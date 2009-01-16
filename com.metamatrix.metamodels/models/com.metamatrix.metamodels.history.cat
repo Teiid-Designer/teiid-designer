@@ -1,0 +1,956 @@
+
+(object Petal
+    version    	43
+    _written   	"Rose 6.1.9113.5"
+    charSet    	0)
+
+(object Class_Category "history"
+    is_unit    	TRUE
+    is_loaded  	TRUE
+    attributes 	(list Attribute_Set
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"packageName"
+	    value      	(value Text "history"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"nsPrefix"
+	    value      	(value Text "history"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"nsURI"
+	    value      	(value Text "http://www.metamatrix.com/metamodels/History"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"basePackage"
+	    value      	(value Text "com.metamatrix.metamodels")))
+    quid       	"3F0D560C01EB"
+    exportControl 	"Public"
+    logical_models 	(list unit_reference_list
+	(object Class "HistoryLog"
+	    quid       	"3F0D56500117"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "name"
+		    quid       	"3F0D57090109"
+		    type       	"String")
+		(object ClassAttribute "uri"
+		    quid       	"3F0D570F0158"
+		    type       	"String"))
+	    abstract   	TRUE)
+	(object Class "Revision"
+	    quid       	"3F0D5669031C"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3F0D59A2026E"
+		    supplier   	"Logical View::history::HistoryLogEntry"
+		    quidu      	"3F0D56AA0315"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "comment"
+		    quid       	"3F0D5744035D"
+		    type       	"String")
+		(object ClassAttribute "version"
+		    quid       	"3F0D57710343"
+		    type       	"String")))
+	(object Class "Label"
+	    quid       	"3F0D566E014C"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3F0D59A40357"
+		    supplier   	"Logical View::history::HistoryLogEntry"
+		    quidu      	"3F0D56AA0315"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "tag"
+		    quid       	"3F0D5717036C"
+		    type       	"String")))
+	(object Class "HistoryLogEntry"
+	    quid       	"3F0D56AA0315"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "timestamp"
+		    quid       	"3F0D56CE02E5"
+		    type       	"String")
+		(object ClassAttribute "user"
+		    quid       	"3F0D56D500B4"
+		    type       	"String"))
+	    abstract   	TRUE)
+	(object Class "Branch"
+	    quid       	"3F0D56B60055"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3F0D59A000EE"
+		    supplier   	"Logical View::history::HistoryLogEntry"
+		    quidu      	"3F0D56AA0315"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "version"
+		    quid       	"3F0D57780145"
+		    type       	"String")))
+	(object Class "HistoryCriteria"
+	    quid       	"3F0D5A4E03AB"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "fromDate"
+		    quid       	"3F0D5A5603D5"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "toDate"
+		    quid       	"3F0D5A5B007F"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "user"
+		    quid       	"3F0D5A5D03D5"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "includeLabels"
+		    quid       	"3F0D5A640118"
+		    type       	"boolean")
+		(object ClassAttribute "onlyLabels"
+		    quid       	"3F0D5A6B033F"
+		    type       	"boolean")))
+	(object Class "RevisionLog"
+	    quid       	"3F675A74011D"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3F675AA70008"
+		    supplier   	"Logical View::history::HistoryLog"
+		    quidu      	"3F0D56500117")))
+	(object Class "LabelLog"
+	    quid       	"3F675A7A0126"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3F675AA90001"
+		    supplier   	"Logical View::history::HistoryLog"
+		    quidu      	"3F0D56500117")))
+	(object Association "$UNNAMED$0"
+	    quid       	"3F0D579101AF"
+	    roles      	(list role_list
+		(object Role "firstRevision"
+		    quid       	"3F0D57930392"
+		    label      	"firstRevision"
+		    supplier   	"Logical View::history::Revision"
+		    quidu      	"3F0D5669031C"
+		    client_cardinality 	(value cardinality "1")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "historyLog"
+		    quid       	"3F0D57930393"
+		    label      	"historyLog"
+		    supplier   	"Logical View::history::RevisionLog"
+		    quidu      	"3F675A74011D"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$1"
+	    quid       	"3F0D58E40238"
+	    roles      	(list role_list
+		(object Role "branch"
+		    quid       	"3F0D58E60065"
+		    label      	"branch"
+		    supplier   	"Logical View::history::Branch"
+		    quidu      	"3F0D56B60055"
+		    client_cardinality 	(value cardinality "0..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "previousRevision"
+		    quid       	"3F0D58E60066"
+		    label      	"previousRevision"
+		    supplier   	"Logical View::history::Revision"
+		    quidu      	"3F0D5669031C"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$2"
+	    quid       	"3F0D5A9300DA"
+	    roles      	(list role_list
+		(object Role "historyCriteria"
+		    quid       	"3F0D5A940013"
+		    label      	"historyCriteria"
+		    supplier   	"Logical View::history::HistoryCriteria"
+		    quidu      	"3F0D5A4E03AB"
+		    client_cardinality 	(value cardinality "0..1")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "historyLog"
+		    quid       	"3F0D5A94001D"
+		    label      	"historyLog"
+		    supplier   	"Logical View::history::HistoryLog"
+		    quidu      	"3F0D56500117"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$3"
+	    quid       	"3F0D5B0C0322"
+	    roles      	(list role_list
+		(object Role "label"
+		    quid       	"3F0D5B0E0072"
+		    label      	"label"
+		    supplier   	"Logical View::history::Label"
+		    quidu      	"3F0D566E014C"
+		    client_cardinality 	(value cardinality "0..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "revision"
+		    quid       	"3F0D5B0E0073"
+		    label      	"revision"
+		    supplier   	"Logical View::history::Revision"
+		    quidu      	"3F0D5669031C"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$4"
+	    quid       	"3F0D68D802BD"
+	    roles      	(list role_list
+		(object Role "nextRevision"
+		    quid       	"3F0D68D903A5"
+		    label      	"nextRevision"
+		    supplier   	"Logical View::history::Revision"
+		    quidu      	"3F0D5669031C"
+		    client_cardinality 	(value cardinality "1")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "previousRevision"
+		    quid       	"3F0D68D903A6"
+		    label      	"previousRevision"
+		    supplier   	"Logical View::history::Revision"
+		    quidu      	"3F0D5669031C"
+		    client_cardinality 	(value cardinality "0..1")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$5"
+	    quid       	"3F675AAB0054"
+	    roles      	(list role_list
+		(object Role "labels"
+		    quid       	"3F675AAB0253"
+		    label      	"labels"
+		    supplier   	"Logical View::history::Label"
+		    quidu      	"3F0D566E014C"
+		    client_cardinality 	(value cardinality "1..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "historyLog"
+		    quid       	"3F675AAB025D"
+		    label      	"historyLog"
+		    supplier   	"Logical View::history::LabelLog"
+		    quidu      	"3F675A7A0126"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE))))
+    logical_presentations 	(list unit_reference_list
+	(object ClassDiagram "Main"
+	    quid       	"3F0D56450035"
+	    title      	"Main"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::history::HistoryLogEntry" @1
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1604, 1942)
+		    font       	(object Font
+			italics    	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@1
+			location   	(1411, 1836)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	386
+			justify    	0
+			label      	"HistoryLogEntry")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F0D56AA0315"
+		    compartment 	(object Compartment
+			Parent_View 	@1
+			location   	(1411, 1897)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	3
+			max_width  	384)
+		    width      	404
+		    height     	236
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::history::HistoryCriteria" @2
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2077, 303)
+		    label      	(object ItemLabel
+			Parent_View 	@2
+			location   	(1807, 122)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	540
+			justify    	0
+			label      	"HistoryCriteria")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F0D5A4E03AB"
+		    compartment 	(object Compartment
+			Parent_View 	@2
+			location   	(1807, 183)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	6
+			max_width  	538)
+		    width      	558
+		    height     	386
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::history::Branch" @3
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(704, 1941)
+		    label      	(object ItemLabel
+			Parent_View 	@3
+			location   	(543, 1860)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	322
+			justify    	0
+			label      	"Branch")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F0D56B60055"
+		    compartment 	(object Compartment
+			Parent_View 	@3
+			location   	(543, 1921)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	319)
+		    width      	340
+		    height     	186
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @4
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F0D59A000EE"
+		    client     	@3
+		    supplier   	@1
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::history::HistoryLog" @5
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1042, 306)
+		    font       	(object Font
+			italics    	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@5
+			location   	(894, 200)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	296
+			justify    	0
+			label      	"HistoryLog")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F0D56500117"
+		    compartment 	(object Compartment
+			Parent_View 	@5
+			location   	(894, 261)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	3
+			max_width  	294)
+		    width      	314
+		    height     	236
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$2" @6
+		    location   	(1498, 307)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F0D5A9300DA"
+		    roleview_list 	(list RoleViews
+			(object RoleView "historyCriteria" @7
+			    Parent_View 	@6
+			    location   	(1095, 35)
+			    label      	(object SegLabel @8
+				Parent_View 	@7
+				location   	(1675, 267)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	287
+				justify    	0
+				label      	"+historyCriteria"
+				pctDist    	0.594059
+				height     	41
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F0D5A940013"
+			    client     	@6
+			    supplier   	@2
+			    line_style 	3
+			    origin_attachment 	(1498, 307)
+			    terminal_attachment 	(1798, 307)
+			    label      	(object SegLabel @9
+				Parent_View 	@7
+				location   	(1733, 350)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.784147
+				height     	43
+				orientation 	1))
+			(object RoleView "historyLog" @10
+			    Parent_View 	@6
+			    location   	(1095, 35)
+			    label      	(object SegLabel @11
+				Parent_View 	@10
+				location   	(1300, 264)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	225
+				justify    	0
+				label      	"+historyLog"
+				pctDist    	0.663366
+				height     	44
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F0D5A94001D"
+			    client     	@6
+			    supplier   	@5
+			    line_style 	3
+			    origin_attachment 	(1498, 307)
+			    terminal_attachment 	(1199, 307)
+			    label      	(object SegLabel @12
+				Parent_View 	@10
+				location   	(1230, 361)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.900000
+				height     	54
+				orientation 	0))))
+		(object ClassView "Class" "Logical View::history::Revision" @13
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(687, 1377)
+		    label      	(object ItemLabel
+			Parent_View 	@13
+			location   	(504, 1271)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	366
+			justify    	0
+			label      	"Revision")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F0D5669031C"
+		    compartment 	(object Compartment
+			Parent_View 	@13
+			location   	(504, 1332)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	3
+			max_width  	363)
+		    width      	384
+		    height     	236
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$1" @14
+		    location   	(690, 1671)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F0D58E40238"
+		    roleview_list 	(list RoleViews
+			(object RoleView "branch" @15
+			    Parent_View 	@14
+			    location   	(-156, 910)
+			    label      	(object SegLabel @16
+				Parent_View 	@15
+				location   	(798, 1814)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	163
+				justify    	0
+				label      	"+branch"
+				pctDist    	0.813559
+				height     	108
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F0D58E60065"
+			    client     	@14
+			    supplier   	@3
+			    line_style 	3
+			    origin_attachment 	(690, 1671)
+			    terminal_attachment 	(690, 1848)
+			    label      	(object SegLabel @17
+				Parent_View 	@15
+				location   	(651, 1797)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..*"
+				pctDist    	0.712230
+				height     	40
+				orientation 	1))
+			(object RoleView "previousRevision" @18
+			    Parent_View 	@14
+			    location   	(-156, 910)
+			    label      	(object SegLabel @19
+				Parent_View 	@18
+				location   	(650, 1607)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	338
+				justify    	0
+				label      	"+previousRevision"
+				pctDist    	0.363946
+				height     	41
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F0D58E60066"
+			    client     	@14
+			    supplier   	@13
+			    line_style 	3
+			    origin_attachment 	(690, 1671)
+			    terminal_attachment 	(690, 1494)
+			    label      	(object SegLabel @20
+				Parent_View 	@18
+				location   	(744, 1513)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.900000
+				height     	54
+				orientation 	1))))
+		(object InheritView "" @21
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F0D59A2026E"
+		    client     	@13
+		    supplier   	@1
+		    line_style 	0)
+		(object AssociationViewNew "$UNNAMED$4" @22
+		    location   	(237, 1374)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F0D68D802BD"
+		    roleview_list 	(list RoleViews
+			(object RoleView "nextRevision" @23
+			    Parent_View 	@22
+			    location   	(-482, 528)
+			    label      	(object SegLabel @24
+				Parent_View 	@23
+				location   	(377, 1229)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	250
+				justify    	0
+				label      	"+nextRevision"
+				pctDist    	0.668524
+				height     	47
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F0D68D903A5"
+			    client     	@22
+			    supplier   	@13
+			    vertices   	(list Points
+				(237, 1374)
+				(237, 1275)
+				(495, 1275))
+			    line_style 	3
+			    origin_attachment 	(237, 1374)
+			    terminal_attachment 	(495, 1275)
+			    label      	(object SegLabel @25
+				Parent_View 	@23
+				location   	(456, 1309)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.894150
+				height     	34
+				orientation 	1))
+			(object RoleView "previousRevision" @26
+			    Parent_View 	@22
+			    location   	(-482, 528)
+			    label      	(object SegLabel @27
+				Parent_View 	@26
+				location   	(397, 1517)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	338
+				justify    	0
+				label      	"+previousRevision"
+				pctDist    	0.729805
+				height     	43
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F0D68D903A6"
+			    client     	@22
+			    supplier   	@13
+			    vertices   	(list Points
+				(237, 1374)
+				(237, 1474)
+				(495, 1474))
+			    line_style 	3
+			    origin_attachment 	(237, 1374)
+			    terminal_attachment 	(495, 1474)
+			    label      	(object SegLabel @28
+				Parent_View 	@26
+				location   	(448, 1434)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.871560
+				height     	41
+				orientation 	0))))
+		(object ClassView "Class" "Logical View::history::RevisionLog" @29
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(668, 796)
+		    label      	(object ItemLabel
+			Parent_View 	@29
+			location   	(546, 745)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	244
+			justify    	0
+			label      	"RevisionLog")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F675A74011D"
+		    width      	262
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$0" @30
+		    location   	(669, 1059)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F0D579101AF"
+		    roleview_list 	(list RoleViews
+			(object RoleView "firstRevision" @31
+			    Parent_View 	@30
+			    location   	(-174, 762)
+			    label      	(object SegLabel @32
+				Parent_View 	@31
+				location   	(820, 1214)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	244
+				justify    	0
+				label      	"+firstRevision"
+				pctDist    	0.781250
+				height     	151
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F0D57930392"
+			    client     	@30
+			    supplier   	@13
+			    line_style 	3
+			    origin_attachment 	(669, 1059)
+			    terminal_attachment 	(669, 1259)
+			    label      	(object SegLabel @33
+				Parent_View 	@31
+				location   	(631, 1225)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.837500
+				height     	39
+				orientation 	1))
+			(object RoleView "historyLog" @34
+			    Parent_View 	@30
+			    location   	(-174, 762)
+			    label      	(object SegLabel @35
+				Parent_View 	@34
+				location   	(812, 908)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	225
+				justify    	0
+				label      	"+historyLog"
+				pctDist    	0.762500
+				height     	143
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F0D57930393"
+			    client     	@30
+			    supplier   	@29
+			    line_style 	3
+			    origin_attachment 	(669, 1059)
+			    terminal_attachment 	(669, 859)
+			    label      	(object SegLabel @36
+				Parent_View 	@34
+				location   	(632, 908)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.762500
+				height     	38
+				orientation 	0))))
+		(object InheritView "" @37
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F675AA70008"
+		    client     	@29
+		    supplier   	@5
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::history::LabelLog" @38
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1598, 799)
+		    label      	(object ItemLabel
+			Parent_View 	@38
+			location   	(1499, 748)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	198
+			justify    	0
+			label      	"LabelLog")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F675A7A0126"
+		    width      	216
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @39
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F675AA90001"
+		    client     	@38
+		    supplier   	@5
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::history::Label" @40
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1605, 1375)
+		    label      	(object ItemLabel
+			Parent_View 	@40
+			location   	(1479, 1294)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	252
+			justify    	0
+			label      	"Label")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F0D566E014C"
+		    compartment 	(object Compartment
+			Parent_View 	@40
+			location   	(1479, 1355)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	259)
+		    width      	270
+		    height     	186
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @41
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F0D59A40357"
+		    client     	@40
+		    supplier   	@1
+		    line_style 	0)
+		(object AssociationViewNew "$UNNAMED$3" @42
+		    location   	(1174, 1375)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F0D5B0C0322"
+		    roleview_list 	(list RoleViews
+			(object RoleView "label" @43
+			    Parent_View 	@42
+			    location   	(762, 547)
+			    label      	(object SegLabel @44
+				Parent_View 	@43
+				location   	(1411, 1334)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	116
+				justify    	0
+				label      	"+label"
+				pctDist    	0.800000
+				height     	42
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F0D5B0E0072"
+			    client     	@42
+			    supplier   	@40
+			    line_style 	3
+			    origin_attachment 	(1174, 1375)
+			    terminal_attachment 	(1470, 1375)
+			    label      	(object SegLabel @45
+				Parent_View 	@43
+				location   	(1412, 1411)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..*"
+				pctDist    	0.806351
+				height     	36
+				orientation 	1))
+			(object RoleView "revision" @46
+			    Parent_View 	@42
+			    location   	(762, 547)
+			    label      	(object SegLabel @47
+				Parent_View 	@46
+				location   	(1008, 1333)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	176
+				justify    	0
+				label      	"+revision"
+				pctDist    	0.567537
+				height     	43
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F0D5B0E0073"
+			    client     	@42
+			    supplier   	@13
+			    line_style 	3
+			    origin_attachment 	(1174, 1375)
+			    terminal_attachment 	(879, 1375)
+			    label      	(object SegLabel @48
+				Parent_View 	@46
+				location   	(910, 1429)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.900000
+				height     	54
+				orientation 	0))))
+		(object AssociationViewNew "$UNNAMED$5" @49
+		    location   	(1598, 1071)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F675AAB0054"
+		    roleview_list 	(list RoleViews
+			(object RoleView "labels" @50
+			    Parent_View 	@49
+			    location   	(0, 272)
+			    label      	(object SegLabel @51
+				Parent_View 	@50
+				location   	(1682, 1231)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	144
+				justify    	0
+				label      	"+labels"
+				pctDist    	0.761905
+				height     	84
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F675AAB0253"
+			    client     	@49
+			    supplier   	@40
+			    line_style 	3
+			    origin_attachment 	(1598, 1071)
+			    terminal_attachment 	(1598, 1281)
+			    label      	(object SegLabel @52
+				Parent_View 	@50
+				location   	(1554, 1241)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1..*"
+				pctDist    	0.809524
+				height     	44
+				orientation 	1))
+			(object RoleView "historyLog" @53
+			    Parent_View 	@49
+			    location   	(0, 272)
+			    label      	(object SegLabel @54
+				Parent_View 	@53
+				location   	(1736, 909)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	225
+				justify    	0
+				label      	"+historyLog"
+				pctDist    	0.775120
+				height     	138
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F675AAB025D"
+			    client     	@49
+			    supplier   	@38
+			    line_style 	3
+			    origin_attachment 	(1598, 1071)
+			    terminal_attachment 	(1598, 862)
+			    label      	(object SegLabel @55
+				Parent_View 	@53
+				location   	(1546, 909)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.775120
+				height     	52
+				orientation 	0))))))))

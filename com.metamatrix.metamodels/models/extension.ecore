@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="extension"
+    nsURI="http://www.metamatrix.com/metamodels/Extension" nsPrefix="mmext">
+  <eClassifiers xsi:type="ecore:EClass" name="XClass" eSuperTypes="../../../plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EClass">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extendedClass" eType="ecore:EClass ../../../plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EClass"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="XPackage" eSuperTypes="../../../plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EPackage">
+    <eOperations name="findXClass" eType="#//XClass">
+      <eParameters name="extendedClass" eType="ecore:EClass ../../../plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EClass"/>
+    </eOperations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="XAttribute" eSuperTypes="../../../plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
+  <eClassifiers xsi:type="ecore:EClass" name="XEnum" eSuperTypes="../../../plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EEnum"/>
+  <eClassifiers xsi:type="ecore:EClass" name="XEnumLiteral" eSuperTypes="../../../plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EEnumLiteral"/>
+</ecore:EPackage>

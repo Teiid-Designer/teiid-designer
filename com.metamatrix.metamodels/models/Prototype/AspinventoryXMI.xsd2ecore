@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xsd2ecore:XSD2EcoreMappingRoot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsd2ecore="http://www.eclipse.org/emf/2002/XSD2Ecore" inputs="aspinventory.ecore#/"
+    outputs="AspinventoryXMI.xsd#/">
+  <nested inputs="aspinventory.ecore#//StorageType" outputs="AspinventoryXMI.xsd#//StorageType;XSDSimpleTypeDefinition">
+    <nested inputs="aspinventory.ecore#//StorageType/STORAGE_AREA_NETWORK" outputs="AspinventoryXMI.xsd#//StorageType;XSDSimpleTypeDefinition/XSDEnumerationFacet"/>
+    <nested inputs="aspinventory.ecore#//StorageType/NETWORK_AREA_STORAGE" outputs="AspinventoryXMI.xsd#//StorageType;XSDSimpleTypeDefinition/XSDEnumerationFacet=1"/>
+    <nested inputs="aspinventory.ecore#//StorageType/LOCAL_STORAGE" outputs="AspinventoryXMI.xsd#//StorageType;XSDSimpleTypeDefinition/XSDEnumerationFacet=2"/>
+  </nested>
+  <nested inputs="aspinventory.ecore#//ApplicationSystem" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition">
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/name" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDAttributeUse=1"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/name" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/revenue" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDAttributeUse=2"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/revenue" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/cost" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDAttributeUse=3"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/cost" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=2"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/productLine" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDAttributeUse=4"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/productLine" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=3"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/businessUnit" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDAttributeUse=5"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/businessUnit" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=4"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/codeBase" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDAttributeUse=6"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/codeBase" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=5"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/customers" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDAttributeUse=7"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/customers" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=6"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/functions" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=7"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/servers" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDAttributeUse=8"/>
+    <nested inputs="aspinventory.ecore#//ApplicationSystem/servers" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=8"/>
+  </nested>
+  <nested inputs="aspinventory.ecore#//ApplicationSystem" outputs="AspinventoryXMI.xsd#//ApplicationSystem;XSDElementDeclaration"/>
+  <nested inputs="aspinventory.ecore#//Servers" outputs="AspinventoryXMI.xsd#//Servers;XSDComplexTypeDefinition=1">
+    <nested inputs="aspinventory.ecore#//Servers/name" outputs="AspinventoryXMI.xsd#//Servers;XSDComplexTypeDefinition=1/XSDAttributeUse=1"/>
+    <nested inputs="aspinventory.ecore#//Servers/name" outputs="AspinventoryXMI.xsd#//Servers;XSDComplexTypeDefinition=1/XSDParticle/XSDModelGroup/XSDParticle"/>
+    <nested inputs="aspinventory.ecore#//Servers/vendor" outputs="AspinventoryXMI.xsd#//Servers;XSDComplexTypeDefinition=1/XSDAttributeUse=2"/>
+    <nested inputs="aspinventory.ecore#//Servers/vendor" outputs="AspinventoryXMI.xsd#//Servers;XSDComplexTypeDefinition=1/XSDParticle/XSDModelGroup/XSDParticle=1"/>
+    <nested inputs="aspinventory.ecore#//Servers/cost" outputs="AspinventoryXMI.xsd#//Servers;XSDComplexTypeDefinition=1/XSDAttributeUse=3"/>
+    <nested inputs="aspinventory.ecore#//Servers/cost" outputs="AspinventoryXMI.xsd#//Servers;XSDComplexTypeDefinition=1/XSDParticle/XSDModelGroup/XSDParticle=2"/>
+    <nested inputs="aspinventory.ecore#//Servers/size" outputs="AspinventoryXMI.xsd#//Servers;XSDComplexTypeDefinition=1/XSDAttributeUse=4"/>
+    <nested inputs="aspinventory.ecore#//Servers/size" outputs="AspinventoryXMI.xsd#//Servers;XSDComplexTypeDefinition=1/XSDParticle/XSDModelGroup/XSDParticle=3"/>
+    <nested inputs="aspinventory.ecore#//Servers/role" outputs="AspinventoryXMI.xsd#//Servers;XSDComplexTypeDefinition=1/XSDAttributeUse=5"/>
+    <nested inputs="aspinventory.ecore#//Servers/role" outputs="AspinventoryXMI.xsd#//Servers;XSDComplexTypeDefinition=1/XSDParticle/XSDModelGroup/XSDParticle=4"/>
+    <nested inputs="aspinventory.ecore#//Servers/storage" outputs="AspinventoryXMI.xsd#//Servers;XSDComplexTypeDefinition=1/XSDParticle/XSDModelGroup/XSDParticle=5"/>
+    <nested inputs="aspinventory.ecore#//Servers/applicationSystems" outputs="AspinventoryXMI.xsd#//Servers;XSDComplexTypeDefinition=1/XSDAttributeUse=6"/>
+    <nested inputs="aspinventory.ecore#//Servers/applicationSystems" outputs="AspinventoryXMI.xsd#//Servers;XSDComplexTypeDefinition=1/XSDParticle/XSDModelGroup/XSDParticle=6"/>
+  </nested>
+  <nested inputs="aspinventory.ecore#//Servers" outputs="AspinventoryXMI.xsd#//Servers;XSDElementDeclaration=1"/>
+  <nested inputs="aspinventory.ecore#//Function" outputs="AspinventoryXMI.xsd#//Function;XSDComplexTypeDefinition=2">
+    <nested inputs="aspinventory.ecore#//Function/name" outputs="AspinventoryXMI.xsd#//Function;XSDComplexTypeDefinition=2/XSDAttributeUse=1"/>
+    <nested inputs="aspinventory.ecore#//Function/name" outputs="AspinventoryXMI.xsd#//Function;XSDComplexTypeDefinition=2/XSDParticle/XSDModelGroup/XSDParticle"/>
+    <nested inputs="aspinventory.ecore#//Function/category" outputs="AspinventoryXMI.xsd#//Function;XSDComplexTypeDefinition=2/XSDAttributeUse=2"/>
+    <nested inputs="aspinventory.ecore#//Function/category" outputs="AspinventoryXMI.xsd#//Function;XSDComplexTypeDefinition=2/XSDParticle/XSDModelGroup/XSDParticle=1"/>
+    <nested inputs="aspinventory.ecore#//Function/relatedFunctions" outputs="AspinventoryXMI.xsd#//Function;XSDComplexTypeDefinition=2/XSDAttributeUse=3"/>
+    <nested inputs="aspinventory.ecore#//Function/relatedFunctions" outputs="AspinventoryXMI.xsd#//Function;XSDComplexTypeDefinition=2/XSDParticle/XSDModelGroup/XSDParticle=2"/>
+    <nested inputs="aspinventory.ecore#//Function/dataEntities" outputs="AspinventoryXMI.xsd#//Function;XSDComplexTypeDefinition=2/XSDAttributeUse=4"/>
+    <nested inputs="aspinventory.ecore#//Function/dataEntities" outputs="AspinventoryXMI.xsd#//Function;XSDComplexTypeDefinition=2/XSDParticle/XSDModelGroup/XSDParticle=3"/>
+  </nested>
+  <nested inputs="aspinventory.ecore#//Function" outputs="AspinventoryXMI.xsd#//Function;XSDElementDeclaration=2"/>
+  <nested inputs="aspinventory.ecore#//Customer" outputs="AspinventoryXMI.xsd#//Customer;XSDComplexTypeDefinition=3">
+    <nested inputs="aspinventory.ecore#//Customer/name" outputs="AspinventoryXMI.xsd#//Customer;XSDComplexTypeDefinition=3/XSDAttributeUse=1"/>
+    <nested inputs="aspinventory.ecore#//Customer/name" outputs="AspinventoryXMI.xsd#//Customer;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup/XSDParticle"/>
+    <nested inputs="aspinventory.ecore#//Customer/id" outputs="AspinventoryXMI.xsd#//Customer;XSDComplexTypeDefinition=3/XSDAttributeUse=2"/>
+    <nested inputs="aspinventory.ecore#//Customer/id" outputs="AspinventoryXMI.xsd#//Customer;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup/XSDParticle=1"/>
+    <nested inputs="aspinventory.ecore#//Customer/revenue" outputs="AspinventoryXMI.xsd#//Customer;XSDComplexTypeDefinition=3/XSDAttributeUse=3"/>
+    <nested inputs="aspinventory.ecore#//Customer/revenue" outputs="AspinventoryXMI.xsd#//Customer;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup/XSDParticle=2"/>
+    <nested inputs="aspinventory.ecore#//Customer/segment" outputs="AspinventoryXMI.xsd#//Customer;XSDComplexTypeDefinition=3/XSDAttributeUse=4"/>
+    <nested inputs="aspinventory.ecore#//Customer/segment" outputs="AspinventoryXMI.xsd#//Customer;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup/XSDParticle=3"/>
+    <nested inputs="aspinventory.ecore#//Customer/volume" outputs="AspinventoryXMI.xsd#//Customer;XSDComplexTypeDefinition=3/XSDAttributeUse=5"/>
+    <nested inputs="aspinventory.ecore#//Customer/volume" outputs="AspinventoryXMI.xsd#//Customer;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup/XSDParticle=4"/>
+    <nested inputs="aspinventory.ecore#//Customer/applicationSystems" outputs="AspinventoryXMI.xsd#//Customer;XSDComplexTypeDefinition=3/XSDAttributeUse=6"/>
+    <nested inputs="aspinventory.ecore#//Customer/applicationSystems" outputs="AspinventoryXMI.xsd#//Customer;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup/XSDParticle=5"/>
+  </nested>
+  <nested inputs="aspinventory.ecore#//Customer" outputs="AspinventoryXMI.xsd#//Customer;XSDElementDeclaration=3"/>
+  <nested inputs="aspinventory.ecore#//Storage" outputs="AspinventoryXMI.xsd#//Storage;XSDComplexTypeDefinition=4">
+    <nested inputs="aspinventory.ecore#//Storage/vendor" outputs="AspinventoryXMI.xsd#//Storage;XSDComplexTypeDefinition=4/XSDAttributeUse=1"/>
+    <nested inputs="aspinventory.ecore#//Storage/vendor" outputs="AspinventoryXMI.xsd#//Storage;XSDComplexTypeDefinition=4/XSDParticle/XSDModelGroup/XSDParticle"/>
+    <nested inputs="aspinventory.ecore#//Storage/modelNumber" outputs="AspinventoryXMI.xsd#//Storage;XSDComplexTypeDefinition=4/XSDAttributeUse=2"/>
+    <nested inputs="aspinventory.ecore#//Storage/modelNumber" outputs="AspinventoryXMI.xsd#//Storage;XSDComplexTypeDefinition=4/XSDParticle/XSDModelGroup/XSDParticle=1"/>
+    <nested inputs="aspinventory.ecore#//Storage/diskSizeInKb" outputs="AspinventoryXMI.xsd#//Storage;XSDComplexTypeDefinition=4/XSDAttributeUse=3"/>
+    <nested inputs="aspinventory.ecore#//Storage/diskSizeInKb" outputs="AspinventoryXMI.xsd#//Storage;XSDComplexTypeDefinition=4/XSDParticle/XSDModelGroup/XSDParticle=2"/>
+    <nested inputs="aspinventory.ecore#//Storage/diskSizeInMb" outputs="AspinventoryXMI.xsd#//Storage;XSDComplexTypeDefinition=4/XSDAttributeUse=4"/>
+    <nested inputs="aspinventory.ecore#//Storage/diskSizeInMb" outputs="AspinventoryXMI.xsd#//Storage;XSDComplexTypeDefinition=4/XSDParticle/XSDModelGroup/XSDParticle=3"/>
+    <nested inputs="aspinventory.ecore#//Storage/diskSizeInGb" outputs="AspinventoryXMI.xsd#//Storage;XSDComplexTypeDefinition=4/XSDAttributeUse=5"/>
+    <nested inputs="aspinventory.ecore#//Storage/diskSizeInGb" outputs="AspinventoryXMI.xsd#//Storage;XSDComplexTypeDefinition=4/XSDParticle/XSDModelGroup/XSDParticle=4"/>
+    <nested inputs="aspinventory.ecore#//Storage/type" outputs="AspinventoryXMI.xsd#//Storage;XSDComplexTypeDefinition=4/XSDAttributeUse=6"/>
+    <nested inputs="aspinventory.ecore#//Storage/type" outputs="AspinventoryXMI.xsd#//Storage;XSDComplexTypeDefinition=4/XSDParticle/XSDModelGroup/XSDParticle=5"/>
+  </nested>
+  <nested inputs="aspinventory.ecore#//Storage" outputs="AspinventoryXMI.xsd#//Storage;XSDElementDeclaration=4"/>
+  <nested inputs="aspinventory.ecore#//CodeBase" outputs="AspinventoryXMI.xsd#//CodeBase;XSDComplexTypeDefinition=5">
+    <nested inputs="aspinventory.ecore#//CodeBase/technology" outputs="AspinventoryXMI.xsd#//CodeBase;XSDComplexTypeDefinition=5/XSDAttributeUse=1"/>
+    <nested inputs="aspinventory.ecore#//CodeBase/technology" outputs="AspinventoryXMI.xsd#//CodeBase;XSDComplexTypeDefinition=5/XSDParticle/XSDModelGroup/XSDParticle"/>
+    <nested inputs="aspinventory.ecore#//CodeBase/version" outputs="AspinventoryXMI.xsd#//CodeBase;XSDComplexTypeDefinition=5/XSDAttributeUse=2"/>
+    <nested inputs="aspinventory.ecore#//CodeBase/version" outputs="AspinventoryXMI.xsd#//CodeBase;XSDComplexTypeDefinition=5/XSDParticle/XSDModelGroup/XSDParticle=1"/>
+    <nested inputs="aspinventory.ecore#//CodeBase/applicationSystems" outputs="AspinventoryXMI.xsd#//CodeBase;XSDComplexTypeDefinition=5/XSDAttributeUse=3"/>
+    <nested inputs="aspinventory.ecore#//CodeBase/applicationSystems" outputs="AspinventoryXMI.xsd#//CodeBase;XSDComplexTypeDefinition=5/XSDParticle/XSDModelGroup/XSDParticle=2"/>
+  </nested>
+  <nested inputs="aspinventory.ecore#//CodeBase" outputs="AspinventoryXMI.xsd#//CodeBase;XSDElementDeclaration=5"/>
+</xsd2ecore:XSD2EcoreMappingRoot>

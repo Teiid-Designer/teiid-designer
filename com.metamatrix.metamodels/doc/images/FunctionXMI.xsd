@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<xsd:schema
+    targetNamespace="http://www.metamatrix.com/metamodels/MetaMatrixFunction"
+    xmlns:mmfunction="http://www.metamatrix.com/metamodels/MetaMatrixFunction"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:import namespace="http://www.omg.org/XMI" schemaLocation="XMI.xsd"/>
+    <xsd:simpleType name="PushDownType">
+        <xsd:restriction base="xsd:NCName">
+            <xsd:enumeration value="REQUIRED"/>
+            <xsd:enumeration value="ALLOWED"/>
+            <xsd:enumeration value="NOT_ALLOWED"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="Function">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="category" type="xsd:string"/>
+            <xsd:element name="pushDown" type="mmfunction:PushDownType"/>
+            <xsd:element ref="xmi:Extension"/>
+        </xsd:choice>
+        <xsd:attribute ref="xmi:id"/>
+        <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="category" type="xsd:string"/>
+        <xsd:attribute name="pushDown" type="mmfunction:PushDownType"/>
+    </xsd:complexType>
+    <xsd:element name="Function" type="mmfunction:Function"/>
+    <xsd:complexType name="ScalarFunction">
+        <xsd:complexContent>
+            <xsd:extension base="mmfunction:Function">
+                <xsd:choice maxOccurs="unbounded" minOccurs="0">
+                    <xsd:element name="invocationClass" type="xsd:string"/>
+                    <xsd:element name="invocationMethod" type="xsd:string"/>
+                    <xsd:element name="deterministic" type="xsd:boolean"/>
+                    <xsd:element name="inputParameters" type="mmfunction:FunctionParameter"/>
+                    <xsd:element name="returnParameter" type="mmfunction:ReturnParameter"/>
+                </xsd:choice>
+                <xsd:attribute name="invocationClass" type="xsd:string"/>
+                <xsd:attribute name="invocationMethod" type="xsd:string"/>
+                <xsd:attribute name="deterministic" type="xsd:boolean"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element name="ScalarFunction" type="mmfunction:ScalarFunction"/>
+    <xsd:complexType name="FunctionParameter">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="type" type="xsd:string"/>
+            <xsd:element ref="xmi:Extension"/>
+        </xsd:choice>
+        <xsd:attribute ref="xmi:id"/>
+        <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="type" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:element name="FunctionParameter" type="mmfunction:FunctionParameter"/>
+    <xsd:complexType name="ReturnParameter">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="type" type="xsd:string"/>
+            <xsd:element ref="xmi:Extension"/>
+        </xsd:choice>
+        <xsd:attribute ref="xmi:id"/>
+        <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+        <xsd:attribute name="type" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:element name="ReturnParameter" type="mmfunction:ReturnParameter"/>
+</xsd:schema>

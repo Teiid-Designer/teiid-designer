@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xsd2ecore:XSD2EcoreMappingRoot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsd2ecore="http://www.eclipse.org/emf/2002/XSD2Ecore" inputs="CardCatalog.ecore#/"
+    outputs="CardcatalogXMI.xsd#/">
+  <nested inputs="CardCatalog.ecore#//Book" outputs="CardcatalogXMI.xsd#//Book;XSDComplexTypeDefinition">
+    <nested inputs="CardCatalog.ecore#//Book/isbn" outputs="CardcatalogXMI.xsd#//Book;XSDComplexTypeDefinition/XSDAttributeUse=1"/>
+    <nested inputs="CardCatalog.ecore#//Book/isbn" outputs="CardcatalogXMI.xsd#//Book;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"/>
+    <nested inputs="CardCatalog.ecore#//Book/title" outputs="CardcatalogXMI.xsd#//Book;XSDComplexTypeDefinition/XSDAttributeUse=2"/>
+    <nested inputs="CardCatalog.ecore#//Book/title" outputs="CardcatalogXMI.xsd#//Book;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1"/>
+    <nested inputs="CardCatalog.ecore#//Book/authors" outputs="CardcatalogXMI.xsd#//Book;XSDComplexTypeDefinition/XSDAttributeUse=3"/>
+    <nested inputs="CardCatalog.ecore#//Book/authors" outputs="CardcatalogXMI.xsd#//Book;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=2"/>
+  </nested>
+  <nested inputs="CardCatalog.ecore#//Book" outputs="CardcatalogXMI.xsd#//Book;XSDElementDeclaration"/>
+  <nested inputs="CardCatalog.ecore#//Library" outputs="CardcatalogXMI.xsd#//Library;XSDComplexTypeDefinition=1">
+    <nested inputs="CardCatalog.ecore#//Library/name" outputs="CardcatalogXMI.xsd#//Library;XSDComplexTypeDefinition=1/XSDAttributeUse=1"/>
+    <nested inputs="CardCatalog.ecore#//Library/name" outputs="CardcatalogXMI.xsd#//Library;XSDComplexTypeDefinition=1/XSDParticle/XSDModelGroup/XSDParticle"/>
+    <nested inputs="CardCatalog.ecore#//Library/branchId" outputs="CardcatalogXMI.xsd#//Library;XSDComplexTypeDefinition=1/XSDAttributeUse=2"/>
+    <nested inputs="CardCatalog.ecore#//Library/branchId" outputs="CardcatalogXMI.xsd#//Library;XSDComplexTypeDefinition=1/XSDParticle/XSDModelGroup/XSDParticle=1"/>
+    <nested inputs="CardCatalog.ecore#//Library/books" outputs="CardcatalogXMI.xsd#//Library;XSDComplexTypeDefinition=1/XSDParticle/XSDModelGroup/XSDParticle=2"/>
+    <nested inputs="CardCatalog.ecore#//Library/magazines" outputs="CardcatalogXMI.xsd#//Library;XSDComplexTypeDefinition=1/XSDParticle/XSDModelGroup/XSDParticle=3"/>
+  </nested>
+  <nested inputs="CardCatalog.ecore#//Library" outputs="CardcatalogXMI.xsd#//Library;XSDElementDeclaration=1"/>
+  <nested inputs="CardCatalog.ecore#//Author" outputs="CardcatalogXMI.xsd#//Author;XSDComplexTypeDefinition=2">
+    <nested inputs="CardCatalog.ecore#//Author/firstName" outputs="CardcatalogXMI.xsd#//Author;XSDComplexTypeDefinition=2/XSDAttributeUse=1"/>
+    <nested inputs="CardCatalog.ecore#//Author/firstName" outputs="CardcatalogXMI.xsd#//Author;XSDComplexTypeDefinition=2/XSDParticle/XSDModelGroup/XSDParticle"/>
+    <nested inputs="CardCatalog.ecore#//Author/lastName" outputs="CardcatalogXMI.xsd#//Author;XSDComplexTypeDefinition=2/XSDAttributeUse=2"/>
+    <nested inputs="CardCatalog.ecore#//Author/lastName" outputs="CardcatalogXMI.xsd#//Author;XSDComplexTypeDefinition=2/XSDParticle/XSDModelGroup/XSDParticle=1"/>
+  </nested>
+  <nested inputs="CardCatalog.ecore#//Author" outputs="CardcatalogXMI.xsd#//Author;XSDElementDeclaration=2"/>
+  <nested inputs="CardCatalog.ecore#//Magazine" outputs="CardcatalogXMI.xsd#//Magazine;XSDComplexTypeDefinition=3">
+    <nested inputs="CardCatalog.ecore#//Magazine/title" outputs="CardcatalogXMI.xsd#//Magazine;XSDComplexTypeDefinition=3/XSDAttributeUse=1"/>
+    <nested inputs="CardCatalog.ecore#//Magazine/title" outputs="CardcatalogXMI.xsd#//Magazine;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup/XSDParticle"/>
+    <nested inputs="CardCatalog.ecore#//Magazine/articles" outputs="CardcatalogXMI.xsd#//Magazine;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup/XSDParticle=1"/>
+  </nested>
+  <nested inputs="CardCatalog.ecore#//Magazine" outputs="CardcatalogXMI.xsd#//Magazine;XSDElementDeclaration=3"/>
+  <nested inputs="CardCatalog.ecore#//Article" outputs="CardcatalogXMI.xsd#//Article;XSDComplexTypeDefinition=4">
+    <nested inputs="CardCatalog.ecore#//Article/title" outputs="CardcatalogXMI.xsd#//Article;XSDComplexTypeDefinition=4/XSDAttributeUse=1"/>
+    <nested inputs="CardCatalog.ecore#//Article/title" outputs="CardcatalogXMI.xsd#//Article;XSDComplexTypeDefinition=4/XSDParticle/XSDModelGroup/XSDParticle"/>
+    <nested inputs="CardCatalog.ecore#//Article/authors" outputs="CardcatalogXMI.xsd#//Article;XSDComplexTypeDefinition=4/XSDAttributeUse=2"/>
+    <nested inputs="CardCatalog.ecore#//Article/authors" outputs="CardcatalogXMI.xsd#//Article;XSDComplexTypeDefinition=4/XSDParticle/XSDModelGroup/XSDParticle=1"/>
+  </nested>
+  <nested inputs="CardCatalog.ecore#//Article" outputs="CardcatalogXMI.xsd#//Article;XSDElementDeclaration=4"/>
+</xsd2ecore:XSD2EcoreMappingRoot>

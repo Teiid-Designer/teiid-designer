@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2000-2004 MetaMatrix Corporation.  All rights reserved."
+    modelDirectory="/com.metamatrix.metamodels.wsdl/src" editDirectory="/com.metamatrix.metamodels.wsdl/src"
+    editorDirectory="/com.metamatrix.metamodels.wsdl/src" modelPluginID="com.metamatrix.metamodels.wsdl"
+    modelName="Wsdl_v1.1_mimeBinding" editPluginClass="com.metamatrix.metamodels.wsdl.mime.provider.MimeBindingEditPlugin"
+    editorPluginClass="com.metamatrix.metamodels.wsdl.mime.presentation.MimeBindingEditorPlugin"
+    updateClasspath="false" nonNLSMarkers="true">
+  <foreignModel>wsdl_v1.1_mimeBinding.xsd</foreignModel>
+  <genPackages prefix="Mime" basePackage="com.metamatrix.metamodels.wsdl" resource="XML"
+      ecorePackage="wsdl_v1.1_mimeBinding.ecore#/">
+    <genClasses ecoreClass="wsdl_v1.1_mimeBinding.ecore#//ContentType">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1_mimeBinding.ecore#//ContentType/part"/>
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1_mimeBinding.ecore#//ContentType/type"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1_mimeBinding.ecore#//Content"/>
+    <genClasses ecoreClass="wsdl_v1.1_mimeBinding.ecore#//MimeXmlType">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1_mimeBinding.ecore#//MimeXmlType/part"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1_mimeBinding.ecore#//MimeXml"/>
+    <genClasses ecoreClass="wsdl_v1.1_mimeBinding.ecore#//PartType">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1_mimeBinding.ecore#//PartType/name"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1_mimeBinding.ecore#//PartType/any"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1_mimeBinding.ecore#//MultipartRelatedType">
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1_mimeBinding.ecore#//MultipartRelatedType/part"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1_mimeBinding.ecore#//MultipartRelated"/>
+    <genClasses ecoreClass="wsdl_v1.1_mimeBinding.ecore#//Part"/>
+  </genPackages>
+</genmodel:GenModel>

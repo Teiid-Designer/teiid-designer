@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2000-2004 MetaMatrix Corporation.  All rights reserved."
+    modelDirectory="/com.metamatrix.metamodels.aspinventory/src" editDirectory="/com.metamatrix.metamodels.aspinventory/src"
+    editorDirectory="/com.metamatrix.metamodels.aspinventory/src" modelPluginID="com.metamatrix.metamodels.aspinventory"
+    modelName="AspInventory" editPluginClass="com.metamatrix.metamodels.aspinventory.provider.AspInventoryEditPlugin"
+    editorPluginClass="com.metamatrix.metamodels.aspinventory.presentation.AspInventoryEditorPlugin"
+    generateSchema="true" nonNLSMarkers="true" usedGenPackages="../Extension.genmodel#//extension ../../../org.eclipse.emf.models/src/model/Ecore.genmodel#//ecore ../Core.genmodel#//core ../Relational.genmodel#//relational">
+  <foreignModel>E:\Plugins\current\plugins\com.metamatrix.metamodels\models\Prototype\AspInventory.mdl</foreignModel>
+  <genPackages prefix="AspInventory" basePackage="com.metamatrix.metamodels" ecorePackage="aspinventory.ecore#/">
+    <genEnums ecoreEnum="aspinventory.ecore#//StorageType">
+      <genEnumLiterals ecoreEnumLiteral="aspinventory.ecore#//StorageType/STORAGE_AREA_NETWORK"/>
+      <genEnumLiterals ecoreEnumLiteral="aspinventory.ecore#//StorageType/NETWORK_AREA_STORAGE"/>
+      <genEnumLiterals ecoreEnumLiteral="aspinventory.ecore#//StorageType/LOCAL_STORAGE"/>
+    </genEnums>
+    <genClasses ecoreClass="aspinventory.ecore#//ApplicationSystem">
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//ApplicationSystem/name"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//ApplicationSystem/revenue"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//ApplicationSystem/cost"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//ApplicationSystem/productLine"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//ApplicationSystem/businessUnit"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference aspinventory.ecore#//ApplicationSystem/codeBase"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference aspinventory.ecore#//ApplicationSystem/customers"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference aspinventory.ecore#//ApplicationSystem/functions"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference aspinventory.ecore#//ApplicationSystem/servers"/>
+    </genClasses>
+    <genClasses ecoreClass="aspinventory.ecore#//Server">
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Server/name"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Server/vendor"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Server/cost"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Server/size"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Server/role"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference aspinventory.ecore#//Server/storage"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference aspinventory.ecore#//Server/applicationSystems"/>
+    </genClasses>
+    <genClasses ecoreClass="aspinventory.ecore#//Function">
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Function/name"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Function/category"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference aspinventory.ecore#//Function/relatedFunctions"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference aspinventory.ecore#//Function/dataEntities"/>
+      <genFeatures property="None" notify="false" ecoreFeature="ecore:EReference aspinventory.ecore#//Function/applicationSystems"/>
+    </genClasses>
+    <genClasses ecoreClass="aspinventory.ecore#//Customer">
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Customer/name"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Customer/id"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Customer/revenue"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Customer/segment"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Customer/volume"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference aspinventory.ecore#//Customer/applicationSystems"/>
+    </genClasses>
+    <genClasses ecoreClass="aspinventory.ecore#//Storage">
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Storage/id"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Storage/vendor"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Storage/modelNumber"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Storage/diskSizeInKb"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Storage/diskSizeInMb"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Storage/diskSizeInGb"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//Storage/type"/>
+      <genFeatures property="None" notify="false" ecoreFeature="ecore:EReference aspinventory.ecore#//Storage/servers"/>
+    </genClasses>
+    <genClasses ecoreClass="aspinventory.ecore#//CodeBase">
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//CodeBase/technology"/>
+      <genFeatures ecoreFeature="ecore:EAttribute aspinventory.ecore#//CodeBase/version"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference aspinventory.ecore#//CodeBase/applicationSystems"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

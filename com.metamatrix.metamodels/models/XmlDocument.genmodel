@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.metamatrix.metamodels.xml/src"
+    editDirectory="/com.metamatrix.metamodels.xml/src" editorDirectory="/com.metamatrix.metamodels.xml.editor/src"
+    modelPluginID="com.metamatrix.metamodels.xml" modelName="XmlDocument" editPluginClass="com.metamatrix.metamodels.xml.provider.XmlDocumentEditPlugin"
+    nonNLSMarkers="true" runtimeCompatibility="true" importerID="org.eclipse.emf.importer.rose"
+    usedGenPackages="../../../plugin/org.eclipse.xsd/model/XSD.genmodel#//xsd">
+  <foreignModel>E:\Plugins\current\plugins\com.metamatrix.metamodels\models\XmlDocument.mdl</foreignModel>
+  <genPackages prefix="XmlDocument" basePackage="com.metamatrix.metamodels" disposableProviderFactory="true"
+      ecorePackage="xml.ecore#/">
+    <genEnums ecoreEnum="xml.ecore#//SoapEncoding">
+      <genEnumLiterals ecoreEnumLiteral="xml.ecore#//SoapEncoding/NONE"/>
+      <genEnumLiterals ecoreEnumLiteral="xml.ecore#//SoapEncoding/DEFAULT"/>
+    </genEnums>
+    <genEnums ecoreEnum="xml.ecore#//ChoiceErrorMode">
+      <genEnumLiterals ecoreEnumLiteral="xml.ecore#//ChoiceErrorMode/THROW"/>
+      <genEnumLiterals ecoreEnumLiteral="xml.ecore#//ChoiceErrorMode/RECORD"/>
+      <genEnumLiterals ecoreEnumLiteral="xml.ecore#//ChoiceErrorMode/DISCARD"/>
+    </genEnums>
+    <genEnums ecoreEnum="xml.ecore#//ValueType">
+      <genEnumLiterals ecoreEnumLiteral="xml.ecore#//ValueType/IGNORED"/>
+      <genEnumLiterals ecoreEnumLiteral="xml.ecore#//ValueType/DEFAULT"/>
+      <genEnumLiterals ecoreEnumLiteral="xml.ecore#//ValueType/FIXED"/>
+    </genEnums>
+    <genEnums ecoreEnum="xml.ecore#//BuildStatus">
+      <genEnumLiterals ecoreEnumLiteral="xml.ecore#//BuildStatus/COMPLETE"/>
+      <genEnumLiterals ecoreEnumLiteral="xml.ecore#//BuildStatus/INCOMPLETE"/>
+    </genEnums>
+    <genEnums ecoreEnum="xml.ecore#//NormalizationType">
+      <genEnumLiterals ecoreEnumLiteral="xml.ecore#//NormalizationType/PRESERVE"/>
+      <genEnumLiterals ecoreEnumLiteral="xml.ecore#//NormalizationType/REPLACE"/>
+      <genEnumLiterals ecoreEnumLiteral="xml.ecore#//NormalizationType/COLLAPSE"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="xml.ecore#//List"/>
+    <genClasses ecoreClass="xml.ecore#//XmlFragment">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlFragment/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xml.ecore#//XmlFragment/root"/>
+    </genClasses>
+    <genClasses ecoreClass="xml.ecore#//XmlDocument">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlDocument/encoding"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlDocument/formatted"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlDocument/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlDocument/standalone"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlDocument/soapEncoding"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xml.ecore#//XmlDocumentEntity">
+      <genOperations ecoreOperation="xml.ecore#//XmlDocumentEntity/getPathInDocument"/>
+      <genOperations ecoreOperation="xml.ecore#//XmlDocumentEntity/getXPath"/>
+    </genClasses>
+    <genClasses ecoreClass="xml.ecore#//XmlElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlElement/recursive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xml.ecore#//XmlElement/attributes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xml.ecore#//XmlElement/declaredNamespaces"/>
+    </genClasses>
+    <genClasses ecoreClass="xml.ecore#//XmlAttribute">
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlAttribute/use"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference xml.ecore#//XmlAttribute/element"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xml.ecore#//XmlDocumentNode">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlDocumentNode/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlDocumentNode/excludeFromDocument"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlDocumentNode/minOccurs"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlDocumentNode/maxOccurs"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference xml.ecore#//XmlDocumentNode/xsdComponent"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference xml.ecore#//XmlDocumentNode/namespace"/>
+    </genClasses>
+    <genClasses ecoreClass="xml.ecore#//XmlRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference xml.ecore#//XmlRoot/fragment"/>
+    </genClasses>
+    <genClasses ecoreClass="xml.ecore#//XmlComment">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlComment/text"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference xml.ecore#//XmlComment/parent"/>
+    </genClasses>
+    <genClasses ecoreClass="xml.ecore#//XmlNamespace">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlNamespace/prefix"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlNamespace/uri"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference xml.ecore#//XmlNamespace/element"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xml.ecore#//XmlContainerNode">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlContainerNode/excludeFromDocument"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlContainerNode/minOccurs"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlContainerNode/maxOccurs"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference xml.ecore#//XmlContainerNode/xsdComponent"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference xml.ecore#//XmlContainerNode/parent"/>
+    </genClasses>
+    <genClasses ecoreClass="xml.ecore#//XmlSequence"/>
+    <genClasses ecoreClass="xml.ecore#//XmlAll"/>
+    <genClasses ecoreClass="xml.ecore#//XmlChoice">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlChoice/defaultErrorMode"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference xml.ecore#//XmlChoice/defaultOption"/>
+      <genOperations ecoreOperation="xml.ecore#//XmlChoice/getOrderedChoiceOptions"/>
+      <genOperations ecoreOperation="xml.ecore#//XmlChoice/setOrderedChoiceOptions">
+        <genParameters ecoreParameter="xml.ecore#//XmlChoice/setOrderedChoiceOptions/options"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xml.ecore#//XmlCommentHolder">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xml.ecore#//XmlCommentHolder/comments"/>
+    </genClasses>
+    <genClasses ecoreClass="xml.ecore#//ProcessingInstruction">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//ProcessingInstruction/rawText"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//ProcessingInstruction/target"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference xml.ecore#//ProcessingInstruction/parent"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xml.ecore#//ProcessingInstructionHolder">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xml.ecore#//ProcessingInstructionHolder/processingInstructions"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xml.ecore#//XmlElementHolder">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xml.ecore#//XmlElementHolder/elements"/>
+    </genClasses>
+    <genClasses ecoreClass="xml.ecore#//XmlFragmentUse">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference xml.ecore#//XmlFragmentUse/fragment"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xml.ecore#//XmlBaseElement">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference xml.ecore#//XmlBaseElement/parent"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xml.ecore#//XmlContainerHolder">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference xml.ecore#//XmlContainerHolder/containers"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xml.ecore#//ChoiceOption">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//ChoiceOption/choiceCriteria"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//ChoiceOption/choiceOrder"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference xml.ecore#//ChoiceOption/defaultFor"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xml.ecore#//XmlValueHolder">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlValueHolder/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlValueHolder/valueType"/>
+      <genOperations ecoreOperation="xml.ecore#//XmlValueHolder/isValueFixed"/>
+      <genOperations ecoreOperation="xml.ecore#//XmlValueHolder/isValueDefault"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="xml.ecore#//XmlBuildable">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute xml.ecore#//XmlBuildable/buildState"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

@@ -1,0 +1,39 @@
+/* ================================================================================== 
+ * JBoss, Home of Professional Open Source. 
+ * 
+ * Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ * 
+ * Some portions of this file may be copyrighted by other 
+ * contributors and licensed to Red Hat, Inc. under one or more 
+ * contributor license agreements. See the copyright.txt file in the 
+ * distribution for a full listing of individual contributors. 
+ * 
+ * This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0 
+ * which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html 
+ * ================================================================================== */ 
+
+package com.metamatrix.modeler.modelgenerator.xml.modelextension;
+
+import com.metamatrix.metamodels.relational.Column;
+import com.metamatrix.metamodels.relational.RelationalEntity;
+
+public interface XMLRequestResponseExtensionManager extends BaseXMLRelationalExtensionManager {
+
+	public abstract void setColumnRoleAttribute(Column column, Integer role);
+
+	public abstract void setColumnInputParamAttribute(Column column,
+			Boolean input);
+
+	public abstract void setXPathRootForInputAttribute(RelationalEntity table,
+			String xrfi_attribute_value);
+
+	public abstract void setColumnXPathForInput(Column relColumn, String xpath);
+
+	public abstract void setAllowEmptyInputElement(Column relCol,
+			boolean request);
+
+	public abstract void setMultipleValue(Column relColumn, Integer value);
+
+}

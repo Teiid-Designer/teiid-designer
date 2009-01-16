@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ######################################################################
+ # JBoss, Home of Professional Open Source.
+ # Copyright (C) 2008 Red Hat, Inc.
+ # Copyright (C) 2000-2007 MetaMatrix, Inc.
+ # Licensed to Red Hat, Inc. under one or more contributor
+ # license agreements.  See the copyright.txt file in the
+ # distribution for a full listing of individual contributors.
+ #
+ # This library is free software; you can redistribute it and/or
+ # modify it under the terms of the GNU Lesser General Public
+ # License as published by the Free Software Foundation; either
+ # version 2.1 of the License, or (at your option) any later version.
+ #
+ # This library is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ # Lesser General Public License for more details.
+ 
+ # You should have received a copy of the GNU Lesser General Public
+ # License along with this library; if not, write to the Free Software
+ # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ # 02110-1301 USA.
+ ###################################################################### -->
+<feature
+      id="com.metamatrix.modeler"
+      label="%featureName"
+      version="5.5.1"
+      provider-name="%providerName"
+      plugin="com.metamatrix.modeler"
+      image="feature.gif">
+
+   <description url="www.metamatrix.com">
+      %description
+   </description>
+
+   <copyright url="www.metamatrix.com">
+      %copyright
+   </copyright>
+
+   <license url="%licenseUrl">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://www.metamatrix.com/updatesite"/>
+   </url>
+
+   <requires>
+      <import feature="org.eclipse.emf" version="2.1.0"/>
+      <import feature="org.eclipse.emf.ecore.sdo" version="2.1.0"/>
+      <import feature="org.eclipse.gef" version="3.1.0"/>
+      <import feature="org.eclipse.platform" version="3.1.0"/>
+      <import feature="org.eclipse.uml2" version="1.1.0"/>
+      <import feature="org.eclipse.xsd" version="2.1.0"/>
+   </requires>
+
+   <plugin
+         id="com.metamatrix.modeler.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"
+         unpack="false"/>
+
+   <plugin
+         id="com.metamatrix.core"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.core.xslt"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.relational"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.core"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.core"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.ddl"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.jdbc"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.jdbc.relational"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.jdbc.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.common"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.common.xa"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.core.xml"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.diagram"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.atomikos"
+         download-size="0"
+         install-size="0"
+         version="2.1.0"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.transformation"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.query"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.query.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.vdb.edit"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="edu.oswego.util.concurrent"
+         download-size="0"
+         install-size="0"
+         version="1.3.4"/>
+
+   <plugin
+         id="org.beanshell"
+         download-size="0"
+         install-size="0"
+         version="2.0.4"/>
+
+   <plugin
+         id="org.bouncycastle_1.4"
+         download-size="0"
+         install-size="0"
+         version="1.2.2"/>
+
+   <plugin
+         id="com.metamatrix.modeler.team.metabase"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.common.comm"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metabase.platform"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metabase.repository.api"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.dependency"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.history"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.common.application"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.common.comm.platform"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metabase.repository"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.platform"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.db.platform"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="org.jaxen"
+         download-size="0"
+         install-size="0"
+         version="1.0.7"/>
+
+   <plugin
+         id="org.jdom"
+         download-size="0"
+         install-size="0"
+         version="0.7.0"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.dataaccess"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.function"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.xml"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.xsd"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.diagram.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.help"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.mapping"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.mapping.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.sdt"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.team.metabase.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.transformation"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.transformation.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.xml"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.xml.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.datadirect"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.gemini"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.license"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metabase.repository.tool"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.application"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.compare"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.query.function"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.gemini.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.relationship"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.relationship"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.relationship.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.xsd.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.uml2"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.modelgenerator"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.modelgenerator.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.compare.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.people"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="org.jgroups"
+         download-size="0"
+         install-size="0"
+         version="2.3.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.webservice"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.wsdl"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.webservice"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.webservice.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.vdb.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="org.antlr"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="com.metamatrix.core.index"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="org.eclipse.jdt.core"
+         download-size="0"
+         install-size="0"
+         version="3.1.0"/>
+
+   <plugin
+         id="org.eclipse.jdt.debug"
+         download-size="0"
+         install-size="0"
+         version="3.1.0"/>
+
+   <plugin
+         id="org.eclipse.jdt.launching"
+         download-size="0"
+         install-size="0"
+         version="3.1.0"/>
+
+   <plugin
+         id="com.metamatrix.admin"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="org.apache.xerces"
+         download-size="0"
+         install-size="0"
+         version="2.7.0"/>
+
+   <plugin
+         id="net.sf.saxon"
+         download-size="0"
+         install-size="0"
+         version="8.7.3"/>
+
+   <plugin
+         id="com.metamatrix.jdbc.api"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.dqp"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.dqp.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="net.sourceforge.sqlexplorer"
+         download-size="0"
+         install-size="0"
+         version="2.2.4"/>
+
+   <plugin
+         id="com.metamatrix.modeler.tools.textimport.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.relational.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="org.apache.commons.validator"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.apache.oro"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="com.mysql"
+         download-size="0"
+         install-size="0"
+         version="3.1.12"/>
+
+   <plugin
+         id="org.postgresql"
+         download-size="0"
+         install-size="0"
+         version="8.1.0"/>
+
+   <plugin
+         id="org.apache.derby"
+         download-size="0"
+         install-size="0"
+         version="10.1.2"/>
+
+   <plugin
+         id="com.metamatrix.modeler.modelgenerator.xml"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.mmquery.api"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.modelgenerator.uml2"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="org.apache.poi"
+         download-size="0"
+         install-size="0"
+         version="2.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.xmlservice"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.modelgenerator.xml"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.builder"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.metamodels.builder.execution"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.tools.genericimport.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.modelgenerator.wsdl"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.modelgenerator.wsdl.ui"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.schema.tools"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="com.metamatrix.modeler.xsd"
+         download-size="0"
+         install-size="0"
+         version="5.5.1"/>
+
+   <plugin
+         id="org.eclipse.wst.wsdl"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"/>
+
+   <plugin
+         id="org.wsdl4j"
+         download-size="0"
+         install-size="0"
+         version="1.4.0"/>
+
+</feature>

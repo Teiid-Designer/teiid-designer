@@ -1,0 +1,2273 @@
+
+(object Petal
+    version    	46
+    _written   	"Rose 7.7.0204.3001"
+    charSet    	0)
+
+(object Class_Category "vdb"
+    is_unit    	TRUE
+    is_loaded  	TRUE
+    attributes 	(list Attribute_Set
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"nsPrefix"
+	    value      	(value Text "vdb"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"nsURI"
+	    value      	(value Text "http://www.metamatrix.com/metamodels/VirtualDatabase"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"basePackage"
+	    value      	(value Text "com.metamatrix.vdb.edit"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"prefix"
+	    value      	(value Text ""))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"packageName"
+	    value      	(value Text "manifest")))
+    quid       	"3F60B2BF00C2"
+    exportControl 	"Public"
+    logical_models 	(list unit_reference_list
+	(object Class "VirtualDatabase"
+	    quid       	"3F60B36D03BB"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3F60B41F00F0"
+		    supplier   	"Logical View::vdb::ProblemMarkerContainer"
+		    quidu      	"3F60B3A90169"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "name"
+		    quid       	"3F60B4D40000"
+		    type       	"String")
+		(object ClassAttribute "identifier"
+		    quid       	"3F60B7340344"
+		    type       	"String")
+		(object ClassAttribute "uuid"
+		    quid       	"3F60B7860305"
+		    type       	"String")
+		(object ClassAttribute "description"
+		    quid       	"3F60B4DC0034"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "version"
+		    quid       	"3F60B4E00397"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "provider"
+		    quid       	"3F60B4EF026C"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "timeLastChanged"
+		    quid       	"3F60B4AA005A"
+		    type       	"String")
+		(object ClassAttribute "timeLastProduced"
+		    quid       	"3F60B4B90278"
+		    type       	"String")
+		(object ClassAttribute "timeLastChangedAsDate"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE))
+		    quid       	"3FD7312A03E0"
+		    type       	"JavaDate"
+		    quidu      	"3FD7317F01DA")
+		(object ClassAttribute "timeLastProducedAsDate"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE))
+		    quid       	"3FD7312B000C"
+		    type       	"JavaDate"
+		    quidu      	"3FD7317F01DA")
+		(object ClassAttribute "producerName"
+		    quid       	"3F60B5F50223"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "producerVersion"
+		    quid       	"3F60B5FE02D0"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "includeModelFiles"
+		    quid       	"3F6B0E54028A"
+		    type       	"boolean")))
+	(object Class "ModelReference"
+	    quid       	"3F60B37403BB"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3F60B42100FD"
+		    supplier   	"Logical View::vdb::ProblemMarkerContainer"
+		    quidu      	"3F60B3A90169")
+		(object Inheritance_Relationship
+		    quid       	"3FBE18B700FD"
+		    supplier   	"Logical View::core::ModelImport"
+		    quidu      	"3FBE17E702DE"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "version"
+		    quid       	"3F60B38803A6"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "uri"
+		    quid       	"3F60B9FC02C5"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "visible"
+		    quid       	"40FBF1BA01B5"
+		    type       	"boolean"
+		    initv      	"true")
+		(object ClassAttribute "accessibility"
+		    quid       	"412E0BC80171"
+		    type       	"ModelAccessibility"
+		    quidu      	"412E0BDF0138"
+		    initv      	"PUBLIC")
+		(object ClassAttribute "timeLastSynchronized"
+		    quid       	"4153292101BF"
+		    type       	"String")
+		(object ClassAttribute "timeLastSynchronizedAsDate"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE))
+		    quid       	"4153292E0240"
+		    type       	"JavaDate"
+		    quidu      	"3FD7317F01DA")
+		(object ClassAttribute "checksum"
+		    quid       	"41532E68026C"
+		    type       	"long")))
+	(object Class "ProblemMarkerContainer"
+	    quid       	"3F60B3A90169"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "severity"
+		    quid       	"3F60B6D80323"
+		    type       	"Severity"
+		    quidu      	"3F60B45102B5"))
+	    abstract   	TRUE)
+	(object Class "Severity"
+	    quid       	"3F60B45102B5"
+	    stereotype 	"enumeration"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "OK"
+		    quid       	"3F60B45E02D2"
+		    exportControl 	"Public")
+		(object ClassAttribute "INFO"
+		    quid       	"3F60B4800064"
+		    exportControl 	"Public")
+		(object ClassAttribute "WARNING"
+		    quid       	"3F60B48102B4"
+		    exportControl 	"Public")
+		(object ClassAttribute "ERROR"
+		    quid       	"3F60B48203D8"
+		    exportControl 	"Public")))
+	(object Class "ProblemMarker"
+	    quid       	"3F60B5520232"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "severity"
+		    quid       	"3F60B56300CE"
+		    type       	"Severity"
+		    quidu      	"3F60B45102B5")
+		(object ClassAttribute "message"
+		    quid       	"3F60B590001F"
+		    type       	"String")
+		(object ClassAttribute "target"
+		    quid       	"3F60B6270134"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "targetUri"
+		    quid       	"42FA6877037A"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "code"
+		    quid       	"3F6B0E960343"
+		    type       	"int")
+		(object ClassAttribute "stackTrace"
+		    quid       	"3F6B0F730084"
+		    stereotype 	"0..1"
+		    type       	"String")))
+	(object Class "ModelSource"
+	    quid       	"3F60C22103AA")
+	(object Class "ModelSourceProperty"
+	    quid       	"3F60C23100BE"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "name"
+		    quid       	"3F60C268022F"
+		    type       	"String")
+		(object ClassAttribute "value"
+		    quid       	"3F60C26B0284"
+		    type       	"String")))
+	(object Class "JavaDate"
+	    quid       	"3FD7317F01DA"
+	    stereotype 	"datatype"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "java.util.Date"
+		    quid       	"3FD7319102A8"
+		    stereotype 	"javaclass")))
+	(object Class "WsdlOptions"
+	    quid       	"412234E0031E"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "targetNamespaceUri"
+		    quid       	"412234EE009D"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "defaultNamespaceUri"
+		    quid       	"4122352E015D"
+		    stereotype 	"0..1"
+		    type       	"String")))
+	(object Class "ModelAccessibility"
+	    quid       	"412E0BDF0138"
+	    stereotype 	"enumeration"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "PUBLIC"
+		    quid       	"412E0BF20059"
+		    exportControl 	"Public")
+		(object ClassAttribute "PROTECTED"
+		    quid       	"412E0BF50339"
+		    exportControl 	"Public")
+		(object ClassAttribute "PRIVATE"
+		    quid       	"412E0BF80120"
+		    exportControl 	"Public")))
+	(object Class "NonModelReference"
+	    quid       	"42C0373C00F1"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "name"
+		    quid       	"42C037620125"
+		    type       	"String")
+		(object ClassAttribute "path"
+		    quid       	"42C03766034E"
+		    type       	"String")
+		(object ClassAttribute "checksum"
+		    quid       	"42C0386A0246"
+		    type       	"long")
+		(object ClassAttribute "properties"
+		    quid       	"42C0389B0346"
+		    type       	"EStringToStringMapEntry"
+		    quidu      	"3DA69D3C00F6")))
+	(object Association "$UNNAMED$0"
+	    quid       	"3F60B3B10323"
+	    roles      	(list role_list
+		(object Role "models"
+		    quid       	"3F60B3B20108"
+		    label      	"models"
+		    supplier   	"Logical View::vdb::ModelReference"
+		    quidu      	"3F60B37403BB"
+		    client_cardinality 	(value cardinality "0..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "virtualDatabase"
+		    quid       	"3F60B3B20109"
+		    label      	"virtualDatabase"
+		    supplier   	"Logical View::vdb::VirtualDatabase"
+		    quidu      	"3F60B36D03BB"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$1"
+	    quid       	"3F60B63C0383"
+	    roles      	(list role_list
+		(object Role "markers"
+		    quid       	"3F60B63D01A4"
+		    label      	"markers"
+		    supplier   	"Logical View::vdb::ProblemMarker"
+		    quidu      	"3F60B5520232"
+		    client_cardinality 	(value cardinality "0..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "marked"
+		    quid       	"3F60B63D01AE"
+		    label      	"marked"
+		    supplier   	"Logical View::vdb::ProblemMarkerContainer"
+		    quidu      	"3F60B3A90169"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$2"
+	    quid       	"3F60B9280068"
+	    roles      	(list role_list
+		(object Role "uses"
+		    quid       	"3F60B9290055"
+		    label      	"uses"
+		    supplier   	"Logical View::vdb::ModelReference"
+		    quidu      	"3F60B37403BB"
+		    client_cardinality 	(value cardinality "0..n")
+		    is_navigable 	TRUE)
+		(object Role "usedBy"
+		    quid       	"3F60B9290056"
+		    label      	"usedBy"
+		    supplier   	"Logical View::vdb::ModelReference"
+		    quidu      	"3F60B37403BB"
+		    client_cardinality 	(value cardinality "0..n")
+		    is_navigable 	TRUE)))
+	(object Association "$UNNAMED$3"
+	    quid       	"3F60C23B03D9"
+	    roles      	(list role_list
+		(object Role "properties"
+		    quid       	"3F60C23C0286"
+		    label      	"properties"
+		    supplier   	"Logical View::vdb::ModelSourceProperty"
+		    quidu      	"3F60C23100BE"
+		    client_cardinality 	(value cardinality "0..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "source"
+		    quid       	"3F60C23C0290"
+		    label      	"source"
+		    supplier   	"Logical View::vdb::ModelSource"
+		    quidu      	"3F60C22103AA"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$4"
+	    quid       	"3F60C8A100D1"
+	    roles      	(list role_list
+		(object Role "modelSource"
+		    quid       	"3F60C8A20259"
+		    label      	"modelSource"
+		    supplier   	"Logical View::vdb::ModelSource"
+		    quidu      	"3F60C22103AA"
+		    client_cardinality 	(value cardinality "0..1")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "model"
+		    quid       	"3F60C8A2025A"
+		    label      	"model"
+		    supplier   	"Logical View::vdb::ModelReference"
+		    quidu      	"3F60B37403BB"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$5"
+	    quid       	"3F6B0A2F01DA"
+	    roles      	(list role_list
+		(object Role "children"
+		    quid       	"3F6B0A31002E"
+		    label      	"children"
+		    supplier   	"Logical View::vdb::ProblemMarker"
+		    quidu      	"3F60B5520232"
+		    client_cardinality 	(value cardinality "0..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "parent"
+		    quid       	"3F6B0A31002F"
+		    label      	"parent"
+		    supplier   	"Logical View::vdb::ProblemMarker"
+		    quidu      	"3F60B5520232"
+		    client_cardinality 	(value cardinality "0..1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$6"
+	    quid       	"4122350101BD"
+	    roles      	(list role_list
+		(object Role "wsdlOptions"
+		    quid       	"412235020060"
+		    label      	"wsdlOptions"
+		    supplier   	"Logical View::vdb::WsdlOptions"
+		    quidu      	"412234E0031E"
+		    client_cardinality 	(value cardinality "0..1")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "virtualDatabase"
+		    quid       	"412235020061"
+		    label      	"virtualDatabase"
+		    supplier   	"Logical View::vdb::VirtualDatabase"
+		    quidu      	"3F60B36D03BB"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$7"
+	    quid       	"42C04F1D0109"
+	    roles      	(list role_list
+		(object Role "nonModels"
+		    quid       	"42C04F1E02AF"
+		    label      	"nonModels"
+		    supplier   	"Logical View::vdb::NonModelReference"
+		    quidu      	"42C0373C00F1"
+		    client_cardinality 	(value cardinality "0..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "virtualDatabase"
+		    quid       	"42C04F1E02B1"
+		    label      	"virtualDatabase"
+		    supplier   	"Logical View::vdb::VirtualDatabase"
+		    quidu      	"3F60B36D03BB"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE))))
+    logical_presentations 	(list unit_reference_list
+	(object ClassDiagram "Main"
+	    quid       	"3F60B36C0053"
+	    title      	"Main"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::vdb::Severity" @1
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2831, 2079)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@1
+			location   	(2669, 1945)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	324
+			justify    	0
+			label      	"Severity")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@1
+			location   	(2669, 1895)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	324
+			justify    	0
+			label      	"<<enumeration>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F60B45102B5"
+		    compartment 	(object Compartment
+			Parent_View 	@1
+			location   	(2669, 2006)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	5
+			max_width  	253)
+		    width      	342
+		    height     	392
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::vdb::ProblemMarkerContainer" @2
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(951, 528)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	TRUE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@2
+			location   	(711, 447)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	480
+			justify    	0
+			label      	"ProblemMarkerContainer")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F60B3A90169"
+		    compartment 	(object Compartment
+			Parent_View 	@2
+			location   	(711, 508)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	TRUE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	378)
+		    width      	498
+		    height     	186
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::vdb::ProblemMarker" @3
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2004, 350)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@3
+			location   	(1665, 144)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	678
+			justify    	0
+			label      	"ProblemMarker")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F60B5520232"
+		    compartment 	(object Compartment
+			Parent_View 	@3
+			location   	(1665, 205)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	7
+			max_width  	584)
+		    width      	696
+		    height     	436
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$1" @4
+		    location   	(1428, 481)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F60B63C0383"
+		    roleview_list 	(list RoleViews
+			(object RoleView "markers" @5
+			    Parent_View 	@4
+			    location   	(-84, 132)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @6
+				Parent_View 	@5
+				location   	(1569, 444)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	185
+				justify    	0
+				label      	"+markers"
+				pctDist    	0.619608
+				height     	38
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F60B63D01A4"
+			    client     	@4
+			    supplier   	@3
+			    vertices   	(list Points
+				(1428, 481)
+				(1428, 458)
+				(1656, 458))
+			    line_style 	3
+			    origin_attachment 	(1428, 481)
+			    terminal_attachment 	(1656, 458)
+			    label      	(object SegLabel @7
+				Parent_View 	@5
+				location   	(1616, 518)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..n"
+				pctDist    	0.827451
+				height     	37
+				orientation 	1))
+			(object RoleView "marked" @8
+			    Parent_View 	@4
+			    location   	(-84, 132)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @9
+				Parent_View 	@8
+				location   	(1311, 450)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	175
+				justify    	0
+				label      	"+marked"
+				pctDist    	0.515748
+				height     	32
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F60B63D01AE"
+			    client     	@4
+			    supplier   	@2
+			    line_style 	3
+			    origin_attachment 	(1428, 481)
+			    terminal_attachment 	(1200, 481)
+			    label      	(object SegLabel @10
+				Parent_View 	@8
+				location   	(1242, 523)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.821012
+				height     	42
+				orientation 	0))))
+		(object AssociationViewNew "$UNNAMED$5" @11
+		    location   	(2602, 300)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F6B0A2F01DA"
+		    roleview_list 	(list RoleViews
+			(object RoleView "children" @12
+			    Parent_View 	@11
+			    location   	(193, -256)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @13
+				Parent_View 	@12
+				location   	(2436, 363)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	165
+				justify    	0
+				label      	"+children"
+				pctDist    	0.757647
+				height     	31
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F6B0A31002E"
+			    client     	@11
+			    supplier   	@3
+			    vertices   	(list Points
+				(2602, 300)
+				(2602, 393)
+				(2352, 393))
+			    line_style 	3
+			    origin_attachment 	(2602, 300)
+			    terminal_attachment 	(2352, 393)
+			    label      	(object SegLabel @14
+				Parent_View 	@12
+				location   	(2393, 433)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..n"
+				pctDist    	0.883436
+				height     	40
+				orientation 	0))
+			(object RoleView "parent" @15
+			    Parent_View 	@11
+			    location   	(193, -256)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @16
+				Parent_View 	@15
+				location   	(2431, 239)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	141
+				justify    	0
+				label      	"+parent"
+				pctDist    	0.769412
+				height     	32
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F6B0A31002F"
+			    client     	@11
+			    supplier   	@3
+			    vertices   	(list Points
+				(2602, 300)
+				(2602, 207)
+				(2352, 207))
+			    line_style 	3
+			    origin_attachment 	(2602, 300)
+			    terminal_attachment 	(2352, 207)
+			    label      	(object SegLabel @17
+				Parent_View 	@15
+				location   	(2393, 147)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.883077
+				height     	61
+				orientation 	1))))
+		(object NoteView @18
+		    location   	(1024, 2346)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@18
+			location   	(746, 2193)
+			fill_color 	13434879
+			nlines     	6
+			max_width  	521
+			label      	"Used to capture the source properties for a model.  These may be used (at a later time) to create connector binding properties.")
+		    line_color 	3342489
+		    fill_color 	14342874
+		    width      	581
+		    height     	319)
+		(object NoteView @19
+		    location   	(2738, 647)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@19
+			location   	(2535, 544)
+			fill_color 	13434879
+			nlines     	4
+			max_width  	371
+			label      	"Records problems on the VDB and individual models.")
+		    line_color 	3342489
+		    fill_color 	14342874
+		    width      	431
+		    height     	218)
+		(object ClassView "Class" "Logical View::core::ModelImport" @20
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2046, 834)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@20
+			location   	(1665, 630)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	762
+			justify    	0
+			label      	"ModelImport")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3FBE17E702DE"
+		    compartment 	(object Compartment
+			Parent_View 	@20
+			location   	(1665, 735)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	6
+			max_width  	768)
+		    width      	780
+		    height     	432
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AttachView "" @21
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    client     	@3
+		    supplier   	@19
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::vdb::JavaDate" @22
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2717, 2442)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@22
+			location   	(2436, 2383)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	562
+			justify    	0
+			label      	"JavaDate")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@22
+			location   	(2436, 2333)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	562
+			justify    	0
+			label      	"<<datatype>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3FD7317F01DA"
+		    compartment 	(object Compartment
+			Parent_View 	@22
+			location   	(2436, 2444)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	2
+			max_width  	568)
+		    width      	580
+		    height     	242
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::vdb::ModelAccessibility" @23
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2821, 1640)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@23
+			location   	(2632, 1531)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	378
+			justify    	0
+			label      	"ModelAccessibility")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@23
+			location   	(2632, 1481)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	378
+			justify    	0
+			label      	"<<enumeration>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"412E0BDF0138"
+		    compartment 	(object Compartment
+			Parent_View 	@23
+			location   	(2632, 1592)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	4
+			max_width  	303)
+		    width      	396
+		    height     	342
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::vdb::ModelSourceProperty" @24
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1666, 2423)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@24
+			location   	(1456, 2317)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	420
+			justify    	0
+			label      	"ModelSourceProperty")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F60C23100BE"
+		    compartment 	(object Compartment
+			Parent_View 	@24
+			location   	(1456, 2378)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	3
+			max_width  	303)
+		    width      	438
+		    height     	236
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AttachView "" @25
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    client     	@24
+		    supplier   	@18
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::vdb::ModelSource" @26
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1649, 1967)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@26
+			location   	(1491, 1915)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	316
+			justify    	0
+			label      	"ModelSource")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F60C22103AA"
+		    width      	334
+		    height     	128
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$3" @27
+		    location   	(1654, 2167)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F60C23B03D9"
+		    roleview_list 	(list RoleViews
+			(object RoleView "properties" @28
+			    Parent_View 	@27
+			    location   	(848, 571)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @29
+				Parent_View 	@28
+				location   	(1782, 2266)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	218
+				justify    	0
+				label      	"+properties"
+				pctDist    	0.727273
+				height     	128
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F60C23C0286"
+			    client     	@27
+			    supplier   	@24
+			    line_style 	3
+			    origin_attachment 	(1654, 2167)
+			    terminal_attachment 	(1654, 2304)
+			    label      	(object SegLabel @30
+				Parent_View 	@28
+				location   	(1614, 2266)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..n"
+				pctDist    	0.727273
+				height     	41
+				orientation 	1))
+			(object RoleView "source" @31
+			    Parent_View 	@27
+			    location   	(848, 571)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @32
+				Parent_View 	@31
+				location   	(1754, 2068)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	145
+				justify    	0
+				label      	"+source"
+				pctDist    	0.734266
+				height     	100
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F60C23C0290"
+			    client     	@27
+			    supplier   	@26
+			    line_style 	3
+			    origin_attachment 	(1654, 2167)
+			    terminal_attachment 	(1654, 2031)
+			    label      	(object SegLabel @33
+				Parent_View 	@31
+				location   	(1617, 2068)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.734266
+				height     	38
+				orientation 	0))))
+		(object AttachView "" @34
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    client     	@26
+		    supplier   	@18
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::vdb::ModelReference" @35
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1735, 1496)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@35
+			location   	(1310, 1265)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	850
+			justify    	0
+			label      	"ModelReference")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F60B37403BB"
+		    compartment 	(object Compartment
+			Parent_View 	@35
+			location   	(1310, 1326)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	8
+			max_width  	856)
+		    width      	868
+		    height     	486
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$2" @36
+		    location   	(2452, 1498)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F60B9280068"
+		    roleview_list 	(list RoleViews
+			(object RoleView "uses" @37
+			    Parent_View 	@36
+			    location   	(1025, 425)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @38
+				Parent_View 	@37
+				location   	(2236, 1541)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	128
+				justify    	0
+				label      	"+uses"
+				pctDist    	0.813648
+				height     	30
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F60B9290055"
+			    client     	@36
+			    supplier   	@35
+			    vertices   	(list Points
+				(2452, 1498)
+				(2452, 1570)
+				(2169, 1570))
+			    line_style 	3
+			    origin_attachment 	(2452, 1498)
+			    terminal_attachment 	(2169, 1570)
+			    label      	(object SegLabel @39
+				Parent_View 	@37
+				location   	(2221, 1607)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..n"
+				pctDist    	0.854331
+				height     	37
+				orientation 	0))
+			(object RoleView "usedBy" @40
+			    Parent_View 	@36
+			    location   	(1025, 425)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @41
+				Parent_View 	@40
+				location   	(2247, 1402)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	176
+				justify    	0
+				label      	"+usedBy"
+				pctDist    	0.784974
+				height     	24
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F60B9290056"
+			    client     	@36
+			    supplier   	@35
+			    vertices   	(list Points
+				(2452, 1498)
+				(2452, 1425)
+				(2169, 1425))
+			    line_style 	3
+			    origin_attachment 	(2452, 1498)
+			    terminal_attachment 	(2169, 1425)
+			    label      	(object SegLabel @42
+				Parent_View 	@40
+				location   	(2205, 1457)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..n"
+				pctDist    	0.900262
+				height     	32
+				orientation 	0))))
+		(object AssociationViewNew "$UNNAMED$4" @43
+		    location   	(1626, 1820)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F60C8A100D1"
+		    roleview_list 	(list RoleViews
+			(object RoleView "modelSource" @44
+			    Parent_View 	@43
+			    location   	(199, 747)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @45
+				Parent_View 	@44
+				location   	(1774, 1885)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	269
+				justify    	0
+				label      	"+modelSource"
+				pctDist    	0.783626
+				height     	148
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F60C8A20259"
+			    client     	@43
+			    supplier   	@26
+			    line_style 	3
+			    origin_attachment 	(1626, 1820)
+			    terminal_attachment 	(1626, 1903)
+			    label      	(object SegLabel @46
+				Parent_View 	@44
+				location   	(1581, 1886)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.801170
+				height     	46
+				orientation 	1))
+			(object RoleView "model" @47
+			    Parent_View 	@43
+			    location   	(199, 747)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @48
+				Parent_View 	@47
+				location   	(1721, 1755)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	144
+				justify    	0
+				label      	"+model"
+				pctDist    	0.794118
+				height     	95
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F60C8A2025A"
+			    client     	@43
+			    supplier   	@35
+			    line_style 	3
+			    origin_attachment 	(1626, 1820)
+			    terminal_attachment 	(1626, 1738)
+			    label      	(object SegLabel @49
+				Parent_View 	@47
+				location   	(1592, 1757)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.776471
+				height     	35
+				orientation 	0))))
+		(object InheritView "" @50
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F60B42100FD"
+		    client     	@35
+		    supplier   	@2
+		    line_style 	0)
+		(object InheritView "" @51
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3FBE18B700FD"
+		    client     	@35
+		    supplier   	@20
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::vdb::WsdlOptions" @52
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(525, 1962)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@52
+			location   	(144, 1856)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	762
+			justify    	0
+			label      	"WsdlOptions")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"412234E0031E"
+		    compartment 	(object Compartment
+			Parent_View 	@52
+			location   	(144, 1917)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	3
+			max_width  	768)
+		    width      	780
+		    height     	236
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::vdb::NonModelReference" @53
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(458, 233)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@53
+			location   	(31, 77)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	854
+			justify    	0
+			label      	"NonModelReference")
+		    icon_style 	"Label"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"42C0373C00F1"
+		    compartment 	(object Compartment
+			Parent_View 	@53
+			location   	(31, 138)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Label"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	5
+			max_width  	734)
+		    width      	872
+		    height     	336
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::vdb::VirtualDatabase" @54
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(462, 1200)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@54
+			location   	(105, 819)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	714
+			justify    	0
+			label      	"VirtualDatabase")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F60B36D03BB"
+		    compartment 	(object Compartment
+			Parent_View 	@54
+			location   	(105, 880)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	14
+			max_width  	721)
+		    width      	732
+		    height     	786
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$0" @55
+		    location   	(1064, 1457)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F60B3B10323"
+		    roleview_list 	(list RoleViews
+			(object RoleView "models" @56
+			    Parent_View 	@55
+			    location   	(-448, 1108)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @57
+				Parent_View 	@56
+				location   	(1220, 1423)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	172
+				justify    	0
+				label      	"+models"
+				pctDist    	0.658273
+				height     	35
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F60B3B20108"
+			    client     	@55
+			    supplier   	@35
+			    line_style 	3
+			    origin_attachment 	(1064, 1457)
+			    terminal_attachment 	(1301, 1457)
+			    label      	(object SegLabel @58
+				Parent_View 	@56
+				location   	(1262, 1485)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..n"
+				pctDist    	0.838130
+				height     	28
+				orientation 	1))
+			(object RoleView "virtualDatabase" @59
+			    Parent_View 	@55
+			    location   	(-448, 1108)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @60
+				Parent_View 	@59
+				location   	(968, 1423)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	300
+				justify    	0
+				label      	"+virtualDatabase"
+				pctDist    	0.410072
+				height     	35
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F60B3B20109"
+			    client     	@55
+			    supplier   	@54
+			    line_style 	3
+			    origin_attachment 	(1064, 1457)
+			    terminal_attachment 	(828, 1457)
+			    label      	(object SegLabel @61
+				Parent_View 	@59
+				location   	(853, 1497)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.899281
+				height     	40
+				orientation 	0))))
+		(object InheritView "" @62
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F60B41F00F0"
+		    client     	@54
+		    supplier   	@2
+		    line_style 	0)
+		(object AssociationViewNew "$UNNAMED$6" @63
+		    location   	(503, 1718)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"4122350101BD"
+		    roleview_list 	(list RoleViews
+			(object RoleView "wsdlOptions" @64
+			    Parent_View 	@63
+			    location   	(52, 518)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @65
+				Parent_View 	@64
+				location   	(636, 1811)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	244
+				justify    	0
+				label      	"+wsdlOptions"
+				pctDist    	0.748201
+				height     	133
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"412235020060"
+			    client     	@63
+			    supplier   	@52
+			    line_style 	3
+			    origin_attachment 	(503, 1718)
+			    terminal_attachment 	(503, 1843)
+			    label      	(object SegLabel @66
+				Parent_View 	@64
+				location   	(451, 1808)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.717223
+				height     	53
+				orientation 	1))
+			(object RoleView "virtualDatabase" @67
+			    Parent_View 	@63
+			    location   	(52, 518)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @68
+				Parent_View 	@67
+				location   	(329, 1621)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	300
+				justify    	0
+				label      	"+virtualDatabase"
+				pctDist    	0.782609
+				height     	175
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"412235020061"
+			    client     	@63
+			    supplier   	@54
+			    line_style 	3
+			    origin_attachment 	(503, 1718)
+			    terminal_attachment 	(503, 1593)
+			    label      	(object SegLabel @69
+				Parent_View 	@67
+				location   	(538, 1632)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.698331
+				height     	35
+				orientation 	1))))
+		(object AssociationViewNew "$UNNAMED$7" @70
+		    location   	(459, 603)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"42C04F1D0109"
+		    roleview_list 	(list RoleViews
+			(object RoleView "nonModels" @71
+			    Parent_View 	@70
+			    location   	(8, -597)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @72
+				Parent_View 	@71
+				location   	(320, 435)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	228
+				justify    	0
+				label      	"+nonModels"
+				pctDist    	0.835069
+				height     	138
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"42C04F1E02AF"
+			    client     	@70
+			    supplier   	@53
+			    line_style 	0
+			    label      	(object SegLabel @73
+				Parent_View 	@71
+				location   	(512, 421)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..n"
+				pctDist    	0.900000
+				height     	54
+				orientation 	1))
+			(object RoleView "virtualDatabase" @74
+			    Parent_View 	@70
+			    location   	(8, -597)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @75
+				Parent_View 	@74
+				location   	(302, 724)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	300
+				justify    	0
+				label      	"+virtualDatabase"
+				pctDist    	0.595001
+				height     	159
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"42C04F1E02B1"
+			    client     	@70
+			    supplier   	@54
+			    line_style 	0
+			    label      	(object SegLabel @76
+				Parent_View 	@74
+				location   	(505, 738)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.666125
+				height     	45
+				orientation 	0))))))
+	(object ClassDiagram "Inheritance"
+	    quid       	"3F6B10C4011F"
+	    title      	"Inheritance"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::vdb::VirtualDatabase" @77
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1048, 669)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@77
+			location   	(890, 628)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	316
+			justify    	0
+			label      	"VirtualDatabase")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F60B36D03BB"
+		    width      	334
+		    height     	107
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::vdb::ModelReference" @78
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1507, 669)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@78
+			location   	(1339, 628)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	336
+			justify    	0
+			label      	"ModelReference")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F60B37403BB"
+		    width      	354
+		    height     	107
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::vdb::ProblemMarkerContainer" @79
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1241, 419)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	TRUE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@79
+			location   	(1002, 378)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	478
+			justify    	0
+			label      	"ProblemMarkerContainer")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F60B3A90169"
+		    width      	496
+		    height     	107
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @80
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F60B41F00F0"
+		    client     	@77
+		    supplier   	@79
+		    line_style 	0)
+		(object InheritView "" @81
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F60B42100FD"
+		    client     	@78
+		    supplier   	@79
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::core::ModelImport" @82
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1809, 421)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@82
+			location   	(1680, 371)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	258
+			justify    	0
+			label      	"ModelImport")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3FBE17E702DE"
+		    width      	276
+		    height     	124
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @83
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3FBE18B700FD"
+		    client     	@78
+		    supplier   	@82
+		    line_style 	0)))))

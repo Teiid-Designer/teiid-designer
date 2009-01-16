@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2000-2008 MetaMatrix Corporation.  All rights reserved."
+    modelDirectory="/com.metamatrix.metamodels.core/src" editDirectory="/com.metamatrix.metamodels.core/src"
+    editorDirectory="/com.metamatrix.metamodels.core.edit/src" modelPluginID="com.metamatrix.metamodels.core"
+    modelName="Extension" editPluginClass="com.metamatrix.metamodels.core.extension.provider.ExtensionEditPlugin"
+    editorPluginClass="com.metamatrix.metamodels.core.extension.presentation.ExtensionEditorPlugin"
+    nonNLSMarkers="true" runtimeCompatibility="true" testSuiteClass="com.metamatrix.metamodels.core.extension.tests.ExtensionAllTests"
+    importerID="org.eclipse.emf.importer.rose" providerRootExtendsClass="" runtimeVersion="2.4"
+    usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+  <foreignModel>E:\Plugins\current\plugins\com.metamatrix.metamodels\models\Extension.mdl</foreignModel>
+  <genPackages prefix="Extension" basePackage="com.metamatrix.metamodels.core" disposableProviderFactory="true"
+      ecorePackage="extension.ecore#/">
+    <genClasses ecoreClass="extension.ecore#//XClass">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference extension.ecore#//XClass/extendedClass"/>
+    </genClasses>
+    <genClasses ecoreClass="extension.ecore#//XPackage">
+      <genOperations ecoreOperation="extension.ecore#//XPackage/findXClass">
+        <genParameters ecoreParameter="extension.ecore#//XPackage/findXClass/extendedClass"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="extension.ecore#//XAttribute"/>
+    <genClasses ecoreClass="extension.ecore#//XEnum"/>
+    <genClasses ecoreClass="extension.ecore#//XEnumLiteral"/>
+  </genPackages>
+</genmodel:GenModel>

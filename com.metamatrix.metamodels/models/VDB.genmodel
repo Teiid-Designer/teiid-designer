@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2000-2005 MetaMatrix Corporation.  All rights reserved."
+    modelDirectory="/com.metamatrix.vdb.edit/src" editDirectory="/com.metamatrix.vdb.edit/src"
+    editorDirectory="/com.metamatrix.vdb.editor/src" modelPluginID="com.metamatrix.vdb.edit"
+    modelName="Manifest" nonNLSMarkers="true" runtimeCompatibility="true" importerID="org.eclipse.emf.importer.rose"
+    usedGenPackages="Core.genmodel#//core ../../../plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore Extension.genmodel#//extension">
+  <foreignModel>VDB.mdl</foreignModel>
+  <genPackages prefix="Manifest" basePackage="com.metamatrix.vdb.edit" disposableProviderFactory="true"
+      ecorePackage="manifest.ecore#/">
+    <genEnums ecoreEnum="manifest.ecore#//Severity">
+      <genEnumLiterals ecoreEnumLiteral="manifest.ecore#//Severity/OK"/>
+      <genEnumLiterals ecoreEnumLiteral="manifest.ecore#//Severity/INFO"/>
+      <genEnumLiterals ecoreEnumLiteral="manifest.ecore#//Severity/WARNING"/>
+      <genEnumLiterals ecoreEnumLiteral="manifest.ecore#//Severity/ERROR"/>
+    </genEnums>
+    <genEnums ecoreEnum="manifest.ecore#//ModelAccessibility">
+      <genEnumLiterals ecoreEnumLiteral="manifest.ecore#//ModelAccessibility/PUBLIC"/>
+      <genEnumLiterals ecoreEnumLiteral="manifest.ecore#//ModelAccessibility/PROTECTED"/>
+      <genEnumLiterals ecoreEnumLiteral="manifest.ecore#//ModelAccessibility/PRIVATE"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="manifest.ecore#//JavaDate"/>
+    <genClasses ecoreClass="manifest.ecore#//VirtualDatabase">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//VirtualDatabase/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//VirtualDatabase/identifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//VirtualDatabase/uuid"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//VirtualDatabase/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//VirtualDatabase/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//VirtualDatabase/provider"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//VirtualDatabase/timeLastChanged"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//VirtualDatabase/timeLastProduced"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//VirtualDatabase/timeLastChangedAsDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//VirtualDatabase/timeLastProducedAsDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//VirtualDatabase/producerName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//VirtualDatabase/producerVersion"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//VirtualDatabase/includeModelFiles"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference manifest.ecore#//VirtualDatabase/models"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference manifest.ecore#//VirtualDatabase/wsdlOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference manifest.ecore#//VirtualDatabase/nonModels"/>
+    </genClasses>
+    <genClasses ecoreClass="manifest.ecore#//ModelReference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ModelReference/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ModelReference/uri"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ModelReference/visible"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ModelReference/accessibility"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ModelReference/timeLastSynchronized"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ModelReference/timeLastSynchronizedAsDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ModelReference/checksum"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference manifest.ecore#//ModelReference/virtualDatabase"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference manifest.ecore#//ModelReference/uses"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference manifest.ecore#//ModelReference/usedBy"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference manifest.ecore#//ModelReference/modelSource"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="manifest.ecore#//ProblemMarkerContainer">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ProblemMarkerContainer/severity"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference manifest.ecore#//ProblemMarkerContainer/markers"/>
+    </genClasses>
+    <genClasses ecoreClass="manifest.ecore#//ProblemMarker">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ProblemMarker/severity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ProblemMarker/message"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ProblemMarker/target"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ProblemMarker/targetUri"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ProblemMarker/code"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ProblemMarker/stackTrace"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference manifest.ecore#//ProblemMarker/marked"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference manifest.ecore#//ProblemMarker/children"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference manifest.ecore#//ProblemMarker/parent"/>
+    </genClasses>
+    <genClasses ecoreClass="manifest.ecore#//ModelSource">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference manifest.ecore#//ModelSource/properties"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference manifest.ecore#//ModelSource/model"/>
+    </genClasses>
+    <genClasses ecoreClass="manifest.ecore#//ModelSourceProperty">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ModelSourceProperty/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//ModelSourceProperty/value"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference manifest.ecore#//ModelSourceProperty/source"/>
+    </genClasses>
+    <genClasses ecoreClass="manifest.ecore#//WsdlOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//WsdlOptions/targetNamespaceUri"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//WsdlOptions/defaultNamespaceUri"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference manifest.ecore#//WsdlOptions/virtualDatabase"/>
+    </genClasses>
+    <genClasses ecoreClass="manifest.ecore#//NonModelReference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//NonModelReference/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//NonModelReference/path"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manifest.ecore#//NonModelReference/checksum"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference manifest.ecore#//NonModelReference/properties"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference manifest.ecore#//NonModelReference/virtualDatabase"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

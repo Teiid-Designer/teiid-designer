@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<schema targetNamespace="http://schemas.xmlsoap.org/wsdl/http/" 
+	xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+	xmlns="http://www.w3.org/2001/XMLSchema">
+	<element name="address" type="http:addressType"/>
+	<complexType name="addressType">
+		<attribute name="location" type="anyURI" use="required"/>
+	</complexType>
+	<element name="binding" type="http:bindingType"/>
+	<complexType name="bindingType">
+		<attribute name="verb" type="NMTOKEN" use="required"/>
+	</complexType>
+	<element name="operation" type="http:operationType"/>
+	<complexType name="operationType">
+		<attribute name="location" type="anyURI" use="required"/>
+	</complexType>
+	<element name="urlEncoded">
+		<complexType/>
+	</element>
+	<element name="urlReplacement">
+		<complexType/>
+	</element>
+</schema>

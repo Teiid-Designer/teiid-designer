@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2000-2005 MetaMatrix Corporation.  All rights reserved."
+    modelDirectory="/com.metamatrix.metamodels.dqp/src" editDirectory="/com.metamatrix.metamodels.dqp/src"
+    editorDirectory="" modelPluginID="com.metamatrix.metamodels.dqp" modelName="DQP"
+    editPluginClass="com.metamatrix.metamodels.dqp.provider.DQPEditPlugin" editorPluginClass=""
+    generateSchema="true" nonNLSMarkers="true">
+  <foreignModel>E:\Plugins\current\plugins\com.metamatrix.metamodels\models\DQP.mdl</foreignModel>
+  <genPackages prefix="Dqp" basePackage="com.metamatrix.metamodels" ecorePackage="DQP.ecore#/">
+    <genEnums ecoreEnum="DQP.ecore#//PropertyForm">
+      <genEnumLiterals ecoreEnumLiteral="DQP.ecore#//PropertyForm/NORMAL"/>
+      <genEnumLiterals ecoreEnumLiteral="DQP.ecore#//PropertyForm/EXPERT"/>
+      <genEnumLiterals ecoreEnumLiteral="DQP.ecore#//PropertyForm/HIDDEN"/>
+    </genEnums>
+    <genEnums ecoreEnum="DQP.ecore#//VDBStatus">
+      <genEnumLiterals ecoreEnumLiteral="DQP.ecore#//VDBStatus/ACTIVE"/>
+      <genEnumLiterals ecoreEnumLiteral="DQP.ecore#//VDBStatus/INACTIVE"/>
+    </genEnums>
+    <genEnums ecoreEnum="DQP.ecore#//ModelVisibility">
+      <genEnumLiterals ecoreEnumLiteral="DQP.ecore#//ModelVisibility/PUBLIC"/>
+      <genEnumLiterals ecoreEnumLiteral="DQP.ecore#//ModelVisibility/PRIVATE"/>
+    </genEnums>
+    <genClasses ecoreClass="DQP.ecore#//EmbeddedConfiguration">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DQP.ecore#//EmbeddedConfiguration/components"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DQP.ecore#//EmbeddedConfiguration/metadata"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DQP.ecore#//EmbeddedConfiguration/data"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//EmbeddedConfiguration/formatVersion"/>
+    </genClasses>
+    <genClasses ecoreClass="DQP.ecore#//DQP">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//DQP/owner"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//DQP/maxThreads"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//DQP/processorThreadTTL"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//DQP/processorTimeslice"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//DQP/maxCodeTables"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//DQP/maxCodeTableRecords"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//DQP/minFetchSize"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//DQP/maxFetchSize"/>
+    </genClasses>
+    <genClasses ecoreClass="DQP.ecore#//ConnectorManager">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//ConnectorManager/dataSourceSpecifications"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//ConnectorManager/owner"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//ConnectorManager/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//ConnectorManager/maxThreads"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//ConnectorManager/processorThreadTTL"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//ConnectorManager/maxResultRows"/>
+    </genClasses>
+    <genClasses ecoreClass="DQP.ecore#//Service">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//Service/usedBy"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//Service/owner"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//Service/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//Service/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//Service/className"/>
+    </genClasses>
+    <genClasses ecoreClass="DQP.ecore#//Property">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//Property/owner"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//Property/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//Property/value"/>
+    </genClasses>
+    <genClasses ecoreClass="DQP.ecore#//VDB">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DQP.ecore#//VDB/modelInfos"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//VDB/owner"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//VDB/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//VDB/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//VDB/status"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//VDB/metadataResource"/>
+    </genClasses>
+    <genClasses ecoreClass="DQP.ecore#//ModelInfo">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//ModelInfo/vdb"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//ModelInfo/dataSource"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//ModelInfo/model"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//ModelInfo/visibility"/>
+    </genClasses>
+    <genClasses ecoreClass="DQP.ecore#//ConnectorType">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//ConnectorType/dataSourceSpecifications"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DQP.ecore#//ConnectorType/propertyDefinitions"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//ConnectorType/owner"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//ConnectorType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//ConnectorType/className"/>
+    </genClasses>
+    <genClasses ecoreClass="DQP.ecore#//PropertyContainer">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DQP.ecore#//PropertyContainer/properties"/>
+    </genClasses>
+    <genClasses ecoreClass="DQP.ecore#//ServiceUser">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//ServiceUser/uses"/>
+    </genClasses>
+    <genClasses ecoreClass="DQP.ecore#//PropertyDefinition">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//PropertyDefinition/connectorType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//PropertyDefinition/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//PropertyDefinition/displayName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//PropertyDefinition/category"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//PropertyDefinition/defaultValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//PropertyDefinition/required"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//PropertyDefinition/masked"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//PropertyDefinition/form"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//PropertyDefinition/tooltip"/>
+    </genClasses>
+    <genClasses ecoreClass="DQP.ecore#//DataSourceSpecification">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//DataSourceSpecification/connectorType"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//DataSourceSpecification/modelInfos"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//DataSourceSpecification/connectorManagers"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//DataSourceSpecification/owner"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DQP.ecore#//DataSourceSpecification/name"/>
+    </genClasses>
+    <genClasses ecoreClass="DQP.ecore#//Data">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DQP.ecore#//Data/connectorTypes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DQP.ecore#//Data/dataSources"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//Data/configuration"/>
+    </genClasses>
+    <genClasses ecoreClass="DQP.ecore#//Components">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DQP.ecore#//Components/connectorManagers"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DQP.ecore#//Components/dqp"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DQP.ecore#//Components/services"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//Components/configuration"/>
+    </genClasses>
+    <genClasses ecoreClass="DQP.ecore#//Metadata">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DQP.ecore#//Metadata/vdbs"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference DQP.ecore#//Metadata/configuration"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

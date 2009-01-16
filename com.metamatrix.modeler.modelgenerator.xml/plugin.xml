@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+ 
+<!-- =============================================================================== 
+ # JBoss, Home of Professional Open Source. 
+ # 
+ # Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ # 
+ # Some portions of this file may be copyrighted by other 
+ # contributors and licensed to Red Hat, Inc. under one or more 
+ # contributor license agreements. See the copyright.txt file in the 
+ # distribution for a full listing of individual contributors. 
+ # 
+ # This program and the accompanying materials 
+ # are made available under the terms of the Eclipse Public License v1.0 
+ # which accompanies this distribution, and is available at 
+ # http://www.eclipse.org/legal/epl-v10.html 
+ # ================================================================================== --> 
+
+<plugin>
+     <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            name="%importXsdAsRelationalWizard.name"
+            icon="icons/full/ctool16/newmodel_wiz.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.modelgenerator.xml.wizards.XsdAsRelationalImportWizard"
+            id="com.metamatrix.modeler.modelgenerator.xml.wizards.XsdAsRelationalImportWizard">
+         <description>
+            %importXsdAsRelationalWizard.description
+         </description>
+      </wizard>
+   </extension>
+   
+<!-- Define the model processor for the xml-as-relational drivers -->
+   <extension
+         id="xmlSchemaAsRelationalModelProcessor"
+         name="XML Schema As Relational Model Processor"
+         point="com.metamatrix.modeler.jdbc.relational.modelProcessor">
+      <driverClass
+            name="com.metamatrix.modeler.modelgenerator.xml.wizards.jdbc.XmlImporterJdbcDriver">
+      </driverClass>
+      <processorClass
+            name="com.metamatrix.modeler.modelgenerator.xml.wizards.jdbc.XmlSchemaAsRelationalModelProcessor">
+      </processorClass>
+   </extension>
+
+<!-- Modeler preferences -->
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="%modelerXmlAsRelationalPreferences"
+            category="com.metamatrix.modeler.ui.preferences.modelerPreferencePage"
+            class="com.metamatrix.modeler.modelgenerator.xml.wizards.PreferencePage"
+            id="com.metamatrix.modeler.modelgenerator.xml.wizards.PreferencePage">
+      </page>
+   </extension>
+   <extension
+         id="com.metamatrix.modeler.modelgenerator.xml.modelextension.FileExtensionReplaceAction"
+		 name="%fileExtensionReplaceAction.name"
+         point="com.metamatrix.modeler.ui.modelResourceAction">
+      <resourceAction
+            label="%fileExtensionReplaceAction.label"
+            name="com.metamatrix.modeler.modelgenerator.xml.modelextension.FileExtensionReplaceAction">
+      </resourceAction>
+   </extension>
+   
+      <extension
+         id="com.metamatrix.modeler.modelgenerator.xml.modelextension.HTTPExtensionReplaceAction"
+		 name="%httpExtensionReplaceAction.name"
+         point="com.metamatrix.modeler.ui.modelResourceAction">
+      <resourceAction
+            label="%httpExtensionReplaceAction.label"
+            name="com.metamatrix.modeler.modelgenerator.xml.modelextension.HTTPExtensionReplaceAction">
+      </resourceAction>
+   </extension>
+</plugin>

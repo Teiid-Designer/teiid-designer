@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+ 
+<!-- =============================================================================== 
+ # JBoss, Home of Professional Open Source. 
+ # 
+ # Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ # 
+ # Some portions of this file may be copyrighted by other 
+ # contributors and licensed to Red Hat, Inc. under one or more 
+ # contributor license agreements. See the copyright.txt file in the 
+ # distribution for a full listing of individual contributors. 
+ # 
+ # This program and the accompanying materials 
+ # are made available under the terms of the Eclipse Public License v1.0 
+ # which accompanies this distribution, and is available at 
+ # http://www.eclipse.org/legal/epl-v10.html 
+ # ================================================================================== --> 
+
+<plugin>
+
+    
+<!-- Web Services New Model Wizard Contributor -->
+   <extension
+         id="webServiceModelWizard"
+         name="%webServiceModelWizard"
+         point="com.metamatrix.modeler.ui.newModelWizardContributor">
+      <class
+            name="com.metamatrix.modeler.internal.webservice.ui.wizard.WebServiceModelContributor"
+            icon="platform:/plugin/com.metamatrix.modeler.ui/icons/full/ctool16/newmodel_wiz.gif">
+      </class>
+      <metamodelDescriptorType
+            name="http://www.metamatrix.com/metamodels/WebService"
+            isPhysical="false"
+            isVirtual="true">
+      </metamodelDescriptorType>
+   </extension>
+<!-- Actions contributed to the object/model generation -->
+   <extension
+		id="com.metamatrix.modeler.webservice.ui.actions.GenerateWebServiceModelAction2"
+		name="%generateWebServiceModelAction2.name"
+        point="com.metamatrix.modeler.ui.modelObjectSpecialAction">
+      <specialAction
+         name="com.metamatrix.modeler.webservice.ui.actions.GenerateWebServiceModelAction2"
+         label="%generateWebServiceModelAction2.label">
+      </specialAction>
+   </extension>
+
+<!-- Context Help Infopops -->
+	<extension point="org.eclipse.help.contexts">
+		<contexts file="helpContexts.xml"  />
+	</extension>
+<extension
+       point="org.eclipse.ui.views">
+    <category
+          id="com.metamatrix.modeler.webservice.ui.advisor"
+          name="%advisorViewCategory"/>
+ </extension>
+
+<!-- Special IMarker used to show VDB execution errors -->
+   <extension
+      id="vdbExecutionMarker" 
+      point="org.eclipse.core.resources.markers" 
+      name="%vdbExecutionMarker.name">
+      <super type="org.eclipse.core.resources.problemmarker"/>
+      <attribute name="ValidationCode" />
+      <attribute name="vdbPath" />
+      <persistent value="true"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            name="%wsdlFileSystemImportWizard.name"
+            icon="icons/full/ctool16/import_wsdl.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.internal.webservice.ui.wizard.WsdlFileSystemImportWizard"
+            id="com.metamatrix.modeler.internal.webservice.ui.wizard.wsdlFileSystemImportWizard">
+         <description>
+            %wsdlFileSystemImportWizard.description
+         </description>
+      </wizard>
+   </extension>
+
+   <extension
+         id="operationEditorPage"
+         point="com.metamatrix.modeler.ui.modelEditorPage">
+      <class
+            name="com.metamatrix.modeler.webservice.ui.editor.OperationEditorPage"
+            order="5"
+            tabName="%operationEditor.tabName"/>
+   </extension>
+   <extension
+         id="operationObjectEditorPage"
+         point="com.metamatrix.modeler.ui.modelObjectEditorPage">
+      <class
+            name="com.metamatrix.modeler.webservice.ui.editor.OperationObjectEditorPage">
+      </class>
+   </extension>
+   <!-- Helper method to allow external edit for objects. i.e. Delete, Copy, etc.. -->
+   <extension
+         id="webServiceObjectEditHelper"
+         name="%webServiceObjectEditHelper"
+         point="com.metamatrix.modeler.ui.modelObjectEditHelper">
+      <class
+        name="com.metamatrix.modeler.webservice.ui.actions.WebServiceObjectEditHelper">
+      </class>
+   </extension>
+
+</plugin>

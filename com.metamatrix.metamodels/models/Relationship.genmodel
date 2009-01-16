@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2000-2005 MetaMatrix Corporation.  All rights reserved."
+    modelDirectory="/com.metamatrix.metamodels.relationship/src" editDirectory="/com.metamatrix.metamodels.relationship/src"
+    editorDirectory="/com.metamatrix.metamodels.editor/src" modelPluginID="com.metamatrix.metamodels.relationship"
+    modelName="Relationship" editPluginClass="com.metamatrix.metamodels.relationship.provider.RelationshipEditPlugin"
+    editorPluginClass="com.metamatrix.metamodels.relationship.presentation.RelationshipEditorPlugin"
+    updateClasspath="false" generateSchema="true" nonNLSMarkers="true" testsDirectory="/com.metamatrix.metamodels.tests/src"
+    testSuiteClass="com.metamatrix.metamodels.relationship.tests.RelationshipAllTests"
+    usedGenPackages="../../org.eclipse.emf.ecore/src/model/Ecore.genmodel#//ecore">
+  <foreignModel>Relationship.mdl</foreignModel>
+  <genPackages prefix="Relationship" basePackage="com.metamatrix.metamodels" ecorePackage="relationship.ecore#/">
+    <genEnums ecoreEnum="relationship.ecore#//RelationshipTypeStatus">
+      <genEnumLiterals ecoreEnumLiteral="relationship.ecore#//RelationshipTypeStatus/PROTOTYPE"/>
+      <genEnumLiterals ecoreEnumLiteral="relationship.ecore#//RelationshipTypeStatus/STANDARD"/>
+      <genEnumLiterals ecoreEnumLiteral="relationship.ecore#//RelationshipTypeStatus/DEPRECATED"/>
+      <genEnumLiterals ecoreEnumLiteral="relationship.ecore#//RelationshipTypeStatus/INVALID"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="relationship.ecore#//IStatus"/>
+    <genDataTypes ecoreDataType="relationship.ecore#//List"/>
+    <genClasses ecoreClass="relationship.ecore#//RelationshipType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipType/directed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipType/exclusive"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipType/crossModel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipType/abstract"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipType/userDefined"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipType/status"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipType/stereotype"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipType/constraint"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipType/label"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipType/oppositeLabel"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relationship.ecore#//RelationshipType/relationshipFeatures"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relationship.ecore#//RelationshipType/superType"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relationship.ecore#//RelationshipType/subType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relationship.ecore#//RelationshipType/roles"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relationship.ecore#//RelationshipType/owner"/>
+      <genOperations ecoreOperation="relationship.ecore#//RelationshipType/getSourceRole"/>
+      <genOperations ecoreOperation="relationship.ecore#//RelationshipType/getTargetRole"/>
+      <genOperations ecoreOperation="relationship.ecore#//RelationshipType/getAllRelationshipFeatures"/>
+    </genClasses>
+    <genClasses ecoreClass="relationship.ecore#//RelationshipEntity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipEntity/name"/>
+      <genOperations ecoreOperation="relationship.ecore#//RelationshipEntity/isValid"/>
+    </genClasses>
+    <genClasses ecoreClass="relationship.ecore#//Relationship">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relationship.ecore#//Relationship/featureValues"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relationship.ecore#//Relationship/targets"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relationship.ecore#//Relationship/sources"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relationship.ecore#//Relationship/type"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relationship.ecore#//Relationship/relationshipContainer"/>
+      <genOperations ecoreOperation="relationship.ecore#//Relationship/getSourceRole"/>
+      <genOperations ecoreOperation="relationship.ecore#//Relationship/getTargetRole"/>
+    </genClasses>
+    <genClasses ecoreClass="relationship.ecore#//FileReference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//FileReference/toolName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//FileReference/toolVersion"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//FileReference/formatName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//FileReference/formatVersion"/>
+      <genOperations ecoreOperation="relationship.ecore#//FileReference/getDisplayableName"/>
+    </genClasses>
+    <genClasses ecoreClass="relationship.ecore#//RelationshipRole">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipRole/stereotype"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipRole/ordered"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipRole/unique"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipRole/navigable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipRole/lowerBound"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipRole/upperBound"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//RelationshipRole/constraint"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relationship.ecore#//RelationshipRole/relationshipType"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference relationship.ecore#//RelationshipRole/oppositeRole"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relationship.ecore#//RelationshipRole/includeTypes"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relationship.ecore#//RelationshipRole/excludeTypes"/>
+      <genOperations ecoreOperation="relationship.ecore#//RelationshipRole/isSourceRole"/>
+      <genOperations ecoreOperation="relationship.ecore#//RelationshipRole/isTargetRole"/>
+      <genOperations ecoreOperation="relationship.ecore#//RelationshipRole/isValidParticipant">
+        <genParameters ecoreParameter="relationship.ecore#//RelationshipRole/isValidParticipant/participant"/>
+      </genOperations>
+      <genOperations ecoreOperation="relationship.ecore#//RelationshipRole/isValidParticipant.1">
+        <genParameters ecoreParameter="relationship.ecore#//RelationshipRole/isValidParticipant.1/participantType"/>
+      </genOperations>
+      <genOperations ecoreOperation="relationship.ecore#//RelationshipRole/isAllowed">
+        <genParameters ecoreParameter="relationship.ecore#//RelationshipRole/isAllowed/type"/>
+      </genOperations>
+      <genOperations ecoreOperation="relationship.ecore#//RelationshipRole/isAllowed.1">
+        <genParameters ecoreParameter="relationship.ecore#//RelationshipRole/isAllowed.1/particpant"/>
+      </genOperations>
+      <genOperations ecoreOperation="relationship.ecore#//RelationshipRole/getOverriddenRole"/>
+    </genClasses>
+    <genClasses ecoreClass="relationship.ecore#//PlaceholderReference">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relationship.ecore#//PlaceholderReference/PlaceholderReferenceContainer"/>
+      <genOperations ecoreOperation="relationship.ecore#//PlaceholderReference/getDisplayableName"/>
+    </genClasses>
+    <genClasses ecoreClass="relationship.ecore#//PlaceholderReferenceContainer">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relationship.ecore#//PlaceholderReferenceContainer/placeholders"/>
+    </genClasses>
+    <genClasses ecoreClass="relationship.ecore#//UriReference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//UriReference/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//UriReference/uri"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//UriReference/resolvable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//UriReference/encoding"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//UriReference/abstract"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//UriReference/keywords"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relationship.ecore#//UriReference/relatedUris"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relationship.ecore#//UriReference/properties"/>
+      <genOperations ecoreOperation="relationship.ecore#//UriReference/getDisplayableName"/>
+    </genClasses>
+    <genClasses ecoreClass="relationship.ecore#//RelationshipFolder">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relationship.ecore#//RelationshipFolder/ownedRelationshipTypes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relationship.ecore#//RelationshipFolder/ownedRelationshipFolders"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relationship.ecore#//RelationshipFolder/owner"/>
+    </genClasses>
+    <genClasses ecoreClass="relationship.ecore#//RelationshipContainer">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relationship.ecore#//RelationshipContainer/ownedRelationships"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

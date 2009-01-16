@@ -1,0 +1,97 @@
+/* ================================================================================== 
+ * JBoss, Home of Professional Open Source. 
+ * 
+ * Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ * 
+ * Some portions of this file may be copyrighted by other 
+ * contributors and licensed to Red Hat, Inc. under one or more 
+ * contributor license agreements. See the copyright.txt file in the 
+ * distribution for a full listing of individual contributors. 
+ * 
+ * This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0 
+ * which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html 
+ * ================================================================================== */ 
+
+package com.metamatrix.metamodels.core.extension;
+
+import org.eclipse.emf.ecore.EFactory;
+
+/**
+ * <!-- begin-user-doc -->
+ * The <b>Factory</b> for the model.
+ * It provides a create method for each non-abstract class of the model.
+ * <!-- end-user-doc -->
+ * @see com.metamatrix.metamodels.core.extension.ExtensionPackage
+ * @generated
+ */
+public interface ExtensionFactory extends EFactory{
+    /**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	String copyright = "Copyright (c) 2000-2008 MetaMatrix Corporation.  All rights reserved."; //$NON-NLS-1$
+
+	/**
+     * The singleton instance of the factory.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     */
+    ExtensionFactory eINSTANCE = new com.metamatrix.metamodels.core.extension.impl.ExtensionFactoryImpl();
+    /**
+	 * Returns a new object of class '<em>XClass</em>'.
+	 * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+	 * @return a new object of class '<em>XClass</em>'.
+	 * @generated
+	 */
+    XClass createXClass();
+
+    /**
+	 * Returns a new object of class '<em>XPackage</em>'.
+	 * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+	 * @return a new object of class '<em>XPackage</em>'.
+	 * @generated
+	 */
+    XPackage createXPackage();
+
+    /**
+	 * Returns a new object of class '<em>XAttribute</em>'.
+	 * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+	 * @return a new object of class '<em>XAttribute</em>'.
+	 * @generated
+	 */
+    XAttribute createXAttribute();
+
+    /**
+	 * Returns a new object of class '<em>XEnum</em>'.
+	 * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+	 * @return a new object of class '<em>XEnum</em>'.
+	 * @generated
+	 */
+    XEnum createXEnum();
+
+    /**
+	 * Returns a new object of class '<em>XEnum Literal</em>'.
+	 * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+	 * @return a new object of class '<em>XEnum Literal</em>'.
+	 * @generated
+	 */
+    XEnumLiteral createXEnumLiteral();
+
+    /**
+	 * Returns the package supported by this factory.
+	 * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+	 * @return the package supported by this factory.
+	 * @generated
+	 */
+    ExtensionPackage getExtensionPackage();
+
+} //ExtensionFactory

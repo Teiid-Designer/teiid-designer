@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="soap"
+    nsURI="http://schemas.xmlsoap.org/wsdl/soap/" nsPrefix="org.xmlsoap.schemas.wsdl.soap">
+  <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+    <details key="representation" value="schema"/>
+    <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+  </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="AddressType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="type"/>
+      <details key="name" value="addressType"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    </eAnnotations>
+    <eReferences name="location" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
+        lowerBound="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Address" eSuperTypes="#//AddressType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="element"/>
+      <details key="name" value="address"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BindingType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="type"/>
+      <details key="name" value="bindingType"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    </eAnnotations>
+    <eReferences name="transport" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eAttributes name="style" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="representation" value="attribute"/>
+        <details key="name" value="style"/>
+        <details key="targetNamespace"/>
+      </eAnnotations>
+    </eAttributes>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Binding" eSuperTypes="#//BindingType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="element"/>
+      <details key="name" value="binding"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BodyType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="type"/>
+      <details key="name" value="bodyType"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    </eAnnotations>
+    <eReferences name="encodingStyle" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eReferences name="namespace" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eAttributes name="parts" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="representation" value="attribute"/>
+        <details key="name" value="parts"/>
+        <details key="targetNamespace"/>
+      </eAnnotations>
+    </eAttributes>
+    <eAttributes name="use" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="representation" value="attribute"/>
+        <details key="name" value="use"/>
+        <details key="targetNamespace"/>
+      </eAnnotations>
+    </eAttributes>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Body" eSuperTypes="#//BodyType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="element"/>
+      <details key="name" value="body"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FaultType" eSuperTypes="#//BodyType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="type"/>
+      <details key="name" value="faultType"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Fault" eSuperTypes="#//FaultType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="element"/>
+      <details key="name" value="fault"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="HeaderfaultType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="type"/>
+      <details key="name" value="headerfaultType"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    </eAnnotations>
+    <eReferences name="encodingStyle" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eReferences name="message" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
+        lowerBound="1"/>
+    <eReferences name="namespace" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eAttributes name="parts" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        lowerBound="1">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="representation" value="attribute"/>
+        <details key="name" value="parts"/>
+        <details key="targetNamespace"/>
+      </eAnnotations>
+    </eAttributes>
+    <eAttributes name="use" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        lowerBound="1">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="representation" value="attribute"/>
+        <details key="name" value="use"/>
+        <details key="targetNamespace"/>
+      </eAnnotations>
+    </eAttributes>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="HeaderType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="type"/>
+      <details key="name" value="headerType"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    </eAnnotations>
+    <eReferences name="headerfault" eType="#//HeaderfaultType" lowerBound="1" containment="true">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="representation" value="element"/>
+        <details key="name" value="headerfault"/>
+        <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+      </eAnnotations>
+    </eReferences>
+    <eReferences name="encodingStyle" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eReferences name="message" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
+        lowerBound="1"/>
+    <eReferences name="namespace" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eAttributes name="parts" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        lowerBound="1">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="representation" value="attribute"/>
+        <details key="name" value="parts"/>
+        <details key="targetNamespace"/>
+      </eAnnotations>
+    </eAttributes>
+    <eAttributes name="use" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        lowerBound="1">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="representation" value="attribute"/>
+        <details key="name" value="use"/>
+        <details key="targetNamespace"/>
+      </eAnnotations>
+    </eAttributes>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Header" eSuperTypes="#//HeaderType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="element"/>
+      <details key="name" value="header"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Headerfault" eSuperTypes="#//HeaderfaultType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="element"/>
+      <details key="name" value="headerfault"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OperationType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="type"/>
+      <details key="name" value="operationType"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    </eAnnotations>
+    <eReferences name="soapAction" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eAttributes name="style" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="representation" value="attribute"/>
+        <details key="name" value="style"/>
+        <details key="targetNamespace"/>
+      </eAnnotations>
+    </eAttributes>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Operation" eSuperTypes="#//OperationType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="element"/>
+      <details key="name" value="operation"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    </eAnnotations>
+  </eClassifiers>
+</ecore:EPackage>

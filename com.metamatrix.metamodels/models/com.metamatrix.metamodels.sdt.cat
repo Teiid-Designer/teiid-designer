@@ -1,0 +1,509 @@
+
+(object Petal
+    version    	46
+    _written   	"Rose 7.7.0204.3001"
+    charSet    	0)
+
+(object Class_Category "sdt"
+    is_unit    	TRUE
+    is_loaded  	TRUE
+    attributes 	(list Attribute_Set
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"nsPrefix"
+	    value      	(value Text "mmsdt"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"nsURI"
+	    value      	(value Text "http://www.metamatrix.com/metamodels/SimpleDatatypes"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"basePackage"
+	    value      	(value Text "com.metamatrix.metamodels")))
+    quid       	"3F61D3F800DF"
+    exportControl 	"Public"
+    logical_models 	(list unit_reference_list
+	(object Class "Domain"
+	    quid       	"3F61D4960187"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3F61D4C90357"
+		    supplier   	"Logical View::xsd::XSDSchema"
+		    quidu      	"374B182500BB")))
+	(object Class "SimpleDatatype"
+	    quid       	"3F61D49B0333"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3F61D4E002D8"
+		    supplier   	"Logical View::xsd::XSDSimpleTypeDefinition"
+		    quidu      	"3B682BA7005D")
+		(object Inheritance_Relationship
+		    quid       	"3F8ACAE801B4"
+		    stereotype 	"mixin"
+		    supplier   	"Logical View::core::Datatype"
+		    quidu      	"3F843BC2015D"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "runtimeType"
+		    quid       	"3F61D4EC0393"
+		    stereotype 	"0..1"
+		    type       	"RuntimeType"
+		    quidu      	"3F61D4F6026B")
+		(object ClassAttribute "runtimeTypeName"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isChangeable"
+			    value      	FALSE))
+		    quid       	"3F61D7BF0090"
+		    type       	"String")))
+	(object Class "RuntimeType"
+	    quid       	"3F61D4F6026B"
+	    stereotype 	"enumeration"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "string"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"attributeName"
+			    value      	(value Text "")))
+		    quid       	"3F61D5020038"
+		    exportControl 	"Public")
+		(object ClassAttribute "boolean"
+		    quid       	"3F61D5990085"
+		    exportControl 	"Public")
+		(object ClassAttribute "byte"
+		    quid       	"3F61D59A0126"
+		    exportControl 	"Public")
+		(object ClassAttribute "short"
+		    quid       	"3F61D59B02B8"
+		    exportControl 	"Public")
+		(object ClassAttribute "char"
+		    quid       	"3F61D59C022E"
+		    exportControl 	"Public")
+		(object ClassAttribute "integer"
+		    quid       	"3F61D59D00D1"
+		    exportControl 	"Public")
+		(object ClassAttribute "long"
+		    quid       	"3F61D59E015E"
+		    exportControl 	"Public")
+		(object ClassAttribute "biginteger"
+		    quid       	"3F61D59F0106"
+		    exportControl 	"Public")
+		(object ClassAttribute "float"
+		    quid       	"3F61D5A201AA"
+		    exportControl 	"Public")
+		(object ClassAttribute "double"
+		    quid       	"3F61D5A3015C"
+		    exportControl 	"Public")
+		(object ClassAttribute "bigdecimal"
+		    quid       	"3F61D5A40135"
+		    exportControl 	"Public")
+		(object ClassAttribute "date"
+		    quid       	"3F61D5A70111"
+		    exportControl 	"Public")
+		(object ClassAttribute "time"
+		    quid       	"3F61D5A8002C"
+		    exportControl 	"Public")
+		(object ClassAttribute "timestamp"
+		    quid       	"3F61D5A90291"
+		    exportControl 	"Public")
+		(object ClassAttribute "object"
+		    quid       	"3F61D5AB00E5"
+		    exportControl 	"Public")
+		(object ClassAttribute "null"
+		    quid       	"3F61D5AD0373"
+		    exportControl 	"Public")
+		(object ClassAttribute "blob"
+		    quid       	"3F61D5AF01EF"
+		    exportControl 	"Public")
+		(object ClassAttribute "clob"
+		    quid       	"3F61D5B30050"
+		    exportControl 	"Public"))))
+    logical_presentations 	(list unit_reference_list
+	(object ClassDiagram "Main"
+	    quid       	"3F61D47B014C"
+	    title      	"Main"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::xsd::XSDSimpleTypeDefinition" @1
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2093, 465)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@1
+			location   	(1714, 286)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	758
+			justify    	0
+			label      	"XSDSimpleTypeDefinition")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B682BA7005D"
+		    compartment 	(object Compartment
+			Parent_View 	@1
+			location   	(1714, 391)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	5
+			max_width  	765)
+		    width      	776
+		    height     	382
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::xsd::XSDSchema" @2
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(736, 471)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@2
+			location   	(238, 192)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	996
+			justify    	0
+			label      	"XSDSchema")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"374B182500BB"
+		    compartment 	(object Compartment
+			Parent_View 	@2
+			location   	(238, 297)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	9
+			max_width  	1003)
+		    width      	1014
+		    height     	582
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::sdt::Domain" @3
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(737, 1293)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@3
+			location   	(633, 1242)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	208
+			justify    	0
+			label      	"Domain")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F61D4960187"
+		    width      	226
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::sdt::SimpleDatatype" @4
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2091, 2061)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@4
+			location   	(1726, 1955)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	730
+			justify    	0
+			label      	"SimpleDatatype")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F61D49B0333"
+		    compartment 	(object Compartment
+			Parent_View 	@4
+			location   	(1726, 2016)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	3
+			max_width  	737)
+		    width      	748
+		    height     	236
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @5
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F61D4C90357"
+		    client     	@3
+		    supplier   	@2
+		    line_style 	0)
+		(object InheritView "" @6
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F61D4E002D8"
+		    client     	@4
+		    supplier   	@1
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::sdt::RuntimeType" @7
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(309, 1593)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@7
+			location   	(147, 1109)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	324
+			justify    	0
+			label      	"RuntimeType")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@7
+			location   	(147, 1059)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	324
+			justify    	0
+			label      	"<<enumeration>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F61D4F6026B"
+		    compartment 	(object Compartment
+			Parent_View 	@7
+			location   	(147, 1170)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	19
+			max_width  	253)
+		    width      	342
+		    height     	1092
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::core::Datatype" @8
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1601, 1643)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@8
+			location   	(1450, 1590)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	302
+			justify    	0
+			label      	"Datatype")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@8
+			location   	(1450, 1540)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	302
+			justify    	0
+			label      	"<<Interface>>")
+		    icon       	"Interface"
+		    icon_style 	"Label"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F843BC2015D"
+		    width      	320
+		    height     	230
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @9
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    stereotype 	(object SegLabel @10
+			Parent_View 	@9
+			location   	(1873, 1868)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			anchor     	10
+			anchor_loc 	1
+			nlines     	1
+			max_width  	450
+			justify    	0
+			label      	"<<mixin>>"
+			pctDist    	0.381006
+			height     	6
+			orientation 	1)
+		    line_color 	3342489
+		    quidu      	"3F8ACAE801B4"
+		    client     	@4
+		    supplier   	@8
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::core::Identifiable" @11
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1598, 1122)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@11
+			location   	(1462, 1040)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	272
+			justify    	0
+			label      	"Identifiable")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@11
+			location   	(1462, 990)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	272
+			justify    	0
+			label      	"<<Interface>>")
+		    icon       	"Interface"
+		    icon_style 	"Label"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F8EA7720183"
+		    compartment 	(object Compartment
+			Parent_View 	@11
+			location   	(1462, 1145)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	2
+			max_width  	278)
+		    width      	290
+		    height     	288
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @12
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F8EA78F00EF"
+		    client     	@8
+		    supplier   	@11
+		    line_style 	0)))))

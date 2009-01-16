@@ -1,0 +1,192 @@
+
+(object Petal
+    version    	43
+    _written   	"Rose 6.1.9113.5"
+    charSet    	0)
+
+(object Class_Category "metabase"
+    is_unit    	TRUE
+    is_loaded  	TRUE
+    attributes 	(list Attribute_Set
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"nsPrefix"
+	    value      	(value Text "metabase"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"nsURI"
+	    value      	(value Text "http://www.metamatrix.com/metamodels/Metabase"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"basePackage"
+	    value      	(value Text "com.metamatrix.modeler.team")))
+    quid       	"3F97DDD90103"
+    exportControl 	"Public"
+    logical_models 	(list unit_reference_list
+	(object Class "MetabaseRepositoryDescriptor"
+	    quid       	"3F97DEA0009B"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "name"
+		    quid       	"3F9816A3007B"
+		    type       	"String")
+		(object ClassAttribute "uri"
+		    quid       	"3F9816AB00EB"
+		    type       	"String")
+		(object ClassAttribute "repositoryPath"
+		    quid       	"3F9816BE023D"
+		    type       	"String")
+		(object ClassAttribute "username"
+		    quid       	"3F9816BC0095"
+		    type       	"String")
+		(object ClassAttribute "repositoryType"
+		    quid       	"3F9816A50042"
+		    type       	"String")))
+	(object Class "MetabaseRepositoryProperty"
+	    quid       	"3F9846BD0190"
+	    stereotype 	"MapEntry"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "key"
+		    quid       	"3F994311037D"
+		    type       	"String")
+		(object ClassAttribute "value"
+		    quid       	"3F9846C50097"
+		    type       	"String")))
+	(object Association "$UNNAMED$0"
+	    quid       	"3F9846D10261"
+	    roles      	(list role_list
+		(object Role "properties"
+		    quid       	"3F9846D200DC"
+		    label      	"properties"
+		    supplier   	"Logical View::metabase::MetabaseRepositoryProperty"
+		    quidu      	"3F9846BD0190"
+		    client_cardinality 	(value cardinality "0..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$1"
+		    quid       	"3F9846D200DD"
+		    supplier   	"Logical View::metabase::MetabaseRepositoryDescriptor"
+		    quidu      	"3F97DEA0009B"
+		    is_aggregate 	TRUE))))
+    logical_presentations 	(list unit_reference_list
+	(object ClassDiagram "Main"
+	    quid       	"3F97DE9E02B5"
+	    title      	"Main"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::metabase::MetabaseRepositoryProperty" @1
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(654, 1047)
+		    label      	(object ItemLabel
+			Parent_View 	@1
+			location   	(371, 963)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	566
+			justify    	0
+			label      	"MetabaseRepositoryProperty")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@1
+			location   	(371, 913)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	566
+			justify    	0
+			label      	"<<MapEntry>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F9846BD0190"
+		    compartment 	(object Compartment
+			Parent_View 	@1
+			location   	(371, 1024)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	3
+			max_width  	284)
+		    width      	584
+		    height     	292
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::metabase::MetabaseRepositoryDescriptor" @2
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(653, 481)
+		    label      	(object ItemLabel
+			Parent_View 	@2
+			location   	(357, 300)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	592
+			justify    	0
+			label      	"MetabaseRepositoryDescriptor")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F97DEA0009B"
+		    compartment 	(object Compartment
+			Parent_View 	@2
+			location   	(357, 361)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	6
+			max_width  	459)
+		    width      	610
+		    height     	386
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$0" @3
+		    location   	(653, 787)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F9846D10261"
+		    roleview_list 	(list RoleViews
+			(object RoleView "properties" @4
+			    Parent_View 	@3
+			    location   	(0, 306)
+			    label      	(object SegLabel @5
+				Parent_View 	@4
+				location   	(781, 870)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	218
+				justify    	0
+				label      	"+properties"
+				pctDist    	0.735714
+				height     	128
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F9846D200DC"
+			    client     	@3
+			    supplier   	@1
+			    line_style 	0
+			    label      	(object SegLabel @6
+				Parent_View 	@4
+				location   	(604, 873)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..*"
+				pctDist    	0.757143
+				height     	50
+				orientation 	1))
+			(object RoleView "$UNNAMED$1" @7
+			    Parent_View 	@3
+			    location   	(0, 306)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F9846D200DD"
+			    client     	@3
+			    supplier   	@2
+			    line_style 	0)))))))

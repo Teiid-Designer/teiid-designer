@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="mime"
+    nsURI="http://schemas.xmlsoap.org/wsdl/mime/" nsPrefix="org.xmlsoap.schemas.wsdl.mime">
+  <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+    <details key="representation" value="schema"/>
+    <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/mime/"/>
+  </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="ContentType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="type"/>
+      <details key="name" value="contentType"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/mime/"/>
+    </eAnnotations>
+    <eAttributes name="part" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="representation" value="attribute"/>
+        <details key="name" value="part"/>
+        <details key="targetNamespace"/>
+      </eAnnotations>
+    </eAttributes>
+    <eAttributes name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="representation" value="attribute"/>
+        <details key="name" value="type"/>
+        <details key="targetNamespace"/>
+      </eAnnotations>
+    </eAttributes>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Content" eSuperTypes="#//ContentType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="element"/>
+      <details key="name" value="content"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/mime/"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MimeXmlType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="type"/>
+      <details key="name" value="mimeXmlType"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/mime/"/>
+    </eAnnotations>
+    <eAttributes name="part" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="representation" value="attribute"/>
+        <details key="name" value="part"/>
+        <details key="targetNamespace"/>
+      </eAnnotations>
+    </eAttributes>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MimeXml" eSuperTypes="#//MimeXmlType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="element"/>
+      <details key="name" value="mimeXml"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/mime/"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PartType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="type"/>
+      <details key="name" value="partType"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/mime/"/>
+    </eAnnotations>
+    <eReferences name="any" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
+        upperBound="-1" containment="true">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="representation" value="element-wildcard"/>
+      </eAnnotations>
+    </eReferences>
+    <eAttributes name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        lowerBound="1">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="representation" value="attribute"/>
+        <details key="name" value="name"/>
+        <details key="targetNamespace"/>
+      </eAnnotations>
+    </eAttributes>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultipartRelatedType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="type"/>
+      <details key="name" value="multipartRelatedType"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/mime/"/>
+    </eAnnotations>
+    <eReferences name="part" eType="#//PartType" upperBound="-1" containment="true">
+      <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+        <details key="representation" value="element"/>
+        <details key="name" value="part"/>
+        <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/mime/"/>
+      </eAnnotations>
+    </eReferences>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultipartRelated" eSuperTypes="#//MultipartRelatedType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="element"/>
+      <details key="name" value="multipartRelated"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/mime/"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Part" eSuperTypes="#//PartType">
+    <eAnnotations source="http:///org/eclipse/emf/mapping/xsd2ecore/XSD2Ecore">
+      <details key="representation" value="element"/>
+      <details key="name" value="part"/>
+      <details key="targetNamespace" value="http://schemas.xmlsoap.org/wsdl/mime/"/>
+    </eAnnotations>
+  </eClassifiers>
+</ecore:EPackage>

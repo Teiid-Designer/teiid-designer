@@ -1,0 +1,2985 @@
+
+(object Petal
+    version    	43
+    _written   	"Rose 6.1.9113.5"
+    charSet    	0)
+
+(object Class_Category "webservice"
+    is_unit    	TRUE
+    is_loaded  	TRUE
+    attributes 	(list Attribute_Set
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"nsPrefix"
+	    value      	(value Text "mmws"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"nsURI"
+	    value      	(value Text "http://www.metamatrix.com/metamodels/WebService"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"basePackage"
+	    value      	(value Text "com.metamatrix.metamodels"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"prefix"
+	    value      	(value Text "WebService")))
+    quid       	"40E56AE901FC"
+    exportControl 	"Public"
+    logical_models 	(list unit_reference_list
+	(object Class "Operation"
+	    quid       	"40E56B2D00A5"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"40E56CCC021F"
+		    supplier   	"Logical View::webservice::WebServiceComponent"
+		    quidu      	"40E56B81036D"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "pattern"
+		    quid       	"40E58D18023C"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "safe"
+		    quid       	"40E58D240351"
+		    type       	"boolean"
+		    initv      	"false")))
+	(object Class "Message"
+	    quid       	"40E56B3A027B"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"40E56CD2010F"
+		    supplier   	"Logical View::webservice::WebServiceComponent"
+		    quidu      	"40E56B81036D"))
+	    abstract   	TRUE)
+	(object Class "WebServiceComponent"
+	    quid       	"40E56B81036D"
+	    operations 	(list Operations
+		(object Operation "isValid"
+		    quid       	"40E5A8C70033"
+		    documentation 	
+|Method to determine whether this relationship entity is considered valid.  The result is an IStatus that contains a message that can be displayed to the user, as well as a status code designating "OK", "WARNING", or "ERROR".
+		    
+		    result     	"IStatus"
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "name"
+		    quid       	"40E570890185"
+		    type       	"String"))
+	    abstract   	TRUE)
+	(object Class "Input"
+	    quid       	"40E595F90316"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"40E5964A03D1"
+		    supplier   	"Logical View::webservice::Message"
+		    quidu      	"40E56B3A027B")))
+	(object Class "Output"
+	    quid       	"40E595FF012A"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"40E5964D0191"
+		    supplier   	"Logical View::webservice::Message"
+		    quidu      	"40E56B3A027B")))
+	(object Class "IStatus"
+	    quid       	"40E5A88B0069"
+	    stereotype 	"datatype"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "org.eclipse.core.runtime.IStatus"
+		    quid       	"40E5A8A20185"
+		    stereotype 	"javaclass")))
+	(object Class "Interface"
+	    quid       	"40E5A9DA0183"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"40E5A9E10314"
+		    supplier   	"Logical View::webservice::WebServiceComponent"
+		    quidu      	"40E56B81036D")))
+	(object Class "SampleMessages"
+	    quid       	"4101248B02C6")
+	(object Class "SampleFile"
+	    quid       	"4101257700BD"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "name"
+		    quid       	"41014E1502A9"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "url"
+		    quid       	"41012584026A"
+		    type       	"String")))
+	(object Class "SampleFromXsd"
+	    quid       	"41014C5001A3"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "maxNumberOfLevelsToBuild"
+		    quid       	"41015C2000D2"
+		    type       	"int"
+		    initv      	"30")))
+	(object Association "$UNNAMED$0"
+	    quid       	"40E56BD401E6"
+	    roles      	(list role_list
+		(object Role "input"
+		    quid       	"40E56BD403C7"
+		    label      	"input"
+		    supplier   	"Logical View::webservice::Input"
+		    quidu      	"40E595F90316"
+		    client_cardinality 	(value cardinality "0..1")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "operation"
+		    quid       	"40E56BD403D1"
+		    label      	"operation"
+		    supplier   	"Logical View::webservice::Operation"
+		    quidu      	"40E56B2D00A5"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$1"
+	    quid       	"40E56C480265"
+	    roles      	(list role_list
+		(object Role "output"
+		    quid       	"40E56C4A0380"
+		    label      	"output"
+		    supplier   	"Logical View::webservice::Output"
+		    quidu      	"40E595FF012A"
+		    client_cardinality 	(value cardinality "0..1")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "operation"
+		    quid       	"40E56C4A038A"
+		    label      	"operation"
+		    supplier   	"Logical View::webservice::Operation"
+		    quidu      	"40E56B2D00A5"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$2"
+	    quid       	"40E5934C000E"
+	    roles      	(list role_list
+		(object Role "contentElement"
+		    quid       	"40E5934C02B7"
+		    label      	"contentElement"
+		    supplier   	"Logical View::xsd::XSDElementDeclaration"
+		    quidu      	"3B66ED580214"
+		    client_cardinality 	(value cardinality "0..1")
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$3"
+		    quid       	"40E5934C0339"
+		    supplier   	"Logical View::webservice::Message"
+		    quidu      	"40E56B3A027B")))
+	(object Association "$UNNAMED$4"
+	    quid       	"40E5A2A30200"
+	    roles      	(list role_list
+		(object Role "xmlDocument"
+		    quid       	"40E5A2A400A3"
+		    label      	"xmlDocument"
+		    supplier   	"Logical View::xml::XmlDocument"
+		    quidu      	"3F54FC210205"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$5"
+		    quid       	"40E5A2A400AD"
+		    supplier   	"Logical View::webservice::Output"
+		    quidu      	"40E595FF012A")))
+	(object Association "$UNNAMED$6"
+	    quid       	"40E5A9E603A7"
+	    roles      	(list role_list
+		(object Role "operations"
+		    quid       	"40E5A9E70236"
+		    label      	"operations"
+		    supplier   	"Logical View::webservice::Operation"
+		    quidu      	"40E56B2D00A5"
+		    client_cardinality 	(value cardinality "0..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "interface"
+		    quid       	"40E5A9E70254"
+		    label      	"interface"
+		    supplier   	"Logical View::webservice::Interface"
+		    quidu      	"40E5A9DA0183"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$7"
+	    quid       	"4101249F003A"
+	    roles      	(list role_list
+		(object Role "samples"
+		    quid       	"4101249F003B"
+		    label      	"samples"
+		    supplier   	"Logical View::webservice::SampleMessages"
+		    quidu      	"4101248B02C6"
+		    client_cardinality 	(value cardinality "0..1")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "message"
+		    quid       	"4101249F003C"
+		    label      	"message"
+		    supplier   	"Logical View::webservice::Message"
+		    quidu      	"40E56B3A027B"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$8"
+	    quid       	"410125A10081"
+	    roles      	(list role_list
+		(object Role "sampleFiles"
+		    quid       	"410125A2010F"
+		    label      	"sampleFiles"
+		    supplier   	"Logical View::webservice::SampleFile"
+		    quidu      	"4101257700BD"
+		    client_cardinality 	(value cardinality "0..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "sampleMessages"
+		    quid       	"410125A20110"
+		    label      	"sampleMessages"
+		    supplier   	"Logical View::webservice::SampleMessages"
+		    quidu      	"4101248B02C6"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$9"
+	    quid       	"41014C62024A"
+	    roles      	(list role_list
+		(object Role "$UNNAMED$10"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isTransient"
+			    value      	TRUE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isChangeable"
+			    value      	FALSE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isResolveProxies"
+			    value      	FALSE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE))
+		    quid       	"41014C62024B"
+		    supplier   	"Logical View::webservice::SampleFromXsd"
+		    quidu      	"41014C5001A3"
+		    is_aggregate 	TRUE)
+		(object Role "sampleFragment"
+		    quid       	"41014C62024C"
+		    label      	"sampleFragment"
+		    supplier   	"Logical View::xml::XmlElement"
+		    quidu      	"3F54FF7300DB"
+		    client_cardinality 	(value cardinality "0..1")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)))
+	(object Association "$UNNAMED$11"
+	    quid       	"41014C9700B5"
+	    roles      	(list role_list
+		(object Role "sampleFromXsd"
+		    quid       	"41014C970282"
+		    label      	"sampleFromXsd"
+		    supplier   	"Logical View::webservice::SampleFromXsd"
+		    quidu      	"41014C5001A3"
+		    client_cardinality 	(value cardinality "0..1")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "sampleMessages"
+		    quid       	"41014C97028C"
+		    label      	"sampleMessages"
+		    supplier   	"Logical View::webservice::SampleMessages"
+		    quidu      	"4101248B02C6"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$12"
+	    quid       	"414F17010318"
+	    roles      	(list role_list
+		(object Role "contentComplexType"
+		    quid       	"414F17010322"
+		    label      	"contentComplexType"
+		    supplier   	"Logical View::xsd::XSDComplexTypeDefinition"
+		    quidu      	"3B682B82031A"
+		    client_cardinality 	(value cardinality "0..1")
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$13"
+		    quid       	"414F17010323"
+		    supplier   	"Logical View::webservice::Message"
+		    quidu      	"40E56B3A027B")))
+	(object Association "$UNNAMED$14"
+	    quid       	"414F171F0068"
+	    roles      	(list role_list
+		(object Role "contentSimpleType"
+		    quid       	"414F171F036B"
+		    label      	"contentSimpleType"
+		    supplier   	"Logical View::xsd::XSDSimpleTypeDefinition"
+		    quidu      	"3B682BA7005D"
+		    client_cardinality 	(value cardinality "0..1")
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$15"
+		    quid       	"414F171F0393"
+		    supplier   	"Logical View::webservice::Message"
+		    quidu      	"40E56B3A027B"))))
+    logical_presentations 	(list unit_reference_list
+	(object ClassDiagram "Main"
+	    quid       	"40E56B1B02DA"
+	    title      	"Main"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::webservice::WebServiceComponent" @1
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    ShowOperationSignature 	TRUE
+		    location   	(576, 211)
+		    font       	(object Font
+			italics    	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@1
+			location   	(346, 105)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	460
+			justify    	0
+			label      	"WebServiceComponent")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E56B81036D"
+		    compartment 	(object Compartment
+			Parent_View 	@1
+			location   	(346, 166)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	3
+			max_width  	371)
+		    width      	478
+		    height     	236
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object NoteView @2
+		    location   	(693, 2165)
+		    label      	(object ItemLabel
+			Parent_View 	@2
+			location   	(124, 1868)
+			fill_color 	13434879
+			nlines     	11
+			max_width  	1102
+			label      	
+|Patterns referenced by WSDL 2.0 (http://www.w3.org/TR/2004/WD-wsdl20-patterns-20040326/)
+| - In-Only
+| - Robust In-Only
+| - In-Out
+| - In-Optional-Out
+| - Out-Only
+| - Robust Out-Only
+| - Out-In
+| - Out-Optional-In
+			)
+		    line_color 	3342489
+		    fill_color 	11848662
+		    width      	1162
+		    height     	607)
+		(object NoteView @3
+		    location   	(1899, 2037)
+		    label      	(object ItemLabel
+			Parent_View 	@3
+			location   	(1449, 1868)
+			fill_color 	13434879
+			nlines     	6
+			max_width  	865
+			label      	
+|Patterns referenced by WSDL 1.1 (http://www.w3.org/TR/wsdl)
+| - One-way
+| - Request-Response
+| - Solicit-Response
+| - Notification
+			)
+		    line_color 	3342489
+		    fill_color 	11848662
+		    width      	925
+		    height     	350)
+		(object NoteView @4
+		    location   	(1380, 1595)
+		    label      	(object ItemLabel
+			Parent_View 	@4
+			location   	(1155, 1458)
+			fill_color 	13434879
+			nlines     	5
+			max_width  	415
+			label      	"Can reference either or, but not both.  Also will be reset if instance of Output when xmlDocument is set")
+		    line_color 	3342489
+		    fill_color 	11848662
+		    width      	475
+		    height     	287)
+		(object ClassView "Class" "Logical View::webservice::IStatus" @5
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2024, 2387)
+		    label      	(object ItemLabel
+			Parent_View 	@5
+			location   	(1571, 2328)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	906
+			justify    	0
+			label      	"IStatus")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@5
+			location   	(1571, 2278)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	906
+			justify    	0
+			label      	"<<datatype>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E5A88B0069"
+		    compartment 	(object Compartment
+			Parent_View 	@5
+			location   	(1571, 2389)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	912)
+		    width      	924
+		    height     	242
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::xml::XmlDocument" @6
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2353, 1206)
+		    label      	(object ItemLabel
+			Parent_View 	@6
+			location   	(2209, 1156)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	288
+			justify    	0
+			label      	"XmlDocument")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	14342874
+		    quidu      	"3F54FC210205"
+		    width      	306
+		    height     	124
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::webservice::Output" @7
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2331, 900)
+		    label      	(object ItemLabel
+			Parent_View 	@7
+			location   	(2250, 849)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	162
+			justify    	0
+			label      	"Output")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E595FF012A"
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$4" @8
+		    location   	(2340, 1053)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E5A2A30200"
+		    roleview_list 	(list RoleViews
+			(object RoleView "xmlDocument" @9
+			    Parent_View 	@8
+			    location   	(944, 229)
+			    label      	(object SegLabel @10
+				Parent_View 	@9
+				location   	(2497, 1110)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	280
+				justify    	0
+				label      	"+xmlDocument"
+				pctDist    	0.620914
+				height     	157
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E5A2A400A3"
+			    client     	@8
+			    supplier   	@6
+			    line_style 	3
+			    origin_attachment 	(2340, 1053)
+			    terminal_attachment 	(2340, 1144)
+			    label      	(object SegLabel @11
+				Parent_View 	@9
+				location   	(2310, 1106)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.586923
+				height     	31
+				orientation 	1))
+			(object RoleView "$UNNAMED$5" @12
+			    Parent_View 	@8
+			    location   	(944, 229)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E5A2A400AD"
+			    client     	@8
+			    supplier   	@7
+			    line_style 	3
+			    origin_attachment 	(2340, 1053)
+			    terminal_attachment 	(2340, 963))))
+		(object ClassView "Class" "Logical View::webservice::Interface" @13
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1750, 104)
+		    label      	(object ItemLabel
+			Parent_View 	@13
+			location   	(1657, 53)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	186
+			justify    	0
+			label      	"Interface")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E5A9DA0183"
+		    width      	204
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @14
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E5A9E10314"
+		    client     	@13
+		    supplier   	@1
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::webservice::Input" @15
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1149, 892)
+		    label      	(object ItemLabel
+			Parent_View 	@15
+			location   	(1068, 841)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	162
+			justify    	0
+			label      	"Input")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E595F90316"
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::webservice::Operation" @16
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1722, 497)
+		    label      	(object ItemLabel
+			Parent_View 	@16
+			location   	(1471, 391)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	502
+			justify    	0
+			label      	"Operation")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E56B2D00A5"
+		    compartment 	(object Compartment
+			Parent_View 	@16
+			location   	(1471, 452)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	3
+			max_width  	509)
+		    width      	520
+		    height     	236
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$1" @17
+		    location   	(2319, 557)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E56C480265"
+		    roleview_list 	(list RoleViews
+			(object RoleView "output" @18
+			    Parent_View 	@17
+			    location   	(1701, -255)
+			    label      	(object SegLabel @19
+				Parent_View 	@18
+				location   	(2393, 806)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	140
+				justify    	0
+				label      	"+output"
+				pctDist    	0.893548
+				height     	74
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E56C4A0380"
+			    client     	@17
+			    supplier   	@7
+			    line_style 	3
+			    origin_attachment 	(2319, 557)
+			    terminal_attachment 	(2319, 837)
+			    label      	(object SegLabel @20
+				Parent_View 	@18
+				location   	(2271, 811)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.911051
+				height     	49
+				orientation 	1))
+			(object RoleView "operation" @21
+			    Parent_View 	@17
+			    location   	(1701, -255)
+			    label      	(object SegLabel @22
+				Parent_View 	@21
+				location   	(2124, 539)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	190
+				justify    	0
+				label      	"+operation"
+				pctDist    	0.642599
+				height     	42
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E56C4A038A"
+			    client     	@17
+			    supplier   	@16
+			    vertices   	(list Points
+				(2319, 557)
+				(2319, 497)
+				(1982, 497))
+			    line_style 	3
+			    origin_attachment 	(2319, 557)
+			    terminal_attachment 	(1982, 497)
+			    label      	(object SegLabel @23
+				Parent_View 	@21
+				location   	(2022, 461)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.902965
+				height     	37
+				orientation 	1))))
+		(object InheritView "" @24
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E56CCC021F"
+		    client     	@16
+		    supplier   	@1
+		    line_style 	0)
+		(object AssociationViewNew "$UNNAMED$6" @25
+		    location   	(1750, 272)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E5A9E603A7"
+		    roleview_list 	(list RoleViews
+			(object RoleView "operations" @26
+			    Parent_View 	@25
+			    location   	(922, 116)
+			    label      	(object SegLabel @27
+				Parent_View 	@26
+				location   	(1870, 336)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	226
+				justify    	0
+				label      	"+operations"
+				pctDist    	0.603774
+				height     	120
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E5A9E70236"
+			    client     	@25
+			    supplier   	@16
+			    line_style 	3
+			    origin_attachment 	(1750, 272)
+			    terminal_attachment 	(1750, 378)
+			    label      	(object SegLabel @28
+				Parent_View 	@26
+				location   	(1707, 342)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..*"
+				pctDist    	0.660377
+				height     	44
+				orientation 	1))
+			(object RoleView "interface" @29
+			    Parent_View 	@25
+			    location   	(922, 116)
+			    label      	(object SegLabel @30
+				Parent_View 	@29
+				location   	(1865, 198)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	184
+				justify    	0
+				label      	"+interface"
+				pctDist    	0.704762
+				height     	115
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E5A9E70254"
+			    client     	@25
+			    supplier   	@13
+			    line_style 	3
+			    origin_attachment 	(1750, 272)
+			    terminal_attachment 	(1750, 167)
+			    label      	(object SegLabel @31
+				Parent_View 	@29
+				location   	(1715, 208)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.610603
+				height     	36
+				orientation 	0))))
+		(object AssociationViewNew "$UNNAMED$0" @32
+		    location   	(1150, 565)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E56BD401E6"
+		    roleview_list 	(list RoleViews
+			(object RoleView "input" @33
+			    Parent_View 	@32
+			    location   	(207, 59)
+			    label      	(object SegLabel @34
+				Parent_View 	@33
+				location   	(1225, 797)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	116
+				justify    	0
+				label      	"+input"
+				pctDist    	0.881356
+				height     	75
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E56BD403C7"
+			    client     	@32
+			    supplier   	@15
+			    line_style 	3
+			    origin_attachment 	(1150, 565)
+			    terminal_attachment 	(1150, 829)
+			    label      	(object SegLabel @35
+				Parent_View 	@33
+				location   	(1099, 797)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.881356
+				height     	52
+				orientation 	1))
+			(object RoleView "operation" @36
+			    Parent_View 	@32
+			    location   	(207, 59)
+			    label      	(object SegLabel @37
+				Parent_View 	@36
+				location   	(1324, 475)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	190
+				justify    	0
+				label      	"+operation"
+				pctDist    	0.629032
+				height     	30
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E56BD403D1"
+			    client     	@32
+			    supplier   	@16
+			    vertices   	(list Points
+				(1150, 565)
+				(1150, 505)
+				(1462, 505))
+			    line_style 	3
+			    origin_attachment 	(1150, 565)
+			    terminal_attachment 	(1462, 505)
+			    label      	(object SegLabel @38
+				Parent_View 	@36
+				location   	(1436, 465)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.929487
+				height     	41
+				orientation 	0))))
+		(object NoteView @39
+		    location   	(753, 1459)
+		    label      	(object ItemLabel
+			Parent_View 	@39
+			location   	(612, 1378)
+			fill_color 	13434879
+			nlines     	3
+			max_width  	246
+			label      	"transient; dynamically built")
+		    line_color 	3342489
+		    fill_color 	11848662
+		    width      	306
+		    height     	175)
+		(object ClassView "Class" "Logical View::xml::XmlElement" @40
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(195, 1606)
+		    label      	(object ItemLabel
+			Parent_View 	@40
+			location   	(68, 1556)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	254
+			justify    	0
+			label      	"XmlElement")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	14342874
+		    quidu      	"3F54FF7300DB"
+		    width      	272
+		    height     	124
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::webservice::SampleFile" @41
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(639, 1706)
+		    label      	(object ItemLabel
+			Parent_View 	@41
+			location   	(400, 1600)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	478
+			justify    	0
+			label      	"SampleFile")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"4101257700BD"
+		    compartment 	(object Compartment
+			Parent_View 	@41
+			location   	(400, 1661)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	3
+			max_width  	484)
+		    width      	496
+		    height     	236
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::webservice::SampleFromXsd" @42
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(547, 1256)
+		    label      	(object ItemLabel
+			Parent_View 	@42
+			location   	(180, 1175)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	734
+			justify    	0
+			label      	"SampleFromXsd")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"41014C5001A3"
+		    compartment 	(object Compartment
+			Parent_View 	@42
+			location   	(180, 1236)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	740)
+		    width      	752
+		    height     	186
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$9" @43
+		    location   	(191, 1446)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"41014C62024A"
+		    roleview_list 	(list RoleViews
+			(object RoleView "sampleFragment" @44
+			    Parent_View 	@43
+			    location   	(-962, 216)
+			    label      	(object SegLabel @45
+				Parent_View 	@44
+				location   	(371, 1515)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	325
+				justify    	0
+				label      	"+sampleFragment"
+				pctDist    	0.707143
+				height     	180
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"41014C62024C"
+			    client     	@43
+			    supplier   	@40
+			    line_style 	3
+			    origin_attachment 	(191, 1446)
+			    terminal_attachment 	(191, 1544)
+			    label      	(object SegLabel @46
+				Parent_View 	@44
+				location   	(134, 1511)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.669643
+				height     	58
+				orientation 	1))
+			(object RoleView "$UNNAMED$10" @47
+			    Parent_View 	@43
+			    location   	(-962, 216)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"41014C62024B"
+			    client     	@43
+			    supplier   	@42
+			    line_style 	3
+			    origin_attachment 	(191, 1446)
+			    terminal_attachment 	(191, 1348))))
+		(object AttachView "" @48
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    client     	@43
+		    supplier   	@39
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::xsd::XSDElementDeclaration" @49
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2516, 1736)
+		    label      	(object ItemLabel
+			Parent_View 	@49
+			location   	(2277, 1686)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	478
+			justify    	0
+			label      	"XSDElementDeclaration")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	14342874
+		    quidu      	"3B66ED580214"
+		    width      	496
+		    height     	124
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::webservice::SampleMessages" @50
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1146, 1089)
+		    label      	(object ItemLabel
+			Parent_View 	@50
+			location   	(969, 1038)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	354
+			justify    	0
+			label      	"SampleMessages")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"4101248B02C6"
+		    width      	372
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$8" @51
+		    location   	(1034, 1502)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"410125A10081"
+		    roleview_list 	(list RoleViews
+			(object RoleView "sampleFiles" @52
+			    Parent_View 	@51
+			    location   	(-119, 272)
+			    label      	(object SegLabel @53
+				Parent_View 	@52
+				location   	(1019, 1740)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	260
+				justify    	0
+				label      	"+sampleFiles"
+				pctDist    	0.623596
+				height     	34
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"410125A2010F"
+			    client     	@51
+			    supplier   	@41
+			    vertices   	(list Points
+				(1034, 1502)
+				(1034, 1706)
+				(887, 1706))
+			    line_style 	3
+			    origin_attachment 	(1034, 1502)
+			    terminal_attachment 	(887, 1706)
+			    label      	(object SegLabel @54
+				Parent_View 	@52
+				location   	(929, 1673)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..*"
+				pctDist    	0.879213
+				height     	34
+				orientation 	1))
+			(object RoleView "sampleMessages" @55
+			    Parent_View 	@51
+			    location   	(-119, 272)
+			    label      	(object SegLabel @56
+				Parent_View 	@55
+				location   	(1223, 1200)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	352
+				justify    	0
+				label      	"+sampleMessages"
+				pctDist    	0.863777
+				height     	189
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"410125A20110"
+			    client     	@51
+			    supplier   	@50
+			    line_style 	3
+			    origin_attachment 	(1034, 1502)
+			    terminal_attachment 	(1034, 1152)
+			    label      	(object SegLabel @57
+				Parent_View 	@55
+				location   	(991, 1197)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.873065
+				height     	44
+				orientation 	0))))
+		(object AssociationViewNew "$UNNAMED$11" @58
+		    location   	(695, 1068)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"41014C9700B5"
+		    roleview_list 	(list RoleViews
+			(object RoleView "sampleFromXsd" @59
+			    Parent_View 	@58
+			    location   	(-458, -162)
+			    label      	(object SegLabel @60
+				Parent_View 	@59
+				location   	(707, 1131)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	332
+				justify    	0
+				label      	"+sampleFromXsd"
+				pctDist    	-0.070588
+				height     	63
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"41014C970282"
+			    client     	@58
+			    supplier   	@42
+			    vertices   	(list Points
+				(695, 1068)
+				(525, 1068)
+				(525, 1163))
+			    line_style 	3
+			    origin_attachment 	(695, 1068)
+			    terminal_attachment 	(525, 1163)
+			    label      	(object SegLabel @61
+				Parent_View 	@59
+				location   	(484, 1133)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.889286
+				height     	42
+				orientation 	1))
+			(object RoleView "sampleMessages" @62
+			    Parent_View 	@58
+			    location   	(-458, -162)
+			    label      	(object SegLabel @63
+				Parent_View 	@62
+				location   	(779, 1032)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	352
+				justify    	0
+				label      	"+sampleMessages"
+				pctDist    	0.321429
+				height     	37
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"41014C97028C"
+			    client     	@58
+			    supplier   	@50
+			    line_style 	3
+			    origin_attachment 	(695, 1068)
+			    terminal_attachment 	(960, 1068)
+			    label      	(object SegLabel @64
+				Parent_View 	@62
+				location   	(919, 1106)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.850000
+				height     	38
+				orientation 	1))))
+		(object ClassView "Class" "Logical View::xsd::XSDComplexTypeDefinition" @65
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2643, 1402)
+		    label      	(object ItemLabel
+			Parent_View 	@65
+			location   	(2375, 1352)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	536
+			justify    	0
+			label      	"XSDComplexTypeDefinition")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	14342874
+		    quidu      	"3B682B82031A"
+		    width      	554
+		    height     	124
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::xsd::XSDSimpleTypeDefinition" @66
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2573, 1571)
+		    label      	(object ItemLabel
+			Parent_View 	@66
+			location   	(2321, 1521)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	504
+			justify    	0
+			label      	"XSDSimpleTypeDefinition")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	14342874
+		    quidu      	"3B682BA7005D"
+		    width      	522
+		    height     	124
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::webservice::Message" @67
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1721, 765)
+		    font       	(object Font
+			italics    	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@67
+			location   	(1624, 714)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	194
+			justify    	0
+			label      	"Message")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E56B3A027B"
+		    width      	212
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @68
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E5964A03D1"
+		    client     	@15
+		    supplier   	@67
+		    line_style 	0)
+		(object InheritView "" @69
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E5964D0191"
+		    client     	@7
+		    supplier   	@67
+		    line_style 	0)
+		(object AssociationViewNew "$UNNAMED$2" @70
+		    location   	(1675, 1577)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E5934C000E"
+		    roleview_list 	(list RoleViews
+			(object RoleView "$UNNAMED$3" @71
+			    Parent_View 	@70
+			    location   	(-651, -156)
+			    label      	(object SegLabel @72
+				Parent_View 	@71
+				location   	(1634, 927)
+				hidden     	TRUE
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	450
+				justify    	0
+				label      	""
+				pctDist    	0.800000
+				height     	42
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E5934C0339"
+			    client     	@70
+			    supplier   	@67
+			    line_style 	3
+			    origin_attachment 	(1675, 1577)
+			    terminal_attachment 	(1675, 828))
+			(object RoleView "contentElement" @73
+			    Parent_View 	@70
+			    location   	(-651, -156)
+			    label      	(object SegLabel @74
+				Parent_View 	@73
+				location   	(2109, 1769)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	309
+				justify    	0
+				label      	"+contentElement"
+				pctDist    	0.788000
+				height     	35
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E5934C02B7"
+			    client     	@70
+			    supplier   	@49
+			    vertices   	(list Points
+				(1675, 1577)
+				(1675, 1734)
+				(2268, 1734))
+			    line_style 	3
+			    origin_attachment 	(1675, 1577)
+			    terminal_attachment 	(2268, 1734)
+			    label      	(object SegLabel @75
+				Parent_View 	@73
+				location   	(2216, 1697)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.930667
+				height     	37
+				orientation 	0))))
+		(object AssociationViewNew "$UNNAMED$7" @76
+		    location   	(1571, 1087)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"4101249F003A"
+		    roleview_list 	(list RoleViews
+			(object RoleView "message" @77
+			    Parent_View 	@76
+			    location   	(425, -2)
+			    label      	(object SegLabel @78
+				Parent_View 	@77
+				location   	(1534, 925)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	188
+				justify    	0
+				label      	"+message"
+				pctDist    	0.695925
+				height     	97
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"4101249F003C"
+			    client     	@76
+			    supplier   	@67
+			    vertices   	(list Points
+				(1571, 1087)
+				(1631, 1087)
+				(1631, 828))
+			    line_style 	3
+			    origin_attachment 	(1571, 1087)
+			    terminal_attachment 	(1631, 828)
+			    label      	(object SegLabel @79
+				Parent_View 	@77
+				location   	(1601, 869)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.871473
+				height     	30
+				orientation 	0))
+			(object RoleView "samples" @80
+			    Parent_View 	@76
+			    location   	(425, -2)
+			    label      	(object SegLabel @81
+				Parent_View 	@80
+				location   	(1442, 1062)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	184
+				justify    	0
+				label      	"+samples"
+				pctDist    	0.539749
+				height     	25
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"4101249F003B"
+			    client     	@76
+			    supplier   	@50
+			    line_style 	3
+			    origin_attachment 	(1571, 1087)
+			    terminal_attachment 	(1332, 1087)
+			    label      	(object SegLabel @82
+				Parent_View 	@80
+				location   	(1385, 1128)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.778243
+				height     	41
+				orientation 	0))))
+		(object AssociationViewNew "$UNNAMED$12" @83
+		    location   	(1790, 1326)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"414F17010318"
+		    roleview_list 	(list RoleViews
+			(object RoleView "$UNNAMED$13" @84
+			    Parent_View 	@83
+			    location   	(-666, -45)
+			    label      	(object SegLabel @85
+				Parent_View 	@84
+				location   	(1749, 904)
+				hidden     	TRUE
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	450
+				justify    	0
+				label      	""
+				pctDist    	0.800000
+				height     	42
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"414F17010323"
+			    client     	@83
+			    supplier   	@67
+			    line_style 	3
+			    origin_attachment 	(1790, 1326)
+			    terminal_attachment 	(1790, 828))
+			(object RoleView "contentComplexType" @86
+			    Parent_View 	@83
+			    location   	(-666, -45)
+			    label      	(object SegLabel @87
+				Parent_View 	@86
+				location   	(2141, 1428)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	422
+				justify    	0
+				label      	"+contentComplexType"
+				pctDist    	0.646226
+				height     	42
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"414F17010322"
+			    client     	@83
+			    supplier   	@65
+			    vertices   	(list Points
+				(1790, 1326)
+				(1790, 1386)
+				(2366, 1386))
+			    line_style 	3
+			    origin_attachment 	(1790, 1326)
+			    terminal_attachment 	(2366, 1386)
+			    label      	(object SegLabel @88
+				Parent_View 	@86
+				location   	(2304, 1353)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.902516
+				height     	33
+				orientation 	0))))
+		(object AssociationViewNew "$UNNAMED$14" @89
+		    location   	(1728, 1488)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"414F171F0068"
+		    roleview_list 	(list RoleViews
+			(object RoleView "$UNNAMED$15" @90
+			    Parent_View 	@89
+			    location   	(-674, -61)
+			    label      	(object SegLabel @91
+				Parent_View 	@90
+				location   	(1687, 916)
+				hidden     	TRUE
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	450
+				justify    	0
+				label      	""
+				pctDist    	0.800000
+				height     	42
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"414F171F0393"
+			    client     	@89
+			    supplier   	@67
+			    line_style 	3
+			    origin_attachment 	(1728, 1488)
+			    terminal_attachment 	(1728, 828))
+			(object RoleView "contentSimpleType" @92
+			    Parent_View 	@89
+			    location   	(-674, -61)
+			    label      	(object SegLabel @93
+				Parent_View 	@92
+				location   	(2113, 1600)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	373
+				justify    	0
+				label      	"+contentSimpleType"
+				pctDist    	0.698941
+				height     	35
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"414F171F036B"
+			    client     	@89
+			    supplier   	@66
+			    vertices   	(list Points
+				(1728, 1488)
+				(1728, 1565)
+				(2312, 1565))
+			    line_style 	3
+			    origin_attachment 	(1728, 1488)
+			    terminal_attachment 	(2312, 1565)
+			    label      	(object SegLabel @94
+				Parent_View 	@92
+				location   	(2267, 1512)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.900000
+				height     	54
+				orientation 	0))))
+		(object InheritView "" @95
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E56CD2010F"
+		    client     	@67
+		    supplier   	@1
+		    line_style 	0)))
+	(object ClassDiagram "Inheritance"
+	    quid       	"40E56D8A0073"
+	    title      	"Inheritance"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::webservice::WebServiceComponent" @96
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(959, 399)
+		    font       	(object Font
+			italics    	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@96
+			location   	(726, 358)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	466
+			justify    	0
+			label      	"WebServiceComponent")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E56B81036D"
+		    width      	484
+		    height     	107
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::webservice::Message" @97
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(512, 737)
+		    font       	(object Font
+			italics    	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@97
+			location   	(415, 696)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	194
+			justify    	0
+			label      	"Message")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E56B3A027B"
+		    width      	212
+		    height     	107
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @98
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E56CD2010F"
+		    client     	@97
+		    supplier   	@96
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::webservice::Input" @99
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(350, 1121)
+		    label      	(object ItemLabel
+			Parent_View 	@99
+			location   	(269, 1080)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	162
+			justify    	0
+			label      	"Input")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E595F90316"
+		    height     	107
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @100
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E5964A03D1"
+		    client     	@99
+		    supplier   	@97
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::webservice::Output" @101
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(656, 1115)
+		    label      	(object ItemLabel
+			Parent_View 	@101
+			location   	(575, 1074)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	162
+			justify    	0
+			label      	"Output")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E595FF012A"
+		    height     	107
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @102
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E5964D0191"
+		    client     	@101
+		    supplier   	@97
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::webservice::Operation" @103
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1362, 740)
+		    label      	(object ItemLabel
+			Parent_View 	@103
+			location   	(1261, 699)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	202
+			justify    	0
+			label      	"Operation")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E56B2D00A5"
+		    width      	220
+		    height     	107
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @104
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E56CCC021F"
+		    client     	@103
+		    supplier   	@96
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::webservice::Interface" @105
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1737, 737)
+		    label      	(object ItemLabel
+			Parent_View 	@105
+			location   	(1644, 696)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	186
+			justify    	0
+			label      	"Interface")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E5A9DA0183"
+		    width      	204
+		    height     	107
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @106
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E5A9E10314"
+		    client     	@105
+		    supplier   	@96
+		    line_style 	0)))
+	(object ClassDiagram "Containment"
+	    quid       	"41004A9F0139"
+	    title      	"Containment"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::webservice::WebServiceComponent" @107
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(878, 172)
+		    font       	(object Font
+			italics    	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@107
+			location   	(647, 91)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	462
+			justify    	0
+			label      	"WebServiceComponent")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	8767721
+		    quidu      	"40E56B81036D"
+		    compartment 	(object Compartment
+			Parent_View 	@107
+			location   	(647, 152)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	303)
+		    width      	480
+		    height     	186
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object NoteView @108
+		    location   	(2721, 1831)
+		    label      	(object ItemLabel
+			Parent_View 	@108
+			location   	(2580, 1750)
+			fill_color 	13434879
+			nlines     	3
+			max_width  	246
+			label      	"transient; dynamically built")
+		    line_color 	3342489
+		    fill_color 	11848662
+		    width      	306
+		    height     	175)
+		(object ClassView "Class" "Logical View::xml::XmlDocument" @109
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1134, 1765)
+		    label      	(object ItemLabel
+			Parent_View 	@109
+			location   	(990, 1715)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	288
+			justify    	0
+			label      	"XmlDocument")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	14342874
+		    quidu      	"3F54FC210205"
+		    width      	306
+		    height     	124
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::webservice::Interface" @110
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(213, 456)
+		    label      	(object ItemLabel
+			Parent_View 	@110
+			location   	(119, 405)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	188
+			justify    	0
+			label      	"Interface")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E5A9DA0183"
+		    width      	206
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @111
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E5A9E10314"
+		    client     	@110
+		    supplier   	@107
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::webservice::Output" @112
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1129, 1409)
+		    label      	(object ItemLabel
+			Parent_View 	@112
+			location   	(1048, 1358)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	162
+			justify    	0
+			label      	"Output")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E595FF012A"
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$4" @113
+		    location   	(1137, 1587)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E5A2A30200"
+		    roleview_list 	(list RoleViews
+			(object RoleView "$UNNAMED$5" @114
+			    Parent_View 	@113
+			    location   	(-1397, 375)
+			    label      	(object SegLabel @115
+				Parent_View 	@114
+				location   	(1179, 1495)
+				hidden     	TRUE
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	450
+				justify    	0
+				label      	""
+				pctDist    	0.800000
+				height     	42
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E5A2A400AD"
+			    client     	@113
+			    supplier   	@112
+			    line_style 	3
+			    origin_attachment 	(1137, 1587)
+			    terminal_attachment 	(1137, 1472))
+			(object RoleView "xmlDocument" @116
+			    Parent_View 	@113
+			    location   	(-1397, 375)
+			    label      	(object SegLabel @117
+				Parent_View 	@116
+				location   	(987, 1650)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	280
+				justify    	0
+				label      	"+xmlDocument"
+				pctDist    	0.539326
+				height     	151
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E5A2A400A3"
+			    client     	@113
+			    supplier   	@109
+			    line_style 	3
+			    origin_attachment 	(1137, 1587)
+			    terminal_attachment 	(1137, 1703)
+			    label      	(object SegLabel @118
+				Parent_View 	@116
+				location   	(1166, 1645)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.505618
+				height     	29
+				orientation 	0))))
+		(object ClassView "Class" "Logical View::webservice::Operation" @119
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(740, 796)
+		    label      	(object ItemLabel
+			Parent_View 	@119
+			location   	(489, 690)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	502
+			justify    	0
+			label      	"Operation")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E56B2D00A5"
+		    compartment 	(object Compartment
+			Parent_View 	@119
+			location   	(489, 751)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	3
+			max_width  	509)
+		    width      	520
+		    height     	236
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$6" @120
+		    location   	(212, 730)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E5A9E603A7"
+		    roleview_list 	(list RoleViews
+			(object RoleView "interface" @121
+			    Parent_View 	@120
+			    location   	(-628, 68)
+			    label      	(object SegLabel @122
+				Parent_View 	@121
+				location   	(334, 558)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	184
+				justify    	0
+				label      	"+interface"
+				pctDist    	0.885387
+				height     	122
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E5A9E70254"
+			    client     	@120
+			    supplier   	@110
+			    line_style 	3
+			    origin_attachment 	(212, 730)
+			    terminal_attachment 	(212, 519)
+			    label      	(object SegLabel @123
+				Parent_View 	@121
+				location   	(163, 555)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.893983
+				height     	50
+				orientation 	0))
+			(object RoleView "operations" @124
+			    Parent_View 	@120
+			    location   	(-628, 68)
+			    label      	(object SegLabel @125
+				Parent_View 	@124
+				location   	(308, 828)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	226
+				justify    	0
+				label      	"+operations"
+				pctDist    	0.478088
+				height     	38
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E5A9E70236"
+			    client     	@120
+			    supplier   	@119
+			    vertices   	(list Points
+				(212, 730)
+				(212, 790)
+				(480, 790))
+			    line_style 	3
+			    origin_attachment 	(212, 730)
+			    terminal_attachment 	(480, 790)
+			    label      	(object SegLabel @126
+				Parent_View 	@124
+				location   	(427, 761)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..*"
+				pctDist    	0.788845
+				height     	30
+				orientation 	0))))
+		(object InheritView "" @127
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E56CCC021F"
+		    client     	@119
+		    supplier   	@107
+		    line_style 	0)
+		(object AssociationViewNew "$UNNAMED$1" @128
+		    location   	(647, 1342)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E56C480265"
+		    roleview_list 	(list RoleViews
+			(object RoleView "operation" @129
+			    Parent_View 	@128
+			    location   	(-843, 111)
+			    label      	(object SegLabel @130
+				Parent_View 	@129
+				location   	(529, 945)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	190
+				justify    	0
+				label      	"+operation"
+				pctDist    	0.927184
+				height     	119
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E56C4A038A"
+			    client     	@128
+			    supplier   	@119
+			    line_style 	3
+			    origin_attachment 	(647, 1342)
+			    terminal_attachment 	(647, 913)
+			    label      	(object SegLabel @131
+				Parent_View 	@129
+				location   	(684, 947)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.922330
+				height     	37
+				orientation 	1))
+			(object RoleView "output" @132
+			    Parent_View 	@128
+			    location   	(-843, 111)
+			    label      	(object SegLabel @133
+				Parent_View 	@132
+				location   	(954, 1434)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	140
+				justify    	0
+				label      	"+output"
+				pctDist    	0.811530
+				height     	33
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E56C4A0380"
+			    client     	@128
+			    supplier   	@112
+			    vertices   	(list Points
+				(647, 1342)
+				(647, 1401)
+				(1039, 1401))
+			    line_style 	3
+			    origin_attachment 	(647, 1342)
+			    terminal_attachment 	(1039, 1401)
+			    label      	(object SegLabel @134
+				Parent_View 	@132
+				location   	(993, 1372)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.899691
+				height     	31
+				orientation 	0))))
+		(object ClassView "Class" "Logical View::webservice::Input" @135
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1126, 1171)
+		    label      	(object ItemLabel
+			Parent_View 	@135
+			location   	(1045, 1120)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	162
+			justify    	0
+			label      	"Input")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"40E595F90316"
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$0" @136
+		    location   	(856, 1109)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E56BD401E6"
+		    roleview_list 	(list RoleViews
+			(object RoleView "operation" @137
+			    Parent_View 	@136
+			    location   	(-869, 122)
+			    label      	(object SegLabel @138
+				Parent_View 	@137
+				location   	(978, 937)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	190
+				justify    	0
+				label      	"+operation"
+				pctDist    	0.883657
+				height     	122
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E56BD403D1"
+			    client     	@136
+			    supplier   	@119
+			    line_style 	3
+			    origin_attachment 	(856, 1109)
+			    terminal_attachment 	(856, 914)
+			    label      	(object SegLabel @139
+				Parent_View 	@137
+				location   	(822, 938)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.875346
+				height     	35
+				orientation 	0))
+			(object RoleView "input" @140
+			    Parent_View 	@136
+			    location   	(-869, 122)
+			    label      	(object SegLabel @141
+				Parent_View 	@140
+				location   	(977, 1139)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	116
+				justify    	0
+				label      	"+input"
+				pctDist    	0.758065
+				height     	31
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E56BD403C7"
+			    client     	@136
+			    supplier   	@135
+			    vertices   	(list Points
+				(856, 1109)
+				(856, 1169)
+				(1036, 1169))
+			    line_style 	3
+			    origin_attachment 	(856, 1109)
+			    terminal_attachment 	(1036, 1169)
+			    label      	(object SegLabel @142
+				Parent_View 	@140
+				location   	(993, 1204)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.825806
+				height     	35
+				orientation 	1))))
+		(object NoteView @143
+		    location   	(2381, 609)
+		    label      	(object ItemLabel
+			Parent_View 	@143
+			location   	(2143, 540)
+			fill_color 	13434879
+			nlines     	2
+			max_width  	440
+			label      	"Only one of these three can be set at any point.")
+		    line_color 	3342489
+		    fill_color 	11848662
+		    width      	500
+		    height     	150)
+		(object ClassView "Class" "Logical View::xsd::XSDElementDeclaration" @144
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2007, 315)
+		    label      	(object ItemLabel
+			Parent_View 	@144
+			location   	(1768, 265)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	478
+			justify    	0
+			label      	"XSDElementDeclaration")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	14342874
+		    quidu      	"3B66ED580214"
+		    width      	496
+		    height     	124
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::webservice::SampleFile" @145
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1079, 2123)
+		    label      	(object ItemLabel
+			Parent_View 	@145
+			location   	(840, 2017)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	478
+			justify    	0
+			label      	"SampleFile")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"4101257700BD"
+		    compartment 	(object Compartment
+			Parent_View 	@145
+			location   	(840, 2078)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	3
+			max_width  	484)
+		    width      	496
+		    height     	236
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::xml::XmlElement" @146
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2367, 1495)
+		    label      	(object ItemLabel
+			Parent_View 	@146
+			location   	(2240, 1445)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	254
+			justify    	0
+			label      	"XmlElement")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	14342874
+		    quidu      	"3F54FF7300DB"
+		    width      	272
+		    height     	124
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::webservice::SampleMessages" @147
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1727, 1490)
+		    label      	(object ItemLabel
+			Parent_View 	@147
+			location   	(1549, 1439)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	356
+			justify    	0
+			label      	"SampleMessages")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"4101248B02C6"
+		    width      	374
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$8" @148
+		    location   	(1628, 1983)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"410125A10081"
+		    roleview_list 	(list RoleViews
+			(object RoleView "sampleMessages" @149
+			    Parent_View 	@148
+			    location   	(16, -95)
+			    label      	(object SegLabel @150
+				Parent_View 	@149
+				location   	(1454, 1609)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	352
+				justify    	0
+				label      	"+sampleMessages"
+				pctDist    	0.869767
+				height     	174
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"410125A20110"
+			    client     	@148
+			    supplier   	@147
+			    line_style 	3
+			    origin_attachment 	(1628, 1983)
+			    terminal_attachment 	(1628, 1553)
+			    label      	(object SegLabel @151
+				Parent_View 	@149
+				location   	(1598, 1659)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.753488
+				height     	30
+				orientation 	0))
+			(object RoleView "sampleFiles" @152
+			    Parent_View 	@148
+			    location   	(16, -95)
+			    label      	(object SegLabel @153
+				Parent_View 	@152
+				location   	(1473, 2150)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	260
+				justify    	0
+				label      	"+sampleFiles"
+				pctDist    	0.661654
+				height     	38
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"410125A2010F"
+			    client     	@148
+			    supplier   	@145
+			    vertices   	(list Points
+				(1628, 1983)
+				(1628, 2112)
+				(1327, 2112))
+			    line_style 	3
+			    origin_attachment 	(1628, 1983)
+			    terminal_attachment 	(1327, 2112)
+			    label      	(object SegLabel @154
+				Parent_View 	@152
+				location   	(1371, 2079)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..*"
+				pctDist    	0.897243
+				height     	34
+				orientation 	1))))
+		(object ClassView "Class" "Logical View::webservice::SampleFromXsd" @155
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2412, 2124)
+		    label      	(object ItemLabel
+			Parent_View 	@155
+			location   	(2045, 2043)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	734
+			justify    	0
+			label      	"SampleFromXsd")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"41014C5001A3"
+		    compartment 	(object Compartment
+			Parent_View 	@155
+			location   	(2045, 2104)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	740)
+		    width      	752
+		    height     	186
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$9" @156
+		    location   	(2368, 1794)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"41014C62024A"
+		    roleview_list 	(list RoleViews
+			(object RoleView "sampleFragment" @157
+			    Parent_View 	@156
+			    location   	(737, -474)
+			    label      	(object SegLabel @158
+				Parent_View 	@157
+				location   	(2556, 1617)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	325
+				justify    	0
+				label      	"+sampleFragment"
+				pctDist    	0.746835
+				height     	188
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"41014C62024C"
+			    client     	@156
+			    supplier   	@146
+			    line_style 	3
+			    origin_attachment 	(2368, 1794)
+			    terminal_attachment 	(2368, 1557)
+			    label      	(object SegLabel @159
+				Parent_View 	@157
+				location   	(2422, 1582)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.900000
+				height     	54
+				orientation 	1))
+			(object RoleView "$UNNAMED$10" @160
+			    Parent_View 	@156
+			    location   	(737, -474)
+			    label      	(object SegLabel @161
+				Parent_View 	@160
+				location   	(2327, 1984)
+				hidden     	TRUE
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	450
+				justify    	0
+				label      	""
+				pctDist    	0.800000
+				height     	42
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"41014C62024B"
+			    client     	@156
+			    supplier   	@155
+			    line_style 	3
+			    origin_attachment 	(2368, 1794)
+			    terminal_attachment 	(2368, 2031))))
+		(object AssociationViewNew "$UNNAMED$11" @162
+		    location   	(1790, 1952)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"41014C9700B5"
+		    roleview_list 	(list RoleViews
+			(object RoleView "sampleMessages" @163
+			    Parent_View 	@162
+			    location   	(159, -316)
+			    label      	(object SegLabel @164
+				Parent_View 	@163
+				location   	(1979, 1625)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	352
+				justify    	0
+				label      	"+sampleMessages"
+				pctDist    	0.819549
+				height     	189
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"41014C97028C"
+			    client     	@162
+			    supplier   	@147
+			    line_style 	3
+			    origin_attachment 	(1790, 1952)
+			    terminal_attachment 	(1790, 1553)
+			    label      	(object SegLabel @165
+				Parent_View 	@163
+				location   	(1824, 1670)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.708333
+				height     	34
+				orientation 	1))
+			(object RoleView "sampleFromXsd" @166
+			    Parent_View 	@162
+			    location   	(159, -316)
+			    label      	(object SegLabel @167
+				Parent_View 	@166
+				location   	(1847, 2143)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	332
+				justify    	0
+				label      	"+sampleFromXsd"
+				pctDist    	0.529891
+				height     	38
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"41014C970282"
+			    client     	@162
+			    supplier   	@155
+			    vertices   	(list Points
+				(1790, 1952)
+				(1790, 2105)
+				(2036, 2105))
+			    line_style 	3
+			    origin_attachment 	(1790, 1952)
+			    terminal_attachment 	(2036, 2105)
+			    label      	(object SegLabel @168
+				Parent_View 	@166
+				location   	(1991, 2072)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.888587
+				height     	34
+				orientation 	0))))
+		(object AttachView "" @169
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    client     	@108
+		    supplier   	@156
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::xsd::XSDComplexTypeDefinition" @170
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2150, 1281)
+		    label      	(object ItemLabel
+			Parent_View 	@170
+			location   	(1882, 1231)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	536
+			justify    	0
+			label      	"XSDComplexTypeDefinition")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	14342874
+		    quidu      	"3B682B82031A"
+		    width      	554
+		    height     	124
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::webservice::Message" @171
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1575, 827)
+		    font       	(object Font
+			italics    	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@171
+			location   	(1478, 776)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	194
+			justify    	0
+			label      	"Message")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	8767721
+		    quidu      	"40E56B3A027B"
+		    width      	212
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @172
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E5964A03D1"
+		    client     	@135
+		    supplier   	@171
+		    line_style 	0)
+		(object InheritView "" @173
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E5964D0191"
+		    client     	@112
+		    supplier   	@171
+		    line_style 	0)
+		(object InheritView "" @174
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E56CD2010F"
+		    client     	@171
+		    supplier   	@107
+		    line_style 	0)
+		(object AssociationViewNew "$UNNAMED$12" @175
+		    location   	(1978, 912)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"414F17010318"
+		    roleview_list 	(list RoleViews
+			(object RoleView "$UNNAMED$13" @176
+			    Parent_View 	@175
+			    location   	(1250, -681)
+			    label      	(object SegLabel @177
+				Parent_View 	@176
+				location   	(1753, 894)
+				hidden     	TRUE
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	450
+				justify    	0
+				label      	""
+				pctDist    	0.800000
+				height     	42
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"414F17010323"
+			    client     	@175
+			    supplier   	@171
+			    vertices   	(list Points
+				(1978, 912)
+				(1978, 852)
+				(1681, 852))
+			    line_style 	3
+			    origin_attachment 	(1978, 912)
+			    terminal_attachment 	(1681, 852))
+			(object RoleView "contentComplexType" @178
+			    Parent_View 	@175
+			    location   	(1250, -681)
+			    label      	(object SegLabel @179
+				Parent_View 	@178
+				location   	(2205, 1184)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	422
+				justify    	0
+				label      	"+contentComplexType"
+				pctDist    	0.885993
+				height     	227
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"414F17010322"
+			    client     	@175
+			    supplier   	@170
+			    line_style 	3
+			    origin_attachment 	(1978, 912)
+			    terminal_attachment 	(1978, 1219)
+			    label      	(object SegLabel @180
+				Parent_View 	@178
+				location   	(1910, 1178)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.866450
+				height     	68
+				orientation 	1))))
+		(object AttachView "" @181
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    client     	@175
+		    supplier   	@143
+		    line_style 	0)
+		(object AssociationViewNew "$UNNAMED$2" @182
+		    location   	(1974, 732)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"40E5934C000E"
+		    roleview_list 	(list RoleViews
+			(object RoleView "$UNNAMED$3" @183
+			    Parent_View 	@182
+			    location   	(896, -1064)
+			    label      	(object SegLabel @184
+				Parent_View 	@183
+				location   	(1753, 836)
+				hidden     	TRUE
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	450
+				justify    	0
+				label      	""
+				pctDist    	0.800000
+				height     	42
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E5934C0339"
+			    client     	@182
+			    supplier   	@171
+			    vertices   	(list Points
+				(1974, 732)
+				(1974, 794)
+				(1681, 794))
+			    line_style 	3
+			    origin_attachment 	(1974, 732)
+			    terminal_attachment 	(1681, 794))
+			(object RoleView "contentElement" @185
+			    Parent_View 	@182
+			    location   	(896, -1064)
+			    label      	(object SegLabel @186
+				Parent_View 	@185
+				location   	(1802, 438)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	309
+				justify    	0
+				label      	"+contentElement"
+				pctDist    	0.830565
+				height     	173
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"40E5934C02B7"
+			    client     	@182
+			    supplier   	@144
+			    line_style 	3
+			    origin_attachment 	(1974, 732)
+			    terminal_attachment 	(1974, 377)
+			    label      	(object SegLabel @187
+				Parent_View 	@185
+				location   	(2032, 426)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.862385
+				height     	58
+				orientation 	1))))
+		(object AttachView "" @188
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    client     	@182
+		    supplier   	@143
+		    line_style 	0)
+		(object AssociationViewNew "$UNNAMED$7" @189
+		    location   	(1581, 1158)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"4101249F003A"
+		    roleview_list 	(list RoleViews
+			(object RoleView "message" @190
+			    Parent_View 	@189
+			    location   	(-506, -370)
+			    label      	(object SegLabel @191
+				Parent_View 	@190
+				location   	(1690, 943)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	188
+				justify    	0
+				label      	"+message"
+				pctDist    	0.801453
+				height     	109
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"4101249F003C"
+			    client     	@189
+			    supplier   	@171
+			    line_style 	3
+			    origin_attachment 	(1581, 1158)
+			    terminal_attachment 	(1581, 890)
+			    label      	(object SegLabel @192
+				Parent_View 	@190
+				location   	(1618, 912)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.922518
+				height     	37
+				orientation 	1))
+			(object RoleView "samples" @193
+			    Parent_View 	@189
+			    location   	(-506, -370)
+			    label      	(object SegLabel @194
+				Parent_View 	@193
+				location   	(1687, 1400)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	184
+				justify    	0
+				label      	"+samples"
+				pctDist    	0.902985
+				height     	106
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"4101249F003B"
+			    client     	@189
+			    supplier   	@147
+			    line_style 	3
+			    origin_attachment 	(1581, 1158)
+			    terminal_attachment 	(1581, 1426)
+			    label      	(object SegLabel @195
+				Parent_View 	@193
+				location   	(1536, 1394)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.880597
+				height     	45
+				orientation 	1))))
+		(object ClassView "Class" "Logical View::xsd::XSDSimpleTypeDefinition" @196
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2563, 1043)
+		    label      	(object ItemLabel
+			Parent_View 	@196
+			location   	(2311, 993)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	504
+			justify    	0
+			label      	"XSDSimpleTypeDefinition")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	14342874
+		    quidu      	"3B682BA7005D"
+		    width      	522
+		    height     	124
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$14" @197
+		    location   	(2186, 824)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"414F171F0068"
+		    roleview_list 	(list RoleViews
+			(object RoleView "contentSimpleType" @198
+			    Parent_View 	@197
+			    location   	(611, -3)
+			    label      	(object SegLabel @199
+				Parent_View 	@198
+				location   	(2323, 944)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	373
+				justify    	0
+				label      	"+contentSimpleType"
+				pctDist    	0.271287
+				height     	120
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"414F171F036B"
+			    client     	@197
+			    supplier   	@196
+			    vertices   	(list Points
+				(2186, 824)
+				(2534, 824)
+				(2534, 981))
+			    line_style 	3
+			    origin_attachment 	(2186, 824)
+			    terminal_attachment 	(2534, 981)
+			    label      	(object SegLabel @200
+				Parent_View 	@198
+				location   	(2601, 950)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.938614
+				height     	67
+				orientation 	0))
+			(object RoleView "$UNNAMED$15" @201
+			    Parent_View 	@197
+			    location   	(611, -3)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"414F171F0393"
+			    client     	@197
+			    supplier   	@171
+			    line_style 	3
+			    origin_attachment 	(2186, 824)
+			    terminal_attachment 	(1681, 824))))
+		(object AttachView "" @202
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    client     	@143
+		    supplier   	@197
+		    line_style 	0)))))

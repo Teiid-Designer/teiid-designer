@@ -1,0 +1,832 @@
+
+(object Petal
+    version    	43
+    _written   	"Rose 6.1.9113.5"
+    charSet    	0)
+
+(object Class_Category "repository"
+    is_unit    	TRUE
+    is_loaded  	TRUE
+    attributes 	(list Attribute_Set
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"packageName"
+	    value      	(value Text "repository"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"nsPrefix"
+	    value      	(value Text "metabaseRepos"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"nsURI"
+	    value      	(value Text "http://www.metamatrix.com/metamodels/MetaBaseRepository"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"basePackage"
+	    value      	(value Text "com.metamatrix.metamodels"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"prefix"
+	    value      	(value Text "Repository")))
+    quid       	"3F56291F0066"
+    exportControl 	"Public"
+    logical_models 	(list unit_reference_list
+	(object Class "RepositoryObject"
+	    quid       	"3F562979000C"
+	    operations 	(list Operations
+		(object Operation "isLockedByUser"
+		    quid       	"3F5904A301EA"
+		    result     	"boolean"
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "name"
+		    quid       	"3F56376A0375"
+		    type       	"String")
+		(object ClassAttribute "uniqueId"
+		    quid       	"3F5634050090"
+		    type       	"ObjectID")
+		(object ClassAttribute "readAllowed"
+		    quid       	"3F5638BF03B1"
+		    type       	"boolean"
+		    initv      	"true")
+		(object ClassAttribute "createAllowed"
+		    quid       	"3F5638CD01F9"
+		    type       	"boolean"
+		    initv      	"true")
+		(object ClassAttribute "deleteAllowed"
+		    quid       	"3F5638D20110"
+		    type       	"boolean"
+		    initv      	"true")
+		(object ClassAttribute "updateAllowed"
+		    quid       	"3F5638EE01F6"
+		    type       	"boolean"
+		    initv      	"true")
+		(object ClassAttribute "lastChangedTime"
+		    quid       	"3F5639240262"
+		    type       	"JavaDate")
+		(object ClassAttribute "lockedTime"
+		    quid       	"3F563C3B01BF"
+		    stereotype 	"0..1"
+		    type       	"JavaDate")
+		(object ClassAttribute "lockedHeldBy"
+		    quid       	"3F563C42020F"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "comment"
+		    quid       	"3F563CAD03CC"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "path"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isChangeable"
+			    value      	FALSE))
+		    quid       	"3F624D8A0022"
+		    type       	"IPath")
+		(object ClassAttribute "pathInWorkspace"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isChangeable"
+			    value      	FALSE))
+		    quid       	"3F624D8E0154"
+		    stereotype 	"0..1"
+		    type       	"IPath"))
+	    abstract   	TRUE)
+	(object Class "RepositoryFolder"
+	    quid       	"3F56298201D1"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3F56311B00A1"
+		    supplier   	"Logical View::repository::RepositoryObject"
+		    quidu      	"3F562979000C"))
+	    operations 	(list Operations
+		(object Operation "refresh"
+		    quid       	"3F590448010C"
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "type"
+		    quid       	"3F97DCA70008"
+		    type       	"RepositoryFolderType")))
+	(object Class "RepositoryItem"
+	    quid       	"3F56298902E0"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3F56311D0112"
+		    supplier   	"Logical View::repository::RepositoryObject"
+		    quidu      	"3F562979000C"))
+	    operations 	(list Operations
+		(object Operation "getInputStream"
+		    quid       	"3F56484800E9"
+		    result     	"InputStream"
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "version"
+		    quid       	"3F56378C0360"
+		    type       	"String")
+		(object ClassAttribute "size"
+		    quid       	"3F563D3900E8"
+		    type       	"long")
+		(object ClassAttribute "type"
+		    quid       	"41A387860059"
+		    type       	"RepositoryItemType"
+		    initv      	"UNKNOWN")))
+	(object Class "ObjectID"
+	    quid       	"3F563415013D"
+	    stereotype 	"datatype"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "com.metamatrix.core.id.ObjectID"
+		    quid       	"3F56372B007B"
+		    stereotype 	"javaclass")))
+	(object Class "JavaDate"
+	    quid       	"3F56393401F7"
+	    stereotype 	"datatype"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "java.util.Date"
+		    quid       	"3F56394300B8"
+		    stereotype 	"javaclass")))
+	(object Class "InputStream"
+	    quid       	"3F56485A01AD"
+	    stereotype 	"datatype"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "java.io.InputStream"
+		    quid       	"3F56486C036B"
+		    stereotype 	"javaclass")))
+	(object Class "IPath"
+	    quid       	"3F59040F03DC"
+	    stereotype 	"datatype"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "org.eclipse.core.runtime.IPath"
+		    quid       	"3F59041C0358"
+		    stereotype 	"javaclass")))
+	(object Class "RepositoryFolderType"
+	    quid       	"3F97DCC2018E"
+	    stereotype 	"enumeration"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "FOLDER"
+		    quid       	"3F97DCD10366"
+		    exportControl 	"Public")
+		(object ClassAttribute "PROJECT"
+		    quid       	"3F97DCD7009E"
+		    exportControl 	"Public")
+		(object ClassAttribute "CONTAINER"
+		    quid       	"3F996EB1012D"
+		    exportControl 	"Public")))
+	(object Class "RepositoryItemType"
+	    quid       	"41A387BB00AF"
+	    stereotype 	"enumeration"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "PHYSICAL"
+		    quid       	"41A387CB01F2")
+		(object ClassAttribute "VIRTUAL"
+		    quid       	"41A387D203E7")
+		(object ClassAttribute "TYPE"
+		    quid       	"41A387D40209")
+		(object ClassAttribute "VDB_ARCHIVE"
+		    quid       	"41A387D502AB")
+		(object ClassAttribute "UNKNOWN"
+		    quid       	"41A387D80060")
+		(object ClassAttribute "FUNCTION"
+		    quid       	"41A387DA00C7")
+		(object ClassAttribute "CONFIGURATION"
+		    quid       	"41A387DB0264")
+		(object ClassAttribute "METAMODEL"
+		    quid       	"41A387DD02FD")
+		(object ClassAttribute "EXTENSION"
+		    quid       	"41A387DF00E3")
+		(object ClassAttribute "LOGICAL"
+		    quid       	"41A387E100C8")
+		(object ClassAttribute "MATERIALIZATION"
+		    quid       	"41A387E3035F")))
+	(object Association "$UNNAMED$0"
+	    quid       	"3F563120010D"
+	    roles      	(list role_list
+		(object Role "items"
+		    quid       	"3F563120038E"
+		    label      	"items"
+		    supplier   	"Logical View::repository::RepositoryItem"
+		    quidu      	"3F56298902E0"
+		    client_cardinality 	(value cardinality "0..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "parent"
+		    quid       	"3F563120038F"
+		    label      	"parent"
+		    supplier   	"Logical View::repository::RepositoryFolder"
+		    quidu      	"3F56298201D1"
+		    client_cardinality 	(value cardinality "0..1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$1"
+	    quid       	"3F563CD401D3"
+	    roles      	(list role_list
+		(object Role "folders"
+		    quid       	"3F563CD502ED"
+		    label      	"folders"
+		    supplier   	"Logical View::repository::RepositoryFolder"
+		    quidu      	"3F56298201D1"
+		    client_cardinality 	(value cardinality "0..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "parent"
+		    quid       	"3F563CD502EE"
+		    label      	"parent"
+		    supplier   	"Logical View::repository::RepositoryFolder"
+		    quidu      	"3F56298201D1"
+		    client_cardinality 	(value cardinality "0..1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$2"
+	    quid       	"3F5648B2033A"
+	    roles      	(list role_list
+		(object Role "history"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isTransient"
+			    value      	TRUE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isChangeable"
+			    value      	FALSE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isResolveProxies"
+			    value      	FALSE))
+		    quid       	"3F5648B600F1"
+		    label      	"history"
+		    supplier   	"Logical View::history::HistoryLog"
+		    quidu      	"3F0D56500117"
+		    client_cardinality 	(value cardinality "0..1")
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$3"
+		    quid       	"3F5648B6010F"
+		    supplier   	"Logical View::repository::RepositoryItem"
+		    quidu      	"3F56298902E0"))))
+    logical_presentations 	(list unit_reference_list
+	(object ClassDiagram "Main"
+	    quid       	"3F562974011D"
+	    title      	"Main"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::repository::RepositoryObject" @1
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    ShowOperationSignature 	TRUE
+		    location   	(1134, 458)
+		    font       	(object Font
+			italics    	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@1
+			location   	(794, 77)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	680
+			justify    	0
+			label      	"RepositoryObject")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F562979000C"
+		    compartment 	(object Compartment
+			Parent_View 	@1
+			location   	(794, 138)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	14
+			max_width  	687
+			compartmentItems 	(list Compartment
+			    "+ isLockedByUser() : boolean"))
+		    width      	698
+		    height     	786
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::repository::ObjectID" @2
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(548, 1734)
+		    label      	(object ItemLabel
+			Parent_View 	@2
+			location   	(84, 1675)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	928
+			justify    	0
+			label      	"ObjectID")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@2
+			location   	(84, 1625)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	928
+			justify    	0
+			label      	"<<datatype>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F563415013D"
+		    compartment 	(object Compartment
+			Parent_View 	@2
+			location   	(84, 1736)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	934)
+		    width      	946
+		    height     	242
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::repository::JavaDate" @3
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(526, 2037)
+		    label      	(object ItemLabel
+			Parent_View 	@3
+			location   	(245, 1978)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	562
+			justify    	0
+			label      	"JavaDate")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@3
+			location   	(245, 1928)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	562
+			justify    	0
+			label      	"<<datatype>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F56393401F7"
+		    width      	580
+		    height     	242
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::repository::InputStream" @4
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(526, 2344)
+		    label      	(object ItemLabel
+			Parent_View 	@4
+			location   	(189, 2285)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	674
+			justify    	0
+			label      	"InputStream")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@4
+			location   	(189, 2235)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	674
+			justify    	0
+			label      	"<<datatype>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F56485A01AD"
+		    width      	692
+		    height     	242
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::repository::RepositoryFolder" @5
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    ShowOperationSignature 	TRUE
+		    location   	(657, 1118)
+		    label      	(object ItemLabel
+			Parent_View 	@5
+			location   	(376, 1012)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	562
+			justify    	0
+			label      	"RepositoryFolder")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F56298201D1"
+		    compartment 	(object Compartment
+			Parent_View 	@5
+			location   	(376, 1073)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	3
+			max_width  	568
+			compartmentItems 	(list Compartment
+			    "+ refresh()"))
+		    width      	580
+		    height     	236
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @6
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F56311B00A1"
+		    client     	@5
+		    supplier   	@1
+		    line_style 	0)
+		(object AssociationViewNew "$UNNAMED$1" @7
+		    location   	(656, 1363)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F563CD401D3"
+		    roleview_list 	(list RoleViews
+			(object RoleView "folders" @8
+			    Parent_View 	@7
+			    location   	(359, 214)
+			    label      	(object SegLabel @9
+				Parent_View 	@8
+				location   	(885, 1305)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	145
+				justify    	0
+				label      	"+folders"
+				pctDist    	0.747692
+				height     	86
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F563CD502ED"
+			    client     	@7
+			    supplier   	@5
+			    vertices   	(list Points
+				(656, 1363)
+				(799, 1363)
+				(799, 1236))
+			    line_style 	3
+			    origin_attachment 	(656, 1363)
+			    terminal_attachment 	(799, 1236)
+			    label      	(object SegLabel @10
+				Parent_View 	@8
+				location   	(840, 1266)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..*"
+				pctDist    	0.892308
+				height     	41
+				orientation 	1))
+			(object RoleView "parent" @11
+			    Parent_View 	@7
+			    location   	(359, 214)
+			    label      	(object SegLabel @12
+				Parent_View 	@11
+				location   	(590, 1309)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	141
+				justify    	0
+				label      	"+parent"
+				pctDist    	0.730061
+				height     	78
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F563CD502EE"
+			    client     	@7
+			    supplier   	@5
+			    vertices   	(list Points
+				(656, 1363)
+				(512, 1363)
+				(512, 1236))
+			    line_style 	3
+			    origin_attachment 	(656, 1363)
+			    terminal_attachment 	(512, 1236)
+			    label      	(object SegLabel @13
+				Parent_View 	@11
+				location   	(566, 1264)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.900000
+				height     	54
+				orientation 	1))))
+		(object ClassView "Class" "Logical View::history::HistoryLog" @14
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2537, 1134)
+		    label      	(object ItemLabel
+			Parent_View 	@14
+			location   	(2389, 1005)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	296
+			justify    	0
+			label      	"HistoryLog")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F0D56500117"
+		    width      	314
+		    height     	282
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::repository::RepositoryItem" @15
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1757, 1146)
+		    label      	(object ItemLabel
+			Parent_View 	@15
+			location   	(1362, 990)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	790
+			justify    	0
+			label      	"RepositoryItem")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F56298902E0"
+		    compartment 	(object Compartment
+			Parent_View 	@15
+			location   	(1362, 1051)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	5
+			max_width  	787
+			compartmentItems 	(list Compartment
+			    "+ getInputStream()"))
+		    width      	808
+		    height     	336
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @16
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F56311D0112"
+		    client     	@15
+		    supplier   	@1
+		    line_style 	0)
+		(object AssociationViewNew "$UNNAMED$0" @17
+		    location   	(1150, 1155)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F563120010D"
+		    roleview_list 	(list RoleViews
+			(object RoleView "items" @18
+			    Parent_View 	@17
+			    location   	(656, 437)
+			    label      	(object SegLabel @19
+				Parent_View 	@18
+				location   	(1288, 1189)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	124
+				justify    	0
+				label      	"+items"
+				pctDist    	0.684444
+				height     	34
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F563120038E"
+			    client     	@17
+			    supplier   	@15
+			    line_style 	3
+			    origin_attachment 	(1150, 1155)
+			    terminal_attachment 	(1353, 1155)
+			    label      	(object SegLabel @20
+				Parent_View 	@18
+				location   	(1316, 1121)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..*"
+				pctDist    	0.822222
+				height     	35
+				orientation 	0))
+			(object RoleView "parent" @21
+			    Parent_View 	@17
+			    location   	(656, 437)
+			    label      	(object SegLabel @22
+				Parent_View 	@21
+				location   	(1020, 1116)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	141
+				justify    	0
+				label      	"+parent"
+				pctDist    	0.640777
+				height     	40
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F563120038F"
+			    client     	@17
+			    supplier   	@5
+			    line_style 	3
+			    origin_attachment 	(1150, 1155)
+			    terminal_attachment 	(947, 1155)
+			    label      	(object SegLabel @23
+				Parent_View 	@21
+				location   	(987, 1208)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.810219
+				height     	53
+				orientation 	0))))
+		(object AssociationViewNew "$UNNAMED$2" @24
+		    location   	(2270, 1162)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3F5648B2033A"
+		    roleview_list 	(list RoleViews
+			(object RoleView "history" @25
+			    Parent_View 	@24
+			    location   	(728, 28)
+			    label      	(object SegLabel @26
+				Parent_View 	@25
+				location   	(2310, 1129)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	145
+				justify    	0
+				label      	"+history"
+				pctDist    	0.363636
+				height     	34
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F5648B600F1"
+			    client     	@24
+			    supplier   	@14
+			    line_style 	3
+			    origin_attachment 	(2270, 1162)
+			    terminal_attachment 	(2380, 1162)
+			    label      	(object SegLabel @27
+				Parent_View 	@25
+				location   	(2338, 1198)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.623282
+				height     	36
+				orientation 	1))
+			(object RoleView "$UNNAMED$3" @28
+			    Parent_View 	@24
+			    location   	(728, 28)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"3F5648B6010F"
+			    client     	@24
+			    supplier   	@15
+			    line_style 	3
+			    origin_attachment 	(2270, 1162)
+			    terminal_attachment 	(2161, 1162))))
+		(object ClassView "Class" "Logical View::repository::IPath" @29
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1418, 2342)
+		    label      	(object ItemLabel
+			Parent_View 	@29
+			location   	(982, 2283)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	872
+			justify    	0
+			label      	"IPath")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@29
+			location   	(982, 2233)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	872
+			justify    	0
+			label      	"<<datatype>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F59040F03DC"
+		    width      	890
+		    height     	242
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::repository::RepositoryFolderType" @30
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1646, 1762)
+		    label      	(object ItemLabel
+			Parent_View 	@30
+			location   	(1432, 1653)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	428
+			justify    	0
+			label      	"RepositoryFolderType")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@30
+			location   	(1432, 1603)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	428
+			justify    	0
+			label      	"<<enumeration>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3F97DCC2018E"
+		    compartment 	(object Compartment
+			Parent_View 	@30
+			location   	(1432, 1714)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	4
+			max_width  	290)
+		    width      	446
+		    height     	342
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::repository::RepositoryItemType" @31
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2368, 1962)
+		    label      	(object ItemLabel
+			Parent_View 	@31
+			location   	(2167, 1653)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	402
+			justify    	0
+			label      	"RepositoryItemType")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@31
+			location   	(2167, 1603)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	402
+			justify    	0
+			label      	"<<enumeration>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"41A387BB00AF"
+		    compartment 	(object Compartment
+			Parent_View 	@31
+			location   	(2167, 1714)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	12
+			max_width  	409)
+		    width      	420
+		    height     	742
+		    annotation 	8
+		    autoResize 	TRUE)))))

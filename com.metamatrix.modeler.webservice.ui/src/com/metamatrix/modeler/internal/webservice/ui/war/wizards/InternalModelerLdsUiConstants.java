@@ -1,0 +1,95 @@
+/* ================================================================================== 
+ * JBoss, Home of Professional Open Source. 
+ * 
+ * Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ * 
+ * Some portions of this file may be copyrighted by other 
+ * contributors and licensed to Red Hat, Inc. under one or more 
+ * contributor license agreements. See the copyright.txt file in the 
+ * distribution for a full listing of individual contributors. 
+ * 
+ * This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0 
+ * which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html 
+ * ================================================================================== */ 
+
+package com.metamatrix.modeler.internal.webservice.ui.war.wizards;
+
+import java.util.ResourceBundle;
+
+import com.metamatrix.core.PluginUtil;
+import com.metamatrix.core.util.PluginUtilImpl;
+import com.metamatrix.modeler.webservice.ui.IUiConstants;
+
+/**
+ * @since 4.0
+ */
+public interface InternalModelerLdsUiConstants{
+    //==================
+    // Constants
+    //==================
+    
+    /**
+     * The identifier of the containing plugin.
+     * @since 4.3
+     */
+    String PLUGIN_ID = IUiConstants.class.getPackage().getName();
+    
+    /**
+     * Provides access to the plug-in's log, internationalized properties, and debugger.
+     * @since 4.3
+     */
+    PluginUtil Util = new PluginUtilImpl(PLUGIN_ID, PC.BUNDLE_NAME, ResourceBundle.getBundle(PC.BUNDLE_NAME));
+    
+    /**
+     * Contains private constants used by other constants within this class.
+     * @since 4.0
+     */
+    class PC {
+        public static final String BUNDLE_NAME = PLUGIN_ID + ".i18n"; //$NON-NLS-1$
+    }        
+    
+    public final static int NONE = 0;
+
+    /**
+     * Constant for an info message (value 1).
+     */
+    public final static int INFORMATION = 1;
+
+    /**
+     * Constant for a warning message (value 2).
+     */
+    public final static int WARNING = 2;
+
+    /**
+     * Constant for an error message (value 3).
+     */
+    public final static int ERROR = 3;
+    
+    
+    public static final String CLOSE = "Close"; //$NON-NLS-1$
+    
+    /**
+     * Keys for images and image descriptors stored in the image registry.
+     * @since 4.0
+     */
+    interface WebServicesImages {                       
+        String WAR_FILE_ICON = "icons/full/wizban/warFile.jpg"; //$NON-NLS-1$
+    }
+    
+    /**
+     * status code for opening connector binding editor
+     */
+    public static int OPEN_BINDING_EDITOR = 55;
+    
+    public static int LEAVE_EDITOR_ALONE = 5;
+    
+    
+    public static int VALIDATEVDBEDITINGCONTEXT = 0;
+    public static int VALIDATECONTEXT           = 1;
+    public static int VALIDATELOGFILE           = 2;
+    public static int VALIDATEWARFILE           = 3;
+    public static int VALIDATELLICENSEFILE      = 4;                           
+    public static int VALIDATEVDBFILENAME       = 5;
+}

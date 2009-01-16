@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2000-2004 MetaMatrix Corporation. All rights reserved."
+    modelDirectory="/com.metamatrix.metamodels.people/src" editDirectory="/com.metamatrix.metamodels.people/src"
+    editorDirectory="/com.metamatrix.metamodels.editor/src" modelPluginID="com.metamatrix.metamodels.people"
+    modelName="People" editPluginClass="com.metamatrix.metamodels.people.provider.PeopleEditPlugin"
+    editorPluginClass="com.metamatrix.metamodels.people.presentation.PeopleEditorPlugin"
+    updateClasspath="false" nonNLSMarkers="true" testsDirectory="" testSuiteClass=""
+    usedGenPackages="../../org.eclipse.emf.ecore/src/model/Ecore.genmodel#//ecore">
+  <foreignModel>People.mdl</foreignModel>
+  <genPackages prefix="People" basePackage="com.metamatrix.metamodels" ecorePackage="people.ecore#/">
+    <genClasses ecoreClass="people.ecore#//Person">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute people.ecore#//Person/firstName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute people.ecore#//Person/surname"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute people.ecore#//Person/commonFullName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute people.ecore#//Person/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute people.ecore#//Person/identifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute people.ecore#//Person/username"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute people.ecore#//Person/workTelephoneNumber"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute people.ecore#//Person/mobileTelephoneNumber"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute people.ecore#//Person/faxTelephoneNumber"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute people.ecore#//Person/pagerTelephoneNumber"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute people.ecore#//Person/homeTelephoneNumber"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute people.ecore#//Person/emailAddress"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute people.ecore#//Person/emailAddressSecondary"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference people.ecore#//Person/properties"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference people.ecore#//Person/personContainer"/>
+      <genOperations ecoreOperation="people.ecore#//Person/getDisplayableName"/>
+    </genClasses>
+    <genClasses ecoreClass="people.ecore#//Folder">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute people.ecore#//Folder/name"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference people.ecore#//Folder/folderContainer"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="people.ecore#//PersonContainer">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference people.ecore#//PersonContainer/persons"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="people.ecore#//FolderContainer">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference people.ecore#//FolderContainer/folders"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

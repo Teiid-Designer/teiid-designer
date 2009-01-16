@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2000-2005 MetaMatrix Corporation.  All rights reserved."
+    modelDirectory="/com.metamatrix.metamodels.relational/src" editDirectory="/com.metamatrix.metamodels.relational/src"
+    editorDirectory="/com.metamatrix.metamodels.relational.ui.editor/src" modelPluginID="com.metamatrix.metamodels.relational"
+    modelName="Relational" nonNLSMarkers="true" runtimeCompatibility="true" importerID="org.eclipse.emf.importer.rose"
+    usedGenPackages="../../../plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore Core.genmodel#//core Extension.genmodel#//extension">
+  <foreignModel>E:\Plugins\current\plugins\com.metamatrix.metamodels\models\Relational.mdl</foreignModel>
+  <genPackages prefix="Relational" basePackage="com.metamatrix.metamodels" disposableProviderFactory="true"
+      ecorePackage="relational.ecore#/">
+    <genEnums ecoreEnum="relational.ecore#//NullableType">
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//NullableType/NO_NULLS"/>
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//NullableType/NULLABLE"/>
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//NullableType/NULLABLE_UNKNOWN"/>
+    </genEnums>
+    <genEnums ecoreEnum="relational.ecore#//DirectionKind">
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//DirectionKind/IN"/>
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//DirectionKind/OUT"/>
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//DirectionKind/INOUT"/>
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//DirectionKind/RETURN"/>
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//DirectionKind/UNKNOWN"/>
+    </genEnums>
+    <genEnums ecoreEnum="relational.ecore#//MultiplicityKind">
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//MultiplicityKind/ONE"/>
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//MultiplicityKind/MANY"/>
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//MultiplicityKind/ZERO_TO_ONE"/>
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//MultiplicityKind/ZERO_TO_MANY"/>
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//MultiplicityKind/UNSPECIFIED"/>
+    </genEnums>
+    <genEnums ecoreEnum="relational.ecore#//SearchabilityType">
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//SearchabilityType/SEARCHABLE"/>
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//SearchabilityType/ALL_EXCEPT_LIKE"/>
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//SearchabilityType/LIKE_ONLY"/>
+      <genEnumLiterals ecoreEnumLiteral="relational.ecore#//SearchabilityType/UNSEARCHABLE"/>
+    </genEnums>
+    <genClasses image="false" ecoreClass="relational.ecore#//Table">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Table/system"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Table/cardinality"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Table/supportsUpdate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Table/materialized"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//Table/schema"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//Table/accessPatterns"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//Table/catalog"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//Table/logicalRelationships"/>
+    </genClasses>
+    <genClasses ecoreClass="relational.ecore#//Column">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/nativeType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/length"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/fixedLength"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/precision"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/scale"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/nullable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/autoIncremented"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/defaultValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/minimumValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/maximumValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/format"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/characterSetName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/collationName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/selectable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/updateable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/caseSensitive"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/searchability"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/currency"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/radix"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/signed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/distinctValueCount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Column/nullValueCount"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//Column/uniqueKeys"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//Column/indexes"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//Column/foreignKeys"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//Column/accessPatterns"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//Column/owner"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//Column/type"/>
+    </genClasses>
+    <genClasses ecoreClass="relational.ecore#//Schema">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//Schema/tables"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//Schema/catalog"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//Schema/procedures"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//Schema/indexes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//Schema/logicalRelationships"/>
+    </genClasses>
+    <genClasses ecoreClass="relational.ecore#//PrimaryKey">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//PrimaryKey/table"/>
+    </genClasses>
+    <genClasses ecoreClass="relational.ecore#//ForeignKey">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//ForeignKey/foreignKeyMultiplicity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//ForeignKey/primaryKeyMultiplicity"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//ForeignKey/columns"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//ForeignKey/uniqueKey"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//ForeignKey/table"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="relational.ecore#//RelationalEntity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//RelationalEntity/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//RelationalEntity/nameInSource"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="relational.ecore#//UniqueKey">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//UniqueKey/columns"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//UniqueKey/foreignKeys"/>
+      <genOperations ecoreOperation="relational.ecore#//UniqueKey/getTable"/>
+    </genClasses>
+    <genClasses ecoreClass="relational.ecore#//View"/>
+    <genClasses ecoreClass="relational.ecore#//Catalog">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//Catalog/schemas"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//Catalog/procedures"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//Catalog/indexes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//Catalog/tables"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//Catalog/logicalRelationships"/>
+    </genClasses>
+    <genClasses ecoreClass="relational.ecore#//Procedure">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Procedure/function"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//Procedure/schema"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//Procedure/parameters"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//Procedure/catalog"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//Procedure/result"/>
+    </genClasses>
+    <genClasses ecoreClass="relational.ecore#//Index">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Index/filterCondition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Index/nullable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Index/autoUpdate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//Index/unique"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//Index/schema"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//Index/columns"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//Index/catalog"/>
+    </genClasses>
+    <genClasses ecoreClass="relational.ecore#//ProcedureParameter">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//ProcedureParameter/direction"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//ProcedureParameter/defaultValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//ProcedureParameter/nativeType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//ProcedureParameter/length"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//ProcedureParameter/precision"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//ProcedureParameter/scale"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//ProcedureParameter/nullable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//ProcedureParameter/radix"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//ProcedureParameter/procedure"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//ProcedureParameter/type"/>
+    </genClasses>
+    <genClasses ecoreClass="relational.ecore#//UniqueConstraint">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//UniqueConstraint/table"/>
+    </genClasses>
+    <genClasses ecoreClass="relational.ecore#//AccessPattern">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//AccessPattern/columns"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//AccessPattern/table"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="relational.ecore#//Relationship"/>
+    <genClasses ecoreClass="relational.ecore#//LogicalRelationship">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//LogicalRelationship/catalog"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//LogicalRelationship/schema"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//LogicalRelationship/ends"/>
+    </genClasses>
+    <genClasses ecoreClass="relational.ecore#//LogicalRelationshipEnd">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute relational.ecore#//LogicalRelationshipEnd/multiplicity"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//LogicalRelationshipEnd/table"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//LogicalRelationshipEnd/relationship"/>
+    </genClasses>
+    <genClasses ecoreClass="relational.ecore#//BaseTable">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//BaseTable/foreignKeys"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//BaseTable/primaryKey"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//BaseTable/uniqueConstraints"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="relational.ecore#//ColumnSet">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference relational.ecore#//ColumnSet/columns"/>
+    </genClasses>
+    <genClasses ecoreClass="relational.ecore#//ProcedureResult">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference relational.ecore#//ProcedureResult/procedure"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

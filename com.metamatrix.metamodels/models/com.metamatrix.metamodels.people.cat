@@ -1,0 +1,525 @@
+
+(object Petal
+    version    	43
+    _written   	"Rose 6.1.9113.5"
+    charSet    	0)
+
+(object Class_Category "people"
+    is_unit    	TRUE
+    is_loaded  	TRUE
+    attributes 	(list Attribute_Set
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"nsPrefix"
+	    value      	(value Text "people"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"nsURI"
+	    value      	(value Text "http://www.metamatrix.com/metamodels/People"))
+	(object Attribute
+	    tool       	"Ecore"
+	    name       	"basePackage"
+	    value      	(value Text "com.metamatrix.metamodels")))
+    quid       	"407C0F34009B"
+    exportControl 	"Public"
+    logical_models 	(list unit_reference_list
+	(object Class "Person"
+	    quid       	"407C0F9900FB"
+	    operations 	(list Operations
+		(object Operation "getDisplayableName"
+		    quid       	"407C0FBC0191"
+		    result     	"String"
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "firstName"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"407C0FA901C6"
+		    documentation 	"The person's first name.  Example: Steven"
+		    type       	"String")
+		(object ClassAttribute "surname"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"407C0FA901D0"
+		    documentation 	"The family name of the person (X.500 surname attribute).  Example: Dougherty"
+		    type       	"String")
+		(object ClassAttribute "commonFullName"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"407C0FA901DA"
+		    documentation 	"X.500 commonName attribute, which contains a name of an object.  If the object corresponds to a person, it is typically the person's full name.  Example:  Mary Francis Xavier"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "title"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"407C0FA901EE"
+		    documentation 	"Designated position or function of the individual."
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "identifier"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"407C0FA901F8"
+		    documentation 	"A unique identifier for the individual."
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "username"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"407C0FA90202"
+		    documentation 	"Identifies the user ID, usually the login ID"
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "workTelephoneNumber"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"407C0FA90216"
+		    documentation 	"The (primary) telephone number for the individual."
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "mobileTelephoneNumber"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"407C0FA90220"
+		    documentation 	"The telephone number for the individual's mobile phone."
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "faxTelephoneNumber"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"407C0FA90234"
+		    documentation 	"The telephone number for the individual's facsimile machine."
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "pagerTelephoneNumber"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"407C0FA9023E"
+		    documentation 	"The (primary) telephone number for the individual."
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "homeTelephoneNumber"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"407C0FA90252"
+		    documentation 	"The (primary) telephone number for the individual."
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "emailAddress"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"407C0FA9025C"
+		    documentation 	"The preferred address for email."
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "emailAddressSecondary"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isUnsettable"
+			    value      	TRUE))
+		    quid       	"407C0FA90270"
+		    documentation 	"The preferred address for email."
+		    stereotype 	"0..1"
+		    type       	"String")
+		(object ClassAttribute "properties"
+		    quid       	"407C0FA90284"
+		    documentation 	"Name-value pairs that are associated with this URI."
+		    stereotype 	"0..*"
+		    type       	"EStringToStringMapEntry")))
+	(object Class "Folder"
+	    quid       	"407C0FEA006B"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"407C105C02AA"
+		    supplier   	"Logical View::people::PersonContainer"
+		    quidu      	"407C0FFF035A")
+		(object Inheritance_Relationship
+		    quid       	"407C111D003A"
+		    supplier   	"Logical View::people::FolderContainer"
+		    quidu      	"407C10760012"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "name"
+		    quid       	"407C0FF60203"
+		    type       	"String")))
+	(object Class "PersonContainer"
+	    quid       	"407C0FFF035A"
+	    stereotype 	"Interface")
+	(object Class "FolderContainer"
+	    quid       	"407C10760012"
+	    stereotype 	"Interface")
+	(object Association "$UNNAMED$0"
+	    quid       	"407C10070171"
+	    roles      	(list role_list
+		(object Role "persons"
+		    quid       	"407C10080050"
+		    label      	"persons"
+		    supplier   	"Logical View::people::Person"
+		    quidu      	"407C0F9900FB"
+		    client_cardinality 	(value cardinality "0..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "personContainer"
+		    quid       	"407C1008005A"
+		    label      	"personContainer"
+		    supplier   	"Logical View::people::PersonContainer"
+		    quidu      	"407C0FFF035A"
+		    client_cardinality 	(value cardinality "0..1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$1"
+	    quid       	"407C10860097"
+	    roles      	(list role_list
+		(object Role "folders"
+		    quid       	"407C10860250"
+		    label      	"folders"
+		    supplier   	"Logical View::people::Folder"
+		    quidu      	"407C0FEA006B"
+		    client_cardinality 	(value cardinality "0..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "folderContainer"
+		    quid       	"407C1086025A"
+		    label      	"folderContainer"
+		    supplier   	"Logical View::people::FolderContainer"
+		    quidu      	"407C10760012"
+		    client_cardinality 	(value cardinality "0..1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE))))
+    logical_presentations 	(list unit_reference_list
+	(object ClassDiagram "Main"
+	    quid       	"407C0F5A01FE"
+	    title      	"Main"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::people::PersonContainer" @1
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1860, 459)
+		    label      	(object ItemLabel
+			Parent_View 	@1
+			location   	(1689, 430)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	342
+			justify    	0
+			label      	"PersonContainer")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@1
+			location   	(1689, 380)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	342
+			justify    	0
+			label      	"<<Interface>>")
+		    icon       	"Interface"
+		    icon_style 	"Label"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"407C0FFF035A"
+		    width      	360
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::people::Person" @2
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    ShowOperationSignature 	TRUE
+		    location   	(676, 700)
+		    label      	(object ItemLabel
+			Parent_View 	@2
+			location   	(225, 269)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	902
+			justify    	0
+			label      	"Person")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"407C0F9900FB"
+		    compartment 	(object Compartment
+			Parent_View 	@2
+			location   	(225, 330)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	16
+			max_width  	900)
+		    width      	920
+		    height     	886
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$0" @3
+		    location   	(1408, 472)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"407C10070171"
+		    roleview_list 	(list RoleViews
+			(object RoleView "persons" @4
+			    Parent_View 	@3
+			    location   	(-431, -409)
+			    label      	(object SegLabel @5
+				Parent_View 	@4
+				location   	(1220, 432)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	185
+				justify    	0
+				label      	"+persons"
+				pctDist    	0.679923
+				height     	41
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"407C10080050"
+			    client     	@3
+			    supplier   	@2
+			    line_style 	3
+			    origin_attachment 	(1408, 472)
+			    terminal_attachment 	(1136, 472)
+			    label      	(object SegLabel @6
+				Parent_View 	@4
+				location   	(1181, 510)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..*"
+				pctDist    	0.849180
+				height     	38
+				orientation 	0))
+			(object RoleView "personContainer" @7
+			    Parent_View 	@3
+			    location   	(-431, -409)
+			    label      	(object SegLabel @8
+				Parent_View 	@7
+				location   	(1515, 434)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	318
+				justify    	0
+				label      	"+personContainer"
+				pctDist    	0.393382
+				height     	38
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"407C1008005A"
+			    client     	@3
+			    supplier   	@1
+			    line_style 	3
+			    origin_attachment 	(1408, 472)
+			    terminal_attachment 	(1680, 472)
+			    label      	(object SegLabel @9
+				Parent_View 	@7
+				location   	(1632, 519)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.842623
+				height     	47
+				orientation 	1))))
+		(object ClassView "Class" "Logical View::people::FolderContainer" @10
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2394, 460)
+		    label      	(object ItemLabel
+			Parent_View 	@10
+			location   	(2238, 431)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	312
+			justify    	0
+			label      	"FolderContainer")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@10
+			location   	(2238, 381)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	312
+			justify    	0
+			label      	"<<Interface>>")
+		    icon       	"Interface"
+		    icon_style 	"Label"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"407C10760012"
+		    width      	330
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::people::Folder" @11
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(2118, 994)
+		    label      	(object ItemLabel
+			Parent_View 	@11
+			location   	(1970, 913)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	296
+			justify    	0
+			label      	"Folder")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"407C0FEA006B"
+		    compartment 	(object Compartment
+			Parent_View 	@11
+			location   	(1970, 974)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	2
+			max_width  	303)
+		    width      	314
+		    height     	186
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$1" @12
+		    location   	(2473, 878)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"407C10860097"
+		    roleview_list 	(list RoleViews
+			(object RoleView "folders" @13
+			    Parent_View 	@12
+			    location   	(77, -456)
+			    label      	(object SegLabel @14
+				Parent_View 	@13
+				location   	(2355, 975)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	145
+				justify    	0
+				label      	"+folders"
+				pctDist    	0.735974
+				height     	33
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"407C10860250"
+			    client     	@12
+			    supplier   	@11
+			    vertices   	(list Points
+				(2473, 878)
+				(2473, 1007)
+				(2275, 1007))
+			    line_style 	3
+			    origin_attachment 	(2473, 878)
+			    terminal_attachment 	(2275, 1007)
+			    label      	(object SegLabel @15
+				Parent_View 	@13
+				location   	(2328, 1043)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..*"
+				pctDist    	0.749629
+				height     	36
+				orientation 	0))
+			(object RoleView "folderContainer" @16
+			    Parent_View 	@12
+			    location   	(77, -456)
+			    label      	(object SegLabel @17
+				Parent_View 	@16
+				location   	(2651, 585)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	302
+				justify    	0
+				label      	"+folderContainer"
+				pctDist    	0.896341
+				height     	178
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"407C1086025A"
+			    client     	@12
+			    supplier   	@10
+			    line_style 	3
+			    origin_attachment 	(2473, 878)
+			    terminal_attachment 	(2473, 551)
+			    label      	(object SegLabel @18
+				Parent_View 	@16
+				location   	(2413, 592)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.878049
+				height     	61
+				orientation 	0))))
+		(object InheritView "" @19
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"407C105C02AA"
+		    client     	@11
+		    supplier   	@1
+		    line_style 	0)
+		(object InheritView "" @20
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"407C111D003A"
+		    client     	@11
+		    supplier   	@10
+		    line_style 	0)))))

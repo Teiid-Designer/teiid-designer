@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: com.metamatrix.metamodels.core; singleton:=true
+Bundle-Version: 6.0.0
+Bundle-ClassPath: metamodelsCore.jar
+Bundle-Activator: com.metamatrix.metamodels.core.CoreMetamodelPlugin
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Export-Package: com.metamatrix.metamodels.core,
+ com.metamatrix.metamodels.core.custom.impl,
+ com.metamatrix.metamodels.core.extension,
+ com.metamatrix.metamodels.core.extension.impl,
+ com.metamatrix.metamodels.core.extension.provider,
+ com.metamatrix.metamodels.core.extension.util,
+ com.metamatrix.metamodels.core.impl,
+ com.metamatrix.metamodels.core.provider,
+ com.metamatrix.metamodels.core.util
+Require-Bundle: org.eclipse.emf.ecore,
+ org.eclipse.emf.edit,
+ org.eclipse.emf.ecore.edit,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ federate_embedded_query,
+ com.metamatrix.core.modeler
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2000-2004 MetaMatrix Corporation. All rights reserved."
+    modelDirectory="/com.metamatrix.metamodels.webservice/src" editDirectory="/com.metamatrix.metamodels.webservice/src"
+    editorDirectory="/com.metamatrix.metamodels.webservice.editor/src" modelPluginID="com.metamatrix.metamodels.webservice"
+    modelName="WebServices" editPluginClass="com.metamatrix.metamodels.webservice.provider.WebServicesEditPlugin"
+    editorPluginClass="com.metamatrix.metamodels.webservice.editor.presentation.WebServicesEditorPlugin"
+    updateClasspath="false" nonNLSMarkers="true" testsDirectory="" testSuiteClass=""
+    usedGenPackages="XmlDocument.genmodel#//xml ../../org.eclipse.xsd/src/model/XSD.genmodel#//xsd">
+  <foreignModel>WebServices.mdl</foreignModel>
+  <genPackages prefix="WebService" basePackage="com.metamatrix.metamodels" disposableProviderFactory="true"
+      ecorePackage="webservice.ecore#/">
+    <genDataTypes ecoreDataType="webservice.ecore#//IStatus"/>
+    <genClasses ecoreClass="webservice.ecore#//Operation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute webservice.ecore#//Operation/pattern"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute webservice.ecore#//Operation/safe"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference webservice.ecore#//Operation/input"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference webservice.ecore#//Operation/output"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference webservice.ecore#//Operation/interface"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="webservice.ecore#//Message">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference webservice.ecore#//Message/contentElement"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference webservice.ecore#//Message/samples"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference webservice.ecore#//Message/contentComplexType"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference webservice.ecore#//Message/contentSimpleType"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="webservice.ecore#//WebServiceComponent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute webservice.ecore#//WebServiceComponent/name"/>
+      <genOperations ecoreOperation="webservice.ecore#//WebServiceComponent/isValid"/>
+    </genClasses>
+    <genClasses ecoreClass="webservice.ecore#//Input">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference webservice.ecore#//Input/operation"/>
+    </genClasses>
+    <genClasses ecoreClass="webservice.ecore#//Output">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference webservice.ecore#//Output/operation"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference webservice.ecore#//Output/xmlDocument"/>
+    </genClasses>
+    <genClasses ecoreClass="webservice.ecore#//Interface">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference webservice.ecore#//Interface/operations"/>
+    </genClasses>
+    <genClasses ecoreClass="webservice.ecore#//SampleMessages">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference webservice.ecore#//SampleMessages/message"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference webservice.ecore#//SampleMessages/sampleFiles"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference webservice.ecore#//SampleMessages/sampleFromXsd"/>
+    </genClasses>
+    <genClasses ecoreClass="webservice.ecore#//SampleFile">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute webservice.ecore#//SampleFile/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute webservice.ecore#//SampleFile/url"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference webservice.ecore#//SampleFile/sampleMessages"/>
+    </genClasses>
+    <genClasses ecoreClass="webservice.ecore#//SampleFromXsd">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute webservice.ecore#//SampleFromXsd/maxNumberOfLevelsToBuild"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference webservice.ecore#//SampleFromXsd/sampleFragment"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference webservice.ecore#//SampleFromXsd/sampleMessages"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

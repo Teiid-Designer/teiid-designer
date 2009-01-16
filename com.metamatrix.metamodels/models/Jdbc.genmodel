@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.metamatrix.modeler.jdbc/src"
+    editDirectory="/com.metamatrix.modeler.jdbc/src" editorDirectory="/com.metamatrix.modeler.jdbc.ui.editor/src"
+    modelPluginID="com.metamatrix.modeler.jdbc" modelName="Jdbc" editPluginClass="com.metamatrix.modeler.jdbc.provider.JdbcEditPlugin"
+    editorPluginClass="com.metamatrix.modeler.jdbc.presentation.JdbcEditorPlugin"
+    updateClasspath="false" generateSchema="true" nonNLSMarkers="true">
+  <foreignModel>E:\Plugins\current\plugins\com.metamatrix.metamodels\models\Jdbc.mdl</foreignModel>
+  <genPackages prefix="Jdbc" basePackage="com.metamatrix.modeler" ecorePackage="Jdbc.ecore#/">
+    <genEnums ecoreEnum="Jdbc.ecore#//CaseConversion">
+      <genEnumLiterals ecoreEnumLiteral="Jdbc.ecore#//CaseConversion/NONE"/>
+      <genEnumLiterals ecoreEnumLiteral="Jdbc.ecore#//CaseConversion/TO_UPPERCASE"/>
+      <genEnumLiterals ecoreEnumLiteral="Jdbc.ecore#//CaseConversion/TO_LOWERCASE"/>
+    </genEnums>
+    <genEnums ecoreEnum="Jdbc.ecore#//SourceNames">
+      <genEnumLiterals ecoreEnumLiteral="Jdbc.ecore#//SourceNames/NONE"/>
+      <genEnumLiterals ecoreEnumLiteral="Jdbc.ecore#//SourceNames/UNQUALIFIED"/>
+      <genEnumLiterals ecoreEnumLiteral="Jdbc.ecore#//SourceNames/FULLY_QUALIFIED"/>
+    </genEnums>
+    <genClasses ecoreClass="Jdbc.ecore#//JdbcSourceProperty">
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcSourceProperty/name"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcSourceProperty/value"/>
+      <genFeatures property="None" notify="false" ecoreFeature="ecore:EReference Jdbc.ecore#//JdbcSourceProperty/source"/>
+    </genClasses>
+    <genClasses ecoreClass="Jdbc.ecore#//JdbcDriver">
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcDriver/name"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcDriver/urlSyntax"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcDriver/jarFileUris"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcDriver/availableDriverClassNames"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcDriver/preferredDriverClassName"/>
+      <genFeatures property="None" notify="false" ecoreFeature="ecore:EReference Jdbc.ecore#//JdbcDriver/jdbcDriverContainer"/>
+    </genClasses>
+    <genClasses ecoreClass="Jdbc.ecore#//JdbcSource">
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcSource/name"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcSource/driverName"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcSource/driverClass"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcSource/username"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcSource/url"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference Jdbc.ecore#//JdbcSource/jdbcDriver"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference Jdbc.ecore#//JdbcSource/properties"/>
+      <genFeatures property="None" notify="false" ecoreFeature="ecore:EReference Jdbc.ecore#//JdbcSource/jdbcSourceContainer"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference Jdbc.ecore#//JdbcSource/importSettings"/>
+    </genClasses>
+    <genClasses ecoreClass="Jdbc.ecore#//JdbcDriverContainer">
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference Jdbc.ecore#//JdbcDriverContainer/jdbcDrivers"/>
+    </genClasses>
+    <genClasses ecoreClass="Jdbc.ecore#//JdbcSourceContainer">
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference Jdbc.ecore#//JdbcSourceContainer/jdbcSources"/>
+    </genClasses>
+    <genClasses ecoreClass="Jdbc.ecore#//JdbcImportSettings">
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcImportSettings/createCatalogsInModel"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcImportSettings/createSchemasInModel"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcImportSettings/convertCaseInModel"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcImportSettings/generateSourceNamesInModel"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcImportSettings/includedCatalogPaths"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcImportSettings/includedSchemaPaths"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcImportSettings/excludedObjectPaths"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcImportSettings/includeForeignKeys"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcImportSettings/includeIndexes"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcImportSettings/includeProcedures"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcImportSettings/includeApproximateIndexes"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcImportSettings/includeUniqueIndexes"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcImportSettings/includedTableTypes"/>
+      <genFeatures property="None" notify="false" ecoreFeature="ecore:EReference Jdbc.ecore#//JdbcImportSettings/source"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference Jdbc.ecore#//JdbcImportSettings/options"/>
+    </genClasses>
+    <genClasses ecoreClass="Jdbc.ecore#//JdbcImportOptions">
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcImportOptions/name"/>
+      <genFeatures ecoreFeature="ecore:EAttribute Jdbc.ecore#//JdbcImportOptions/value"/>
+      <genFeatures property="None" notify="false" ecoreFeature="ecore:EReference Jdbc.ecore#//JdbcImportOptions/importSettings"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

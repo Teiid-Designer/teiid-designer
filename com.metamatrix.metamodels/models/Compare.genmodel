@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.metamatrix.modeler.compare/src"
+    editDirectory="/com.metamatrix.modeler.compare/src" editorDirectory="/com.metamatrix.modeler.compare.ui.editor/src"
+    modelPluginID="com.metamatrix.modeler.compare" modelName="Compare" editPluginClass="com.metamatrix.modeler.compare.provider.CompareEditPlugin"
+    editorPluginClass="com.metamatrix.modeler.compare.ui.presentation.CompareEditorPlugin"
+    updateClasspath="false" generateSchema="true" nonNLSMarkers="true" testsDirectory="/com.metamatrix.modeler.compare/testsrc"
+    testSuiteClass="com.metamatrix.modeler.compare.tests.CompareAllTests" usedGenPackages="../../org.eclipse.emf.ecore/src/model/Ecore.genmodel#//ecore ../../org.eclipse.emf.mapping/src/model/Mapping.genmodel#//mapping">
+  <foreignModel>Compare.mdl</foreignModel>
+  <genPackages prefix="Compare" basePackage="com.metamatrix.modeler" ecorePackage="compare.ecore#/">
+    <genEnums ecoreEnum="compare.ecore#//DifferenceType">
+      <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceType/NO_CHANGE"/>
+      <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceType/ADDITION"/>
+      <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceType/DELETION"/>
+      <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceType/CHANGE"/>
+      <genEnumLiterals ecoreEnumLiteral="compare.ecore#//DifferenceType/CHANGE_BELOW"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="compare.ecore#//AnyType"/>
+    <genClasses ecoreClass="compare.ecore#//DifferenceDescriptor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//DifferenceDescriptor/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//DifferenceDescriptor/skip"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//DifferenceDescriptor/propertyDifferences"/>
+      <genOperations ecoreOperation="compare.ecore#//DifferenceDescriptor/isDeletion"/>
+      <genOperations ecoreOperation="compare.ecore#//DifferenceDescriptor/isAddition"/>
+      <genOperations ecoreOperation="compare.ecore#//DifferenceDescriptor/isChanged"/>
+      <genOperations ecoreOperation="compare.ecore#//DifferenceDescriptor/isChangedBelow"/>
+      <genOperations ecoreOperation="compare.ecore#//DifferenceDescriptor/isNoChange"/>
+    </genClasses>
+    <genClasses ecoreClass="compare.ecore#//DifferenceReport">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//DifferenceReport/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//DifferenceReport/totalAdditions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//DifferenceReport/totalDeletions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//DifferenceReport/totalChanges"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//DifferenceReport/analysisTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//DifferenceReport/sourceUri"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//DifferenceReport/resultUri"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference compare.ecore#//DifferenceReport/mapping"/>
+    </genClasses>
+    <genClasses ecoreClass="compare.ecore#//PropertyDifference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//PropertyDifference/newValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//PropertyDifference/oldValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute compare.ecore#//PropertyDifference/skip"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference compare.ecore#//PropertyDifference/affectedFeature"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference compare.ecore#//PropertyDifference/descriptor"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

@@ -1,0 +1,1268 @@
+
+(object Petal
+    version    	43
+    _written   	"Rose 6.1.9113.5"
+    charSet    	0)
+
+(object Design "Logical View"
+    is_unit    	TRUE
+    is_loaded  	TRUE
+    quid       	"3FB2A3FF0063"
+    defaults   	(object defaults
+	rightMargin 	0.250000
+	leftMargin 	0.250000
+	topMargin  	0.250000
+	bottomMargin 	0.500000
+	pageOverlap 	0.250000
+	clipIconLabels 	TRUE
+	autoResize 	TRUE
+	snapToGrid 	TRUE
+	gridX      	16
+	gridY      	16
+	defaultFont 	(object Font
+	    size       	10
+	    face       	"Arial"
+	    bold       	FALSE
+	    italics    	FALSE
+	    underline  	FALSE
+	    strike     	FALSE
+	    color      	0
+	    default_color 	TRUE)
+	showMessageNum 	1
+	showClassOfObject 	TRUE
+	notation   	"Unified")
+    root_usecase_package 	(object Class_Category "Use Case View"
+	quid       	"3FB2A3FF0065"
+	exportControl 	"Public"
+	global     	TRUE
+	logical_models 	(list unit_reference_list)
+	logical_presentations 	(list unit_reference_list
+	    (object UseCaseDiagram "Main"
+		quid       	"3FB2A3FF0078"
+		title      	"Main"
+		zoom       	100
+		max_height 	28350
+		max_width  	21600
+		origin_x   	0
+		origin_y   	0
+		items      	(list diagram_item_list))))
+    root_category 	(object Class_Category "Logical View"
+	quid       	"3FB2A3FF0064"
+	exportControl 	"Public"
+	global     	TRUE
+	subsystem  	"Component View"
+	quidu      	"3FB2A3FF0066"
+	logical_models 	(list unit_reference_list
+	    (object Class_Category "cardcatalog"
+		attributes 	(list Attribute_Set
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"nsPrefix"
+			value      	(value Text "cardcat"))
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"nsURI"
+			value      	(value Text "http://www.metamatrix.com/metamodels/CardCatalog"))
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"basePackage"
+			value      	(value Text "com.metamatrix.metamodels")))
+		quid       	"3FB2A405012A"
+		exportControl 	"Public"
+		logical_models 	(list unit_reference_list
+		    (object Class "Book"
+			quid       	"3FB2A4920227"
+			class_attributes 	(list class_attribute_list
+			    (object ClassAttribute "isbn"
+				quid       	"3FB2A5BB029C"
+				type       	"String")
+			    (object ClassAttribute "title"
+				quid       	"3FB2A5C00127"
+				type       	"String")))
+		    (object Class "Library"
+			quid       	"3FB2A49A0124"
+			class_attributes 	(list class_attribute_list
+			    (object ClassAttribute "name"
+				quid       	"3FB2A5C80056"
+				type       	"String")
+			    (object ClassAttribute "branchId"
+				quid       	"3FB2A5D2017D"
+				type       	"int")))
+		    (object Class "Author"
+			quid       	"3FB2A49E013E"
+			class_attributes 	(list class_attribute_list
+			    (object ClassAttribute "firstName"
+				quid       	"3FB2A59903D4"
+				type       	"String")
+			    (object ClassAttribute "lastName"
+				quid       	"3FB2A59F0382"
+				type       	"String")))
+		    (object Class "Magazine"
+			quid       	"3FB2A5FD012F"
+			class_attributes 	(list class_attribute_list
+			    (object ClassAttribute "title"
+				quid       	"3FB2A6030119"
+				type       	"String")))
+		    (object Class "Article"
+			quid       	"3FB2A60A0282"
+			class_attributes 	(list class_attribute_list
+			    (object ClassAttribute "title"
+				quid       	"3FB2A60F01D5"
+				type       	"String")))
+		    (object Association "$UNNAMED$0"
+			quid       	"3FB2A4C1009E"
+			roles      	(list role_list
+			    (object Role "books"
+				quid       	"3FB2A4C10224"
+				label      	"books"
+				supplier   	"Logical View::cardcatalog::Book"
+				quidu      	"3FB2A4920227"
+				client_cardinality 	(value cardinality "0..n")
+				Containment 	"By Value"
+				is_navigable 	TRUE)
+			    (object Role "library"
+				quid       	"3FB2A4C1022E"
+				label      	"library"
+				supplier   	"Logical View::cardcatalog::Library"
+				quidu      	"3FB2A49A0124"
+				client_cardinality 	(value cardinality "0..1")
+				is_navigable 	TRUE
+				is_aggregate 	TRUE)))
+		    (object Association "$UNNAMED$1"
+			quid       	"3FB2A55902A5"
+			roles      	(list role_list
+			    (object Role "authors"
+				quid       	"3FB2A55A0333"
+				label      	"authors"
+				supplier   	"Logical View::cardcatalog::Author"
+				quidu      	"3FB2A49E013E"
+				client_cardinality 	(value cardinality "1..n")
+				is_navigable 	TRUE)
+			    (object Role "$UNNAMED$2"
+				quid       	"3FB2A55A033D"
+				supplier   	"Logical View::cardcatalog::Book"
+				quidu      	"3FB2A4920227")))
+		    (object Association "$UNNAMED$3"
+			quid       	"3FB2A6160351"
+			roles      	(list role_list
+			    (object Role "magazines"
+				quid       	"3FB2A61700E6"
+				label      	"magazines"
+				supplier   	"Logical View::cardcatalog::Magazine"
+				quidu      	"3FB2A5FD012F"
+				client_cardinality 	(value cardinality "0..n")
+				Containment 	"By Value"
+				is_navigable 	TRUE)
+			    (object Role "library"
+				quid       	"3FB2A61700E7"
+				label      	"library"
+				supplier   	"Logical View::cardcatalog::Library"
+				quidu      	"3FB2A49A0124"
+				client_cardinality 	(value cardinality "0..1")
+				is_navigable 	TRUE
+				is_aggregate 	TRUE)))
+		    (object Association "$UNNAMED$4"
+			quid       	"3FB2A657012E"
+			roles      	(list role_list
+			    (object Role "articles"
+				quid       	"3FB2A6580003"
+				label      	"articles"
+				supplier   	"Logical View::cardcatalog::Article"
+				quidu      	"3FB2A60A0282"
+				client_cardinality 	(value cardinality "1..n")
+				Containment 	"By Value"
+				is_navigable 	TRUE)
+			    (object Role "magazine"
+				quid       	"3FB2A6580004"
+				label      	"magazine"
+				supplier   	"Logical View::cardcatalog::Magazine"
+				quidu      	"3FB2A5FD012F"
+				client_cardinality 	(value cardinality "0..1")
+				is_navigable 	TRUE
+				is_aggregate 	TRUE)))
+		    (object Association "$UNNAMED$5"
+			quid       	"3FB2A68F037D"
+			roles      	(list role_list
+			    (object Role "authors"
+				quid       	"3FB2A6900176"
+				label      	"authors"
+				supplier   	"Logical View::cardcatalog::Author"
+				quidu      	"3FB2A49E013E"
+				client_cardinality 	(value cardinality "1..n")
+				is_navigable 	TRUE)
+			    (object Role "$UNNAMED$6"
+				quid       	"3FB2A6900180"
+				supplier   	"Logical View::cardcatalog::Article"
+				quidu      	"3FB2A60A0282"))))
+		logical_presentations 	(list unit_reference_list
+		    (object ClassDiagram "Main"
+			quid       	"3FB2A48C0355"
+			title      	"Main"
+			zoom       	100
+			max_height 	28350
+			max_width  	21600
+			origin_x   	0
+			origin_y   	0
+			items      	(list diagram_item_list
+			    (object ClassView "Class" "Logical View::cardcatalog::Library" @1
+				ShowCompartmentStereotypes 	TRUE
+				IncludeAttribute 	TRUE
+				location   	(848, 224)
+				label      	(object ItemLabel
+				    Parent_View 	@1
+				    location   	(700, 118)
+				    fill_color 	13434879
+				    nlines     	1
+				    max_width  	296
+				    justify    	0
+				    label      	"Library")
+				icon_style 	"Icon"
+				line_color 	3342489
+				fill_color 	13434879
+				quidu      	"3FB2A49A0124"
+				compartment 	(object Compartment
+				    Parent_View 	@1
+				    location   	(700, 179)
+				    icon_style 	"Icon"
+				    fill_color 	13434879
+				    anchor     	2
+				    nlines     	3
+				    max_width  	303)
+				width      	314
+				height     	236
+				annotation 	8
+				autoResize 	TRUE)
+			    (object ClassView "Class" "Logical View::cardcatalog::Book" @2
+				ShowCompartmentStereotypes 	TRUE
+				IncludeAttribute 	TRUE
+				location   	(464, 480)
+				label      	(object ItemLabel
+				    Parent_View 	@2
+				    location   	(328, 374)
+				    fill_color 	13434879
+				    nlines     	1
+				    max_width  	272
+				    justify    	0
+				    label      	"Book")
+				icon_style 	"Icon"
+				line_color 	3342489
+				fill_color 	13434879
+				quidu      	"3FB2A4920227"
+				compartment 	(object Compartment
+				    Parent_View 	@2
+				    location   	(328, 435)
+				    icon_style 	"Icon"
+				    fill_color 	16777215
+				    anchor     	2
+				    nlines     	3
+				    max_width  	269)
+				width      	290
+				height     	236
+				annotation 	8
+				autoResize 	TRUE)
+			    (object AssociationViewNew "$UNNAMED$0" @3
+				location   	(498, 233)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"3FB2A4C1009E"
+				roleview_list 	(list RoleViews
+				    (object RoleView "books" @4
+					Parent_View 	@3
+					location   	(-718, -183)
+					label      	(object SegLabel @5
+					    Parent_View 	@4
+					    location   	(359, 337)
+					    anchor     	1
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	135
+					    justify    	0
+					    label      	"+books"
+					    pctDist    	0.870466
+					    height     	75
+					    orientation 	1)
+					stereotype 	TRUE
+					line_color 	3342489
+					quidu      	"3FB2A4C10224"
+					client     	@3
+					supplier   	@2
+					vertices   	(list Points
+					    (498, 233)
+					    (434, 233)
+					    (434, 362))
+					line_style 	3
+					origin_attachment 	(498, 233)
+					terminal_attachment 	(434, 362)
+					label      	(object SegLabel @6
+					    Parent_View 	@4
+					    location   	(472, 331)
+					    anchor     	2
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	15
+					    justify    	0
+					    label      	"0..*"
+					    pctDist    	0.839378
+					    height     	38
+					    orientation 	0))
+				    (object RoleView "library" @7
+					Parent_View 	@3
+					location   	(-718, -183)
+					label      	(object SegLabel @8
+					    Parent_View 	@7
+					    location   	(614, 194)
+					    anchor     	1
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	146
+					    justify    	0
+					    label      	"+library"
+					    pctDist    	0.601036
+					    height     	39
+					    orientation 	0)
+					stereotype 	TRUE
+					line_color 	3342489
+					quidu      	"3FB2A4C1022E"
+					client     	@3
+					supplier   	@1
+					line_style 	3
+					origin_attachment 	(498, 233)
+					terminal_attachment 	(691, 233)
+					label      	(object SegLabel @9
+					    Parent_View 	@7
+					    location   	(654, 272)
+					    anchor     	2
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	15
+					    justify    	0
+					    label      	"0..1"
+					    pctDist    	0.808290
+					    height     	39
+					    orientation 	1))))
+			    (object ClassView "Class" "Logical View::cardcatalog::Magazine" @10
+				ShowCompartmentStereotypes 	TRUE
+				IncludeAttribute 	TRUE
+				location   	(1200, 448)
+				label      	(object ItemLabel
+				    Parent_View 	@10
+				    location   	(1069, 367)
+				    fill_color 	13434879
+				    nlines     	1
+				    max_width  	262
+				    justify    	0
+				    label      	"Magazine")
+				icon_style 	"Icon"
+				line_color 	3342489
+				fill_color 	13434879
+				quidu      	"3FB2A5FD012F"
+				compartment 	(object Compartment
+				    Parent_View 	@10
+				    location   	(1069, 428)
+				    icon_style 	"Icon"
+				    fill_color 	13434879
+				    anchor     	2
+				    nlines     	2
+				    max_width  	268)
+				width      	280
+				height     	186
+				annotation 	8
+				autoResize 	TRUE)
+			    (object AssociationViewNew "$UNNAMED$3" @11
+				location   	(1143, 233)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"3FB2A6160351"
+				roleview_list 	(list RoleViews
+				    (object RoleView "magazines" @12
+					Parent_View 	@11
+					location   	(-25, -183)
+					label      	(object SegLabel @13
+					    Parent_View 	@12
+					    location   	(1324, 334)
+					    anchor     	1
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	224
+					    justify    	0
+					    label      	"+magazines"
+					    pctDist    	0.884615
+					    height     	121
+					    orientation 	0)
+					stereotype 	TRUE
+					line_color 	3342489
+					quidu      	"3FB2A61700E6"
+					client     	@11
+					supplier   	@10
+					vertices   	(list Points
+					    (1143, 233)
+					    (1203, 233)
+					    (1203, 355))
+					line_style 	3
+					origin_attachment 	(1143, 233)
+					terminal_attachment 	(1203, 355)
+					label      	(object SegLabel @14
+					    Parent_View 	@12
+					    location   	(1150, 336)
+					    anchor     	2
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	15
+					    justify    	0
+					    label      	"0..*"
+					    pctDist    	0.900000
+					    height     	54
+					    orientation 	1))
+				    (object RoleView "library" @15
+					Parent_View 	@11
+					location   	(-25, -183)
+					label      	(object SegLabel @16
+					    Parent_View 	@15
+					    location   	(1088, 194)
+					    anchor     	1
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	146
+					    justify    	0
+					    label      	"+library"
+					    pctDist    	0.398551
+					    height     	39
+					    orientation 	1)
+					stereotype 	TRUE
+					line_color 	3342489
+					quidu      	"3FB2A61700E7"
+					client     	@11
+					supplier   	@1
+					line_style 	3
+					origin_attachment 	(1143, 233)
+					terminal_attachment 	(1005, 233)
+					label      	(object SegLabel @17
+					    Parent_View 	@15
+					    location   	(1046, 272)
+					    anchor     	2
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	15
+					    justify    	0
+					    label      	"0..1"
+					    pctDist    	0.702899
+					    height     	39
+					    orientation 	0))))
+			    (object ClassView "Class" "Logical View::cardcatalog::Author" @18
+				ShowCompartmentStereotypes 	TRUE
+				IncludeAttribute 	TRUE
+				location   	(496, 864)
+				label      	(object ItemLabel
+				    Parent_View 	@18
+				    location   	(312, 758)
+				    fill_color 	13434879
+				    nlines     	1
+				    max_width  	368
+				    justify    	0
+				    label      	"Author")
+				icon_style 	"Icon"
+				line_color 	3342489
+				fill_color 	13434879
+				quidu      	"3FB2A49E013E"
+				compartment 	(object Compartment
+				    Parent_View 	@18
+				    location   	(312, 819)
+				    icon_style 	"Icon"
+				    fill_color 	16777215
+				    anchor     	2
+				    nlines     	3
+				    max_width  	366)
+				width      	386
+				height     	236
+				annotation 	8
+				autoResize 	TRUE)
+			    (object AssociationViewNew "$UNNAMED$1" @19
+				location   	(459, 672)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"3FB2A55902A5"
+				roleview_list 	(list RoleViews
+				    (object RoleView "authors" @20
+					Parent_View 	@19
+					location   	(-53, 256)
+					label      	(object SegLabel @21
+					    Parent_View 	@20
+					    location   	(362, 722)
+					    anchor     	1
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	158
+					    justify    	0
+					    label      	"+authors"
+					    pctDist    	0.675676
+					    height     	97
+					    orientation 	1)
+					stereotype 	TRUE
+					line_color 	3342489
+					quidu      	"3FB2A55A0333"
+					client     	@19
+					supplier   	@18
+					line_style 	3
+					origin_attachment 	(459, 672)
+					terminal_attachment 	(459, 746)
+					label      	(object SegLabel @22
+					    Parent_View 	@20
+					    location   	(508, 719)
+					    anchor     	2
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	15
+					    justify    	0
+					    label      	"1..*"
+					    pctDist    	0.635135
+					    height     	49
+					    orientation 	0))
+				    (object RoleView "$UNNAMED$2" @23
+					Parent_View 	@19
+					location   	(-53, 256)
+					stereotype 	TRUE
+					line_color 	3342489
+					quidu      	"3FB2A55A033D"
+					client     	@19
+					supplier   	@2
+					line_style 	3
+					origin_attachment 	(459, 672)
+					terminal_attachment 	(459, 598))))
+			    (object ClassView "Class" "Logical View::cardcatalog::Article" @24
+				ShowCompartmentStereotypes 	TRUE
+				IncludeAttribute 	TRUE
+				location   	(1200, 816)
+				label      	(object ItemLabel
+				    Parent_View 	@24
+				    location   	(1069, 735)
+				    fill_color 	13434879
+				    nlines     	1
+				    max_width  	262
+				    justify    	0
+				    label      	"Article")
+				icon_style 	"Icon"
+				line_color 	3342489
+				fill_color 	13434879
+				quidu      	"3FB2A60A0282"
+				compartment 	(object Compartment
+				    Parent_View 	@24
+				    location   	(1069, 796)
+				    icon_style 	"Icon"
+				    fill_color 	16777215
+				    anchor     	2
+				    nlines     	2
+				    max_width  	259)
+				width      	280
+				height     	186
+				annotation 	8
+				autoResize 	TRUE)
+			    (object AssociationViewNew "$UNNAMED$4" @25
+				location   	(1200, 631)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"3FB2A657012E"
+				roleview_list 	(list RoleViews
+				    (object RoleView "articles" @26
+					Parent_View 	@25
+					location   	(80, -185)
+					label      	(object SegLabel @27
+					    Parent_View 	@26
+					    location   	(1113, 691)
+					    anchor     	1
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	158
+					    justify    	0
+					    label      	"+articles"
+					    pctDist    	0.659341
+					    height     	87
+					    orientation 	1)
+					stereotype 	TRUE
+					line_color 	3342489
+					quidu      	"3FB2A6580003"
+					client     	@25
+					supplier   	@24
+					line_style 	0
+					label      	(object SegLabel @28
+					    Parent_View 	@26
+					    location   	(1245, 694)
+					    anchor     	2
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	15
+					    justify    	0
+					    label      	"1..*"
+					    pctDist    	0.692308
+					    height     	45
+					    orientation 	0))
+				    (object RoleView "magazine" @29
+					Parent_View 	@25
+					location   	(80, -185)
+					label      	(object SegLabel @30
+					    Parent_View 	@29
+					    location   	(1321, 562)
+					    anchor     	1
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	216
+					    justify    	0
+					    label      	"+magazine"
+					    pctDist    	0.766667
+					    height     	121
+					    orientation 	1)
+					stereotype 	TRUE
+					line_color 	3342489
+					quidu      	"3FB2A6580004"
+					client     	@25
+					supplier   	@10
+					line_style 	0
+					label      	(object SegLabel @31
+					    Parent_View 	@29
+					    location   	(1132, 562)
+					    anchor     	2
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	15
+					    justify    	0
+					    label      	"0..1"
+					    pctDist    	0.766667
+					    height     	68
+					    orientation 	0))))
+			    (object AssociationViewNew "$UNNAMED$5" @32
+				location   	(874, 837)
+				stereotype 	TRUE
+				line_color 	3342489
+				quidu      	"3FB2A68F037D"
+				roleview_list 	(list RoleViews
+				    (object RoleView "authors" @33
+					Parent_View 	@32
+					location   	(-1126, 21)
+					label      	(object SegLabel @34
+					    Parent_View 	@33
+					    location   	(771, 881)
+					    anchor     	1
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	158
+					    justify    	0
+					    label      	"+authors"
+					    pctDist    	0.556757
+					    height     	44
+					    orientation 	0)
+					stereotype 	TRUE
+					line_color 	3342489
+					quidu      	"3FB2A6900176"
+					client     	@32
+					supplier   	@18
+					line_style 	3
+					origin_attachment 	(874, 837)
+					terminal_attachment 	(689, 837)
+					label      	(object SegLabel @35
+					    Parent_View 	@33
+					    location   	(749, 796)
+					    anchor     	2
+					    anchor_loc 	1
+					    nlines     	1
+					    max_width  	15
+					    justify    	0
+					    label      	"1..*"
+					    pctDist    	0.675862
+					    height     	42
+					    orientation 	1))
+				    (object RoleView "$UNNAMED$6" @36
+					Parent_View 	@32
+					location   	(-1126, 21)
+					stereotype 	TRUE
+					line_color 	3342489
+					quidu      	"3FB2A6900180"
+					client     	@32
+					supplier   	@24
+					line_style 	3
+					origin_attachment 	(874, 837)
+					terminal_attachment 	(1060, 837)))))))))
+	logical_presentations 	(list unit_reference_list
+	    (object ClassDiagram "Main"
+		quid       	"3FB2A3FF006A"
+		title      	"Main"
+		zoom       	100
+		max_height 	28350
+		max_width  	21600
+		origin_x   	0
+		origin_y   	0
+		items      	(list diagram_item_list
+		    (object CategoryView "Logical View::cardcatalog" @37
+			location   	(400, 320)
+			label      	(object ItemLabel
+			    Parent_View 	@37
+			    location   	(256, 236)
+			    fill_color 	13434879
+			    nlines     	2
+			    max_width  	288
+			    justify    	0
+			    label      	"cardcatalog")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"3FB2A405012A"
+			width      	300
+			height     	180)))))
+    root_subsystem 	(object SubSystem "Component View"
+	quid       	"3FB2A3FF0066"
+	physical_models 	(list unit_reference_list)
+	physical_presentations 	(list unit_reference_list
+	    (object Module_Diagram "Main"
+		quid       	"3FB2A3FF0077"
+		title      	"Main"
+		zoom       	100
+		max_height 	28350
+		max_width  	21600
+		origin_x   	0
+		origin_y   	0
+		items      	(list diagram_item_list))))
+    process_structure 	(object Processes
+	quid       	"3FB2A3FF0067"
+	ProcsNDevs 	(list
+	    (object Process_Diagram "Deployment View"
+		quid       	"3FB2A3FF0069"
+		title      	"Deployment View"
+		zoom       	100
+		max_height 	28350
+		max_width  	21600
+		origin_x   	0
+		origin_y   	0
+		items      	(list diagram_item_list))))
+    properties 	(object Properties
+	attributes 	(list Attribute_Set
+	    (object Attribute
+		tool       	"DDL"
+		name       	"propertyId"
+		value      	"809135966")
+	    (object Attribute
+		tool       	"DDL"
+		name       	"default__Project"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"DDL"
+			name       	"Directory"
+			value      	"AUTO GENERATE")
+		    (object Attribute
+			tool       	"DDL"
+			name       	"DataBase"
+			value      	("DataBaseSet" 800))
+		    (object Attribute
+			tool       	"DDL"
+			name       	"DataBaseSet"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"DDL"
+				name       	"ANSI"
+				value      	800)
+			    (object Attribute
+				tool       	"DDL"
+				name       	"Oracle"
+				value      	801)
+			    (object Attribute
+				tool       	"DDL"
+				name       	"SQLServer"
+				value      	802)
+			    (object Attribute
+				tool       	"DDL"
+				name       	"Sybase"
+				value      	803)
+			    (object Attribute
+				tool       	"DDL"
+				name       	"Watcom"
+				value      	804)))
+		    (object Attribute
+			tool       	"DDL"
+			name       	"PrimaryKeyColumnName"
+			value      	"Id")
+		    (object Attribute
+			tool       	"DDL"
+			name       	"PrimaryKeyColumnType"
+			value      	"NUMBER(5)")
+		    (object Attribute
+			tool       	"DDL"
+			name       	"ViewName"
+			value      	"V_")
+		    (object Attribute
+			tool       	"DDL"
+			name       	"TableName"
+			value      	"T_")
+		    (object Attribute
+			tool       	"DDL"
+			name       	"InheritSuffix"
+			value      	"_V")
+		    (object Attribute
+			tool       	"DDL"
+			name       	"DropClause"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"DDL"
+			name       	"BaseViews"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"DDL"
+			name       	"DDLScriptFilename"
+			value      	"DDL1.SQL")))
+	    (object Attribute
+		tool       	"DDL"
+		name       	"default__Attribute"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"DDL"
+			name       	"ColumnType"
+			value      	"VARCHAR")
+		    (object Attribute
+			tool       	"DDL"
+			name       	"Length"
+			value      	"")
+		    (object Attribute
+			tool       	"DDL"
+			name       	"NullsOK"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"DDL"
+			name       	"PrimaryKey"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"DDL"
+			name       	"Unique"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"DDL"
+			name       	"CompositeUnique"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"DDL"
+			name       	"CheckConstraint"
+			value      	"")))
+	    (object Attribute
+		tool       	"DDL"
+		name       	"HiddenTool"
+		value      	FALSE)
+	    (object Attribute
+		tool       	"Java"
+		name       	"propertyId"
+		value      	"809135966")
+	    (object Attribute
+		tool       	"Java"
+		name       	"default__Project"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Java"
+			name       	"CreateMissingDirectories"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"StopOnError"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"UsePrefixes"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"Editor"
+			value      	("EditorType" 100))
+		    (object Attribute
+			tool       	"Java"
+			name       	"VM"
+			value      	("VMType" 200))
+		    (object Attribute
+			tool       	"Java"
+			name       	"ClassPath"
+			value      	"")
+		    (object Attribute
+			tool       	"Java"
+			name       	"EditorType"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Java"
+				name       	"BuiltIn"
+				value      	100)
+			    (object Attribute
+				tool       	"Java"
+				name       	"WindowsShell"
+				value      	101)))
+		    (object Attribute
+			tool       	"Java"
+			name       	"VMType"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Java"
+				name       	"Sun"
+				value      	200)
+			    (object Attribute
+				tool       	"Java"
+				name       	"Microsoft"
+				value      	201)))
+		    (object Attribute
+			tool       	"Java"
+			name       	"InstanceVariablePrefix"
+			value      	"m_")
+		    (object Attribute
+			tool       	"Java"
+			name       	"ClassVariablePrefix"
+			value      	"s_")
+		    (object Attribute
+			tool       	"Java"
+			name       	"DefaultAttributeDataType"
+			value      	"int")
+		    (object Attribute
+			tool       	"Java"
+			name       	"DefaultOperationReturnType"
+			value      	"void")))
+	    (object Attribute
+		tool       	"Java"
+		name       	"default__Class"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Java"
+			name       	"Final"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"Static"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"GenerateDefaultConstructor"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"ConstructorIs"
+			value      	("Ctor_Set" 62))
+		    (object Attribute
+			tool       	"Java"
+			name       	"Ctor_Set"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Java"
+				name       	"public"
+				value      	62)
+			    (object Attribute
+				tool       	"Java"
+				name       	"protected"
+				value      	63)
+			    (object Attribute
+				tool       	"Java"
+				name       	"private"
+				value      	64)
+			    (object Attribute
+				tool       	"Java"
+				name       	"package"
+				value      	65)))
+		    (object Attribute
+			tool       	"Java"
+			name       	"GenerateFinalizer"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"GenerateStaticInitializer"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"GenerateInstanceInitializer"
+			value      	FALSE)))
+	    (object Attribute
+		tool       	"Java"
+		name       	"default__Module-Spec"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Java"
+			name       	"CmIdentification"
+			value      	(value Text ""))
+		    (object Attribute
+			tool       	"Java"
+			name       	"CopyrightNotice"
+			value      	(value Text ""))))
+	    (object Attribute
+		tool       	"Java"
+		name       	"default__Module-Body"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Java"
+			name       	"CmIdentification"
+			value      	(value Text ""))
+		    (object Attribute
+			tool       	"Java"
+			name       	"CopyrightNotice"
+			value      	(value Text ""))))
+	    (object Attribute
+		tool       	"Java"
+		name       	"default__Operation"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Java"
+			name       	"Abstract"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"Static"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"Final"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"Native"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"Synchronized"
+			value      	FALSE)))
+	    (object Attribute
+		tool       	"Java"
+		name       	"default__Attribute"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Java"
+			name       	"Final"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"Transient"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"Volatile"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"PropertyType"
+			value      	("BeanProperty_Set" 71))
+		    (object Attribute
+			tool       	"Java"
+			name       	"BeanProperty_Set"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Java"
+				name       	"Not A Property"
+				value      	71)
+			    (object Attribute
+				tool       	"Java"
+				name       	"Simple"
+				value      	72)
+			    (object Attribute
+				tool       	"Java"
+				name       	"Bound"
+				value      	73)
+			    (object Attribute
+				tool       	"Java"
+				name       	"Constrained"
+				value      	74)))
+		    (object Attribute
+			tool       	"Java"
+			name       	"IndividualChangeMgt"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"Read/Write"
+			value      	("Read/Write_Set" 81))
+		    (object Attribute
+			tool       	"Java"
+			name       	"Read/Write_Set"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Java"
+				name       	"Read & Write"
+				value      	81)
+			    (object Attribute
+				tool       	"Java"
+				name       	"Read Only"
+				value      	82)
+			    (object Attribute
+				tool       	"Java"
+				name       	"Write Only"
+				value      	83)))))
+	    (object Attribute
+		tool       	"Java"
+		name       	"default__Role"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Java"
+			name       	"ContainerClass"
+			value      	"")
+		    (object Attribute
+			tool       	"Java"
+			name       	"InitialValue"
+			value      	"")
+		    (object Attribute
+			tool       	"Java"
+			name       	"Final"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"Transient"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"Volatile"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"PropertyType"
+			value      	("BeanProperty_Set" 71))
+		    (object Attribute
+			tool       	"Java"
+			name       	"BeanProperty_Set"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Java"
+				name       	"Not A Property"
+				value      	71)
+			    (object Attribute
+				tool       	"Java"
+				name       	"Simple"
+				value      	72)
+			    (object Attribute
+				tool       	"Java"
+				name       	"Bound"
+				value      	73)
+			    (object Attribute
+				tool       	"Java"
+				name       	"Constrained"
+				value      	74)))
+		    (object Attribute
+			tool       	"Java"
+			name       	"IndividualChangeMgt"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Java"
+			name       	"Read/Write"
+			value      	("Read/Write_Set" 81))
+		    (object Attribute
+			tool       	"Java"
+			name       	"Read/Write_Set"
+			value      	(list Attribute_Set
+			    (object Attribute
+				tool       	"Java"
+				name       	"Read & Write"
+				value      	81)
+			    (object Attribute
+				tool       	"Java"
+				name       	"Read Only"
+				value      	82)
+			    (object Attribute
+				tool       	"Java"
+				name       	"Write Only"
+				value      	83)))))
+	    (object Attribute
+		tool       	"Java"
+		name       	"HiddenTool"
+		value      	FALSE)
+	    (object Attribute
+		tool       	"Rose Model Integrator"
+		name       	"HiddenTool"
+		value      	FALSE)
+	    (object Attribute
+		tool       	"Version Control"
+		name       	"HiddenTool"
+		value      	FALSE)
+	    (object Attribute
+		tool       	"Ecore"
+		name       	"propertyId"
+		value      	"809135969")
+	    (object Attribute
+		tool       	"Ecore"
+		name       	"default__Category"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"packageName"
+			value      	"")
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"nsPrefix"
+			value      	"")
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"nsURI"
+			value      	"")
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"basePackage"
+			value      	"")
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"prefix"
+			value      	"")))
+	    (object Attribute
+		tool       	"Ecore"
+		name       	"default__Class"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"classifierName"
+			value      	"")))
+	    (object Attribute
+		tool       	"Ecore"
+		name       	"default__Operation"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"operationName"
+			value      	"")))
+	    (object Attribute
+		tool       	"Ecore"
+		name       	"default__Attribute"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"attributeName"
+			value      	"")
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isTransient"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isVolatile"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isChangeable"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isUnsettable"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isUnique"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isID"
+			value      	FALSE)))
+	    (object Attribute
+		tool       	"Ecore"
+		name       	"default__Role"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"referenceName"
+			value      	"")
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isTransient"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isVolatile"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isChangeable"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isUnsettable"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isResolveProxies"
+			value      	TRUE))))
+	quid       	"3FB2A3FF0068"))

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2000-2004 MetaMatrix Corporation.  All rights reserved."
+    modelDirectory="/com.metamatrix.metamodels.wsdl/src" editDirectory="/com.metamatrix.metamodels.wsdl/src"
+    editorDirectory="/com.metamatrix.metamodels.editor/src" modelPluginID="com.metamatrix.metamodels.wsdl"
+    modelName="Wsdl_v1.1" editPluginClass="com.metamatrix.metamodels.wsdl.provider.Wsdl11EditPlugin"
+    editorPluginClass="com.metamatrix.metamodels.wsdl.presentation.Wsdl11EditorPlugin"
+    updateClasspath="false" nonNLSMarkers="true">
+  <foreignModel>wsdl_v1.1.xsd</foreignModel>
+  <genPackages prefix="Wsdl" basePackage="com.metamatrix.metamodels" resource="XML"
+      ecorePackage="wsdl_v1.1.ecore#/">
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//Documentation">
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//Documentation/contents"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//Documented">
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//Documented/documentation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//StartWithExtensionsType">
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//StartWithExtensionsType/any"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//FaultType">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1.ecore#//FaultType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//BindingOperationType">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1.ecore#//BindingOperationType/name"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//BindingOperationType/input"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//BindingOperationType/output"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//BindingOperationType/fault"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//BindingType">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1.ecore#//BindingType/name"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//BindingType/operation"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//BindingType/type"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//Binding"/>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//ImportType">
+      <genFeatures notify="false" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//ImportType/location"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//ImportType/namespace"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//TypesType">
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//TypesType/any"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//OpenAtts">
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//OpenAtts/documentation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//PartType">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1.ecore#//PartType/name"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//PartType/element"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//PartType/type"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//MessageType">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1.ecore#//MessageType/name"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//MessageType/part"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//ParamType">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1.ecore#//ParamType/name"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//ParamType/message"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//FaultType1">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1.ecore#//FaultType1/name"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//FaultType1/message"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//OperationType">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1.ecore#//OperationType/name"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//OperationType/input"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//OperationType/input1"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//OperationType/output"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//OperationType/fault"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//OperationType/output1"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//OperationType/input2"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//OperationType/fault1"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//OperationType/output2"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//PortTypeType">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1.ecore#//PortTypeType/name"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//PortTypeType/operation"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//PortType1">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1.ecore#//PortType1/name"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//PortType1/any"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//PortType1/binding"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//ServiceType">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1.ecore#//ServiceType/name"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//ServiceType/port"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//ServiceType/any"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//DefinitionsType">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1.ecore#//DefinitionsType/name"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//DefinitionsType/import"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//DefinitionsType/types"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//DefinitionsType/message"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//DefinitionsType/portType"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//DefinitionsType/binding"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//DefinitionsType/service"/>
+      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//DefinitionsType/any"/>
+      <genFeatures notify="false" ecoreFeature="ecore:EReference wsdl_v1.1.ecore#//DefinitionsType/targetNamespace"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//Definitions"/>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//Fault"/>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//Import"/>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//Input"/>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//Message"/>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//Operation"/>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//Output"/>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//Part"/>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//Port"/>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//PortType"/>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//Service"/>
+    <genClasses ecoreClass="wsdl_v1.1.ecore#//Types"/>
+  </genPackages>
+</genmodel:GenModel>

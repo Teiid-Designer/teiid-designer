@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<xsd:schema
+    targetNamespace="http://www.metamatrix.com/metamodels/Practice"
+    xmlns:practice="http://www.metamatrix.com/metamodels/Practice"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:import namespace="http://www.omg.org/XMI" schemaLocation="XMI.xsd"/>
+    <xsd:complexType name="Book">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="isbn" type="xsd:string"/>
+            <xsd:element name="title" type="xsd:string"/>
+            <xsd:element name="authors" type="practice:Author"/>
+            <xsd:element ref="xmi:Extension"/>
+        </xsd:choice>
+        <xsd:attribute ref="xmi:id"/>
+        <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+        <xsd:attribute name="isbn" type="xsd:string"/>
+        <xsd:attribute name="title" type="xsd:string"/>
+        <xsd:attribute name="authors" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:element name="Book" type="practice:Book"/>
+    <xsd:complexType name="Library">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="branchId" type="xsd:int"/>
+            <xsd:element name="books" type="practice:Book"/>
+            <xsd:element name="magazines" type="practice:Magazine"/>
+            <xsd:element ref="xmi:Extension"/>
+        </xsd:choice>
+        <xsd:attribute ref="xmi:id"/>
+        <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="branchId" type="xsd:int"/>
+    </xsd:complexType>
+    <xsd:element name="Library" type="practice:Library"/>
+    <xsd:complexType name="Author">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="firstName" type="xsd:string"/>
+            <xsd:element name="lastName" type="xsd:string"/>
+            <xsd:element ref="xmi:Extension"/>
+        </xsd:choice>
+        <xsd:attribute ref="xmi:id"/>
+        <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+        <xsd:attribute name="firstName" type="xsd:string"/>
+        <xsd:attribute name="lastName" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:element name="Author" type="practice:Author"/>
+    <xsd:complexType name="Magazine">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="title" type="xsd:string"/>
+            <xsd:element name="articles" type="practice:Article"/>
+            <xsd:element ref="xmi:Extension"/>
+        </xsd:choice>
+        <xsd:attribute ref="xmi:id"/>
+        <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+        <xsd:attribute name="title" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:element name="Magazine" type="practice:Magazine"/>
+    <xsd:complexType name="Article">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+            <xsd:element name="title" type="xsd:string"/>
+            <xsd:element name="authors" type="practice:Author"/>
+            <xsd:element ref="xmi:Extension"/>
+        </xsd:choice>
+        <xsd:attribute ref="xmi:id"/>
+        <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+        <xsd:attribute name="title" type="xsd:string"/>
+        <xsd:attribute name="authors" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:element name="Article" type="practice:Article"/>
+</xsd:schema>

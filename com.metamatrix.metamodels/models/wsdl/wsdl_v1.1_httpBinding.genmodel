@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2000-2004 MetaMatrix Corporation.  All rights reserved."
+    modelDirectory="/com.metamatrix.metamodels.wsdl/src" editDirectory="/com.metamatrix.metamodels.wsdl/src"
+    editorDirectory="/com.metamatrix.metamodels.wsdl/src" modelPluginID="com.metamatrix.metamodels.wsdl"
+    modelName="Wsdl_v1.1_httpBinding" editPluginClass="com.metamatrix.metamodels.wsdl.http.provider.HttpBindingEditPlugin"
+    editorPluginClass="com.metamatrix.metamodels.wsdl.http.presentation.HttpBindingEditorPlugin"
+    updateClasspath="false" nonNLSMarkers="true">
+  <foreignModel>wsdl_v1.1_httpBinding.xsd</foreignModel>
+  <genPackages prefix="Http" basePackage="com.metamatrix.metamodels.wsdl" resource="XML"
+      ecorePackage="wsdl_v1.1_httpBinding.ecore#/">
+    <genClasses ecoreClass="wsdl_v1.1_httpBinding.ecore#//AddressType">
+      <genFeatures notify="false" ecoreFeature="ecore:EReference wsdl_v1.1_httpBinding.ecore#//AddressType/location"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1_httpBinding.ecore#//Address"/>
+    <genClasses ecoreClass="wsdl_v1.1_httpBinding.ecore#//BindingType">
+      <genFeatures ecoreFeature="ecore:EAttribute wsdl_v1.1_httpBinding.ecore#//BindingType/verb"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1_httpBinding.ecore#//Binding"/>
+    <genClasses ecoreClass="wsdl_v1.1_httpBinding.ecore#//OperationType">
+      <genFeatures notify="false" ecoreFeature="ecore:EReference wsdl_v1.1_httpBinding.ecore#//OperationType/location"/>
+    </genClasses>
+    <genClasses ecoreClass="wsdl_v1.1_httpBinding.ecore#//Operation"/>
+    <genClasses ecoreClass="wsdl_v1.1_httpBinding.ecore#//UrlEncoded"/>
+    <genClasses ecoreClass="wsdl_v1.1_httpBinding.ecore#//UrlReplacement"/>
+  </genPackages>
+</genmodel:GenModel>

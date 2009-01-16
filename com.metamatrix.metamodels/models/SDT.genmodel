@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2000-2005 MetaMatrix Corporation. All rights reserved."
+    modelDirectory="/com.metamatrix.metamodels.sdt/src" editDirectory="/com.metamatrix.metamodels.sdt/src"
+    editorDirectory="/com.metamatrix.metamodels.sdt.editor/src" modelPluginID="com.metamatrix.metamodels.sdt"
+    modelName="SDT" editPluginClass="com.metamatrix.metamodels.sdt.provider.SdtEditPlugin"
+    editorPluginClass="com.metamatrix.metamodels.sdt.presentation.SdtEditorPlugin"
+    updateClasspath="false" generateSchema="true" nonNLSMarkers="true" testsDirectory="/com.metamatrix.metamodels.sdt/testsrc"
+    testSuiteClass="com.metamatrix.metamodels.sdt.tests.SdtAllTests" usedGenPackages="../../org.eclipse.emf.ecore/src/model/Ecore.genmodel#//ecore ../../org.eclipse.xsd/src/model/XSD.genmodel#//xsd Core.genmodel#//core Extension.genmodel#//extension">
+  <foreignModel>SDT.mdl</foreignModel>
+  <genPackages prefix="Sdt" basePackage="com.metamatrix.metamodels" ecorePackage="sdt.ecore#/">
+    <genEnums ecoreEnum="sdt.ecore#//RuntimeType">
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/string"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/boolean"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/byte"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/short"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/char"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/integer"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/long"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/biginteger"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/float"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/double"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/bigdecimal"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/date"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/time"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/timestamp"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/object"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/null"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/blob"/>
+      <genEnumLiterals ecoreEnumLiteral="sdt.ecore#//RuntimeType/clob"/>
+    </genEnums>
+    <genClasses ecoreClass="sdt.ecore#//Domain"/>
+    <genClasses ecoreClass="sdt.ecore#//SimpleDatatype">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sdt.ecore#//SimpleDatatype/runtimeType"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute sdt.ecore#//SimpleDatatype/runtimeTypeName"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

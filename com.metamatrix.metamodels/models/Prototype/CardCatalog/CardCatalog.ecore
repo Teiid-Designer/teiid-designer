@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="cardcatalog"
+    nsURI="http://www.metamatrix.com/metamodels/CardCatalog" nsPrefix="cardcat">
+  <eClassifiers xsi:type="ecore:EClass" name="Book">
+    <eReferences name="library" eType="#//Library" transient="true" eOpposite="#//Library/books"/>
+    <eReferences name="authors" eType="#//Author" lowerBound="1" upperBound="-1"/>
+    <eAttributes name="isbn" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAttributes name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Library">
+    <eReferences name="books" eType="#//Book" upperBound="-1" containment="true" eOpposite="#//Book/library"/>
+    <eReferences name="magazines" eType="#//Magazine" upperBound="-1" containment="true"
+        eOpposite="#//Magazine/library"/>
+    <eAttributes name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAttributes name="branchId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Author">
+    <eAttributes name="firstName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAttributes name="lastName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Magazine">
+    <eReferences name="library" eType="#//Library" transient="true" eOpposite="#//Library/magazines"/>
+    <eReferences name="articles" eType="#//Article" lowerBound="1" upperBound="-1"
+        containment="true" eOpposite="#//Article/magazine"/>
+    <eAttributes name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Article">
+    <eReferences name="magazine" eType="#//Magazine" transient="true" eOpposite="#//Magazine/articles"/>
+    <eReferences name="authors" eType="#//Author" lowerBound="1" upperBound="-1"/>
+    <eAttributes name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>
