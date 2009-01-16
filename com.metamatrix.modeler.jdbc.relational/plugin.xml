@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+ 
+<!-- =============================================================================== 
+ # JBoss, Home of Professional Open Source. 
+ # 
+ # Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ # 
+ # Some portions of this file may be copyrighted by other 
+ # contributors and licensed to Red Hat, Inc. under one or more 
+ # contributor license agreements. See the copyright.txt file in the 
+ # distribution for a full listing of individual contributors. 
+ # 
+ # This program and the accompanying materials 
+ # are made available under the terms of the Eclipse Public License v1.0 
+ # which accompanies this distribution, and is available at 
+ # http://www.eclipse.org/legal/epl-v10.html 
+ # ================================================================================== --> 
+
+<plugin>
+
+    
+<!-- Define the extension point for model processors -->
+   <extension-point id="modelProcessor" name="%extension-point.name.0" schema="schema/modelProcessor.exsd"/>
+
+<!-- Define the model processors for the standard Oracle drivers -->
+   <extension
+         id="oracleModelProcessor"
+         name="Oracle Model Processor"
+         point="com.metamatrix.modeler.jdbc.relational.modelProcessor">
+      <driverClass
+            name="oracle.jdbc.OracleDriver">
+      </driverClass>
+      <driverClass
+            name="oracle.jdbc.driver.OracleDriver">
+      </driverClass>
+      <processorClass
+            name="com.metamatrix.modeler.jdbc.relational.impl.custom.OracleModelProcessor">
+      </processorClass>
+   </extension>
+<!-- Define the model processors for the MetaMatrix Oracle drivers -->
+   <extension
+         id="oracleMetaMatrixModelProcessor"
+         name="Oracle Model Processor (MetaMatrix Driver)"
+         point="com.metamatrix.modeler.jdbc.relational.modelProcessor">
+      <driverClass
+            name="com.metamatrix.jdbc.oracle.OracleDriver">
+      </driverClass>
+      <driverClass
+            name="com.metamatrix.jdbcx.oracle.OracleDataSource">
+      </driverClass>
+      <processorClass
+            name="com.metamatrix.modeler.jdbc.relational.impl.custom.OracleModelProcessor">
+      </processorClass>
+   </extension>
+<!-- Define the model processors for the MetaMatrix SQL Server drivers -->
+   <extension
+         id="sqlserverMetaMatrixModelProcessor"
+         name="SQL Server Model Processor (MetaMatrix Driver)"
+         point="com.metamatrix.modeler.jdbc.relational.modelProcessor">
+      <driverClass
+            name="com.metamatrix.jdbc.sqlserver.SQLServerDriver">
+      </driverClass>
+      <driverClass
+            name="com.metamatrix.jdbcx.sqlserver.SQLServerDataSource">
+      </driverClass>
+      <processorClass
+            name="com.metamatrix.modeler.jdbc.relational.impl.custom.SqlServerModelProcessor">
+      </processorClass>
+   </extension>
+<!-- Define the model processors for the MetaMatrix Sybase Server drivers -->
+   <extension
+         id="sybaseMetaMatrixModelProcessor"
+         name="Sybase Model Processor (MetaMatrix Driver)"
+         point="com.metamatrix.modeler.jdbc.relational.modelProcessor">
+      <driverClass
+            name="com.metamatrix.jdbc.sybase.SybaseDriver">
+      </driverClass>
+      <driverClass
+            name="com.metamatrix.jdbcx.sybase.SybaseDataSource">
+      </driverClass>
+      <processorClass
+            name="com.metamatrix.modeler.jdbc.relational.impl.custom.SybaseModelProcessor">
+      </processorClass>
+   </extension>
+<!-- Define the model processors for the MetaMatrix Sybase Server drivers -->
+   <extension
+         id="db2MetaMatrixModelProcessor"
+         name="DB2 Model Processor (MetaMatrix Driver)"
+         point="com.metamatrix.modeler.jdbc.relational.modelProcessor">
+      <driverClass
+            name="com.metamatrix.jdbc.db2.DB2Driver">
+      </driverClass>
+      <driverClass
+            name="com.metamatrix.jdbcx.db2.DB2DataSource">
+      </driverClass>
+      <processorClass
+            name="com.metamatrix.modeler.jdbc.relational.impl.custom.Db2ModelProcessor">
+      </processorClass>
+   </extension>
+<!-- Define the model processors for the standard Postgres drivers -->
+   <extension
+         id="postgresModelProcessor"
+         name="Postgres Model Processor"
+         point="com.metamatrix.modeler.jdbc.relational.modelProcessor">
+      <driverClass
+            name="org.postgresql.Driver">
+      </driverClass>
+      <driverClass
+            name="postgresql.Driver">
+      </driverClass>
+      <processorClass
+            name="com.metamatrix.modeler.jdbc.relational.impl.custom.PostgresModelProcessor">
+      </processorClass>
+   </extension>
+<!-- Define the model processors for the standard ODBC drivers -->
+   <extension
+         id="odbcModelProcessor"
+         name="ODBC Model Processor"
+         point="com.metamatrix.modeler.jdbc.relational.modelProcessor">
+      <driverClass
+            name="sun.jdbc.odbc.JdbcOdbcDriver">
+      </driverClass>
+      <processorClass
+            name="com.metamatrix.modeler.jdbc.relational.impl.custom.ExcelModelProcessor">
+      </processorClass>
+   </extension>
+<!-- EObject Matcher extensions -->
+   <extension
+         id="jdbcMatcherFactory"
+         point="com.metamatrix.modeler.core.eobjectMatcherFactory">
+      <class
+            name="com.metamatrix.modeler.jdbc.relational.compare.JdbcMatcherFactory">
+      </class>
+   </extension>
+<!-- MetamodelAspect extensions -->
+   <extension
+         id="jdbcRelationalSqlAspect"
+         point="com.metamatrix.modeler.core.sqlAspect">
+      <metamodelExtensionID>
+         jdbcMetamodel
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.modeler.jdbc.relational.aspects.sql.JdbcSqlAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+
+</plugin>

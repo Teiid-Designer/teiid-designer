@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+ 
+<!-- =============================================================================== 
+ # JBoss, Home of Professional Open Source. 
+ # 
+ # Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ # 
+ # Some portions of this file may be copyrighted by other 
+ # contributors and licensed to Red Hat, Inc. under one or more 
+ # contributor license agreements. See the copyright.txt file in the 
+ # distribution for a full listing of individual contributors. 
+ # 
+ # This program and the accompanying materials 
+ # are made available under the terms of the Eclipse Public License v1.0 
+ # which accompanies this distribution, and is available at 
+ # http://www.eclipse.org/legal/epl-v10.html 
+ # ================================================================================== --> 
+
+<plugin>
+
+     <extension
+         id="com.metamatrix.modeler.xsd.ui.editor.xsdSemanticsEditor"
+         name="%semanticEditor.name"
+         point="com.metamatrix.modeler.ui.modelEditorPage">
+      <class
+            tabName="%semanticEditor.tabname"
+            order="3"
+            name="com.metamatrix.modeler.internal.xsd.ui.editor.XsdSemanticsEditorPage">
+      </class>
+   </extension>
+
+   <extension
+         id="com.metamatrix.modeler.xsd.ui.editor.xsdSimpleDatatypesEditor"
+         name="%simpleDatatypesEditor.name"
+         point="com.metamatrix.modeler.ui.modelEditorPage">
+      <class
+            tabName="%simpleDatatypesEditor.tabname"
+            order="1"
+            name="com.metamatrix.modeler.internal.xsd.ui.editor.XsdSimpleDatatypesEditorPage">
+      </class>
+   </extension>
+
+   <extension
+         id="com.metamatrix.modeler.xsd.ui.editor.xsdSourceEditor"
+         name="%sourceEditor.name"
+         point="com.metamatrix.modeler.ui.modelEditorPage">
+      <class
+            tabName="%sourceEditor.tabname"
+            order="4"
+            name="com.metamatrix.modeler.internal.xsd.ui.editor.XsdTextEditorPage">
+      </class>
+   </extension>
+   <extension
+         id="XsdSchemaUiNewModelObjectHelper"
+         name="%xsdSchemaUiNewModelObjectHelper"
+         point="com.metamatrix.modeler.core.newModelObjectHelper">
+      <class
+        name="com.metamatrix.modeler.xsd.ui.XsdSchemaUiNewModelObjectHelper">
+      </class>
+   </extension>  
+   <extension
+         id="datatypeUiTextImporter"
+         name="%datatypeUiTextImporter"
+         point="com.metamatrix.modeler.tools.textimport.ui.textImportContributor">
+      <class
+        name="com.metamatrix.modeler.internal.xsd.ui.wizards.ImportDatatypesMainPage">
+      </class>
+   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            name="%xsdFileSystemImportWizard.name"
+            icon="icons/full/cview16/import_xsd_file.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.internal.xsd.ui.wizards.XsdFileSystemImportWizard"
+            id="com.metamatrix.modeler.internal.xsd.ui.wizards.xsdFileSystemImportWizard">
+         <description>
+            %xsdFileSystemImportWizard.description
+         </description>
+      </wizard>
+   </extension>
+   <extension
+		id="com.metamatrix.modeler.internal.xsd.ui.actions.CreateVirtualModelFromSchemaAction"
+		name="%createVirtualModelFromSchemaAction.name"
+        point="com.metamatrix.modeler.ui.modelResourceAction">
+      <resourceAction
+         name="com.metamatrix.modeler.internal.xsd.ui.actions.CreateVirtualModelFromSchemaAction"
+         label="%createVirtualModelFromSchemaAction.label">
+      </resourceAction>
+   </extension> 
+</plugin>

@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<body>
+<p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<p class="maintitle_b24"> Preview Your Data </p>
+<hr />
+<p><span class="subtitle_b16"><a name="previewDataSummary" id="previewDataSummary"></a>Summary</span></p>
+<p>Designing and working with data is often much easier when you can see the information you're working with. &nbsp;The<strong> Designer</strong>'s <strong>Preview Data </strong>feature makes this possible and allows you to instantly preview the information described by any object, whether it's a physical table or a virtual view. &nbsp;In other words, you can test the views with actual data by simply selecting the table, view, procedure or XML document.  The preview functionality leverages an embedded version of the <strong>MetaMatrix Server</strong>, so you can be sure that the behavior in the <strong>Designer</strong> will reliably match when the <a href="WebServiceVdbSummary.htm"><strong>VDB</strong></a> is deployed to the Server.  Previewing information is a fast and easy way to sample the data. &nbsp;Of course, to run more complicated queries like what your application likely uses, simply <a href="ExecuteVdbHelp.htm">execute the <strong>VDB</strong> in the <strong>Designer</strong></a> and type in any query or SQL statement.</p>
+<p>After creating your models, you can test them by   using the <strong>Preview Data </strong>action, <img src="images/icons/previewData.gif" width="16" height="16">. By selecting a desired table object and executing the action, the results of a simple query will be displayed in the<a href="PreviewDataView.htm"> <strong>Preview results view</strong></a>. This action is accessible throughout the <strong>Designer</strong> in various view toolbars and context menus.</p>
+<p>There are two requirements for previewing your data: the selected object must be one several previewable model object types and all source models within the model dependency tree must be bound to connector bindings.</p>
+<p>Previewable objects include:</p>
+<ul>
+  <li>Relational  table or view, including tables involving<a href="#previewAccessPattern"> access patterns</a>. </li>
+  <li><a href="#previewRelationalProcedure">Relational procedure</a></li>
+  <li><a href="#previewWSOperation">Web Service operation</a></li>
+  <li>XML Document staging table  </li>
+</ul>
+<p>Note that any virtual table, view or procedure is previewable as long as all &quot;physical&quot; source models are bound via connector bindings. (See<a href="ConnectorsView.htm"> Connectors View</a> and <a href="ConnectorTypesView.htm">Connector Types View</a>) </p>
+<hr />
+<p><span class="subtitle_b16"><a name="previewRelationalProcedure" id="previewRelationalProcedure"></a>Previewing Relational Procedure</span></p>
+<p>Precedure Inputs dialog:</p>
+<p><img src="images/views/ParameterInputDialogProcedure.jpg" hspace="20" ></p>
+<hr />
+<p><span class="subtitle_b16"><a name="previewWSOperation" id="previewWSOperation"></a>Previewing Web Service Operation</span></p>
+<p>Precedure Inputs dialog:</p>
+<p><img src="images/views/ParameterInputDialogWSOperation.jpg" hspace="20" ></p>
+<hr />
+<p><span class="subtitle_b16"><a name="previewAccessPattern" id="previewAccessPattern"></a>Previewing Relational Table with Access Pattern</span></p>
+<p>Column Inputs dialog:</p>
+<p><img src="images/views/ParameterInputDialogAccessPattern.jpg" hspace="20" ></p>
+<p>&nbsp;   </p>
+<hr />
+<p class="subtitle_b16">Related Topics</p>
+<ul>
+  <li><a href="DesignerViews.htm">Designer Views</a></li>
+  <li><a href="ConnectorsView.htm">Connectors View</a></li>  <li><a href="UDFView.htm">UDF's View</a></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr />
+<p class="copyright">&copy; 2008 Varsity Gateway LLC.  All rights reserved.</span><br />Visit <a href="http://www.metamatrix.com">http://www.metamatrix.com</a></span></p>
+</body>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
+<booleanAttribute key="askclear" value="true"/>
+<booleanAttribute key="automaticAdd" value="false"/>
+<booleanAttribute key="automaticValidate" value="false"/>
+<stringAttribute key="bootstrap" value=""/>
+<booleanAttribute key="clearConfig" value="false"/>
+<booleanAttribute key="clearws" value="true"/>
+<booleanAttribute key="clearwslog" value="false"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/Modeler Product Linux"/>
+<booleanAttribute key="default" value="true"/>
+<booleanAttribute key="includeFragments" value="false"/>
+<booleanAttribute key="includeOptional" value="true"/>
+<stringAttribute key="location" value="${env_var:HOME}/Runtime-Workspaces"/>
+<stringAttribute key="location1" value="/home/blafond/Work/designerWorkspaces"/>
+<stringAttribute key="location2" value="E:\Modeler\current\runtime-workspace"/>
+<stringAttribute key="location3" value="E:\Plugins\current\runtime-.product"/>
+<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
+<listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+<listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
+<listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.JAVA_COMMAND" value="java"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -clean -consoleLog -debug"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Djavax.xml.transform.TransformerFactory=net.sf.saxon.TransformerFactoryImpl -XX:MaxPermSize=512M"/>
+<stringAttribute key="pde.version" value="3.3"/>
+<stringAttribute key="product" value="com.metamatrix.modeler.modeler"/>
+<stringAttribute key="productFile" value="/com.metamatrix.modeler/.product"/>
+<booleanAttribute key="show_selected_only" value="false"/>
+<booleanAttribute key="tracing" value="false"/>
+<booleanAttribute key="useDefaultConfig" value="true"/>
+<booleanAttribute key="useDefaultConfigArea" value="true"/>
+<booleanAttribute key="useProduct" value="false"/>
+<booleanAttribute key="usefeatures" value="false"/>
+<booleanAttribute key="yk-capture-cpu-on-exit" value="true"/>
+<booleanAttribute key="yk-capture-memory-on-exit" value="false"/>
+<booleanAttribute key="yk-launch-ui" value="true"/>
+<intAttribute key="yk-mem-threshold" value="0"/>
+<booleanAttribute key="yk-startup-with-cpu-full" value="false"/>
+<booleanAttribute key="yk-startup-with-cpu-times" value="true"/>
+<booleanAttribute key="yk-startup-with-object-allocations" value="false"/>
+</launchConfiguration>

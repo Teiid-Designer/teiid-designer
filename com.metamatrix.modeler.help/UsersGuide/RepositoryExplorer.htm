@@ -1,0 +1,141 @@
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<body>
+<p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<p class="maintitle_b24"> Repository Explorer </p>
+<hr />
+<ul class="small_toc_item">
+  <li><a href="#components"><span><strong>Components</strong></span></a></li>
+  <li><a href="#selectionMenus"><span><strong> Repository Action Menus </strong></span></a></li>
+</ul>
+<hr />
+<p><span class="subtitle_b16"><a name="components"></a>Components</span></p>
+<p><strong>Enterprise Designer</strong> allows you to store, organize, and  report on your diverse metadata via the <strong>MetaMatrix Repository</strong>. The <strong>Repository Explorer </strong>located in the <a href="DesignerPerspectives.htm#metabaseRepositoryPerspective"><strong>Repository Perspective</strong></a>, provides a simple file-structured view of your respository resources. </p>
+<p>The <a name="repositoryExplorer"></a><strong>Repository Explorer</strong> (shown below) is comprised of a toolbar and a tree view and works in conjunction with the<strong> Repository Contents</strong> table, <strong>Repository Console</strong> and <strong>Repository Status</strong> views. </p>
+<p><img src="images/views/MR_RepositoryExplorer.jpg" width="320" height="354" hspace="20"></p>
+<p>The<strong> <a name="repositoryContents"></a>Repository Contents</strong> view presents the contents of the selected resource in the Repository Explorer. This view provides structural navigation via the up folder icon on it's toolbar and the use of a mouse double-click action. The <strong>Location</strong> field indicates the current container. </p>
+<p><img src="images/views/MR_RepositoryContents.jpg" width="640" height="361" hspace="20"></p>
+<p>As <strong>Repository</strong> actions are performed (Share, Check-In/Check-Out), the<a name="repositoryConsole"></a> <strong>Repository Console</strong> provides feedback on the status/success of the action.</p>
+<p><img src="images/views/MR_RepositoryConsole.jpg" width="641" height="275" hspace="20"></p>
+<p>The<a name="repositoryStatus"></a> <strong>Repository Status</strong> view summarizes checked-out status for all models associated with all connected repositories. </p>
+<p><img src="images/views/MR_RepositoryStatus.jpg" width="760" height="274" hspace="20"></p>
+<hr />
+<p><span class="subtitle_b16"><a name="selectionMenus"></a>Selection-Based Action Menus</span></p>
+<p>Selecting specific objects in the <strong>Repository Explorer</strong> provides a context from which the <strong>Designer</strong> presents a customized menu of available actions. Note that these identical actions are available in the <strong>Repository Contents</strong> table. </p>
+<p>Selecting a repository connection and righ-clicking reveals the following menu:</p>
+<p><img src="images/views/MR_NewMMRepsitoryAction.jpg" width="423" height="227" hspace="20"> </p>
+<p>Selecting a folder or resource (i.e. model) enables a number of team-based actions including:</p>
+<ul>
+  <li><a href="#getLatest"><strong>Get Latest...</strong></a>-  retrieves  the latest version selected projects or models in the repository.</li>
+  <li><strong><a href="#checkIn">Check In...</a></strong> - adds a copy of a project or resource on your local file system (your workspace) to the shared repository. </li>
+  <li><strong><a href="#checkOut">Check Out...</a></strong> -  retrieves  the latest version selected projects or models in the repository and locks the resource(s) in the repository. </li>
+  <li><strong><a href="#undoCheckout">Undo Checkout...</a></strong> - unlocks the selected projects or models in the repository  so that others can access and modify the current versions.</li>
+</ul>
+<ul>
+  <li><strong><a href="#removeFromRepository">Remove from Repository...</a></strong> - deletes the selected resource(s) and their children from the repository. </li>
+  <li><strong><a href="#showDifferences">Show Differences...</a></strong> - provides difference analysis between projects and models in the repository and your local copies of your resources.</li>
+  <li><strong><a href="#showHistory">Show History...</a></strong> - provides a history of a selected resource in the repository, including comments, check-out status and users. </li>
+</ul>
+<ul>
+  <li><strong>Refresh Checkout Status...</strong> - refreshes the status of a resource in the<a href="#RepositoryExplorer"><strong> Repository Explorer</strong></a>. This is required if multiple users are working in the same repository. </li>
+  <li><strong>Refresh Folder</strong> -  refreshes the content of your <strong><a href="#RepositoryExplorer">Repository Explorer</a>.</strong> This is required if multiple users are working in the same repository</li>
+</ul>
+<ul>
+  <li><strong><a href="MetaMatrixRepository.htm#createRepositoryConnection">New MetaMatrix Repository</a>     </strong>- create new repository connections. </li>
+</ul>
+<p><img src="images/views/MR_ContextModelActions.jpg" width="408" height="382" hspace="20"></p>
+<hr />
+<p><span class="subtitle_b16"><a name="getLatest"></a>Get Latest... </span></p>
+<p>The following dialog provides the get latest version options available for your resource(s). Set your options and click <strong>OK</strong> to get copies of your  resources. </p>
+<p><img src="images/views/MR_GetLatestVersion.jpg" width="416" height="216" hspace="20"></p>
+<p>Options within this dialog box include:</p>
+<ul>
+  <li><strong>Recurse Subfolder </strong>&ndash; checking this option return everything at a entity level and all subsequent sublevels.</li>
+  <li><strong>Include Imported Models </strong>&ndash; if any projects are associated with model imports, selecting this option will enable the necessary imported models as well.</li>
+  <li> <strong>Make Writable</strong> &ndash; enables the contents of the project model to be modified within the workspace.</li>
+  <li><strong>Replace Writable</strong>: &ndash; determines what will happen when a writable model already exists in the workplace.
+    <ul>
+      <li><strong>Ask</strong> &ndash; prompts you whether or not to replace existing writable models in the workspace.</li>
+      <li><strong>Replace</strong> &ndash; replaces existing writable models in the workspace.</li>
+      <li><strong>Skip</strong> &ndash; keeps all modifications temporary, and does not actively save them unless you select File &gt; Save in the Designer.<br>
+      </li>
+    </ul>
+  </li>
+</ul>
+<hr />
+<p><span class="subtitle_b16"><a name="checkIn"></a>Check In... </span></p>
+<p>The following dialog provides the check-in options available for your resource(s). Set your options and click <strong>OK</strong> to check in resources. </p>
+<p><img src="images/views/MR_CheckInOptions.jpg" width="468" height="297" hspace="20"></p>
+<p>Options within this dialog box include:</p>
+<ul>
+  <li><strong>Recurse Subfolders</strong> &ndash; check in the entire contents of the project or folder, including the contents of child subfolders.</li>
+  <li><strong>Include Imported Models</strong> &ndash; check in any models imported by the models already selected to be checked out.</li>
+  <li><strong>Keep checked out</strong> &ndash; if you want to place a version of this file in the  <strong>Repository</strong>, but you want to keep it locked and checked out for more editing.</li>
+  <li><strong>Remove local copy</strong> &ndash; deletes the checked in files from your workspace.</li>
+  <li><strong>Use check out comment</strong> &ndash; enables you to associate a notation with this action.<br>
+  </li>
+</ul>
+<hr />
+<p><span class="subtitle_b16"><a name="checkOut"></a>Check Out... </span></p>
+<p>The following dialog provides the check-out options available for your resource(s). Set your options and click <strong>OK</strong> to check out resources. </p>
+<p><img src="images/views/MR_CheckOutOptions.jpg" width="499" height="218" hspace="20"></p>
+<p>Options available within this dialog box include:</p>
+<ul>
+  <li><strong>Recurse Subfolder </strong>&ndash; Undo check out for the entire contents of the project or folder, including the contents of child subfolders.</li>
+  <li><strong>Include Imported Models</strong> &ndash; Undo check out for any models imported by the models already selected for undo check out.</li>
+  <li><strong>Don&rsquo;t get local copy</strong> &ndash; checking this option will mark the selected files as checked out without copying those files to your workspace.</li>
+  <li><strong>Replace Writable</strong>&ndash; Determines what happens to the copies in your workspace of the files to be undone.
+    <ul>
+      <li>Replace &ndash; Overwrites the copy in your workspace with the one from the Team Share Repository.</li>
+      <li>Leave &ndash; Releases the lock on the file, but leaves the local copy (including any changes you made) intact.</li>
+      <li>Delete &ndash; Deletes the local copy of the file from your workspace.<br>
+      </li>
+    </ul>
+  </li>
+</ul>
+<p>When finished, the affected resource (model) will display a check decorator indicated a checked-out status in the<strong> Repository Explorer</strong>, <strong>Repository Contents</strong> view and the<strong> Model Explorer</strong> (see below). </p>
+<p><img src="images/views/MR_CheckedOutModelInTree.jpg" width="395" height="153" hspace="20"></p>
+<p><img src="images/views/MR_CheckedOutModelInTable.jpg" width="610" height="181" hspace="20"></p>
+<p><img src="images/views/MR_CheckedOutModelInModelExplorer.jpg" width="264" height="140" hspace="20"></p>
+<p>&nbsp;</p>
+<hr />
+<p><span class="subtitle_b16"><a name="undoCheckout"></a>Undo Checkout... </span></p>
+<p>The following dialog provides the undo check-out options available for your resource(s). Set your options and click <strong>OK</strong> to undo check out resources. </p>
+<p><img src="images/views/MR_UndoCheckOutOptions.jpg" width="448" height="161" hspace="20"></p>
+<p>Options available within this dialog box include:</p>
+<ul>
+  <li><strong>Recurse Subfolder </strong>&ndash; Undo check out for the entire contents of the project or folder, including the contents of child subfolders.</li>
+  <li><strong>Include Imported Models</strong> &ndash; Undo check out for any models imported by the models already selected for undo check out.</li>
+  <li><strong>Local Copy</strong> &ndash; Determines what happens to the copies in your workspace of the files to be undone.
+    <ul>
+        <li>Replace &ndash; Overwrites the copy in your workspace with the one from the Team Share Repository.</li>
+      <li>Leave &ndash; Releases the lock on the file, but leaves the local copy (including any changes you made) intact.</li>
+      <li>Delete &ndash; Deletes the local copy of the file from your workspace.</li>
+    </ul>
+  </li>
+</ul>
+<hr />
+<p><span class="subtitle_b16"><a name="removeFromRepository"></a>Remove from Repository...</span></p>
+<p>This action deletes the selected resource(s) from the repository. A confirmation dialog is provided to insure delete was intended. </p>
+<p><img src="images/views/MR_RemoveFromRepository.jpg" width="441" height="146" hspace="20"></p>
+<hr />
+<p><span class="subtitle_b16"><a name="showDifferences"></a>Show Differences... </span></p>
+<p>The <strong>Show Differences </strong>action performs a comparison of the selected resource in the repository and the corresponding local version of that resource. The following dialog displays the difference results and indicates what has been changed, added and/or removed. Selecting an object (i.e. difference) will display details of the change in the <strong>Selection Details</strong> section. </p>
+<p><img src="images/views/MR_ShowDifferencesWithLocalCopy.jpg" width="640" height="427" hspace="20"></p>
+<hr />
+<p><span class="subtitle_b16"><a name="showHistory"></a>Show History... </span></p>
+<p>The MetaMatrix Repository performs version control and as a result provides change control history via the Show History... action. Selecting a model in the Repository Explorer and selecting Show History... displays the following dialog.</p>
+<p><img src="images/views/MR_ShowHistory.jpg" width="678" height="242" hspace="20"></p>
+<p>You can perform two other functions in this dialog. The first is to show differences between two versions of your model. A sample difference report is shown below. </p>
+<p><img src="images/views/MR_ShowDifferencesTwoVersions.jpg" width="711" height="448" hspace="20"></p>
+<p>You can also get a previous version of your model via the <strong>Get... </strong>button. This will perform the identical operation to the <strong>Get Latest </strong>action except that the version may not be the latest version. </p>
+<p>In the case where you have a checked-out model and you wish to replace it with an older version, a overwrite confirmation dialog will be presented.</p>
+<p><img src="images/views/MR_ReplaceWritableFile.jpg" width="441" height="146" hspace="20"> </p>
+<hr />
+<p class="subtitle_b16">Related Topics</p>
+<ul>
+  <li><a href="MetaMatrixRepository.htm">MetaMatrix Repository </a></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr />
+<p class="copyright">&copy; 2008 Varsity Gateway LLC.  All rights reserved.</span><br />Visit <a href="http://www.metamatrix.com">http://www.metamatrix.com</a></span></p>
+</body>

@@ -1,0 +1,70 @@
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<body>
+<p> <a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<p class="maintitle_b24">Importing ERwin source </p>
+<hr />
+<p class="medium"><strong>Designer</strong> provides an option to import  <strong>ERwin</strong> files (versions 3, 3.5.2, 4, 4.1, and 7). The importer will create Relational models in the  workspace, as well as Logical, Relationship and Datatype models if applicable.</p>
+<p class="medium">Supported structural features of ERwin models include:</p>
+<ul>
+  <li>Schema</li>
+  <li>Catalog</li>
+  <li>Table<br>
+  </li>
+  <li>View<br>
+    </li>
+  <li>Column<br>
+    </li>
+  <li>Index<br>
+    </li>
+  <li>Procedure<br>
+    </li>
+  <li>Parameter<br>
+    </li>
+  <li>Foreign key<br>
+    </li>
+  <li>Primary key<br>
+    </li>
+  <li>Unique key<br>
+    </li>
+  <li>Logical relationship</li>
+</ul>
+<p class="medium">Any properties (name-value pairs) of these features that are unique to your use of ERwin (or describe physical database attributes) will be implemented using the Designer's metadata extension functionality. The Designer will allow the display and editing of the imported metadata in UML notation in package diagrams within the model.<br>
+</p>
+<p class="medium">To import an ERwin file, follow the steps below. </p>
+<blockquote>
+  <p class="medium"><strong>Step 1:</strong> In <strong><a href="ModelExplorer.htm">Model Explorer</a> </strong> , choose the <strong><a href="ModelingYourData.htm#importWizard">File &gt; Import</a></strong> action <img src="images/icons/import_wiz.gif" width="16" height="16" /> in the toolbar or select a project, folder or model in the tree and choose &quot;<img src="images/icons/import_wiz.gif" width="16" height="16" /> <strong>Import...</strong>&quot;</p>
+  <p class="medium"><strong>Step 2:</strong> Select  one of the <strong>ERwin</strong> import options below, then choose <strong>NEXT&gt;</strong></p>
+  <ul>
+    <li><strong class="medium">Metadata from ER/Studio 5.1 to 7.1 Models </strong></li>
+    <li><strong class="medium">Metadata from ERwin 3.0 to 3.5.2 Models</strong></li>
+    <li><strong>Metadata from ERwin 4.0 SP1 to 4.1 Models </strong></li>
+    <li><strong>Metadata from ERwin 7 Models</strong></li>
+  </ul>
+  <p class="medium"><strong>Step 3:</strong> Click on the <strong>Browse...</strong> button to locate and select your <strong>ERwin</strong> <strong>Source Model</strong> and choose <strong>NEXT&gt;</strong>  </p>
+  <blockquote>
+    <p class="medium">Any user-defined properties and values will be at the top of the information listed in the User Properties and Import Options section.  A number of core properties and values will always appear.</p>
+  </blockquote>
+  <p class="medium"><img src="images/views/ImportERwin30352.jpg" width="637" height="597" hspace="20"></p>
+  <p class="medium"><strong>Step 5:</strong> Specify valid &quot;<strong>Location</strong>&quot; by editing the text field, or select <strong>Browse...</strong> button to locate and select a folder or project in your workspace. </p>
+  <p class="medium"><strong>Step 6:</strong> Modify/Specify names of generated models. </p>
+  <p class="medium"><strong>Step 7:</strong> Click <strong>Finish</strong>.</p>
+  <p><span class="note">Notes:</span></p>
+  <ul>
+    <li><span class="note">When you import an <strong>ERwin</strong> model, all entities from the <strong>ERwin</strong> model that are Logical Only or Logical and Physical get created in the Logical (UML) model.</span></li>
+    <li><span class="note">Also, all entities from the ERwin model that are Physical Only or Physical and Logical get created in the Source Model.</span></li>
+    <li><span class="note">All types used are created in a Datatype schema.  </span></li>
+    <li><span class="note">All relationships between entities (Primary Keys, Foreign Keys, Associations, etc) are represented in the Relationship model and may also be represented in another model. </span><br>
+    </li>
+  </ul>
+</blockquote>
+<hr />
+<p class="subtitle_b16">Related Topics</p>
+<ul>
+  <li><a href="ModelingYourData.htm" class="medium">Modeling your Data </a></li>
+  <li><a href="ImportJdbc.htm" class="medium">Import Relational Data</a></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr />
+<p class="copyright">&copy; 2008 Varsity Gateway LLC.  All rights reserved.<br />
+Visit <a href="http://www.metamatrix.com">http://www.metamatrix.com</a></p>
+</body>

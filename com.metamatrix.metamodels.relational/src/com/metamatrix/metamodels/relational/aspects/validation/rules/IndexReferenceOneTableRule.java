@@ -1,0 +1,111 @@
+/* ================================================================================== 
+ * JBoss, Home of Professional Open Source. 
+ * 
+ * Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ * 
+ * Some portions of this file may be copyrighted by other 
+ * contributors and licensed to Red Hat, Inc. under one or more 
+ * contributor license agreements. See the copyright.txt file in the 
+ * distribution for a full listing of individual contributors. 
+ * 
+ * This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0 
+ * which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html 
+ * ================================================================================== */ 
+
+package com.metamatrix.metamodels.relational.aspects.validation.rules;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Preferences;
+
+import org.eclipse.emf.ecore.EObject;
+
+import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.metamodels.relational.Column;
+import com.metamatrix.metamodels.relational.ColumnSet;
+import com.metamatrix.metamodels.relational.Index;
+import com.metamatrix.metamodels.relational.RelationalPlugin;
+import com.metamatrix.metamodels.relational.Table;
+import com.metamatrix.modeler.core.ValidationDescriptor;
+import com.metamatrix.modeler.core.ValidationPreferences;
+import com.metamatrix.modeler.core.validation.ObjectValidationRule;
+import com.metamatrix.modeler.core.validation.ValidationContext;
+import com.metamatrix.modeler.core.validation.ValidationProblem;
+import com.metamatrix.modeler.core.validation.ValidationResult;
+import com.metamatrix.modeler.internal.core.validation.ValidationProblemImpl;
+import com.metamatrix.modeler.internal.core.validation.ValidationResultImpl;
+
+/**
+ * ColumnIntegerDatatypeRule
+ */
+public class IndexReferenceOneTableRule implements ObjectValidationRule {
+    
+    /*
+     * @see com.metamatrix.modeler.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, com.metamatrix.modeler.core.validation.ValidationContext)
+     */
+    public void validate(EObject eObject, ValidationContext context) {
+        ArgCheck.isInstanceOf(Index.class, eObject);
+
+        // See what the preference is ...
+        int status = IStatus.WARNING;
+        //TODO: Replace code with context.getPreferenceStatus(String , int);
+        Preferences prefs = context.getPreferences();
+        if(prefs != null) {        
+            String value = getPreferenceValue(prefs);
+            if(value.equals(ValidationDescriptor.IGNORE)) {
+                return;
+            } else if(value.equals(ValidationDescriptor.ERROR)) {
+                status = IStatus.ERROR;
+            } else if(value.equals(ValidationDescriptor.INFO)) {
+                status = IStatus.INFO;
+            }  else if(value.equals(ValidationDescriptor.WARNING)) {
+                status = IStatus.WARNING;
+            }
+        }
+
+        // See whether more than one table are involved ...
+        final Index index = (Index) eObject;
+        final List columns = index.getColumns();
+        final Set referencedTables = new HashSet();
+        final Iterator iter = columns.iterator();
+        while (iter.hasNext()) {
+            final Column column = (Column)iter.next();
+            final ColumnSet table = column.getOwner();
+            if ( table instanceof Table ) {
+                referencedTables.add(table);
+            }
+        }
+        
+        // See if there are any duplicates ...
+        if ( referencedTables.size() > 1 ) {
+            ValidationResult result = new ValidationResultImpl(eObject);
+            // create validation problem and add it to the result
+            ValidationProblem problem  = new ValidationProblemImpl(0, status, getValidationMsg(0, new Object[] {eObject}));
+            result.addProblem(problem);
+            context.addResult(result);
+        }
+    }
+
+    protected String getPreferenceValue(Preferences prefs) {
+        return prefs.getString(ValidationPreferences.RELATIONAL_INDEXES_WITH_COLUMNS_FROM_MULTIPLE_TABLES);
+    }
+    
+    /**
+     * Gets the appropriate validation error message for the specified error code. 
+     * @param theCode the error code whose validation message is being requested
+     * @param theParams the parameters to be used within the message or <code>null</code> if not used
+     * @return the validation message
+     * @since 4.2
+     */
+    protected String getValidationMsg(int theCode,
+                                      Object[] theParams) {
+        return RelationalPlugin.Util.getString("IndexReferenceOneTableRule.Index_references_columns_from_more_than_one_table"); //$NON-NLS-1$
+    }
+
+}

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+ 
+<!-- =============================================================================== 
+ # JBoss, Home of Professional Open Source. 
+ # 
+ # Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ # 
+ # Some portions of this file may be copyrighted by other 
+ # contributors and licensed to Red Hat, Inc. under one or more 
+ # contributor license agreements. See the copyright.txt file in the 
+ # distribution for a full listing of individual contributors. 
+ # 
+ # This program and the accompanying materials 
+ # are made available under the terms of the Eclipse Public License v1.0 
+ # which accompanies this distribution, and is available at 
+ # http://www.eclipse.org/legal/epl-v10.html 
+ # ================================================================================== --> 
+
+<plugin>
+
+     <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            name="%roseImportWizard.name"
+            icon="icons/full/ctool16/importrose_wiz.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.rose.internal.ui.wizard.RoseImportWizard"
+            id="com.metamatrix.rose.ui.wizard.roseImportWizard">
+         <description>
+            %roseImportWizard.description
+         </description>
+      </wizard>
+   </extension>
+<!-- Action in the Metadata menu to reresolve references -->
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="%roseUiMetadataMenuActionSet.label"
+            visible="false"
+            id="com.metamatrix.rose.ui.roseUiMetadataMenuActionSet">
+         <menu
+               label="%metadata.menu"
+               path="additions"
+               id="com.metamatrix.modeler.ui.actions.metadataMenu">
+            <separator
+                  name="slot1">
+            </separator>
+            <separator
+                  name="slot2">
+            </separator>
+            <separator
+                  name="slot3">
+            </separator>
+            <separator
+                  name="slot4">
+            </separator>
+            <groupMarker
+                  name="com.metamatrix.modeler.ui.groupMarker1">
+            </groupMarker>
+         </menu>            
+         <action
+               label="%reresolveReferencesAction.label"
+               tooltip="%reresolveReferencesAction.tip"
+               class="com.metamatrix.rose.internal.ui.actions.ReresolveReferencesAction"
+               menubarPath="com.metamatrix.modeler.ui.actions.metadataMenu/slot2"
+               enablesFor="1"
+               id="com.metamatrix.rose.internal.ui.actions.ReresolveReferencesAction">
+         </action>
+      </actionSet>
+   </extension>
+<!--
+	Add the RoseUiMetadataMenuActionSet to the Modeler Perspective. In order to do this we must make
+	sure the MetaData Action Set has also been activated.
+-->
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="com.metamatrix.modeler.ui.modelerPerspective">
+         <actionSet
+               id="com.metamatrix.rose.ui.roseUiMetadataMenuActionSet">
+         </actionSet>
+      </perspectiveExtension>
+   </extension>
+
+</plugin>

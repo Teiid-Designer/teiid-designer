@@ -1,0 +1,63 @@
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<body>
+<p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<p class="maintitle_b24"> The MetaMatrix Repository </p>
+<hr />
+<p>The <strong>MetaMatrix Repository</strong> is a graphical metadata management system in <strong>Designer</strong> that helps you store, import, organize, and  report on the diverse metadata that supports your data service effort.  You can assemble all the metadata that  supports your data service work, and share metadata, models, and data  service definitions across teams and projects for a clearer picture of  how enterprise data is interrelated.</p>
+<p>This repository can be viewed in <strong>Designer</strong> via the <strong>MetaMatrix Repository</strong> perspective. You can open this perspective any time, via the <IMG src="images/icons/selectPerspective.png" alt="Open Perspectives" width="23" height="23" border="0">  shortcut toolbar button. ( See <a href="DesignerPerspectives.htm#openNewPerspective">Opening a New Perspective</a>) </p>
+<p>To use the <strong>Repository</strong>, you'll need to  create repository connections through which you'll share and control your projects and resoures. You can do this in two ways:</p>
+<ul>
+  <li>Open the <strong>Repository</strong> perpective and <a href="#createRepositoryConnection">create repository connections</a> prior to sharing/adding resources. </li>
+  <li>Using the<a href="#teamShareProject"><strong> Team > Share Project</strong></a> action - provides step-by-step creation of repository connections and adds resources to repository.</li>
+</ul>
+<hr />
+<p class="medium"><a name="createRepositoryConnection"></a><span class="subtitle_b16">Create New Repository Connection</span></p>
+<p>To  create a repository connection:</p>
+<blockquote>
+  <p><span class="medium"><strong>Step 1:</strong> Open the <strong>Repository</strong> perspective via the <IMG src="images/icons/selectPerspective.png" alt="Open Perspectives" width="23" height="23" border="0"> shortcut toolbar button</span></p>
+  <p><span class="medium"><strong>Step 2:</strong> Right-click in the <strong><a href="RepositoryExplorer.htm">Repository Explorer</a></strong> tree and select </span><strong>New MetaMatrix Repository</strong> <img src="images/icons/newmb_wiz.gif" alt="newmb_wiz" width="16" height="16"> action. You can also select this action from the main toolbar's <strong>New</strong> <img src="images/icons/newResourceButton.jpg" alt="new resource" width="44" height="30">button </p>
+  <p><img src="images/views/MR_NewMMRepsitoryAction.jpg" alt="new rep action" width="423" height="227" hspace="20"> </p>
+  <p class="medium"><strong>Step 3: </strong>Enter a name and  critical authentication details for accessing the repository and click <strong>Finish &gt;</strong> to establish the connection.</p>
+  <blockquote>
+    <p class="note">Note: You can check user authentication by selecting the <strong>Test Connection</strong> button. </p>
+  </blockquote>
+  <p class="medium"><img src="images/views/MR_ShareProject_NewConnection.jpg" alt="share" width="465" height="447" hspace="20"></p>
+  <p class="medium"><strong>Step 4:</strong> Enter a valid pasword and click <strong>OK</strong>. </p>
+  <p class="medium"><img src="images/views/MR_ConnectingToRepository.jpg" alt="connect" width="352" height="122" hspace="20"></p>
+</blockquote>
+<hr />
+<p><a name="teamShareProject"></a><span class="subtitle_b16">Sharing Projects and Resources </span></p>
+<p>To  share either a model or an entire project to the team repository, follow the steps below:</p>
+<blockquote>
+  <p class="medium"><strong>Step 1:</strong> 	Right-click on a model or project in the <a href="ModelExplorer.htm"><strong>Model Explorer</strong></a>select <strong>Team &gt; Share Project&hellip;</strong> from the pop-up menu.</p>
+  <p class="medium"><img src="images/views/MR_ShareProjectAction.jpg" width="391" height="421" hspace="20"></p>
+  <p class="medium"><strong>Step 2:</strong> The <strong>Share Project</strong> dialog box displays.  If you have access to existing repositories, they will be selectable through the dialog box.  For the purposes of this example, we will be creating a new repository. Select the radio button for <strong>Share in a new repository</strong> and click <strong>NEXT &gt;</strong>. </p>
+  <blockquote>
+    <p class="note"><strong>NOTE: </strong>The  following procedures assume that you are using the MetaMatrix MetaMatrix  Repository.&nbsp; If you are using another  third-party repository the following dialog boxes do not apply.</p>
+  </blockquote>
+  <p class="medium"><img src="images/views/MR_ShareProject.jpg" width="465" height="447" hspace="20"></p>
+  <p class="medium"><strong>Step 3: </strong>Enter a name and  critical authentication details for accessing the repository and click <strong>Finish &gt;</strong> to establish the connection.</p>
+  <blockquote>
+    <p class="note">Note: You can check user authentication by selecting the <strong>Test Connection</strong> button. </p>
+  </blockquote>
+  <p class="medium"><img src="images/views/MR_ShareProject_NewConnection.jpg" width="465" height="447" hspace="20"></p>
+  <p class="medium"><strong>Step 4:</strong> Enter a valid pasword and click <strong>OK</strong>. </p>
+  <p class="medium"><img src="images/views/MR_ConnectingToRepository.jpg" width="352" height="122" hspace="20"></p>
+  <p class="medium"><strong>Step 5: </strong>Next, a dialog is presented which provides options to add project resources to the repository at this time. You can supply an initial comments and select from a set addtional options to add resources related by structure (subfolders) or dependency (imported models). In addition, you have an option of deleting your local copies of your resources after they are added to the repository. </p>
+  <p class="medium">Click <strong>OK</strong>, when finished, to add resources, or <strong>Cancel</strong> if you do not wish to add resources at this time. </p>
+  <p class="medium"><img src="images/views/MR_AddFilesOptions.jpg" width="460" height="255" hspace="30"> </p>
+  <ul>
+    <li><strong>Recurse Subfolder</strong> &ndash; checking this option imports everything at a entity level and all subsequent sublevels.  If you are adding a model, this option will be grayed out.</li>
+    <li><strong>Include Imported Models</strong> &ndash; if any projects are linked to model imports, selecting this option will capture the necessary imported models as well.</li>
+    <li><strong>Remove local copy</strong> &ndash; checking this option deletes your local project or model file after it is added to the database, ensuring the existence of only one version at a time.<br>
+    </li>
+  </ul>
+</blockquote>
+<hr />
+<p class="subtitle_b16">Related Topics</p>
+<ul><li><span class="medium"> <a href="RepositoryExplorer.htm">Repository Explorer</a> </span></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr />
+<p class="copyright">&copy; 2008 Varsity Gateway LLC.  All rights reserved.</span><br />Visit <a href="http://www.metamatrix.com">http://www.metamatrix.com</a></span></p>
+</body>

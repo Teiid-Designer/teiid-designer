@@ -1,0 +1,67 @@
+/* ================================================================================== 
+ * JBoss, Home of Professional Open Source. 
+ * 
+ * Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ * 
+ * Some portions of this file may be copyrighted by other 
+ * contributors and licensed to Red Hat, Inc. under one or more 
+ * contributor license agreements. See the copyright.txt file in the 
+ * distribution for a full listing of individual contributors. 
+ * 
+ * This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0 
+ * which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html 
+ * ================================================================================== */ 
+
+package com.metamatrix.modeler.internal.dqp.ui.connection;
+
+import java.util.Collections;
+
+import net.sourceforge.sqlexplorer.ext.IRequestDocumentGenerator;
+
+import org.eclipse.emf.ecore.resource.Resource;
+
+import com.metamatrix.core.id.IDGenerator;
+import com.metamatrix.core.id.ObjectID;
+import com.metamatrix.metamodels.webservice.Operation;
+import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
+import com.metamatrix.modeler.webservice.util.WebServiceUtil;
+
+/**
+ * This class generates template request documents for web service operations.
+ * 
+ * @since 5.0.1
+ */
+public class WebServiceRequestGenerator implements
+                                       IRequestDocumentGenerator {
+
+    // ===========================================================================================================================
+    // Methods
+
+    /**
+     * @see net.sourceforge.sqlexplorer.ext.IRequestDocumentGenerator#generateRequestDocument(java.lang.String)
+     * @since 5.0.1
+     */
+    public String generateRequestDocument(String webServiceModelUUID,
+                                          String webServiceOperationUUID) {
+        try {
+            // ensure the model is loaded
+            ObjectID modelID = IDGenerator.getInstance().stringToObject(webServiceModelUUID);
+            Resource res = ModelerCore.getModelContainer().getResourceFinder().findByUUID(modelID, false);
+            if (!res.isLoaded()) {
+                res.load(Collections.EMPTY_MAP);
+            }
+            // find the object
+            Object obj = ModelerCore.getModelContainer().getEObjectFinder().find(webServiceOperationUUID);
+            if (obj instanceof Operation) {
+                return WebServiceUtil.generateRequestDocument((Operation)obj, null);
+            }
+        } catch (Exception e) {
+            DqpUiConstants.UTIL.log(e);
+        }
+
+        return null;
+    }
+}

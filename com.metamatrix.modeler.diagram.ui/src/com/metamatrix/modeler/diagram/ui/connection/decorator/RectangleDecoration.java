@@ -1,0 +1,99 @@
+/* ================================================================================== 
+ * JBoss, Home of Professional Open Source. 
+ * 
+ * Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ * 
+ * Some portions of this file may be copyrighted by other 
+ * contributors and licensed to Red Hat, Inc. under one or more 
+ * contributor license agreements. See the copyright.txt file in the 
+ * distribution for a full listing of individual contributors. 
+ * 
+ * This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0 
+ * which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html 
+ * ================================================================================== */ 
+
+package com.metamatrix.modeler.diagram.ui.connection.decorator;
+
+/**
+ * RectangleDecoration
+ */
+
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.PolygonDecoration;
+//import org.eclipse.draw2d.PolylineDecoration;
+import org.eclipse.draw2d.geometry.*;
+
+/**
+ * A decorative Figure intended to be placed on a 
+ * {@link Polyline}.
+ * It has the default shape of right-pointing triangle.
+ */
+public class RectangleDecoration extends PolygonDecoration {
+
+    public static final PointList RECTANGLE_TIP = new PointList();
+
+    static {
+        RECTANGLE_TIP.addPoint(-2, 0);
+        RECTANGLE_TIP.addPoint(-1, 1);
+        RECTANGLE_TIP.addPoint(-0, 0);
+        RECTANGLE_TIP.addPoint(-1, -1);
+        RECTANGLE_TIP.addPoint(-2, 0);
+    }
+
+    /**
+     * Constructs a RectangleDecoration. 
+     * Defaults the RectangleDecoration to fill its region with black.
+     * 
+     * @since 2.0 
+     */
+    public RectangleDecoration() {
+        setBackgroundColor(ColorConstants.black);
+        setForegroundColor(ColorConstants.blue);
+        setTemplate(RECTANGLE_TIP);
+        setPoints(RECTANGLE_TIP);
+        setScale(8, 8);
+    }
+
+    /**
+     * Returns the points in the PolylineDecoration as a PointList.
+     * 
+     * @since 2.0
+     */
+    @Override
+    public PointList getPoints() {
+        return super.getPoints();
+    }
+
+    /**
+     * Sets the amount of scaling to be done along X and Y
+     * axes on the PolylineDecoration's template.
+     *
+     * @param x X scaling
+     * @param y Y scaling
+     * @since 2.0
+     */
+    @Override
+    public void setScale(double x, double y) {
+        super.setScale(x, y);
+    }
+
+    @Override
+    public void setReferencePoint(Point ref) {
+        super.setReferencePoint(ref);
+    }
+
+    /**
+     * Sets the angle by which rotation is to be done on the 
+     * PolylineDecoration.
+     * 
+     * @param angle Angle of rotation.
+     * @since 2.0
+     */
+    @Override
+    public void setRotation(double angle) {
+        super.setRotation(angle);
+    }
+
+}

@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<body>
+<p><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<p class="maintitle_b24">Testing Your VDB</p>
+<hr/>
+<p class="medium">In Enterprise Designer you can execute a <strong>VDB</strong> to test/query actual data. (see <a href="WebServiceVdbSummary.htm"><strong>Virtual Database Summary</strong></a> ). To execute a <strong>VDB</strong>, follow the steps below: </p>
+<blockquote>
+  <p class="medium"><strong>Step 1:</strong> In the <strong><a href="ModelExplorer.htm">Model Explorer</a></strong>, double-click a <strong>VDB</strong>, or select one and choose <strong>Open</strong> action to open a  <strong>VDB Editor</strong>.</p>
+  <p class="medium"> <strong>Step 2:</strong> Select the <strong>Execute</strong> tab to establish a connection and open the<a href="DesignerPerspectives.htm#sqlExplorerPerspective"> <strong>SQL Explorer</strong></a> perspective. Your <strong>VDB</strong> should now be connected via the <a href="ConnectorBindingsHelp.htm">connector bindings</a> defined previously. Verify the connection in the <strong>Connections View</strong>.</p>
+  <p class="medium"><a name="connectionsView"></a><img src="images/views/SQLExplorerConnectionsView.jpg"  border="1"> </p>
+  <p class="medium"><strong>Step 2:</strong> In the <strong>Database Structure View</strong> (upper left),  expand the <strong>Table</strong> node to list the tables in your VDB.&nbsp; </p>
+  <p class="medium"><a name="databaseStructureView"></a><img src="images/views/databaseStructureView.jpg" /></p>
+  <p class="medium"><strong>Step 3:</strong> Select one of the tables and do a right  click.&nbsp; Select the &lsquo;<strong>Generate Select in  SQL Editor</strong>&rsquo; menu item.</p>
+  <p class="medium"><img src="images/views/generateSelectAction.jpg"  /></p>
+  <p class="medium"><strong>Step 4:</strong> A SELECT statement will appear in the editor  (upper right).&nbsp; </p>
+  <p class="medium"><a name="sqlEditorView"></a><img src="images/views/generatedSql.jpg" /></p>
+  <p class="medium"><strong>Step 5: </strong>Click the <strong>Execute&nbsp; SQL</strong> icon <img src="images/icons/runner.gif" width="21" height="21" /> to run the SQL.&nbsp; Results will appear in the <strong>SQL Results</strong> tab (lower right).</p>
+  <p class="medium"><a name="sqlResultsView"></a><img src="images/views/sqlTableResults.jpg" /></p>
+</blockquote>
+<p>When executing queries on XML View Documents, the results are displayed in XML format as shown below:</p>
+<blockquote>
+  <p><a name="xmlResultsView"></a><img src="images/views/SqlExplorerXmlResultsView.jpg"> </p>
+</blockquote>
+<p>When each query is executed, the SQL is stored in the SQL History table so the queries can be re-submitted without re-typing it.</p>
+<blockquote>
+  <p><a name="sqlHistoryView"></a><img src="images/views/SqlExplorerSqlHistoryView.jpg"></p>
+</blockquote>
+<p> This content of this SQL History table can be edited via right-click menu shown below.</p>
+<blockquote>
+  <p><img src="images/views/SqlExplorerSqlHistoryViewMenu.jpg"></p>
+</blockquote>
+<hr />
+<p class="subtitle_b16">Saving Your Query Results </p>
+<p>Query results, both SQL &amp; XML, can  be saved to text files in the SQL Explorer perspective.</p>
+<p>The toolbars for SQL Results &amp; XML Results views contains an additional action/button (see below) which presents a file save dialog.</p>
+<p><img src="images/views/SE_SqlResultsSaveResults.jpg" width="528" height="42" hspace="20"></p>
+<ul>
+  <li> Note: The action can also be accessed via the right-click menu on both views.</li>
+</ul>
+<p>In addition, this file save dialog is presented to the user when the XML Document results exceed the character size limit defined by a user preference property for the SQLExplorer.</p>
+<p><img src="images/views/SE_SqlResultsXmlDisplayLimitPref.jpg" width="535" height="216" hspace="20" border="1"></p>
+<p>When this limit is exceeded, the user is presented with a dialog to either save the results to a file or continue displaying the results and possibly incurring substantial runtime memory allocation.</p>
+<p><img src="images/views/SE_SqlResultsLargeXmlDocDialog.jpg" width="441" height="192" hspace="20"></p>
+<p>When the Save option is accepted, the XML Query Results view displays the file name and path of the exported file.</p>
+<p><img src="images/views/SE_SqlResultsXmlSavedToFilejpg.jpg" width="672" height="172" hspace="20"> </p>
+<hr />
+<p class="subtitle_b16">Related Topics</p>
+<ul>
+  <li><a href="WebServiceVdbSummary.htm" class="medium">VDB Facts</a></li>
+  <li><a href="DesignerPerspectives.htm#sqlExplorerPerspective">SQL Explorer Perspective</a></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr />
+<p class="copyright">&copy; 2008 Varsity Gateway LLC.  All rights reserved.</span><br />Visit <a href="http://www.metamatrix.com">http://www.metamatrix.com</a></span></p>
+</body>

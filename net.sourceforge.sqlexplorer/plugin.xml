@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!-- ######################################################################
+ # JBoss, Home of Professional Open Source.
+ # Copyright (C) 2008 Red Hat, Inc.
+ # Copyright (C) 2000-2007 MetaMatrix, Inc.
+ # Licensed to Red Hat, Inc. under one or more contributor
+ # license agreements.  See the copyright.txt file in the
+ # distribution for a full listing of individual contributors.
+ #
+ # This library is free software; you can redistribute it and/or
+ # modify it under the terms of the GNU Lesser General Public
+ # License as published by the Free Software Foundation; either
+ # version 2.1 of the License, or (at your option) any later version.
+ #
+ # This library is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ # Lesser General Public License for more details.
+ 
+ # You should have received a copy of the GNU Lesser General Public
+ # License along with this library; if not, write to the Free Software
+ # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ # 02110-1301 USA.
+ ###################################################################### -->
+<plugin>
+
+   <extension-point id="resultSetProcessor" name="%extension-point.name.0" schema="schema/resultSetProcessor.exsd"/>
+   <extension-point id="requestDocGenerator" name="%extension-point.name.1" schema="schema/requestDocGenerator.exsd"/>
+   <extension-point id="sqlExecVetoListener" name="%extension-point.name.2" schema="schema/sqlExecVetoListener.exsd"/>
+
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="%category.name.0"
+            id="SQLExplorerPlugin">
+      </category>
+      <view
+            name="%view.name.0"
+            icon="icons/history_list.gif"
+            category="SQLExplorerPlugin"
+            class="net.sourceforge.sqlexplorer.plugin.views.SQLHistoryView"
+            id="net.sourceforge.sqlexplorer.plugin.views.SQLHistoryView">
+      </view>
+      <view
+            name="%view.name.1"
+            icon="icons/app_obj.gif"
+            category="SQLExplorerPlugin"
+            class="net.sourceforge.sqlexplorer.plugin.views.ConnectionInfo"
+            id="net.sourceforge.sqlexplorer.plugin.views.ConnectionInfo">
+      </view>
+      <view
+            name="%view.name.2"
+            icon="icons/showparents_mode.gif"
+            category="SQLExplorerPlugin"
+            class="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView"
+            id="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView">
+      </view>
+      <view
+            name="%view.name.3"
+            icon="icons/tree_mode.gif"
+            category="SQLExplorerPlugin"
+            class="net.sourceforge.sqlexplorer.plugin.views.DBView"
+            id="net.sourceforge.sqlexplorer.plugin.views.DBView">
+      </view>
+      <view
+            name="%view.name.4"
+            icon="icons/feature_obj.gif"
+            category="SQLExplorerPlugin"
+            class="net.sourceforge.sqlexplorer.plugin.views.DriverView"
+            id="net.sourceforge.sqlexplorer.plugin.views.DriverView">
+      </view>
+      <view
+            name="%view.name.5"
+            icon="icons/app_obj.gif"
+            category="SQLExplorerPlugin"
+            class="net.sourceforge.sqlexplorer.plugin.views.AliasView"
+            id="net.sourceforge.sqlexplorer.plugin.views.AliasView">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="%page.name.0"
+            class="net.sourceforge.sqlexplorer.preferences.GeneralPreferencePage"
+            id="net.sourceforge.sqlexplorer.preferences.GeneralPreferencePage">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="%page.name.1"
+            category="net.sourceforge.sqlexplorer.preferences.GeneralPreferencePage"
+            class="net.sourceforge.sqlexplorer.preferences.SQLPreferencePage"
+            id="net.sourceforge.sqlexplorer.preferences.SQLPreferencePage">
+      </page>
+   </extension>
+   <extension
+         id="editors"
+         point="org.eclipse.ui.editors">
+      <editor
+            default="true"
+            name="%editor.name.0"
+            extensions="sql"
+            icon="icons/perspective_icon.gif"
+            class="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor"
+            contributorClass="net.sourceforge.sqlexplorer.plugin.editors.SQLEditorActionContributor"
+            id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor">
+      </editor>
+      <editor
+            name="%editor.name.1"
+            extensions="sqls"
+            icon="icons/edittsk_tsk.gif"
+            class="net.sourceforge.sqlexplorer.gef.editors.SchemaEditor"
+            contributorClass="net.sourceforge.sqlexplorer.gef.editors.SchemaViewerActionBarContributor"
+            id="net.sourceforge.sqlexplorer.gef.editors.SchemaEditor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.viewActions">     
+      <viewContribution
+            targetID="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView"
+            id="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView.commit">
+         <action
+               label="%action.label.0"
+               icon="icons/commit.gif"
+               class="net.sourceforge.sqlexplorer.sessiontree.actions.Commit"
+               tooltip="%action.tooltip.0"
+               enablesFor="1"
+               toolbarPath="additions"
+               id="net.sourceforge.sqlexplorer.actions.commit">
+         </action>
+      </viewContribution>
+      <viewContribution
+            targetID="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView"
+            id="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView.rollback">
+         <action
+               label="%action.label.1"
+               icon="icons/rollback.gif"
+               class="net.sourceforge.sqlexplorer.sessiontree.actions.Rollback"
+               tooltip="%action.tooltip.1"
+               enablesFor="1"
+               toolbarPath="additions"
+               id="net.sourceforge.sqlexplorer.actions.rollback">
+         </action>
+      </viewContribution>
+      <viewContribution
+            targetID="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView"
+            id="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView.close">
+         <action
+               label="%action.label.2"
+               icon="icons/remove_co.gif"
+               class="net.sourceforge.sqlexplorer.sessiontree.actions.CloseConnection"
+               tooltip="%action.tooltip.2"
+               enablesFor="1"
+               toolbarPath="additions"
+               id="net.sourceforge.sqlexplorer.actions.close">
+            <selection
+                  name="*"
+                  class="net.sourceforge.sqlexplorer.sessiontree.model.SessionTreeNode">
+            </selection>
+         </action>
+      </viewContribution>
+      <viewContribution
+            targetID="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView"
+            id="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView.closeAll">
+         <action
+               label="%action.label.3"
+               icon="icons/removeAll_co.gif"
+               class="net.sourceforge.sqlexplorer.sessiontree.actions.CloseAllConnections"
+               tooltip="%action.tooltip.3"
+               enablesFor="1"
+               toolbarPath="additions"
+               id="net.sourceforge.sqlexplorer.actions.closeAll">
+            <selection
+                  name="*"
+                  class="net.sourceforge.sqlexplorer.sessiontree.model.SessionTreeNode">
+            </selection>
+         </action>
+      </viewContribution>
+      <viewContribution
+            targetID="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView"
+            id="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView.NewEditor">
+         <action
+               label="%action.label.4"
+               icon="icons/edittsk_tsk.gif"
+               class="net.sourceforge.sqlexplorer.sessiontree.actions.NewSQLEditor"
+               tooltip="%action.tooltip.4"
+               enablesFor="*"
+               toolbarPath="additions"
+               id="net.sourceforge.sqlexplorer.actions.newEditor">
+         </action>
+      </viewContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="%category.name.1"
+            id="net.sourceforge.sqlexplorer.new">
+      </category>
+      <wizard
+            name="%wizard.name.0"
+            icon="icons/edittsk_tsk.gif"
+            category="net.sourceforge.sqlexplorer.new"
+            class="net.sourceforge.sqlexplorer.plugin.wizards.NewSQLEditorWizard"
+            id="net.sourceforge.sqlexplorer.plugin.wizards.sqleditor">
+         <description>
+            %wizard.description.0
+         </description>
+         <selection
+               class="org.eclipse.core.resources.IResource">
+         </selection>
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            name="%command.name.0"
+            description="%command.description.0"
+            categoryId="org.eclipse.ui.category.edit"
+            id="net.sourceforge.sqlexplorer.sqlrun">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="net.sourceforge.sqlexplorer.plugin.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="net.sourceforge.sqlexplorer.sqlrun"
+            contextId="org.eclipse.ui.textEditorScope"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Ctrl+F9">
+      </key>
+   </extension>
+</plugin>

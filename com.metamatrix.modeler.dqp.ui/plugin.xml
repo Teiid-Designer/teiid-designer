@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+ 
+<!-- =============================================================================== 
+ # JBoss, Home of Professional Open Source. 
+ # 
+ # Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ # 
+ # Some portions of this file may be copyrighted by other 
+ # contributors and licensed to Red Hat, Inc. under one or more 
+ # contributor license agreements. See the copyright.txt file in the 
+ # distribution for a full listing of individual contributors. 
+ # 
+ # This program and the accompanying materials 
+ # are made available under the terms of the Eclipse Public License v1.0 
+ # which accompanies this distribution, and is available at 
+ # http://www.eclipse.org/legal/epl-v10.html 
+ # ================================================================================== --> 
+
+<plugin>
+
+     <extension-point id="vdbEditorUtil" name="%vdbEditorUtil" schema="schema/vdbEditorUtil.exsd"/>
+
+  <extension
+        point="org.eclipse.ui.views">
+<!-- SqlResultsView -->
+      <view
+            name="%SqlResultsView.name"
+            icon="icons/full/cview16/XmlResultsView.gif"
+            category="SQLExplorerPlugin"
+            class="com.metamatrix.modeler.internal.dqp.ui.views.SqlResultsView"
+            id="com.metamatrix.modeler.dqp.ui.views.SqlResultsView">
+      </view>
+<!-- PreviewDataView -->
+      <view
+            name="%PreviewDataView.name"
+            icon="icons/full/cview16/XmlResultsView.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.internal.dqp.ui.views.PreviewDataView"
+            id="com.metamatrix.modeler.dqp.ui.views.PreviewDataView">
+      </view>
+<!-- User Defined Function (UDF) view -->
+      <view
+            name="%udfModelView"
+            icon="platform:/plugin/com.metamatrix.modeler.ui/icons/full/obj16/FunctionModel.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.internal.dqp.ui.workspace.udf.UdfModelView"
+            id="com.metamatrix.modeler.dqp.ui.workspace.udf.udfModelView">
+      </view>
+  </extension>
+<!-- VDB Execution Tab contribution to the VDB Editor -->
+  <extension
+        id="connectorbindingseditorpart"
+        name="%connectorBindingsVdbEditorPage.name"
+        point="com.metamatrix.modeler.vdb.ui.vdbEditorPage">
+        <class
+            displayName="%connectorBindingsVdbEditorPage.name"
+            name="com.metamatrix.modeler.internal.dqp.ui.config.ConnectorBindingsEditorPart">
+        </class>
+  </extension>
+<!-- JDBC Client Perspective -->
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="%jdbcClientPerspective.name"
+            icon="icons/full/ctool16/run_vdb.gif"
+            class="com.metamatrix.modeler.internal.dqp.ui.jdbc.JdbcClientPluginPerspective"
+            id="com.metamatrix.modeler.internal.dqp.ui.jdbc.JdbcClientPluginPerspective">
+      </perspective>
+   </extension>
+<!-- jh Added to fix 19314 -->
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="com.metamatrix.modeler.internal.dqp.ui.jdbc.JdbcClientPluginPerspective">
+         <perspectiveShortcut
+               id="com.metamatrix.modeler.internal.dqp.ui.jdbc.JdbcClientPluginPerspective"/>
+         
+      </perspectiveExtension>
+   </extension>
+   
+<!-- XML Document ResultSet Processor -->
+  <extension
+        id="xmlDocumentResultSetProcessor"
+        name="%xmlDocumentResultSetProcessor.name"
+        point="net.sourceforge.sqlexplorer.resultSetProcessor">
+        <class
+            name="com.metamatrix.modeler.internal.dqp.ui.jdbc.XmlDocumentResultSetProcessor">
+        </class>
+  </extension>
+<!-- SQL ResultSet Processor -->
+  <extension
+        id="sqlResultSetProcessor"
+        name="%sqlResultSetProcessor.name"
+        point="net.sourceforge.sqlexplorer.resultSetProcessor">
+        <class
+            name="com.metamatrix.modeler.internal.dqp.ui.jdbc.SqlResultSetProcessor">
+        </class>
+  </extension>
+<!-- Shutdown listener to alert user of VDB validation issues *** ONLY DIMENSION DESIGNER *** -->
+   <extension
+         id="dqpUiShutdownListener"
+         point="com.metamatrix.modeler.ui.vetoableShutdownListener">
+      <class
+            name="com.metamatrix.modeler.dqp.ui.DqpUiShutdownListener">
+      </class>
+   </extension>
+<!-- Action to open the log file for a given Connection in SQLExplorer -->   
+   <extension
+         point="org.eclipse.ui.viewActions">
+      <viewContribution
+            targetID="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView"
+            id="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView.DqpLogActions">
+         <action
+               label="%setDqpLogLevel.label"
+               icon="icons/full/cview16/SetLogLevel.gif"
+               class="com.metamatrix.modeler.internal.dqp.ui.actions.SetLogLevelAction"
+               tooltip="%setDqpLogLevel.tooltip"
+               enablesFor="1"
+               toolbarPath="additions"
+               id="com.metamatrix.modeler.internal.dqp.ui.actions.SetLogLevelAction">
+            <selection
+                  name="*"
+                  class="net.sourceforge.sqlexplorer.sessiontree.model.SessionTreeNode">
+            </selection>
+         </action>
+         <action
+               label="%showDqpLog.label"
+               icon="icons/full/cview16/ViewLog.gif"
+               class="com.metamatrix.modeler.internal.dqp.ui.actions.ShowDqpLogAction"
+               tooltip="%showDqpLog.tooltip"
+               enablesFor="1"
+               toolbarPath="additions"
+               id="com.metamatrix.modeler.internal.dqp.ui.actions.ShowDqpLogAction">
+            <selection
+                  name="*"
+                  class="net.sourceforge.sqlexplorer.sessiontree.model.SessionTreeNode">
+            </selection>
+               
+         </action>
+      </viewContribution>
+   </extension>
+   <extension
+        id="staledVDBChecker"
+        name="%staledVDBChecker.name"
+        point="net.sourceforge.sqlexplorer.sqlExecVetoListener">
+        <class
+            name="com.metamatrix.modeler.internal.dqp.ui.jdbc.StaledVDBChecker">
+        </class>
+   </extension>
+   <extension
+        id="staledExtensionModuleChecker"
+        name="%staledExtensionModuleChecker.name"
+        point="net.sourceforge.sqlexplorer.sqlExecVetoListener">
+        <class
+            name="com.metamatrix.modeler.internal.dqp.ui.jdbc.StaledExtensionModuleChecker">
+        </class>
+   </extension>
+   <extension
+         id="com.metamatrix.modeler.internal.dqp.ui.connection.WebServiceRequestGenerator"
+         name="%webServiceRequestDocGenerator.name"
+         point="net.sourceforge.sqlexplorer.requestDocGenerator">
+      <class name="com.metamatrix.modeler.internal.dqp.ui.connection.WebServiceRequestGenerator"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="%category.name.0"
+            id="com.metamatrix.modeler.runtime.ui">
+      </category>
+      <view
+            name="%connectorsView"
+            icon="icons/full/obj16/connectorBinding.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorsView"
+            id="com.metamatrix.modeler.dqp.ui.workspace.connectorsView">
+      </view>
+   </extension>
+   <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->
+   <extension
+         id="connectorsPerspectiveContributor"
+         name="%connectorsPerspectiveContributor.name"
+         point="com.metamatrix.modeler.ui.modelerPerspectiveContributor">
+      <class
+        name="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorsPerspectiveContributor">
+      </class>
+   </extension>
+   <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->
+   <extension
+         id="udfModelViewContributor"
+         name="%udfModelViewContributor.name"
+         point="com.metamatrix.modeler.ui.modelerPerspectiveContributor">
+      <class
+        name="com.metamatrix.modeler.internal.dqp.ui.workspace.udf.UdfViewPerspectiveContributor">
+      </class>
+   </extension>
+   
+   <extension
+		id="com.metamatrix.modeler.internal.dqp.ui.workspace.actions.BindToConnectorAction"
+		name="%bindToConnectorAction.name"
+        point="com.metamatrix.modeler.ui.modelResourceAction">
+      <resourceAction
+         name="com.metamatrix.modeler.internal.dqp.ui.workspace.actions.BindToConnectorAction"
+         label="%bindToConnectorAction.label">
+      </resourceAction>
+   </extension>
+   <extension
+		id="com.metamatrix.modeler.internal.dqp.ui.workspace.actions.UnbindFromConnectorAction"
+		name="%unbindFromConnectorAction.name"
+        point="com.metamatrix.modeler.ui.modelResourceAction">
+      <resourceAction
+         name="com.metamatrix.modeler.internal.dqp.ui.workspace.actions.UnbindFromConnectorAction"
+         label="%unbindFromConnectorAction.label">
+      </resourceAction>
+   </extension>
+   
+   <extension
+         id="connectorBindingContentProvider"
+         name="Connector Binding Content Provider"
+         point="com.metamatrix.modeler.ui.extendedModelContentProvider">
+      <class
+            name="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorBindingModelContentProvider">
+      </class>
+   </extension>
+   <extension
+         id="connectorBindingLabelProvider"
+         name="Connector Binding Label Provider"
+         point="com.metamatrix.modeler.ui.extendedModelLabelProvider">
+      <class
+            name="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorBindingModelLabelProvider">
+      </class>
+   </extension>
+   
+   <extension
+         id="udfModelJarsContentProvider"
+         name="Udf Jars Content Provider"
+         point="com.metamatrix.modeler.ui.extendedModelContentProvider">
+      <class
+            name="com.metamatrix.modeler.internal.dqp.ui.workspace.udf.UdfJarContentProvider">
+      </class>
+   </extension>
+   <extension
+         id="udfModelJarsLabelProvider"
+         name="Udf Jars  Label Provider"
+         point="com.metamatrix.modeler.ui.extendedModelLabelProvider">
+      <class
+            name="com.metamatrix.modeler.internal.dqp.ui.workspace.udf.UdfJarLabelProvider">
+      </class>
+   </extension>
+   
+<!-- Initializer for preferences -->
+   <extension point="org.eclipse.core.runtime.preferences">
+      <initializer class="com.metamatrix.modeler.internal.dqp.ui.preferences.DqpUiPreferenceInitializer"/>
+   </extension>
+  <extension
+         point="com.metamatrix.modeler.ui.generalPreferenceContributor">
+      <category
+            id="com.metamatrix.modeler.internal.dqp.ui.preferences.dqpUiPreferenceCategory"
+            name="%dqpUiPreferenceCategory">
+      </category>
+	  <!-- Preview Row Count Preference -->
+      <preference
+            id="com.metamatrix.modeler.internal.dqp.ui.preferences.previewRowCountPreferenceContributor"
+            categoryId="com.metamatrix.modeler.internal.dqp.ui.preferences.dqpUiPreferenceCategory"
+            class="com.metamatrix.modeler.internal.dqp.ui.preferences.PreviewRowCountPreferenceContributor">
+      </preference>
+	  <!-- Preview Max Results Preference -->
+      <preference
+            id="com.metamatrix.modeler.internal.dqp.ui.preferences.previewResultsCountPreferenceContributor"
+            categoryId="com.metamatrix.modeler.internal.dqp.ui.preferences.dqpUiPreferenceCategory"
+            class="com.metamatrix.modeler.internal.dqp.ui.preferences.PreviewResultsCountPreferenceContributor">
+      </preference>
+  </extension>
+<!-- JDBC Importer Post Processor (Connector Binding) -->
+  <extension
+        point="com.metamatrix.modeler.jdbc.ui.jdbcImportPostProcessor"
+        id="com.metamatrix.modeler.dqp.ui.jdbc.connectorBindingImportPostProcessor"
+        name="%connectorBindingImportPostProcessor">
+        <class
+        	name="com.metamatrix.modeler.internal.dqp.ui.jdbc.ConnectorBindingImportPostProcessor">
+        </class>
+  </extension>
+<!-- Actions contributed to the object/model generation -->
+   <extension
+		id="com.metamatrix.modeler.internal.dqp.ui.actions.PreviewTableDataContextAction"
+		name="%previewTableDataContextAction.name"
+        point="com.metamatrix.modeler.ui.modelObjectSpecialAction">
+      <specialAction
+         name="com.metamatrix.modeler.internal.dqp.ui.actions.PreviewTableDataContextAction"
+         label="%previewTableDataContextAction.label">
+      </specialAction>
+   </extension>
+</plugin>

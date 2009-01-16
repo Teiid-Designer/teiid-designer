@@ -1,0 +1,153 @@
+/* ================================================================================== 
+ * JBoss, Home of Professional Open Source. 
+ * 
+ * Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ * 
+ * Some portions of this file may be copyrighted by other 
+ * contributors and licensed to Red Hat, Inc. under one or more 
+ * contributor license agreements. See the copyright.txt file in the 
+ * distribution for a full listing of individual contributors. 
+ * 
+ * This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0 
+ * which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html 
+ * ================================================================================== */ 
+
+package com.metamatrix.modeler.transformation.ui.wizards;
+
+import java.util.Collections;
+import java.util.Map;
+
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.wizard.IWizardPage;
+
+import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
+import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.transformation.util.TransformationNewModelObjectHelper;
+import com.metamatrix.modeler.internal.ui.wizards.IStructuralCopyTreePopulator;
+import com.metamatrix.modeler.transformation.ui.UiConstants;
+import com.metamatrix.modeler.ui.wizards.INewModelWizardContributor;
+import com.metamatrix.ui.internal.widget.InheritanceCheckboxTreeViewer;
+
+/**
+ * TransformationLinkContributor is the NewModelWizard builder contributor for generating
+ * a virtual model that is transformed from an existing model.
+ */
+public class TransformationLinkContributor implements INewModelWizardContributor, UiConstants {
+    //
+    // Class constants:
+    //
+    private static final Map MAP_CLEAR_SUPPORTS_UPDATES = Collections.singletonMap(TransformationNewModelObjectHelper.VIRTUAL_TABLE_CLEAR_SUPPORTS_UPDATE, Boolean.TRUE);
+    private static final Map MAP_KEEP_SUPPORTS_UPDATES = Collections.singletonMap(TransformationNewModelObjectHelper.VIRTUAL_TABLE_CLEAR_SUPPORTS_UPDATE, Boolean.FALSE);
+
+    //
+    // Instance variables:
+    //
+    private IWizardPage[] pages;
+    private TransformationLinkWizardPage transformationLinkPage;
+
+    /**
+     * Construct an instance of TransformationLinkContributor.
+     */
+    public TransformationLinkContributor() {
+    	super();
+    }
+    
+    /** 
+     * @see com.metamatrix.modeler.ui.wizards.INewModelWizardContributor#canFinishEarly(org.eclipse.jface.wizard.IWizardPage)
+     * @since 4.2
+     */
+    public boolean canFinishEarly(IWizardPage theCurrentPage) {
+        return false;
+    }
+
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.ui.wizards.INewModelWizardContributor#createWizardPages(org.eclipse.jface.viewers.ISelection, org.eclipse.core.resources.IProject, com.metamatrix.modeler.core.MetamodelDescriptor, boolean)
+     */
+    public void createWizardPages(
+        	ISelection selection,
+        	IResource targetResource,
+            IPath targetFilePath,
+        	MetamodelDescriptor descriptor,
+        	boolean isVirtual) {
+
+        pages = new IWizardPage[1];
+        transformationLinkPage = new TransformationLinkWizardPage(
+				"transformationLinkWizardPage", //$NON-NLS-1$
+        		selection, descriptor, isVirtual);
+        pages[0] = transformationLinkPage;
+    }
+
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.ui.wizards.INewModelWizardContributor#getWizardPages()
+     */
+    public IWizardPage[] getWizardPages() {
+        return pages;
+    }
+
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.ui.wizards.INewModelWizardContributor#inputChanged(org.eclipse.jface.viewers.ISelection, org.eclipse.core.resources.IProject, com.metamatrix.modeler.core.MetamodelDescriptor, boolean)
+     */
+    public void inputChanged(
+        ISelection selection,
+        IResource targetResource,
+        MetamodelDescriptor descriptor,
+        boolean isVirtual) {
+
+    }
+    
+    /** 
+     * @see com.metamatrix.modeler.ui.wizards.INewModelWizardContributor#doCancel()
+     * @since 4.2
+     */
+    public void doCancel() {
+    }
+
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.ui.wizards.INewModelWizardContributor#doFinish(com.metamatrix.modeler.core.workspace.ModelResource, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    public void doFinish(ModelResource modelResource, IProgressMonitor monitor) {
+		String transactionName = Util.getString("TransformationLinkContributor.transactionName"); //$NON-NLS-1$
+		boolean started = ModelerCore.startTxn(transactionName, this);
+        boolean succeeded = false;
+		try {
+			IStructuralCopyTreePopulator populator = transformationLinkPage.getTreePopulator();
+			InheritanceCheckboxTreeViewer viewer = transformationLinkPage.getViewer();
+            Map extraProperties = transformationLinkPage.isClearSupportsUpdate() ? MAP_CLEAR_SUPPORTS_UPDATES : MAP_KEEP_SUPPORTS_UPDATES;
+			if ((populator != null) && (viewer != null)) {
+                // exclude the viewer if the user wants to copy the entire model:
+                if (transformationLinkPage.isCopyEntireModel()) {
+                    // all nodes selected, copy all:
+                    populator.copyModel((ModelResource) viewer.getRoot(), modelResource, null, extraProperties, transformationLinkPage.isCopyAllDescriptions(), monitor);
+
+                } else {
+                    // user selected some nodes, and excluded others:
+                    populator.copyModel((ModelResource) viewer.getRoot(), modelResource, viewer, extraProperties, transformationLinkPage.isCopyAllDescriptions(), monitor);
+                } // endif
+			}
+            succeeded = true;
+        } catch (Exception ex) {
+            String message = UiConstants.Util.getString("TransformationLinkContributor.doFinishError",     //$NON-NLS-1$
+                                                      modelResource.getItemName()); 
+            UiConstants.Util.log(IStatus.ERROR, ex, message); 
+		} finally {
+			if (started) {
+                if(succeeded) {
+                    ModelerCore.commitTxn();
+                } else {
+                    ModelerCore.rollbackTxn();
+                }
+			}
+		}
+    }
+
+    public void currentPageChanged(IWizardPage page) {
+        // unneeded, for now
+    }
+}

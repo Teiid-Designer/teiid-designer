@@ -1,0 +1,214 @@
+<link rel="stylesheet" href="designer_help.css" type="text/css" /><body>
+<p><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<p class="maintitle_b24">Designer's Main Menus </p>
+<hr/>
+<p>There are 6 categories of actions on Designer's main menu bar. They include:</p>
+<ul>
+  <li><a href="#fileMenu">File </a>- Resource management actions. </li>
+  <li><a href="#editMenu">Edit </a>- Standard edit actions.</li>
+  <li><a href="#refactorMenu">Refactor </a>- Resource actions (i.e. Rename, Move, etc...) </li>
+  <li><a href="#searchMenu">Search </a>- Find data within your workspace. </li>
+  <li><a href="#projectMenu">Project</a> - Model level actions.</li>
+  <li><a href="#metadataMenu">Metadata </a>- Standard edit actions.</li>
+  <li><a href="#windowMenu">Window</a> - Change perspectives or add/remove views to your perspective. </li>
+  <li><a href="#helpMenu">Help</a> - Access available Designer help documents, MetaMatrix SQL Support Guide and Eclipse Overview information. </li>
+</ul>
+<p><img src="images/views/DesignerMainMenuBar.jpg" hspace="20" border="1"></p>
+<hr/>
+<p class="subtitle_b16"><a name="fileMenu"></a>File Menu </p>
+<p class="medium">The <strong>File</strong> menu provides actions to manage your workspace resources. </p>
+<p><img src="images/views/ED_MainMenus_File.jpg" width="319" height="553" hspace="20" border="1" align="texttop"><img src="images/views/ED_MainMenus_File_New.jpg"  hspace="20" border="1" align="texttop"></p>
+<p>The individual actions are described below:</p>
+<ul>
+  <li><strong><a href="ModelingYourData.htm#newModelWizard">New &gt; Model Project </a> <img src="images/icons/newproject_wiz.gif" width="16" height="16" hspace="5"> </strong>- Allows user to create a new model project..</li>
+  <li><strong><a href="ModelingYourData.htm#newModelWizard">New &gt; Folder </a> <img src="images/icons/newfolder.gif" width="16" height="16" hspace="5"> </strong>- Allows user to create new folder within an existing project or folder.</li>
+  <li><strong><a href="ModelingYourData.htm#newModelWizard">New &gt; Model</a> <img src="images/icons/newmodel_wiz.gif" width="16" height="16" hspace="5"> </strong>- Allows user to create new models of several different kinds.</li>
+  <li><strong><a href="CreateVirtualDatabase.htm#newVDB">New &gt; Virtual Database Definition </a> <img src="images/icons/newvdb_wiz.gif" width="16" height="16" hspace="5"> </strong>- Creates a new VDB.</li>
+  <li><strong>Add Existing Project... </strong><img src="images/icons/addprj_wiz.gif" width="16" height="16" hspace="5"> - TBD </li>
+  <li><strong>Add Existing Model Project Set... </strong> <img src="images/icons/addprj_wiz.gif" width="16" height="16" hspace="5">- TBD </li>
+  <li><strong>Open File </strong> - TBD </li>
+</ul>
+<ul>
+  <li><strong>Close Editor</strong> - Closes the currently selected (visible) editor tab.</li>
+  <li><strong>Close All</strong> - Closes all open editors.</li>
+</ul>
+<ul>
+  <li><strong>Save</strong>	<img src="images/icons/save_edit.gif" width="16" height="16" hspace="5"> - Saves any changes in the currently selected (visible) editor.</li>
+  <li>  <strong>Save As</strong> <img src="images/icons/saveas_edit.gif" width="16" height="16" hspace="5">- Allows user to select a new name and/or location for the resource (model) in the currently selected (visible) editor.</li>
+  <li><strong>Save All <img src="images/icons/saveall_edit.gif" width="16" height="16" hspace="5"></strong> - Saves any changes in the any open editors that have changes.  An asterisk displays on the tab of editors with changes.</li>
+  <li><strong>Revert - </strong> TBD. <em><strong>(Not Yet Implemented) </strong></em></li>
+</ul>
+<ul>
+  <li><strong>Move&hellip;</strong> - Launches a <strong>Refactor &gt; Move</strong> resource dialog.</li>
+  <li><strong>Rename&hellip;</strong> - Launches a <strong>Refactor &gt; Rename</strong> resource dialog if resource selected, else in-line rename is preformed. </li>
+  <li><strong>Refresh Tree - </strong> Reloads tree with resources from the file system. <em><strong>(Not Yet Implemented) </strong></em></li>
+  <li><strong>Convert Line Delimeters to...- </strong> TBD <em><strong></strong></em></li>
+</ul>
+<ul>
+  <li><strong>Print</strong>	<img src="images/icons/print_edit.gif" width="16" height="16" hspace="5"> - Prints the diagram in the selected editor.  Allows control over orientation (portrait or landscape), scaling, margins and page order.  User can also specify a subset of the pages to print (i.e., &ldquo;2 through 8&rdquo;).</li>
+</ul>
+<ul>
+  <li><strong>Switch Workspace </strong> - TBD </li>
+</ul>
+<ul>
+  <li><strong><a href="ModelingYourData.htm#importWizard">Import</a></strong> <img src="images/icons/import.gif" width="16" height="16" hspace="5"> - launches the <strong>Import Wizard</strong> which provides several ways to construct or import  models.</li>
+  <li><strong><a href="ModelingYourData.htm#importWizard">Export</a></strong> <img src="images/icons/export.gif" width="16" height="16" hspace="5"> - launches the <strong>Export Wizard</strong> which provides options for exporting model data.</li>
+</ul>
+<ul>
+  <li><strong> Properties</strong> - Displays the operating system&rsquo;s file properties dialog for the selected file.</li>
+</ul>
+<ul>
+  <li><strong>Exit </strong>- Closes Designer after prompting user to save unsaved resources, if any.</li>
+</ul>
+<p>An additional feature of the <strong>File</strong> menu is a convenient list of most-recently-edited resources.  Selecting a <strong>Model</strong> from this list will open the model in an editor. You can change the number of Models displayed in this list via <strong>Window &gt; <a href="DesignerPreferences.htm#vdbMRUList"> Preferences</a> &gt; General &gt; Editors</strong><br>
+</p>
+<hr/>
+<p class="subtitle_b16"><a name="editMenu"></a>Edit Menu </p>
+<p class="medium">The <strong>Edit</strong> menu provides actions to manage the content, structure and properties of your model and project resources. </p>
+<p><img src="images/views/ED_MainMenus_Edit.jpg" width="260" height="419" hspace="20" border="1"></p>
+<p>The individual actions are described below:</p>
+<ul>
+  <li><strong><a href="CreateModelObjects.htm#newChildAction">New &gt; Child</a> </strong>- The New Child menu is created dynamically to  support the creation of whatever types of child objects can be created under  the selected object.. </li>
+  <li><strong><a href="CreateModelObjects.htm#newSiblingAction">New &gt; Sibling</a> </strong>- The New Sibling menu is created dynamically to  support the creation of whatever types of sibling objects can be created under  the same parent as the selected object.. </li>
+  <li><strong><a href="CreateModelObjects.htm#newAssociationAction">New &gt; Association</a> </strong>-The New Association menu is created dynamically  to support the creation of whatever types of associations can be created with  the selected object.. </li>
+  <li><strong><a href="EditModelObjects.htm#modelingSubmenu">Modeling &gt; </a> </strong>-The Modeling menu is created dynamically. Various modeling operations are available based on selected model object type. </li>
+</ul>
+<ul>
+  <li><strong>Undo</strong> <img src="images/icons/undo_edit.gif" width="16" height="16" hspace="5"> - Reverses the effect of the most recent command.</li>
+  <li><strong>Redo</strong> <img src="images/icons/redo_edit.gif" width="16" height="16" hspace="5"> - Reapplies the most recently Undone command.</li>
+</ul>
+<ul>
+  <li><strong>Cut</strong> <img src="images/icons/cut_edit.gif" width="16" height="16" hspace="5"> - Deletes the selected object(s) and copies it to the  clipboard.</li>
+  <li><strong>Copy</strong> <img src="images/icons/copy_edit.gif" width="16" height="16" hspace="5"> - Copies the selected object(s) to the clipboard.</li>
+  <li><strong>Paste</strong> <img src="images/icons/paste_edit.gif" width="16" height="16" hspace="5"> - Pastes the contents of the clipboard to the  selected context.</li>
+  <li><strong>Paste Special...</strong> - Provides additional paste capabilities for complex clipboard objects<em><strong> (Not Yet Implemented) </strong></em></li>
+  <li><strong>Clone</strong> -    Duplicates the selected object in the same  location with the same name; user is able to rename the new object right in the  tree.</li>
+</ul>
+<ul>
+  <li><strong>Delete</strong> <img src="images/icons/delete_edit.gif" width="16" height="16" hspace="5"> - Deletes the selected object(s).</li>
+  <li><strong>Rename</strong> - Allows a user to rename an object in the  tree.</li>
+</ul>
+<ul>
+  <li><strong>Find/Replace</strong> - Launches dialog that can be used to search in  the current text view, such as a Transformation Editor.</li>
+  <li><strong>Open</strong> - Opens the selected object in the appropriate  editor. </li>
+  <li><strong>Edit</strong> - Opens the selected object in the appropriate  specialized editor, such as the Choice Editor or Recursion Editor.</li>
+  <li><strong>Set Datatype</strong><img src="images/icons/BuiltinDatatype.gif" width="16" height="16" hspace="5"> - Launches a dialog that allows the user to select  one of the built-in or user-defined datatypes and to apply it to the selected  column.</li>
+</ul>
+<ul>
+  <li><strong>Add Bookmark </strong> - TBD</li>
+  <li><strong>Add Task </strong>- TBD</li>
+</ul>
+<ul>
+  <li></li>
+</ul>
+<hr/>
+<p class="subtitle_b16"><a name="refactorMenu"></a>Refactor Menu </p>
+<p><img src="images/views/ED_MainMenus_Refactor.jpg" hspace="20"
+ border="1"></p>
+<p>The individual actions in the <strong>Refactor</strong> menu are described below:</p>
+<ul>
+  <li><strong>Undo </strong>- TBD</li>
+  <li><strong>Redo </strong>- TBD</li>
+</ul>
+<ul>
+  <li><strong>Rename...</strong>- TBD</li>
+  <li><strong>Move...</strong>- TBD</li>
+</ul>
+<p>&nbsp;</p>
+<hr/>
+<p class="subtitle_b16"><a name="searchMenu"></a>Search Menu </p>
+<p><img src="images/views/ED_MainMenus_Search.jpg" hspace="20" border="1"></p>
+<p>The individual actions in the <strong>Search</strong> menu are described below:</p>
+<ul>
+  <li><strong><a href="SearchingInDesigner.htm#findModelObject">Search...</a><img src="images/icons/metadata_search.gif" width="16" height="16" hspace="5"></strong>- Launches the Find Model Object dialog, which can  be used to find an object in the workspace by specifying all or part of its  name.&nbsp; Selecting the object will open it  in the appropriate editor..</li>
+  <li><strong><a href="SearchingInDesigner.htm#findModelObject">File...</a><img src="images/icons/metadata_search.gif" width="16" height="16" hspace="5"></strong>- Launches the Find Model Object dialog, which can  be used to find an object in the workspace by specifying all or part of its  name.&nbsp; Selecting the object will open it  in the appropriate editor..</li>
+  <li><strong><a href="SearchingInDesigner.htm#findModelObject">Find Model Object</a> <img src="images/icons/opentype.gif" width="16" height="16" hspace="5"> </strong>- Launches the Find Model Object dialog, which can  be used to find an object in the workspace by specifying all or part of its  name.&nbsp; Selecting the object will open it  in the appropriate editor..</li>
+  <li><strong><a href="SearchingInDesigner.htm">Relationship...</a></strong> <img src="images/icons/metadata_search.gif" width="16" height="16" hspace="5">- Launches the Search dialog.&nbsp; User can search for models in the workspace  by specifying an Object Type, and/or a Data Type, and/or a property value.&nbsp; Search results appear in the <a href="SearchingInDesigner.htm#searchResultsView">Search  Results view</a>, and double-clicking a result will open that model in the  appropriate editor. </li>
+  <li><strong><a href="SearchingInDesigner.htm">Transformations...</a></strong> <img src="images/icons/search_transformation.gif" width="16" height="16" hspace="5">- Launches the Transformation Search dialog.&nbsp; User can search models in the workspace  for matching SQL text.&nbsp; Search results appear in the dialog and user can select and view SQL as well as open desired transformations for editing. </li>
+  <li><strong><a href="SearchingInDesigner.htm">Metadata...</a></strong> <img src="images/icons/metadata_search.gif" width="16" height="16" hspace="5">- Launches the Search dialog.&nbsp; User can search for models in the workspace  by specifying an Object Type, and/or a Data Type, and/or a property value.&nbsp; Search results appear in the <a href="SearchingInDesigner.htm#searchResultsView">Search  Results view</a>, and double-clicking a result will open that model in the  appropriate editor. </li>
+</ul>
+<hr/>
+<p class="subtitle_b16"><a name="projectMenu"></a>Project Menu </p>
+<p><img src="images/views/ED_MainMenus_Project.jpg" hspace="20" border="1"></p>
+<p>The individual actions in the <strong>Project</strong> menu are described below:</p>
+<ul>
+  <li><strong>Open Project  </strong>- Launches the Open Project dialog.</li>
+  <li><strong>Close Project </strong>- Closes the currently selected project(s).</li>
+</ul>
+<ul>
+  <li><strong>Build All <img src="images/icons/build_exec.gif" width="16" height="16" hspace="5"></strong>- Validates the contents of the entire  workspace.&nbsp; Any errors or warnings will  appear in the <a href="ModelProblemsHelp.htm">Problems View.</a></li>
+  <li><strong>Build Project </strong>- Validates the contents of the selected project(s).&nbsp; Any errors or warnings will  appear in the <a href="ModelProblemsHelp.htm">Problems View.</a></li>
+  <li><strong>Build Working Set </strong>- Validates the contents of the selected working set. &nbsp; Any errors or warnings will  appear in the <a href="ModelProblemsHelp.htm">Problems View.</a></li>
+  <li><strong>Clean...</strong>- Launches the Clean dialog.</li>
+  <li><strong><a href="DesignerPreferences.htm#validateAutomatically">Build Automatically</a> </strong>- Sets the &lsquo;<a href="DesignerPreferences.htm#validateAutomatically">Build Automatically</a>&rsquo; flag on or  off.&nbsp; When on, a checkmark appears to  the left of this menu item.&nbsp; When this  is turned on, validation of changes is done automatically each time a Save is  done.</li>
+</ul>
+<ul>
+  <li><strong>Validate Model Transformations </strong>- Revalidates all transformations for the selected view model.</li>
+  <li><strong><a href="CloneProject.htm">Clone Project</a> </strong>- Launches the Clean dialog.</li>
+  <li><strong>Build Project Imports </strong>- Reconciles all model import dependencies for models contained within the selected project.</li>
+  <li><strong>Build All Imports </strong>- Reconciles all model import dependencies for models contained within the workspace.</li>
+</ul>
+<ul>
+  <li><strong>Properties </strong>-  Displays the operating system&rsquo;s file properties dialog for the selected file.</li>
+</ul>
+<hr/>
+<p class="subtitle_b16"><a name="metadataMenu"></a>Metadata Menu </p>
+<p><img src="images/views/ED_MainMenus_Metadata.jpg" hspace="20" border="1"></p>
+<p>The individual actions in the <strong>Metadata</strong> menu are described below:</p>
+<ul>
+  <li><strong>Rebuild VDB </strong>- Launches the Open Project dialog.</li>
+</ul>
+<ul>
+  <li><strong>Close Project </strong>- Closes the currently selected project(s).</li>
+</ul>
+<p>&nbsp;</p>
+<hr/>
+<p class="subtitle_b16"><a name="windowMenu"></a>Window Menu </p>
+<p>The individual actions in the <strong>Window</strong> menu are described below:</p>
+<ul>
+  <li><strong>New Window  </strong>- TBD </li>
+  <li><strong>New Editor </strong>- TBD</li>
+</ul>
+<ul>
+  <li><strong>Open Perspective  </strong>- TBD</li>
+  <li><strong>Show View </strong>- Opens and/or selects the specified view or launches &quot;<strong>Other....</strong>&quot; views dialog.</li>
+</ul>
+<ul>
+  <li><strong>Customize Perspective </strong>- TBD</li>
+  <li><strong>Save Perspective As... </strong>- TBD </li>
+  <li><strong>Reset Perspective </strong>- Resets the current Perspective to its default  layout.</li>
+  <li><strong>Close Perspective </strong>- TBD </li>
+  <li><strong>Close All  Perspectives </strong>- TBD </li>
+</ul>
+<ul>
+  <li><strong>Navigation </strong>- TBD </li>
+</ul>
+<ul>
+  <li><strong><a href="DesignerPreferences.htm">Preferences</a></strong> -     Launches the Preferences dialog, which can be  used to set preferences and default values for many features of <strong>Enterprise  Designer.</strong></li>
+</ul>
+<p><img src="images/views/ED_MainMenus_Window.jpg" hspace="20" border="1"></p>
+<p><a name="showViewDialog"></a>Selecting <strong>Other...</strong> displays a view selection dialog, shown below, which summarizes <a href="DesignerViews.htm">all  views</a> available in <strong>Designer</strong>.</p>
+<p><img src="images/views/ShowViewDialog.jpg" hspace="20" > </p>
+<p>&nbsp;</p>
+<hr/>
+<p class="subtitle_b16"><a name="helpMenu"></a>Help Menu </p>
+<p><img src="images/views/ED_MainMenus_Help.jpg" hspace="20" border="1"></p>
+<p>The individual actions are described below:</p>
+<ul>
+  <li><strong>Welcome  </strong>- Shifts to the Welcome perspective, which  contains links to documentation, examples and &lsquo;how-to&rsquo; starting points.</li>
+  <li><strong>Help Contents</strong> <img src="images/icons/help_contents.gif" width="16" height="16" hspace="5">- Launches the Help Window.&nbsp; All of Designer&rsquo;s online documentation is  accessible from there as well.</li>
+  <li><strong>Search</strong> <img src="images/icons/help_search.gif" width="16" height="16" hspace="5">- Launches the Help Search view, which can be used  to search for phrases in the documentation.</li>
+  <li><strong>Dynamic Help</strong> - Opens the  <strong><a href="DynamicHelpView.htm">Help View </a></strong>in <strong>Enterprise Designer</strong>.</li>
+  <li><strong>Software Updates...</strong> - provides access to retrieve software updates. </li>
+  <li><strong>Build Diagnostics Report... </strong>-  Launches a dialog that can email diagnostic  information on the current state of Designer to MetaMatrix tech support.</li>
+  <li><strong>About MetaMatrix Enterprise Designer</strong> - Launches the About dialog.</li>
+</ul>
+<hr />
+<p class="subtitle_b16">Related Topics</p>
+<ul>
+  <li><a href="DesignerPerspectives.htm">Designer Perspectives </a></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr />
+<p class="copyright">&copy; 2008 Varsity Gateway LLC.  All rights reserved.</span><br />Visit <a href="http://www.metamatrix.com">http://www.metamatrix.com</a></span></p>
+</body>

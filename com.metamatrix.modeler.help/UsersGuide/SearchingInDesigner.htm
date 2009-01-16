@@ -1,0 +1,78 @@
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<body>
+<p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<p class="maintitle_b24">Searching In Designer </p>
+<hr />
+<p><strong>Designer</strong> provides multiple search actions located in the main toolbar's <strong>Search</strong> menu. </p>
+<p><img src="images/views/ED_MainMenus_Search.jpg" border="1"></p>
+<p>The individual actions in the <strong>Search</strong> menu are described below:</p>
+<ul>
+  <li><strong><a href="#fileSearch">Search...</a></strong> <img src="images/icons/metadata_search.gif" width="16" height="16" hspace="5">- Launches the Search dialog which auto-selects Eclipse's default search tab.&nbsp; Search results appear in the<a href="#searchResultsView"> Search Result view</a>, and double-clicking a result will open that model in the  appropriate editor. </li>
+  <li><strong><a href="#fileSearch">File...</a></strong> <img src="images/icons/search_history.gif" width="16" height="16" hspace="5">-  Launches the Search dialog which auto-selects Eclipse's default search tab.&nbsp;  Search results appear in the<a href="#searchResultsView"> Search Result view</a>, and double-clicking a result will open that model in the  appropriate editor. </li>
+  <li><strong><a href="#findModelObject">Find Model Object</a> <img src="images/icons/opentype.gif" width="16" height="16" hspace="5"> </strong>- Launches the <strong>Find Model Object</strong> dialog, which can  be used to find an object in the workspace by specifying all or part of its  name.&nbsp; Selecting the object will open it  in the appropriate editor..</li>
+  <li><strong><a href="#relationshipSearch">Relationship...</a></strong> <img src="images/icons/relationshipSearchPage.gif" width="16" height="16" hspace="5">- Launches the Search dialog which auto-selects the Relationship search tab.&nbsp; Users can search for relationships in the workspace  by specifying an Object Type, and/or a Data Type, and/or a property value.&nbsp; Search results appear in the<a href="#searchResultsView"> Search Result view</a>, and double-clicking a result will open that model in the  appropriate editor. </li>
+  <li><strong><a href="#transformationSearch">Tranformation...</a></strong> <img src="images/icons/search_transformation.gif" width="16" height="16" hspace="5">- Launches the Search Transformations dialog.&nbsp; Userd can search for transformations in the workspace which contain a specific string within it's SQL text.&nbsp; Search results appear within the dialog. Users can also preview theSQL for each search result and open a selected result transformation for editing. </li>
+  <li><strong><a href="#searchingInDesigner">Metadata...</a></strong> <img src="images/icons/metadata_search.gif" width="16" height="16" hspace="5">- Launches the Search dialog.&nbsp; Users can search for models in the workspace  by specifying an Object Type, and/or a Data Type, and/or a property value.&nbsp; Search results appear in the<a href="#searchResultsView"> Search Result view</a>, and double-clicking a result will open that model in the  appropriate editor.</li>
+</ul>
+<hr />
+<p class="subtitle_b16"><a name="findModelObject"></a>Finding Model Objects </p>
+<p>To find a model object, </p>
+<blockquote>
+  <p><strong>Step 1:</strong> Open the FInd Model Object dialog by either selecting the <strong>Find Model Object</strong> <strong><img src="images/icons/opentype.gif" width="16" height="16" hspace="5"></strong>action on the main <strong>Designer</strong> toolbar </p>
+  <p><img src="images/views/FindModelObjectFromToolbar.jpg"></p>
+  <p>or select the same action via the main menu's  <strong>Find Model Object</strong> <strong><img src="images/icons/opentype.gif" width="16" height="16" hspace="5"></strong> action. </p>
+  <p><img src="images/views/FindModelObjectDialog.jpg" width="409" height="447"></p>
+  <p><strong>Step 2: </strong>Begin typing a word or partial word in the <strong>Type Object Name</strong> field. Wild-card (*) characters will be honored. As you type, the objects which match the desired name will be displayed in the <strong>Matching Model Objects </strong>list. If there are more than one objects with the same name, the locations or paths of the objects are displayed in the <strong>Locations</strong> list. </p>
+  <p><strong>Step 3:</strong> If more than one object exists with the desired name, select the one of the locations.</p>
+  <p><strong>Step 4:</strong> Click <strong>OK</strong>. If editor is not open for the object's model, an editor will open. The desired object should end up displayed in a diagram (if applicable) and selected. </p>
+</blockquote>
+<hr />
+<p class="subtitle_b16"><a name="searchingInDesigner" id="searchingInDesigner"></a>Searching </p>
+<p>To search models in Designer: </p>
+<blockquote>
+  <p><strong>Step 1:</strong> Select <strong>Search &gt; Metadata... </strong><img src="images/icons/metadata_search.gif" width="16" height="16" hspace="5">action on the main <strong>Designer</strong> toolbar which opens the <strong>Search</strong> dialog. </p>
+  <p><img src="images/views/SearchMetadata.jpg" ></p>
+  <p><strong>Step 2</strong>: Specify desired search options for <strong>Object Type</strong>, <strong>Data Type</strong> and  <strong>Properties</strong>.</p>
+  <p><strong>Step 3:</strong> Click <strong>Search</strong>. The search will be performed and the results will be displayed in the<strong> Search Results View</strong>. If the view is not yet open, it will be opened automatically. </p>
+</blockquote>
+<p><a name="relationshipSearch"></a>In addition to searching models based on properties, you can search for relationships via the <strong>Relationships</strong> search tab.</p>
+<p><img src="images/views/SearchRelationships.jpg" width="475" height="547" hspace="20"> </p>
+<p>&nbsp;</p>
+<p><a name="fileSearch"></a>You can also search for files or in files using Eclipse's <strong>File Search</strong> option. </p>
+<p><img src="images/views/SearchFiles.jpg" width="475" height="547" hspace="20"></p>
+<p>&nbsp;</p>
+<hr />
+<p class="subtitle_b16"><a name="transformationSearch"></a>Searching Transformations </p>
+<p>To search for string values in your transformations SQL: </p>
+<blockquote>
+  <p><strong>Step 1:</strong> Select <strong>Search &gt; Metadata... </strong><img src="images/icons/search_transformation.gif" width="16" height="16" hspace="5">action on the main <strong>Designer</strong> toolbar which opens the <strong>Search Transformations </strong> dialog. </p>
+  <p><img src="images/views/SearchTransformationsDialog.jpg" width="638" height="579" hspace="20"></p>
+  <p><strong>Step 2:</strong> Specify a string segement in the &quot;<strong>Find:</strong>&quot; field and specify/change your <strong>case sensitive</strong> preference. </p>
+  <p><strong>Step 3:</strong> Select <strong>Perform Search</strong> button. Any transformation object containing SQL text which contains occurances of your string will be displayed in the results section.</p>
+</blockquote>
+<p>You can select individual objects and view the SQL. If a table or view supports updates and there is insert, update or delete SQL present, you can expand the object and select the individual SQL type as shown below.</p>
+<p><img src="images/views/SearchTransformationsDialogInsertSQL.jpg" width="608" height="579" hspace="20"> </p>
+<p>If you wish to view the selected object and it's SQL in a<strong> Model Editor</strong>, you can click the &quot;<strong>Edit</strong>&quot; button.</p>
+<p>&nbsp;</p>
+<hr />
+<p class="subtitle_b16"><a name="searchResultsView"></a>Viewing Search Results</p>
+<p>Below is an example set of search results. The view contains rows representing  matches for your search parameters. You can double-click a entry and the object will be opened and selected in an editor and/or the VDB Explorer if applicable. </p>
+<p><span class="subtitle_b16"><img src="images/views/SearchResultsView.jpg" hspace="20" ></span></p>
+<p>The toolbar actions for the <strong>Search Results</strong> view are:</p>
+<ul>
+  <li><img src="images/icons/search_next.gif" width="16" height="16" hspace="5">Show Next Match - navigates down one row in the view. </li>
+  <li><img src="images/icons/search_prev.gif" width="16" height="16" hspace="5">Show Previous Match - navigates up one row in the view. </li>
+  <li><img src="images/icons/search_rem.gif" width="16" height="16" hspace="5">Remove Selected Matches - removes selected results from the view. </li>
+  <li><img src="images/icons/search_remall.gif" width="16" height="16" hspace="5">Remove All Matches - Clears the view.</li>
+  <li><img src="images/icons/metadata_search.gif" width="16" height="16" hspace="5">Search - Launches the Designer Search Dialog. </li>
+  <li><img src="images/icons/search_history.gif" width="16" height="16" hspace="5">Previous Search Results - select previous search results from history. </li>
+</ul>
+<p>You can perform some of these actions via the right-click menu: </p>
+<p><img src="images/views/SearchResultsViewMenu.jpg"  hspace="20"></p>
+<hr />
+<p class="subtitle_b16">Related Topics</p>
+<ul><li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr />
+<p class="copyright">&copy; 2008 Varsity Gateway LLC.  All rights reserved.</span><br />Visit <a href="http://www.metamatrix.com">http://www.metamatrix.com</a></span></p>
+</body>

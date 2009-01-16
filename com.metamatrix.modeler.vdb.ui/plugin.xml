@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+ 
+<!-- =============================================================================== 
+ # JBoss, Home of Professional Open Source. 
+ # 
+ # Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ # 
+ # Some portions of this file may be copyrighted by other 
+ # contributors and licensed to Red Hat, Inc. under one or more 
+ # contributor license agreements. See the copyright.txt file in the 
+ # distribution for a full listing of individual contributors. 
+ # 
+ # This program and the accompanying materials 
+ # are made available under the terms of the Eclipse Public License v1.0 
+ # which accompanies this distribution, and is available at 
+ # http://www.eclipse.org/legal/epl-v10.html 
+ # ================================================================================== --> 
+
+<plugin>
+
+     <extension-point id="vdbEditorPage" name="%vdbEditorPage" schema="schema/vdbEditorPage.exsd"/>
+
+<!-- Model Editors -->
+   <extension
+         point="org.eclipse.ui.editors">
+<!-- VDB Editor -->
+      <editor
+            name="%vdbEditor"
+            default="true"
+            icon="platform:/plugin/com.metamatrix.modeler.ui/icons/full/obj16/VDB.gif"
+            extensions="vdb"
+            class="com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditor"
+            id="com.metamatrix.modeler.internal.vdb.ui.editor.vdbEditor">
+      </editor>
+   </extension>
+
+<!-- New wizards -->
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="%modelCategory"
+            id="com.metamatrix.modeler.ui">
+      </category>
+<!-- New VDB wizard -->
+      <wizard
+            name="%newVdbWizard"
+            icon="icons/full/ctool16/newvdb_wiz.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.internal.vdb.ui.wizards.NewVdbWizard"
+            id="com.metamatrix.modeler.internal.vdb.ui.wizards.newVdbWizard">
+         <description>
+            %newVdbWizardDescription
+         </description>
+      </wizard>
+   </extension> 
+   <extension
+         point="org.eclipse.ui.importWizards">
+<!-- Modeler VDB Import wizard -->
+      <wizard
+            name="%importVdbWizard.name"
+            icon="icons/full/ctool16/importvdb.gif"
+            class="com.metamatrix.modeler.internal.vdb.ui.wizards.ImportVdbWizard"
+            id="com.metamatrix.modeler.internal.vdb.ui.wizards.importVdbWizard">
+         <description>
+            %importVdbWizard.description
+         </description>
+      </wizard>
+   </extension>
+      <extension
+		id="com.metamatrix.modeler.internal.vdb.ui.actions.SynchronizeVdbAction"
+		name="%synchronizeVdbAction.name"
+        point="com.metamatrix.modeler.ui.modelResourceAction">
+      <resourceAction
+         name="com.metamatrix.modeler.internal.vdb.ui.actions.SynchronizeVdbAction"
+         label="%synchronizeVdbAction.label">
+      </resourceAction>
+   </extension>
+<!--
+	Add the Navigation Action Set to the Modeler Perspective MetaData menu. In order to do
+	this we must make sure the MetaData Action Set has also been activated. Also add the search action set.
+-->
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+         targetID="com.metamatrix.modeler.ui.modelerPerspective">
+         <actionSet
+               id="com.metamatrix.modeler.vdb.ui.vdbMetadataActionSet">
+         </actionSet>
+      </perspectiveExtension>
+   </extension>
+
+
+   <extension
+		id="com.metamatrix.modeler.internal.vdb.ui.actions.RebuildVdbAction"
+		name="%rebuildVdbAction.name"
+        point="com.metamatrix.modeler.ui.modelResourceAction">
+      <resourceAction
+         name="com.metamatrix.modeler.internal.vdb.ui.actions.RebuildVdbAction"
+         label="%rebuildVdbAction.label">
+      </resourceAction>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="%vdbActionSet.name"
+            visible="true"
+            id="com.metamatrix.modeler.vdb.ui.vdbMetadataActionSet">
+         <menu
+               label="%metadata.menu"
+               path="additions"
+               id="com.metamatrix.modeler.ui.actions.metadataMenu">
+            <separator
+                  name="slot1">
+            </separator>
+            <separator
+                  name="slot2">
+            </separator>
+            <separator
+                  name="slot3">
+            </separator>
+            <separator
+                  name="slot4">
+            </separator>
+            <groupMarker
+                  name="com.metamatrix.modeler.ui.groupMarker1">
+            </groupMarker>
+         </menu>            
+         <action
+               label="%rebuildVdbAction.text"
+               tooltip="%rebuildVdbAction.tip"
+               icon="icons/full/ctool16/rebuild_vdb.gif"
+               class="com.metamatrix.modeler.internal.vdb.ui.actions.RebuildVdbMetadataAction"
+               menubarPath="com.metamatrix.modeler.ui.actions.metadataMenu/slot4"
+               id="rebuildVdbMetadataAction">
+         </action>              
+      </actionSet>
+   </extension>  
+</plugin>

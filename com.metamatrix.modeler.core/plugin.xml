@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+ 
+<!-- =============================================================================== 
+ # JBoss, Home of Professional Open Source. 
+ # 
+ # Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ # 
+ # Some portions of this file may be copyrighted by other 
+ # contributors and licensed to Red Hat, Inc. under one or more 
+ # contributor license agreements. See the copyright.txt file in the 
+ # distribution for a full listing of individual contributors. 
+ # 
+ # This program and the accompanying materials 
+ # are made available under the terms of the Eclipse Public License v1.0 
+ # which accompanies this distribution, and is available at 
+ # http://www.eclipse.org/legal/epl-v10.html 
+ # ================================================================================== --> 
+
+<plugin>
+
+     <extension-point id="metamodel" name="%extension-point.name.0" />
+   <extension-point id="modelValidation" name="%extension-point.name.1"/>
+   <extension-point id="resourceFactory" name="%extension-point.name.2"/>
+   <extension-point id="metamodelService" name="%extension-point.name.3"/>
+   <extension-point id="ioService" name="%extension-point.name.4"/>
+   <extension-point id="streamReader" name="%extension-point.name.5"/>
+   <extension-point id="streamWriter" name="%extension-point.name.6"/>
+   <extension-point id="associationProvider" name="%extension-point.name.7"/>
+   <extension-point id="datatypeManager" name="%extension-point.name.8"/>
+   <extension-point id="externalResource" name="%extension-point.name.9"/>
+   <extension-point id="externalResourceSet" name="%extension-point.name.10"/>
+   <extension-point id="resourceValidator" name="%extension-point.name.11"/>
+   <extension-point id="resourceIndexer" name="%extension-point.name.12"/>
+   <extension-point id="invocationFactoryHelper" name="%extension-point.name.13"/>
+   <extension-point id="referenceUpdator" name="%extension-point.name.14"/>
+
+<!-- MetamodelAspect extension points -->
+   <extension-point id="umlDiagramAspect" name="%extension-point.name.15"/>
+   <extension-point id="itemProviderAspect" name="%extension-point.name.16"/>
+   <extension-point id="dependencyAspect" name="%extension-point.name.17"/>
+   <extension-point id="validationAspect" name="%extension-point.name.18"/>
+   <extension-point id="featureConstraintAspect" name="%extension-point.name.19"/>
+   <extension-point id="eobjectMatcherFactory" name="%extension-point.name.20"/>
+   <extension-point id="sqlAspect" name="%extension-point.name.21"/>
+   <extension-point id="importAspect" name="%extension-point.name.22"/>
+   <extension-point id="relationshipAspect" name="%extension-point.name.23"/>
+   <extension-point id="modelContainerInitializer" name="%extension-point.name.24" schema="schema/modelContainerInitializer.exsd"/>
+   <extension-point id="resourceLoadOptions" name="%extension-point.name.25"/>
+   <extension-point id="newModelObjectHelper" name="%newModelObjectHelper"/>
+   <extension-point id="pasteContributor" name="%extension-point.name.26" schema="schema/pasteContributor.exsd"/>
+   <extension-point id="refactorResourceListener" name="%extension-point.name.27" schema="schema/refactorResourceListener.exsd"/>
+
+<!-- Metamodel extensions -->
+   <extension
+         point="com.metamatrix.modeler.core.resourceValidator">
+      <class
+            name="com.metamatrix.modeler.internal.core.builder.XmiResourceValidator">
+      </class>
+   </extension>
+   <extension
+         point="com.metamatrix.modeler.core.resourceIndexer">
+      <class
+            name="com.metamatrix.modeler.internal.core.index.ModelIndexer">
+      </class>
+   </extension>
+   <extension
+         point="com.metamatrix.modeler.core.resourceIndexer">
+      <class
+            name="com.metamatrix.modeler.internal.core.index.ModelSearchIndexer">
+      </class>
+   </extension>
+   <extension
+         id="xmiStreamReader"
+         name="XMI"
+         point="com.metamatrix.modeler.core.streamReader">
+      <class
+            name="com.metamatrix.modeler.internal.core.reader.XmiStreamReader">
+      </class>
+   </extension>
+   <extension
+         id="xmiStreamWriter"
+         name="XMI"
+         point="com.metamatrix.modeler.core.streamWriter">
+      <class
+            name="com.metamatrix.modeler.internal.core.writer.XmiStreamWriter">
+      </class>
+   </extension>
+   <extension
+         id="emfInvocationFactoryHelper"
+         name="EmfInvocationFactoryHelper"
+         point="com.metamatrix.modeler.core.invocationFactoryHelper">
+      <class
+            name="com.metamatrix.modeler.internal.core.invocation.EmfInvocationFactoryHelper">
+      </class>
+   </extension>
+   <extension
+         id="standardInvocationFactoryHelper"
+         name="StandardInvocationFactoryHelper"
+         point="com.metamatrix.modeler.core.invocationFactoryHelper">
+      <class
+            name="com.metamatrix.modeler.internal.core.invocation.StandardInvocationFactoryHelper">
+      </class>
+   </extension>
+   
+<!-- This is added programmatically to the MetamodelRegistry
+   <extension id="metamodelResourceFactory"
+         point="com.metamatrix.mtk.emf.resourceFactory">
+      <class name="com.metamatrix.mtk.emf.resource.metamodel.MetamodelResourceFactory"/>
+      <protocol>mtkplugin</protocol>
+   </extension>
+   -->
+   <extension
+         id="xmiResourceFactory"
+         point="com.metamatrix.modeler.core.resourceFactory">
+      <class
+            name="com.metamatrix.modeler.internal.core.resource.xmi.MtkXmiResourceFactory">
+      </class>
+      <fileExtension>
+         ecore
+      </fileExtension>
+      <fileExtension>
+         xmi
+      </fileExtension>
+      <fileExtension>
+         xml
+      </fileExtension>
+   </extension>
+   <extension
+         id="vdbResourceFactory"
+         point="com.metamatrix.modeler.core.resourceFactory">
+      <class
+            name="com.metamatrix.modeler.internal.core.resource.vdb.VdbResourceFactory">
+      </class>
+      <fileExtension>
+         vdb
+      </fileExtension>
+   </extension>
+<!-- This extension defines the Core Modeling Preferences -->
+   <extension
+         id="corePreferences"
+         point="com.metamatrix.modeler.core.modelValidation">
+      <preference
+            toolTip="Check if there are multiple eObjects across available models with same uuid. ?"
+            name="eObjectUuidUniquess"
+            label="%eObjectUuidUniquess"
+            default="ignore"
+            category="Core">
+      </preference>
+      <preference
+            toolTip="String functions 1-based ?"
+            name="stringFunctionsAreOneBased"
+            label="%stringFunctionsAreOneBased"
+            default="warning"
+            category="Core">
+     </preference>
+   </extension>
+<!-- This extension defines the Modeling Project Nature -->
+   <extension
+         id="modelNature"
+         name="%modelNatureName"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="com.metamatrix.modeler.internal.core.workspace.ModelProjectImpl">
+         </run>
+      </runtime>
+      <builder
+            id="com.metamatrix.modeler.core.modelBuilder">
+      </builder>
+   </extension>
+<!-- Hidden Project Nature -->
+   <extension
+         id="hiddenProjectNature"
+         name="%hiddenNatureName"
+         point="org.eclipse.core.resources.natures">
+     <runtime>
+         <run
+               class="com.metamatrix.modeler.internal.core.workspace.HiddenProjectNature">
+         </run>
+      </runtime>
+   </extension>
+<!-- EObject Matcher extensions -->
+   <extension
+         id="proxyMatcherFactory"
+         point="com.metamatrix.modeler.core.eobjectMatcherFactory">
+      <class
+            name="com.metamatrix.modeler.core.compare.UuidMatcherFactory">
+      </class>
+   </extension>
+   <extension
+         id="coreMatcherFactory"
+         point="com.metamatrix.modeler.core.eobjectMatcherFactory">
+      <class
+            name="com.metamatrix.modeler.core.compare.CoreMatcherFactory">
+      </class>
+   </extension>
+   <extension
+         id="ecoreMatcherFactory"
+         point="com.metamatrix.modeler.core.eobjectMatcherFactory">
+      <class
+            name="com.metamatrix.modeler.core.compare.EcoreMatcherFactory">
+      </class>
+   </extension>
+   <extension
+         id="diagramMatcherFactory"
+         point="com.metamatrix.modeler.core.eobjectMatcherFactory">
+      <class
+            name="com.metamatrix.modeler.core.compare.diagram.DiagramMatcherFactory">
+      </class>
+   </extension>
+<!-- Model builder extension -->
+   <extension
+         id="modelBuilder"
+         name="%modelBuilderName"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="com.metamatrix.modeler.internal.core.builder.ModelBuilder">
+         </run>
+      </builder>
+   </extension>
+<!-- MetamodelAspect extensions -->
+   <extension
+         id="annotationSqlAspect"
+         point="com.metamatrix.modeler.core.sqlAspect">
+      <metamodelExtensionID>
+         core
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.modeler.core.metamodel.core.aspects.sql.CoreSqlAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+   <extension
+         id="extensionUmlAspect"
+         point="com.metamatrix.modeler.core.umlDiagramAspect">
+      <metamodelExtensionID>
+         extension
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.modeler.core.metamodel.core.aspects.uml.ExtensionUmlAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+   <extension
+         id="annotationValidationAspect"
+         point="com.metamatrix.modeler.core.validationAspect">
+      <metamodelExtensionID>
+         core
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.modeler.core.metamodel.core.aspects.validation.CoreValidationAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+   <extension
+         id="annotationImportAspect"
+         point="com.metamatrix.modeler.core.importAspect">
+      <metamodelExtensionID>
+         core
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.modeler.core.metamodel.core.aspects.imports.CoreImportAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+      <extension
+         id="extensionValidationAspect"
+         point="com.metamatrix.modeler.core.validationAspect">
+      <metamodelExtensionID>
+         extension
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.modeler.core.metamodel.core.aspects.validation.ExtensionValidationAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+<!-- ResourceUpdator extensions -->
+   <extension
+         id="modelImportReferenceUpdator"
+         point="com.metamatrix.modeler.core.referenceUpdator">
+      <class
+            name="com.metamatrix.modeler.internal.core.refactor.ModelImportReferenceUpdator">
+      </class>
+   </extension>   
+</plugin>

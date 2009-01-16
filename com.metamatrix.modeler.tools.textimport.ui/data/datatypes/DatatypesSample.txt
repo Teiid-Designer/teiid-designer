@@ -1,0 +1,10 @@
+#TYPE,TYPENAME,DESCRIPTION,BASETYPE,LENGTH,MINLENGTH,MAXLENGTH,MINBOUND,MININCLUSIVE,MAXBOUND,MAXINCLUSIVE,TOTALDIGITS,FRACTIONDIGITS
+TYPE, Atomic1, "Description for Type1", string, 5, 1, 10, 1, 2, 1, 2, 5, 2
+ENUM, value1, "description 1"
+ENUM, value2, "description 2"
+ENUM, value3, "description 3"
+ENUM, value4, "description 4"
+TYPE, Atomic2, "Description for Type2", Atomic1, 6, 2, 11, 2, 3, 2, 3, 6, 3
+TYPE, Atomic3, "Description for Type3", integer, 7, 3, 12, 3, 4, 3, 4, 7, 4
+TYPE, Atomic4, "Description for Type4", Atomic3, 8, 4, 13, 4, 5, 4, 5, 8, 5
+TYPE, Atomic5, "Description for Type5", Atomic4, 9, 5, 14, 5, 6, 5, 6, 9, 6

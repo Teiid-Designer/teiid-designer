@@ -1,0 +1,55 @@
+/* ================================================================================== 
+ * JBoss, Home of Professional Open Source. 
+ * 
+ * Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ * 
+ * Some portions of this file may be copyrighted by other 
+ * contributors and licensed to Red Hat, Inc. under one or more 
+ * contributor license agreements. See the copyright.txt file in the 
+ * distribution for a full listing of individual contributors. 
+ * 
+ * This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0 
+ * which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html 
+ * ================================================================================== */ 
+
+package com.metamatrix.modeler.modelgenerator.ui;
+
+import java.util.ResourceBundle;
+
+import com.metamatrix.core.PluginUtil;
+import com.metamatrix.core.util.PluginUtilImpl;
+
+/**
+ * DiagramUiConstants
+ * @since 4.0
+ */
+public interface ModelGeneratorUiConstants {
+    /**
+     * The ID of the plug-in containing this constants class.
+     * @since 4.0
+     */
+    String PLUGIN_ID = "com.metamatrix.modeler.modelgenerator.ui"; //$NON-NLS-1$
+    
+    public static String EMPTY_STR = "";  //$NON-NLS-1$
+     
+    int IMAGE_ICON_GAP = 5;
+
+    /**
+     * Contains private constants used by other constants within this class.
+     * @since 4.0
+     */  
+    class PC {
+        private static final String BUNDLE_NAME = PLUGIN_ID + ".i18n"; //$NON-NLS-1$
+    }
+    
+    /**
+     * Provides access to the plugin's log and to it's resources.
+     * @since 4.0
+     */
+    PluginUtil Util = new PluginUtilImpl(PLUGIN_ID, PC.BUNDLE_NAME, ResourceBundle.getBundle(PC.BUNDLE_NAME));
+  
+}
+
+

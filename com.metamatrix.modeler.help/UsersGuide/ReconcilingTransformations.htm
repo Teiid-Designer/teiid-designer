@@ -1,0 +1,78 @@
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<body>
+<p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<p class="maintitle_b24">Reconciling Transformations </p>
+<hr />
+<p><span class="subtitle_b16"><a name="reconcilerDialog"></a></span>When you have modified a  transformation or the target virtual class, you might create discrepancies between  the symbols you enter in the transformation and the attributes within your  virtual metadata class. These descrepancies will typically reflect unbound attributes, unmatched SQL symbols and/or mis-matched datatypes. You can manually resolve these discrepancies using the <strong><a href="#reconcilerTargetAttributes">Reconcile  Virtual Target Attributes</a></strong> dialog.</p>
+<p><img src="images/views/ReconcilerDialog.jpg" hspace="20"></p>
+<p>&nbsp;</p>
+<p>The table on the left of the dialog contains the a list of all virtual target attributes  and their bound SQL symbols. This defines the mapping or &quot;transformation&quot; of your source data into your virtual, or view table. </p>
+<p>You can lock your target attributes for virtual models  that your enterprise already uses with its applications, especially in  situations where renaming an attribute might render the application  inoperative.
+</p>
+<hr />
+<p class="subtitle_b16"><a name="reconcilerTargetAttributes"></a>Reconcile Target Attributes </p>
+<p>To reconcile your transformations target attributes </p>
+<blockquote>
+  <p><strong>Step 1:</strong> Open the transformation diagram.</p>
+  <p><strong>Step 2: </strong>Click the <strong>Reconcile Target Attributes</strong> button <img src="images/icons/tb_reconcile_sql.gif" width="16" height="16"> to open the dialog (located on the Diagram Toolbar and the Transformation Editor toolbar) </p>
+  <p><strong>Step 3:</strong> If the unmatched target attributes, datatype conflicts, or unmatched SQL symbols number is not 0, you need to reconcile your transformation.</p>
+  <blockquote>
+    <p>If your virtual attributes are <strong>locked</strong>, the <strong>Target Locked</strong> check box contains a checkmark. You can click this check box to temporarily remove the checkmark so that you can modify the virtual attributes. This checkbox helps to prevent you from inadvertently modifying a virtual attribute, which your production applications might use.</p>
+    <p>If your virtual attributes are unlocked, you can reorganize the attributes in the target class as well as add or remove attributes based upon the symbols you have typed in your transformation.<br>
+    </p>
+  </blockquote>
+  <p><strong>Step 4: </strong>Use this dialog  to match the number of rows in the <strong>Target Group Attributes</strong> table, which lists the attributes defined in your virtual class, with the number of items in the <strong>Unmatched SQL Symbols</strong> list box, which lists the symbols in your query that do not reflect existing attributes in your virtual metadata. </p>
+  <p>As you make changes, the SQL Query Display contains your reconciled query.</p>
+  <p>You can then:</p>
+  <ul>
+    <li><strong>Add</strong> a new attribute based on a SQL symbol.<em>You can only do this if your target class is unlocked. In the Unmatched SQL Symbols list box, select the symbol you want for which you want to create an attribute and click New. The item displays in the Target Group Attributes table and the Designer will create an attribute meta object for this symbol.</em></li>
+    <li><strong>Delete</strong> an existing attribute from the virtual class. <em>You can only do this if your target class is unlocked. Click the row in the Target Group Attributes table that you want to delete and click Delete. The Designer removes this row from the table and this attribute from your virtual class.</em></li>
+    <li><strong>Reorder</strong> the attributes in the virtual class. <em>You can only do this if your target class is unlocked. Click a row in the Target Group Attributes table that you want to move and click Up to move the attribute (and its symbol) toward the beginning of the list or Down to move the attribute (and its symbol) toward the end of the list.</em></li>
+    <li><strong>Bind</strong> an unmatched symbol to an existing target attribute. This simply renames the unmatched symbol to match an existing attribute. In the Unmatched SQL Symbols list box, select the symbol to bind. In the Target Group Attributes table, select the attribute to which you want to bind the symbol. Click  <strong>&lt; Bind</strong>. The <strong>Designer</strong> renames the symbol in your query and displays the symbol, renamed to match the target attribute, in the table.
+      <ul>
+        <li><span class="note">NOTE:	You can select a row in the table and click Unbind &gt; to divorce a symbol from its target attribute.</span></li>
+      </ul>
+    </li>
+    <li><strong>Add </strong>SQL symbols. This action allows adding any available <strong>SQL Element Symbol</strong> from your query source tables into your table and the query text.
+      <ul>
+        <li><span class="note">NOTE: In cases where there are different sources but same symbol names, you can highlight the tooltip for these symbols and view the full path name including model (see below).</span></li>
+      </ul>
+    </li>
+    <blockquote>
+      <p><img src="images/views/DuplicateSqlSymbolsTooltip.jpg" width="225" height="77"></p>
+    </blockquote>
+    <li><strong>Remove</strong> selected unmatched symbols. This removes the selected unmatched symbol from the query text and the Unmatched SQL Symbols table. </li>
+    <li><strong>Clear</strong> all unmatched symbols. This removes all remaining unmatched symbols from the query text and the Unmatched SQL Symbols table. </li>
+    <li><strong>Sort/Unsort</strong> the <strong>Unmatched SQL Symbols</strong> table. Sort orders the unmatched symbols alphabetically by name, to make it easier to find a specific symbol.  Unsort restores them to their natural order.</li>
+    <li><strong>Resolve</strong> the Datatype. If there are any datatype conflicts, you can change the datatype or use a <strong>CONVERT</strong> function to alter the output of the query. Select a row and click<a href="#typeResolver"><strong> Type Resolver &hellip;</strong></a> to review the options.<br>
+    </li>
+  </ul>
+  <p><strong>Step 5:</strong> After you have reconciled all unmatched SQL  symbols and target attributes, click <strong>OK</strong>.</p>
+</blockquote>
+<p><br>
+  The Designer reconciles the query as  you specified. This dialog box can alter the Select statement&rsquo;s output by  removing or aliasing the existing SQL symbols. <span class="note">If you want to add or remove  attributes to the query, you must use the <a href="TransformationEditor.htm">Transformation Editor</a>.</span></p>
+<hr />
+<p><span class="subtitle_b16"><a name="typeResolver"></a>Type Resolver  </span></p>
+<p>Your SQL Bindings may require resolving mismatched datatypes. The figure below provides a simple example of a target attribute with type string bound to a column of type short. </p>
+<p><img src="images/views/SqlBindingsMismatchedType.jpg" hspace="20" border="1"></p>
+<p>To resolve this mismatch:</p>
+<blockquote>
+  <p><strong>Step 1</strong>:&nbsp; Select the <strong>Type Resolver....</strong> botton to launch the <strong>Resolve Datatype Conflicts</strong> dialog. </p>
+  <p><img src="images/views/ResolveDatatypeConflicts.jpg" width="626" height="671" hspace="20"></p>
+  <p><strong>Step 2 </strong>:&nbsp; Select the Attribute-SQL Binding you wish to edit.</p>
+  <p><strong>Step 3 </strong>:&nbsp; Choose which aspect of the binding you wish to edit. You can either:</p>
+  <ul>
+    <li>Change the datatype of the target attribute (i.e. runtime type) by selecting an appropriate datatype via the <strong>Change</strong> button, then selecting <strong>Apply</strong></li>
+    <li>Change the SQL Symbol to perform a convert() function by selecting <strong>Apply</strong>. Typically the conversion will be pre-constructed for you.</li>
+  </ul>
+  <strong>Step 4</strong>: Select <strong>OK</strong> when finished. Note, as each binding is corrected, it should be reflected by a change in Status and color of the row in the table.</blockquote>
+<hr />
+<p class="subtitle_b16">Related Topics</p>
+<ul>
+  <li><a href="DiagramEditor.htm#transformationDiagram" class="medium">Transformation Diagram </a> </li>
+  <li><a href="TransformationEditor.htm" class="medium">Transformation Editor </a></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a></li>
+</ul>
+<hr />
+<p class="copyright">&copy; 2008 Varsity Gateway LLC.  All rights reserved.</span><br />Visit <a href="http://www.metamatrix.com">http://www.metamatrix.com</a></span></p>
+</body>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+ 
+<!-- =============================================================================== 
+ # JBoss, Home of Professional Open Source. 
+ # 
+ # Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ # 
+ # Some portions of this file may be copyrighted by other 
+ # contributors and licensed to Red Hat, Inc. under one or more 
+ # contributor license agreements. See the copyright.txt file in the 
+ # distribution for a full listing of individual contributors. 
+ # 
+ # This program and the accompanying materials 
+ # are made available under the terms of the Eclipse Public License v1.0 
+ # which accompanies this distribution, and is available at 
+ # http://www.eclipse.org/legal/epl-v10.html 
+ # ================================================================================== --> 
+
+<plugin>
+
+    
+<!--
+   	Each extension below represents a single metamodel.  Each metmodel is
+   	registered using under the specified <uri> value which must be the same
+   	eNS_URI value defined in the EPackage class for that metamodel.
+   -->
+   <extension
+         id="function"
+         name="%metamodelName"
+         point="com.metamatrix.modeler.core.metamodel">
+      <uri>
+         http://www.metamatrix.com/metamodels/MetaMatrixFunction
+      </uri>
+      <alternateUri>
+         http://www.metamatrix.com/metamodels/MetaMatrixFunction
+      </alternateUri>
+      <rootEntityClass
+            name="com.metamatrix.metamodels.function.ScalarFunction">
+      </rootEntityClass>
+      <properties
+            createAsPhysical="true"
+            requiresProxies="false"
+            supportsDiagrams="true"
+            createAsNewModel="false"
+            participatoryOnly="false"
+            supportsExtension="true"
+            createAsVirtual="false">
+      </properties>
+      <allowableModelType>
+         FUNCTION
+      </allowableModelType>
+      <packageClass
+            name="com.metamatrix.metamodels.function.impl.FunctionPackageImpl">
+      </packageClass>
+      <adapterClass
+            name="com.metamatrix.metamodels.function.provider.FunctionItemProviderAdapterFactory">
+      </adapterClass>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.metamatrix.com/metamodels/MetaMatrixFunction"
+            class="com.metamatrix.metamodels.function.FunctionPackage">
+      </package>
+   </extension>
+
+
+<!-- MetamodelAspect extensions -->
+   <extension
+         id="functionValidationAspect"
+         point="com.metamatrix.modeler.core.validationAspect">
+      <metamodelExtensionID>
+         function
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.metamodels.function.aspects.validation.FunctionValidationAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+   <extension
+         id="functionUmlAspect"
+         point="com.metamatrix.modeler.core.umlDiagramAspect">
+      <metamodelExtensionID>
+         function
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.metamodels.function.aspects.uml.FunctionUmlAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+<!-- EObject Matcher extensions -->
+   <extension
+         id="functionMatcherFactory"
+         point="com.metamatrix.modeler.core.eobjectMatcherFactory">
+      <class
+            name="com.metamatrix.metamodels.function.compare.FunctionMatcherFactory">
+      </class>
+   </extension>
+</plugin>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:relational="http://www.metamatrix.com/metamodels/Relational">
+  <relational:Schema name="partssupplier">
+    <tables>
+    	<columns> name="SUPPLIER_ID" type="INT" scale="0" precision="4" nullable="false" </columns>
+        <columns> name="SUPPLIER_NAME" type="VARCHAR" nullable="false" length="256" </columns>  
+    </tables>
+  </relational:Schema>
+</xmi:XMI>

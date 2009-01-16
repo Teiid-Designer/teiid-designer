@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.apache.oro
+Bundle-Version: 1.0.0
+Bundle-ClassPath: jakarta-oro-2.0.8.jar
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Export-Package: org.apache.oro.io,
+ org.apache.oro.text,
+ org.apache.oro.text.awk,
+ org.apache.oro.text.perl,
+ org.apache.oro.text.regex,
+ org.apache.oro.util
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

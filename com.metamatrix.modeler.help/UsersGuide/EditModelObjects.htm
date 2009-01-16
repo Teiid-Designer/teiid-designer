@@ -1,0 +1,100 @@
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<body>
+<p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<p class="maintitle_b24">Editing Model Objects </p>
+<hr />
+<p>This section summarizes <strong>Designer'</strong>s features for editing existing model objects contained in your models.</p>
+<p>The primary actions for editing model objects are: </p>
+<ul>
+  <li><strong>Cut</strong> <img src="images/icons/cut_edit.gif" width="16" height="16" hspace="5"> - Deletes the selected object(s) and copies it to the  clipboard.</li>
+  <li><strong>Copy</strong> <img src="images/icons/copy_edit.gif" width="16" height="16" hspace="5"> - Copies the selected object(s) to the clipboard.</li>
+  <li><strong>Paste</strong> <img src="images/icons/paste_edit.gif" width="16" height="16" hspace="5"> - Pastes the contents of the clipboard to the  selected context.</li>
+  <li><strong>Clone</strong> -    Duplicates the selected object in the same  location with the same name; user is able to rename the new object right in the  tree.</li>
+  <li><strong>Delete</strong> <img src="images/icons/delete_edit.gif" width="16" height="16" hspace="5"> - Deletes the selected object(s).</li>
+  <li><strong>Rename</strong> - Allows a user to rename an object.</li>
+</ul>
+<p>These actions are presented in <strong>Designer'</strong>s main  <strong><a href="DesignerMainMenus.htm#editMenu">Edit</a></strong> menu and also in the right-click context menus for model objects selected in the <a href="ModelExplorer.htm#selectionMenus"><strong>Model Explorer</strong></a>,<a href="DiagramEditor.htm#diagramContextMenu"><strong> Diagram Editor</strong></a> and <a href="TableEditor.htm#contextMenu"><strong>Table Editor</strong></a>. </p>
+<hr />
+<p class="subtitle_b16"><a name="modelingSubmenu" id="modelingSubmenu"></a>Modeling Sub-Menu </p>
+<p>In addition to the New Child/Sibling/Association menus available for object creation Designer provides a &quot;Modeling &gt;&quot; sub-menu which presents various object-specific actions which can be performed.</p>
+<p>If you select a source table, for instance, the modeling menu below would be presented:</p>
+<p><img src="images/views/ModelingMenuForSourceTable.jpg" width="517" height="147" hspace="20" border="1"></p>
+<p>If a view table is selected, the menu would reflect the actions related to virtual operations.</p>
+<p><img src="images/views/ModelingMenuForViewTable.jpg" width="533" height="228" hspace="20" border="1"> </p>
+<p>&nbsp;</p>
+<hr />
+<p class="subtitle_b16"><a name="editSpecialModelObjects" id="editSpecialModelObjects"></a>Editing Special Model Objects</p>
+<p class="medium"><strong>Designer </strong>provides specialized object editors to handling a few complex model objects and their unique properties. These objects include:</p>
+<ul>
+  <li><a href="#editTransformations">Transformation</a></li>
+  <li><a href="#editInputSets">Mapping Class Input Set</a></li>
+  <li><a href="#editXMLChoiceElement">XML schema choice element</a></li>
+  <li><a href="#editRecursiveMappingClass">Recursive Mapping Class</a></li>
+</ul>
+<p>The details for editing these objects is in the following sections. </p>
+<hr />
+<p class="subtitle_b16"><a name="editTransformations"></a>Edit Transformation </p>
+<p>To edit a transformation you can:</p>
+<ol>
+  <li>Double-click
+    <strong>Edit</strong>
+    <ul>
+      <li> A relational view table or procedure in the <strong><a href="ModelExplorer.htm">Model Explorer</a></strong> or<a href="DiagramEditor.htm"> <strong>Diagram Editor</strong></a></li>
+      <li>A transformation node in a <a href="DiagramEditor.htm#transformationDiagram">transformation diagram</a> or <a href="DiagramEditor.htm#mappingTransformationDiagram">mapping transformation diagram</a></li>
+      <li> A mapping class in a <a href="DiagramEditor.htm#mappingDiagram">mapping diagram</a> or <a href="DiagramEditor.htm#mappingTransformationDiagram">mapping transformation diagram</a> </li>
+    </ul>
+  </li>
+  <li>Right-click  <strong>Edit</strong> action on selected object in the<strong> <strong><a href="ModelExplorer.htm">Model Explorer</a></strong>, <a href="DiagramEditor.htm">Diagram Editor</a></strong> or <strong><a href="TableEditor.htm">Table Editor</a></strong>
+    <ul>
+      <li>A relational view table or procedure </li>
+      <li>A transformation node in a <a href="DiagramEditor.htm#transformationDiagram">transformation diagram</a> or <a href="DiagramEditor.htm#mappingTransformationDiagram">mapping transformation diagram</a></li>
+      <li> A mapping class in a <a href="DiagramEditor.htm#mappingDiagram">mapping diagram</a> or <a href="DiagramEditor.htm#mappingTransformationDiagram">mapping transformation diagram</a> </li>
+    </ul>
+  </li>
+</ol>
+<p>If a <a href="ModelEditors.htm"><strong>Model Editor</strong></a> is not currently open for the selected object's model, a <a href="ModelEditors.htm"><strong>Model Editor</strong></a> will be opened. </p>
+<p>After the corresponding transformation diagram is opened in the <a href="DiagramEditor.htm"><strong>Diagram Editor</strong></a>, the <a href="TransformationEditor.htm"><strong>Transformation Editor</strong></a> is displayed in the lower section of the<a href="DiagramEditor.htm"><strong> Diagram Editor</strong></a>. </p>
+<hr />
+<p class="subtitle_b16"><a name="editInputSets" id="editInputSets"></a>Edit Input Set</p>
+<p>To edit an input set you can:</p>
+<ol>
+  <li>Double-click <strong>Edit  </strong>an input set in a <a href="DiagramEditor.htm#mappingTransformationDiagram">mapping transformation diagram</a></li>
+  <li>Right-click <strong>Edit  </strong>an input set selected in a <a href="DiagramEditor.htm#mappingTransformationDiagram">mapping transformation diagram</a> </li>
+  <li>Click the <img src="images/icons/EditInputSetButton.gif" width="22" height="21" hspace="5">button on the input set in the <a href="DiagramEditor.htm#mappingTransformationDiagram">mapping transformation diagram</a>
+    <p><img src="images/views/EditInputSetButton.jpg" width="261" height="134" border="1"></p>
+  </li>
+</ol>
+<p>The result of the <strong>Edit</strong> action is to open the<a href="InputSetEditor.htm#inputSetEditor"><strong> Input Set Editor </strong></a>in the lower section of the<a href="DiagramEditor.htm"><strong> Diagram Editor</strong></a>. </p>
+<hr />
+<p class="subtitle_b16"><a name="editXMLChoiceElement" id="editXMLChoiceElement"></a>Edit XML Choice element properties</p>
+<p>To edit an XML choice element you can:</p>
+<ol>
+  <li>Right-click <strong>Edit  </strong>an XML choice element selected in the <a href="DiagramEditor.htm#mappingTransformationDiagram">mapping transformation diagram</a> document tree
+    <p><img src="images/views/XmlChoiceElementInTree.jpg" width="343" height="119" border="1"></p>
+  </li>
+
+  <blockquote>
+    <p>&nbsp;</p>
+  </blockquote>
+</ol>
+<p>The result of the <strong>Edit</strong> action is to open the <a href="ChoiceEditor.htm"><strong>Choice Editor </strong></a>in the lower section of the<a href="DiagramEditor.htm"><strong> Diagram Editor</strong></a>. </p>
+<hr />
+<p class="subtitle_b16"><a name="editRecursiveMappingClass" id="editRecursiveMappingClass"></a>Edit Recursive Mapping Class properties </p>
+<p>To edit the properties of a recursive mapping class you can:</p>
+<ol>
+  <li>Click the <img src="images/icons/recursion.gif" width="15" height="16" hspace="5" border="1">button on the input set in the <a href="DiagramEditor.htm#mappingTransformationDiagram">mapping transformation diagram</a>
+    <p><img src="images/views/EditRecusionButton.jpg" width="470" height="140" border="1"></p>
+  </li>
+  <blockquote>
+    <p>&nbsp;</p>
+  </blockquote>
+</ol>
+<p>The result of the <strong>Edit</strong> action is to open the <a href="RecursionEditor.htm#recursionEditor"><strong>Recursion Editor </strong></a>in the lower section of the<a href="DiagramEditor.htm"><strong> Diagram Editor</strong></a>. </p>
+<p>&nbsp;</p>
+<hr />
+<p class="subtitle_b16">Related Topics</p>
+<ul><li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr />
+<p class="copyright">&copy; 2008 Varsity Gateway LLC.  All rights reserved.</span><br />Visit <a href="http://www.metamatrix.com">http://www.metamatrix.com</a></span></p>
+</body>

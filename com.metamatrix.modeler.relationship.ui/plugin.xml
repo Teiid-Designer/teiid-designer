@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+ 
+<!-- =============================================================================== 
+ # JBoss, Home of Professional Open Source. 
+ # 
+ # Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ # 
+ # Some portions of this file may be copyrighted by other 
+ # contributors and licensed to Red Hat, Inc. under one or more 
+ # contributor license agreements. See the copyright.txt file in the 
+ # distribution for a full listing of individual contributors. 
+ # 
+ # This program and the accompanying materials 
+ # are made available under the terms of the Eclipse Public License v1.0 
+ # which accompanies this distribution, and is available at 
+ # http://www.eclipse.org/legal/epl-v10.html 
+ # ================================================================================== --> 
+
+<plugin>
+
+    
+<!-- Adding the Relationship Diagram Type extension-->
+   <extension
+         id="relationshipDiagramType"
+         name="%relationshipDiagramType"
+         point="com.metamatrix.modeler.diagram.ui.diagramType">
+      <diagram
+            class="com.metamatrix.modeler.relationship.ui.diagram.RelationshipDiagramType"
+            simpleDiagram="false">
+      </diagram>
+   </extension>
+<!-- Relationship Diagram Type Permanent Model Object Action Contributor -->
+   <extension
+         id="relationshipDiagramModelObjectActionContributor"
+         point="com.metamatrix.modeler.ui.modelObjectActionContributor">
+      <class
+            name="com.metamatrix.modeler.relationship.ui.actions.RelationshipDiagramPermanentActionContributor">
+      </class>
+   </extension>
+<!--
+   <extension
+         id="generateRelationshipsActionContributor"
+         point="com.metamatrix.modeler.ui.modelObjectActionContributor">
+      <class
+            name="com.metamatrix.modeler.relationship.ui.actions.GenerateRelationshipsActionContributor">
+      </class>
+   </extension>
+   -->
+<!-- Relationship Diagram Type Content And Label Providers -->
+   <extension
+         id="relationshipDiagramContentProvider"
+         name="Relationship Diagram Content Provider"
+         point="com.metamatrix.modeler.ui.diagramContentProvider">
+      <class
+            name="com.metamatrix.modeler.relationship.ui.diagram.RelationshipDiagramContentProvider">
+      </class>
+      <diagramType
+            name="relationshipDiagramType">
+      </diagramType>
+   </extension>
+   <extension
+         id="relationshipDiagramLabelProvider"
+         name="Relationship Diagram LabelProvider"
+         point="com.metamatrix.modeler.ui.diagramLabelProvider">
+      <class
+            name="com.metamatrix.modeler.relationship.ui.diagram.RelationshipDiagramLabelProvider">
+      </class>
+      <diagramType
+            name="relationshipDiagramType">
+      </diagramType>
+   </extension>
+<!-- Modeler view category -->
+   <extension
+         point="org.eclipse.ui.views">
+<!-- Navigation view -->
+      <view
+            name="%relationshipNavigationView"
+            icon="icons/full/cview16/navigator_view.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.relationship.ui.navigation.NavigationView"
+            id="com.metamatrix.modeler.relationship.ui.navigation.navigationView">
+      </view>
+   </extension>
+<!-- Action to open the Navigation View in context menus -->
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.emf.ecore.EObject"
+            id="com.metamatrix.modeler.relationship.ui.navigation.actions.openNavigator">
+         <action
+               label="%openNavigatorAction"
+               icon="icons/full/cview16/navigator_view.gif"
+               class="com.metamatrix.modeler.relationship.ui.navigation.actions.OpenInNavigatorAction"
+               enablesFor="1"
+               id="openNavigatorAction">
+         </action>
+      </objectContribution>
+   </extension>
+<!-- Action to open the Navigation View in the Metadata menu -->
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="%navigationActionSet.label"
+            visible="false"
+            id="com.metamatrix.modeler.relationship.ui.actions.navigationActionSet">
+         <menu
+               label="%metadata.menu"
+               path="additions"
+               id="com.metamatrix.modeler.ui.actions.metadataMenu">
+            <separator
+                  name="slot1">
+            </separator>
+            <separator
+                  name="slot2">
+            </separator>
+            <separator
+                  name="slot3">
+            </separator>
+            <separator
+                  name="slot4">
+            </separator>
+            <groupMarker
+                  name="com.metamatrix.modeler.ui.groupMarker1">
+            </groupMarker>
+         </menu>            
+         <action
+               label="%openNavigatorAction"
+               icon="icons/full/cview16/navigator_view.gif"
+               helpContextId="com.metamatrix.modeler.relationship.ui.navigation.actions.helpContext"
+               tooltip="%openNavigatorAction"
+               class="com.metamatrix.modeler.relationship.ui.navigation.actions.OpenInNavigatorAction"
+               menubarPath="com.metamatrix.modeler.ui.actions.metadataMenu/slot2"
+               enablesFor="1"
+               id="com.metamatrix.modeler.relationship.ui.navigation.actions.metadataOpenNavigator">
+         </action>
+      </actionSet>
+   </extension>
+<!-- Adding the Relationship Custom Diagram Type extension-->
+   <extension
+         id="customRelationshipDiagramType"
+         name="%customRelationshipDiagramType"
+         point="com.metamatrix.modeler.diagram.ui.diagramType">
+      <diagram
+            class="com.metamatrix.modeler.relationship.ui.custom.CustomDiagramType"
+            simpleDiagram="true">
+      </diagram>
+   </extension>
+<!-- Relationship Custom Diagram Type Permanent Model Object Action Contributor -->
+   <extension
+         id="customRelationishipModelObjectActionContributor"
+         point="com.metamatrix.modeler.ui.modelObjectActionContributor">
+      <class
+            name="com.metamatrix.modeler.relationship.ui.custom.actions.CustomDiagramPermanentActionContributor">
+      </class>
+   </extension>
+<!-- Custom Diagram Content Provider -->
+   <extension
+         id="customRelationshipDiagramContentProvider"
+         name="%customRelationshipDiagramContentProvider"
+         point="com.metamatrix.modeler.ui.diagramContentProvider">
+      <class
+            name="com.metamatrix.modeler.relationship.ui.custom.CustomDiagramContentProvider">
+      </class>
+      <diagramType
+            name="customDiagramType">
+      </diagramType>
+   </extension>
+<!-- Custom Diagram Label Provider -->
+   <extension
+         id="customRelationshipDiagramLabelProvider"
+         name="%customRelationshipDiagramLabelProvider"
+         point="com.metamatrix.modeler.ui.diagramLabelProvider">
+      <class
+            name="com.metamatrix.modeler.relationship.ui.custom.CustomDiagramLabelProvider">
+      </class>
+      <diagramType
+            name="customRelationshipDiagramType">
+      </diagramType>
+   </extension>
+<!-- Relationship Object Editor Page -->
+   <extension
+         id="relationshipObjectEditorPage"
+         name="%relationshipEditorName"
+         point="com.metamatrix.modeler.ui.modelObjectEditorPage">
+      <class
+            name="com.metamatrix.modeler.relationship.ui.editor.RelationshipObjectEditorPage">
+      </class>
+   </extension>
+<!-- Relationship Type Editor Object Editor Page -->
+   <extension
+         id="relationshipObjectEditorPage"
+         name="%relationshipEditorName"
+         point="com.metamatrix.modeler.ui.modelObjectEditorPage">
+      <class
+            name="com.metamatrix.modeler.relationship.ui.editor.RelationshipTypeObjectEditorPage">
+      </class>
+   </extension>
+<!--
+	Add the Navigation Action Set to the Modeler Perspective MetaData menu. In order to do
+	this we must make sure the MetaData Action Set has also been activated. Also add the search action set.
+-->
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="com.metamatrix.modeler.ui.modelerPerspective">
+         <actionSet
+               id="com.metamatrix.modeler.ui.actions.metadataActionSet">
+         </actionSet>
+         <actionSet
+               id="com.metamatrix.modeler.relationship.ui.actions.navigationActionSet">
+         </actionSet>
+         <actionSet
+               id="com.metamatrix.modeler.relationship.ui.search.relationshipSearchActionSet">
+         </actionSet>
+      </perspectiveExtension>
+   </extension>
+<!-- New Object Wizard for Relationship -->
+   <extension
+         id="com.metamatrix.modeler.relationship.ui.NewRelationshipContributor"
+         name="%relationshipWizardName"
+         point="com.metamatrix.modeler.ui.newModelObjectWizard">
+      <class
+            name="com.metamatrix.modeler.relationship.ui.editor.NewRelationshipWizard">
+      </class>
+      <descriptorType
+            name="com.metamatrix.metamodels.relationship.Relationship">
+      </descriptorType>
+   </extension>
+<!-- New Association Wizard for Relationship -->
+   <extension
+         id="com.metamatrix.modeler.relationship.ui.NewRelationshipAssociationContributor"
+         name="%relationshipWizardName"
+         point="com.metamatrix.modeler.ui.newAssociationWizard">
+      <class
+            name="com.metamatrix.modeler.relationship.ui.editor.NewRelationshipWizard">
+      </class>
+      <descriptorType
+            name="RelationshipAssociationDescriptor">
+      </descriptorType>
+   </extension>
+<!-- New Object Wizard for Relationship Type -->
+   <extension
+         id="com.metamatrix.modeler.relationship.ui.NewRelationshipTypeContributor"
+         name="%relationshipTypeWizardName"
+         point="com.metamatrix.modeler.ui.newModelObjectWizard">
+      <class
+            name="com.metamatrix.modeler.relationship.ui.editor.NewRelationshipTypeWizard">
+      </class>
+      <descriptorType
+            name="com.metamatrix.metamodels.relationship.RelationshipType">
+      </descriptorType>
+   </extension>
+<!-- Relationship Search Page -->
+   <extension
+         point="org.eclipse.search.searchPages">
+      <page
+            showScopeSection="true"
+            tabPosition="1"
+            label="%relationshipSearchPage.name"
+            icon="icons/full/obj16/relationshipSearchPage.gif"
+            extensions="xmi:1"
+            class="com.metamatrix.modeler.internal.relationship.ui.search.RelationshipSearchPage"
+            id="com.metamatrix.modeler.relationship.ui.search.RelationshipSearchPage">
+      </page>
+   </extension>
+<!-- Action set to get Relationship Search Action in Search Menu -->
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="%relationshipSearchActionSet.name"
+            visible="false"
+            id="com.metamatrix.modeler.relationship.ui.search.relationshipSearchActionSet">
+		 <menu
+			   id="org.eclipse.search.menu"
+			   label="%searchMenu.label"
+			   path="navigate">
+			   <groupMarker name="internalDialogGroup"/>   <!-- not to be used by clients  -->
+			   <groupMarker name="dialogGroup"/>           <!-- to be used by clients      -->
+			   <groupMarker name="quickPage"/>           <!-- to be used by clients      -->		   
+			   <separator name="contextMenuActionsGroup"/>
+		 </menu>              
+         <action
+               definitionId="com.metamatrix.modeler.internal.relationship.ui.search.OpenRelationshipSearchPageAction"
+               label="%openRelationshipSearchAction.label"
+               icon="icons/full/obj16/relationshipSearchPage.gif"
+               tooltip="%openRelationshipSearchAction.tip"
+               class="com.metamatrix.modeler.internal.relationship.ui.search.OpenRelationshipSearchPageAction"
+               menubarPath="org.eclipse.search.menu/quickPage"
+               id="com.metamatrix.modeler.internal.relationship.ui.search.OpenRelationshipSearchPageAction">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            name="%openRelationshipSearchAction.label"
+            description="%openRelationshipSearchAction.tip"
+            categoryId="com.metamatrix.modeler.ui.category.modeler"
+            id="com.metamatrix.modeler.internal.relationship.ui.search.OpenRelationshipSearchPageAction">
+      </command>
+   </extension>      
+   <extension
+         id="com.metamatrix.modeler.relationship.ui.properties.RelationshipPropertyEditorFactory"
+         name="%relationshipPropertyEditorFactory"
+         point="com.metamatrix.modeler.ui.propertyEditorFactory">
+      <class
+            name="com.metamatrix.modeler.relationship.ui.properties.RelationshipPropertyEditorFactory">
+      </class>
+   </extension>
+   <!-- Helper method to allow external edit for diagrams. i.e. Delete, Copy, etc.. -->
+      <extension
+         id="customDiagramHelper"
+         name="%customDiagramHelper"
+         point="com.metamatrix.modeler.ui.diagramHelper">
+      <class
+         name="com.metamatrix.modeler.relationship.ui.custom.CustomDiagramHelper"
+         diagramType="customRelationshipDiagramType">
+      </class>
+   </extension>
+   <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->
+   <extension
+         id="relationshipPerspectiveContributor"
+         name="%relationshipPerspectiveContributor"
+         point="com.metamatrix.modeler.ui.modelerPerspectiveContributor">
+      <class
+        name="com.metamatrix.modeler.relationship.ui.RelationshipPerspectiveContributor">
+      </class>
+   </extension>
+       <!-- Text Importer Contribution -->
+      <extension
+         id="relationshipsUiTextImporter"
+         name="%relationshipsUiTextImporter"
+         point="com.metamatrix.modeler.tools.textimport.ui.textImportContributor">
+      <class
+        name="com.metamatrix.modeler.internal.relationship.ui.wizards.ImportRelationshipsMainPage">
+      </class>
+   </extension>
+    <extension
+		id="com.metamatrix.modeler.relationship.ui.actions.GenerateSqlRelationshipsAction"
+		name="%generateSqlRelationshipsAction.name"
+        point="com.metamatrix.modeler.ui.modelObjectSpecialAction">
+      <specialAction
+         name="com.metamatrix.modeler.relationship.ui.actions.GenerateSqlRelationshipsAction"
+         label="%generateSqlRelationshipsAction.label">
+      </specialAction>
+   </extension>
+</plugin>

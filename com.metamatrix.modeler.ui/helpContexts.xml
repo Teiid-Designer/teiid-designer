@@ -1,0 +1,29 @@
+<!--
+ # JBoss, Home of Professional Open Source.
+ # Copyright (C) 2008 Red Hat, Inc.
+ # Copyright (C) 2000-2007 MetaMatrix, Inc.
+ # Licensed to Red Hat, Inc. under one or more contributor
+ # license agreements.  See the copyright.txt file in the
+ # distribution for a full listing of individual contributors.
+ #
+ # This library is free software; you can redistribute it and/or
+ # modify it under the terms of the GNU Lesser General Public
+ # License as published by the Free Software Foundation; either
+ # version 2.1 of the License, or (at your option) any later version.
+ #
+ # This library is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ # Lesser General Public License for more details.
+ 
+ # You should have received a copy of the GNU Lesser General Public
+ # License along with this library; if not, write to the Free Software
+ # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ # 02110-1301 USA.
+-->
+<contexts>
+	<context id="namespaceUriRenameDialog">
+		<description>A Uniform Resource Identifier (URI) is a compact sequence of characters that identifies an abstract or physical resource and consists of many differenct parts. The top level URI syntax is the following:&lt;br&gt;&lt;br&gt;URI = scheme ":" hier-part [ "?" query ] [ "#" fragment ]&lt;br&gt;&lt;br&gt;For details of all the parts, the valid character set, the complete syntax definition, and much more use the link provided below.&lt;br&gt;&lt;br&gt;The Namespace URI can be used to logically identify a model and must conform to standard URI syntax as defined by the W3C. When a model is given a Namespace URI, all of its contained model objects are automatically assigned an Object URI.&lt;br&gt;&lt;br&gt;The Object URI is composed of the model’s Namespace URI combined with the model object’s own unique identifier. The Object URI enables model objects to be referenced by other W3C technologies, such as XML Schema Documents (XSD), Resource Description Framework (RDF), and Web Ontology Language (OWL), in a location-independent way.</description>
+		<topic href="http://www.gbiv.com/protocols/uri/rfc/rfc3986.html" label="Uniform Resource Identifier (URI): Generic Syntax"/>
+	</context>
+</contexts>

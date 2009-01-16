@@ -1,0 +1,101 @@
+/* ================================================================================== 
+ * JBoss, Home of Professional Open Source. 
+ * 
+ * Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ * 
+ * Some portions of this file may be copyrighted by other 
+ * contributors and licensed to Red Hat, Inc. under one or more 
+ * contributor license agreements. See the copyright.txt file in the 
+ * distribution for a full listing of individual contributors. 
+ * 
+ * This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0 
+ * which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html 
+ * ================================================================================== */ 
+
+package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
+
+import org.eclipse.jface.window.Window;
+
+import com.metamatrix.common.config.api.ComponentType;
+import com.metamatrix.common.config.api.ComponentTypeID;
+import com.metamatrix.common.config.api.ConnectorBinding;
+import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
+import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
+import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.NewConnectorBindingDialog;
+import com.metamatrix.ui.internal.util.UiUtil;
+
+
+/** 
+ * @since 5.0
+ */
+public class NewConnectorBindingAction extends ConfigurationManagerAction {
+    private static final String PREFIX = I18nUtil.getPropertyPrefix(NewConnectorBindingAction.class);
+    
+    /** 
+     * 
+     * @since 5.0
+     */
+    public NewConnectorBindingAction() {
+        super(DqpUiConstants.UTIL.getString(PREFIX + "label")); //$NON-NLS-1$
+        this.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.NEW_BINDING_ICON));
+        this.setToolTipText(DqpUiConstants.UTIL.getString(PREFIX + "tooltip")); //$NON-NLS-1$
+        setEnabled(true);
+    }
+
+    /**
+     *  
+     * @see org.eclipse.jface.action.IAction#run()
+     * @since 5.0
+     */
+    @Override
+    public void run() {
+        //System.out.println("  NewConnectorBindingAction.run() ====>>> ");
+        // Get Selection
+
+        NewConnectorBindingDialog dialog = new NewConnectorBindingDialog(UiUtil.getWorkbenchShellOnlyIfUiThread());
+        Object selectedObject = getSelectedObject();
+        if( selectedObject instanceof ComponentTypeID ) {
+            dialog.setConnectorType((ComponentTypeID)selectedObject);
+        }
+        dialog.open();
+        
+        if (dialog.getReturnCode() == Window.OK) {
+            // NOTE:  the result of this call is a clone of the dialog's connector binding and the addition of the binding to 
+            // the Configuration Manager
+            dialog.getNewConnectorBinding();
+        }
+    }
+
+    /**
+     *  
+     * @see com.metamatrix.modeler.internal.dqp.ui.workspace.actions.ConfigurationManagerAction#setEnablement()
+     * @since 5.0
+     */
+    @Override
+    protected void setEnablement() {
+        boolean result = getConfigurationManager().getConnectorTypes().size() > 0;
+        if( !isMultiSelection() && !isEmptySelection() ) {
+            Object selectedObject = getSelectedObject();
+            result = false;
+            if( selectedObject instanceof ConnectorBinding 
+                || selectedObject instanceof ComponentType 
+                || selectedObject instanceof ComponentTypeID) {
+                result = true;
+            }
+        }
+        
+        setEnabled(result);
+    }
+    
+    /**
+     * Needed to check/reset enablement from ConnectorsView if NO selection 
+     * 
+     * @since 5.0
+     */
+    public void checkEnablement() {
+        setEnablement();
+    }
+}

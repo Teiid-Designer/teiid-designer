@@ -1,0 +1,43 @@
+/* ================================================================================== 
+ * JBoss, Home of Professional Open Source. 
+ * 
+ * Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ * 
+ * Some portions of this file may be copyrighted by other 
+ * contributors and licensed to Red Hat, Inc. under one or more 
+ * contributor license agreements. See the copyright.txt file in the 
+ * distribution for a full listing of individual contributors. 
+ * 
+ * This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0 
+ * which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html 
+ * ================================================================================== */ 
+
+package com.metamatrix.modeler.xml;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+
+import com.metamatrix.metamodels.xml.XmlFragment;
+import com.metamatrix.modeler.core.workspace.ModelResource;
+
+/**
+ * @author PForhan
+ */
+public interface IVirtualDocumentFragmentSource {
+    /** Get the fragments this source has to offer.
+      *  It is up to the implementation whether calling this method
+      *  will make permanent changes to data or whether this is a 
+      *  simple accessor.
+      * @param monitor IProgressMonitor to use
+      * @return an array of Fragments and Documents.
+      */
+    public XmlFragment[] getFragments(ModelResource modelResource, IProgressMonitor monitor);
+
+    /** Refresh fragment information from the source, if any.
+     * 
+     * @param isVisible whether the results of the update will be visible to the user
+     * @param monitor The monitor to pay attention to.
+     */
+   public void updateSourceFragments(boolean isVisible, IProgressMonitor monitor);
+}

@@ -1,0 +1,95 @@
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<body>
+<p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<p class="maintitle_b24"> Connectors View </p>
+<hr />
+<p>The <strong>Connectors  View</strong> provides a means to display and manage (add or remove) connectors and source bindings in <strong>Designer</strong>. </p>
+<p>To show the Connectors View click &quot;<strong>Views &gt; Show View &gt; Other...</strong>&quot; to display the <strong><a href="DesignerMainMenus.htm#showViewDialog">Show View</a></strong> dialog. Choose &quot;<strong>Designer &gt; Connectors </strong>&quot; view and hit <strong>OK</strong>. </p>
+<p><img src="images/views/ConnectorsView.jpg" width="409" height="245"></p>
+<p>The view's toolbar actions include: </p>
+<ul>
+  <li><img src="images/icons/new_binding.png" width="16" height="16" hspace="5"><strong>Create New Connector Binding </strong>  </a> - Launches New Connector Binding wizard.</li>
+</ul>
+<ul>
+  <li><img src="images/icons/import_connectors.png" width="16" height="16" hspace="5"> <strong>Import Connector Bindings </strong> </a> - Imports connector bindings from a *.cdk file.</li>
+  <li><img src="images/icons/export_connectors.png" width="16" height="16" hspace="5"> <strong>Export Connector Bindings </strong> </a> - Exports selected connector bindings to *.cdk file. This action provides a means to transfer your source connection information between Designer workspaces. </li>
+</ul>
+<ul>
+  <li><img src="images/icons/showHideConnectors.png" width="16" height="16" hspace="5"><strong>Show/Hide Connector Types  </strong>  </a> - Shows or hides connector types in tree view.</li>
+</ul>
+<ul>
+  <li><img src="images/icons/collapseall.gif" width="16" height="16" hspace="5"><strong>Collapse All </strong>  </a> - Collapses tree view.</li>
+</ul>
+<p>You can also access these actions via the right-click menu as shown below. Note the <strong>Clone</strong> action which creates a new connector binding but sets all of its property values with those of the selected binding. </p>
+<p><img src="images/views/ConnectorsViewContextMenu.jpg"  hspace="20" border="1"></p>
+<p>You can show/hide the connector types by toggling the <img src="images/icons/showHideConnectors.png" width="16" height="16" hspace="5">action in the toolbar. </p>
+<p><img src="images/views/ConnectorsViewShowTypes.jpg" width="409" height="244" hspace="20"></p>
+<hr />
+<p><span class="subtitle_b16"><a name="editConnectorProperties" id="editConnectorProperties"></a>Editing Connector Properties</span></p>
+<p>To edit properties of a connector binding, you can either select the binding and edit the properties in the <strong><a href="PropertiesView.htm">Properties</a></strong> view, or select the <strong>Edit</strong> action and open the <strong>Connector  Editor</strong> dialog presented below</p>
+<p><img src="images/views/ConnectorBindingEditorDialog.jpg" hspace="20"> </p>
+<hr />
+<p><span class="subtitle_b16"><a name="createNewBinding" id="createNewBinding"></a>Create New Connector Binding </span></p>
+<p>Create new connector binding by either selecting the <strong>New Connector Binding</strong> action in the Connectors View toolbar or right-click select the same action from the context menu. If connector types are displayed in the Connectors view, you can select a connector type first, then select the <strong>New Connector Binding</strong> action. This will pre-select the type in the <strong>New Connector</strong> dialog. </p>
+<p>The action will lauch the <strong>New Connector</strong> dialog shown below. Provide a valid binding name, select desired connector type, enter your custom properties and click OK to create you new connector binding. </p>
+<p><img src="images/views/CreateNewConnectorBindingDialog.jpg" hspace="20"> </p>
+<hr />
+<p><span class="subtitle_b16"><a name="bindingSourcesToConnectors" id="bindingSourcesToConnectors"></a>Binding Sources to Connectors  </span></p>
+<p>In order to preview your data, you'll need to bind your source models to valid connectors. If you import your source from JDBC, your connector binding will be created during the import process and your source automatically bound to that connector binding.</p>
+<p>You can bind, unbind or change source bindings in a couple of ways. </p>
+<p>To bind a source, you can:</p>
+<ul>
+  <li>Select a model in the <a href="ModelExplorer.htm">Model Explorer </a>view select the <strong>Modeling &gt; Connector &gt;&gt; Bind</strong> action. This action presents a dialog for selecting your desired existing Connector binding. Select a binding and click OK.</li>
+  <li>Select a model in the <a href="ModelExplorer.htm">Model Explorer </a>view and drag the model into the <strong>Connectors</strong> view and drop into the  desired existing Connector binding.</li>
+</ul>
+<p>To unbind a source:</p>
+<ul>
+  <li>Select the source model in <strong>Connectors</strong> view and right-click select the Unbind action. </li>
+  <li>Select the model in the <a href="ModelExplorer.htm">Model Explorer </a>view and select the <strong>Modeling &gt; Connector &gt;&gt; Unbind</strong> action. </li>
+</ul>
+<hr />
+<p class="style4"><span class="subtitle_b16"><a name="importBindingsAndTypes" id="importBindingsAndTypes"></a>Importing Connector Bindings and Types  </span></p>
+<p>You can import your custom connector types and bindings into <strong>Designer</strong>. These bindings can be in the form of a <strong>*.cdk</strong> file (i.e. exported from Designer) or from a <strong>*.caf </strong>(connector archive file) defined during connector development. </p>
+<p>To import import connector types and/or bindings: </p>
+<blockquote>
+  <p><strong>Step 1</strong>: Select the <strong>Import Connectors (*.cdk, *.caf)</strong> &nbsp;action <img src="images/icons/import_connectors.png" width="16" height="16"> located in the <strong>Connectors View</strong> toolbar or in the right-click menu.</p>
+  <p><strong>Step 2</strong>: In the first wizard page, Select the &quot;<strong>Import...</strong>&quot; button to select your *.cdk or *.caf file on your local file system. This page presents a summary of the custom connector types defined in your cdk/caf file. Use the check-boxes in the table to choose which types to import. Select &quot;<strong>Next&gt;</strong>&quot; to view additional binding and jar import options or click &quot;<strong>Finish</strong>&quot; (if enabled) to import selected types and all associated bindings and connectors jars. </p>
+  <blockquote>
+    <p class="note">Note: This wizard page contains a details panel which displays status messages for selected connector types. </p>
+  </blockquote>
+  <p><img src="images/views/ImportBindingsPage_1.jpg" width="620" height="522" hspace="20"></p>
+  <p><strong>Step 3 </strong>: The second wizard page contains connector types defined in your cdk/caf file.  Use the check-boxes in the table to choose which bindings to import. Select &quot;<strong>Next&gt;</strong>&quot; to view additional jar import options or click &quot;<strong>Finish</strong>&quot; (if enabled) to import selected types, bindings and all associated connectors jars. </p>
+  <blockquote>
+    <p class="note">Note: This wizard page contains a details panel which displays status messages for selected connector types. </p>
+  </blockquote>
+  <p><img src="images/views/ImportBindingsPage_2.jpg" width="620" height="522" hspace="20"></p>
+  <p><strong>Step 4 </strong>: The last wizard page contains connector jars defined either in your caf file or jars located in the same file system folder as the initial cdk file. If while importing a cdk file the required jars are not present in the selected file system folder, select the &quot;Find...&quot; button to locate and select the required jar from your local file system.</p>
+  <blockquote>
+    <p class="note">Note 1: This wizard page contains a details panel which displays status messages for selected connector types. </p>
+    <p class="note">Note 2: The &quot;Finish&quot; button will not enable until all custom connector jars are identified and defined. These jar files are defined in the &quot;classPath&quot; property for both connector bindings and connector types. </p>
+  </blockquote>
+  <p class="medium"><img src="images/views/ImportBindingsPage_3.jpg" width="620" height="522" hspace="20"></p>
+  <p class="medium"><strong>Step 5 </strong>: Click &quot;<strong>Finish</strong>&quot; to complete the import.</p>
+</blockquote>
+<hr />
+<p class="style4"><span class="subtitle_b16"><a name="exportBindings" id="exportBindings"></a>Export Connector Bindings</span></p>
+<p>You can export your custom connector bindings from <strong>Designer</strong> into a *.cdk file. </p>
+<p>To export connector bindings:</p>
+<blockquote>
+  <p><strong>Step 1</strong>: Select one or more Connector Bindings in the Connectors View.</p>
+  <p><strong>Step 2:</strong> Select the <strong>Export Connectors (*.cdk)</strong> &nbsp;action <img src="images/icons/export_connectors.png" width="16" height="16"> located in the <strong>Connectors View</strong> toolbar or right-click select same action in the menu.</p>
+  <p><strong>Step 3 </strong>: In the  wizard, select a location on your local file system and specify a *.cdk file name (default is: savedBindings.cdk)</p>
+  <p><img src="images/views/ExportBindingsDialog.jpg" width="563" height="419" hspace="20"></p>
+  <p><strong>Step 4 </strong>: Select &quot;Save&quot; to create the file. </p>
+</blockquote>
+<hr />
+<p class="subtitle_b16">Related Topics</p>
+<ul>
+  <li><a href="DesignerViews.htm">Designer Views</a></li>
+  <li><a href="PreviewData.htm">Previewing Your Data</a></li>
+  <li><a href="UDFView.htm">UDF's View</a></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr />
+<p class="copyright">&copy; 2008 Varsity Gateway LLC.  All rights reserved.</span><br />Visit <a href="http://www.metamatrix.com">http://www.metamatrix.com</a></span></p>
+</body>

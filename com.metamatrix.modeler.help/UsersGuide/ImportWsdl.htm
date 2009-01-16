@@ -1,0 +1,115 @@
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<style type="text/css">
+<!--
+.style4 {font-weight: bold}
+-->
+</style>
+<body>
+<p><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<p class="maintitle_b24">Creating a Web Service model from imported WSDL file </p>
+<hr />
+<p class="medium">You can create a Web Service model by selecting a WSDL file in your workspace, importing WSDL files from the file system or by defining a URL. Designer will interpret the WSDL, locate any associated or dependent XML schema files, generate an XML View of the schema components and create a Web service model representing the interfaces and operations defined in the WSDL. </span></p>
+<p class="medium">There are three options for selecting the WSDL for your Web Service generation</p>
+<ul>
+  <li class="medium"><a href="#WorkspaceLocation"><strong>Workspace Location</strong></a></li>
+  <li class="medium"><a href="#FileSystemLocation"><strong>File System Location</strong></a></li>
+  <li class="medium"><a href="#UrlLocation"><strong>URL</strong></a></li>
+</ul>
+<p>Detailed steps for each of these options is described below, as well as a description of how the wizard handles<a href="#WSDLErrors"> WSDL errors</a>. </p>
+<hr />
+<p class="subtitle_b16"><a name="WorkspaceLocation"></a>Workspace Location</span></p>
+<p>To create a Web Service model from a WSDL file located in your workspace:</p>
+<blockquote>
+  <p><span class="medium"><strong>Step 1:</strong> Choose the <strong><a href="ModelingYourData.htm#importWizard">File &gt; Import</a></strong> action <img src="images/icons/import_wiz.gif" width="16" height="16" /> in the toolbar or select a project, folder or model in the tree and choose &quot;<strong>Import...</strong>&quot; </span> </p>
+  <p><span class="medium"><strong>Step 2:</strong> Select the <strong>WSDL File into Web Service Model</strong> option shown below and click <strong>NEXT &gt;</strong>.</span></p>
+  <p><span class="medium"><img src="images/views/importWsdlWizardSelection.jpg" hspace="20" /></span></p>
+  <p><span class="medium"><strong>Step 3:</strong> Input a valid name for your Web Service model and select the</span> <strong>Workspace...</strong> button. Locate your workspace WSDL file in the selection dialog and click <strong>OK</strong>. </p>
+  <p><img src="images/views/WSDLtoWS_1_Workspace.jpg" width="681" height="505" hspace="20"> </p>
+  <p><img src="images/views/WSDL_WorkspaceFileSelection_Dialog.jpg" width="347" height="400" hspace="20"></p>
+  <blockquote>
+    <p class="medium"><strong>Notes: </strong></p>
+    <ul>
+      <li><strong class="style4"><em>If no WSDL is selected or specified then the importer will only create an empty Web service model. No XML Schema or XML View models will be generated.</em></strong></li>
+      <li><em><strong>Any referenced files (WSDLs or schemas) must either be  embedded in the WSDL file or exist on your file system</strong></em></li>
+    </ul>
+  </blockquote>
+  <p><span class="medium"><strong>Step 4:</strong> The next page is titled &quot;<strong>Namespace Resolution</strong>&quot;. This page identifies successful and errant WSDL namespace resolution. The main WSDL document will essentially always be resolved, since the workspace file chooser is used to obtain the path. Problems will occur when the main WSDL file imports other WSDL files that cannot be resolved..... If no errors, select &quot;<strong>Next</strong>&quot; to proceed, or &quot;<strong>Finish</strong>&quot; (if enabled) to complete with default options. </span></p>
+  <p><img src="images/views/WSDLtoWS_2_Workspace.jpg" hspace="20" ></p>
+  <p><span class="medium"><strong>Step 5:</strong> The next page</span> &quot;<strong>WSDL Operations Selection</strong>&quot; allows customizing the resulting content of your Web Service model by selecting/deselecting various operations and interfaces in the following dialog. </p>
+  <p><img src="images/views/WSDLtoWS_3_Workspace.jpg" width="516" height="558" hspace="20"></p>
+  <p><span class="medium"><strong>Step 6:</strong>  The next page is</span> titled &quot;<strong>Schema Workspace Location Selection</strong> &quot;. This page lists all schemas imported by the WSDL (along with any dependent schemas referenced within schemas) as well as schemas embedded in the WSDL and indicates whether or not they are resolvable. All resolved schemas will be created in a separate file and added to the workspace. The editor panel allows you to change the default file name of the new schema file(s).</p>
+  <p>If no errors, select &quot;<strong>Next</strong>&quot; to proceed, or &quot;<strong>Finish</strong>&quot; to complete with default options. </p>
+  <p><img src="images/views/WSDLtoWS_4_Workspace.jpg" hspace="20"></p>
+  <p><span class="medium"><strong>Step 7:</strong> The last page titled &quot;<strong>XML Model Generation</strong> &quot; allows you to change the name of the XML View model if the &quot;<strong>Generate virtual XML document model</strong>&quot; is checked. Input desired name or use the default name provide. Select &quot;<strong>Finish</strong>&quot; to complete. </span></p>
+  <p><img src="images/views/WSDLtoWS_5_URL.jpg" width="440" height="365" hspace="20"></p>
+</blockquote>
+<hr />
+<p class="subtitle_b16"><a name="FileSystemLocation"></a>File System  Location</span></p>
+  <p>To create a Web Service model from a WSDL file located on your local file system:</p>
+  <blockquote>
+    <p><span class="medium"><strong>Step 1:</strong> Choose the <strong><a href="ModelingYourData.htm#importWizard">File &gt; Import</a></strong> action <img src="images/icons/import_wiz.gif" alt="import icon" width="16" height="16" /> in the toolbar or select a project, folder or model in the tree and choose &quot;<strong>Import...</strong>&quot; </span> </p>
+    <p><span class="medium"><strong>Step 2:</strong> Select the <strong>WSDL File into Web Service Model</strong> option shown below and click <strong>NEXT &gt;</strong>.</span></p>
+    <p><span class="medium"><img src="images/views/importWsdlWizardSelection.jpg" alt="import selection wizard" hspace="20" /></span></p>
+    <p><span class="medium"><strong>Step 3:</strong> Input a valid name for your Web Service model and select the</span> <strong>File System...</strong> button. Locate your file system WSDL file in the selection dialog and click <strong>OK</strong>. </p>
+    <p><img src="images/views/WSDLtoWS_1_FileSystem.jpg" alt="page 1" hspace="20"></p>
+    <blockquote>
+      <p class="medium"><strong>Notes: </strong></p>
+      <ul>
+        <li><strong class="style4"><em>If no WSDL is selected or specified then the importer will only create an empty Web service model. No XML Schema or XML View models will be generated.</em></strong></li>
+        <li><em><strong>Any referenced files (WSDLs or schemas) must either be  embedded in the WSDL file or exist on your file system</strong></em></li>
+      </ul>
+    </blockquote>
+    <p><span class="medium"><strong>Step 4:</strong> The next page is titled &quot;<strong>Namespace Resolution</strong>&quot;. This page identifies successful and errant WSDL namespace resolution. The main WSDL document will essentially always be resolved, since the workspace file chooser is used to obtain the path. Problems will occur when the main WSDL file imports other WSDL files that cannot be resolved..... If no errors, select &quot;<strong>Next</strong>&quot; to proceed, or &quot;<strong>Finish</strong>&quot; (if enabled) to complete with default options. </span></p>
+    <p><img src="images/views/WSDLtoWS_2_FileSystem.jpg" alt="page 2" hspace="20" ></p>
+    <p><span class="medium"><strong>Step 5:</strong> The next page</span> &quot;<strong>WSDL Operations Selection</strong>&quot; allows customizing the resulting content of your Web Service model by selecting/deselecting various operations and interfaces in the following dialog. </p>
+    <p><img src="images/views/WSDLtoWS_3_FileSystem.jpg" alt="page 3" hspace="20"></p>
+    <p><span class="medium"><strong>Step 6:</strong> The next page is</span> titled &quot;<strong>Schema Workspace Location Selection</strong> &quot;. This page lists all schemas imported by the WSDL (along with any dependent schemas referenced within schemas) as well as schemas embedded in the WSDL and indicates whether or not they are resolvable. All resolved schemas will be created in a separate file and added to the workspace. The editor panel allows you to change the default file name of the new schema file(s).</p>
+    <p>If no errors, select &quot;<strong>Next</strong>&quot; to proceed, or &quot;<strong>Finish</strong>&quot; to complete with default options. </p>
+    <p><img src="images/views/WSDLtoWS_4_URL.jpg" alt="page 4" hspace="20"></p>
+    <p><span class="medium"><strong>Step<strong> </strong>7:</strong> The last page titled &quot;<strong>XML Model Generation</strong> &quot; allows you to change the name of the XML View model if the &quot;<strong>Generate virtual XML document model</strong>&quot; is checked. Input desired name or use the default name provide. Select &quot;<strong>Finish</strong>&quot; to complete. </span></p>
+    <p><img src="images/views/WSDLtoWS_5_URL.jpg" alt="page 5" width="440" height="365" hspace="20"></p>
+  </blockquote>
+  <hr />
+  <p class="subtitle_b16"><a name="UrlLocation"></a>URL</span></p>
+  <p>To create a Web Service model from a WSDL file at an external URL location:</p>
+  <blockquote>
+    <p><span class="medium"><strong>Step 1:</strong> Choose the <strong><a href="ModelingYourData.htm#importWizard">File &gt; Import</a></strong> action <img src="images/icons/import_wiz.gif" alt="import icon" width="16" height="16" /> in the toolbar or select a project, folder or model in the tree and choose &quot;<strong>Import...</strong>&quot; </span> </p>
+    <p><span class="medium"><strong>Step 2:</strong> Select the <strong>WSDL File into Web Service Model</strong> option shown below and click <strong>NEXT &gt;</strong>.</span></p>
+    <p><span class="medium"><img src="images/views/importWsdlWizardSelection.jpg" alt="import wizard" hspace="20" /></span></p>
+    <p><span class="medium"><strong>Step 3:</strong> Input a valid name for your Web Service model and select the</span> <strong>URL...</strong> button. Locate your workspace WSDL file in the selection dialog and click <strong>OK</strong>. </p>
+    <p><img src="images/views/WSDLtoWS_1_URL.jpg" alt="page 1" hspace="20"></p>
+    <blockquote>
+      <p class="medium"><strong>Notes: </strong></p>
+      <ul>
+        <li><strong class="style4"><em>If no WSDL is selected or specified then the importer will only create an empty Web service model. No XML Schema or XML View models will be generated.</em></strong></li>
+        <li><em><strong>Any referenced files (WSDLs or schemas) must either be  embedded in the WSDL file or exist on your file system</strong></em></li>
+      </ul>
+    </blockquote>
+    <p><span class="medium"><strong>Step 4:</strong> The next page is titled &quot;<strong>Namespace Resolution</strong>&quot;. This page identifies successful and errant WSDL namespace resolution. The main WSDL document will essentially always be resolved, since the workspace file chooser is used to obtain the path. Problems will occur when the main WSDL file imports other WSDL files that cannot be resolved..... If no errors, select &quot;<strong>Next</strong>&quot; to proceed, or &quot;<strong>Finish</strong>&quot; (if enabled) to complete with default options. </span></p>
+    <p><img src="images/views/WSDLtoWS_2_URL.jpg" alt="page 2" hspace="20" ></p>
+    <p><span class="medium"><strong>Step 5:</strong> The next page</span> &quot;<strong>WSDL Operations Selection</strong>&quot; allows customizing the resulting content of your Web Service model by selecting/deselecting various operations and interfaces in the following dialog. </p>
+    <p><img src="images/views/WSDLtoWS_3_URL.jpg" alt="page 3" hspace="20"></p>
+    <p><span class="medium"><strong>Step 6:</strong> The next page is</span> titled &quot;<strong>Schema Workspace Location Selection</strong> &quot;. This page lists all schemas imported by the WSDL (along with any dependent schemas referenced within schemas) as well as schemas embedded in the WSDL and indicates whether or not they are resolvable. All resolved schemas will be created in a separate file and added to the workspace. The editor panel allows you to change the default file name of the new schema file(s).</p>
+    <p>If no errors, select &quot;<strong>Next</strong>&quot; to proceed, or &quot;<strong>Finish</strong>&quot; to complete with default options. </p>
+    <p><img src="images/views/WSDLtoWS_4_URL.jpg" alt="page 4" hspace="20"></p>
+    <p><span class="medium"><strong>Step 7:</strong> The last page titled &quot;<strong>XML Model Generation</strong> &quot; allows you to change the name of the XML View model if the &quot;<strong>Generate virtual XML document model</strong>&quot; is checked. Input desired name or use the default name provide. Select &quot;<strong>Finish</strong>&quot; to complete. </span></p>
+    <p><img src="images/views/WSDLtoWS_5_URL.jpg" alt="page 5" width="440" height="365" hspace="20"></p>
+  </blockquote>
+  <hr />
+  <p class="subtitle_b16"><a name="WSDLErrors"></a>WSDL Error handling</p>
+  <p>In order to successfully generate Web Services from WSDL, the WSDL must be error free. WSDL validation is performed during <strong>Step 3</strong> above. If errors do exist, a error summary dialog will be displayed and you will not be able to &quot;Finish&quot; the wizard until the WSDL problems are fixed or you re-import and select a valid WSDL file.</p>
+  <p><img src="images/views/WSDLtoWS_ValidationProblems.jpg" width="890" height="427"> </p>
+<hr />
+<p class="subtitle_b16">Related Topics</p>
+<ul>
+  <li><a href="ModelingYourData.htm#newModelWizard">New Model Wizard</a></li>
+  <li><a href="ModelingYourData.htm#importWizard">Import Wizard</a>  </li>
+  <li><a href="ImportingXsdFiles.htm" class="medium">Import XML Schema</a></li>
+  <li><a href="ConnectorBindingsHelp.htm" class="medium">Connector Bindings</a> </li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<p class="copyright">&copy; 2008 Varsity Gateway LLC.  All rights reserved.<br />
+Visit <a href="http://www.metamatrix.com">http://www.metamatrix.com</a></p>
+</body>

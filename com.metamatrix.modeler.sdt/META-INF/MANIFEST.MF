@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: com.metamatrix.modeler.sdt; singleton:=true
+Bundle-Version: 6.0.0
+Bundle-ClassPath: modelerSdt.jar
+Bundle-Activator: com.metamatrix.modeler.sdt.ModelerSdtPlugin
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Require-Bundle: com.metamatrix.modeler.core,
+ com.metamatrix.metamodels.xsd,
+ com.metamatrix.core.modeler,
+ federate_embedded_query,
+ org.eclipse.core.runtime,
+ org.eclipse.xsd,
+ org.eclipse.core.resources,
+ org.eclipse.emf.edit
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: com.metamatrix.modeler.internal.sdt.types,
+ com.metamatrix.modeler.sdt

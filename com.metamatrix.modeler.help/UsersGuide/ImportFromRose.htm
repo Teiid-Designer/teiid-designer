@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<body>
+<p> <a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<p class="maintitle_b24">Importing Rose file </p>
+<hr />
+<p class="medium"><strong>Designer</strong> provides an option to an importer for files exported from Rational Rose versions 2000 and 2001.</p>
+<p class="medium">The importer creates UML models in the  workspace. Supported structural features of UML will be defined by the UMLClasses Metamodel Project. The content of the Rose model file that matches these supported features of the MetaMatrix UML metamodel are imported.</p>
+<p class="medium">The importer allows subsequent reimportation of the Rose model file which will incorporate changes into the MetaMatrix UML model. Any properties of the supported UML constructs that are unique to your use of Rose are implemented using the Designer's metadata extension functionality.<br>
+</p>
+<p class="medium">To import an Rose file, follow the steps below. </p>
+<blockquote>
+  <p class="medium"><strong>Step 1:</strong> In <strong><a href="ModelExplorer.htm">Model Explorer</a> </strong> , choose the <strong><a href="ModelingYourData.htm#importWizard">File &gt; Import</a></strong> action <img src="images/icons/import_wiz.gif" width="16" height="16" /> in the toolbar or select a project, folder or model in the tree and choose &quot;<img src="images/icons/import_wiz.gif" width="16" height="16" /> <strong>Import...</strong>&quot;</p>
+  <p class="medium"><strong>Step 2:</strong> Select  the import option &quot;<strong>Metadata from IBM Rational Rose Model</strong>&quot;, then choose <strong>NEXT&gt;</strong></p>
+  <p class="medium"><strong>Step 3:</strong> Click on the <img src="images/icons/elipsis.gif" width="24" height="23"><strong></strong> button to locate and select your <strong>IBM  Rational Rose Model</strong> ( *.mdl or *.cat) file. Check the appropriate models and/or model children to import.  Click  <strong>NEXT&gt;</strong>.  </p>
+  <p><img src="images/views/ImportRose_1.jpg" hspace="20"></p>
+  <p class="medium"><strong>Step 4:</strong> Select  the target models and folders in Editor panel and click   <strong>NEXT&gt;</strong>. A progress monitor will display intermediate processing status. </p>
+  <blockquote>
+    <p class="note">NOTE: 	If preserving the file system structure of the source Rose Units being imported is desired, a similar file system structure must exist in the model target location prior to starting the wizard.</p>
+    <p class="medium">This wizard page consists of two distinct areas: the selected source Rose Units table and an Editor.</p>
+    <p class="medium">The table identifies the Rose Units being imported. For each Rose Unit a target folder and target model name is shown, as well as, an error or warning indicator. The initial value of the target folder will be set to the model project or folder that was selected prior to starting the wizard (or none if there was no previous selection). Selection buttons to the right of the table aid in selecting table rows. Values in the selected table rows are changed via the editor. </p>
+    <p class="medium">The Editor allows target folders and model names to be changed. The editor modifies all selected table rows (the top area) with its information once the Apply button is selected. If more than one row is selected, the information area shows only the common information.</p>
+    <p class="medium">For example, if two rows are selected that have the same target folder, then that target folder will show in the editor. However, if two rows are selected with different target folders, the editor will not show any information for the folder.</p>
+    <p class="medium">When changes are made in the editor, the appropriate checkbox is automatically checked. Unchecking the checkbox will reset the editor back to the original value. <br>
+      For both the target folder and target model properties, using their respective browse buttons can set new values.  This allows navigation of the workspace.  Selecting a recently used value in the drop-down dialog can also set new values. The editor can be closed and opened either by using the editor's toolbar button or the top areas toolbar button.<br>
+    </p>
+  </blockquote>
+  <p class="medium"><img src="images/views/ImportRose_2.jpg" width="637" height="597" hspace="20"></p>
+  <p class="medium"><strong>Step 5:</strong> &nbsp;Gives you the opportunity to de-select specific of the UML model entity(s). All check elements will be included in your UML model. </p>
+  <p class="medium"><img src="images/views/ImportRose_3.jpg" width="637" height="597" hspace="20"></p>
+  <p class="medium"><strong>Step 6:</strong> Click <strong>Finish</strong>.<br>
+  </p>
+</blockquote>
+<hr />
+<p class="subtitle_b16">Related Topics</p>
+<ul>
+  <li><a href="ModelingYourData.htm" class="medium">Modeling your Data </a></li>
+  <li><a href="ImportJdbc.htm" class="medium">Import Relational Data</a></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr />
+<p class="copyright">&copy; 2008 Varsity Gateway LLC.  All rights reserved.<br />
+Visit <a href="http://www.metamatrix.com">http://www.metamatrix.com</a></p>
+</body>

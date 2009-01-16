@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: com.metamatrix.modeler.ddl; singleton:=true
+Bundle-Version: 6.0.0
+Bundle-ClassPath: modelerDdl.jar
+Bundle-Activator: com.metamatrix.modeler.ddl.DdlPlugin
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Export-Package: com.metamatrix.modeler.ddl,
+ com.metamatrix.modeler.internal.ddl
+Require-Bundle: org.eclipse.core.runtime,
+ com.metamatrix.modeler.core,
+ com.metamatrix.metamodels.relational,
+ federate_embedded_query,
+ com.metamatrix.core.xslt,
+ com.metamatrix.core.modeler,
+ org.eclipse.emf.ecore.xmi,
+ com.metamatrix.metamodels.diagram,
+ com.metamatrix.metamodels.core
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

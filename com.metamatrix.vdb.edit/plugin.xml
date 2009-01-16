@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+ 
+<!-- =============================================================================== 
+ # JBoss, Home of Professional Open Source. 
+ # 
+ # Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ # 
+ # Some portions of this file may be copyrighted by other 
+ # contributors and licensed to Red Hat, Inc. under one or more 
+ # contributor license agreements. See the copyright.txt file in the 
+ # distribution for a full listing of individual contributors. 
+ # 
+ # This program and the accompanying materials 
+ # are made available under the terms of the Eclipse Public License v1.0 
+ # which accompanies this distribution, and is available at 
+ # http://www.eclipse.org/legal/epl-v10.html 
+ # ================================================================================== --> 
+
+<plugin>
+
+   <extension-point id="vdbArtifactGenerator" name="%extension-point.name.0"/>
+
+   <extension
+         point="com.metamatrix.modeler.core.resourceValidator">
+      <class
+            name="com.metamatrix.vdb.internal.edit.validation.VdbResourceValidator">
+      </class>
+   </extension>
+<!--
+   	Each extension below represents a single metamodel.  Each metmodel is
+   	registered using under the specified <uri> value which must be the same
+   	eNS_URI value defined in the EPackage class for that metamodel.
+   -->
+   <extension
+         id="vdb"
+         name="%metamodelName"
+         point="com.metamatrix.modeler.core.metamodel">
+      <uri>
+         http://www.metamatrix.com/metamodels/VirtualDatabase
+      </uri>
+      <alternateUri>
+         mtkplugin:///com.metamatrix.metamodels.VirtualDatabase
+      </alternateUri>
+      <properties
+            createAsPhysical="false"
+            requiresProxies="false"
+            participatoryOnly="true"
+            createAsVirtual="false">
+      </properties>
+      <packageClass
+            name="com.metamatrix.vdb.edit.manifest.ManifestPackage">
+      </packageClass>
+      <adapterClass
+            name="com.metamatrix.vdb.edit.manifest.provider.ManifestItemProviderAdapterFactory">
+      </adapterClass>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.metamatrix.com/metamodels/VirtualDatabase"
+            class="com.metamatrix.vdb.edit.manifest.ManifestPackage">
+      </package>
+   </extension>
+   
+   
+<!-- MetamodelAspect extensions -->
+   <extension
+         id="vdbSqlAspect"
+         point="com.metamatrix.modeler.core.sqlAspect">
+      <metamodelExtensionID>
+         vdb
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.vdb.edit.aspects.sql.VdbEditSqlAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+<!-- EObject Matcher extensions -->
+   <extension
+         id="vdbMatcherFactory"
+         point="com.metamatrix.modeler.core.eobjectMatcherFactory">
+      <class
+            name="com.metamatrix.vdb.edit.compare.VdbMatcherFactory">
+      </class>
+   </extension>
+   
+
+</plugin>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:uml2="http://www.eclipse.org/uml2/2.1.0/UML">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:826e7300-35f2-1efb-970b-fc1a6045b79b" primaryMetamodelUri="http://www.eclipse.org/uml2/2.1.0/UML" modelType="PHYSICAL"/>
+  <uml2:Package xmi:uuid="mmuuid:061b1c41-35f7-1efb-970b-fc1a6045b79b" name="Core">
+    <packagedElement xsi:type="uml2:Package" xmi:uuid="mmuuid:61988b42-36ea-1efb-8f0b-81da3fe7dab7" name="PrimitiveTypes">
+      <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:0af241d2-36f2-1efb-8f0b-81da3fe7dab7" name="Integer"/>
+      <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:951da084-36f5-1efb-8f0b-81da3fe7dab7" name="Boolean"/>
+      <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:b42cf405-36f8-1efb-8f0b-81da3fe7dab7" name="String"/>
+      <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:f6910b81-567c-1efb-bc0f-ca4ef31026bf" name="UnlimitedNatural"/>
+      <packagedElement xsi:type="uml2:Package" xmi:uuid="mmuuid:2596794e-e359-1efd-b118-b1a83b4bebfd" name="MetaMatrix">
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:07f9d992-e35f-1efd-b118-b1a83b4bebfd" name="byte"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:aa424112-e373-1efd-b118-b1a83b4bebfd" name="short"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:92ab4452-e37a-1efd-b118-b1a83b4bebfd" name="char"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:52a8d312-e37d-1efd-b118-b1a83b4bebfd" name="long"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:1ebfea92-e380-1efd-b118-b1a83b4bebfd" name="biginteger"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:ad91f892-e384-1efd-b118-b1a83b4bebfd" name="float"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:c42a8c92-e387-1efd-b118-b1a83b4bebfd" name="double"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:65859692-e38b-1efd-b118-b1a83b4bebfd" name="bigdecimal"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:2a581b12-e390-1efd-b118-b1a83b4bebfd" name="date"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:897a2192-e392-1efd-b118-b1a83b4bebfd" name="time"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:d336404f-e394-1efd-b118-b1a83b4bebfd" name="timestamp"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:e1769952-e397-1efd-b118-b1a83b4bebfd" name="object"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:c78a0612-e399-1efd-b118-b1a83b4bebfd" name="blob"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:878794d2-e39c-1efd-b118-b1a83b4bebfd" name="clob"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:b2013e52-e3ec-1efd-a928-93d496ad97c2" name="ENTITY"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:9946d78c-e3f0-1efd-a928-93d496ad97c2" name="IDREF"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:833a9652-e3f3-1efd-a928-93d496ad97c2" name="ID"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:7ec32d12-e3f5-1efd-a928-93d496ad97c2" name="NCName"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:d96d4a83-e3f8-1efd-a928-93d496ad97c2" name="NMTOKEN"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:2338ab92-e3fb-1efd-a928-93d496ad97c2" name="NOTATION"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:364d7a89-e3ff-1efd-a928-93d496ad97c2" name="Name"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:1d644d92-e401-1efd-a928-93d496ad97c2" name="QName"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:2709990a-e3a0-1efd-b118-b1a83b4bebfd" name="anyURI"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:49720b92-e404-1efd-a928-93d496ad97c2" name="base64Binary"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:580f7152-e40a-1efd-a928-93d496ad97c2" name="dateTime"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:87063c89-e3ac-1efd-b118-b1a83b4bebfd" name="decimal"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:3e8f2d12-e40f-1efd-a928-93d496ad97c2" name="duration"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:a9d9fe91-e411-1efd-a928-93d496ad97c2" name="gDay"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:7e58138a-e413-1efd-a928-93d496ad97c2" name="gMonthDay"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:1cf53612-e417-1efd-a928-93d496ad97c2" name="gMonth"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:56f502c2-e419-1efd-a928-93d496ad97c2" name="gYearMonth"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:32020f12-e41c-1efd-a928-93d496ad97c2" name="gYear"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:26268ed2-e41e-1efd-a928-93d496ad97c2" name="hexBinary"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:3dc6ae92-e3af-1efd-b118-b1a83b4bebfd" name="int"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:b22af351-e421-1efd-a928-93d496ad97c2" name="language"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:12644792-e3b3-1efd-b118-b1a83b4bebfd" name="negativeInteger"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:dcd09fd2-e3b6-1efd-b118-b1a83b4bebfd" name="nonNegativeInteger"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:6a8f05cc-e3b9-1efd-b118-b1a83b4bebfd" name="nonPositiveInteger"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:bad99c12-e3bb-1efd-b118-b1a83b4bebfd" name="normalizedString"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:70a5ea12-e3be-1efd-b118-b1a83b4bebfd" name="positiveInteger"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:feab5401-e3d4-1efd-a928-93d496ad97c2" name="token"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:2c9217d2-e3d8-1efd-a928-93d496ad97c2" name="unsignedByte"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:2db50210-e3da-1efd-a928-93d496ad97c2" name="unsignedInt"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:89343f47-e3dc-1efd-a928-93d496ad97c2" name="unsignedLong"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:92ce68d2-e3df-1efd-a928-93d496ad97c2" name="unsignedShort"/>
+
+	<!--
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:79c75952-e43e-1efd-a928-93d496ad97c2" name="asciiString"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:2ae36912-e46a-1efd-a928-93d496ad97c2" name="binary"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:f41d94d2-e46b-1efd-a928-93d496ad97c2" name="hexadecimal"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:984548d2-e46e-1efd-a928-93d496ad97c2" name="octal"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:6634e652-e470-1efd-a928-93d496ad97c2" name="timeInstant"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:578c3c52-e472-1efd-a928-93d496ad97c2" name="uri"/>
+        <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:fe811a12-e474-1efd-a928-93d496ad97c2" name="uuid"/>
+	-->
+      </packagedElement>
+    </packagedElement>
+  </uml2:Package>
+  <mmcore:AnnotationContainer xmi:uuid="mmuuid:a3c52ac0-563c-1efb-bc0f-ca4ef31026bf">
+    <annotations xmi:uuid="mmuuid:a003dd00-563c-1efb-bc0f-ca4ef31026bf" description="The PrimitiveTypes subpackage within the Core package defines the different types of primitive values that are used to define the Core metamodel.  Is is also intended that every metamodel based on Core will reuse this set of primitive types.&#xd;&#xa;&#xd;&#xa;In Core and the UML metamodel, the primitive types of Integer, Boolean, String, and UnlimitedNatural are predefined and available to the Core and UML extensions at all time.  These predefined value types are independent of any object model and part of the definition of the Core." annotatedObject="mmuuid/61988b42-36ea-1efb-8f0b-81da3fe7dab7"/>
+    <annotations xmi:uuid="mmuuid:0969e4c0-5646-1efb-bc0f-ca4ef31026bf" description="A boolean type is used for logical expression, consisting of the predefined values true and false.&#xd;&#xa;&#xd;&#xa;Boolean is an instance of PrimitiveType. In the metamodel, Boolean defines an enumeration that denotes a logical condition. Its enumeration literals are:&#xd;&#xa;true - The Boolean condition is satisified&#xd;&#xa;false - The Boolean condition is not satisified&#xd;&#xa;&#xd;&#xa;It is used for boolean attribute and boolean expressions in the metamodel, such as OCL expression." annotatedObject="mmuuid/951da084-36f5-1efb-8f0b-81da3fe7dab7"/>
+    <annotations xmi:uuid="mmuuid:ee3f6100-564c-1efb-bc0f-ca4ef31026bf" description="An integer is a primitive type representing integer values.An instance of Integer is an element in the (infinite) set of integers (&#x2026;-2, -1, 0, 1, 2&#x2026;). It is used for integer attributes and integer expressions in the metamodel." annotatedObject="mmuuid/0af241d2-36f2-1efb-8f0b-81da3fe7dab7"/>
+    <annotations xmi:uuid="mmuuid:4315d640-5676-1efb-bc0f-ca4ef31026bf" description="A string is a sequence of characters in some suitable character set used to display information about the model. Character sets may include non-Roman alphabets and characters.&#xd;&#xa;&#xd;&#xa;An instance of String defines a piece of text. The semantics of the string itself depends on its purpose, it can be a comment, computational language expression, OCL expression, etc. It is used for String attributes and String expressions in the metamodel." annotatedObject="mmuuid/b42cf405-36f8-1efb-8f0b-81da3fe7dab7"/>
+    <annotations xmi:uuid="mmuuid:02ae9240-5685-1efb-bc0f-ca4ef31026bf" description="An unlimited natural is a primitive type representing unlimited natural values. An instance of UnlimitedNatural is an element in the (infinite) set of naturals (0, 1, 2&#x2026;). The value of infinity is shown using an asterisk (*)." annotatedObject="mmuuid/f6910b81-567c-1efb-bc0f-ca4ef31026bf"/>
+    <annotations xmi:uuid="mmuuid:786d4f40-e485-1efd-a928-93d496ad97c2" description="Package defines the extended set of MetaMatrix primitive types." annotatedObject="mmuuid/2596794e-e359-1efd-b118-b1a83b4bebfd"/>
+  </mmcore:AnnotationContainer>
+</xmi:XMI>

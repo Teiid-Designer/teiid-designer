@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<body>
+<p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<p class="maintitle_b24"> User Defined Functions View </p>
+<hr />
+<p><strong>User-defined functions</strong> extend the basic set of functions you  can use within data access applications that use your MetaMatrix System or even  within your transformation queries that you use to model View Metadata. Your  organization needs to develop Java logic to perform these functions and manage  these functions through the MetaMatrix Console. For more information about this  complete process, see <em>Creating Custom User-Defined Functions.</em></p>
+<p>Before you can model the user-defined functions, you must  have exported the User Functions metadata model from the MetaMatrix System  using the MetaMatrix Console. You should have placed this file in your local  directory so that you can open it.</p>
+<p>The User-Defined Functions model uses a special metamodel,  the MetaMatrix Function metamodel, which is limited to constructs for this  specific purpose. Therefore you cannot  create a new model using this  metamodel, nor should you use this model in a project or as a source for View  Metadata models.</p>
+<p>Users can edit their <strong>User Defined Functions</strong> model from within the <strong>UDFs view</strong> shown below. The basic functionality of the <strong>UDFs view</strong> is identical to the <a href="ModelExplorer.htm">Model Explorer</a> view but focused the single FunctionsDefinitions model. </p>
+<p><img src="images/views/UDFView.jpg" hspace="20"></p>
+<p>The view's toolbar actions include: </p>
+<ul>
+  <li><img src="images/icons/alphab_sort.gif" width="16" height="16" hspace="5"> <strong>Sort Model Contents</strong> </a> - Sorts the contents of the models based on object type and alphabetizing.</li>
+  <li><img src="images/icons/refresh.gif" width="16" height="16" hspace="5"> <strong>Refresh Markers</strong> - Refreshes error and warning markers for objects in tree. </li>
+  <li><strong><img src="images/icons/importjarorzip.gif" width="16" height="16" hspace="5">Import UDF Extension Jar  </strong> - Import your custom UDF extension jar files. </li>
+  <li><strong><img src="images/icons/add_udf_jar.png" width="16" height="16" hspace="5">Add Connector Jar to UDF  </strong> - Add connector jar to UDF model. This allows using dual use extension jars. </li>
+</ul>
+<ul>
+  <li><img src="images/icons/collapseall.gif" width="16" height="16" hspace="5"><strong>Collapse All</a></strong> - Collapses all projects.</li>
+  <li><img src="images/icons/synced.gif" width="16" height="16" hspace="5"> <strong>Link with Editor </strong>-  When object is selected in an open editor, this option auto-selects and reveals object  in UDFs view. </li>
+</ul>
+<p>You can delete your UDF jars by right-click select <strong>Delete Jars</strong> action.</p>
+<p><img src="images/views/DeleteUdfJars.jpg" width="311" height="170" hspace="20" border="1"></p>
+<hr />
+<p class="style4"><span class="subtitle_b16"><a name="addConnectorJarToUdf" id="addConnectorJarToUdf"></a>Add Connector Jar to UDF  </span></p>
+<p>Both UDF jars and connector extension jars are utilized by Designer during <a href="ExecuteVdbHelp.htm">VDB execution</a> and data <a href="PreviewData.htm">Preview</a>. This provides the ability to utilize a common extension jar to deliver both user defined function code and custom connector code. To facilitate this scenerio, the UDFs view contains an <strong>Add Connector Jar to UDF</strong> action.</p>
+<p>To add an existing connector jar to your UDF:</p>
+<blockquote>
+  <p><strong>Step 1</strong>:&nbsp; Select the <strong>Add Connector Jar to UDF</strong> toolbar button<img src="images/icons/add_udf_jar.png" width="16" height="16" hspace="5">or select the UDF jars folder or jar and right-click select the same action.</p>
+  <p><strong>Step 2 </strong>:&nbsp;In the selection dialog below, select one or more connector jars and choose <strong>OK</strong> to finish.</p>
+  <p><img src="images/views/AddConnectorJarsToUdfDialog.jpg" width="363" height="502" hspace="20"></p>
+</blockquote>
+<hr />
+<p class="subtitle_b16">Related Topics</p>
+<ul>
+  <li><a href="DesignerViews.htm">Designer Views</a></li>
+  <li><a href="PreviewData.htm">Previewing Your Data</a></li>
+  <li><a href="ConnectorsView.htm">Connectors View</a></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr />
+<p class="copyright">&copy; 2008 Varsity Gateway LLC.  All rights reserved.</span><br />Visit <a href="http://www.metamatrix.com">http://www.metamatrix.com</a></span></p>
+</body>

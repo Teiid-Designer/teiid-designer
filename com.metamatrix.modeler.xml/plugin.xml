@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+ 
+<!-- =============================================================================== 
+ # JBoss, Home of Professional Open Source. 
+ # 
+ # Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
+ # 
+ # Some portions of this file may be copyrighted by other 
+ # contributors and licensed to Red Hat, Inc. under one or more 
+ # contributor license agreements. See the copyright.txt file in the 
+ # distribution for a full listing of individual contributors. 
+ # 
+ # This program and the accompanying materials 
+ # are made available under the terms of the Eclipse Public License v1.0 
+ # which accompanies this distribution, and is available at 
+ # http://www.eclipse.org/legal/epl-v10.html 
+ # ================================================================================== --> 
+
+<plugin>
+
+    
+<!-- MetamodelAspect extensions -->
+   <extension
+         id="xmlSqlAspect"
+         point="com.metamatrix.modeler.core.sqlAspect">
+      <metamodelExtensionID>
+         xmldoc
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.modeler.internal.xml.aspects.sql.XmlSqlAspectFactory">
+      </factoryClass>
+   </extension>
+<!-- Extension for Tree-Based Model To Relational Model Mapper (com.metamatrix.modeler.mapping.ui.ITreeToRelationalMapper) -->
+   <extension
+         id="xmlModelMapper"
+         name="%xmlMapperName"
+         point="com.metamatrix.modeler.mapping.modelMapper">
+      <class
+            name="com.metamatrix.modeler.internal.xml.factory.XmlFragmentMapper"
+            metamodelUri="http://www.metamatrix.com/metamodels/XmlDocument">
+      </class>
+   </extension>
+<!-- Extension for Choice Object Handler -->
+   <extension
+         id="xmlChoiceObjectHandler"
+         name="%xmlChoiceObjectHandlerName"
+         point="com.metamatrix.modeler.mapping.choiceObjectHandler">
+      <class
+            factoryClass="com.metamatrix.modeler.internal.xml.choice.XmlChoiceFactory">
+      </class>
+   </extension>
+
+</plugin>
