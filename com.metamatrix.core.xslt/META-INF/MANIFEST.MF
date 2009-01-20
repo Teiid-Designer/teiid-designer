@@ -7,7 +7,7 @@ Bundle-ClassPath: coreXslt.jar
 Bundle-Activator: com.metamatrix.core.xslt.CoreXsltPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Require-Bundle: com.metamatrix.core.modeler;bundle-version="6.0.0",
+Require-Bundle: com.metamatrix.core.modeler,
  net.sf.saxon,
  org.eclipse.core.runtime,
  federate_embedded_query
