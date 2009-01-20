@@ -7,7 +7,7 @@
 <booleanAttribute key="clearConfig" value="false"/>
 <booleanAttribute key="clearws" value="true"/>
 <booleanAttribute key="clearwslog" value="false"/>
-<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/Modeler Product Linux"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/Designer Linux"/>
 <booleanAttribute key="default" value="true"/>
 <booleanAttribute key="includeFragments" value="false"/>
 <booleanAttribute key="includeOptional" value="true"/>
@@ -25,7 +25,7 @@
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Djavax.xml.transform.TransformerFactory=net.sf.saxon.TransformerFactoryImpl -XX:MaxPermSize=512M"/>
 <stringAttribute key="pde.version" value="3.3"/>
-<stringAttribute key="product" value="com.metamatrix.modeler.modeler"/>
+<stringAttribute key="product" value="org.eclipse.equinox.p2.director.app.product"/>
 <stringAttribute key="productFile" value="/com.metamatrix.modeler/.product"/>
 <booleanAttribute key="show_selected_only" value="false"/>
 <booleanAttribute key="tracing" value="false"/>
