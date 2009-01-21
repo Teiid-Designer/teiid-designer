@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -19,7 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelType;
@@ -167,7 +168,7 @@ public final class UdfManager implements IResourceChangeListener, UdfModelListen
     private IPath getRuntimePath() {
         if (this.runtimePath == null) {
             if (this.testRuntimePath == null) {
-                this.runtimePath = Platform.getStateLocation(TransformationPlugin.getDefault().getBundle());
+                this.runtimePath = TransformationPlugin.getDefault().getStateLocation();
             } else {
                 this.runtimePath = new Path(this.testRuntimePath);
             }

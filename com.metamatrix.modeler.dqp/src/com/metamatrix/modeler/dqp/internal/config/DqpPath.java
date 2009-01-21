@@ -11,10 +11,11 @@ package com.metamatrix.modeler.dqp.internal.config;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+
 import com.metamatrix.modeler.dqp.DqpPlugin;
 
 public final class DqpPath {
@@ -144,7 +145,7 @@ public final class DqpPath {
     public static IPath getRuntimePath() {
         if (runtimePath == null) {
             if (testRuntimeDir == null) {
-                runtimePath = Platform.getStateLocation(DqpPlugin.getInstance().getBundle());
+                runtimePath = DqpPlugin.getInstance().getStateLocation();
             } else {
                 runtimePath = new Path(testRuntimeDir);
             }
