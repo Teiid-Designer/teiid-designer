@@ -1,6 +1,9 @@
 /*
- * Copyright © 2000-2005 MetaMatrix, Inc.
- * All rights reserved.
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
 package net.sourceforge.sqlexplorer.dbviewer.details;
 
@@ -9,7 +12,6 @@ import net.sourceforge.sqlexplorer.dbviewer.actions.CopyTableAction;
 import net.sourceforge.sqlexplorer.dbviewer.model.ProcedureNode;
 import net.sourceforge.sqlexplorer.dbviewer.model.TableNode;
 import net.sourceforge.squirrel_sql.fw.sql.ResultSetReader;
-
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
@@ -34,7 +36,7 @@ public class ProcedureDetail {
     public static final int PRECISION_COLUMN = 5;
     public static final int SCALE_COLUMN = 6;
     public static final int COMMENTS_COLUMN = 7;
-    
+
     private static final String NAME_COLUMN_TXT = Messages.getString("ProcedureDetail.nameColumn"); //$NON-NLS-1$
     private static final String TYPE_COLUMN_TXT = Messages.getString("ProcedureDetail.typeColumn"); //$NON-NLS-1$
     private static final String DATA_TYPE_COLUMN_TXT = Messages.getString("ProcedureDetail.dataTypeColumn"); //$NON-NLS-1$
@@ -43,8 +45,7 @@ public class ProcedureDetail {
     private static final String SCALE_COLUMN_TXT = Messages.getString("ProcedureDetail.scaleColumn"); //$NON-NLS-1$
     private static final String PRECISION_COLUMN_TXT = Messages.getString("ProcedureDetail.precisionColumn"); //$NON-NLS-1$
     private static final String COMMENTS_COLUMN_TXT = Messages.getString("ProcedureDetail.commentsColumn"); //$NON-NLS-1$
-                                                                 
-                                                                 
+
     TableViewer viewer;
     TableNode node;
 
@@ -53,7 +54,9 @@ public class ProcedureDetail {
     /**
      * @since 4.3
      */
-    public ProcedureDetail(final Composite parent, final ResultSetReader rsReader, final ProcedureNode node) {
+    public ProcedureDetail( final Composite parent,
+                            final ResultSetReader rsReader,
+                            final ProcedureNode node ) {
         viewer = new TableViewer(parent, SWT.BORDER | SWT.FULL_SELECTION);
         final Table table = viewer.getTable();
         table.setLinesVisible(true);
@@ -103,7 +106,7 @@ public class ProcedureDetail {
         ProcedureDetailLabelProvider provider = new ProcedureDetailLabelProvider(model);
         viewer.setLabelProvider(provider);
         viewer.setInput(model);
-        
+
         node.setArgumentNameList(model.getArgumentNameList());
     }
 

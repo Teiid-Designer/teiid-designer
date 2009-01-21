@@ -1,6 +1,9 @@
 /*
- * Copyright � 2000-2005 MetaMatrix, Inc.
- * All rights reserved.
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
 package net.sourceforge.sqlexplorer.dbviewer.details;
 
