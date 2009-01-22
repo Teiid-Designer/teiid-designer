@@ -29,6 +29,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 import org.eclipse.ui.texteditor.StatusLineContributionItem;
@@ -68,6 +69,13 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
 
     /** Listener to clean up the partContributorMap. */
     private IPartListener partListener;
+    
+    /**
+     * Keep track of the global action handlers. When we activate them through the IHandlerService, if their is already a
+     * handler for that action, Eclipse logs a warning message but the activation still works. This map is being used so
+     * that we can deactivate existing handlers before activating the new one (which gets rid of the warning message).
+     */
+    private Map<String, IHandlerActivation> actionHandlerMap;
 
     static {
         defaultActionsMap = new ModelerGlobalActionsMap();
@@ -77,6 +85,8 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
         super();
         Util.trace(this, new StringBuffer().append("exiting constructor:identity=") //$NON-NLS-1$
         .append(System.identityHashCode(this)).toString());
+        
+        this.actionHandlerMap = new HashMap<String, IHandlerActivation>(ModelerGlobalActionsMap.ALL_GLOBAL_ACTIONS.length);
     }
 
     public void addContributor( IEditorPart thePart,
@@ -275,6 +285,7 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
 
         IWorkbenchWindow window = getPage().getWorkbenchWindow();
         ActionService actionService = (contributor == null) ? UiPlugin.getDefault().getActionService(window.getActivePage()) : contributor.getActionService();
+        IHandlerService svc = (IHandlerService)part.getSite().getService(IHandlerService.class);
 
         Iterator itr = globalActions.entrySet().iterator();
 
@@ -292,8 +303,12 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
 
             getActionBars().setGlobalActionHandler(actionId, action);
 
-            IHandlerService svc = (IHandlerService)part.getSite().getService(IHandlerService.class);
-            svc.activateHandler(actionId, new ActionHandler(action));
+            // must deactive if already one activated in order to get rid of an Eclipse warning message
+            if (this.actionHandlerMap.containsKey(actionId)) {
+                svc.deactivateHandler(this.actionHandlerMap.get(actionId));
+            }
+
+            this.actionHandlerMap.put(actionId, svc.activateHandler(actionId, new ActionHandler(action)));
         }
 
         // must call this if action bars have been changed
