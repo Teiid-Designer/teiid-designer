@@ -131,7 +131,7 @@ public class DescriptionView extends ModelerView
             setText(StringUtil.Constants.EMPTY_STRING);
             this.textEditor.setEditable(enabled);
             this.textEditor.resetUndoRedoHistory();
-            this.textEditor.getTextWidget().traverse(SWT.TRAVERSE_TAB_PREVIOUS);
+            this.textEditor.getTextWidget().traverse(SWT.TRAVERSE_PAGE_PREVIOUS);
             setBackgroundColor(enabled);
         }
     }
