@@ -1,11 +1,10 @@
-/******************************************************************************* 
- * Copyright (c) 2000, 2008 MetaMatrix, Inc. and Red Hat, Inc. 
- * All rights reserved. This program and the accompanying materials 
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
- * http://www.eclipse.org/legal/epl-v10.html 
- *******************************************************************************/ 
-
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
 package com.metamatrix.modeler.dqp.internal.config;
 
 import java.io.File;
