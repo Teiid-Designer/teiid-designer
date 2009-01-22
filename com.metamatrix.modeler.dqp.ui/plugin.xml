@@ -37,6 +37,14 @@
             class="com.metamatrix.modeler.internal.dqp.ui.workspace.udf.UdfModelView"
             id="com.metamatrix.modeler.dqp.ui.workspace.udf.udfModelView">
       </view>
+<!-- XmlDocumentSqlResultsView -->
+      <view
+            name="%xmlDocumentSqlResultsView.name"
+            icon="icons/full/cview16/XmlResultsView.gif"
+            category="SQLExplorerPlugin"
+            class="com.metamatrix.modeler.internal.dqp.ui.views.XmlDocumentSqlResultsView"
+            id="com.metamatrix.modeler.dqp.ui.views.XmlDocumentSqlResultsView">
+      </view>
   </extension>
 <!-- VDB Execution Tab contribution to the VDB Editor -->
   <extension
@@ -186,8 +194,8 @@
    </extension>
    
    <extension
-		id="com.metamatrix.modeler.internal.dqp.ui.workspace.actions.BindToConnectorAction"
-		name="%bindToConnectorAction.name"
+        id="com.metamatrix.modeler.internal.dqp.ui.workspace.actions.BindToConnectorAction"
+        name="%bindToConnectorAction.name"
         point="com.metamatrix.modeler.ui.modelResourceAction">
       <resourceAction
          name="com.metamatrix.modeler.internal.dqp.ui.workspace.actions.BindToConnectorAction"
@@ -195,8 +203,8 @@
       </resourceAction>
    </extension>
    <extension
-		id="com.metamatrix.modeler.internal.dqp.ui.workspace.actions.UnbindFromConnectorAction"
-		name="%unbindFromConnectorAction.name"
+        id="com.metamatrix.modeler.internal.dqp.ui.workspace.actions.UnbindFromConnectorAction"
+        name="%unbindFromConnectorAction.name"
         point="com.metamatrix.modeler.ui.modelResourceAction">
       <resourceAction
          name="com.metamatrix.modeler.internal.dqp.ui.workspace.actions.UnbindFromConnectorAction"
@@ -248,13 +256,13 @@
             id="com.metamatrix.modeler.internal.dqp.ui.preferences.dqpUiPreferenceCategory"
             name="%dqpUiPreferenceCategory">
       </category>
-	  <!-- Preview Row Count Preference -->
+      <!-- Preview Row Count Preference -->
       <preference
             id="com.metamatrix.modeler.internal.dqp.ui.preferences.previewRowCountPreferenceContributor"
             categoryId="com.metamatrix.modeler.internal.dqp.ui.preferences.dqpUiPreferenceCategory"
             class="com.metamatrix.modeler.internal.dqp.ui.preferences.PreviewRowCountPreferenceContributor">
       </preference>
-	  <!-- Preview Max Results Preference -->
+      <!-- Preview Max Results Preference -->
       <preference
             id="com.metamatrix.modeler.internal.dqp.ui.preferences.previewResultsCountPreferenceContributor"
             categoryId="com.metamatrix.modeler.internal.dqp.ui.preferences.dqpUiPreferenceCategory"
@@ -267,13 +275,13 @@
         id="com.metamatrix.modeler.dqp.ui.jdbc.connectorBindingImportPostProcessor"
         name="%connectorBindingImportPostProcessor">
         <class
-        	name="com.metamatrix.modeler.internal.dqp.ui.jdbc.ConnectorBindingImportPostProcessor">
+            name="com.metamatrix.modeler.internal.dqp.ui.jdbc.ConnectorBindingImportPostProcessor">
         </class>
   </extension>
 <!-- Actions contributed to the object/model generation -->
    <extension
-		id="com.metamatrix.modeler.internal.dqp.ui.actions.PreviewTableDataContextAction"
-		name="%previewTableDataContextAction.name"
+        id="com.metamatrix.modeler.internal.dqp.ui.actions.PreviewTableDataContextAction"
+        name="%previewTableDataContextAction.name"
         point="com.metamatrix.modeler.ui.modelObjectSpecialAction">
       <specialAction
          name="com.metamatrix.modeler.internal.dqp.ui.actions.PreviewTableDataContextAction"
