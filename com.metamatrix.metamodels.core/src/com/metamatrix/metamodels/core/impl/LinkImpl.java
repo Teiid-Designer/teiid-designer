@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.core.impl;
 
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -21,40 +20,36 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import com.metamatrix.metamodels.core.CorePackage;
 import com.metamatrix.metamodels.core.Link;
 import com.metamatrix.metamodels.core.LinkContainer;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Link</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Link</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.core.impl.LinkImpl#getName <em>Name</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.core.impl.LinkImpl#getDescription <em>Description</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.core.impl.LinkImpl#getReferences <em>References</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.core.impl.LinkImpl#getLinkedObjects <em>Linked Objects</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.core.impl.LinkImpl#getLinkContainer <em>Link Container</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.core.impl.LinkImpl#getName <em>Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.core.impl.LinkImpl#getDescription <em>Description</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.core.impl.LinkImpl#getReferences <em>References</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.core.impl.LinkImpl#getLinkedObjects <em>Linked Objects</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.core.impl.LinkImpl#getLinkContainer <em>Link Container</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class LinkImpl extends EObjectImpl implements Link {
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public static final String copyright = "Copyright (c) 2000-2005 MetaMatrix Corporation.  All rights reserved."; //$NON-NLS-1$
+    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -62,9 +57,8 @@ public class LinkImpl extends EObjectImpl implements Link {
     protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -72,9 +66,9 @@ public class LinkImpl extends EObjectImpl implements Link {
     protected String name = NAME_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getDescription()
      * @generated
      * @ordered
@@ -82,9 +76,9 @@ public class LinkImpl extends EObjectImpl implements Link {
     protected static final String DESCRIPTION_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getDescription()
      * @generated
      * @ordered
@@ -92,9 +86,9 @@ public class LinkImpl extends EObjectImpl implements Link {
     protected String description = DESCRIPTION_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getReferences() <em>References</em>}' attribute list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getReferences() <em>References</em>}' attribute list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getReferences()
      * @generated
      * @ordered
@@ -102,9 +96,9 @@ public class LinkImpl extends EObjectImpl implements Link {
     protected EList references = null;
 
     /**
-     * The cached value of the '{@link #getLinkedObjects() <em>Linked Objects</em>}' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getLinkedObjects() <em>Linked Objects</em>}' reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getLinkedObjects()
      * @generated
      * @ordered
@@ -112,8 +106,8 @@ public class LinkImpl extends EObjectImpl implements Link {
     protected EList linkedObjects = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected LinkImpl() {
@@ -121,8 +115,8 @@ public class LinkImpl extends EObjectImpl implements Link {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -131,8 +125,8 @@ public class LinkImpl extends EObjectImpl implements Link {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getName() {
@@ -140,20 +134,19 @@ public class LinkImpl extends EObjectImpl implements Link {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setName(String newName) {
+    public void setName( String newName ) {
         String oldName = name;
         name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.LINK__NAME, oldName, name));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.LINK__NAME, oldName, name));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getDescription() {
@@ -161,20 +154,20 @@ public class LinkImpl extends EObjectImpl implements Link {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setDescription(String newDescription) {
+    public void setDescription( String newDescription ) {
         String oldDescription = description;
         description = newDescription;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.LINK__DESCRIPTION, oldDescription, description));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.LINK__DESCRIPTION,
+                                                                   oldDescription, description));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getReferences() {
@@ -185,8 +178,8 @@ public class LinkImpl extends EObjectImpl implements Link {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getLinkedObjects() {
@@ -197,8 +190,8 @@ public class LinkImpl extends EObjectImpl implements Link {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public LinkContainer getLinkContainer() {
@@ -207,55 +200,61 @@ public class LinkImpl extends EObjectImpl implements Link {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setLinkContainer(LinkContainer newLinkContainer) {
-        if (newLinkContainer != eContainer || (eContainerFeatureID != CorePackage.LINK__LINK_CONTAINER && newLinkContainer != null)) {
-            if (EcoreUtil.isAncestor(this, newLinkContainer))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setLinkContainer( LinkContainer newLinkContainer ) {
+        if (newLinkContainer != eContainer
+            || (eContainerFeatureID != CorePackage.LINK__LINK_CONTAINER && newLinkContainer != null)) {
+            if (EcoreUtil.isAncestor(this, newLinkContainer)) throw new IllegalArgumentException(
+                                                                                                 "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newLinkContainer != null)
-                msgs = ((InternalEObject)newLinkContainer).eInverseAdd(this, CorePackage.LINK_CONTAINER__LINKS, LinkContainer.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newLinkContainer != null) msgs = ((InternalEObject)newLinkContainer).eInverseAdd(this,
+                                                                                                 CorePackage.LINK_CONTAINER__LINKS,
+                                                                                                 LinkContainer.class,
+                                                                                                 msgs);
             msgs = eBasicSetContainer((InternalEObject)newLinkContainer, CorePackage.LINK__LINK_CONTAINER, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.LINK__LINK_CONTAINER, newLinkContainer, newLinkContainer));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          CorePackage.LINK__LINK_CONTAINER, newLinkContainer,
+                                                                          newLinkContainer));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case CorePackage.LINK__LINK_CONTAINER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, CorePackage.LINK__LINK_CONTAINER, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case CorePackage.LINK__LINK_CONTAINER:
@@ -268,12 +267,12 @@ public class LinkImpl extends EObjectImpl implements Link {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case CorePackage.LINK__LINK_CONTAINER:
@@ -286,12 +285,13 @@ public class LinkImpl extends EObjectImpl implements Link {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case CorePackage.LINK__NAME:
                 return getName();
@@ -308,12 +308,13 @@ public class LinkImpl extends EObjectImpl implements Link {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case CorePackage.LINK__NAME:
                 setName((String)newValue);
@@ -337,12 +338,12 @@ public class LinkImpl extends EObjectImpl implements Link {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case CorePackage.LINK__NAME:
                 setName(NAME_EDEFAULT);
@@ -364,12 +365,12 @@ public class LinkImpl extends EObjectImpl implements Link {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case CorePackage.LINK__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -386,8 +387,8 @@ public class LinkImpl extends EObjectImpl implements Link {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -405,4 +406,4 @@ public class LinkImpl extends EObjectImpl implements Link {
         return result.toString();
     }
 
-} //LinkImpl
+} // LinkImpl

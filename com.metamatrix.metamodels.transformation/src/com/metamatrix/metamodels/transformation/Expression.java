@@ -32,7 +32,7 @@ public interface Expression extends EObject {
      * <!-- end-user-doc -->
      * @generated
      */
-    String copyright = "Copyright � 2000-2005 MetaMatrix, Inc.  All rights reserved."; //$NON-NLS-1$
+    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Returns the value of the '<em><b>Value</b></em>' attribute.

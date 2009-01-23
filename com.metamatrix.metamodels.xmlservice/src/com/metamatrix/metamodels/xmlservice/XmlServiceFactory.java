@@ -23,7 +23,7 @@ public interface XmlServiceFactory extends EFactory{
      * <!-- end-user-doc -->
      * @generated
      */
-    String copyright = "Copyright (c) 2000-2006 MetaMatrix Corporation. All rights reserved."; //$NON-NLS-1$
+    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * The singleton instance of the factory.

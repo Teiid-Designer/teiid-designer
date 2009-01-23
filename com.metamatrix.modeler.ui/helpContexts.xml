@@ -1,18 +1,10 @@
-<!-- =============================================================================== 
- # JBoss, Home of Professional Open Source. 
- # 
- # Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
- # 
- # Some portions of this file may be copyrighted by other 
- # contributors and licensed to Red Hat, Inc. under one or more 
- # contributor license agreements. See the copyright.txt file in the 
- # distribution for a full listing of individual contributors. 
- # 
- # This program and the accompanying materials 
- # are made available under the terms of the Eclipse Public License v1.0 
- # which accompanies this distribution, and is available at 
- # http://www.eclipse.org/legal/epl-v10.html 
- # ================================================================================== --> 
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <contexts>
 	<context id="namespaceUriRenameDialog">
 		<description>A Uniform Resource Identifier (URI) is a compact sequence of characters that identifies an abstract or physical resource and consists of many differenct parts. The top level URI syntax is the following:&lt;br&gt;&lt;br&gt;URI = scheme ":" hier-part [ "?" query ] [ "#" fragment ]&lt;br&gt;&lt;br&gt;For details of all the parts, the valid character set, the complete syntax definition, and much more use the link provided below.&lt;br&gt;&lt;br&gt;The Namespace URI can be used to logically identify a model and must conform to standard URI syntax as defined by the W3C. When a model is given a Namespace URI, all of its contained model objects are automatically assigned an Object URI.&lt;br&gt;&lt;br&gt;The Object URI is composed of the model’s Namespace URI combined with the model object’s own unique identifier. The Object URI enables model objects to be referenced by other W3C technologies, such as XML Schema Documents (XSD), Resource Description Framework (RDF), and Web Ontology Language (OWL), in a location-independent way.</description>

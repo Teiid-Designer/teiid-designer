@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:mmfunction="http://www.metamatrix.com/metamodels/MetaMatrixFunction">
   <mmcore:ModelAnnotation xmi:uuid="mmuuid:1339aac0-1cd3-1f76-a60a-ef2ca142dae4" primaryMetamodelUri="http://www.metamatrix.com/metamodels/MetaMatrixFunction" modelType="FUNCTION" supportsDistinct="false" supportsJoin="false" supportsOrderBy="false" supportsOuterJoin="false" supportsWhereAll="false" ProducerName="MetaMatrix" ProducerVersion="5.5"/>
   <diagram:DiagramContainer xmi:uuid="mmuuid:141e8c80-1cd3-1f76-a60a-ef2ca142dae4">

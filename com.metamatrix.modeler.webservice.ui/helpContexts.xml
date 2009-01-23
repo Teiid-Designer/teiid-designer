@@ -1,18 +1,10 @@
-<!-- =============================================================================== 
- # JBoss, Home of Professional Open Source. 
- # 
- # Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc. 
- # 
- # Some portions of this file may be copyrighted by other 
- # contributors and licensed to Red Hat, Inc. under one or more 
- # contributor license agreements. See the copyright.txt file in the 
- # distribution for a full listing of individual contributors. 
- # 
- # This program and the accompanying materials 
- # are made available under the terms of the Eclipse Public License v1.0 
- # which accompanies this distribution, and is available at 
- # http://www.eclipse.org/legal/epl-v10.html 
- # ================================================================================== --> 
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <contexts>
 	<context id="namespaceResolutionPage">
 		<description>This wizard page shows all selected WSDL(s) and their referenced namespaces. You can resolve namespaces to existing resources in your workspace or from the file system. Click the "Workspace..." button to choose files from the workspace. Click "File System..." to choose them from the file system. Selected namespaces can be viewed, have their information copied to the clipboard, or made unresolved using the toolbar buttons. Also, another toolbar button can be used to display a namespace dependency dialog. All namespaces must be resolved to continue.</description>

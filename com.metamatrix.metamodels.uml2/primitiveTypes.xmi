@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="ASCII"?>
-<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:uml2="http://www.eclipse.org/uml2/2.1.0/UML">
   <mmcore:ModelAnnotation xmi:uuid="mmuuid:826e7300-35f2-1efb-970b-fc1a6045b79b" primaryMetamodelUri="http://www.eclipse.org/uml2/2.1.0/UML" modelType="PHYSICAL"/>
   <uml2:Package xmi:uuid="mmuuid:061b1c41-35f7-1efb-970b-fc1a6045b79b" name="Core">

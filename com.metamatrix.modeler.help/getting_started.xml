@@ -1,1 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?><?NLS TYPE="org.eclipse.help.toc"?><!-- ===============================================================================  # JBoss, Home of Professional Open Source.  #  # Copyright (c) 2000, 2009 MetaMatrix, Inc. and Red Hat, Inc.  #  # Some portions of this file may be copyrighted by other  # contributors and licensed to Red Hat, Inc. under one or more  # contributor license agreements. See the copyright.txt file in the  # distribution for a full listing of individual contributors.  #  # This program and the accompanying materials  # are made available under the terms of the Eclipse Public License v1.0  # which accompanies this distribution, and is available at  # http://www.eclipse.org/legal/epl-v10.html  # ================================================================================== -->  <!-- ========================== --><!-- Define topics for the GettingStarted --><!-- ========================== --><toc label="Getting Started">	<topic label="What's it all about?" href="UsersGuide/DesignerGettingStarted.htm">		<topic label="What is Designer" 		href="UsersGuide/AllAboutDesigner.htm#whatIsDesigner"/>		<topic label="Why Use Designer?" 		href="UsersGuide/AllAboutDesigner.htm#whyUseDesigner"/>		<topic label="What is Metadata?" 		href="UsersGuide/MetadataOverview.htm"/>		<topic label="What is a Model?" 		href="UsersGuide/Models1001.htm"/>		<topic label="Types of Models" 			href="UsersGuide/DesignerMetamodels.htm"/>		<topic label="VDB Facts" 				href="UsersGuide/WebServiceVdbSummary.htm"/>	</topic>	<topic label="Getting acquainted" href="UsersGuide/DesignerGettingStarted.htm">	    <topic label="Welcome aboard..."		href="UsersGuide/WelcomePage.htm"/>		<topic label="A new perspective..." 	href="UsersGuide/DesignerPerspectives.htm"/>		<topic label="A view on things" 		href="UsersGuide/DesignerViews.htm"/>		<topic label="What's on the menu? " 	href="UsersGuide/DesignerMainMenus.htm"/>		<topic label="Starting a project" 	    href="UsersGuide/ManagingModelProjects.htm"/>		<topic label="Examples" 	    		href="UsersGuide/DesignerExamples.htm"/>	</topic>	<topic label="Making things happen" href="UsersGuide/DesignerGettingStarted.htm">		<topic label="Create a VDB" 				href="UsersGuide/CreateVirtualDatabase.htm"/>		<topic label="Model your data" 				href="UsersGuide/ModelingYourData.htm"/>		<topic label="Validate your models" 		href="UsersGuide/ModelProblemsHelp.htm"/>		<topic label="Import relational data"		href="UsersGuide/ImportJdbc.htm"/>		<topic label="Preview your data"			href="UsersGuide/PreviewData.htm"/>		<topic label="Create Web service models"	href="UsersGuide/CreateWebServiceModels.htm"/>		<topic label="Edit your Web services" 		href="UsersGuide/EditingWebServices.htm"/>		<topic label="Test your VDB" 				href="UsersGuide/ExecuteVdbHelp.htm"/>	</topic></toc>
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<toc label="Getting Started">
+	<topic label="What's it all about?" href="UsersGuide/DesignerGettingStarted.htm">
+		<topic label="What is Designer" 		href="UsersGuide/AllAboutDesigner.htm#whatIsDesigner"/>
+		<topic label="Why Use Designer?" 		href="UsersGuide/AllAboutDesigner.htm#whyUseDesigner"/>
+		<topic label="What is Metadata?" 		href="UsersGuide/MetadataOverview.htm"/>
+		<topic label="What is a Model?" 		href="UsersGuide/Models1001.htm"/>
+		<topic label="Types of Models" 			href="UsersGuide/DesignerMetamodels.htm"/>
+		<topic label="VDB Facts" 				href="UsersGuide/WebServiceVdbSummary.htm"/>
+	</topic>
+	<topic label="Getting acquainted" href="UsersGuide/DesignerGettingStarted.htm">
+	    <topic label="Welcome aboard..."		href="UsersGuide/WelcomePage.htm"/>
+		<topic label="A new perspective..." 	href="UsersGuide/DesignerPerspectives.htm"/>
+		<topic label="A view on things" 		href="UsersGuide/DesignerViews.htm"/>
+		<topic label="What's on the menu? " 	href="UsersGuide/DesignerMainMenus.htm"/>
+		<topic label="Starting a project" 	    href="UsersGuide/ManagingModelProjects.htm"/>
+		<topic label="Examples" 	    		href="UsersGuide/DesignerExamples.htm"/>
+	</topic>
+	<topic label="Making things happen" href="UsersGuide/DesignerGettingStarted.htm">
+		<topic label="Create a VDB" 				href="UsersGuide/CreateVirtualDatabase.htm"/>
+		<topic label="Model your data" 				href="UsersGuide/ModelingYourData.htm"/>
+		<topic label="Validate your models" 		href="UsersGuide/ModelProblemsHelp.htm"/>
+		<topic label="Import relational data"		href="UsersGuide/ImportJdbc.htm"/>
+		<topic label="Preview your data"			href="UsersGuide/PreviewData.htm"/>
+		<topic label="Create Web service models"	href="UsersGuide/CreateWebServiceModels.htm"/>
+		<topic label="Edit your Web services" 		href="UsersGuide/EditingWebServices.htm"/>
+		<topic label="Test your VDB" 				href="UsersGuide/ExecuteVdbHelp.htm"/>
+	</topic>
+</toc>

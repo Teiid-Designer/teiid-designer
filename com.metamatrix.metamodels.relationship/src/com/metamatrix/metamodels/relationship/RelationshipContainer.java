@@ -33,7 +33,7 @@ public interface RelationshipContainer extends EObject{
      * <!-- end-user-doc -->
      * @generated
      */
-    String copyright = "Copyright (c) 2000-2005 MetaMatrix Corporation.  All rights reserved."; //$NON-NLS-1$
+    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Returns the value of the '<em><b>Owned Relationships</b></em>' containment reference list.

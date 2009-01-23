@@ -31,7 +31,7 @@ public class XAttributeImpl extends EAttributeImpl implements XAttribute {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final String copyright = "Copyright (c) 2000-2008 MetaMatrix Corporation.  All rights reserved."; //$NON-NLS-1$
+	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
 				/**
 	 * <!-- begin-user-doc -->

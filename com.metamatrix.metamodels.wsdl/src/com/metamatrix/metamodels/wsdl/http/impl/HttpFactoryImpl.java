@@ -27,7 +27,7 @@ public class HttpFactoryImpl extends EFactoryImpl implements HttpFactory {
      * 
      * @generated
      */
-    public static final String copyright = "Copyright � 2000-2005 MetaMatrix, Inc.  All rights reserved."; //$NON-NLS-1$
+    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->

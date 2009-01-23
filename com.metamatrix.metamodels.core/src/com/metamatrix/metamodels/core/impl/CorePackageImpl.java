@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.emf.ecore.impl.EcorePackageImpl;
-
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.metamodels.core.CoreFactory;
@@ -32,92 +31,89 @@ import com.metamatrix.metamodels.core.extension.ExtensionPackage;
 import com.metamatrix.metamodels.core.extension.impl.ExtensionPackageImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Package</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class CorePackageImpl extends EPackageImpl implements CorePackage {
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public static final String copyright = "Copyright (c) 2000-2005 MetaMatrix Corporation.  All rights reserved."; //$NON-NLS-1$
+    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass annotationEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass annotationContainerEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass modelAnnotationEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass linkEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass linkContainerEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass datatypeEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass identifiableEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass modelImportEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EEnum modelTypeEEnum = null;
 
     /**
-     * Creates an instance of the model <b>Package</b>, registered with
-     * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
-     * package URI value.
-     * <p>Note: the correct way to create the package is via the static
-     * factory method {@link #init init()}, which also performs
-     * initialization of the package, or returns the registered package,
-     * if one already exists.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
+     * EPackage.Registry} by the package package URI value.
+     * <p>
+     * Note: the correct way to create the package is via the static factory method {@link #init init()}, which also performs
+     * initialization of the package, or returns the registered package, if one already exists. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see org.eclipse.emf.ecore.EPackage.Registry
      * @see com.metamatrix.metamodels.core.CorePackage#eNS_URI
      * @see #init()
@@ -128,29 +124,24 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private static boolean isInited = false;
 
     /**
-     * Creates, registers, and initializes the <b>Package</b> for this
-     * model, and for any others upon which it depends.  Simple
-     * dependencies are satisfied by calling this method on all
-     * dependent packages before doing anything else.  This method drives
-     * initialization for interdependent packages directly, in parallel
-     * with this package, itself.
-     * <p>Of this package and its interdependencies, all packages which
-     * have not yet been registered by their URI values are first created
-     * and registered.  The packages are then initialized in two steps:
-     * meta-model objects for all of the packages are created before any
-     * are initialized, since one package's meta-model objects may refer to
-     * those of another.
-     * <p>Invocation of this method will not affect any packages that have
-     * already been initialized.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends. Simple
+     * dependencies are satisfied by calling this method on all dependent packages before doing anything else. This method drives
+     * initialization for interdependent packages directly, in parallel with this package, itself.
+     * <p>
+     * Of this package and its interdependencies, all packages which have not yet been registered by their URI values are first
+     * created and registered. The packages are then initialized in two steps: meta-model objects for all of the packages are
+     * created before any are initialized, since one package's meta-model objects may refer to those of another.
+     * <p>
+     * Invocation of this method will not affect any packages that have already been initialized. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #eNS_URI
      * @see #createPackageContents()
      * @see #initializePackageContents()
@@ -181,8 +172,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getAnnotation() {
@@ -190,8 +181,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getAnnotation_Description() {
@@ -199,8 +190,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getAnnotation_Keywords() {
@@ -208,8 +199,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getAnnotation_AnnotatedObject() {
@@ -217,8 +208,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getAnnotation_ExtensionObject() {
@@ -226,8 +217,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getAnnotation_Tags() {
@@ -235,8 +226,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getAnnotation_AnnotationContainer() {
@@ -244,8 +235,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getAnnotationContainer() {
@@ -253,8 +244,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getAnnotationContainer_Annotations() {
@@ -262,8 +253,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getModelAnnotation() {
@@ -271,8 +262,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelAnnotation_Description() {
@@ -280,8 +271,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelAnnotation_NameInSource() {
@@ -289,8 +280,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelAnnotation_PrimaryMetamodelUri() {
@@ -298,8 +289,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelAnnotation_ModelType() {
@@ -307,8 +298,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelAnnotation_MaxSetSize() {
@@ -316,8 +307,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelAnnotation_Visible() {
@@ -325,8 +316,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelAnnotation_SupportsDistinct() {
@@ -334,8 +325,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelAnnotation_SupportsJoin() {
@@ -343,8 +334,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelAnnotation_SupportsOrderBy() {
@@ -352,8 +343,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelAnnotation_SupportsOuterJoin() {
@@ -361,8 +352,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelAnnotation_SupportsWhereAll() {
@@ -370,8 +361,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getModelAnnotation_Tags() {
@@ -379,8 +370,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelAnnotation_NamespaceUri() {
@@ -388,8 +379,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelAnnotation_ProducerName() {
@@ -397,8 +388,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelAnnotation_ProducerVersion() {
@@ -406,8 +397,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getModelAnnotation_ModelImports() {
@@ -415,8 +406,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getModelAnnotation_ExtensionPackage() {
@@ -424,8 +415,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getLink() {
@@ -433,8 +424,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getLink_Name() {
@@ -442,8 +433,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getLink_Description() {
@@ -451,8 +442,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getLink_References() {
@@ -460,8 +451,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getLink_LinkedObjects() {
@@ -469,8 +460,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getLink_LinkContainer() {
@@ -478,8 +469,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getLinkContainer() {
@@ -487,8 +478,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getLinkContainer_Links() {
@@ -496,8 +487,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getDatatype() {
@@ -505,8 +496,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getIdentifiable() {
@@ -514,8 +505,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getIdentifiable_Uuid() {
@@ -523,8 +514,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getModelImport() {
@@ -532,8 +523,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelImport_Name() {
@@ -541,8 +532,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelImport_Path() {
@@ -550,8 +541,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelImport_ModelLocation() {
@@ -559,8 +550,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelImport_Uuid() {
@@ -568,8 +559,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelImport_ModelType() {
@@ -577,8 +568,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getModelImport_PrimaryMetamodelUri() {
@@ -586,8 +577,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getModelImport_Model() {
@@ -595,8 +586,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EEnum getModelType() {
@@ -604,8 +595,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public CoreFactory getCoreFactory() {
@@ -613,17 +604,16 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private boolean isCreated = false;
 
     /**
-     * Creates the meta-model objects for the package.  This method is
-     * guarded to have no affect on any invocation but its first.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Creates the meta-model objects for the package. This method is guarded to have no affect on any invocation but its first.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void createPackageContents() {
@@ -690,17 +680,16 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private boolean isInitialized = false;
 
     /**
-     * Complete the initialization of the package and its meta-model.  This
-     * method is guarded to have no affect on any invocation but its first.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Complete the initialization of the package and its meta-model. This method is guarded to have no affect on any invocation
+     * but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void initializePackageContents() {
@@ -721,34 +710,94 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 
         // Initialize classes and features; add operations and parameters
         initEClass(annotationEClass, Annotation.class, "Annotation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEAttribute(getAnnotation_Description(), ecorePackage.getEString(), "description", null, 0, 1, Annotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getAnnotation_Keywords(), ecorePackage.getEString(), "keywords", null, 0, -1, Annotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getAnnotation_Tags(), theEcorePackage.getEStringToStringMapEntry(), null, "tags", null, 0, -1, Annotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getAnnotation_AnnotationContainer(), this.getAnnotationContainer(), this.getAnnotationContainer_Annotations(), "annotationContainer", null, 0, 1, Annotation.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getAnnotation_AnnotatedObject(), theEcorePackage.getEObject(), null, "annotatedObject", null, 0, 1, Annotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getAnnotation_ExtensionObject(), theEcorePackage.getEObject(), null, "extensionObject", null, 0, 1, Annotation.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getAnnotation_Description(),
+                       ecorePackage.getEString(),
+                       "description", null, 0, 1, Annotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getAnnotation_Keywords(),
+                       ecorePackage.getEString(),
+                       "keywords", null, 0, -1, Annotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getAnnotation_Tags(),
+                       theEcorePackage.getEStringToStringMapEntry(),
+                       null,
+                       "tags", null, 0, -1, Annotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getAnnotation_AnnotationContainer(),
+                       this.getAnnotationContainer(),
+                       this.getAnnotationContainer_Annotations(),
+                       "annotationContainer", null, 0, 1, Annotation.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getAnnotation_AnnotatedObject(),
+                       theEcorePackage.getEObject(),
+                       null,
+                       "annotatedObject", null, 0, 1, Annotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getAnnotation_ExtensionObject(),
+                       theEcorePackage.getEObject(),
+                       null,
+                       "extensionObject", null, 0, 1, Annotation.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(annotationContainerEClass, AnnotationContainer.class, "AnnotationContainer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getAnnotationContainer_Annotations(), this.getAnnotation(), this.getAnnotation_AnnotationContainer(), "annotations", null, 0, -1, AnnotationContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(annotationContainerEClass,
+                   AnnotationContainer.class,
+                   "AnnotationContainer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getAnnotationContainer_Annotations(),
+                       this.getAnnotation(),
+                       this.getAnnotation_AnnotationContainer(),
+                       "annotations", null, 0, -1, AnnotationContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(modelAnnotationEClass, ModelAnnotation.class, "ModelAnnotation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEAttribute(getModelAnnotation_Description(), ecorePackage.getEString(), "description", null, 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getModelAnnotation_NameInSource(), ecorePackage.getEString(), "nameInSource", null, 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getModelAnnotation_PrimaryMetamodelUri(), ecorePackage.getEString(), "primaryMetamodelUri", null, 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getModelAnnotation_ModelType(), this.getModelType(), "modelType", "UNKNOWN", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getModelAnnotation_MaxSetSize(), ecorePackage.getEInt(), "maxSetSize", "100", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getModelAnnotation_Visible(), ecorePackage.getEBoolean(), "visible", "true", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getModelAnnotation_SupportsDistinct(), ecorePackage.getEBoolean(), "supportsDistinct", "true", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getModelAnnotation_SupportsJoin(), ecorePackage.getEBoolean(), "supportsJoin", "true", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getModelAnnotation_SupportsOrderBy(), ecorePackage.getEBoolean(), "supportsOrderBy", "true", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getModelAnnotation_SupportsOuterJoin(), ecorePackage.getEBoolean(), "supportsOuterJoin", "true", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getModelAnnotation_SupportsWhereAll(), ecorePackage.getEBoolean(), "supportsWhereAll", "true", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEReference(getModelAnnotation_Tags(), theEcorePackage.getEStringToStringMapEntry(), null, "tags", null, 0, -1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getModelAnnotation_NamespaceUri(), ecorePackage.getEString(), "namespaceUri", null, 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getModelAnnotation_ProducerName(), ecorePackage.getEString(), "ProducerName", null, 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getModelAnnotation_ProducerVersion(), ecorePackage.getEString(), "ProducerVersion", null, 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getModelAnnotation_ModelImports(), this.getModelImport(), this.getModelImport_Model(), "modelImports", null, 0, -1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getModelAnnotation_ExtensionPackage(), theExtensionPackage.getXPackage(), null, "extensionPackage", null, 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(modelAnnotationEClass,
+                   ModelAnnotation.class,
+                   "ModelAnnotation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEAttribute(getModelAnnotation_Description(),
+                       ecorePackage.getEString(),
+                       "description", null, 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getModelAnnotation_NameInSource(),
+                       ecorePackage.getEString(),
+                       "nameInSource", null, 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getModelAnnotation_PrimaryMetamodelUri(),
+                       ecorePackage.getEString(),
+                       "primaryMetamodelUri", null, 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getModelAnnotation_ModelType(),
+                       this.getModelType(),
+                       "modelType", "UNKNOWN", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getModelAnnotation_MaxSetSize(),
+                       ecorePackage.getEInt(),
+                       "maxSetSize", "100", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getModelAnnotation_Visible(),
+                       ecorePackage.getEBoolean(),
+                       "visible", "true", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getModelAnnotation_SupportsDistinct(),
+                       ecorePackage.getEBoolean(),
+                       "supportsDistinct", "true", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getModelAnnotation_SupportsJoin(),
+                       ecorePackage.getEBoolean(),
+                       "supportsJoin", "true", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getModelAnnotation_SupportsOrderBy(),
+                       ecorePackage.getEBoolean(),
+                       "supportsOrderBy", "true", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getModelAnnotation_SupportsOuterJoin(),
+                       ecorePackage.getEBoolean(),
+                       "supportsOuterJoin", "true", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getModelAnnotation_SupportsWhereAll(),
+                       ecorePackage.getEBoolean(),
+                       "supportsWhereAll", "true", 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEReference(getModelAnnotation_Tags(),
+                       theEcorePackage.getEStringToStringMapEntry(),
+                       null,
+                       "tags", null, 0, -1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getModelAnnotation_NamespaceUri(),
+                       ecorePackage.getEString(),
+                       "namespaceUri", null, 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getModelAnnotation_ProducerName(),
+                       ecorePackage.getEString(),
+                       "ProducerName", null, 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getModelAnnotation_ProducerVersion(),
+                       ecorePackage.getEString(),
+                       "ProducerVersion", null, 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getModelAnnotation_ModelImports(),
+                       this.getModelImport(),
+                       this.getModelImport_Model(),
+                       "modelImports", null, 0, -1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getModelAnnotation_ExtensionPackage(),
+                       theExtensionPackage.getXPackage(),
+                       null,
+                       "extensionPackage", null, 0, 1, ModelAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         EOperation op = addEOperation(modelAnnotationEClass, this.getModelImport(), "findModelImportByPath"); //$NON-NLS-1$
         addEParameter(op, ecorePackage.getEString(), "path"); //$NON-NLS-1$
@@ -757,28 +806,62 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
         addEParameter(op, ecorePackage.getEString(), "uuid"); //$NON-NLS-1$
 
         initEClass(linkEClass, Link.class, "Link", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEAttribute(getLink_Name(), ecorePackage.getEString(), "name", null, 0, 1, Link.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getLink_Description(), ecorePackage.getEString(), "description", null, 0, 1, Link.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getLink_References(), ecorePackage.getEString(), "references", null, 0, -1, Link.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getLink_LinkedObjects(), theEcorePackage.getEObject(), null, "linkedObjects", null, 0, -1, Link.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getLink_LinkContainer(), this.getLinkContainer(), this.getLinkContainer_Links(), "linkContainer", null, 0, 1, Link.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getLink_Name(),
+                       ecorePackage.getEString(),
+                       "name", null, 0, 1, Link.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getLink_Description(),
+                       ecorePackage.getEString(),
+                       "description", null, 0, 1, Link.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getLink_References(),
+                       ecorePackage.getEString(),
+                       "references", null, 0, -1, Link.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getLink_LinkedObjects(),
+                       theEcorePackage.getEObject(),
+                       null,
+                       "linkedObjects", null, 0, -1, Link.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getLink_LinkContainer(),
+                       this.getLinkContainer(),
+                       this.getLinkContainer_Links(),
+                       "linkContainer", null, 0, 1, Link.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(linkContainerEClass, LinkContainer.class, "LinkContainer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getLinkContainer_Links(), this.getLink(), this.getLink_LinkContainer(), "links", null, 0, -1, LinkContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(linkContainerEClass,
+                   LinkContainer.class,
+                   "LinkContainer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getLinkContainer_Links(),
+                       this.getLink(),
+                       this.getLink_LinkContainer(),
+                       "links", null, 0, -1, LinkContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(datatypeEClass, Datatype.class, "Datatype", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
         initEClass(identifiableEClass, Identifiable.class, "Identifiable", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEAttribute(getIdentifiable_Uuid(), ecorePackage.getEString(), "uuid", null, 0, 1, Identifiable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getIdentifiable_Uuid(),
+                       ecorePackage.getEString(),
+                       "uuid", null, 0, 1, Identifiable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(modelImportEClass, ModelImport.class, "ModelImport", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEAttribute(getModelImport_Name(), ecorePackage.getEString(), "name", null, 0, 1, ModelImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getModelImport_Path(), ecorePackage.getEString(), "path", null, 0, 1, ModelImport.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getModelImport_ModelLocation(), ecorePackage.getEString(), "modelLocation", null, 0, 1, ModelImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getModelImport_Uuid(), ecorePackage.getEString(), "uuid", null, 0, 1, ModelImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getModelImport_ModelType(), this.getModelType(), "modelType", "UNKNOWN", 0, 1, ModelImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getModelImport_PrimaryMetamodelUri(), ecorePackage.getEString(), "primaryMetamodelUri", null, 0, 1, ModelImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getModelImport_Model(), this.getModelAnnotation(), this.getModelAnnotation_ModelImports(), "model", null, 0, 1, ModelImport.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getModelImport_Name(),
+                       ecorePackage.getEString(),
+                       "name", null, 0, 1, ModelImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getModelImport_Path(),
+                       ecorePackage.getEString(),
+                       "path", null, 0, 1, ModelImport.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getModelImport_ModelLocation(),
+                       ecorePackage.getEString(),
+                       "modelLocation", null, 0, 1, ModelImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getModelImport_Uuid(),
+                       ecorePackage.getEString(),
+                       "uuid", null, 0, 1, ModelImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getModelImport_ModelType(),
+                       this.getModelType(),
+                       "modelType", "UNKNOWN", 0, 1, ModelImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getModelImport_PrimaryMetamodelUri(),
+                       ecorePackage.getEString(),
+                       "primaryMetamodelUri", null, 0, 1, ModelImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getModelImport_Model(),
+                       this.getModelAnnotation(),
+                       this.getModelAnnotation_ModelImports(),
+                       "model", null, 0, 1, ModelImport.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         // Initialize enums and add enum literals
         initEEnum(modelTypeEEnum, ModelType.class, "ModelType"); //$NON-NLS-1$
@@ -798,4 +881,4 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
         createResource(eNS_URI);
     }
 
-} //CorePackageImpl
+} // CorePackageImpl

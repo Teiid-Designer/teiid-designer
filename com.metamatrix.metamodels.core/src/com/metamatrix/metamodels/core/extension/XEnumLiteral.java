@@ -10,22 +10,19 @@ package com.metamatrix.metamodels.core.extension;
 import org.eclipse.emf.ecore.EEnumLiteral;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>XEnum Literal</b></em>'.
- * <!-- end-user-doc -->
- *
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>XEnum Literal</b></em>'. <!-- end-user-doc -->
+ * 
  * @see com.metamatrix.metamodels.core.extension.ExtensionPackage#getXEnumLiteral()
  * @model
  * @generated
  */
-public interface XEnumLiteral extends EEnumLiteral{
+public interface XEnumLiteral extends EEnumLiteral {
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	String copyright = "Copyright (c) 2000-2008 MetaMatrix Corporation.  All rights reserved."; //$NON-NLS-1$
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
 } // XEnumLiteral

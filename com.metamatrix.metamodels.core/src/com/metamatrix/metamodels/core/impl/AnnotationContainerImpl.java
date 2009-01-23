@@ -10,7 +10,6 @@ package com.metamatrix.metamodels.core.impl;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -20,40 +19,37 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.metamodels.core.CorePackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Container</b></em>'.
- * @implements InternalAnnotationContainer
- * <!-- end-user-doc -->
- * <p>
- * The following features are implemented:
- * <ul>
- *   <li>{@link com.metamatrix.metamodels.core.impl.AnnotationContainerImpl#getAnnotations <em>Annotations</em>}</li>
- * </ul>
- * </p>
- *
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Container</b></em>'.
+ * 
+ * @implements InternalAnnotationContainer <!-- end-user-doc -->
+ *             <p>
+ *             The following features are implemented:
+ *             <ul>
+ *             <li>{@link com.metamatrix.metamodels.core.impl.AnnotationContainerImpl#getAnnotations <em>Annotations</em>}</li>
+ *             </ul>
+ *             </p>
  * @generated
  */
 public class AnnotationContainerImpl extends EObjectImpl implements AnnotationContainer, InternalAnnotationContainer {
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public static final String copyright = "Copyright (c) 2000-2005 MetaMatrix Corporation.  All rights reserved."; //$NON-NLS-1$
+    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     private Map annotationByTarget = new HashMap();
-    
+
     /**
-     * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list. <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
+     * 
      * @see #getAnnotations()
      * @generated
      * @ordered
@@ -61,8 +57,8 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
     protected EList annotations = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected AnnotationContainerImpl() {
@@ -70,8 +66,8 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -80,47 +76,53 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getAnnotations() {
         if (annotations == null) {
-            annotations = new EObjectContainmentWithInverseEList(Annotation.class, this, CorePackage.ANNOTATION_CONTAINER__ANNOTATIONS, CorePackage.ANNOTATION__ANNOTATION_CONTAINER);
+            annotations = new EObjectContainmentWithInverseEList(Annotation.class, this,
+                                                                 CorePackage.ANNOTATION_CONTAINER__ANNOTATIONS,
+                                                                 CorePackage.ANNOTATION__ANNOTATION_CONTAINER);
         }
         return annotations;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs)
-    {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case CorePackage.ANNOTATION_CONTAINER__ANNOTATIONS:
-					// Start customized code
+                    // Start customized code
                     addAnnotation((Annotation)otherEnd);
-					// End customized code
+                    // End customized code
                     return ((InternalEList)getAnnotations()).basicAdd(otherEnd, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public NotificationChain eInverseAddGen(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAddGen( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case CorePackage.ANNOTATION_CONTAINER__ANNOTATIONS:
@@ -129,25 +131,26 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs)
-    {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case CorePackage.ANNOTATION_CONTAINER__ANNOTATIONS:
-					// Start customized code
+                    // Start customized code
                     removeAnnotation((Annotation)otherEnd);
-					// End customized code
+                    // End customized code
                     return ((InternalEList)getAnnotations()).basicRemove(otherEnd, msgs);
                 default:
                     return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
@@ -157,11 +160,14 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public NotificationChain eInverseRemoveGen(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemoveGen( InternalEObject otherEnd,
+                                                int featureID,
+                                                Class baseClass,
+                                                NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case CorePackage.ANNOTATION_CONTAINER__ANNOTATIONS:
@@ -174,12 +180,13 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case CorePackage.ANNOTATION_CONTAINER__ANNOTATIONS:
                 return getAnnotations();
@@ -188,12 +195,13 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case CorePackage.ANNOTATION_CONTAINER__ANNOTATIONS:
                 getAnnotations().clear();
@@ -204,30 +212,29 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature)
-    {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case CorePackage.ANNOTATION_CONTAINER__ANNOTATIONS:
                 getAnnotations().clear();
-				// Start customized code
+                // Start customized code
                 this.annotationByTarget.clear();
-				// End customized code
+                // End customized code
                 return;
         }
         eDynamicUnset(eFeature);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void eUnsetGen(EStructuralFeature eFeature) {
+    public void eUnsetGen( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case CorePackage.ANNOTATION_CONTAINER__ANNOTATIONS:
                 getAnnotations().clear();
@@ -237,12 +244,12 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case CorePackage.ANNOTATION_CONTAINER__ANNOTATIONS:
                 return annotations != null && !annotations.isEmpty();
@@ -251,36 +258,38 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
     }
 
     public Annotation findAnnotation( final EObject annotatedObject ) {
-        final Annotation result = (Annotation) this.annotationByTarget.get(annotatedObject);
+        final Annotation result = (Annotation)this.annotationByTarget.get(annotatedObject);
         return result;
     }
-    
-    protected void doUpdateExistingAnnotation( final Annotation annotation, final EObject newTarget, final EObject oldTarget ) {
-        if ( oldTarget != null ) {
+
+    protected void doUpdateExistingAnnotation( final Annotation annotation,
+                                               final EObject newTarget,
+                                               final EObject oldTarget ) {
+        if (oldTarget != null) {
             // Remove the caching by the old target ...
             this.annotationByTarget.remove(oldTarget);
         }
-        if ( newTarget != null ) {
-            this.annotationByTarget.put(newTarget,annotation);
+        if (newTarget != null) {
+            this.annotationByTarget.put(newTarget, annotation);
         }
     }
 
     /**
      * @param annotation
      */
-    public void addAnnotation(final Annotation annotation) {
-        if ( annotation != null ) {
-            this.annotationByTarget.put(annotation.getAnnotatedObject(),annotation);
+    public void addAnnotation( final Annotation annotation ) {
+        if (annotation != null) {
+            this.annotationByTarget.put(annotation.getAnnotatedObject(), annotation);
         }
     }
 
     /**
      * @param annotation
      */
-    public void removeAnnotation(Annotation annotation) {
-        if ( annotation != null ) {
+    public void removeAnnotation( Annotation annotation ) {
+        if (annotation != null) {
             this.annotationByTarget.remove(annotation.getAnnotatedObject());
         }
     }
 
-} //AnnotationContainerImpl
+} // AnnotationContainerImpl

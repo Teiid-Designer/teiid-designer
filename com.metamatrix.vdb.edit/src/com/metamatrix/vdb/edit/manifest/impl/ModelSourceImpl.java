@@ -46,7 +46,7 @@ public class ModelSourceImpl extends EObjectImpl implements ModelSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public static final String copyright = "Copyright (c) 2000-2005 MetaMatrix Corporation. All rights reserved."; //$NON-NLS-1$
+    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * The cached value of the '{@link #getProperties() <em>Properties</em>}' containment reference list.

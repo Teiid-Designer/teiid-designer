@@ -1,16 +1,4 @@
 <?xml version='1.0' encoding='UTF-8'?>
- 
-
-
-
-
-
-
-
-
-
-
-
 <!--
   JBoss, Home of Professional Open Source.
 
@@ -18,17 +6,22 @@
 
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
-<schema targetNamespace="com.metamatrix.modeler.ui">
+<schema targetNamespace="com.metamatrix.modeler.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appInfo>
+      <appinfo>
          <meta.schema plugin="com.metamatrix.modeler.ui" id="diagramContentProvider" name="Diagram Content Provider"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          The Diagram Content Provider extension point allows plugins to create and display Diagram instances in any ModelViewer.  The Modeler&apos;s TreeContentProvider will call getChildren on all instances of this extension so that Diagram plugin providers may find and/or create diagrams as the user walks through the model.
       </documentation>
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="class"/>
@@ -70,9 +63,9 @@
                <documentation>
                   The full class name of an implementation of ITreeContentProvider that supplies diagrams of the specified types.
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.jface.viewers.ITreeContentProvider"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -96,47 +89,47 @@
    </element>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="since"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter the first release in which this extension point appears.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="examples"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter extension point usage example here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="apiInfo"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter API information here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="implementation"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter information about supplied implementation of this extension point.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="copyright"/>
-      </appInfo>
+      </appinfo>
       <documentation>
-         
+         See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
       </documentation>
    </annotation>
 

@@ -45,7 +45,7 @@ public class XmlOutputImpl extends XmlMessageImpl implements XmlOutput {
      * <!-- end-user-doc -->
      * @generated
      */
-    public static final String copyright = "Copyright (c) 2000-2006 MetaMatrix Corporation. All rights reserved."; //$NON-NLS-1$
+    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * The cached value of the '{@link #getResult() <em>Result</em>}' containment reference.

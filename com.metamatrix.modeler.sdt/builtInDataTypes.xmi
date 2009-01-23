@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="ASCII"?>
-<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Sdt="http://www.metamatrix.com/metamodels/SimpleDatatypes" xmlns:Xsd="http://www.eclipse.org/xsd/2002/XSD" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
   <Sdt:Domain element="[xsd:schema: null]" document="[#document: null]" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance">
     <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:4ca2ae00-3a95-1e20-921b-eeee28353879" element="[xsd:simpleType: null]" name="NMTOKEN" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="NMTOKEN" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:4ca2ae00-3a95-1e20-921b-eeee28353879" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#NMTOKEN" qName="Q1:NMTOKEN" variety="atomic" facets="/0/NMTOKEN;SimpleDatatype/XSDWhiteSpaceFacet /0/NMTOKEN;SimpleDatatype/XSDPatternFacet=1" baseTypeDefinition="mmuuid/3425cb80-d844-1e20-9027-be6d2c3b8b3a" uuid="mmuuid:4ca2ae00-3a95-1e20-921b-eeee28353879" runtimeTypeName="string">

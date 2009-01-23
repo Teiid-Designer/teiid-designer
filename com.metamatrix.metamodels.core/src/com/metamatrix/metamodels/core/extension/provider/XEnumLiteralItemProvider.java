@@ -27,7 +27,7 @@ public class XEnumLiteralItemProvider extends EEnumLiteralItemProvider {
      * 
      * @generated
      */
-    public static final String copyright = "Copyright (c) 2000-2008 MetaMatrix Corporation.  All rights reserved."; //$NON-NLS-1$
+    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->

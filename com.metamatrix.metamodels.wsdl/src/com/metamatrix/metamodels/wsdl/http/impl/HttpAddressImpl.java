@@ -45,7 +45,7 @@ public class HttpAddressImpl extends EObjectImpl implements HttpAddress {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public static final String copyright = "Copyright � 2000-2005 MetaMatrix, Inc.  All rights reserved."; //$NON-NLS-1$
+	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * The default value of the '{@link #getLocation() <em>Location</em>}' attribute.

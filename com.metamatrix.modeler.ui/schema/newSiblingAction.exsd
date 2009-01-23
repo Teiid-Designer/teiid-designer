@@ -1,16 +1,4 @@
 <?xml version='1.0' encoding='UTF-8'?>
- 
-
-
-
-
-
-
-
-
-
-
-
 <!--
   JBoss, Home of Professional Open Source.
 
@@ -114,7 +102,7 @@
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         
+         See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.         
       </documentation>
    </annotation>
 

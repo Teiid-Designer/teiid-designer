@@ -31,7 +31,7 @@ public class ExtensionFactoryImpl extends EFactoryImpl implements ExtensionFacto
      * 
      * @generated
      */
-    public static final String copyright = "Copyright (c) 2000-2008 MetaMatrix Corporation.  All rights reserved."; //$NON-NLS-1$
+    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
