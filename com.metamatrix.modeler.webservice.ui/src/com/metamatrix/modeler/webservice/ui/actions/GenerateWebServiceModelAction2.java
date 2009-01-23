@@ -15,7 +15,6 @@ import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -70,12 +69,6 @@ public class GenerateWebServiceModelAction2 extends SortableSelectionAction impl
         boolean isValid = true;
         if (SelectionUtilities.isEmptySelection(selection)) {
             isValid = false;
-        } else if (ProductCustomizerMgr.getInstance() != null && Platform.getProduct() != null) {
-            if (ProductCustomizerMgr.getInstance().getProductId() != null) {
-                if (!ProductCustomizerMgr.getInstance().getProductId().equals(Platform.getProduct().getId())) {
-                   isValid = false;
-                }
-            }
         }
         
         if ( isValid  && SelectionUtilities.isSingleSelection(selection)) {

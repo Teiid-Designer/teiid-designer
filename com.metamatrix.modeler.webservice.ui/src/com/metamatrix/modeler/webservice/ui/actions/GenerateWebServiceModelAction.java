@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -34,7 +33,6 @@ import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
 import com.metamatrix.modeler.internal.webservice.ui.wizard.GenerateWebServiceModelWizard;
 import com.metamatrix.modeler.webservice.ui.WebServiceUiPlugin;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
-import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 import com.metamatrix.ui.internal.widget.ListMessageDialog;
 
 /**
@@ -125,12 +123,6 @@ public class GenerateWebServiceModelAction extends ActionDelegate implements
         boolean isValid = true;
         if (SelectionUtilities.isEmptySelection(selection)) {
             isValid = false;
-        } else if (ProductCustomizerMgr.getInstance() != null && Platform.getProduct() != null) {
-            if (ProductCustomizerMgr.getInstance().getProductId() != null) {
-                if (!ProductCustomizerMgr.getInstance().getProductId().equals(Platform.getProduct().getId())) {
-                   isValid = false;
-                }
-            }
         }
         
         if ( isValid ) {

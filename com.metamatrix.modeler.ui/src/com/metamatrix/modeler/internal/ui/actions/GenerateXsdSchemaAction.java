@@ -15,7 +15,6 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -39,7 +38,6 @@ import com.metamatrix.modeler.internal.ui.wizards.GenerateXsdWizard;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
-import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 import com.metamatrix.ui.internal.widget.ListMessageDialog;
 
 /**
@@ -127,12 +125,6 @@ public class GenerateXsdSchemaAction extends ActionDelegate implements
         boolean isValid = true;
         if (SelectionUtilities.isEmptySelection(selection)) {
             isValid = false;
-        } else if (ProductCustomizerMgr.getInstance() != null && Platform.getProduct() != null) {
-            if (ProductCustomizerMgr.getInstance().getProductId() != null) {
-                if ( ! ProductCustomizerMgr.getInstance().getProductId().equals(Platform.getProduct().getId())) {
-                   isValid = false;
-                }
-            }
         }
         
         if ( isValid ) {
