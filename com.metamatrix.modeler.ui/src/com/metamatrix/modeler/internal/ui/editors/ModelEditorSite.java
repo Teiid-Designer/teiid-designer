@@ -133,7 +133,7 @@ public class ModelEditorSite implements IEditorSite {
      * @see org.eclipse.ui.IWorkbenchPartSite#getKeyBindingService()
      */
     public IKeyBindingService getKeyBindingService() {
-        return null;
+        return getMultiPageEditor().getEditorSite().getKeyBindingService();
     }
 
     /**
