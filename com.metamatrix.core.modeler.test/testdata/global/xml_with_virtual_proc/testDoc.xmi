@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Transformation="http://www.metamatrix.com/metamodels/Transformation" xmlns:Xsd="http://www.eclipse.org/xsd/2002/XSD" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:vxmldoc="http://www.metamatrix.com/metamodels/XmlDocument">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:42e38300-841c-1f15-9526-ebd0cace03e1" primaryMetamodelUri="http://www.metamatrix.com/metamodels/XmlDocument" modelType="VIRTUAL">
+    <modelImports xmi:uuid="mmuuid:012d0081-5f02-1f8b-b83e-884634e23d85" name="extensionTest" path="/XML with virtual proc/extensionTest.xmi" uuid="mmuuid:ca2c5bc0-c570-1f48-9b1a-c75f4b3c42fa" modelType="EXTENSION" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Extension"/>
+    <modelImports xmi:uuid="mmuuid:f9b9a741-5f01-1f8b-b83e-884634e23d85" name="test2" path="/XML with virtual proc/test2.xmi" uuid="mmuuid:2199a400-2f02-1f15-890c-cdb9b341bd39" modelType="VIRTUAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/DataAccess"/>
+    <modelImports xmi:uuid="mmuuid:012d0080-5f02-1f8b-b83e-884634e23d85" name="testSchema" path="/XML with virtual proc/testSchema.xsd" modelType="PHYSICAL" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
+    <modelImports xmi:uuid="mmuuid:58496ac1-841c-1f15-9526-ebd0cace03e1" name="XMLSchema" path="http://www.w3.org/2001/XMLSchema"/>
+    <extensionPackage href="extensionTest.xmi#mmuuid/8a0a6680-c571-1f48-9b1a-c75f4b3c42fa"/>
+  </mmcore:ModelAnnotation>
+  <vxmldoc:XmlDocument xmi:uuid="mmuuid:4789b280-841c-1f15-9526-ebd0cace03e1" name="yyyTestDocument">
+    <root xmi:uuid="mmuuid:4a56dc40-841c-1f15-9526-ebd0cace03e1" name="yyyTest">
+      <xsdComponent xsi:type="Xsd:XSDElementDeclaration" href="testSchema.xsd#//yyyTest;XSDElementDeclaration"/>
+      <containers xsi:type="vxmldoc:XmlSequence" xmi:uuid="mmuuid:4d240600-841c-1f15-9526-ebd0cace03e1">
+        <elements xsi:type="vxmldoc:XmlElement" xmi:uuid="mmuuid:4e08e7c0-841c-1f15-9526-ebd0cace03e1" name="wrapper">
+          <xsdComponent xsi:type="Xsd:XSDElementDeclaration" href="testSchema.xsd#//yyyType;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle/wrapper;XSDElementDeclaration"/>
+          <containers xsi:type="vxmldoc:XmlSequence" xmi:uuid="mmuuid:4efd0bc0-841c-1f15-9526-ebd0cace03e1">
+            <elements xsi:type="vxmldoc:XmlElement" xmi:uuid="mmuuid:4efd0bc1-841c-1f15-9526-ebd0cace03e1" name="key">
+              <xsdComponent xsi:type="Xsd:XSDElementDeclaration" href="testSchema.xsd#//yyyType;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle/wrapper;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle/key;XSDElementDeclaration"/>
+            </elements>
+            <elements xsi:type="vxmldoc:XmlElement" xmi:uuid="mmuuid:4efd0bc2-841c-1f15-9526-ebd0cace03e1" name="keyAndValue">
+              <xsdComponent xsi:type="Xsd:XSDElementDeclaration" href="testSchema.xsd#//yyyType;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle/wrapper;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1/keyAndValue;XSDElementDeclaration"/>
+            </elements>
+            <xsdComponent xsi:type="Xsd:XSDModelGroup" href="testSchema.xsd#//yyyType;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle/wrapper;XSDElementDeclaration/XSDComplexTypeDefinition/XSDParticle/XSDModelGroup"/>
+          </containers>
+        </elements>
+        <xsdComponent xsi:type="Xsd:XSDModelGroup" href="testSchema.xsd#//yyyType;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup"/>
+      </containers>
+      <declaredNamespaces xmi:uuid="mmuuid:4b3bbe00-841c-1f15-9526-ebd0cace03e1" prefix="MetaMatrix" uri="http://www.metamatrix.com/yyy"/>
+      <declaredNamespaces xmi:uuid="mmuuid:4b3bbe01-841c-1f15-9526-ebd0cace03e1" prefix="xsd" uri="http://www.w3.org/2001/XMLSchema"/>
+    </root>
+  </vxmldoc:XmlDocument>
+  <Transformation:MappingClassSetContainer xmi:uuid="mmuuid:53a33b40-841c-1f15-9526-ebd0cace03e1">
+    <mappingClassSets xmi:uuid="mmuuid:52af1740-841c-1f15-9526-ebd0cace03e1" target="mmuuid/4789b280-841c-1f15-9526-ebd0cace03e1">
+      <mappingClasses xmi:uuid="mmuuid:51ca3580-841c-1f15-9526-ebd0cace03e1" name="wrapper">
+        <columns xmi:uuid="mmuuid:58496ac0-841c-1f15-9526-ebd0cace03e1" name="key">
+          <type href="http://www.w3.org/2001/XMLSchema#string"/>
+        </columns>
+        <columns xmi:uuid="mmuuid:593d8ec0-841c-1f15-9526-ebd0cace03e1" name="keyAndValue">
+          <type href="http://www.w3.org/2001/XMLSchema#string"/>
+        </columns>
+        <inputSet xmi:uuid="mmuuid:54975f40-841c-1f15-9526-ebd0cace03e1"/>
+      </mappingClasses>
+    </mappingClassSets>
+  </Transformation:MappingClassSetContainer>
+  <Transformation:TransformationContainer xmi:uuid="mmuuid:57648901-841c-1f15-9526-ebd0cace03e1">
+    <transformationMappings xsi:type="Transformation:TreeMappingRoot" xmi:uuid="mmuuid:57648900-841c-1f15-9526-ebd0cace03e1" inputs="mmuuid/51ca3580-841c-1f15-9526-ebd0cace03e1" outputs="mmuuid/4e08e7c0-841c-1f15-9526-ebd0cace03e1" target="mmuuid/4789b280-841c-1f15-9526-ebd0cace03e1">
+      <nested xmi:uuid="mmuuid:58496ac2-841c-1f15-9526-ebd0cace03e1" inputs="mmuuid/58496ac0-841c-1f15-9526-ebd0cace03e1" outputs="mmuuid/4efd0bc1-841c-1f15-9526-ebd0cace03e1"/>
+      <nested xmi:uuid="mmuuid:593d8ec1-841c-1f15-9526-ebd0cace03e1" inputs="mmuuid/593d8ec0-841c-1f15-9526-ebd0cace03e1" outputs="mmuuid/4efd0bc2-841c-1f15-9526-ebd0cace03e1"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:57648902-841c-1f15-9526-ebd0cace03e1" outputs="mmuuid/51ca3580-841c-1f15-9526-ebd0cace03e1" target="mmuuid/51ca3580-841c-1f15-9526-ebd0cace03e1">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:5142e040-8420-1f15-9526-ebd0cace03e1" selectSql="SELECT mmuuid:37b7dc42-2f23-1f15-890c-cdb9b341bd39, mmuuid:3990e200-2f23-1f15-890c-cdb9b341bd39 AS keyAndValue FROM mmuuid:b01d67c1-2f02-1f15-890c-cdb9b341bd39 ORDER BY mmuuid:37b7dc42-2f23-1f15-890c-cdb9b341bd39, keyAndValue">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:5142e041-8420-1f15-9526-ebd0cace03e1" selectSql="SELECT test2.NewGroup.KEY, test2.NewGroup.KEYVALUESTRING AS keyAndValue FROM test2.NewGroup ORDER BY test2.NewGroup.KEY, keyAndValue"/>
+        <aliases xmi:uuid="mmuuid:cbb193c0-cf62-1f15-bd16-8e8b18a32c12" alias="NewGroup">
+          <aliasedObject href="test2.xmi#mmuuid/b01d67c1-2f02-1f15-890c-cdb9b341bd39"/>
+        </aliases>
+      </helper>
+      <nested xmi:uuid="mmuuid:935e9904-cf26-1f15-bd16-8e8b18a32c12" outputs="mmuuid/58496ac0-841c-1f15-9526-ebd0cace03e1">
+        <inputs href="test2.xmi#mmuuid/37b7dc42-2f23-1f15-890c-cdb9b341bd39"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:935e9905-cf26-1f15-bd16-8e8b18a32c12" outputs="mmuuid/593d8ec0-841c-1f15-9526-ebd0cace03e1">
+        <inputs href="test2.xmi#mmuuid/3990e200-2f23-1f15-890c-cdb9b341bd39"/>
+      </nested>
+      <inputs href="test2.xmi#mmuuid/b01d67c1-2f02-1f15-890c-cdb9b341bd39"/>
+    </transformationMappings>
+  </Transformation:TransformationContainer>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:bfa42840-841c-1f15-9526-ebd0cace03e1">
+    <diagram xmi:uuid="mmuuid:bebf4680-841c-1f15-9526-ebd0cace03e1" type="packageDiagramType" target="mmuuid/42e38300-841c-1f15-9526-ebd0cace03e1">
+      <diagramEntity xmi:uuid="mmuuid:c2715200-841c-1f15-9526-ebd0cace03e1" modelObject="mmuuid/4789b280-841c-1f15-9526-ebd0cace03e1" xPosition="22" yPosition="11" height="42" width="139"/>
+    </diagram>
+    <diagram xmi:uuid="mmuuid:18a40640-8422-1f15-9526-ebd0cace03e1" type="transformationDiagramType" target="mmuuid/51ca3580-841c-1f15-9526-ebd0cace03e1">
+      <diagramEntity xmi:uuid="mmuuid:1b713000-8422-1f15-9526-ebd0cace03e1" modelObject="mmuuid/51ca3580-841c-1f15-9526-ebd0cace03e1" xPosition="10" yPosition="10" height="146" width="141"/>
+      <diagramEntity xmi:uuid="mmuuid:1b713001-8422-1f15-9526-ebd0cace03e1" name="T" modelObject="mmuuid/57648902-841c-1f15-9526-ebd0cace03e1" xPosition="241" yPosition="63" height="40" width="40"/>
+      <diagramEntity xmi:uuid="mmuuid:cc967580-cf62-1f15-bd16-8e8b18a32c12" xPosition="401" yPosition="10" height="103" width="179">
+        <modelObject href="test2.xmi#mmuuid/b01d67c1-2f02-1f15-890c-cdb9b341bd39"/>
+      </diagramEntity>
+    </diagram>
+  </Diagram:DiagramContainer>
+  <mmcore:AnnotationContainer xmi:uuid="mmuuid:4ef21a41-7f65-1f48-9b1a-c75f4b3c42fa">
+    <annotations xmi:uuid="mmuuid:4ef21a40-7f65-1f48-9b1a-c75f4b3c42fa" description="This is a test description of virtual doc yyyTestDocument" annotatedObject="mmuuid/4789b280-841c-1f15-9526-ebd0cace03e1">
+      <tags xmi:uuid="mmuuid:7bb8b880-c5a7-1f48-9b1a-c75f4b3c42fa" key="NugentXAttribute" value="Nuuuuuge22222"/>
+      <tags xmi:uuid="mmuuid:c05f4140-c6b3-1f48-9b1a-c75f4b3c42fa" key="NugentYAttribute" value="Nuuuuuge44444"/>
+    </annotations>
+  </mmcore:AnnotationContainer>
+</xmi:XMI>

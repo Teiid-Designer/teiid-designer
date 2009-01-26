@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:response.sap1.bcgl.librados" elementFormDefault="qualified" targetNamespace="urn:response.sap1.bcgl.librados">
+  <xsd:element name="RESPONSE">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="BAPI_CUSTOMER_GETLIST" type="BAPI_CUSTOMER_GETLISTType"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="BAPI_CUSTOMER_GETLISTType">
+    <xsd:sequence minOccurs="0">
+      <xsd:element name="OUTPUT" type="OUTPUTType"/>
+      <xsd:element name="TABLES" type="TABLESType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="SPECIALDATAItem">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" name="item" type="BAPICUSTOMER_SPECIALDATAType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="BAPICUSTOMER_ADDRESSDATAType">
+    <xsd:sequence>
+      <xsd:element name="CUSTOMER">
+        <xsd:annotation>
+          <xsd:documentation source="Customer number"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="10" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="10"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="SORT1">
+        <xsd:annotation>
+          <xsd:documentation source="Search term 1"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="20" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="20"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="NAME">
+        <xsd:annotation>
+          <xsd:documentation source="Name 1"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="40" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="40"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="COUNTRY">
+        <xsd:annotation>
+          <xsd:documentation source="Country key"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="3" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="3"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="COUNTRYISO">
+        <xsd:annotation>
+          <xsd:documentation source="Country ISO code"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="2" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="2"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="CITY">
+        <xsd:annotation>
+          <xsd:documentation source="City"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="40" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="40"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="POSTL_COD1">
+        <xsd:annotation>
+          <xsd:documentation source="City postal code"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="10" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="10"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="REGION">
+        <xsd:annotation>
+          <xsd:documentation source="Region (State, Province, County)"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="3" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="3"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="STREET">
+        <xsd:annotation>
+          <xsd:documentation source="Street"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="60" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="60"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="TEL1_NUMBR">
+        <xsd:annotation>
+          <xsd:documentation source="First telephone no.: dialling code+number"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="30" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="30"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="FAX_NUMBER">
+        <xsd:annotation>
+          <xsd:documentation source="First fax no.: dialling code+number"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="30" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="30"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="ADDRESS">
+        <xsd:annotation>
+          <xsd:documentation source="Address"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="10" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="10"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="BAPICUSTOMER_IDRANGEType">
+    <xsd:sequence>
+      <xsd:element name="SIGN">
+        <xsd:annotation>
+          <xsd:documentation source="Inclusion/exclusion criterion SIGN for range tables"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="1" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="1"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="OPTION">
+        <xsd:annotation>
+          <xsd:documentation source="Selection operator OPTION for range tables"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="2" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="2"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="LOW">
+        <xsd:annotation>
+          <xsd:documentation source="Customer number"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="10" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="10"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="HIGH">
+        <xsd:annotation>
+          <xsd:documentation source="Customer number"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="10" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="10"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OUTPUTType">
+    <xsd:sequence>
+      <xsd:element name="RETURN" type="BAPIRETURN1Type"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ADDRESSDATAItem">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" name="item" type="BAPICUSTOMER_ADDRESSDATAType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="BAPIRETURN1Type">
+    <xsd:sequence>
+      <xsd:element name="TYPE">
+        <xsd:annotation>
+          <xsd:documentation source="Message type: S Success, E Error, W Warning, I Info, A Abort"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="1" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="1"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="ID">
+        <xsd:annotation>
+          <xsd:documentation source="Messages, message class"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="20" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="20"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="NUMBER">
+        <xsd:annotation>
+          <xsd:documentation source="Messages, message number"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="3" name="NUM"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="3"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="MESSAGE">
+        <xsd:annotation>
+          <xsd:documentation source="Message text"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="220" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="220"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="LOG_NO">
+        <xsd:annotation>
+          <xsd:documentation source="Application log: log number"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="20" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="20"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="LOG_MSG_NO">
+        <xsd:annotation>
+          <xsd:documentation source="Application log: Internal message serial number"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="6" name="NUM"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="6"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="MESSAGE_V1">
+        <xsd:annotation>
+          <xsd:documentation source="Messages, message variables"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="50" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="50"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="MESSAGE_V2">
+        <xsd:annotation>
+          <xsd:documentation source="Messages, message variables"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="50" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="50"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="MESSAGE_V3">
+        <xsd:annotation>
+          <xsd:documentation source="Messages, message variables"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="50" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="50"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="MESSAGE_V4">
+        <xsd:annotation>
+          <xsd:documentation source="Messages, message variables"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="50" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="50"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="IDRANGEItem">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" name="item" type="BAPICUSTOMER_IDRANGEType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="BAPICUSTOMER_SPECIALDATAType">
+    <xsd:sequence>
+      <xsd:element name="CUSTOMER">
+        <xsd:annotation>
+          <xsd:documentation source="Customer number"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="10" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="10"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="ACC_1_TIME">
+        <xsd:annotation>
+          <xsd:documentation source="Indicator: Is the account a one-time account?"/>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:appinfo>
+              <saptype kind="PREDEFINED" length="1" name="CHAR"/>
+            </xsd:appinfo>
+          </xsd:annotation>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="1"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="TABLESType">
+    <xsd:sequence>
+      <xsd:element name="ADDRESSDATA" type="ADDRESSDATAItem"/>
+      <xsd:element name="IDRANGE" type="IDRANGEItem"/>
+      <xsd:element name="SPECIALDATA" type="SPECIALDATAItem"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

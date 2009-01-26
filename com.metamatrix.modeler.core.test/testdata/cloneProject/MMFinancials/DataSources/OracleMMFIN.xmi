@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:jdbc="http://www.metamatrix.com/metamodels/JDBC" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:5a0cacc0-fb5d-1004-9613-9e80c6d51212" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" maxSetSize="1000" supportsWhereAll="false" ProducerName="MetaMatrix" ProducerVersion="5.0">
+    <modelImports xmi:uuid="mmuuid:35cfd480-fb5e-1004-9613-9e80c6d51212" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
+  </mmcore:ModelAnnotation>
+  <Relational:Schema xmi:uuid="mmuuid:5be5b280-fb5d-1004-9613-9e80c6d51212" name="MMFIN" nameInSource="MMFIN">
+    <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:5cca9440-fb5d-1004-9613-9e80c6d51212" name="CUSTMASTER" nameInSource="CUSTMASTER">
+      <columns xmi:uuid="mmuuid:5cca9441-fb5d-1004-9613-9e80c6d51212" name="CUSTMASTNUM" nameInSource="CUSTMASTNUM" nativeType="VARCHAR2" length="12" nullable="NO_NULLS" uniqueKeys="mmuuid/7418c400-fb5d-1004-9613-9e80c6d51212">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:5dbeb840-fb5d-1004-9613-9e80c6d51212" name="FULLNAME" nameInSource="FULLNAME" nativeType="VARCHAR2" length="50" nullable="NO_NULLS">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:5dbeb841-fb5d-1004-9613-9e80c6d51212" name="ADDRESS1" nameInSource="ADDRESS1" nativeType="VARCHAR2" length="25" nullable="NO_NULLS">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:5eb2dc40-fb5d-1004-9613-9e80c6d51212" name="ADDRESS2" nameInSource="ADDRESS2" nativeType="VARCHAR2" length="25">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:5eb2dc41-fb5d-1004-9613-9e80c6d51212" name="ADDRESS3" nameInSource="ADDRESS3" nativeType="VARCHAR2" length="25">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:5eb2dc42-fb5d-1004-9613-9e80c6d51212" name="ADDRESS4" nameInSource="ADDRESS4" nativeType="VARCHAR2" length="25">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:5eb2dc43-fb5d-1004-9613-9e80c6d51212" name="CITY" nameInSource="CITY" nativeType="VARCHAR2" length="25" nullable="NO_NULLS">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:5eb2dc44-fb5d-1004-9613-9e80c6d51212" name="REGION" nameInSource="REGION" nativeType="VARCHAR2" length="25">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:5eb2dc45-fb5d-1004-9613-9e80c6d51212" name="POSTALCODE" nameInSource="POSTALCODE" nativeType="VARCHAR2" length="15" nullable="NO_NULLS">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:5eb2dc46-fb5d-1004-9613-9e80c6d51212" name="COUNTRY" nameInSource="COUNTRY" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:5eb2dc47-fb5d-1004-9613-9e80c6d51212" name="COUNTRYCODE" nameInSource="COUNTRYCODE" nativeType="VARCHAR2" length="2">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:5eb2dc48-fb5d-1004-9613-9e80c6d51212" name="AREACODE" nameInSource="AREACODE" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:5f97be00-fb5d-1004-9613-9e80c6d51212" name="PHONENUMBER" nameInSource="PHONENUMBER" nativeType="VARCHAR2" length="30">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <primaryKey xmi:uuid="mmuuid:7418c400-fb5d-1004-9613-9e80c6d51212" name="SYS_C003082" nameInSource="SYS_C003082" columns="mmuuid/5cca9441-fb5d-1004-9613-9e80c6d51212"/>
+    </tables>
+  </Relational:Schema>
+  <jdbc:JdbcSource xmi:uuid="mmuuid:ac3b8d00-fb57-1004-9613-9e80c6d51212" name="OracleMMFIN" driverName="MetaMatrix Oracle" driverClass="com.metamatrix.jdbc.oracle.OracleDriver" username="mmfin" url="jdbc:mmx:oracle://cardwell:1521;Sid=cardwell">
+    <importSettings xmi:uuid="mmuuid:c46e9e80-fb57-1004-9613-9e80c6d51212">
+      <includedSchemaPaths>/MMFIN</includedSchemaPaths>
+      <excludedObjectPaths>/MMFIN/TABLE/ACCOUNT</excludedObjectPaths>
+      <excludedObjectPaths>/MMFIN/TABLE/ACCOUNTHOLDINGS</excludedObjectPaths>
+      <excludedObjectPaths>/MMFIN/TABLE/CUSTOMER</excludedObjectPaths>
+      <excludedObjectPaths>/MMFIN/TABLE/PRODUCTDATA</excludedObjectPaths>
+      <excludedObjectPaths>/MMFIN/TABLE/PRODUCTSYMBOLS</excludedObjectPaths>
+      <excludedObjectPaths>/MMFIN/TABLE/QUOTESERVER</excludedObjectPaths>
+      <includedTableTypes>TABLE</includedTableTypes>
+    </importSettings>
+  </jdbc:JdbcSource>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:e6c72cc0-fb5e-1004-9613-9e80c6d51212">
+    <diagram xmi:uuid="mmuuid:e6c72cc1-fb5e-1004-9613-9e80c6d51212" type="packageDiagramType" target="mmuuid/5a0cacc0-fb5d-1004-9613-9e80c6d51212">
+      <diagramEntity xmi:uuid="mmuuid:e6c72cc2-fb5e-1004-9613-9e80c6d51212" modelObject="mmuuid/5be5b280-fb5d-1004-9613-9e80c6d51212" xPosition="10" yPosition="10"/>
+    </diagram>
+    <diagram xmi:uuid="mmuuid:a129e840-fb60-1004-9613-9e80c6d51212" type="packageDiagramType" target="mmuuid/5be5b280-fb5d-1004-9613-9e80c6d51212">
+      <diagramEntity xmi:uuid="mmuuid:a302ee00-fb60-1004-9613-9e80c6d51212" modelObject="mmuuid/5cca9440-fb5d-1004-9613-9e80c6d51212" xPosition="10" yPosition="10"/>
+    </diagram>
+  </Diagram:DiagramContainer>
+</xmi:XMI>

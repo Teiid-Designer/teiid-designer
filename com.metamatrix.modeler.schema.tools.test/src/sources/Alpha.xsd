@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/Alpha" xmlns:tns="http://www.example.org/Alpha">
+	<element name="AAA">
+		<complexType>
+			<sequence>
+				<element name="BBB" type="string"></element>
+			</sequence>
+		</complexType>
+	</element>
+
+</schema>

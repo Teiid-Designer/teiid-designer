@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:d6091c80-0548-1f36-8533-e208b4ff86d8" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL">
+    <modelImports xmi:uuid="mmuuid:68b15a00-05b4-1f36-be10-a7a4aea2716c" name="XMLSchema" path="http://www.w3.org/2001/XMLSchema"/>
+    <modelImports xmi:uuid="mmuuid:c62ce3c0-0677-1f36-be10-a7a4aea2716c" name="SimpleDatatypes-instance" path="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"/>
+  </mmcore:ModelAnnotation>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:ccc62501-0598-1f36-be10-a7a4aea2716c">
+    <diagram xmi:uuid="mmuuid:ccc62500-0598-1f36-be10-a7a4aea2716c" type="packageDiagramType" target="mmuuid/d6091c80-0548-1f36-8533-e208b4ff86d8">
+      <diagramEntity xmi:uuid="mmuuid:965c5e00-059b-1f36-be10-a7a4aea2716c" name="Values" modelObject="mmuuid/79de2ac0-059a-1f36-be10-a7a4aea2716c" xPosition="10" yPosition="10"/>
+    </diagram>
+  </Diagram:DiagramContainer>
+  <Relational:BaseTable xmi:uuid="mmuuid:79de2ac0-059a-1f36-be10-a7a4aea2716c" name="Values">
+    <columns xmi:uuid="mmuuid:ed68afc0-05a8-1f36-be10-a7a4aea2716c" name="StringValue" length="10">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9c8cff40-05b5-1f36-be10-a7a4aea2716c" name="IntValue">
+      <type href="http://www.w3.org/2001/XMLSchema#int"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:000de780-05c2-1f36-be10-a7a4aea2716c" name="BooleanValue">
+      <type href="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:a7f86880-05c7-1f36-be10-a7a4aea2716c" name="ByteValue">
+      <type href="http://www.w3.org/2001/XMLSchema#byte"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:11bd5480-0652-1f36-be10-a7a4aea2716c" name="CharValue" length="1">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c961a8c0-0652-1f36-be10-a7a4aea2716c" name="ShortValue">
+      <type href="http://www.w3.org/2001/XMLSchema#short"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:632955c0-0653-1f36-be10-a7a4aea2716c" name="LongValue">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:dde42e00-0655-1f36-be10-a7a4aea2716c" name="FloatValue">
+      <type href="http://www.w3.org/2001/XMLSchema#float"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:22446dc0-0698-1f36-be10-a7a4aea2716c" name="DoubleValue">
+      <type href="http://www.w3.org/2001/XMLSchema#double"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:8885bc40-06a9-1f36-be10-a7a4aea2716c" name="BigIntegerValue">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6feed780-06b7-1f36-be10-a7a4aea2716c" name="BigDecimalValue">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#bigdecimal"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:53b22b00-06bf-1f36-be10-a7a4aea2716c" name="DateValue">
+      <type href="http://www.w3.org/2001/XMLSchema#date"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:650cf880-06c4-1f36-be10-a7a4aea2716c" name="TimeValue">
+      <type href="http://www.w3.org/2001/XMLSchema#time"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9d984880-06d8-1f36-be10-a7a4aea2716c" name="TimeStampValue">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:79c3f200-07c9-1f36-b83a-8aac80571dfc" name="ObjectValue">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#object"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:e215d200-07cf-1f36-b83a-8aac80571dfc" name="BlobValue">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#blob"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0ac4cc40-07e1-1f36-b83a-8aac80571dfc" name="ClobValue">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#clob"/>
+    </columns>
+  </Relational:BaseTable>
+</xmi:XMI>

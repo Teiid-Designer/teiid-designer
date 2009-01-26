@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/SimpleSoapArray"
+	xmlns:tns="http://www.example.org/SimpleSoapArray"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+	<import namespace="http://schemas.xmlsoap.org/soap/encoding/"
+		schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />
+
+	<complexType name="ArrayOfDouble">
+		<complexContent>
+			<restriction base="soapenc:Array">
+				<attribute ref="soapenc:arrayType"
+					wsdl:arrayType="double[]" />
+			</restriction>
+		</complexContent>
+	</complexType>
+
+</schema>

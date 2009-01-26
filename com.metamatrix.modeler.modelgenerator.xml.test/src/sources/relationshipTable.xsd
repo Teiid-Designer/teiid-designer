@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/relationshipTable" xmlns:tns="http://www.example.org/relationshipTable" elementFormDefault="qualified">
+
+    <complexType name="sharedType">
+    	<sequence>
+    		<element name="first" type="string"></element>
+    		<element name="second" type="string"></element>
+    		<element name="third" type="string"></element>
+    		<element name="fourth" type="string"></element>
+    		<element name="fifth" type="string"></element>
+    	</sequence>
+    </complexType>
+
+    <element name="sharedElement" type="tns:sharedType"></element>
+
+
+    <complexType name="containerOne">
+    	<sequence>
+    		<element name="shared" type="tns:sharedType"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</element>
+    		<element name="one" type="string"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="containerTwo">
+    	<sequence>
+    		<element name="shared" type="tns:sharedType"></element>
+    		<element name="two" type="string"></element>
+    	</sequence>
+    </complexType>
+
+    <element name="elementOne" type="tns:containerOne"></element>
+
+    <element name="elementTwo" type="tns:containerTwo"></element>
+</schema>

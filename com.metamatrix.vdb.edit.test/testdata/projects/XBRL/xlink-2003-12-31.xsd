@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (c) XBRL International.  See www.xbrl.org/legal  
+ 
+This version is non-normative - it should be identical to the normative
+version that is contained in Appendix A of the specification RECOMMENDATION
+with errata corrections to 2004-04-29 except for this comment
+
+Following the schema maintenance policy of XBRL International, its location on the
+web will be as follows:
+
+1) While it is the most current RECOMMENDED version of the schema and until it is 
+superseded by any additional errata corrections it will reside on the web at
+
+http://www.xbrl.org/2003/xlink-2003-12-31.xsd 
+
+2) It will be archived in perpetuity at 
+
+http://www.xbrl.org/2003/2004-04-29/xlink-2003-12-31.xsd
+
+-->
+<schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink">
+  
+  <annotation>
+    <documentation>
+    XLink attribute specification
+    </documentation>
+  </annotation>
+  
+  <simpleType name="nonEmptyURI">
+    <annotation>
+      <documentation>
+      A URI type with a minimum length of 1 character.
+      Used on role and arcrole and href elements.
+      </documentation>
+    </annotation>
+    <restriction base="anyURI">
+      <minLength value="1"/>
+    </restriction>
+  </simpleType>
+  
+  <simpleType name="typeEnum">
+    <annotation>
+      <documentation>
+    Enumeration of values for the type attribute
+    </documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="simple"/>
+      <enumeration value="extended"/>
+      <enumeration value="locator"/>
+      <enumeration value="arc"/>
+      <enumeration value="resource"/>
+      <enumeration value="title"/>
+    </restriction>
+  </simpleType>
+
+  <attributeGroup name="simpleType">
+    <attribute name="type" use="required">
+      <simpleType>
+        <restriction base="token">
+          <enumeration value="simple"/>
+        </restriction>
+      </simpleType>
+    </attribute>
+  </attributeGroup>
+
+  <attributeGroup name="extendedType">
+    <attribute name="type" use="required">
+      <simpleType>
+        <restriction base="token">
+          <enumeration value="extended"/>
+        </restriction>
+      </simpleType>
+    </attribute>
+  </attributeGroup>
+
+  <attributeGroup name="locatorType">
+    <attribute name="type" use="required">
+      <simpleType>
+        <restriction base="token">
+          <enumeration value="locator"/>
+        </restriction>
+      </simpleType>
+    </attribute>
+  </attributeGroup>
+
+  <attributeGroup name="arcType">
+    <attribute name="type" use="required">
+      <simpleType>
+        <restriction base="token">
+          <enumeration value="arc"/>
+        </restriction>
+      </simpleType>
+    </attribute>
+  </attributeGroup>
+
+  <attributeGroup name="resourceType">
+    <attribute name="type" use="required">
+      <simpleType>
+        <restriction base="token">
+          <enumeration value="resource"/>
+        </restriction>
+      </simpleType>
+    </attribute>
+  </attributeGroup>
+
+  <attributeGroup name="titleType">
+    <attribute name="type" use="required">
+      <simpleType>
+        <restriction base="token">
+          <enumeration value="title"/>
+        </restriction>
+      </simpleType>
+    </attribute>
+  </attributeGroup>
+
+  <simpleType name="showEnum">
+    <annotation>
+      <documentation>
+      Enumeration of values for the show attribute
+      </documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="new"/>
+      <enumeration value="replace"/>
+      <enumeration value="embed"/>
+      <enumeration value="other"/>
+      <enumeration value="none"/>
+    </restriction>
+  </simpleType>
+
+  <simpleType name="actuateEnum">
+    <annotation>
+      <documentation>
+      Enumeration of values for the actuate attribute
+      </documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="onLoad"/>
+      <enumeration value="onRequest"/>
+      <enumeration value="other"/>
+      <enumeration value="none"/>
+    </restriction>
+  </simpleType>
+  
+  <attribute name="type" type="xlink:typeEnum"/>
+  <attribute name="role" type="xlink:nonEmptyURI"/>
+  <attribute name="arcrole" type="xlink:nonEmptyURI"/>
+  <attribute name="title" type="string"/>
+  <attribute name="show" type="xlink:showEnum"/>
+  <attribute name="actuate" type="xlink:actuateEnum"/>
+  <attribute name="label" type="NCName"/>
+  <attribute name="from" type="NCName"/>
+  <attribute name="to" type="NCName"/>
+  <attribute name="href" type="anyURI"/>
+  
+</schema>

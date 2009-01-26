@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:mmext="http://www.metamatrix.com/metamodels/Extension">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:cb857140-1b47-1026-9b3b-db39dc8c2bab" description="The description for the model:  InterfaceExtensionModel" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Extension" modelType="EXTENSION" ProducerName="MetaMatrix" ProducerVersion="5.0"/>
+  <mmext:XPackage xmi:uuid="mmuuid:d6ba1840-1b47-1026-9b3b-db39dc8c2bab" name="ExtPackage">
+    <eClassifiers xsi:type="mmext:XClass" xmi:uuid="mmuuid:d7ae3c40-1b47-1026-9b3b-db39dc8c2bab" name="TableExt">
+      <eStructuralFeatures xsi:type="mmext:XAttribute" xmi:uuid="mmuuid:dd394d80-1b47-1026-9b3b-db39dc8c2bab" name="S_AIS_ID">
+        <eType xsi:type="ecore:EDataType" href="mtkplugin:///www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="mmext:XAttribute" xmi:uuid="mmuuid:dd394d81-1b47-1026-9b3b-db39dc8c2bab" name="R_AIS_ID">
+        <eType xsi:type="ecore:EDataType" href="mtkplugin:///www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="mmext:XAttribute" xmi:uuid="mmuuid:dd394d82-1b47-1026-9b3b-db39dc8c2bab" name="SCMNQ_PART_ID">
+        <eType xsi:type="ecore:EDataType" href="mtkplugin:///www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="mmext:XAttribute" xmi:uuid="mmuuid:dd394d83-1b47-1026-9b3b-db39dc8c2bab" name="RCMNQ_PART_ID">
+        <eType xsi:type="ecore:EDataType" href="mtkplugin:///www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="mmext:XAttribute" xmi:uuid="mmuuid:dd394d84-1b47-1026-9b3b-db39dc8c2bab" name="IDE_DEF_TX">
+        <eType xsi:type="ecore:EDataType" href="mtkplugin:///www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eStructuralFeatures>
+      <extendedClass href="mtkplugin:///com.metamatrix.metamodels.Relational#//BaseTable"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="mmext:XClass" xmi:uuid="mmuuid:d7ae3c41-1b47-1026-9b3b-db39dc8c2bab" name="ColumnExt">
+      <eStructuralFeatures xsi:type="mmext:XAttribute" xmi:uuid="mmuuid:dd394d85-1b47-1026-9b3b-db39dc8c2bab" name="INTE_SEQ_ID">
+        <eType xsi:type="ecore:EDataType" href="mtkplugin:///www.eclipse.org/emf/2002/Ecore#//EInt"/>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="mmext:XAttribute" xmi:uuid="mmuuid:dd394d86-1b47-1026-9b3b-db39dc8c2bab" name="IDE_DEF_TX">
+        <eType xsi:type="ecore:EDataType" href="mtkplugin:///www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="mmext:XAttribute" xmi:uuid="mmuuid:dd394d87-1b47-1026-9b3b-db39dc8c2bab" name="SAMPLE_DATA">
+        <eType xsi:type="ecore:EDataType" href="mtkplugin:///www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eStructuralFeatures>
+      <extendedClass href="mtkplugin:///com.metamatrix.metamodels.Relational#//Column"/>
+    </eClassifiers>
+  </mmext:XPackage>
+</xmi:XMI>

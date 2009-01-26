@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:relational="http://www.metamatrix.com/metamodels/Relational" xmlns:transformation="http://www.metamatrix.com/metamodels/Transformation">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:86312880-9bd6-1f55-9838-f1bcf0c80574" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="VIRTUAL" ProducerName="MetaMatrix" ProducerVersion="5.0">
+    <modelImports xmi:uuid="mmuuid:ccfdbc40-aadd-1f55-9838-f1bcf0c80574" name="SimpleDatatypes-instance" modelLocation="../builtInDataTypes.xsd"/>
+    <modelImports xmi:uuid="mmuuid:cd9652c0-aadd-1f55-9838-f1bcf0c80574" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema"/>
+  </mmcore:ModelAnnotation>
+  <transformation:TransformationContainer xmi:uuid="mmuuid:9e8ba540-aad6-1f55-9838-f1bcf0c80574">
+    <transformationMappings 
+    	xsi:type="transformation:SqlTransformationMappingRoot" 
+    	xmi:uuid="mmuuid:6ecf73c0-6bec-1f58-bb3a-884bfa142717" 
+    	outputs="mmuuid/92bd0240-6be5-1f58-bb3a-884bfa142717" 
+    	target="mmuuid/92bd0240-6be5-1f58-bb3a-884bfa142717">
+      <helper 
+      	  xsi:type="transformation:SqlTransformation" 
+      	  xmi:uuid="mmuuid:7131cdc1-6bec-1f58-bb3a-884bfa142717" 
+      	  selectSql="SELECT A.mmuuid:e9adbd0b-4a87-1f51-a735-f0c2e18d1cb0, A.mmuuid:e9adbd05-4a87-1f51-a735-f0c2e18d1cb0, B.mmuuid:47927cc0-6aee-1f58-bb3a-884bfa142717, A.mmuuid:e9adbd0e-4a87-1f51-a735-f0c2e18d1cb0, A.mmuuid:e9adbd0a-4a87-1f51-a735-f0c2e18d1cb0, A.mmuuid:e9adbd03-4a87-1f51-a735-f0c2e18d1cb0, A.mmuuid:e9adbd08-4a87-1f51-a735-f0c2e18d1cb0, A.mmuuid:e9adbd04-4a87-1f51-a735-f0c2e18d1cb0, A.mmuuid:e9adbd0d-4a87-1f51-a735-f0c2e18d1cb0, A.mmuuid:e9adbd02-4a87-1f51-a735-f0c2e18d1cb0, A.mmuuid:e9adbd01-4a87-1f51-a735-f0c2e18d1cb0, A.mmuuid:e9adbd0c-4a87-1f51-a735-f0c2e18d1cb0, A.mmuuid:e9adbd0f-4a87-1f51-a735-f0c2e18d1cb0, A.mmuuid:e9adbd07-4a87-1f51-a735-f0c2e18d1cb0, A.mmuuid:e9adbd09-4a87-1f51-a735-f0c2e18d1cb0, B.mmuuid:43665f40-6aee-1f58-bb3a-884bfa142717, B.mmuuid:43fef5c0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:44978c40-6aee-1f58-bb3a-884bfa142717, B.mmuuid:46614fc0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:482b1340-6aee-1f58-bb3a-884bfa142717, B.mmuuid:48c3a9c0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:495c4040-6aee-1f58-bb3a-884bfa142717, B.mmuuid:49f4d6c0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:4a8d6d40-6aee-1f58-bb3a-884bfa142717, B.mmuuid:4b2603c0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:4bbe9a40-6aee-1f58-bb3a-884bfa142717, B.mmuuid:4c5730c0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:4cefc740-6aee-1f58-bb3a-884bfa142717, B.mmuuid:4d885dc0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:4e20f440-6aee-1f58-bb3a-884bfa142717, B.mmuuid:4eb98ac0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:4feab7c0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:50834e40-6aee-1f58-bb3a-884bfa142717, B.mmuuid:511be4c0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:524d11c0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:52e5a840-6aee-1f58-bb3a-884bfa142717, B.mmuuid:537e3ec0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:5416d540-6aee-1f58-bb3a-884bfa142717, B.mmuuid:54af6bc0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:55480240-6aee-1f58-bb3a-884bfa142717, B.mmuuid:55e098c0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:56792f40-6aee-1f58-bb3a-884bfa142717, B.mmuuid:5711c5c0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:57aa5c40-6aee-1f58-bb3a-884bfa142717, B.mmuuid:5842f2c0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:58db8940-6aee-1f58-bb3a-884bfa142717, B.mmuuid:59741fc0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:5a0cb640-6aee-1f58-bb3a-884bfa142717, B.mmuuid:5aa54cc0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:5b3de340-6aee-1f58-bb3a-884bfa142717, B.mmuuid:5bd679c0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:5c6f1040-6aee-1f58-bb3a-884bfa142717, B.mmuuid:5d07a6c0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:5da03d40-6aee-1f58-bb3a-884bfa142717, B.mmuuid:5e38d3c0-6aee-1f58-bb3a-884bfa142717, B.mmuuid:5ed16a40-6aee-1f58-bb3a-884bfa142717, B.mmuuid:643df700-6aee-1f58-bb3a-884bfa142717, B.mmuuid:64d68d80-6aee-1f58-bb3a-884bfa142717, B.mmuuid:656f2400-6aee-1f58-bb3a-884bfa142717, B.mmuuid:6607ba80-6aee-1f58-bb3a-884bfa142717, B.mmuuid:66a05100-6aee-1f58-bb3a-884bfa142717, B.mmuuid:6738e780-6aee-1f58-bb3a-884bfa142717, B.mmuuid:67d17e00-6aee-1f58-bb3a-884bfa142717, B.mmuuid:699b4180-6aee-1f58-bb3a-884bfa142717, B.mmuuid:6acc6e80-6aee-1f58-bb3a-884bfa142717, B.mmuuid:6b650500-6aee-1f58-bb3a-884bfa142717, B.mmuuid:6bfd9b80-6aee-1f58-bb3a-884bfa142717, B.mmuuid:6c963200-6aee-1f58-bb3a-884bfa142717, B.mmuuid:6d2ec880-6aee-1f58-bb3a-884bfa142717, B.mmuuid:91b96b45-6af0-1f58-bb3a-884bfa142717, B.mmuuid:92ea9840-6af0-1f58-bb3a-884bfa142717, B.mmuuid:93832ec0-6af0-1f58-bb3a-884bfa142717, B.mmuuid:941bc540-6af0-1f58-bb3a-884bfa142717, B.mmuuid:94b45bc0-6af0-1f58-bb3a-884bfa142717, B.mmuuid:954cf240-6af0-1f58-bb3a-884bfa142717, B.mmuuid:95e588c0-6af0-1f58-bb3a-884bfa142717, B.mmuuid:967e1f40-6af0-1f58-bb3a-884bfa142717, B.mmuuid:9716b5c0-6af0-1f58-bb3a-884bfa142717, B.mmuuid:9847e2c0-6af0-1f58-bb3a-884bfa142717, B.mmuuid:9847e2c5-6af0-1f58-bb3a-884bfa142717, B.mmuuid:98e07944-6af0-1f58-bb3a-884bfa142717, B.mmuuid:99790fc3-6af0-1f58-bb3a-884bfa142717, B.mmuuid:9aaa3cc3-6af0-1f58-bb3a-884bfa142717, C.mmuuid:2688f651-4a88-1f51-a735-f0c2e18d1cb0 AS From_Plot_Lat, C.mmuuid:25f05fcf-4a88-1f51-a735-f0c2e18d1cb0 AS From_Plot_Lon, C.mmuuid:25f05fc6-4a88-1f51-a735-f0c2e18d1cb0 AS From_Plot_Label, convertGeoLocSymbol(C.mmuuid:2688f645-4a88-1f51-a735-f0c2e18d1cb0, 'AFD') AS From_Plot_Symbol, D.mmuuid:2688f651-4a88-1f51-a735-f0c2e18d1cb0 AS To_Plot_Lat, D.mmuuid:25f05fcf-4a88-1f51-a735-f0c2e18d1cb0 AS To_Plot_Lon, D.mmuuid:25f05fc6-4a88-1f51-a735-f0c2e18d1cb0 AS To_Plot_Label, convertGeoLocSymbol(D.mmuuid:2688f645-4a88-1f51-a735-f0c2e18d1cb0, 'AFD') AS To_Plot_Symbol, (A.mmuuid:e9adbd0b-4a87-1f51-a735-f0c2e18d1cb0 || ('/' || A.mmuuid:e9adbd05-4a87-1f51-a735-f0c2e18d1cb0)) AS Overall_Label FROM mmuuid:8681c5c0-6aea-1f58-bb3a-884bfa142717 AS B, (mmuuid:e9adbd00-4a87-1f51-a735-f0c2e18d1cb0 AS A LEFT OUTER JOIN mmuuid:25f05fc0-4a88-1f51-a735-f0c2e18d1cb0 AS C ON A.mmuuid:e9adbd04-4a87-1f51-a735-f0c2e18d1cb0 = C.mmuuid:25f05fc6-4a88-1f51-a735-f0c2e18d1cb0) LEFT OUTER JOIN mmuuid:25f05fc0-4a88-1f51-a735-f0c2e18d1cb0 AS D ON A.mmuuid:e9adbd0d-4a87-1f51-a735-f0c2e18d1cb0 = D.mmuuid:25f05fc6-4a88-1f51-a735-f0c2e18d1cb0 WHERE (A.mmuuid:e9adbd0b-4a87-1f51-a735-f0c2e18d1cb0 = B.mmuuid:43fef5c0-6aee-1f58-bb3a-884bfa142717) AND (A.mmuuid:e9adbd05-4a87-1f51-a735-f0c2e18d1cb0 = B.mmuuid:9a11a643-6af0-1f58-bb3a-884bfa142717)">
+        <nested 
+        	xsi:type="transformation:SqlTransformation" 
+        	xmi:uuid="mmuuid:71ca6440-6bec-1f58-bb3a-884bfa142717" 
+        	selectSql="SELECT A.Primary_Mission_Key, A.Leg_Id, B.Mission_Id, A.Source, A.ETMS_Time_Stamp, A.Flight_Id, A.Altitude, A.Origin_ICAO, A.Destination_ICAO, A.Aircraft_Type, A.ETA, A.Latitude, A.Longitude, A.Heading, A.Ground_Speed, B.Category_Id, B.First_Mission_Id, B.Tail_Num, B.Tail_Fleet, B.Mission_Class, B.Load_Type, B.Config_Code, B.Config_Text, B.Operator, B.Mission_Design_Series, B.NAF, B.Close_Watch, B.Current_Priority, B.Mission_Label, B.Next_Mission, B.Max_Priority, B.Previous_Mission, B.Current_Departure_Itinerary_Num, B.Current_Arrival_Itinerary_Num, B.Current_Itinerary_Num, B.Event_Code, B.Current_Status_Code, B.Time_Next_Event, B.Current_Estimated_ICAO, B.Next1_Estimated_ICAO, B.Next2_Estimated_ICAO, B.Next3_Estimated_ICAO, B.As_Required, B.Squadron, B.Aircraft_Name, B.Crew_Type, B.Wing, B.Last_Four_Social, B.NAF_Airlift_Division_Label, B.Serial_Order_Number, B.Contract_Num, B.Item_Num, B.Project_or_Exercise_Name, B.OPlan, B.Aircraft_Call_Sign, B.DIPS_Approved, B.DIPS_Required, B.Additional_Crew, B.Mission_Deviation, B.Reason_Code, B.On_Ground, B.Force_Code, B.Send_MAIRS, B.Tasked_Aircraft_Type, B.Tasked_Unit, B.Secure_Launch, B.Radar_Flag, B.Crew_Source, B.Flight_Message, B.Itinerary_Num, B.Cancelled, B.Event_Type, B.Scheduled_Time, B.Actual_Time, B.Estimated_Time, B.Scheduled_Purpose_Code, B.Actual_Purpose_Code, B.Estimated_Purpose_Code, B.Scheduled_ICAO, B.Actual_ICAO, B.Estimated_ICAO, B.Delay_Start_ACT_Landing, B.Arrival_Delay_Code, C.Latitude AS From_Plot_Lat, C.Longitude AS From_Plot_Lon, C.ICAO AS From_Plot_Label, convertGeoLocSymbol(C.Country_Code, 'AFD') AS From_Plot_Symbol, D.Latitude AS To_Plot_Lat, D.Longitude AS To_Plot_Lon, D.ICAO AS To_Plot_Label, convertGeoLocSymbol(D.Country_Code, 'AFD') AS To_Plot_Symbol, (A.Primary_Mission_Key || ('/' || A.Leg_Id)) AS Overall_Label FROM Air_Transportation_VML.Mission_Events AS B, (GDSS_VBL.ETMS_Flight_Data AS A LEFT OUTER JOIN GDSS_VBL.Station_Id_View AS C ON A.Origin_ICAO = C.ICAO) LEFT OUTER JOIN GDSS_VBL.Station_Id_View AS D ON A.Destination_ICAO = D.ICAO WHERE (A.Primary_Mission_Key = B.First_Mission_Id) AND (A.Leg_Id = B.Leg_Id)"/>
+      </helper>
+      <inputs href="#mmuuid/8681c5c0-6aea-1f58-bb3a-884bfa142717"/>
+    </transformationMappings>
+  </transformation:TransformationContainer>
+  <relational:BaseTable xmi:uuid="mmuuid:8681c5c0-6aea-1f58-bb3a-884bfa142717" name="Mission_Events" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:43665f40-6aee-1f58-bb3a-884bfa142717" name="Category_Id" fixedLength="true" precision="22" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:43fef5c0-6aee-1f58-bb3a-884bfa142717" name="First_Mission_Id" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:44978c40-6aee-1f58-bb3a-884bfa142717" name="Tail_Num" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:46614fc0-6aee-1f58-bb3a-884bfa142717" name="Tail_Fleet" length="7" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:46f9e640-6aee-1f58-bb3a-884bfa142717" name="Aircraft_Type" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:47927cc0-6aee-1f58-bb3a-884bfa142717" name="Mission_Id" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:482b1340-6aee-1f58-bb3a-884bfa142717" name="Mission_Class" length="8" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:48c3a9c0-6aee-1f58-bb3a-884bfa142717" name="Load_Type" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:495c4040-6aee-1f58-bb3a-884bfa142717" name="Config_Code" length="5" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:49f4d6c0-6aee-1f58-bb3a-884bfa142717" name="Config_Text" length="24" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:4a8d6d40-6aee-1f58-bb3a-884bfa142717" name="Operator" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:4b2603c0-6aee-1f58-bb3a-884bfa142717" name="Mission_Design_Series" length="8" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:4bbe9a40-6aee-1f58-bb3a-884bfa142717" name="NAF" length="2" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:4c5730c0-6aee-1f58-bb3a-884bfa142717" name="Close_Watch" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:4cefc740-6aee-1f58-bb3a-884bfa142717" name="Current_Priority" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:4d885dc0-6aee-1f58-bb3a-884bfa142717" name="Mission_Label" length="28" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:4e20f440-6aee-1f58-bb3a-884bfa142717" name="Next_Mission" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:4eb98ac0-6aee-1f58-bb3a-884bfa142717" name="Max_Priority" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:4feab7c0-6aee-1f58-bb3a-884bfa142717" name="Previous_Mission" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:50834e40-6aee-1f58-bb3a-884bfa142717" name="Current_Departure_Itinerary_Num" fixedLength="true" precision="22" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:511be4c0-6aee-1f58-bb3a-884bfa142717" name="Current_Arrival_Itinerary_Num" fixedLength="true" precision="22" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:524d11c0-6aee-1f58-bb3a-884bfa142717" name="Current_Itinerary_Num" fixedLength="true" precision="22" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:52e5a840-6aee-1f58-bb3a-884bfa142717" name="Event_Code" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:537e3ec0-6aee-1f58-bb3a-884bfa142717" name="Current_Status_Code" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5416d540-6aee-1f58-bb3a-884bfa142717" name="Time_Next_Event" fixedLength="true" precision="7" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:54af6bc0-6aee-1f58-bb3a-884bfa142717" name="Current_Estimated_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:55480240-6aee-1f58-bb3a-884bfa142717" name="Next1_Estimated_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:55e098c0-6aee-1f58-bb3a-884bfa142717" name="Next2_Estimated_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:56792f40-6aee-1f58-bb3a-884bfa142717" name="Next3_Estimated_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5711c5c0-6aee-1f58-bb3a-884bfa142717" name="As_Required" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:57aa5c40-6aee-1f58-bb3a-884bfa142717" name="Squadron" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5842f2c0-6aee-1f58-bb3a-884bfa142717" name="Aircraft_Name" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:58db8940-6aee-1f58-bb3a-884bfa142717" name="Crew_Type" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:59741fc0-6aee-1f58-bb3a-884bfa142717" name="Wing" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5a0cb640-6aee-1f58-bb3a-884bfa142717" name="Last_Four_Social" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5aa54cc0-6aee-1f58-bb3a-884bfa142717" name="NAF_Airlift_Division_Label" length="28" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5b3de340-6aee-1f58-bb3a-884bfa142717" name="Serial_Order_Number" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5bd679c0-6aee-1f58-bb3a-884bfa142717" name="Contract_Num" length="16" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5c6f1040-6aee-1f58-bb3a-884bfa142717" name="Item_Num" length="5" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5d07a6c0-6aee-1f58-bb3a-884bfa142717" name="Project_or_Exercise_Name" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5da03d40-6aee-1f58-bb3a-884bfa142717" name="OPlan" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5e38d3c0-6aee-1f58-bb3a-884bfa142717" name="Aircraft_Call_Sign" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5ed16a40-6aee-1f58-bb3a-884bfa142717" name="DIPS_Approved" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:643df700-6aee-1f58-bb3a-884bfa142717" name="DIPS_Required" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:64d68d80-6aee-1f58-bb3a-884bfa142717" name="Additional_Crew" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:656f2400-6aee-1f58-bb3a-884bfa142717" name="Mission_Deviation" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6607ba80-6aee-1f58-bb3a-884bfa142717" name="Reason_Code" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:66a05100-6aee-1f58-bb3a-884bfa142717" name="On_Ground" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6738e780-6aee-1f58-bb3a-884bfa142717" name="Force_Code" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:67d17e00-6aee-1f58-bb3a-884bfa142717" name="Send_MAIRS" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:699b4180-6aee-1f58-bb3a-884bfa142717" name="Tasked_Aircraft_Type" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6acc6e80-6aee-1f58-bb3a-884bfa142717" name="Tasked_Unit" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6b650500-6aee-1f58-bb3a-884bfa142717" name="Secure_Launch" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6bfd9b80-6aee-1f58-bb3a-884bfa142717" name="Radar_Flag" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6c963200-6aee-1f58-bb3a-884bfa142717" name="Crew_Source" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6d2ec880-6aee-1f58-bb3a-884bfa142717" name="Flight_Message" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:91b96b45-6af0-1f58-bb3a-884bfa142717" name="Itinerary_Num" fixedLength="true" precision="22" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:92ea9840-6af0-1f58-bb3a-884bfa142717" name="Cancelled" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:93832ec0-6af0-1f58-bb3a-884bfa142717" name="Event_Type" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:941bc540-6af0-1f58-bb3a-884bfa142717" name="Scheduled_Time" fixedLength="true" precision="7" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:94b45bc0-6af0-1f58-bb3a-884bfa142717" name="Actual_Time" fixedLength="true" precision="7" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:954cf240-6af0-1f58-bb3a-884bfa142717" name="Estimated_Time" fixedLength="true" precision="7" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:95e588c0-6af0-1f58-bb3a-884bfa142717" name="Scheduled_Purpose_Code" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:967e1f40-6af0-1f58-bb3a-884bfa142717" name="Actual_Purpose_Code" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9716b5c0-6af0-1f58-bb3a-884bfa142717" name="Estimated_Purpose_Code" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9847e2c0-6af0-1f58-bb3a-884bfa142717" name="Scheduled_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9847e2c5-6af0-1f58-bb3a-884bfa142717" name="Actual_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:98e07944-6af0-1f58-bb3a-884bfa142717" name="Estimated_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:99790fc3-6af0-1f58-bb3a-884bfa142717" name="Delay_Start_ACT_Landing" fixedLength="true" precision="7" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9a11a643-6af0-1f58-bb3a-884bfa142717" name="Leg_Id" fixedLength="true" precision="22" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9aaa3cc3-6af0-1f58-bb3a-884bfa142717" name="Arrival_Delay_Code" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+  </relational:BaseTable>
+  <relational:BaseTable xmi:uuid="mmuuid:92bd0240-6be5-1f58-bb3a-884bfa142717" name="Flight_Data_Mission_Events" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:1c9e9480-6bee-1f58-bb3a-884bfa142717" name="Primary_Mission_Key" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:1dcfc180-6bee-1f58-bb3a-884bfa142717" name="Leg_Id" fixedLength="true" precision="22" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:1f00ee80-6bee-1f58-bb3a-884bfa142717" name="Mission_Id" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:20321b80-6bee-1f58-bb3a-884bfa142717" name="Source" length="8" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:21634880-6bee-1f58-bb3a-884bfa142717" name="ETMS_Time_Stamp" fixedLength="true" precision="7" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:21fbdf00-6bee-1f58-bb3a-884bfa142717" name="Flight_Id" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:258f6600-6bee-1f58-bb3a-884bfa142717" name="Altitude" fixedLength="true" precision="22" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:27f1c000-6bee-1f58-bb3a-884bfa142717" name="Origin_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2922ed00-6bee-1f58-bb3a-884bfa142717" name="Destination_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2a541a00-6bee-1f58-bb3a-884bfa142717" name="Aircraft_Type" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2aecb080-6bee-1f58-bb3a-884bfa142717" name="ETA" fixedLength="true" precision="7" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2c1ddd80-6bee-1f58-bb3a-884bfa142717" name="Latitude" fixedLength="true" precision="126" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#float"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2d4f0a80-6bee-1f58-bb3a-884bfa142717" name="Longitude" fixedLength="true" precision="126" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#float"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2e803780-6bee-1f58-bb3a-884bfa142717" name="Heading" fixedLength="true" precision="22" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2fb16480-6bee-1f58-bb3a-884bfa142717" name="Ground_Speed" fixedLength="true" precision="22" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:53b2b300-6bf0-1f58-bb3a-884bfa142717" name="Category_Id" fixedLength="true" precision="22" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:54e3e000-6bf0-1f58-bb3a-884bfa142717" name="First_Mission_Id" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:56150d00-6bf0-1f58-bb3a-884bfa142717" name="Tail_Num" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:57463a00-6bf0-1f58-bb3a-884bfa142717" name="Tail_Fleet" length="7" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:59a89400-6bf0-1f58-bb3a-884bfa142717" name="Mission_Class" length="8" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5a412a80-6bf0-1f58-bb3a-884bfa142717" name="Load_Type" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5b725780-6bf0-1f58-bb3a-884bfa142717" name="Config_Code" length="5" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5ca38480-6bf0-1f58-bb3a-884bfa142717" name="Config_Text" length="24" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5dd4b180-6bf0-1f58-bb3a-884bfa142717" name="Operator" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:5f05de80-6bf0-1f58-bb3a-884bfa142717" name="Mission_Design_Series" length="8" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:60370b80-6bf0-1f58-bb3a-884bfa142717" name="NAF" length="2" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:62996580-6bf0-1f58-bb3a-884bfa142717" name="Close_Watch" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:63ca9280-6bf0-1f58-bb3a-884bfa142717" name="Current_Priority" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:64fbbf80-6bf0-1f58-bb3a-884bfa142717" name="Mission_Label" length="28" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:662cec80-6bf0-1f58-bb3a-884bfa142717" name="Next_Mission" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:675e1980-6bf0-1f58-bb3a-884bfa142717" name="Max_Priority" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:67f6b000-6bf0-1f58-bb3a-884bfa142717" name="Previous_Mission" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6927dd00-6bf0-1f58-bb3a-884bfa142717" name="Current_Departure_Itinerary_Num" fixedLength="true" precision="22" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6a590a00-6bf0-1f58-bb3a-884bfa142717" name="Current_Arrival_Itinerary_Num" fixedLength="true" precision="22" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6b8a3700-6bf0-1f58-bb3a-884bfa142717" name="Current_Itinerary_Num" fixedLength="true" precision="22" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6cbb6400-6bf0-1f58-bb3a-884bfa142717" name="Event_Code" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6dec9100-6bf0-1f58-bb3a-884bfa142717" name="Current_Status_Code" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6f1dbe00-6bf0-1f58-bb3a-884bfa142717" name="Time_Next_Event" fixedLength="true" precision="7" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:704eeb00-6bf0-1f58-bb3a-884bfa142717" name="Current_Estimated_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:70e78180-6bf0-1f58-bb3a-884bfa142717" name="Next1_Estimated_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7218ae80-6bf0-1f58-bb3a-884bfa142717" name="Next2_Estimated_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:73e27200-6bf0-1f58-bb3a-884bfa142717" name="Next3_Estimated_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:747b0880-6bf0-1f58-bb3a-884bfa142717" name="As_Required" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:75ac3580-6bf0-1f58-bb3a-884bfa142717" name="Squadron" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:76dd6280-6bf0-1f58-bb3a-884bfa142717" name="Aircraft_Name" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:780e8f80-6bf0-1f58-bb3a-884bfa142717" name="Crew_Type" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:793fbc80-6bf0-1f58-bb3a-884bfa142717" name="Wing" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7a70e980-6bf0-1f58-bb3a-884bfa142717" name="Last_Four_Social" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7bb158c0-6bf0-1f58-bb3a-884bfa142717" name="NAF_Airlift_Division_Label" length="28" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7ce285c0-6bf0-1f58-bb3a-884bfa142717" name="Serial_Order_Number" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7e13b2c0-6bf0-1f58-bb3a-884bfa142717" name="Contract_Num" length="16" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7f44dfc0-6bf0-1f58-bb3a-884bfa142717" name="Item_Num" length="5" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:80760cc0-6bf0-1f58-bb3a-884bfa142717" name="Project_or_Exercise_Name" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:81a739c0-6bf0-1f58-bb3a-884bfa142717" name="OPlan" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:823fd040-6bf0-1f58-bb3a-884bfa142717" name="Aircraft_Call_Sign" length="12" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:84a22a40-6bf0-1f58-bb3a-884bfa142717" name="DIPS_Approved" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:85d35740-6bf0-1f58-bb3a-884bfa142717" name="DIPS_Required" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:87048440-6bf0-1f58-bb3a-884bfa142717" name="Additional_Crew" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:8835b140-6bf0-1f58-bb3a-884bfa142717" name="Mission_Deviation" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:8966de40-6bf0-1f58-bb3a-884bfa142717" name="Reason_Code" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:8a980b40-6bf0-1f58-bb3a-884bfa142717" name="On_Ground" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:8bc93840-6bf0-1f58-bb3a-884bfa142717" name="Force_Code" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:8cfa6540-6bf0-1f58-bb3a-884bfa142717" name="Send_MAIRS" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:8d92fbc0-6bf0-1f58-bb3a-884bfa142717" name="Tasked_Aircraft_Type" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:8ec428c0-6bf0-1f58-bb3a-884bfa142717" name="Tasked_Unit" length="6" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:8ff555c0-6bf0-1f58-bb3a-884bfa142717" name="Secure_Launch" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:912682c0-6bf0-1f58-bb3a-884bfa142717" name="Radar_Flag" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9257afc0-6bf0-1f58-bb3a-884bfa142717" name="Crew_Source" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9388dcc0-6bf0-1f58-bb3a-884bfa142717" name="Flight_Message" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:94ba09c0-6bf0-1f58-bb3a-884bfa142717" name="Itinerary_Num" fixedLength="true" precision="22" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:95eb36c0-6bf0-1f58-bb3a-884bfa142717" name="Cancelled" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9683cd40-6bf0-1f58-bb3a-884bfa142717" name="Event_Type" length="1" fixedLength="true" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:97b4fa40-6bf0-1f58-bb3a-884bfa142717" name="Scheduled_Time" fixedLength="true" precision="7" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:98e62740-6bf0-1f58-bb3a-884bfa142717" name="Actual_Time" fixedLength="true" precision="7" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9a175440-6bf0-1f58-bb3a-884bfa142717" name="Estimated_Time" fixedLength="true" precision="7" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9b488140-6bf0-1f58-bb3a-884bfa142717" name="Scheduled_Purpose_Code" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9c79ae40-6bf0-1f58-bb3a-884bfa142717" name="Actual_Purpose_Code" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9daadb40-6bf0-1f58-bb3a-884bfa142717" name="Estimated_Purpose_Code" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9edc0840-6bf0-1f58-bb3a-884bfa142717" name="Scheduled_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:a00d3540-6bf0-1f58-bb3a-884bfa142717" name="Actual_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:a13e6240-6bf0-1f58-bb3a-884bfa142717" name="Estimated_ICAO" length="4" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:a26f8f40-6bf0-1f58-bb3a-884bfa142717" name="Delay_Start_ACT_Landing" fixedLength="true" precision="7" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:a3a0bc45-6bf0-1f58-bb3a-884bfa142717" name="Arrival_Delay_Code" length="3" fixedLength="true" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:e80d99c0-92b8-1fd2-9209-88d6afdc3cd3" name="From_Plot_Lat">
+      <type href="http://www.w3.org/2001/XMLSchema#float"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:e901bdc0-92b8-1fd2-9209-88d6afdc3cd3" name="From_Plot_Lon">
+      <type href="http://www.w3.org/2001/XMLSchema#float"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:e901bdc5-92b8-1fd2-9209-88d6afdc3cd3" name="From_Plot_Label" length="4">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:e9f5e1c0-92b8-1fd2-9209-88d6afdc3cd3" name="From_Plot_Symbol" length="15">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:e9f5e1c5-92b8-1fd2-9209-88d6afdc3cd3" name="To_Plot_Lat">
+      <type href="http://www.w3.org/2001/XMLSchema#float"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:eadac380-92b8-1fd2-9209-88d6afdc3cd3" name="To_Plot_Lon">
+      <type href="http://www.w3.org/2001/XMLSchema#float"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:eadac385-92b8-1fd2-9209-88d6afdc3cd3" name="To_Plot_Label" length="4">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:ebcee780-92b8-1fd2-9209-88d6afdc3cd3" name="To_Plot_Symbol" length="15">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:e6349400-92b8-1fd2-9209-88d6afdc3cd3" name="Overall_Label" length="28">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+  </relational:BaseTable>
+</xmi:XMI>

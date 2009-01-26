@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:jdbc="http://www.metamatrix.com/metamodels/JDBC" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:184bca80-d718-1f52-982e-b5bf83c35e91" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" maxSetSize="1000" supportsOuterJoin="true">
+    <modelImports xmi:uuid="mmuuid:3f8492c0-d719-1f52-982e-b5bf83c35e91" name="XMLSchema" path="http://www.w3.org/2001/XMLSchema"/>
+    <modelImports xmi:uuid="mmuuid:40697480-d719-1f52-982e-b5bf83c35e91" name="SimpleDatatypes-instance" path="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"/>
+  </mmcore:ModelAnnotation>
+  <Relational:BaseTable xmi:uuid="mmuuid:2ea5d640-d718-1f52-982e-b5bf83c35e91" name="PRODUCTDATA" nameInSource="PRODUCTDATA" cardinality="103">
+    <columns xmi:uuid="mmuuid:ad4ec380-d718-1f52-982e-b5bf83c35e91" name="INSTR_ID" nameInSource="INSTR_ID" nativeType="VARCHAR2" length="10" nullable="NO_NULLS" uniqueKeys="mmuuid/b2e91700-d718-1f52-982e-b5bf83c35e91">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:af27c940-d718-1f52-982e-b5bf83c35e91" name="NAME" nameInSource="NAME" nativeType="VARCHAR2" length="60">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:af27c941-d718-1f52-982e-b5bf83c35e91" name="TYPE" nameInSource="TYPE" nativeType="VARCHAR2" length="15">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:af27c942-d718-1f52-982e-b5bf83c35e91" name="ISSUER" nameInSource="ISSUER" nativeType="VARCHAR2" length="10">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:af27c943-d718-1f52-982e-b5bf83c35e91" name="EXCHANGE" nameInSource="EXCHANGE" nativeType="VARCHAR2" length="10">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:b01bed40-d718-1f52-982e-b5bf83c35e91" name="ISDJI" nameInSource="ISDJI" nativeType="NUMBER" fixedLength="true" precision="38" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:b01bed41-d718-1f52-982e-b5bf83c35e91" name="ISSP500" nameInSource="ISSP500" nativeType="NUMBER" fixedLength="true" precision="38" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:b01bed42-d718-1f52-982e-b5bf83c35e91" name="ISNAS100" nameInSource="ISNAS100" nativeType="NUMBER" fixedLength="true" precision="38" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:b01bed43-d718-1f52-982e-b5bf83c35e91" name="ISAMEXINT" nameInSource="ISAMEXINT" nativeType="NUMBER" fixedLength="true" precision="38" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:b01bed44-d718-1f52-982e-b5bf83c35e91" name="PRIBUSINESS" nameInSource="PRIBUSINESS" nativeType="VARCHAR2" length="30">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:b2e91700-d718-1f52-982e-b5bf83c35e91" name="PK_PD_INSTR_ID" nameInSource="PK_PD_INSTR_ID" columns="mmuuid/ad4ec380-d718-1f52-982e-b5bf83c35e91" foreignKeys="mmuuid/2ec4da80-d719-1f52-982e-b5bf83c35e91"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:b9684c40-d718-1f52-982e-b5bf83c35e91" name="PRODUCTSYMBOLS" nameInSource="PRODUCTSYMBOLS" cardinality="103">
+    <columns xmi:uuid="mmuuid:2b038cc0-d719-1f52-982e-b5bf83c35e91" name="INSTR_ID" nameInSource="INSTR_ID" nativeType="VARCHAR2" length="10" nullable="NO_NULLS" uniqueKeys="mmuuid/2bf7b0c0-d719-1f52-982e-b5bf83c35e91" foreignKeys="mmuuid/2ec4da80-d719-1f52-982e-b5bf83c35e91">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2b038cc1-d719-1f52-982e-b5bf83c35e91" name="SYMBOL_TYPE" nameInSource="SYMBOL_TYPE" nativeType="NUMBER" fixedLength="true" precision="38" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2b038cc2-d719-1f52-982e-b5bf83c35e91" name="SYMBOL" nameInSource="SYMBOL" nativeType="VARCHAR2" length="10" nullable="NO_NULLS">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2b038cc3-d719-1f52-982e-b5bf83c35e91" name="CUSIP" nameInSource="CUSIP" nativeType="VARCHAR2" length="10">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <foreignKeys xmi:uuid="mmuuid:2ec4da80-d719-1f52-982e-b5bf83c35e91" name="FK_INSTR_ID" nameInSource="FK_INSTR_ID" foreignKeyMultiplicity="UNSPECIFIED" primaryKeyMultiplicity="UNSPECIFIED" columns="mmuuid/2b038cc0-d719-1f52-982e-b5bf83c35e91" uniqueKey="mmuuid/b2e91700-d718-1f52-982e-b5bf83c35e91"/>
+    <primaryKey xmi:uuid="mmuuid:2bf7b0c0-d719-1f52-982e-b5bf83c35e91" name="PK_PS_INSTR_ID" nameInSource="PK_PS_INSTR_ID" columns="mmuuid/2b038cc0-d719-1f52-982e-b5bf83c35e91"/>
+  </Relational:BaseTable>
+  <jdbc:JdbcSource xmi:uuid="mmuuid:20657d40-d715-1f52-982e-b5bf83c35e91" name="Products" driverName="MetaMatrix Oracle" driverClass="com.metamatrix.jdbc.oracle.OracleDriver" username="Products" url="jdbc:mmx:oracle://slntds04:1521;Sid=ds04">
+    <importSettings xmi:uuid="mmuuid:38988ec0-d715-1f52-982e-b5bf83c35e91" createSchemasInModel="false">
+      <includedSchemaPaths>/PRODUCTS</includedSchemaPaths>
+      <includedTableTypes>TABLE</includedTableTypes>
+    </importSettings>
+  </jdbc:JdbcSource>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:4e6b4540-d719-1f52-982e-b5bf83c35e91">
+    <diagram xmi:uuid="mmuuid:4d772140-d719-1f52-982e-b5bf83c35e91" type="packageDiagramType" target="mmuuid/184bca80-d718-1f52-982e-b5bf83c35e91">
+      <diagramEntity xmi:uuid="mmuuid:e185f640-d719-1f52-982e-b5bf83c35e91" modelObject="mmuuid/2ea5d640-d718-1f52-982e-b5bf83c35e91" xPosition="299" yPosition="30"/>
+      <diagramEntity xmi:uuid="mmuuid:e27a1a40-d719-1f52-982e-b5bf83c35e91" modelObject="mmuuid/b9684c40-d718-1f52-982e-b5bf83c35e91" xPosition="30" yPosition="67"/>
+    </diagram>
+  </Diagram:DiagramContainer>
+</xmi:XMI>

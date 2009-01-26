@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:jdbc="http://www.metamatrix.com/metamodels/JDBC">
+  <jdbc:JdbcDriverContainer>
+    <jdbcDrivers name="MetaMatrix JDBC for Oracle" preferredDriverClassName="com.metamatrix.jdbc.oracle.OracleDriver">
+      <jarFileUris>com.metamatrix.datadirect/MJbase.jar</jarFileUris>
+      <jarFileUris>com.metamatrix.datadirect/MJutil.jar</jarFileUris>
+      <jarFileUris>com.metamatrix.datadirect/MJoracle.jar</jarFileUris>
+      <availableDriverClassNames>com.metamatrix.jdbc.oracle.OracleDriver</availableDriverClassNames>
+      <availableDriverClassNames>com.metamatrix.jdbcx.oracle.OracleDataSource</availableDriverClassNames>
+    </jdbcDrivers>
+    <jdbcDrivers name="Oracle JDBC" preferredDriverClassName="oracle.jdbc.OracleDriver">
+      <jarFileUris>com.oracle.jdbc/oracle9iclasses12.zip</jarFileUris>
+      <availableDriverClassNames>oracle.jdbc.OracleDriver</availableDriverClassNames>
+    </jdbcDrivers>
+    <jdbcDrivers name="MetaMatrix JDBC for SQL Server" preferredDriverClassName="com.metamatrix.jdbc.sqlserver.SQLServerDriver">
+      <jarFileUris>com.metamatrix.datadirect/MJbase.jar</jarFileUris>
+      <jarFileUris>com.metamatrix.datadirect/MJutil.jar</jarFileUris>
+      <jarFileUris>com.metamatrix.datadirect/MJsqlserver.jar</jarFileUris>
+      <availableDriverClassNames>com.metamatrix.jdbc.sqlserver.SQLServerDriver</availableDriverClassNames>
+      <availableDriverClassNames>com.metamatrix.jdbcx.sqlserver.SQLServerDataSource</availableDriverClassNames>
+    </jdbcDrivers>
+    <jdbcDrivers name="MySQL JDBC" preferredDriverClassName="com.mysql.jdbc.Driver">
+      <jarFileUris>mysql-jdbcdriver.jar</jarFileUris>
+      <availableDriverClassNames>com.mysql.jdbc.Driver</availableDriverClassNames>
+      <availableDriverClassNames>com.mysql.jdbc.jdbc2.optional.MysqlDataSource</availableDriverClassNames>
+    </jdbcDrivers>
+    <jdbcDrivers name="WebLogic SQL Server JDBC" preferredDriverClassName="weblogic.jdbc.mssqlserver4.Driver">
+      <jarFileUris>mssqlserver4v65.jar</jarFileUris>
+      <jarFileUris>license.zip</jarFileUris>
+      <availableDriverClassNames>weblogic.jdbc.mssqlserver4.Driver</availableDriverClassNames>
+    </jdbcDrivers>
+    <jdbcDrivers name="MetaMatrix JDBC for Informix" preferredDriverClassName="com.metamatrix.jdbc.informix.InformixDriver">
+      <jarFileUris>com.metamatrix.datadirect/MJbase.jar</jarFileUris>
+      <jarFileUris>com.metamatrix.datadirect/MJutil.jar</jarFileUris>
+      <jarFileUris>com.metamatrix.datadirect/MJinformix.jar</jarFileUris>
+      <availableDriverClassNames>com.metamatrix.jdbc.informix.InformixDriver</availableDriverClassNames>
+      <availableDriverClassNames>com.metamatrix.jdbcx.informix.InformixDataSource</availableDriverClassNames>
+    </jdbcDrivers>
+    <jdbcDrivers name="MetaMatrix JDBC for Informix - SPY" preferredDriverClassName="com.metamatrix.jdbc.informix.InformixDriver">
+      <jarFileUris>com.metamatrix.datadirect/MJbase.jar</jarFileUris>
+      <jarFileUris>com.metamatrix.datadirect/MJutil.jar</jarFileUris>
+      <jarFileUris>com.metamatrix.datadirect/MJinformix.jar</jarFileUris>
+      <jarFileUris>com.metamatrix.datadirect/MJspy.jar</jarFileUris>
+      <availableDriverClassNames>com.metamatrix.jdbc.informix.InformixDriver</availableDriverClassNames>
+      <availableDriverClassNames>com.metamatrix.jdbcx.informix.InformixDataSource</availableDriverClassNames>
+    </jdbcDrivers>
+  </jdbc:JdbcDriverContainer>
+  <jdbc:JdbcSourceContainer>
+    <!-- 
+          Oracle
+    -->
+    <jdbcSources name="Oracle PartsSupplier">
+      <driverName>Oracle JDBC</driverName>
+      <driverClass>oracle.jdbc.OracleDriver</driverClass>
+      <url>jdbc:oracle:thin:@slntds04.mm.atl2.redhat.com:1521:ds04</url>
+      <username>partssupplier</username>
+    </jdbcSources>
+    <jdbcSources name="Oracle PartsSupplier (w/MetaMatrix Driver)">
+      <driverName>MetaMatrix JDBC for Oracle</driverName>
+      <driverClass>com.metamatrix.jdbc.oracle.OracleDriver</driverClass>
+      <url>jdbc:mmx:oracle://slntds04.mm.atl2.redhat.com;Sid=ds04;Port=1521</url>
+      <username>partssupplier</username>
+    </jdbcSources>
+    <jdbcSources name="Oracle PartsSupplier (w/MetaMatrix DataSource)">
+      <driverName>MetaMatrix JDBC for Oracle</driverName>
+      <driverClass>com.metamatrix.jdbcx.oracle.OracleDataSource</driverClass>
+      <properties name="sid" value="ds04"/>
+      <properties name="serverName" value="slntds04.mm.atl2.redhat.com"/>
+      <properties name="portNumber" value="1521"/>
+      <properties name="user" value="partssupplier"/>
+      <properties name="catalogIncludesSynonyms" value="false"/>
+    </jdbcSources>
+    <jdbcSources name="Oracle apollo_rep_test (w/MetaMatrix Driver)">
+      <driverName>MetaMatrix JDBC for Oracle</driverName>
+      <driverClass>com.metamatrix.jdbcx.oracle.OracleDataSource</driverClass>
+      <properties name="sid" value="ds04"/>
+      <properties name="serverName" value="slntds04.mm.atl2.redhat.com"/>
+      <properties name="portNumber" value="1521"/>
+      <properties name="user" value="apollo_rep_test3"/>
+      <properties name="catalogIncludesSynonyms" value="false"/>
+    </jdbcSources>
+    <jdbcSources name="Oracle stress_test">
+      <driverName>Oracle JDBC</driverName>
+      <driverClass>oracle.jdbc.OracleDriver</driverClass>
+      <url>jdbc:oracle:thin:@slntds04.mm.atl2.redhat.com:1521:ds04</url>
+      <username>stress_test</username>
+    </jdbcSources>
+    <jdbcSources name="Oracle stress_test (w/MetaMatrix Driver)">
+      <driverName>MetaMatrix JDBC for Oracle</driverName>
+      <driverClass>com.metamatrix.jdbcx.oracle.OracleDataSource</driverClass>
+      <properties name="sid" value="ds04"/>
+      <properties name="serverName" value="slntds04.mm.atl2.redhat.com"/>
+      <properties name="portNumber" value="1521"/>
+      <properties name="user" value="stress_test"/>
+      <properties name="catalogIncludesSynonyms" value="false"/>
+    </jdbcSources>
+    <jdbcSources name="Oracle Modeler Import Test">
+      <driverName>Oracle JDBC</driverName>
+      <driverClass>oracle.jdbc.OracleDriver</driverClass>
+      <url>jdbc:oracle:thin:@slntds04.mm.atl2.redhat.com:1521:ds04</url>
+      <username>mit</username>
+    </jdbcSources>
+    <!-- 
+          SQL Server
+    -->
+    <jdbcSources name="SQL Server PartsSupplier (w/MetaMatrix Driver)">
+      <driverName>MetaMatrix JDBC for SQL Server</driverName>
+      <driverClass>com.metamatrix.jdbc.sqlserver.SQLServerDriver</driverClass>
+      <url>jdbc:mmx:sqlserver://slntdb02.mm.atl2.redhat.com:1433;DatabaseName=PartsSupplier</url>
+      <username>partssupplier</username>
+    </jdbcSources>
+    <jdbcSources name="SQL Server PartsSupplier (w/MetaMatrix DataSource)">
+      <driverName>MetaMatrix JDBC for SQL Server</driverName>
+      <driverClass>com.metamatrix.jdbcx.sqlserver.SQLServerDataSource</driverClass>
+      <properties name="databaseName" value="partssupplier"/>
+      <properties name="serverName" value="slntdb02.mm.atl2.redhat.com"/>
+      <properties name="portNumber" value="1433"/>
+      <properties name="user" value="partssupplier"/>
+    </jdbcSources>
+    <jdbcSources name="SQL Server BQT2 (w/WebLogic Driver)">
+      <driverName>WebLogic SQL Server JDBC</driverName>
+      <driverClass>weblogic.jdbc.mssqlserver4.Driver</driverClass>
+      <url>jdbc:weblogic:mssqlserver4:BQT2@sl2kds04</url>
+      <username>BQT2</username>
+    </jdbcSources>
+    <!-- 
+          Informix
+    -->
+    <jdbcSources name="Informix BQT2 (w/MetaMatrix Driver)">
+      <driverName>MetaMatrix JDBC for Informix</driverName>
+      <driverClass>com.metamatrix.jdbc.informix.InformixDriver</driverClass>
+      <url>jdbc:mmx:informix://slntds03.mm.atl2.redhat.com:1527;informixServer=slntds03_informix1;DatabaseName=bqt2</url>
+      <username>bqt2</username>
+    </jdbcSources>
+    <jdbcSources name="Informix BQT2 (w/MetaMatrix Driver) - SPY">
+      <driverName>MetaMatrix JDBC for Informix - SPY</driverName>
+      <driverClass>com.metamatrix.jdbc.informix.InformixDriver</driverClass>
+      <url>jdbc:spy:mmx:informix://slntds03.mm.atl2.redhat.com:1527;informixServer=slntds03_informix1;DatabaseName=bqt2;log=(file)e:\plugins\current\plugins\com.metamatrix.modeler.jdbc\testdata\spy.log;logTName=yes;timestamp=yes</url>
+      <username>bqt2</username>
+    </jdbcSources>
+    <jdbcSources name="Informix PartsSupplier (w/MetaMatrix Driver) - SPY">
+      <driverName>MetaMatrix JDBC for Informix - SPY</driverName>
+      <driverClass>com.metamatrix.jdbc.informix.InformixDriver</driverClass>
+      <url>jdbc:spy:mmx:informix://slntds03.mm.atl2.redhat.com:1527;informixServer=slntds03_informix1;DatabaseName=partssupplier;log=(file)e:\plugins\current\plugins\com.metamatrix.modeler.jdbc\testdata\spy2.log;logTName=yes;timestamp=yes</url>
+      <username>partssupplier</username>
+    </jdbcSources>
+    <jdbcSources name="Informix BQT2 (w/MetaMatrix DataSource)">
+      <driverName>MetaMatrix JDBC for Informix</driverName>
+      <driverClass>com.metamatrix.jdbcx.informix.InformixDataSource</driverClass>
+      <properties name="databaseName" value="bqt2"/>
+      <properties name="informixServer" value="slntds03_informix1"/>
+      <properties name="serverName" value="slntds03.mm.atl2.redhat.com"/>
+      <properties name="portNumber" value="1527"/>
+      <properties name="user" value="bqt2"/>
+    </jdbcSources>
+    <jdbcSources name="Informix BQT2 (w/MetaMatrix DataSource) - SPY">
+      <driverName>MetaMatrix JDBC for Informix - SPY</driverName>
+      <driverClass>com.metamatrix.jdbcx.informix.InformixDataSource</driverClass>
+      <properties name="databaseName" value="bqt2"/>
+      <properties name="informixServer" value="slntds03_informix1"/>
+      <properties name="serverName" value="slntds03.mm.redhat.com"/>
+      <properties name="portNumber" value="1527"/>
+      <properties name="user" value="bqt2"/>
+      <properties name="spyAttributes" value="log=(file)e:\plugins\current\plugins\com.metamatrix.modeler.jdbc\testdata\spy.log;logTName=yes;timestamp=yes"/>
+    </jdbcSources>
+    <!-- 
+          MySQL
+    -->
+    <jdbcSources name="MySQL PartsSupplier">
+      <driverName>MySQL JDBC</driverName>
+      <driverClass>com.mysql.jdbc.Driver</driverClass>
+      <url>jdbc:mysql://slnt1qm02/PartsSupplier</url>
+      <username>partssupplier</username>
+    </jdbcSources>
+    <!-- 
+          RedBrick
+    -->
+    <jdbcSources name="MySQL PartsSupplier">
+      <driverName>RedBrick JDBC</driverName>
+      <driverClass>redbrick.jdbc.RBWDriver</driverClass>
+      <url>jdbc:rbw:protocol:sl2kdb03:5050/aroma</url>
+      <username>system</username>
+    </jdbcSources>
+  </jdbc:JdbcSourceContainer>
+</xmi:XMI>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.metamatrix.com/vParts_Input" xmlns="http://www.metamatrix.com/vParts_Input" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="suppInfo_Input" type="suppInfo_Input_Type"/>
+  <xs:complexType name="suppInfo_Input_Type">
+    <xs:sequence>
+      <xs:element name="SUPPLIER_ID" nillable="false" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

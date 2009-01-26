@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:vdb="http://www.metamatrix.com/metamodels/VirtualDatabase">
+  <vdb:VirtualDatabase name="sampleVdbManifest">
+  </vdb:VirtualDatabase>
+</xmi:XMI>

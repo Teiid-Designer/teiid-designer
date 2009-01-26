@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/NamespaceSpecifiedUnqualifed" targetNamespace="http://www.example.org/NamespaceSpecifiedUnqualifed" attributeFormDefault="qualified" elementFormDefault="qualified">
+
+	<!--  "Test for modeling schemas with qualified namespaces" -->
+	<xsd:element name="Gamma" type="tns:Alpha"></xsd:element>
+
+	<xsd:complexType name="Alpha">
+		<xsd:sequence>
+			<xsd:element name="Beta" type="xsd:string" minOccurs="1" maxOccurs="1"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+</xsd:schema>

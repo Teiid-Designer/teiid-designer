@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:primitive_types
+	xmlns:tns="http://www.example.org/primitive_datatypes"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.example.org/primitive_datatypes"
+	string="" duration="P1D" anyURI="http://tempuri.org" decimal="0.0"
+	QName="QName" gYearMonth="2001-01" gYear="2001" base64Binary="/9j/"
+	time="12:00:00" dateTime="2001-12-31T12:00:00" gDay="---01"
+	gMonthDay="--01-01" hexBinary="0F00" gMonth="--01--" boolean="true"
+	date="2001-01-01" double="0.0" float="0.0">
+</tns:primitive_types>

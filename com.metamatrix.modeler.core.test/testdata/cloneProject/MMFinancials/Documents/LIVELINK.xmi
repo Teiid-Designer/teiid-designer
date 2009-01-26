@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:jdbc="http://www.metamatrix.com/metamodels/JDBC" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:972fba40-5e42-1f20-ad06-a70a6f8efcd0" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" maxSetSize="1000" ProducerName="MetaMatrix" ProducerVersion="5.0">
+    <modelImports xmi:uuid="mmuuid:01d6e780-091f-1f24-a537-e40e182382b0" name="SimpleDatatypes-instance" modelLocation="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"/>
+    <modelImports xmi:uuid="mmuuid:031756c0-091f-1f24-a537-e40e182382b0" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema"/>
+  </mmcore:ModelAnnotation>
+  <Relational:BaseTable xmi:uuid="mmuuid:c8164480-5ec9-1f20-ad06-a70a6f8efcd0" name="DTREE" nameInSource="LLTEST.DTREE">
+    <columns xmi:uuid="mmuuid:c81644a2-5ec9-1f20-ad06-a70a6f8efcd0" name="OWNERID" nameInSource="OWNERID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164492-5ec9-1f20-ad06-a70a6f8efcd0" name="PARENTID" nameInSource="PARENTID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164489-5ec9-1f20-ad06-a70a6f8efcd0" name="DATAID" nameInSource="DATAID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164486-5ec9-1f20-ad06-a70a6f8efcd0" name="NAME" nameInSource="NAME" nativeType="VARCHAR2" length="255" nullable="NO_NULLS">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c816448b-5ec9-1f20-ad06-a70a6f8efcd0" name="ORIGINOWNERID" nameInSource="ORIGINOWNERID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164494-5ec9-1f20-ad06-a70a6f8efcd0" name="ORIGINDATAID" nameInSource="ORIGINDATAID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c816448e-5ec9-1f20-ad06-a70a6f8efcd0" name="USERID" nameInSource="USERID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c81644a5-5ec9-1f20-ad06-a70a6f8efcd0" name="GROUPID" nameInSource="GROUPID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c816449c-5ec9-1f20-ad06-a70a6f8efcd0" name="UPERMISSIONS" nameInSource="UPERMISSIONS" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164499-5ec9-1f20-ad06-a70a6f8efcd0" name="GPERMISSIONS" nameInSource="GPERMISSIONS" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164484-5ec9-1f20-ad06-a70a6f8efcd0" name="WPERMISSIONS" nameInSource="WPERMISSIONS" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164485-5ec9-1f20-ad06-a70a6f8efcd0" name="SPERMISSIONS" nameInSource="SPERMISSIONS" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c81644ab-5ec9-1f20-ad06-a70a6f8efcd0" name="ACLCOUNT" nameInSource="ACLCOUNT" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c81644a9-5ec9-1f20-ad06-a70a6f8efcd0" name="PERMID" nameInSource="PERMID" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164497-5ec9-1f20-ad06-a70a6f8efcd0" name="DATATYPE" nameInSource="DATATYPE" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164496-5ec9-1f20-ad06-a70a6f8efcd0" name="CREATEDBY" nameInSource="CREATEDBY" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c81644a3-5ec9-1f20-ad06-a70a6f8efcd0" name="CREATEDATE" nameInSource="CREATEDATE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c81644ae-5ec9-1f20-ad06-a70a6f8efcd0" name="MODIFYDATE" nameInSource="MODIFYDATE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c81644a0-5ec9-1f20-ad06-a70a6f8efcd0" name="MAXVERS" nameInSource="MAXVERS" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164493-5ec9-1f20-ad06-a70a6f8efcd0" name="RESERVED" nameInSource="RESERVED" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c81644a1-5ec9-1f20-ad06-a70a6f8efcd0" name="RESERVEDBY" nameInSource="RESERVEDBY" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c816448c-5ec9-1f20-ad06-a70a6f8efcd0" name="RESERVEDDATE" nameInSource="RESERVEDDATE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164495-5ec9-1f20-ad06-a70a6f8efcd0" name="VERSIONNUM" nameInSource="VERSIONNUM" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c816449d-5ec9-1f20-ad06-a70a6f8efcd0" name="DCOMMENT" nameInSource="DCOMMENT" nativeType="VARCHAR2" length="2000">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c816449a-5ec9-1f20-ad06-a70a6f8efcd0" name="DCATEGORY" nameInSource="DCATEGORY" nativeType="VARCHAR2" length="255">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c81644a4-5ec9-1f20-ad06-a70a6f8efcd0" name="SUBTYPE" nameInSource="SUBTYPE" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c81644a8-5ec9-1f20-ad06-a70a6f8efcd0" name="EXATT1" nameInSource="EXATT1" nativeType="VARCHAR2" length="255">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164498-5ec9-1f20-ad06-a70a6f8efcd0" name="EXATT2" nameInSource="EXATT2" nativeType="VARCHAR2" length="255">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164491-5ec9-1f20-ad06-a70a6f8efcd0" name="ORDERING" nameInSource="ORDERING" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164487-5ec9-1f20-ad06-a70a6f8efcd0" name="MAJOR" nameInSource="MAJOR" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c81644a7-5ec9-1f20-ad06-a70a6f8efcd0" name="MINOR" nameInSource="MINOR" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c816449b-5ec9-1f20-ad06-a70a6f8efcd0" name="RELEASEREF" nameInSource="RELEASEREF" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164488-5ec9-1f20-ad06-a70a6f8efcd0" name="CHILDCOUNT" nameInSource="CHILDCOUNT" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c81644ad-5ec9-1f20-ad06-a70a6f8efcd0" name="ASSIGNEDTO" nameInSource="ASSIGNEDTO" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c816448a-5ec9-1f20-ad06-a70a6f8efcd0" name="DATEASSIGNED" nameInSource="DATEASSIGNED" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c81644a6-5ec9-1f20-ad06-a70a6f8efcd0" name="DATEEFFECTIVE" nameInSource="DATEEFFECTIVE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164482-5ec9-1f20-ad06-a70a6f8efcd0" name="DATEEXPIRATION" nameInSource="DATEEXPIRATION" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c816448d-5ec9-1f20-ad06-a70a6f8efcd0" name="DATEDUE" nameInSource="DATEDUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c816449e-5ec9-1f20-ad06-a70a6f8efcd0" name="DATESTARTED" nameInSource="DATESTARTED" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164490-5ec9-1f20-ad06-a70a6f8efcd0" name="DATECOMPLETED" nameInSource="DATECOMPLETED" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c81644ac-5ec9-1f20-ad06-a70a6f8efcd0" name="STATUS" nameInSource="STATUS" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c816449f-5ec9-1f20-ad06-a70a6f8efcd0" name="PRIORITY" nameInSource="PRIORITY" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c816448f-5ec9-1f20-ad06-a70a6f8efcd0" name="GIF" nameInSource="GIF" nativeType="VARCHAR2" length="255">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164481-5ec9-1f20-ad06-a70a6f8efcd0" name="EXTENDEDDATA" nameInSource="EXTENDEDDATA" nativeType="LONG" length="2147483647">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c8164483-5ec9-1f20-ad06-a70a6f8efcd0" name="CATALOG" nameInSource="CATALOG" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:c81644aa-5ec9-1f20-ad06-a70a6f8efcd0" name="CACHEEXPIRATION" nameInSource="CACHEEXPIRATION" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:00a5ba80-091f-1f24-a537-e40e182382b0" name="CATREGIONMAP" nameInSource="LLTEST.CATREGIONMAP">
+    <columns xmi:uuid="mmuuid:00a5ba82-091f-1f24-a537-e40e182382b0" name="CATID" nameInSource="CATID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:00a5ba85-091f-1f24-a537-e40e182382b0" name="CATNAME" nameInSource="CATNAME" nativeType="VARCHAR2" length="255">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:00a5ba81-091f-1f24-a537-e40e182382b0" name="SETNAME" nameInSource="SETNAME" nativeType="VARCHAR2" length="255">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:00a5ba83-091f-1f24-a537-e40e182382b0" name="ATTRNAME" nameInSource="ATTRNAME" nativeType="VARCHAR2" length="255">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:00a5ba84-091f-1f24-a537-e40e182382b0" name="REGIONNAME" nameInSource="REGIONNAME" nativeType="VARCHAR2" length="128" nullable="NO_NULLS">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:06aaddc0-091f-1f24-a537-e40e182382b0" name="DVERSDATA" nameInSource="LLTEST.DVERSDATA">
+    <columns xmi:uuid="mmuuid:07437440-091f-1f24-a537-e40e182382b0" name="VERSIONID" nameInSource="VERSIONID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437454-091f-1f24-a537-e40e182382b0" name="DOCID" nameInSource="DOCID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437446-091f-1f24-a537-e40e182382b0" name="VERSION" nameInSource="VERSION" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437451-091f-1f24-a537-e40e182382b0" name="VERSIONNAME" nameInSource="VERSIONNAME" nativeType="VARCHAR2" length="128" nullable="NO_NULLS">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:06aaddc1-091f-1f24-a537-e40e182382b0" name="OWNER" nameInSource="OWNER" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437444-091f-1f24-a537-e40e182382b0" name="VERCDATE" nameInSource="VERCDATE" nativeType="DATE" fixedLength="true" precision="19" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437450-091f-1f24-a537-e40e182382b0" name="VERMDATE" nameInSource="VERMDATE" nativeType="DATE" fixedLength="true" precision="19" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437441-091f-1f24-a537-e40e182382b0" name="PLATFORM" nameInSource="PLATFORM" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437445-091f-1f24-a537-e40e182382b0" name="FILENAME" nameInSource="FILENAME" nativeType="VARCHAR2" length="255">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0743744b-091f-1f24-a537-e40e182382b0" name="DATASIZE" nameInSource="DATASIZE" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0743744a-091f-1f24-a537-e40e182382b0" name="RESSIZE" nameInSource="RESSIZE" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:06aaddc2-091f-1f24-a537-e40e182382b0" name="FILETYPE" nameInSource="FILETYPE" nativeType="VARCHAR2" length="255">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0743744c-091f-1f24-a537-e40e182382b0" name="FILECREATOR" nameInSource="FILECREATOR" nativeType="VARCHAR2" length="255">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437442-091f-1f24-a537-e40e182382b0" name="FILECDATE" nameInSource="FILECDATE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0743744f-091f-1f24-a537-e40e182382b0" name="FILEMDATE" nameInSource="FILEMDATE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437448-091f-1f24-a537-e40e182382b0" name="ICON" nameInSource="ICON" nativeType="VARCHAR2" length="255">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437447-091f-1f24-a537-e40e182382b0" name="PROVIDERID" nameInSource="PROVIDERID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437456-091f-1f24-a537-e40e182382b0" name="VERCOMMENT" nameInSource="VERCOMMENT" nativeType="VARCHAR2" length="255">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437455-091f-1f24-a537-e40e182382b0" name="LOCKED" nameInSource="LOCKED" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437449-091f-1f24-a537-e40e182382b0" name="LOCKEDBY" nameInSource="LOCKEDBY" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0743744d-091f-1f24-a537-e40e182382b0" name="LOCKEDDATE" nameInSource="LOCKEDDATE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437443-091f-1f24-a537-e40e182382b0" name="INDEXED" nameInSource="INDEXED" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437453-091f-1f24-a537-e40e182382b0" name="FINDERFLAGS" nameInSource="FINDERFLAGS" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:07437452-091f-1f24-a537-e40e182382b0" name="MIMETYPE" nameInSource="MIMETYPE" nativeType="VARCHAR2" length="64">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0743744e-091f-1f24-a537-e40e182382b0" name="VERTYPE" nameInSource="VERTYPE" nativeType="VARCHAR2" length="32">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:0e6a8240-091f-1f24-a537-e40e182382b0" name="LLATTRDATA" nameInSource="LLTEST.LLATTRDATA">
+    <columns xmi:uuid="mmuuid:0e6a8248-091f-1f24-a537-e40e182382b0" name="ID" nameInSource="ID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0e6a824b-091f-1f24-a537-e40e182382b0" name="VERNUM" nameInSource="VERNUM" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0e6a8243-091f-1f24-a537-e40e182382b0" name="DEFID" nameInSource="DEFID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0e6a824f-091f-1f24-a537-e40e182382b0" name="DEFVERN" nameInSource="DEFVERN" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0e6a824d-091f-1f24-a537-e40e182382b0" name="ATTRID" nameInSource="ATTRID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0e6a824a-091f-1f24-a537-e40e182382b0" name="ATTRTYPE" nameInSource="ATTRTYPE" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0e6a8242-091f-1f24-a537-e40e182382b0" name="CUSTOMID" nameInSource="CUSTOMID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0e6a8244-091f-1f24-a537-e40e182382b0" name="ENTRYNUM" nameInSource="ENTRYNUM" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0e6a824e-091f-1f24-a537-e40e182382b0" name="PARENTKEYID" nameInSource="PARENTKEYID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0e6a824c-091f-1f24-a537-e40e182382b0" name="KEYID" nameInSource="KEYID" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0e6a8249-091f-1f24-a537-e40e182382b0" name="VALINT" nameInSource="VALINT" nativeType="NUMBER" fixedLength="true" precision="10" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0e6a8246-091f-1f24-a537-e40e182382b0" name="VALREAL" nameInSource="VALREAL" nativeType="NUMBER" fixedLength="true" precision="28" scale="14" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#bigdecimal"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0e6a8241-091f-1f24-a537-e40e182382b0" name="VALDATE" nameInSource="VALDATE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0e6a8245-091f-1f24-a537-e40e182382b0" name="VALSTR" nameInSource="VALSTR" nativeType="VARCHAR2" length="255">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0e6a8247-091f-1f24-a537-e40e182382b0" name="VALLONG" nameInSource="VALLONG" nativeType="LONG" length="2147483647">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+  </Relational:BaseTable>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:cc4b4f01-5e42-1f20-ad06-a70a6f8efcd0">
+    <diagram xmi:uuid="mmuuid:cc4b4f00-5e42-1f20-ad06-a70a6f8efcd0" type="packageDiagramType" target="mmuuid/972fba40-5e42-1f20-ad06-a70a6f8efcd0">
+      <diagramEntity xmi:uuid="mmuuid:fd31d940-5ec9-1f20-ad06-a70a6f8efcd0" modelObject="mmuuid/c8164480-5ec9-1f20-ad06-a70a6f8efcd0" xPosition="498" yPosition="10" height="748" width="225"/>
+      <diagramEntity xmi:uuid="mmuuid:46810780-091f-1f24-a537-e40e182382b0" modelObject="mmuuid/00a5ba80-091f-1f24-a537-e40e182382b0" xPosition="254" yPosition="10" height="133" width="172"/>
+      <diagramEntity xmi:uuid="mmuuid:46810781-091f-1f24-a537-e40e182382b0" modelObject="mmuuid/06aaddc0-091f-1f24-a537-e40e182382b0" xPosition="254" yPosition="165" height="433" width="177"/>
+      <diagramEntity xmi:uuid="mmuuid:47b23480-091f-1f24-a537-e40e182382b0" modelObject="mmuuid/0e6a8240-091f-1f24-a537-e40e182382b0" xPosition="10" yPosition="10" height="283" width="192"/>
+    </diagram>
+  </Diagram:DiagramContainer>
+  <jdbc:JdbcSource xmi:uuid="mmuuid:df287e80-5e8e-1f20-ad06-a70a6f8efcd0" name="LIVELINK" driverName="MetaMatrix Oracle" driverClass="com.metamatrix.jdbc.oracle.OracleDriver" username="metamatrix" url="jdbc:mmx:oracle://web-kmdb-01.unl.ac.uk:1521;Sid=lltest">
+    <importSettings xmi:uuid="mmuuid:eb514980-5e8e-1f20-ad06-a70a6f8efcd0" createSchemasInModel="false" generateSourceNamesInModel="FULLY_QUALIFIED" includeForeignKeys="false">
+      <includedSchemaPaths>/LLTEST</includedSchemaPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/ACCESSION</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/ACTIONCODE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/AGENTCONFIG</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/AGENTSCHEDULE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/AGENTSTATS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/AUDITCOLLECTIONSITEMS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/AUDITCOLLECTIONSMANAGE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/BLOBDATA</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/BLOBRESDATA</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/COLLECTIONS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DATETOUSE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DATTRIBUTES</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DAUDIT</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DAVEXTREF</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DAVLOCK</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DAVNODE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DAVPROP</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DCATATTRS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DCATEGORIES</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DDELLIST</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DELETEDDOCS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DEPARTMENTMAPPING</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DISCUSSIONID</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DISPOSITION</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DISPOSITIONHOLD</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DOCXREFTYP</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DREADLIST</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DSTAGINGIMPORT</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DTREEACL</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DTREENOTIFY</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/DVERSEXTRADATA</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/ELINKALIAS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/ELINKMESSAGELOG</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/ELINKMESSAGES</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/ELINKSUBSCRIPTION</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/ELINKUNHANDLEDEVENT</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/ESS_RECORDS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/EXPLORERUSAGE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/FILE_STATUS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/HOLDTYPE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/ICONBARDISPLAY</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/KDUAL</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/KID</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/KINI</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/KLONG</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/KSTATE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/KUAF</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/KUAFCHILDREN</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/KUAFPREFS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/KUAFPROXY</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/KUAFRIGHTSLIST</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/LABELDEFINITION</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/LABELDEFSPECS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/LABELQUEUE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/LABELSTOCK</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/LLATTRBLOBDATA</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/LLCACHE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/LLCLASSIFY</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/LLEVENTQUEUE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/LLPOLLING</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/MEDIATYPES</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/NOTIFYEVENTS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/NOTIFYINTERESTS2</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/NOTIFYMESSAGES</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/OBJECT</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/OFFLINEINTERESTS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/OTDOCUMENTHOLD</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/PHYSITEMCO</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/PHYSITEMDATA</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/PHYSITEMEXT</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/PHYSITEMHISTORY</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/PHYSITEMREQUEST</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/PHYSOBJCLIENT</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/PHYSOBJKEYWORDS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/PHYSOBJLOCATION</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/PROJECTOVERVIEWSETTINGS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/PROVIDERDATA</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RECD_ADMINCONFIG</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RECD_HOT</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RECD_OPERATIONSUMMARY</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RECD_OPERATIONTRACKING</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RECD_OPINIONSUMMARY</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RECD_SYSTEMSTATSSUMMARY</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RELATTYPE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RETSTAGE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RIMSDBVERSION</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RIMSKEYWORDED</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RIMSNODECLASSIFICATION</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RIMSTABLES</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RM_ADDRIGHTS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RM_ASSIGNEDFUNCTIONS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RM_CLASSIFICATION</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RM_DELETEAUDIT</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RM_DISPOSITIONS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RM_DISPRESULTS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RM_DOCXREF</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RM_FUNCTIONS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RM_MULTICLASS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RM_PICKLIST</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RM_RECORDSMANAGERS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RM_RECORDSOFFICERS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RM_TEMPDATA</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RM_USERAUDIT</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RSI</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RSIEVENTSCHED</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RSIKEYWORDS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RSIRULECODE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/RSISTATUS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/SEARCHRESULTSHITSCACHE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/SEARCHRESULTSQUERYCACHE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/SOVCONTROLRULES</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/SOVMGMTMSGS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/SPECIAL_CHARACTERS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/STORAGE</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/TABLES</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/TERMLEVEL</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/THESHISTORY</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/THESRELATIONS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/THESTERMS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/USERTABRIGHTS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WDATA</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WFATTRDATA</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WFATTRDATAVERSIONS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WFCOMMENTS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WFDISPOSITIONS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WFFORMS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WFFORMSLOCK</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WFFORMSVERSIONS</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WINDEXNOTIFY</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WLOCK</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WMAP</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WMAPTASK</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WSUBWORK</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WSUBWORKTASK</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WWORK</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WWORKACL</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/WWORKAUDIT</excludedObjectPaths>
+      <excludedObjectPaths>/LLTEST/TABLE/XMLRELAYQ</excludedObjectPaths>
+      <includedTableTypes>SYNONYM</includedTableTypes>
+      <includedTableTypes>SYSTEM TABLE</includedTableTypes>
+      <includedTableTypes>TABLE</includedTableTypes>
+      <includedTableTypes>VIEW</includedTableTypes>
+    </importSettings>
+  </jdbc:JdbcSource>
+</xmi:XMI>

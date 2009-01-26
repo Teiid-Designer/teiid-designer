@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<relational:Schema xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:relational="http://www.metamatrix.com/metamodels/Relational">
+  <tables xsi:type="relational:BaseTable" name="MyFirstTable">
+    <columns name="ColumnA"/>
+    <columns name="ColumnB"/>
+    <columns name="ColumnC"/>
+    <primaryKey name="PK_A" columns="//@tables.1/@columns.0" foreignKeys="//@tables.1/@foreignKeys.0"/>
+  </tables>
+  <tables xsi:type="relational:BaseTable" name="MySecondTable">
+    <columns name="A" primaryKey="//@tables.0/@primaryKey" foreignKeys="//@tables.1/@foreignKeys.0"/>
+    <foreignKeys name="FK_A" columns="//@tables.1/@columns.0" primaryKey="//@tables.0/@primaryKey"/>
+  </tables>
+  <tables xsi:type="relational:View" name="MyFirstView">
+    <columns name="A"/>
+  </tables>
+</relational:Schema>

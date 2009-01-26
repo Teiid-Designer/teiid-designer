@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/ComplexSoapArray"
+	xmlns:tns="http://www.example.org/ComplexSoapArray"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+	<import namespace="http://schemas.xmlsoap.org/soap/encoding/"
+		schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />
+
+	<complexType name="FooList">
+		<sequence>
+			<element name="SomethingArray" type="tns:ArrayOfSomething" />
+			<element name="yabba" type="string" />
+		</sequence>
+	</complexType>
+
+	<complexType name="ArrayOfServiceSummary">
+		<complexContent>
+			<restriction base="soapenc:Array">
+				<attribute ref="soapenc:arrayType"
+					wsdl:arrayType="tns:ServiceSummary[]" />
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ArrayOfSomething">
+		<complexContent>
+			<restriction base="soapenc:Array">
+				<attribute ref="soapenc:arrayType"
+					wsdl:arrayType="tns:Something[]" />
+			</restriction>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="ServiceSummary">
+		<sequence>
+			<element name="name" nillable="true" type="string" />
+			<element name="id" nillable="true" type="string" />
+			<element name="shortDescription" nillable="true"
+				type="string" />
+			<element name="wsdlURL" nillable="true" type="string" />
+			<element name="publisherID" nillable="true" type="string" />
+		</sequence>
+	</complexType>
+	
+	<complexType name="Something">
+		<sequence>
+			<element name="one" nillable="true" type="string" />
+			<element name="two" nillable="true" type="string" />
+			<element name="three" nillable="true" type="string" />
+			<element name="four" nillable="true" type="string" />
+			<element name="five" nillable="true" type="string" />
+			<element name="summaries" type="tns:ArrayOfServiceSummary" />
+		</sequence>
+	</complexType>
+</schema>

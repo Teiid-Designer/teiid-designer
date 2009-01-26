@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+================================================================================
+  Copyright (c) 2000-2003 by MetaMatrix, Inc.  All Rights Reserved.
+
+  Unauthorized use of MetaMatrix products is prohibited.  Tampering with
+  this license file or with MetaMatrix software is a violation of the
+  MetaMatrix license agreement.
+
+  www.metamatrix.com
+
+
+  MetaMatrix Invoice #:
+  MetaMatrix Invoice Date:
+  MetaMatrix File:          
+
+  Reason for Update: 
+
+================================================================================
+-->
+<MetaMatrix:license xmlns:MetaMatrix="http://www.metamatrix.com" version="1">
+    <MetaMatrix:licenseInfo>
+        <MetaMatrix:licenseType>Internal</MetaMatrix:licenseType>
+        <MetaMatrix:createdBy>rscanlon</MetaMatrix:createdBy>
+        <MetaMatrix:created>05-Dec-2003</MetaMatrix:created>
+
+        
+    </MetaMatrix:customer>
+    <MetaMatrix:productLicenses>
+        <MetaMatrix:product name="MetaMatrix Server" version="4.3">
+            <MetaMatrix:productLicense uuid="40348c40-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>10</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaMatrix Server/API/ODBC" version="4.3">
+            <MetaMatrix:productLicense uuid="4128b040-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaMatrix Server/API/SOAP" version="4.3">
+            <MetaMatrix:productLicense uuid="43f5da01-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaMatrix DQP" version="4.3">
+            <MetaMatrix:productLicense uuid="4128b041-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaMatrix DQP/Transactions" version="4.3">
+            <MetaMatrix:productLicense uuid="4128b042-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaMatrix DQP/Updates" version="4.3">
+            <MetaMatrix:productLicense uuid="4128b043-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaMatrix DQP/Materialized Views" version="4.3">
+            <MetaMatrix:productLicense uuid="4128b044-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaMatrix DQP/Connector/JDBC" version="4.3">
+            <MetaMatrix:productLicense uuid="4128b045-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaMatrix DQP/Connector/Text" version="4.3">
+            <MetaMatrix:productLicense uuid="4128b046-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaMatrix DQP/Connector/Librados" version="4.3">
+            <MetaMatrix:productLicense uuid="4128b047-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaMatrix DQP/Connector/Oracle Spatial" version="4.3">
+            <MetaMatrix:productLicense uuid="cc0d3800-bf31-1f89-bc0c-ef6dc4a3529e" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaBase Server" version="4.3">
+            <MetaMatrix:productLicense uuid="421cd440-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>500</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaBase Modeler" version="4.3">
+            <MetaMatrix:productLicense uuid="421cd441-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>10</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaBase Modeler/Virtual Modeling" version="4.3">
+            <MetaMatrix:productLicense uuid="4301b600-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaBase Modeler/Virtual Modeling/Relational" version="4.3">
+            <MetaMatrix:productLicense uuid="4301b601-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaBase Modeler/Virtual Modeling/XML" version="4.3">
+            <MetaMatrix:productLicense uuid="4301b602-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaBase Modeler/Model Generation/Relational/From UML" version="4.3">
+            <MetaMatrix:productLicense uuid="4301b603-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaBase Modeler/Import/JDBC" version="4.3">
+            <MetaMatrix:productLicense uuid="4301b604-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaBase Modeler/Import/Rational Rose" version="4.3">
+            <MetaMatrix:productLicense uuid="4301b605-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaBase Modeler/Import/ERwin" version="4.3">
+            <MetaMatrix:productLicense uuid="4301b606-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaBase Modeler/Import/Popkin" version="4.3">
+            <MetaMatrix:productLicense uuid="4301b607-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaBase Modeler/Export/RDBMS" version="4.3">
+            <MetaMatrix:productLicense uuid="4301b608-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaBase Modeler/VDB Management" version="4.3">
+            <MetaMatrix:productLicense uuid="4301b609-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        <MetaMatrix:product name="MetaBase Modeler/Repository Manager" version="4.3">
+            <MetaMatrix:productLicense uuid="43f5da00-42b0-1f3a-be21-ee5ff067bf67" type="Development">
+                <MetaMatrix:issuanceDate>24-Jun-2005</MetaMatrix:issuanceDate>
+                <MetaMatrix:effectiveDate>24-Jun-2005</MetaMatrix:effectiveDate>
+                <MetaMatrix:expirationDate>31-Mar-2006</MetaMatrix:expirationDate>
+                <MetaMatrix:numberOfUnits>1</MetaMatrix:numberOfUnits>
+                <MetaMatrix:ipSet>Undefined</MetaMatrix:ipSet>
+                
+            </MetaMatrix:productLicense>
+            
+        </MetaMatrix:product>
+        
+    </MetaMatrix:productLicenses>
+    
+</MetaMatrix:license>
+

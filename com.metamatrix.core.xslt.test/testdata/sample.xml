@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<model name="SimplePhysicalForDDL" uuid="mmuuid:86b7a100-3ca3-1e8c-ae26-b498e3fd8787" generateComments="true" generateDrops="false" exportTool="MetaMatrix MetaBase Modeler" exportToolVersion="Release current(Build 1173)" exportDate="2003-03-24" exportTime="11:12:49" modelFilename="SimplePhysicalForDDL.xml" modelType="PhysicalModel" metaModel="Relational" metaModelURL="http://www.metamatrix.com/metabase/3.0/metamodels/Relational.xml">
+   <table name="Table1" description="Description for 'Table1'." uuid="mmuuid:9524c140-3ca4-1e8c-ae26-b498e3fd8787" supportsUpdate="true">
+      <column name="ColumnWithoutAlias" description="Description for 'Table1.ColumnWithoutAlias'." uuid="mmuuid:1640ca00-3ca8-1e8c-ae26-b498e3fd8787" multiplicity="1" changeability="true" isLengthFixed="false" isNullable="false" supportsSelect="true" supportsSet="false" supportsSubscription="false" supportsUpdate="true" isCaseSensitive="false" isSigned="false" isCurrency="false" isAutoIncremented="false" searchType="Searchable"/>
+      <column name="AliasOfColWithAlias" uuid="mmuuid:5df59c80-3ca9-1e8c-ae26-b498e3fd8787" alias="AliasOfColWithAlias" multiplicity="1" changeability="true" isLengthFixed="false" isNullable="false" supportsSelect="true" supportsSet="false" supportsSubscription="false" supportsUpdate="true" isCaseSensitive="false" isSigned="false" isCurrency="false" isAutoIncremented="false" searchType="Searchable"/>
+   </table>
+   <primaryKey name="PrimaryKey" uuid="mmuuid:a32d0ec0-3cb1-1e8c-ae26-b498e3fd8787" tableName="Table1">
+      <column name="ColumnWithoutAlias" uuid="mmuuid:1640ca00-3ca8-1e8c-ae26-b498e3fd8787"/>
+   </primaryKey>
+   <table name="AliasOfTableWithAlias" description="Description for 'TableWithAlias'." uuid="mmuuid:0e565d40-3cae-1e8c-ae26-b498e3fd8787" alias="AliasOfTableWithAlias" supportsUpdate="true">
+      <column name="Column" uuid="mmuuid:0eeef3c0-3cae-1e8c-ae26-b498e3fd8787" multiplicity="1" changeability="true" isLengthFixed="false" isNullable="false" supportsSelect="true" supportsSet="false" supportsSubscription="false" supportsUpdate="true" isCaseSensitive="false" isSigned="false" isCurrency="false" isAutoIncremented="false" searchType="Searchable"/>
+      <column name="AliasOfColWithAlias" uuid="mmuuid:0eeef3c1-3cae-1e8c-ae26-b498e3fd8787" alias="AliasOfColWithAlias" multiplicity="1" changeability="true" isLengthFixed="false" isNullable="false" supportsSelect="true" supportsSet="false" supportsSubscription="false" supportsUpdate="true" isCaseSensitive="false" isSigned="false" isCurrency="false" isAutoIncremented="false" searchType="Searchable"/>
+   </table>
+   <primaryKey name="AliasOfPKWithAlias" uuid="mmuuid:1b700400-3cc6-1e8c-ae26-b498e3fd8787" tableName="AliasOfTableWithAlias">
+      <column name="AliasOfColWithAlias" uuid="mmuuid:0eeef3c1-3cae-1e8c-ae26-b498e3fd8787"/>
+   </primaryKey>
+   <foreignKey name="ForeignKeyX" uuid="mmuuid:d50fe080-3cce-1e8c-ae26-b498e3fd8787" tableName="AliasOfTableWithAlias" pkTableName="Table1">
+      <column name="AliasOfColWithAlias" uuid="mmuuid:0eeef3c1-3cae-1e8c-ae26-b498e3fd8787" pkColumnName="ColumnWithoutAlias"/>
+   </foreignKey>
+   <foreignKey name="AliasOfFKWithAlias" uuid="mmuuid:d2a6c000-3cdf-1e8c-ae26-b498e3fd8787" tableName="AliasOfTableWithAlias" pkTableName="Table2">
+      <column name="Column" uuid="mmuuid:0eeef3c0-3cae-1e8c-ae26-b498e3fd8787" pkColumnName="Column"/>
+   </foreignKey>
+   <table name="Table2" uuid="mmuuid:126ca800-3cde-1e8c-ae26-b498e3fd8787" supportsUpdate="true">
+      <column name="Column" uuid="mmuuid:126ca801-3cde-1e8c-ae26-b498e3fd8787" multiplicity="1" changeability="true" isLengthFixed="false" isNullable="false" supportsSelect="true" supportsSet="false" supportsSubscription="false" supportsUpdate="true" isCaseSensitive="false" isSigned="false" isCurrency="false" isAutoIncremented="false" searchType="Searchable"/>
+      <column name="AliasOfColWithAlias" uuid="mmuuid:126ca802-3cde-1e8c-ae26-b498e3fd8787" alias="AliasOfColWithAlias" multiplicity="1" changeability="true" isLengthFixed="false" isNullable="false" supportsSelect="true" supportsSet="false" supportsSubscription="false" supportsUpdate="true" isCaseSensitive="false" isSigned="false" isCurrency="false" isAutoIncremented="false" searchType="Searchable"/>
+   </table>
+   <primaryKey name="PrimaryKey" uuid="mmuuid:13053e80-3cde-1e8c-ae26-b498e3fd8787" tableName="Table2">
+      <column name="Column" uuid="mmuuid:126ca801-3cde-1e8c-ae26-b498e3fd8787"/>
+   </primaryKey>
+</model>

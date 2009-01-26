@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name.0
+Bundle-SymbolicName: com.metamatrix.core.xslt.test
+Bundle-Version: 6.0.0
+Bundle-Vendor: %Bundle-Vendor.0
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: com.metamatrix.core.xslt,
+ com.metamatrix.core.xslt.impl
+Require-Bundle: org.junit4;bundle-version="4.3.1",
+ org.eclipse.core.runtime;bundle-version="3.4.0",
+ com.metamatrix.core.xslt;bundle-version="6.0.0",
+ federate_embedded_query;bundle-version="6.0.0",
+ com.metamatrix.core.modeler.test;bundle-version="6.0.0"
+Bundle-Localization: plugin

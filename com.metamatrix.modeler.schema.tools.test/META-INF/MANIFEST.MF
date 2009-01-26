@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name.0
+Bundle-SymbolicName: com.metamatrix.modeler.schema.tools.test
+Bundle-Version: 6.0.0
+Bundle-Vendor: %Bundle-Vendor.0
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: com.metamatrix.modeler.schema.tools,
+ com.metamatrix.modeler.schema.tools.common,
+ com.metamatrix.modeler.schema.tools.model.jdbc.internal,
+ com.metamatrix.modeler.schema.tools.model.schema.impl,
+ com.metamatrix.modeler.schema.tools.processing
+Bundle-Localization: plugin
+Require-Bundle: com.metamatrix.modeler.schema.tools;bundle-version="6.0.0",
+ org.eclipse.xsd;bundle-version="2.4.0",
+ org.junit4;bundle-version="4.3.1",
+ federate_embedded_query;bundle-version="6.0.0"

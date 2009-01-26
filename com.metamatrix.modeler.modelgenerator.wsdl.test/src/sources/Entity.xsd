@@ -1,0 +1,2627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 rel. 3 U (http://www.altova.com) by Ryan Sammons (Northrop Grumman Mission Systems) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="java:i3.intel.model" targetNamespace="java:i3.intel.model" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<xs:simpleType name="EntityKeys">
+		<xs:restriction base="xsd:string">
+			<xs:enumeration value="FAC">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Site Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="EQP">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Equipment Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="UNIT">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Unit Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="DOC_MGMT">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Document Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="MESSAGE">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Message Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="track">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Track Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TACTICAL_ID">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a ReportinHistory Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="LOCATION">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Report Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ASSETS">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Asset Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="IND">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Person Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TGT_DTL">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Target Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TGT_LIST">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a TargetList Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="AKA">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Alias Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ITS_PRODUCT">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Image Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="RMK">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Remark Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="EVENT">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Event Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="IND_PROFESSION">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Employment Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="AltLoc">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a AlternateLocation Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Assessment">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Assessment Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Relationship">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Relationship Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ExtendedReportingHistory">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a ExtendedReportingHistory Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ExtendedReport">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a ExtendedReport Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ACOUSTICS">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Acoustic Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="EMITTER_PARAMETRICS">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Parametrics Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="DOC">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Point Document Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="MAT">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Point Materiel Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="PERSON">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Point Individual Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ORG">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Point Organization Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="OCC">
+				<xs:annotation>
+					<xs:documentation>
+                    Relates to a Point Occurence Entity
+                </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Entity">
+		<xs:sequence>
+			<xs:element name="derivedSk" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>The key to the national record on which this record is based.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="avSiteId" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>The site_id for the site adding the alternate view record OR the last site to promote the alternate view record.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FPA" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Functional Production Area under the Shared Production Program (SPP).  Producers are defined per country per FPA.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="URL" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>The Universal Resource Location (URL) of the document on Intelink. (?)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="allegiance" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>The DoD Standard Country Code designator for the country or political entity to which the entity owes its allegiance.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="bestRecord" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>The record to be used as the most accurate for the site that has national and local records. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="classification" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Highest classification level of the data contained within the record.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="codeWord" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>The description of this element may be found in the classified appendix.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="comment" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Reserved for additional information.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="confidenceLevel" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Reliability/degree of confidence that the analyst has assigned to the data within this record. (EVAL)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="controlMark" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Any special notations (caveats) for special handling restrictions or requirements that are assigned to the data within the record.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dateTimeCreated" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Date, or date and time that the record was created.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dateTimeFirstInfo" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Date or datetime on which intelligence data was first made available.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dateTimeLastChanged" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Date, or date and time of the most recent change to the record.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dateTimeLastInfo" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Date or datetime of the latest information upon which the data is based.  The information cut-off date, ICOD.  At a minimum, the maintenance of this data element should coincide with the updating of REVIEW DATE to record the latest date of information in the reviewed record.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="declassOn" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Indicates the event that will allow the data to be changed from classified to unclassified.  A value of 'D' indicates that the data will be declassified on the date entered in the DECLASS_ON_DATE field.  A value of 'O' indicates that the original source carries a marking of OADR, if a date for declassification exists, it will be entered in the DECLASS_ON_DATE field.  Values 'X1-X8' indicate the reason the data must stay classified for longer than the standard 10 years, as directed in EO 12958.  The field is CONDITIONALLY MANDATORY on the CLASS_LVL field.  DECLASS_ON will be mandatory if the record is classified.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="declassOnDate" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Date when the information is to be declassified.  The field is CONDITIONALLY MANDATORY on the DECLASS_ON field.  The field will be mandatory if DECLASS_ON = 'D'.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="domainLevel" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Indicates the highest level of compartmented data within a given record.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="entity" type="tns:EntityKeys" nillable="true">
+				<xs:annotation>
+					<xs:documentation>The table name of the entity.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="lastChangedUserID" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>The userid of the individual who last modified the record.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="name" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>The name of the entity.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="primaryKey" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>The unique key for the entity within a table.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="recordStatus" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>The functional status of the data in the record.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="releaseMark" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Countries and/or country grouping (e.g. NATO) to which the data within the record is releasable.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="responsibleProducer" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Organization that is responsible for the maintenance of the record.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="reviewDate" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Date on which the data in the record was last reviewed by the responsible analyst for accuracy and currency.  This date cannot be greater than the current date.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="scenarioSet" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Allows an analyst to group multiple records into a scenario or query set.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="serverId" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>The identification number used to identify the server the record was created on.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="symbolCode" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>A standard scheme for symbol coding enabling the transfer, display and use of symbols and graphics among information systems, as per MIL-STD 2525B, and supported by the element AFFILIATION.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="threat" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Indicates the association of the assessed threat that the entity imposes towards the U.S. and its allies.  This element supports SYMBOL_CODE, as per MIL-STD 2525B. (AFFILIATION)
+</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Relationship">
+		<xs:complexContent>
+			<xs:extension base="tns:Entity">
+				<xs:sequence>
+					<xs:element name="fromEntityType" type="tns:EntityKeys" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The table name of the entity to which a tie is being made.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="fromSK" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>This field may hold one of two surrogate key values. 1) The surrogate key of the record from the parent table, for which a tie is being made. When this field contains the surrogate key from a parent record, the TIE_BOOL field will be FALSE.  Or, 2) The 'primary '_sk of another *_tie record, for which a tie is being  made. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="relationshipType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A description of the relationship between the two entities (MIDB: ASSOC).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="toEntityType" type="tns:EntityKeys" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The table name of the entity to which a tie is being made.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="toSK" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The surrogate key of the record, to which a ‘tie’ is being made.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Assessment">
+		<xs:complexContent>
+			<xs:extension base="tns:Entity">
+				<xs:sequence>
+					<xs:element name="assessDateTime" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>If the ASSESS_TYPE is Battle Damage Assessment (BDA) this field will contain the Time On Target value.  If the ASSESS_TYPE is Strike Assessment (SA) this field will contain the Time On Target or the observation time from the report which last caused a change.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="assessType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>This field indicates whether the row contains BDA or SA data.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeEnded" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The effective ending date or datetime for which the data applies to the entity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeStarted" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The effective beginning date or datetime for which the data applies to the entity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="parentType" type="tns:EntityKeys" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The table name of the parent entity.  Used for child-type data (e.g. AKAs, Addresses, etc)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="percentDamaged" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A subjective evaluation of the fraction of a target damaged and unusable that is believed to be repairable, expressed as a percent.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="percentDestroyed" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A subjective evaluation of the fraction of a target that is so damaged that it cannot function as intended nor be restored to a usable condition, expressed as a percent.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="quantityCaptured" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the quantity of personnel assessed to be captured.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="quantityDamaged" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The number that have sustained damage.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="quantityDestroyed" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The number that have been destroyed.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="quantityKilled" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the number of personnel assessed to have been killed.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="quantityWounded" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the quantity of personnel assessed to be wounded.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="LocatedEntity">
+		<xs:complexContent>
+			<xs:extension base="tns:Entity">
+				<xs:sequence>
+					<xs:element name="CC" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Country in which the geographic coordinates reside.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="activity" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the function or mission of an entity, which that entity may or may not be engaged in at the moment.  Typically refers to a unit, organization, or installation/facility performing a specific function or mission such as a redistribution center or naval shipyard.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="addressName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>name of the address or the name of the object at the address.  For example, 'The White House'.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="airDefenseArea" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Air Defense District (ADD) or Air Defense Area (ADA) in which the geographic coordinates reside.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="condition" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The physical manner of being or state of existence of the entity.  A physical condition that must be considered in the determining of a course of action.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="coordinate" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates any of the magnitudes that serve to define the position of a point by reference to a fixed figure, system of lines, etc.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="coordinateDateTime" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The date on which a specific coordinate was reported or developed.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="coordinateDatum" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A mathematical model of the earth used to calculate coordinates on a map.  US Forces use the World Geodetic System 1984 (WGS 84), but also use maps by allied countries with local datums.  The datum must be specified to ensure accuracy of coordinates.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="coordinateROA" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the radius of the circle that the coordinate is contained within as a measure of confidence.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="elevation" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Ground elevation of the geographic coordinates (above or below) a referenced ellipsoid vertical datum, usually WGS_84.  This field is supported by:  ELEVATION_ACC + ELEVATION_CONF_LVL + ELEVATION_DATUM + ELEVATION_DERIV + 
+ELEVATION_DERIV_ACC + ELEVATION_DERIV_ACC_UM + ELEVATION_UM.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="elevationDatum" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A mathematical model of the earth used to calculate coordinates on a map.  US Forces use the World Geodetic System 1984 (WGS 84), but also use maps by allied countries with local datums.  The datum must be specified to ensure accuracy of coordinates.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="elevationUnitOfMeasure" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Unit of measure for the ELEVATION_DERIV_ACC field value. (?)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="latitude" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>ILAT is an integer representation of the latitude, calculated when COORD is filled.  Calculated as ((Degree * 3600) + Minute * 60) + Second) * 1000), latitudes in the south assigned negative values.  Range is -324000000 to 324000000 (90S to 90N).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="locationName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Location name for the coordinates.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="longitude" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>ILON is an integer representation of the longitude, calculated when COORD is filled.  Calculated as ((Degree * 3600) + Minute * 60) + Second) * 1000), longitude in the west assigned negative values.  Range is -648000000 to 648000000 (180W to 180E).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="militaryArea" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Military district, region, or zone in which the geographic coordinates reside.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="militaryGridReference" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Military Grid Reference System coordinates.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="operStatus" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Degree to which an entity is ready to perform the overall operational mission(s) for which it was organized and equipped.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="placeName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A textual description of the individual's address location, to include, if possible, the city, town, village, state and province.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="politicalSubdivision" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Political subdivision in which the geographic coordinates reside.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="postalCode" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the postal district of the entity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="streetName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Name of the street on which the entity is located.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="streetNumber" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Number on the street where the entity is located.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AlternateLocation">
+		<xs:complexContent>
+			<xs:extension base="tns:LocatedEntity">
+				<xs:sequence>
+					<xs:element name="dateTimeEnded" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The effective ending date or datetime for which the data applies to the entity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeStarted" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The effective beginning date or datetime for which the data applies to the entity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="parentType" type="tns:EntityKeys" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The table name of the parent entity.  Used for child-type data (e.g. AKAs, Addresses, etc)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Employment">
+		<xs:complexContent>
+			<xs:extension base="tns:Entity">
+				<xs:sequence>
+					<xs:element name="NATOgrade" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The military grade as contained in the NATO chart. (GRADE_LVL_NATO)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateAssumedJob" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The data the person assumed the job (?)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeEnded" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The effective ending date or datetime for which the data applies to the entity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeStarted" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The effective beginning date or datetime for which the data applies to the entity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="force" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>An aggregation of military units within a single service (i.e., ARMY, AIR FORCE, etc.)which operates under a single authority to accomplish a common mission.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="functionalRole" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Principal combat-related role that a unit is organized, structured and equipped to perform.  Or, the specialized military or paramilitary branch in which an individual serves, their specialization.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="grade" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A specific code for the military title of the individual. (GRADE_LVL)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="job" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates an individual's post of employment, their job position.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="nativeRank" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The official national military title of an individual.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="position" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>social or official rank or status (www.m-w.com)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="profession" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The profession, trade or occupation of a civilian worker or employee.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="title" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A descriptive or distinctive name given to an individual by right, rank, office assignment or attainment, etc.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Person">
+		<xs:complexContent>
+			<xs:extension base="tns:LocatedEntity">
+				<xs:sequence>
+					<xs:element name="affiliation" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the association of the assessed threat that the entity imposes towards the U.S. and its allies.  This element supports SYMBOL_CODE, as per MIL-STD 2525B.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="age" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The age of a person (?)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="build" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>body type, short, tall, etc. (?)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="children" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Number of children, Yes or no, names, (?)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="citizenship" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Citizenship of a country (?)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="contacts" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates if a person wears contacts.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="countryOfBirth" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The State Department country code where the individual was born.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="countryOfDeath" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The State Department country code where the individual died.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateOfBirth" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The date of an individual's birth.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateOfDeath" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The date of an individual's death.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ethnicity" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Relating to large groups of people classed according to common racial, national, tribal, religious, linguistic, or cultural origin or background. (www.m-w.com)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="eyeColor" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The color of a individual's eyes.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="facialHair" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The color, description, length of a individuals facial hair or (Yes or No) (?)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="features" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A textual descriptive statement of the IND_DESCR_TYPE selected.  For example, if IND_DESCR_TYPE was EYE for 'eye colour', a descriptive statement might be 'cerulean blue'. (DESCR)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="firstName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A given name conferred upon an individual at birth or through a legal process.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="glasses" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Yes or No, Or description of glasses (?)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="hairColor" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Color of a indiividual's hair</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="heightMeters" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A individual height in meters</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="hobbiesSports" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A individual's personnel hobbies or sports participant. (?)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="languageSpoken" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Spoken language (native or secondary ?)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="lastName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The surname or family name conferred on an individual at birth, through marriage (e.g. married name), or through a legal process.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="maritalStatus" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Captures the status of the significant personal relationship of the individual.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="middleName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A given name, or the first letter of a given name, conferred upon an individual at birth or through a legal process.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="nationality" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The DoD Standard Country Code designator for the country or political entity to which the entity owes its allegiance. (ALLIGENCE)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="personalitiesList" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A list of psychological characteristics</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="physicalCondition" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The physical health conddition of the indicidual.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="placeOfBirth" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A textual description of the individual's birth location, to include, if possible, the city, town, village, state and province.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="placeOfDeath" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A textual description of the individual's death location, to include, if possible, the city, town, village, state and province.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="race" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>a family, tribe, people, or nation belonging to the same stock. (www-m-w.com)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="relatives" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>a person connected with another by blood or affinity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="religion" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The worship of a god or the supernatural (Which one, ?)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="sex" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The individual's sex.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="skinColor" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The color of a individuals skin.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="spouseName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Name of a Individual's spouse (male or female complete name)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="targetPriority" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The relative priority assigned to the target.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="weightKGS" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The weight of a individual in kilograms.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Message">
+		<xs:complexContent>
+			<xs:extension base="tns:Entity">
+				<xs:sequence>
+					<xs:element name="dateTimeSent" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The date time the message was sent.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="from" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Who the message is from.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="receivedDateTime" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The date time the message was received.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="subject" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The subject of the message.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="to" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Who the message was sent to.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ElintMode">
+		<xs:complexContent>
+			<xs:extension base="tns:Entity">
+				<xs:sequence>
+					<xs:element name="datetimeLastObserved" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Date or datetime of the last observation (OBS).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="elnot" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The primary five character Electronic Intelligence ELINT notation established by NSA for non-communications electronic emissions.  Used to preserve original signal identification in case of modification by subsequent processing.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="emitterMode" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A one-up-number used to group operating parameters of a radar.  Uniquely identifies one of the modes that belong to an equipment or track.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Asset">
+		<xs:complexContent>
+			<xs:extension base="tns:LocatedEntity">
+				<xs:sequence>
+					<xs:element name="OBType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the type of Order-of-Battle to which a unit or equipment belongs.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="elintMode" type="tns:ElintMode" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="equipmentCode" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Designated equipment code assigned to the item of equipment or an abbreviation record type unique identifier.  Valid equipment codes are determined by DIA.  The equipment codes are maintained by DIA.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="equipmentType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Generic type this specific piece of equipment belongs to, and the identifying nomenclature which describes the equipment. (NOMEN)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="quantityOnHand" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Relative to the parent entity, the total number of military personnel or equipment assessed to be on-hand (OH).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Report">
+		<xs:complexContent>
+			<xs:extension base="tns:LocatedEntity">
+				<xs:sequence>
+					<xs:element name="assets" type="tns:Asset" nillable="true" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Equipment related information associated with a report.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="azimuth" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The single or the low range of the entity's orientation relative to a fixed reference direction.  The horizontal angular distance from a fixed reference direction.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="informationSource" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The system identification for the source of the update. (SOURCE)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="reportMethod" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The message type from which the report data was extracted.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="reportType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The phase type for imagery interpretation reports or a report type (e.g. TRACK, ELINT, ACOUSTIC, etc) for archived tracks.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ExtendedReport">
+		<xs:complexContent>
+			<xs:extension base="tns:Report">
+				<xs:sequence>
+					<xs:element name="tmsContactId" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>A cross reference back to tms for a location.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="courseTrueNorth" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The direction of travel of an object relative to true north.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="altitudeDepth" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The vertical distance below the ground or water surface to a specified point or plane measured in meters (m).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="archiveStatus" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The TMS archived status of the location.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="obsSensorSource" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>A code for a command, unit, system, system characteristic, or procedure originating, passing or amplifying information.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="speed" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The rate of motion of a contact or target in knots.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="alternate1" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>Length of a semi-major axis of an ellipse, radius of a circle, bearing error of a line of bearing or half-width of a bearing box.  Depends on AOU type.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="alternate2" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>Length of a semi-minor axis of an ellipse, radius of a circle, range of a line of bearing or range of a bearing box.  Depends on AOU type.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="areaOfUncertaintyType" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The AOU type: ELP, LOB or BB</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="bearing" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The angular displacement in degrees from true north of a line extending from one point or object to another.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="remarks" type="tns:Remarks" nillable="true" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Remarks associated with a report.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="acoustics" type="tns:Acoustics" nillable="true" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Acoustic data associated with a report.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="parametrics" type="tns:Parametrics" nillable="true" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Emitter parametric data associated with a report.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Acoustics">
+		<xs:complexContent>
+			<xs:extension base="tns:Entity">
+				<xs:sequence>
+					<xs:element name="tmsContactId" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>A cross reference back to tms for a location.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="acousticDatetime" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The date time of the contact.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="acousticSignatureFreq" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The frequency of an emitted acoustic signal to the nearest one thousandth hertz.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="acousticSigSumFreqMax" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The maximum frequency to the nearest one thousandth hertz of an emitted acoustic signal.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="acousticSignatureRPM" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>Rotational speed in revolutions per minute (rpm).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="acousticSignatureTPK" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>Turns per knot (TPK).  The ratio of the number of propeller revolutions to the speed of a vessel through the water.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="acousticSignatureHarmonic" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>A whole multiple of a fundamental frequency.  1 to 3 digit harmonic combination explanation separated by a hyphen and listed in descending order of predominance.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="acousticSignatureSource" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The origin of an acoustic signal.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Parametrics">
+		<xs:complexContent>
+			<xs:extension base="tns:Entity">
+				<xs:sequence>
+					<xs:element name="tmsContactId" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>A cross reference back to tms for a location.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="priBase" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The base banded pulse repetition interval.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="priMode" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>Pulse repetition interval mode.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="baseBandScanRate" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The base banded scan rate.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="baseBandScanRateMode" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The base banded scan rate mode.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="correlationIndex" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>Correlation Index</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="interceptDateTime" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The date time of the intercept.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="elnot" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The primary five character electronic intelligence elint notation established by nsa for non-communications electronic emissions.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="elnotConf" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The confidence that an observation and an elnot have been correctly associated.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="elnot2" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The secondary five character electronic intelligence elint notation established by nsa for non-communications electronic emissions.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="elnot2Conf" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The confidence that an observation and an elnot have been correctly associated.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="emitterName" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The model number or official nickname assigned to a radar.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="radioFreq" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The number of repetitions of a complete waveform in one second.  This field will hold the center frequency of a radars transmission.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="freqStability" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The frequency stability.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="pulseRepetitionFreq" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The pulse repetition frequency (PRF) of a radar signal.  The number of pulses or pulse groups generated in a one second time period.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="pulseRepetitionInterval" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The numeric value of a Pulse Repetition Interval (PRI) measurement. This interval is measured from leading edge to leading edge of adjacent repetitive pulses.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="priStability" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>Pulse Repetition Interval (PRI) stability.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="pulseWidth" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The pulse width in microseconds.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="scanRate" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>For a scanning radar, the amount of time it takes the radar to complete one scanning pattern.  Normally measured in seconds per cycle or in Hertz.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="scanStability" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>Scan stability.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="scanType" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The pattern or scan type that emitted electromagnetic energy follows as a volume in space is searched.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="scn" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>SCN</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="staggerLegs" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>Stagger legs</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Organization">
+		<xs:complexContent>
+			<xs:extension base="tns:LocatedEntity">
+				<xs:sequence>
+					<xs:element name="OBType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the type of Order-of-Battle to which a unit or equipment belongs.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="affiliation" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the association of the assessed threat that the entity imposes towards the U.S. and its allies.  This element supports SYMBOL_CODE, as per MIL-STD 2525B.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="combatEffectiveness" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A measure of the ability of a unit to wage war, expressed as a percentage; reflects an assessment of both the unit's personnel strength and it current (versus nominal) equipment strength, both in context of the unit's primary mission.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="combatStrength" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A measure of the personnel strength of a unit, expressed as a percentage of the estimate of its current strength compared to
+its established or projected nominal strength.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeStarted" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The effective beginning date or datetime for which the data applies to the entity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="echelon" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Organizational level of the unit.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="forceName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The specific name for a given force.  For example,  Force = ADF (Air Defense Force) and Force Name = Army Air Defense Force.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="functionalRole" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Principal combat-related role that a unit is organized, structured and equipped to perform.  Or, the specialized military or paramilitary branch in which an individual serves, their specialization.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="locationReason" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the reason that the entity is at that location.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="missionSpecialty" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the principal specialty type of mission that an entity is organized and equipped to perform.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="primaryMission" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the principal type of mission that an entity is organized and equipped to perform.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="unitID" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Unique identifier for each unit.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Site">
+		<xs:complexContent>
+			<xs:extension base="tns:LocatedEntity">
+				<xs:sequence>
+					<xs:element name="BENumber" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Uniquely identifies the installation of the facility.  The BE_NUMBER is generated based on the value input for the COORD to determine the appropriate World Area Code (WAC), the system assigned record originator and a one-up-number.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="area" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Measurement representing the extent of space or surface on which the entity functions.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="areaUnitOfMeasure" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Unit of measure for the AREA field value.  Typically, indicated in either square feet or square meters.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="azimuth" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The single or the low range of the entity's orientation relative to a fixed reference direction.  The horizontal angular distance from a fixed reference direction (AZIMUTH_REF) to an object or an objects orientation.  This is measured clockwise in degrees.  When associated with a fixed orientation for the object, values range from 0-179.  When associated with an object movement or the movement of the contents of the object, values range from 0-359, to indicate the direction of the flow or movement.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="category" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Used to classify the entity by its product or the type of activity in which it is engaged.  The installation records will contain all zeroes.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="depth" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The extent, measurement, or dimension downward, backward, or inward.  This value may be the only known value, or, if there is a range of values it represents the minimum depth.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="depthUnitOfMeasure" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Unit of measure for DEPTH and DEPTH_MAX field values.  Typically, indicated in either feet or meters.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="diameter" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the length of a straight line segment passing through the center of a figure, esp. of a circle or sphere, and terminating at the periphery.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="diameterUnitOfMeasure" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Unit of measure for DIAMETER field value.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="height" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Denotes the extent upward, as well as, any measurable distance above a given level.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="heightUnitOfMeasure" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Unit of measure for HEIGHT field value.  Typically, indicated in either feet or meters.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="length" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Measurement of the extent of an object along its greatest dimension.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="lengthUnitOfMeasure" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Unit of measure for LENGTH field value.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="missileSystem" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>TBS</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="osuffix" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Uniquely identifies a facility or demographic area in conjunction with a BE_NUMBER.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="pin" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Site number of a specific electronic site or its associated equipment.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="placement" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Physical positioning of the component relative to the earth's surface.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="primaryFunction" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Principal operational function being performed.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="secondaryFunction" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Secondary operational function being performed.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="targetRadius" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>RADIUS of the smallest circle encompassing 95% of a facility.  Radius is length of a straight line extending from the center of a circle to the circumference or surface.  TGT_RADIUS = (LENGTH/2.2 + WIDTH/9.7)/1852.  ALWAYS displayed in Meters.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="targetRadiusUnitOfAngle" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Traget Radius unit of angle (?)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="width" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Measurement of the extent of an object along its least dimension, or from side to side.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="widthUnitOfMeasure" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Unit of measure for WIDTH field value.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TargetList">
+		<xs:complexContent>
+			<xs:extension base="tns:Entity">
+				<xs:sequence>
+					<xs:element name="targetListNumber" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A numeric identifier of a target list.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="targetListScope" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The scope of the traget list (?)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="targetListStatus" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The status of a target list during an active exercise.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="targetListType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The coded value indicating the contents of a target list.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Target">
+		<xs:complexContent>
+			<xs:extension base="tns:LocatedEntity">
+				<xs:sequence>
+					<xs:element name="DMPIID" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A unique identifier for a Desired Mean Point of Impact (DMPI).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Equipment">
+		<xs:complexContent>
+			<xs:extension base="tns:LocatedEntity">
+				<xs:sequence>
+					<xs:element name="OBType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the type of Order-of-Battle to which a unit or equipment belongs.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeLastObserved" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The date and time when the activity was observed.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="elintMode" type="tns:ElintMode" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="equipmentCode" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Designated equipment code assigned to the item of equipment or an abbreviation record type unique identifier.  Valid equipment codes are determined by DIA.  The equipment codes are maintained by DIA.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="equipmentNumber" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Uniquely identifies each item or group of equipment associated with a unit, facility or site.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="equipmentType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Generic type this specific piece of equipment belongs to, and the identifying nomenclature which describes the equipment.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="height" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Height of the emission source above the surface of the terrain.  This data is typically captured in meters. (EMITTER_HEIGHT)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="heightUnitOfMeasure" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Unit of measure for EMITTER_HEIGHT field value.  This data is typically captured in meters. (EMITTER_HEIGHT_UM)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="length" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Measurement of the extent of an object along its greatest dimension.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="lengthUnitOfMeasure" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Unit of measure for LENGTH field value.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="locationReason" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the reason that the entity is at that location.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="primaryFunction" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Principal operational function being performed.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="quantityAuthorized" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Relative to the parent entity, the authorized maximum amount of equipment assessed to be be on-hand (OH). (QTY_OH_MAX)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="quantityOnHand" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Relative to the parent entity, the total number of military personnel or equipment assessed to be on-hand (OH).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="secondaryFunction" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Secondary operational function being performed.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="width" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Measurement of the extent of an object along its least dimension, or from side to side.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="widthUnitOfMeasure" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Unit of measure for WIDTH field value.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Event">
+		<xs:complexContent>
+			<xs:extension base="tns:LocatedEntity">
+				<xs:sequence>
+					<xs:element name="affiliation" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the association of the assessed threat that the entity imposes towards the U.S. and its allies.  This element supports SYMBOL_CODE, as per MIL-STD 2525B.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeEnded" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The effective ending date or datetime for which the data applies to the entity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeStarted" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The effective beginning date or datetime for which the data applies to the entity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="eventId" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Unique event identifier for the corresponding Event record.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="eventType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Generic type of event being described in the record.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="incident" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Type of incident that the event is based upon.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ReportingHistory">
+		<xs:complexContent>
+			<xs:extension base="tns:LocatedEntity">
+				<xs:sequence>
+					<xs:element name="BENumber" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Uniquely identifies the installation of the facility. The BE_NUMBER is generated based on the value input for the coord to determine the appropriate World Area Code (WAC), the system-assigned record originator, and a one-up number.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="UID" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The unique identifier assigned a track by TMS.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="UIC" type="xsd:string" nillable="true" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Unit Identification Code assigned by CNO to US Naval Units.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="alternateName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Contains the value of another name, identifier or designator for the entity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="category" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Used to classify the entity by its product or the type of activity in which it is engaged.  The installation records will contain all zeroes.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="sconum" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Ship control number. Number assigned by Office of Naval Intelligence (ONI).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="trackScope" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The scope of a track sets it limit of distribution and visualization (Terminal, Local, OTH).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="trackSubType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The track state: Real World, Live Training, Simulated.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="trackType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The TMS track type (e.g. PLATFORM, ELINT, etc)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="unitID" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Unique identifier for each unit. The unit or civil organization as used in the DoD Intelligence order of battle files.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ExtendedReportingHistory">
+		<xs:complexContent>
+			<xs:extension base="tns:ReportingHistory">
+				<xs:sequence>
+					<xs:element name="alert" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The alert status of an observation or track.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="archiveStatus" nillable="true" type="xsd:string">
+						<xs:annotation>
+							<xs:documentation>The TMS archived status of the track.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="callsign" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Identifies one or more communication facilities, commands, authorities, activities, or units.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="className" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The name of the platform designated as the prototype of all platforms of the same class, that is, those platforms having a marked similarity in configuration, characteristics, and capabilities.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="discreteId" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The four digit discrete identifier used in maritime reporting of tracks which are not identified as "friend" or "unknown, assumed friend".</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="forceThreatDesignation" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Designator used in U.S. Navy automated systems to identify the force threat evaluation assigned to a data track.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="fotcCmd" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>FOTC Track Number command.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="FOTCTrackNumber" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>FOTC Track Number</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="homeBase" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Home base of the track.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="hullNum" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Hull number of track.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="hullType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The hull type such as cvn, ddg, etc.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="idFriendFoeMode1" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Mode 1 IFF Code</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="indicFotcTrack" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates whether the track is a Force Over-The-Horizon Track Coordinator (FOTC) track.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="indicAmbiguity" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates whether the track is an ambiguity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="lastReportedXref" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Last reported source cross reference.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="localTrackNumber" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The Local Track Number assigned by TMS.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="originatorsXref" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Original source cross reference of a track.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="trackCategory" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The type of platform on which the observed equipment is located.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="trademarkId" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The trademark of a subsurface platform.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="reports" type="tns:ExtendedReport" nillable="true" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The reports (locations) for this entity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="childTracks" type="tns:ExtendedReportingHistory" nillable="true" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The children of an archived TMS track.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Image">
+		<xs:complexContent>
+			<xs:extension base="tns:Entity">
+				<xs:sequence>
+					<xs:element name="NIIRS" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A numeric, graduated scale, value representing the interpretability of a frame of imagery.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="imageSensor" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The sensor collecting the image.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="imageTitle" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The name of the mission on which this information was collected.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="productFormat" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Format of the image product (e.g. JPEG, NITF, MPEG, etc)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="productSize" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The size, in bytes, of the product.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="productSource" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The source of the product.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="serverName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The name of the server producing the image product.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="timeCollected" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The datetime the image was taken.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Track">
+		<xs:complexContent>
+			<xs:extension base="tns:LocatedEntity">
+				<xs:sequence>
+					<xs:element name="FOTCTrackNumber" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>FOTC Track Number</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="UID" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The unique identifier assigned a track by TMS.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="localTrackNumber" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The Local Track Number assigned by TMS.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="sconum" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Ship control number. Number assigned by Office of Naval Intelligence (ONI).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="systemTrackNumber" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Track number assigned by the reporting system (e.g. NTDS)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="trackScope" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The scope of a track sets it limit of distribution and visualization (Terminal, Local, OTH).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="trackSubType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The track state: Real World, Live Training, Simulated.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="trackType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The TMS track type (e.g. PLATFORM, ELINT, etc)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Remarks">
+		<xs:complexContent>
+			<xs:extension base="tns:Entity">
+				<xs:sequence>
+					<xs:element name="remarkText" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>This data element is a text entry containing additional information, statements, amplification, or interpretations by the 
+intelligence community</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="remarkType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Identifies the type of remarks which are contained within a record.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Alias">
+		<xs:complexContent>
+			<xs:extension base="tns:Entity">
+				<xs:sequence>
+					<xs:element name="akaType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The label of the value within AKA field.  Specifically, what type of name, identifier or designator the other field contains.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeEnded" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The effective ending date or datetime for which the data applies to the entity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeStarted" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The effective beginning date or datetime for which the data applies to the entity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="parentType" type="tns:EntityKeys" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The table name of the parent entity.  Used for child-type data (e.g. AKAs, Addresses, etc)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Document">
+		<xs:complexContent>
+			<xs:extension base="tns:Entity">
+				<xs:sequence>
+					<xs:element name="documentStatus" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The status of the actual document.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="documentType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The type of document being produced.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CC" type="xsd:string" nillable="true" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Country in which the geographic coordinates reside.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Unit">
+		<xs:complexContent>
+			<xs:extension base="tns:LocatedEntity">
+				<xs:sequence>
+					<xs:element name="OBType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the type of Order-of-Battle to which a unit or equipment belongs.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="affiliation" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the association of the assessed threat that the entity imposes towards the U.S. and its allies.  This element supports SYMBOL_CODE, as per MIL-STD 2525B.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="combatEffectiveness" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A measure of the ability of a unit to wage war, expressed as a percentage; reflects an assessment of both the unit's personnel strength and it current (versus nominal) equipment strength, both in context of the unit's primary mission.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="combatStrength" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>A measure of the personnel strength of a unit, expressed as a percentage of the estimate of its current strength compared to its established or projected nominal strength.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeStarted" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The effective beginning date or datetime for which the data applies to the entity.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="echelon" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Organizational level of the unit.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="forceName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>The specific name for a given force.  For example,  Force = ADF (Air Defense Force) and Force Name = Army Air Defense Force.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="functionalRole" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Principal combat-related role that a unit is organized, structured and equipped to perform.  Or, the specialized military or paramilitary branch in which an individual serves, their specialization.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="locationReason" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the reason that the entity is at that location.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="missionSpecialty" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the principal specialty type of mission that an entity is organized and equipped to perform.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="primaryMission" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Indicates the principal type of mission that an entity is organized and equipped to perform.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="unitID" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation>Unique identifier for each unit.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PointOccurence">
+		<xs:complexContent>
+			<xs:extension base="tns:LocatedEntity">
+				<xs:sequence>
+					<xs:group ref="tns:CommonPointFields"/>
+					<xs:element name="cc" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="coalitionKIA" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="coalitionWIA" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeLastPatrol" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="detained" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="enemyKIA" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="enemyWIA" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="incidentType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="intendedTarget" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="localMilKIA" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="localMilWIA" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="neutralKIA" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="neutralWIA" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="occCategory" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="occId" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="occName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="occSubType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="occType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="relativeRanking" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PointOrganization">
+		<xs:complexContent>
+			<xs:extension base="tns:LocatedEntity">
+				<xs:sequence>
+					<xs:group ref="tns:CommonPointFields"/>
+					<xs:element name="affiliation" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="allegianceAlt" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ctTierLevel" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="militaryUnit" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="primaryMission" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="primaryMissionSpecialty" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="secondaryMission" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="secondaryMissionSpecialty" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="orgId" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="orgName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="orgType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="relativeRanking" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="strength" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="strengthDatetime" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="strengthMax" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PointIndividual">
+		<xs:complexContent>
+			<xs:extension base="tns:LocatedEntity">
+				<xs:sequence>
+					<xs:group ref="tns:CommonPointFields"/>
+					<xs:element name="affiliation" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="birthCc" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="birthDate" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="birthPlace" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="category" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ctid" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ctTierLevel" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="deathCc" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="deathDate" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="deathPlace" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="fullName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="gender" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="givenName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="individualId" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="maritalStatus" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="namePrefix" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="nameSuffix" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="relativeRanking" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="religion" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="religiousConvert" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="religiousPractice" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="surname" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="usCitizen" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PointMateriel">
+		<xs:complexContent>
+			<xs:extension base="tns:Entity">
+				<xs:sequence>
+					<xs:group ref="tns:CommonPointFields"/>
+					<xs:element name="category" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="condition" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="conditionAvailable" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="electricCurrent" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="idNumber" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="language" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="lowUseTimeBegin" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="lowUseTimeDays" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="lowUseTimeEnd" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="make" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="manufacturer" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="materielType" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="model" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="modification" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="peakUseTimeBegin" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="peakUseTimeDays" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="peakUseTimeEnd" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="primaryFunction" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="quantity" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="secondaryFunction" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="voltage" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PointDocument">
+		<xs:complexContent>
+			<xs:extension base="tns:Entity">
+				<xs:sequence>
+					<xs:group ref="tns:CommonPointFields"/>
+					<xs:element name="activeDate" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="annotations" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="cc" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="cityIssue" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateImage" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateIssued" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateRevalidation" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="documentName" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="expireDate" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="number" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="status" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="type" type="xsd:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation></xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:group name="CommonPointFields">
+		<xs:annotation>
+			<xs:documentation>A group containing the fields common to point entities</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="avBestRecord" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="avRecordStatus" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="classifiedBy" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dateTimeBegin" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dateTimeEnd" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="declassManRev" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>		
+			<xs:element name="derivedFrom" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="derivedFromSk" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="evaluation" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="exemptSourceDate" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>		
+			<xs:element name="exemptSourceType" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="relido" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ownerProducer" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="recordOwner" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="siteOriginator" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="sourceSk" type="xsd:string" nillable="true">
+				<xs:annotation>
+					<xs:appinfo>
+						<dbName/>
+					</xs:appinfo>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+</xs:schema>

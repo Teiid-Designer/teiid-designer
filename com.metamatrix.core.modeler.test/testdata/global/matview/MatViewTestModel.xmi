@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:Transformation="http://www.metamatrix.com/metamodels/Transformation" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:40487f80-e6fa-1f36-b535-ce77c1ba1b1c" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="VIRTUAL">
+    <modelImports xmi:uuid="mmuuid:d6091c80-0548-1f36-8533-e208b4ff86d8" name="RuntimeTypeModel" path="/mvtest/RuntimeTypeModel.xmi" uuid="mmuuid:d6091c80-0548-1f36-8533-e208b4ff86d8" modelType="PHYSICAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>
+    <modelImports xmi:uuid="mmuuid:60e90b40-e706-1f36-b535-ce77c1ba1b1c" name="XMLSchema" path="http://www.w3.org/2001/XMLSchema"/>
+    <modelImports xmi:uuid="mmuuid:61dd2f4a-e706-1f36-b535-ce77c1ba1b1c" name="SimpleDatatypes-instance" path="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"/>
+  </mmcore:ModelAnnotation>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:79fb0181-e6fa-1f36-b535-ce77c1ba1b1c">
+    <diagram xmi:uuid="mmuuid:79fb0180-e6fa-1f36-b535-ce77c1ba1b1c" type="packageDiagramType" target="mmuuid/40487f80-e6fa-1f36-b535-ce77c1ba1b1c">
+      <diagramEntity xmi:uuid="mmuuid:e945a900-e6ff-1f36-b535-ce77c1ba1b1c" name="MatViewGroup" modelObject="mmuuid/8f169d00-e6fe-1f36-b535-ce77c1ba1b1c" xPosition="20" yPosition="20"/>
+    </diagram>
+    <diagram xmi:uuid="mmuuid:ed06f6c0-e6ff-1f36-b535-ce77c1ba1b1c" type="transformationDiagramType" target="mmuuid/8f169d00-e6fe-1f36-b535-ce77c1ba1b1c">
+      <diagramEntity xmi:uuid="mmuuid:a8bae300-e704-1f36-b535-ce77c1ba1b1c" modelObject="mmuuid/8f169d00-e6fe-1f36-b535-ce77c1ba1b1c" xPosition="24" yPosition="68"/>
+      <diagramEntity xmi:uuid="mmuuid:a8bae301-e704-1f36-b535-ce77c1ba1b1c" name="T" modelObject="mmuuid/c8701040-e703-1f36-b535-ce77c1ba1b1c" xPosition="225" yPosition="159"/>
+      <diagramEntity xmi:uuid="mmuuid:6d029400-e706-1f36-b535-ce77c1ba1b1c" xPosition="385" yPosition="10">
+        <modelObject href="RuntimeTypeModel.xmi#mmuuid/79de2ac0-059a-1f36-be10-a7a4aea2716c"/>
+      </diagramEntity>
+    </diagram>
+  </Diagram:DiagramContainer>
+  <Relational:BaseTable xmi:uuid="mmuuid:8f169d00-e6fe-1f36-b535-ce77c1ba1b1c" name="MatViewGroup" supportsUpdate="false" materialized="true">
+    <columns xmi:uuid="mmuuid:5b4eb7c0-e706-1f36-b535-ce77c1ba1b1c" name="StringValue" length="10">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:60e90b41-e706-1f36-b535-ce77c1ba1b1c" name="IntValue">
+      <type href="http://www.w3.org/2001/XMLSchema#int"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:60e90b46-e706-1f36-b535-ce77c1ba1b1c" name="BooleanValue">
+      <type href="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:61dd2f40-e706-1f36-b535-ce77c1ba1b1c" name="ByteValue">
+      <type href="http://www.w3.org/2001/XMLSchema#byte"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:61dd2f45-e706-1f36-b535-ce77c1ba1b1c" name="CharValue" length="1">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:62c21100-e706-1f36-b535-ce77c1ba1b1c" name="ShortValue">
+      <type href="http://www.w3.org/2001/XMLSchema#short"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:62c21105-e706-1f36-b535-ce77c1ba1b1c" name="LongValue">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:63b63504-e706-1f36-b535-ce77c1ba1b1c" name="FloatValue">
+      <type href="http://www.w3.org/2001/XMLSchema#float"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:63b63509-e706-1f36-b535-ce77c1ba1b1c" name="DoubleValue">
+      <type href="http://www.w3.org/2001/XMLSchema#double"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:649b16c0-e706-1f36-b535-ce77c1ba1b1c" name="BigIntegerValue">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:649b16c5-e706-1f36-b535-ce77c1ba1b1c" name="BigDecimalValue">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#bigdecimal"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:649b16ca-e706-1f36-b535-ce77c1ba1b1c" name="DateValue">
+      <type href="http://www.w3.org/2001/XMLSchema#date"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:658f3ac0-e706-1f36-b535-ce77c1ba1b1c" name="TimeValue">
+      <type href="http://www.w3.org/2001/XMLSchema#time"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:658f3ac5-e706-1f36-b535-ce77c1ba1b1c" name="TimeStampValue">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:658f3aca-e706-1f36-b535-ce77c1ba1b1c" name="ObjectValue">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#object"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:66835ec0-e706-1f36-b535-ce77c1ba1b1c" name="BlobValue">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#blob"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:66835ec5-e706-1f36-b535-ce77c1ba1b1c" name="ClobValue">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#clob"/>
+    </columns>
+  </Relational:BaseTable>
+  <Transformation:TransformationContainer xmi:uuid="mmuuid:c8701041-e703-1f36-b535-ce77c1ba1b1c">
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:c8701040-e703-1f36-b535-ce77c1ba1b1c" outputs="mmuuid/8f169d00-e6fe-1f36-b535-ce77c1ba1b1c" target="mmuuid/8f169d00-e6fe-1f36-b535-ce77c1ba1b1c">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:a8bae302-e704-1f36-b535-ce77c1ba1b1c" selectSql="SELECT * FROM mmuuid:79de2ac0-059a-1f36-be10-a7a4aea2716c">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:a8bae303-e704-1f36-b535-ce77c1ba1b1c" selectSql="SELECT * FROM RuntimeTypeModel.&quot;Values&quot;"/>
+        <aliases xmi:uuid="mmuuid:53db5e81-e706-1f36-b535-ce77c1ba1b1c" alias="Values">
+          <aliasedObject href="RuntimeTypeModel.xmi#mmuuid/79de2ac0-059a-1f36-be10-a7a4aea2716c"/>
+        </aliases>
+      </helper>
+      <nested xmi:uuid="mmuuid:1c22e84e-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/5b4eb7c0-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/ed68afc0-05a8-1f36-be10-a7a4aea2716c"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1c22e84f-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/60e90b41-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/9c8cff40-05b5-1f36-be10-a7a4aea2716c"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1c22e850-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/60e90b46-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/000de780-05c2-1f36-be10-a7a4aea2716c"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1c22e851-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/61dd2f40-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/a7f86880-05c7-1f36-be10-a7a4aea2716c"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1c22e852-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/61dd2f45-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/11bd5480-0652-1f36-be10-a7a4aea2716c"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1d07ca00-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/62c21100-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/c961a8c0-0652-1f36-be10-a7a4aea2716c"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1d07ca01-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/62c21105-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/632955c0-0653-1f36-be10-a7a4aea2716c"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1d07ca02-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/63b63504-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/dde42e00-0655-1f36-be10-a7a4aea2716c"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1d07ca03-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/63b63509-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/22446dc0-0698-1f36-be10-a7a4aea2716c"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1d07ca04-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/649b16c0-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/8885bc40-06a9-1f36-be10-a7a4aea2716c"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1d07ca05-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/649b16c5-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/6feed780-06b7-1f36-be10-a7a4aea2716c"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1d07ca06-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/649b16ca-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/53b22b00-06bf-1f36-be10-a7a4aea2716c"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1d07ca07-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/658f3ac0-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/650cf880-06c4-1f36-be10-a7a4aea2716c"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1d07ca08-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/658f3ac5-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/9d984880-06d8-1f36-be10-a7a4aea2716c"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1d07ca09-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/658f3aca-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/79c3f200-07c9-1f36-b83a-8aac80571dfc"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1d07ca0a-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/66835ec0-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/e215d200-07cf-1f36-b83a-8aac80571dfc"/>
+      </nested>
+      <nested xmi:uuid="mmuuid:1d07ca0b-ec6b-1f36-a63d-c76525a683cc" outputs="mmuuid/66835ec5-e706-1f36-b535-ce77c1ba1b1c">
+        <inputs href="RuntimeTypeModel.xmi#mmuuid/0ac4cc40-07e1-1f36-b83a-8aac80571dfc"/>
+      </nested>
+      <inputs href="RuntimeTypeModel.xmi#mmuuid/79de2ac0-059a-1f36-be10-a7a4aea2716c"/>
+    </transformationMappings>
+  </Transformation:TransformationContainer>
+</xmi:XMI>

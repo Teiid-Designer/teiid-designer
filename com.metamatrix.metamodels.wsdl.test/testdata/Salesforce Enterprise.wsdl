@@ -1,0 +1,2800 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+Salesforce.com Enterprise Web Services API Version 4.0 
+Generated on 2004-10-05 23:15:52 +0000.
+
+Copyright 1999-2004 salesforce.com, inc.
+All Rights Reserved
+-->
+
+<definitions targetNamespace="urn:enterprise.soap.sforce.com"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:tns="urn:enterprise.soap.sforce.com"
+             xmlns:ens="urn:sobject.enterprise.soap.sforce.com"
+             xmlns:fns="urn:fault.enterprise.soap.sforce.com"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <types>
+
+        <schema elementFormDefault="qualified"
+                targetNamespace="urn:sobject.enterprise.soap.sforce.com"
+                xmlns="http://www.w3.org/2001/XMLSchema">
+
+	    <import namespace="urn:enterprise.soap.sforce.com"/>
+
+
+            <!-- Base sObject (abstract) -->
+            <complexType name="sObject" abstract="true">
+                <sequence>
+                    <element name="fieldsToNull"       type="xsd:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    <element name="Id"                 type="tns:ID" nillable="true" minOccurs="0" maxOccurs="1" />
+                </sequence>
+            </complexType>
+            <complexType name="Account">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="AccountNumber" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="AccountSE__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="AccountSubOwners__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="AnnualRevenue" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="BillingCity" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="BillingCountry" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="BillingPostalCode" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="BillingState" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="BillingStreet" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="CurrentMode__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="DataSources__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Fax" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Industry" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="NumberOfEmployees" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="OwnerId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Ownership" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ParentId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Phone" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Rating" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ShippingCity" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ShippingCountry" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ShippingPostalCode" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ShippingState" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ShippingStreet" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Sic" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Site" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SpecialConnectors__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="TickerSymbol" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Type" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Website" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Account" type="ens:Account"/>
+
+            <complexType name="AccountContactRole">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="AccountId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ContactId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsPrimary" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Role" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="AccountContactRole" type="ens:AccountContactRole"/>
+
+            <complexType name="AccountShare">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="AccountAccessLevel" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="AccountId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CaseAccessLevel" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="OpportunityAccessLevel" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="RowCause" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="UserOrGroupId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="AccountShare" type="ens:AccountShare"/>
+
+            <complexType name="Approval">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="ApproveComment" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="OwnerId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ParentId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="RequestComment" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Status" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Approval" type="ens:Approval"/>
+
+            <complexType name="AssignmentRule">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="Active" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="RuleType" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="AssignmentRule" type="ens:AssignmentRule"/>
+
+            <complexType name="Attachment">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="Body" nillable="true" minOccurs="0" type="xsd:base64Binary"/>
+                        <element name="BodyLength" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsPrivate" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OwnerId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ParentId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Attachment" type="ens:Attachment"/>
+
+            <complexType name="BusinessHours">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="FridayEnd" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="FridayStart" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="MondayEnd" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="MondayStart" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SaturdayEnd" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SaturdayStart" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SundayEnd" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SundayStart" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="ThursdayEnd" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ThursdayStart" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="TuesdayEnd" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="TuesdayStart" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="WednesdayEnd" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="WednesdayStart" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="BusinessHours" type="ens:BusinessHours"/>
+
+            <complexType name="BusinessProcess">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="IsActive" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="TableEnumOrId" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="BusinessProcess" type="ens:BusinessProcess"/>
+
+            <complexType name="Campaign">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="ActualCost" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="AmountAllOpportunities" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="AmountWonOpportunities" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="BudgetedCost" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="EndDate" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="ExpectedResponse" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="ExpectedRevenue" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="IsActive" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="NumberOfContacts" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="NumberOfConvertedLeads" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="NumberOfLeads" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="NumberOfOpportunities" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="NumberOfResponses" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="NumberOfWonOpportunities" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="NumberSent" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="OwnerId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="StartDate" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="Status" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Type" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Campaign" type="ens:Campaign"/>
+
+            <complexType name="CampaignMember">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CampaignId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ContactId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="HasResponded" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LeadId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Status" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="CampaignMember" type="ens:CampaignMember"/>
+
+            <complexType name="Case">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="AppServerPlatform__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Assigned_to__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="CaseNumber" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ClientVisibility__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Client_JDK_Version__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ClosedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="ContactId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Customer_Severity__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Data_Sources__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="DateHotPatchSent__c" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="DeploymentConfiguration__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Eval_ODBC_Expiry__c" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="FixedinBuild__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="HotPatchesApplied__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="IsClosed" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsEscalated" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsVisibleInCss" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LicenseExpiryDate__c" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="LicenseInvoiceDate__c" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="LicenseInvoice__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LicenseMetaMatrixServer__c" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="LicenseMetamatrixXAS__c" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="LicenseModelerWebUnits__c" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="LicenseODBCClientKey__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LicenseODBCDriverunits__c" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="LicenseODBCServerKey__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Modeler_Products__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OEM_Case_ID_Name__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OEM_Case_ID__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Origin" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OwnerId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Priority" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ProductBuild__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ProductMetaBaseModeler__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ProductMetaBaseServer__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ProductMetaMatrixServer__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ProductMetaMatrixXAServer__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ProductModelerWeb__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ProductODBCDriver__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ProductinQuestion__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Reason" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="RecordTypeId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="RelatedDefectEntryDate__c" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="RelatedDefectNumber__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="RepositoryType__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Resolved_In__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ServerPlatform__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Status" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SubProduct__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Subject" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SuppliedCompany" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SuppliedEmail" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SuppliedName" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SuppliedPhone" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="TargetedRelease__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ToolsPlatform__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Type" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Version__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Case" type="ens:Case"/>
+
+            <complexType name="CaseComment">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CommentBody" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsPublished" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="ParentId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="CaseComment" type="ens:CaseComment"/>
+
+            <complexType name="CaseHistory">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CaseId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Field" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="NewValue" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OldValue" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="CaseHistory" type="ens:CaseHistory"/>
+
+            <complexType name="CaseSolution">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CaseId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="SolutionId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="CaseSolution" type="ens:CaseSolution"/>
+
+            <complexType name="CaseStatus">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsClosed" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsDefault" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="MasterLabel" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SortOrder" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="CaseStatus" type="ens:CaseStatus"/>
+
+            <complexType name="Contact">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="AccountId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="AssistantName" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="AssistantPhone" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Birthdate" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Department" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="DoNotCall" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="Email" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Fax" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="FirstName" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="HasOptedOutOfEmail" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="HomePhone" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LastCURequestDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LastCUUpdateDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LastName" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LeadSource" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="MailingCity" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="MailingCountry" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="MailingPostalCode" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="MailingState" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="MailingStreet" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="MobilePhone" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OtherCity" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OtherCountry" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OtherPhone" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OtherPostalCode" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OtherState" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OtherStreet" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OwnerId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Phone" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ReportsToId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Salutation" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Title" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Contact" type="ens:Contact"/>
+
+            <complexType name="Contract">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="AccountId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ActivatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ActivatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="BillingCity" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="BillingCountry" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="BillingPostalCode" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="BillingState" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="BillingStreet" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="CompanySignedDate" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="CompanySignedId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ContractNumber" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ContractTerm" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="CustomerSignedDate" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="CustomerSignedId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CustomerSignedTitle" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="EndDate" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="LastApprovedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OwnerExpirationNotice" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OwnerId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="SpecialTerms" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="StartDate" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="Status" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="StatusCode" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Contract" type="ens:Contract"/>
+
+            <complexType name="ContractContactRole">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="ContactId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ContractId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsPrimary" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Role" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="ContractContactRole" type="ens:ContractContactRole"/>
+
+            <complexType name="ContractStatus">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsDefault" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="MasterLabel" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SortOrder" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="StatusCode" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="ContractStatus" type="ens:ContractStatus"/>
+
+            <complexType name="Document">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="AuthorId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Body" nillable="true" minOccurs="0" type="xsd:base64Binary"/>
+                        <element name="BodyLength" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="FolderId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="IsInternalUseOnly" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="Keywords" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Type" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Url" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Document" type="ens:Document"/>
+
+            <complexType name="Event">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="AccountId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ActivityDate" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="ActivityDateTime" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="App_Server__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="DurationInMinutes" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="IsAllDayEvent" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsChild" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsGroupEvent" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsPrivate" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="License_Expiration__c" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="License_Type__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Licensed_MetaBase_Models__c" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="Licensed_Modeler_Seats__c" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="Licensed_Product__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Location" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OwnerId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Repository_Type__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Server_OS__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ShowAs" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Subject" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Type" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Upgrading_From__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Version__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="WhatId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="WhoId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Event" type="ens:Event"/>
+
+            <complexType name="Folder">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="AccessType" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsReadonly" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Type" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Folder" type="ens:Folder"/>
+
+            <complexType name="Group">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Email" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OwnerId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="RelatedId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Type" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Group" type="ens:Group"/>
+
+            <complexType name="GroupMember">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="GroupId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="UserOrGroupId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="GroupMember" type="ens:GroupMember"/>
+
+            <complexType name="Lead">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="AnnualRevenue" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="City" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Company" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ConvertedAccountId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ConvertedContactId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ConvertedDate" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="ConvertedOpportunityId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Country" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="DoNotCall" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="Email" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Fax" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="FirstName" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="HasOptedOutOfEmail" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="Industry" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="IsConverted" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsUnreadByOwner" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LastName" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LeadSource" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="MDA__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="MobilePhone" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="NumberOfEmployees" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="OwnerId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Phone" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="PostalCode" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Rating" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Salutation" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="State" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Status" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Street" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Title" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Training_Session__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Training_Status__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Website" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="comments__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="companyType__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="contactType__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="date__c" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="department__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="draw__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="firstName__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="followup1__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="followup2__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="followup3__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="followup4__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="followup5__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="followup6__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="lastName__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="product__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="referrer__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="scope__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="server__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="surveyOrigin__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="training_sponsor__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Lead" type="ens:Lead"/>
+
+            <complexType name="LeadStatus">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsConverted" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsDefault" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="MasterLabel" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SortOrder" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="LeadStatus" type="ens:LeadStatus"/>
+
+            <complexType name="MailmergeTemplate">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="Body" nillable="true" minOccurs="0" type="xsd:base64Binary"/>
+                        <element name="BodyLength" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Filename" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LastUsedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="MailmergeTemplate" type="ens:MailmergeTemplate"/>
+
+            <complexType name="Note">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="Body" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsPrivate" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="OwnerId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ParentId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Title" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Note" type="ens:Note"/>
+
+            <complexType name="Opportunity">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="AccountId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Amount" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="CampaignId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CloseDate" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="Commit_Upside__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ExpectedRevenue" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="ForecastCategory" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="HasOpportunityLineItem" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="If_Federal_Sector__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="IsClosed" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsPrivate" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsWon" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LeadSource" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="NextStep" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OwnerId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Pricebook2Id" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="PricebookId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Probability" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="RecordTypeId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Sales_Use_Case__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="StageName" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Type" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Opportunity" type="ens:Opportunity"/>
+
+            <complexType name="OpportunityCompetitor">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CompetitorName" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="OpportunityId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Strengths" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Weaknesses" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="OpportunityCompetitor" type="ens:OpportunityCompetitor"/>
+
+            <complexType name="OpportunityContactRole">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="ContactId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsPrimary" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="OpportunityId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Role" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="OpportunityContactRole" type="ens:OpportunityContactRole"/>
+
+            <complexType name="OpportunityHistory">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="Amount" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="CloseDate" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="ExpectedRevenue" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="ForecastCategory" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OpportunityId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Probability" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="StageName" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="OpportunityHistory" type="ens:OpportunityHistory"/>
+
+            <complexType name="OpportunityLineItem">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="ListPrice" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="OpportunityId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="PricebookEntryId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ProductId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Quantity" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="ServiceDate" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="TotalPrice" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="UnitPrice" nillable="true" minOccurs="0" type="xsd:double"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="OpportunityLineItem" type="ens:OpportunityLineItem"/>
+
+            <complexType name="OpportunityShare">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="OpportunityAccessLevel" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OpportunityId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="RowCause" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="UserOrGroupId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="OpportunityShare" type="ens:OpportunityShare"/>
+
+            <complexType name="OpportunityStage">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="DefaultProbability" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ForecastCategory" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="IsActive" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsClosed" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsWon" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="MasterLabel" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SortOrder" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="OpportunityStage" type="ens:OpportunityStage"/>
+
+            <complexType name="Organization">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="City" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ComplianceBccEmail" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Country" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="DefaultAccountAndContactAccess" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="DefaultCalendarAccess" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="DefaultCaseAccess" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="DefaultLeadAccess" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="DefaultLocaleSidKey" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="DefaultOpportunityAccess" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="DefaultPricebookAccess" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Division" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Fax" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="FiscalYearStartMonth" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="LanguageLocaleKey" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="MaxActionsPerRule" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="MaxRulesPerEntity" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Phone" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="PostalCode" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="PrimaryContact" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ReceivesAdminInfoEmails" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="ReceivesInfoEmails" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="State" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Street" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="UsesStartDateAsFiscalYearName" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="WebToCaseDefaultOrigin" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Organization" type="ens:Organization"/>
+
+            <complexType name="Partner">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="AccountFromId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="AccountToId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsPrimary" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="OpportunityId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Role" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Partner" type="ens:Partner"/>
+
+            <complexType name="PartnerRole">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="MasterLabel" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ReverseRole" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SortOrder" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="PartnerRole" type="ens:PartnerRole"/>
+
+            <complexType name="Pricebook">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="IsActive" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Pricebook" type="ens:Pricebook"/>
+
+            <complexType name="Pricebook2">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="IsActive" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsStandard" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Pricebook2" type="ens:Pricebook2"/>
+
+            <complexType name="PricebookEntry">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsActive" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Pricebook2Id" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Product2Id" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ProductCode" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="UnitPrice" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="UseStandardPrice" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="PricebookEntry" type="ens:PricebookEntry"/>
+
+            <complexType name="Product">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="DefaultPrice" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="IsActive" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="PricebookId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ProductCode" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Product" type="ens:Product"/>
+
+            <complexType name="Product2">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Family" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="IsActive" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ProductCode" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Product2" type="ens:Product2"/>
+
+            <complexType name="Profile">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="PermissionsApiUserOnly" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsCreateAccount" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsCreateSolution" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsCustomizeApplication" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsDeleteAccounts" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsDeleteOpportunity" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsEditAccount" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsEditCase" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsEditContact" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsEditContract" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsEditDocument" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsEditEvent" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsEditForecast" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsEditLead" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsEditOpportunity" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsEditPricebook" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsEditProduct" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsEditPublicDocuments" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsEditReadonlyFields" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsEditTask" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsImportLeads" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsManageCases" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsManageCssUsers" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsManageDashboards" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsManageLeads" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsManagePrivateSolutions" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsManageSelfService" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsManageSolutions" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsManageUsers" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsModifyAllData" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsRunReports" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsSendSitRequests" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsTransferAnyEntity" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsTransferAnyLead" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsViewAllData" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="PermissionsViewSetup" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Profile" type="ens:Profile"/>
+
+            <complexType name="Queue">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="OwnerId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="QueueEmail" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="QueueName" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Type" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Queue" type="ens:Queue"/>
+
+            <complexType name="QueueMember">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="QueueId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="UserId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="QueueMember" type="ens:QueueMember"/>
+
+            <complexType name="RecordType">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="BusinessProcessId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="IsActive" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="TableEnumOrId" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="RecordType" type="ens:RecordType"/>
+
+            <complexType name="Scontrol">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="Binary" nillable="true" minOccurs="0" type="xsd:base64Binary"/>
+                        <element name="BodyLength" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Filename" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="HtmlWrapper" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Scontrol" type="ens:Scontrol"/>
+
+            <complexType name="Solution">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsPublished" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsReviewed" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="OwnerId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="SolutionName" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SolutionNote" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SolutionNumber" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Status" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Solution" type="ens:Solution"/>
+
+            <complexType name="SolutionStatus">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsDefault" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsReviewed" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="MasterLabel" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SortOrder" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="SolutionStatus" type="ens:SolutionStatus"/>
+
+            <complexType name="Task">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="AccountId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ActivityDate" nillable="true" minOccurs="0" type="xsd:date"/>
+                        <element name="App_Server__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Description" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="IsClosed" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="License_Expiration__c" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="License_Type__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Licensed_MetaBase_Models__c" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="Licensed_Modeler_Seats__c" nillable="true" minOccurs="0" type="xsd:double"/>
+                        <element name="Licensed_Product__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OwnerId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Priority" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Repository_Type__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Server_OS__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Status" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Subject" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Type" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Upgrading_From__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Version__c" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="WhatId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="WhoId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="Task" type="ens:Task"/>
+
+            <complexType name="TaskPriority">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsDefault" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsHighPriority" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="MasterLabel" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SortOrder" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="TaskPriority" type="ens:TaskPriority"/>
+
+            <complexType name="TaskStatus">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="IsClosed" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="IsDefault" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="MasterLabel" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SortOrder" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="TaskStatus" type="ens:TaskStatus"/>
+
+            <complexType name="User">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="Alias" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="City" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="CompanyName" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Country" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Department" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Division" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Email" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="EmailEncodingKey" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="EmployeeNumber" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Fax" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="FirstName" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="IsActive" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LanguageLocaleKey" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LastLoginDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LastName" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="LocaleSidKey" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="MobilePhone" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Phone" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="PostalCode" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ProfileId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ReceivesAdminInfoEmails" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="ReceivesInfoEmails" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="State" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Street" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="TimeZoneSidKey" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Title" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="UserPermissionsAvantgoUser" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="UserPermissionsMarketingUser" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="UserPermissionsOfflineUser" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="UserPermissionsSuperCssUser" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="UserPermissionsWirelessUser" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="UserRoleId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="Username" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="WirelessEmail" nillable="true" minOccurs="0" type="xsd:string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="User" type="ens:User"/>
+
+            <complexType name="UserRole">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CaseAccessForAccountOwner" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OpportunityAccessForAccountOwner" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ParentRoleId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="RollupDescription" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="UserRole" type="ens:UserRole"/>
+
+            <complexType name="WebLink">
+                <complexContent>
+                    <extension base="ens:sObject">
+                        <sequence>
+                        <element name="CreatedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="CreatedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="EncodingKey" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="HasMenubar" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="HasScrollbars" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="HasToolbar" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="Height" nillable="true" minOccurs="0" type="xsd:int"/>
+                        <element name="IsResizable" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="LastModifiedById" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="LastModifiedDate" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="LinkType" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Name" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="OpenType" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="PageEnumOrId" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Position" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="ScontrolId" nillable="true" minOccurs="0" type="tns:ID"/>
+                        <element name="ShowsLocation" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="ShowsStatus" nillable="true" minOccurs="0" type="xsd:boolean"/>
+                        <element name="SystemModstamp" nillable="true" minOccurs="0" type="xsd:dateTime"/>
+                        <element name="Url" nillable="true" minOccurs="0" type="xsd:string"/>
+                        <element name="Width" nillable="true" minOccurs="0" type="xsd:int"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <element name="WebLink" type="ens:WebLink"/>
+
+
+        </schema>
+
+        <schema elementFormDefault="qualified"
+                targetNamespace="urn:enterprise.soap.sforce.com"
+                xmlns="http://www.w3.org/2001/XMLSchema">
+
+	    <import namespace="urn:sobject.enterprise.soap.sforce.com"/>
+
+            <!-- Our simple ID Type -->
+            <simpleType name="ID">
+                <restriction base="xsd:string">
+                    <length value="18"/>
+                    <pattern value='[a-zA-Z0-9]{18}'/>
+                </restriction>
+            </simpleType>
+
+            <simpleType name="QueryLocator">
+                <restriction base="xsd:string"/>
+            </simpleType>
+
+            <!-- Shared Result Types -->
+            <complexType name="QueryResult">
+                <sequence>
+                    <element name="done"         type="xsd:boolean"/>
+                    <element name="queryLocator" type="tns:QueryLocator" nillable="true"/>
+                    <element name="records"      type="ens:sObject" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    <element name="size"         type="xsd:int"/>
+                </sequence>
+            </complexType>
+
+            <!-- Search Result -->
+            <complexType name="SearchResult">
+                <sequence>
+                    <element name="searchRecords"  minOccurs="0" maxOccurs="unbounded" type="tns:SearchRecord"/>
+                    <element name="sforceReserved" minOccurs="0" maxOccurs="1" type="xsd:string"/>
+                </sequence>
+            </complexType>
+
+            <complexType name="SearchRecord">
+                <sequence>
+                    <element name="record" type="ens:sObject"/>
+                </sequence>
+            </complexType>
+
+            <!-- GetUpdated Result -->
+            <complexType name="GetUpdatedResult">
+                <sequence>
+                    <element name="ids" minOccurs="0" maxOccurs="unbounded" type="tns:ID"/>
+                    <element name="sforceReserved" minOccurs="0" maxOccurs="1" type="xsd:string"/>
+                </sequence>
+            </complexType>
+
+            <!-- GetDeleted Result -->
+            <complexType name="GetDeletedResult">
+                <sequence>
+                    <element name="deletedRecords" minOccurs="0" maxOccurs="unbounded" type="tns:DeletedRecord"/>
+                    <element name="sforceReserved" minOccurs="0" maxOccurs="1" type="xsd:string"/>
+                </sequence>
+            </complexType>
+
+            <complexType name="DeletedRecord">
+                <sequence>
+                    <element name="deletedDate" type="xsd:dateTime"/>
+                    <element name="id"          type="tns:ID"/>
+                </sequence>
+            </complexType>
+
+
+            <complexType name="GetServerTimestampResult">
+                <sequence>
+                    <element name="timestamp" type="xsd:dateTime"/>
+                </sequence>
+            </complexType>
+
+            <complexType name="SetPasswordResult">
+            </complexType>
+
+            <complexType name="ResetPasswordResult">
+                <sequence>
+                    <element name="password" type="xsd:string"/>
+                </sequence>
+            </complexType>
+
+            <complexType name="GetUserInfoResult">
+                <sequence>
+                    <element name="currencySymbol"             type="xsd:string"/>
+                    <element name="organizationId"             type="tns:ID"/>
+                    <element name="organizationMultiCurrency"  type="xsd:boolean"/>
+                    <element name="organizationName"           type="xsd:string"/>
+                    <element name="userDefaultCurrencyIsoCode" type="xsd:string"/>
+                    <element name="userEmail"                  type="xsd:string"/>
+                    <element name="userFullName"               type="xsd:string"/>
+                    <element name="userId"                     type="tns:ID"/>
+                    <element name="userLanguage"               type="xsd:string"/>
+                    <element name="userLocale"                 type="xsd:string"/>
+                    <element name="userTimeZone"               type="xsd:string"/>
+                </sequence>
+            </complexType>
+
+            <complexType name="LoginResult">
+                <sequence>
+                    <element name="serverUrl"        type="xsd:string" nillable="true"/>
+                    <element name="sessionId"        type="xsd:string"/>
+
+                    <element name="userId"           type="tns:ID"/>
+                </sequence>
+            </complexType>
+
+            <simpleType name="StatusCode">
+                <restriction base="xsd:string">
+                    <enumeration value="ASSIGNEE_TYPE_REQUIRED"/>
+                    <enumeration value="BAD_CUSTOM_ENTITY_PARENT_DOMAIN"/>
+                    <enumeration value="CANNOT_CASCADE_PRODUCT_ACTIVE"/>
+                    <enumeration value="CANNOT_INSERT_UPDATE_ACTIVATE_ENTITY"/>
+                    <enumeration value="CANNOT_REPARENT_RECORD"/>
+                    <enumeration value="CANNOT_RESOLVE_NAME"/>
+                    <enumeration value="CANNOT_UPDATE_CONVERTED_LEAD"/>
+                    <enumeration value="CANT_DISABLE_CORP_CURRENCY"/>
+                    <enumeration value="CANT_UNSET_CORP_CURRENCY"/>
+                    <enumeration value="CHILD_SHARE_FAILS_PARENT"/>
+                    <enumeration value="CIRCULAR_DEPENDENCY"/>
+                    <enumeration value="CUSTOM_ENTITY_OR_FIELD_LIMIT"/>
+                    <enumeration value="CUSTOM_FIELD_INDEX_LIMIT_EXCEEDED"/>
+                    <enumeration value="DELETE_FAILED"/>
+                    <enumeration value="DEPENDENCY_EXISTS"/>
+                    <enumeration value="DUPLICATE_CASE_SOLUTION"/>
+                    <enumeration value="DUPLICATE_CUSTOM_TAB_MOTIF"/>
+                    <enumeration value="DUPLICATE_DEVELOPER_NAME"/>
+                    <enumeration value="DUPLICATE_MASTER_LABEL"/>
+                    <enumeration value="DUPLICATE_USERNAME"/>
+                    <enumeration value="DUPLICATE_VALUE"/>
+                    <enumeration value="ENTITY_FAILED_IFLASTMODIFIED_ON_UPDATE"/>
+                    <enumeration value="ENTITY_IS_ARCHIVED"/>
+                    <enumeration value="ENTITY_IS_DELETED"/>
+                    <enumeration value="ENTITY_IS_LOCKED"/>
+                    <enumeration value="FAILED_ACTIVATION"/>
+                    <enumeration value="FIELD_INTEGRITY_EXCEPTION"/>
+                    <enumeration value="INACTIVE_OWNER_OR_USER"/>
+                    <enumeration value="INSUFFICIENT_ACCESS_ON_CROSS_REFERENCE_ENTITY"/>
+                    <enumeration value="INSUFFICIENT_ACCESS_OR_READONLY"/>
+                    <enumeration value="INVALID_ACCESS_LEVEL"/>
+                    <enumeration value="INVALID_ARGUMENT_TYPE"/>
+                    <enumeration value="INVALID_ASSIGNEE_TYPE"/>
+                    <enumeration value="INVALID_ASSIGNMENT_RULE"/>
+                    <enumeration value="INVALID_BATCH_OPERATION"/>
+                    <enumeration value="INVALID_CREDIT_CARD_INFO"/>
+                    <enumeration value="INVALID_CROSS_REFERENCE_KEY"/>
+                    <enumeration value="INVALID_CROSS_REFERENCE_TYPE_FOR_FIELD"/>
+                    <enumeration value="INVALID_CURRENCY_ISO"/>
+                    <enumeration value="INVALID_EMAIL_ADDRESS"/>
+                    <enumeration value="INVALID_EMPTY_KEY_OWNER"/>
+                    <enumeration value="INVALID_FIELD_FOR_INSERT_UPDATE"/>
+                    <enumeration value="INVALID_FILTER_ACTION"/>
+                    <enumeration value="INVALID_ID_FIELD"/>
+                    <enumeration value="INVALID_LINEITEM_CLONE_STATE"/>
+                    <enumeration value="INVALID_OPERATOR"/>
+                    <enumeration value="INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST"/>
+                    <enumeration value="INVALID_STATUS"/>
+                    <enumeration value="INVALID_TYPE"/>
+                    <enumeration value="INVALID_TYPE_FOR_OPERATION"/>
+                    <enumeration value="INVALID_TYPE_ON_FIELD_IN_RECORD"/>
+                    <enumeration value="LAST_MODIFIED_SINCE_TOO_OLD"/>
+                    <enumeration value="LICENSE_LIMIT_EXCEEDED"/>
+                    <enumeration value="MALFORMED_ID"/>
+                    <enumeration value="MAXIMUM_CCEMAILS_EXCEEDED"/>
+                    <enumeration value="MAXIMUM_DASHBOARD_COMPONENTS_EXCEEDED"/>
+                    <enumeration value="MAXIMUM_SIZE_OF_ATTACHMENT"/>
+                    <enumeration value="MAXIMUM_SIZE_OF_DOCUMENT"/>
+                    <enumeration value="MAX_ACTIONS_PER_RULE_EXCEEDED"/>
+                    <enumeration value="MAX_ACTIVE_RULES_EXCEEDED"/>
+                    <enumeration value="MAX_TASK_DESCRIPTION_EXCEEEDED"/>
+                    <enumeration value="MISSING_ARGUMENT"/>
+                    <enumeration value="NUMBER_OUTSIDE_VALID_RANGE"/>
+                    <enumeration value="REQUIRED_FIELD_MISSING"/>
+                    <enumeration value="SHARE_NEEDED_FOR_CHILD_OWNER"/>
+                    <enumeration value="STANDARD_PRICE_NOT_DEFINED"/>
+                    <enumeration value="STORAGE_LIMIT_EXCEEDED"/>
+                    <enumeration value="TEXT_DATA_OUTSIDE_SUPPORTED_CHARSET"/>
+                    <enumeration value="TOO_MANY_ENUM_VALUE"/>
+                    <enumeration value="UNKNOWN_EXCEPTION"/>
+                    <enumeration value="UNSPECIFIED_EMAIL_ADDRESS"/>
+                    <enumeration value="WEBEX_API_FAILED"/>
+                    <enumeration value="WEBEX_UNEXPECTED_ERROR"/>
+                </restriction>
+            </simpleType>
+
+
+            <complexType name="Error">
+                <sequence>
+                    <element name="fields"     type="xsd:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    <element name="message"    type="xsd:string"/>
+                    <element name="statusCode" type="tns:StatusCode"/>
+                </sequence>
+            </complexType>
+            
+            <complexType name="SaveResult">
+                <sequence>
+                    <element name="errors"    type="tns:Error" nillable="true" minOccurs="0" maxOccurs="unbounded"/>     
+                    <element name="id"        type="tns:ID" nillable="true"/>
+                    <element name="success"   type="xsd:boolean"/>
+                </sequence>
+            </complexType>
+            
+            <complexType name="DeleteResult">
+                <sequence>
+                    <element name="errors"    type="tns:Error" nillable="true" minOccurs="0" maxOccurs="unbounded"/>     
+                    <element name="id"        type="tns:ID" nillable="true"/>
+                    <element name="success"   type="xsd:boolean"/>
+                </sequence>
+            </complexType>
+
+            <complexType name="DescribeSObjectResult">
+                <sequence>
+                    <element name="activateable"   type="xsd:boolean"/>
+                    <element name="createable"     type="xsd:boolean"/>
+                    <element name="custom"         type="xsd:boolean"/>
+                    <element name="deletable"      type="xsd:boolean"/>
+                    <element name="fields"         type="tns:Field" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    <element name="keyPrefix"      type="xsd:string"/>
+                    <element name="label"          type="xsd:string"/>
+                    <element name="name"           type="xsd:string"/>
+                    <element name="queryable"      type="xsd:boolean"/>
+                    <element name="replicateable"  type="xsd:boolean"/>
+                    <element name="retrieveable"   type="xsd:boolean"/>
+                    <element name="searchable"     type="xsd:boolean"/>
+                    <element name="updateable"     type="xsd:boolean"/>
+                    <element name="undeletable"    type="xsd:boolean"/>
+                    <element name="urlDetail"      type="xsd:string" nillable="true"/>
+                    <element name="urlEdit"        type="xsd:string" nillable="true"/>
+                    <element name="urlNew"         type="xsd:string" nillable="true"/>
+                </sequence>
+            </complexType>
+
+            <complexType name="DescribeGlobalResult">
+                <sequence>
+                    <element name="encoding"       type="xsd:string" nillable="true"/>
+                    <element name="maxBatchSize"   type="xsd:int"/>
+                    <element name="types"          type="xsd:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                </sequence>
+            </complexType>
+
+            <simpleType name="fieldType">
+                <restriction base="xsd:string">
+                    <enumeration value="string"/>
+                    <enumeration value="picklist"/>
+                    <enumeration value="multipicklist"/>
+                    <enumeration value="combobox"/>
+                    <enumeration value="reference"/>
+                    <enumeration value="base64"/>
+                    <enumeration value="boolean"/>
+                    <enumeration value="currency"/>
+                    <enumeration value="textarea"/>
+                    <enumeration value="int"/>
+                    <enumeration value="double"/>
+                    <enumeration value="percent"/>
+                    <enumeration value="phone"/>
+                    <enumeration value="id"/>
+                    <enumeration value="date"/>
+                    <enumeration value="datetime"/>
+                    <enumeration value="url"/>
+                    <enumeration value="email"/>
+                </restriction>
+            </simpleType>
+
+            <simpleType name="soapType"> 
+                <restriction base="xsd:string">
+                    <enumeration value="tns:ID"/>
+                    <enumeration value="xsd:base64Binary"/>
+                    <enumeration value="xsd:boolean"/>
+                    <enumeration value="xsd:double"/>
+                    <enumeration value="xsd:int"/>
+                    <enumeration value="xsd:string"/>
+                    <enumeration value="xsd:date"/>
+                    <enumeration value="xsd:dateTime"/>
+                </restriction>
+            </simpleType>
+
+            <complexType name="Field">
+                <sequence>
+                    <element name="autoNumber"         type="xsd:boolean"/>
+                    <element name="byteLength"         type="xsd:int"/>
+                    <element name="createable"         type="xsd:boolean"/>
+                    <element name="custom"             type="xsd:boolean"/>
+                    <element name="defaultedOnCreate"  type="xsd:boolean"/>
+                    <element name="digits"             type="xsd:int"/>
+                    <element name="filterable"         type="xsd:boolean"/>
+                    <element name="label"              type="xsd:string"/>
+                    <element name="length"             type="xsd:int"/>
+                    <element name="name"               type="xsd:string"/>
+                    <element name="nameField"          type="xsd:boolean"/>
+                    <element name="nillable"           type="xsd:boolean"/>
+                    <element name="picklistValues"     type="tns:PicklistEntry" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    <element name="precision"          type="xsd:int"/>
+                    <element name="referenceTo"        type="xsd:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    <element name="restrictedPicklist" type="xsd:boolean"/>
+                    <element name="scale"              type="xsd:int"/>
+                    <element name="soapType"           type="tns:soapType"/> 
+                    <element name="type"               type="tns:fieldType"/>
+                    <element name="updateable"         type="xsd:boolean"/>
+                </sequence>
+            </complexType>
+           
+            <complexType name="PicklistEntry">
+                <sequence>
+                    <element name="active"       type="xsd:boolean"/>
+                    <element name="defaultValue" type="xsd:boolean"/>
+                    <element name="label"        type="xsd:string" nillable="true"/>
+                    <element name="value"        type="xsd:string"/>
+                </sequence>
+            </complexType>
+
+
+            
+            <!-- Login Message Types -->
+            <element name="login">
+                <complexType>
+                    <sequence>
+                        <element name="username" type="xsd:string"/>
+                        <element name="password" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="loginResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:LoginResult"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <!-- Describe Message Types -->
+            <element name="describeSObject">
+                <complexType>
+                    <sequence>
+                        <element name="sObjectType" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="describeSObjectResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:DescribeSObjectResult"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <!-- Describe Global Message Types -->
+            <element name="describeGlobal">
+                <complexType> 
+                    <sequence/> 
+                </complexType> 
+            </element>
+            <element name="describeGlobalResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:DescribeGlobalResult"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <!-- Create Message Types -->
+            <element name="create">
+                <complexType>
+                    <sequence>
+                        <element name="sObjects" type="ens:sObject" minOccurs="1" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="createResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:SaveResult" minOccurs="1" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+            
+            <!-- Update Message Types -->
+            <element name="update">
+                <complexType>
+                    <sequence>
+                        <element name="sObjects" type="ens:sObject" minOccurs="1" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="updateResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:SaveResult" minOccurs="1" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <!-- Delete Message Types -->
+            <element name="delete">
+                <complexType>
+                    <sequence>
+                        <element name="ids" type="tns:ID" minOccurs="1" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="deleteResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:DeleteResult" minOccurs="1" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <!-- Retrieve (ID List) Message Types -->
+            <element name="retrieve">
+                <complexType>
+                    <sequence>
+                        <element name="fieldList"   type="xsd:string"/>
+                        <element name="sObjectType" type="xsd:string"/>
+                        <element name="ids"         type="tns:ID" minOccurs="1" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="retrieveResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="ens:sObject" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <!-- Get Updated Message Types -->
+            <element name="getUpdated">
+                <complexType>
+                    <sequence>
+                        <element name="sObjectType" type="xsd:string"/>
+                        <element name="startDate" type="xsd:dateTime"/>
+                        <element name="endDate" type="xsd:dateTime"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getUpdatedResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:GetUpdatedResult"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <!-- Get Deleted Message Types -->
+            <element name="getDeleted">
+                <complexType>
+                    <sequence>
+                        <element name="sObjectType" type="xsd:string"/>
+                        <element name="startDate" type="xsd:dateTime"/>
+                        <element name="endDate" type="xsd:dateTime"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getDeletedResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:GetDeletedResult"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <!-- Create Query -->
+            <element name="query">
+                <complexType>
+                    <sequence>
+                        <element name="queryString" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="queryResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:QueryResult"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <!-- Next Batch of sObjects from a query -->
+            <element name="queryMore">
+                <complexType>
+                    <sequence>
+                        <element name="queryLocator" type="tns:QueryLocator"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="queryMoreResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:QueryResult"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <!-- Create Search -->
+            <element name="search">
+                <complexType>
+                    <sequence>
+                        <element name="searchString" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="searchResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:SearchResult"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+
+            
+            <element name="getServerTimestamp">
+                <complexType> 
+                    <sequence/> 
+                </complexType> 
+            </element>
+            <element name="getServerTimestampResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:GetServerTimestampResult"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <element name="setPassword">
+                <complexType>
+                    <sequence>
+                        <element name="userId" type="tns:ID"/>
+                        <element name="password" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="setPasswordResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:SetPasswordResult"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <element name="resetPassword">
+                <complexType>
+                    <sequence>
+                        <element name="userId" type="tns:ID"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="resetPasswordResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:ResetPasswordResult"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <element name="getUserInfo">
+                <complexType> 
+                    <sequence/> 
+                </complexType> 
+            </element>
+            <element name="getUserInfoResponse">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="tns:GetUserInfoResult"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+
+
+            <!-- Header Elements -->
+            <element name="SessionHeader">
+                <complexType>
+                    <sequence>
+                        <element name="sessionId" type="xsd:string"/> 
+                    </sequence>
+                </complexType>
+            </element>
+
+
+            
+            <element name="QueryOptions">
+                <complexType>
+                    <sequence>
+                        <element name="batchSize" type="xsd:int" nillable="true" minOccurs="0"/>
+                    </sequence>
+                </complexType>
+            </element>
+            
+            <!-- Use of SaveOptions is deprecated, please use AssignmentRuleHeader instead -->
+            <element name="SaveOptions">
+                <complexType>
+                    <sequence>
+                        <element name="autoAssign"          type="xsd:boolean"/>
+                        <element name="assignmentRuleId"    type="tns:ID"/>
+                    </sequence>
+                </complexType>
+            </element>
+ 
+            <element name="AssignmentRuleHeader">
+                <complexType>
+                    <sequence>
+                        <element name="assignmentRuleId"    type="tns:ID"      nillable="true" />
+                        <element name="useDefaultRule"      type="xsd:boolean" nillable="true" />
+                    </sequence>
+                </complexType>
+            </element>
+ 			
+        </schema>
+
+        <schema elementFormDefault="qualified"
+                targetNamespace="urn:fault.enterprise.soap.sforce.com"
+                xmlns="http://www.w3.org/2001/XMLSchema">
+
+            <simpleType name="ExceptionCode">
+                <restriction base="xsd:string">
+                    <enumeration value="API_CURRENTLY_DISABLED"/>
+                    <enumeration value="API_DISABLED_FOR_ORG"/>
+                    <enumeration value="EXCEEDED_ID_LIMIT"/>
+                    <enumeration value="EXCEEDED_QUOTA"/>
+                    <enumeration value="EXCEEDED_RATE_LIMIT"/>
+                    <enumeration value="FUNCTIONALITY_NOT_ENABLED"/>
+                    <enumeration value="INSUFFICIENT_ACCESS"/>
+                    <enumeration value="INVALID_BATCH_SIZE"/>
+                    <enumeration value="INVALID_CLIENT"/>
+                    <enumeration value="INVALID_FIELD"/>
+                    <enumeration value="INVALID_LOGIN"/>
+                    <enumeration value="INVALID_QUERY_FILTER_OPERATOR"/>
+                    <enumeration value="INVALID_QUERY_LOCATOR"/>
+                    <enumeration value="INVALID_REPLICATION_DATE"/>
+                    <enumeration value="INVALID_SEARCH"/>
+                    <enumeration value="INVALID_SEARCH_SCOPE"/>
+                    <enumeration value="INVALID_SESSION_ID"/>
+                    <enumeration value="INVALID_SSO_GATEWAY_URL"/>
+                    <enumeration value="INVALID_TYPE"/>
+                    <enumeration value="LOGIN_DURING_RESTRICTED_DOMAIN"/>
+                    <enumeration value="LOGIN_DURING_RESTRICTED_TIME"/>
+                    <enumeration value="MALFORMED_QUERY"/>
+                    <enumeration value="MALFORMED_SEARCH"/>
+                    <enumeration value="ORG_LOCKED"/>
+                    <enumeration value="PASSWORD_LOCKOUT"/>
+                    <enumeration value="SERVER_UNAVAILABLE"/>
+                    <enumeration value="SSO_SERVICE_DOWN"/>
+                    <enumeration value="TRIAL_EXPIRED"/>
+                    <enumeration value="UNKNOWN_EXCEPTION"/>
+                    <enumeration value="UNSUPPORTED_API_VERSION"/>
+                    <enumeration value="UNSUPPORTED_CLIENT"/>
+                </restriction>
+            </simpleType>
+
+
+            <!-- Fault -->
+            <complexType name="ApiFault">
+                <sequence>
+                    <element name="exceptionCode"    type="fns:ExceptionCode"/>
+                    <element name="exceptionMessage" type="xsd:string"/>
+
+                </sequence>
+            </complexType>
+
+            <complexType name="LoginFault">
+                <complexContent>
+                    <extension base="fns:ApiFault"/>
+                </complexContent>
+            </complexType>
+            <element name="LoginFault" type="fns:LoginFault"/>
+
+            <complexType name="InvalidSObjectFault">
+                <complexContent>
+                    <extension base="fns:ApiFault"/>
+                </complexContent>
+            </complexType>
+            <element name="InvalidSObjectFault" type="fns:InvalidSObjectFault"/>
+
+            <complexType name="InvalidFieldFault">
+                <complexContent>
+                    <extension base="fns:ApiFault"/>
+                </complexContent>
+            </complexType>
+            <element name="InvalidFieldFault" type="fns:InvalidFieldFault"/>
+
+            <complexType name="MalformedQueryFault">
+                <complexContent>
+                    <extension base="fns:ApiFault"/>
+                </complexContent>
+            </complexType>
+            <element name="MalformedQueryFault" type="fns:MalformedQueryFault"/>
+
+            <complexType name="InvalidQueryLocatorFault">
+                <complexContent>
+                    <extension base="fns:ApiFault"/>
+                </complexContent>
+            </complexType>
+            <element name="InvalidQueryLocatorFault" type="fns:InvalidQueryLocatorFault"/>
+
+            <complexType name="MalformedSearchFault">
+                <complexContent>
+                    <extension base="fns:ApiFault"/>
+                </complexContent>
+            </complexType>
+            <element name="MalformedSearchFault" type="fns:MalformedSearchFault"/>
+
+            <complexType name="InvalidIdFault">
+                <complexContent>
+                    <extension base="fns:ApiFault"/>
+                </complexContent>
+            </complexType>
+            <element name="InvalidIdFault" type="fns:InvalidIdFault"/>
+
+            <complexType name="UnexpectedErrorFault">
+                <complexContent>
+                    <extension base="fns:ApiFault"/>
+                </complexContent>
+            </complexType>
+            <element name="UnexpectedErrorFault" type="fns:UnexpectedErrorFault"/>
+
+
+        </schema>
+
+    </types>
+    
+    <!-- Header Message -->
+    <message name="Header">
+        <part element="tns:SessionHeader"    name="SessionHeader"/>
+
+        <part element="tns:SaveOptions"      name="SaveOptions"/>
+        <part element="tns:QueryOptions"     name="QueryOptions"/>
+        <part element="tns:AssignmentRuleHeader"   name="AssignmentRuleHeader"/>
+    </message>
+    
+    <!-- Fault Messages -->
+    
+    <message name="ApiFault">
+        <part name="fault" type="fns:ApiFault"/>
+    </message>
+
+    <message name="LoginFault">
+        <part name="fault" element="fns:LoginFault"/>
+    </message>
+    <message name="InvalidSObjectFault">
+        <part name="fault" element="fns:InvalidSObjectFault"/>
+    </message>
+    <message name="InvalidFieldFault">
+        <part name="fault" element="fns:InvalidFieldFault"/>
+    </message>
+    <message name="MalformedQueryFault">
+        <part name="fault" element="fns:MalformedQueryFault"/>
+    </message>
+    <message name="InvalidQueryLocatorFault">
+        <part name="fault" element="fns:InvalidQueryLocatorFault"/>
+    </message>
+    <message name="MalformedSearchFault">
+        <part name="fault" element="fns:MalformedSearchFault"/>
+    </message>
+    <message name="InvalidIdFault">
+        <part name="fault" element="fns:InvalidIdFault"/>
+    </message>
+    <message name="UnexpectedErrorFault">
+        <part name="fault" element="fns:UnexpectedErrorFault"/>
+    </message>
+
+    
+    <!-- Method Messages -->
+    
+    <message name="loginRequest">
+        <part element="tns:login" name="parameters"/>
+    </message>
+    <message name="loginResponse">
+        <part element="tns:loginResponse" name="parameters"/>
+    </message>
+
+    <message name="describeSObjectRequest">
+        <part element="tns:describeSObject" name="parameters"/>
+    </message>
+    <message name="describeSObjectResponse">
+        <part element="tns:describeSObjectResponse" name="parameters"/>
+    </message>
+    
+    <message name="describeGlobalRequest">
+        <part element="tns:describeGlobal" name="parameters"/>
+    </message>
+    <message name="describeGlobalResponse">
+        <part element="tns:describeGlobalResponse" name="parameters"/>
+    </message>
+
+    <message name="createRequest">
+        <part element="tns:create" name="parameters"/>
+    </message>
+    <message name="createResponse">
+        <part element="tns:createResponse" name="parameters"/>
+    </message>
+
+    <message name="updateRequest">
+        <part element="tns:update" name="parameters"/>
+    </message>
+    <message name="updateResponse">
+        <part element="tns:updateResponse" name="parameters"/>
+    </message>
+
+    <message name="deleteRequest">
+        <part element="tns:delete" name="parameters"/>
+    </message>
+    <message name="deleteResponse">
+        <part element="tns:deleteResponse" name="parameters"/>
+    </message>
+
+    <message name="retrieveRequest">
+        <part element="tns:retrieve" name="parameters"/>
+    </message>
+    <message name="retrieveResponse">
+        <part element="tns:retrieveResponse" name="parameters"/>
+    </message>
+
+    <message name="getDeletedRequest">
+        <part element="tns:getDeleted" name="parameters"/>
+    </message>
+    <message name="getDeletedResponse">
+        <part element="tns:getDeletedResponse" name="parameters"/>
+    </message>
+
+    <message name="getUpdatedRequest">
+        <part element="tns:getUpdated" name="parameters"/>
+    </message>
+    <message name="getUpdatedResponse">
+        <part element="tns:getUpdatedResponse" name="parameters"/>
+    </message>
+
+    <message name="queryRequest">
+        <part element="tns:query" name="parameters"/>
+    </message>
+    <message name="queryResponse">
+        <part element="tns:queryResponse" name="parameters"/>
+    </message>
+
+    <message name="queryMoreRequest">
+        <part element="tns:queryMore" name="parameters"/>
+    </message>
+    <message name="queryMoreResponse">
+        <part element="tns:queryMoreResponse" name="parameters"/>
+    </message>
+
+    <message name="searchRequest">
+        <part element="tns:search" name="parameters"/>
+    </message>
+    <message name="searchResponse">
+        <part element="tns:searchResponse" name="parameters"/>
+    </message>
+
+
+    
+    <message name="getServerTimestampRequest">
+        <part element="tns:getServerTimestamp" name="parameters"/>
+    </message>
+    <message name="getServerTimestampResponse">
+        <part element="tns:getServerTimestampResponse" name="parameters"/>
+    </message>
+
+    <message name="setPasswordRequest">
+        <part element="tns:setPassword" name="parameters"/>
+    </message>
+    <message name="setPasswordResponse">
+        <part element="tns:setPasswordResponse" name="parameters"/>
+    </message>
+
+    <message name="resetPasswordRequest">
+        <part element="tns:resetPassword" name="parameters"/>
+    </message>
+    <message name="resetPasswordResponse">
+        <part element="tns:resetPasswordResponse" name="parameters"/>
+    </message>
+
+    <message name="getUserInfoRequest">
+        <part element="tns:getUserInfo" name="parameters"/>
+    </message>
+    <message name="getUserInfoResponse">
+        <part element="tns:getUserInfoResponse" name="parameters"/>
+    </message>
+
+
+
+    <!-- Soap PortType -->
+    <portType name="Soap">
+        <operation name="login">
+            <documentation>Login to the Salesforce.com SOAP Api.</documentation>
+            <input  message="tns:loginRequest"/>
+            <output message="tns:loginResponse"/>
+            <fault  message="tns:LoginFault" name="LoginFault"/>
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+        
+        <operation name="describeSObject">
+            <documentation>Describe the Global state</documentation>
+            <input message="tns:describeSObjectRequest"/>
+            <output message="tns:describeSObjectResponse"/>
+            <fault  message="tns:InvalidSObjectFault" name="InvalidSObjectFault"/>
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+
+        <operation name="describeGlobal">
+            <documentation>Describe an sObject</documentation>
+            <input message="tns:describeGlobalRequest"/>
+            <output message="tns:describeGlobalResponse"/>
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+
+        <operation name="create">
+            <documentation>Create a set of new sObjects</documentation>
+            <input  message="tns:createRequest"/>
+            <output message="tns:createResponse"/>
+            <fault  message="tns:InvalidSObjectFault" name="InvalidSObjectFault"/>
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+
+        <operation name="update">
+            <documentation>Update a set of sObjects</documentation>
+            <input  message="tns:updateRequest"/>
+            <output message="tns:updateResponse"/>
+            <fault  message="tns:InvalidSObjectFault" name="InvalidSObjectFault"/>
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+        
+        <operation name="delete">
+            <documentation>Delete a set of sObjects</documentation>
+            <input  message="tns:deleteRequest"/>
+            <output message="tns:deleteResponse"/>
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+        
+        <operation name="retrieve">
+            <documentation>Get a set of sObjects</documentation>
+            <input  message="tns:retrieveRequest"/>
+            <output message="tns:retrieveResponse"/>
+            <fault  message="tns:InvalidSObjectFault" name="InvalidSObjectFault"/>
+            <fault  message="tns:InvalidFieldFault" name="InvalidFieldFault"/>
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+
+        <operation name="getDeleted">
+            <documentation>Get the IDs for deleted sObjects</documentation>
+            <input  message="tns:getDeletedRequest" />
+            <output message="tns:getDeletedResponse" />
+            <fault  message="tns:InvalidSObjectFault" name="InvalidSObjectFault"/>
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+
+        <operation name="getUpdated">
+            <documentation>Get the IDs for updated sObjects</documentation>
+            <input  message="tns:getUpdatedRequest" />
+            <output message="tns:getUpdatedResponse" />
+            <fault  message="tns:InvalidSObjectFault" name="InvalidSObjectFault"/>
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+
+        <operation name="query">
+            <documentation>Create a Query Cursor</documentation>
+            <input  message="tns:queryRequest"/>
+            <output message="tns:queryResponse"/>
+            <fault  message="tns:InvalidSObjectFault" name="InvalidSObjectFault"/>
+            <fault  message="tns:InvalidFieldFault" name="InvalidFieldFault"/>
+            <fault  message="tns:MalformedQueryFault" name="MalformedQueryFault"/>
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+        
+        <operation name="queryMore">
+            <documentation>Gets the next batch of sObjects from a query</documentation>
+            <input  message="tns:queryMoreRequest"/>
+            <output message="tns:queryMoreResponse"/>
+            <fault  message="tns:InvalidQueryLocatorFault" name="InvalidQueryLocatorFault"/>
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+
+        <operation name="search">
+            <documentation>Search for sObjects</documentation>
+            <input  message="tns:searchRequest" />
+            <output message="tns:searchResponse" />
+            <fault  message="tns:InvalidSObjectFault" name="InvalidSObjectFault"/>
+            <fault  message="tns:InvalidFieldFault" name="InvalidFieldFault" />
+            <fault  message="tns:MalformedSearchFault" name="MalformedSearchFault" />
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+
+
+
+        <operation name="getServerTimestamp">
+            <documentation>Gets server timestamp</documentation>
+            <input  message="tns:getServerTimestampRequest"/>
+            <output message="tns:getServerTimestampResponse"/>
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+
+        <operation name="setPassword">
+            <documentation>Set a user's password</documentation>
+            <input  message="tns:setPasswordRequest"/>
+            <output message="tns:setPasswordResponse"/>
+            <fault  message="tns:InvalidIdFault" name="InvalidIdFault"/>
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+
+        <operation name="resetPassword">
+            <documentation>Reset a user's password</documentation>
+            <input  message="tns:resetPasswordRequest"/>
+            <output message="tns:resetPasswordResponse"/>
+            <fault  message="tns:InvalidIdFault" name="InvalidIdFault"/>
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+
+        <operation name="getUserInfo">
+            <documentation>Returns standard information relevant to the current user</documentation>
+            <input  message="tns:getUserInfoRequest"/>
+            <output message="tns:getUserInfoResponse"/>
+            <fault  message="tns:UnexpectedErrorFault" name="UnexpectedErrorFault"/>
+        </operation>
+
+
+        
+    </portType>
+    
+    <!-- Soap Binding -->
+    <binding name="SoapBinding" type="tns:Soap">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        
+        <operation name="login">
+            <soap:operation soapAction=""/>
+            <input>
+
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output> 
+                <soap:body use="literal"/>
+            </output>
+            <fault name="LoginFault">
+               <soap:fault name="LoginFault" use="literal"/> 
+            </fault>
+            <fault name="UnexpectedErrorFault">
+               <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+            </fault>
+        </operation>
+        
+        <operation name="describeSObject">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:header use="literal" message="tns:Header" part="SessionHeader"/>
+
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="InvalidSObjectFault">
+                <soap:fault name="InvalidSObjectFault" use="literal"/> 
+            </fault>
+           <fault name="UnexpectedErrorFault">
+               <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+           </fault>
+        </operation>
+        
+        <operation name="describeGlobal">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:header use="literal" message="tns:Header" part="SessionHeader"/>
+
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="UnexpectedErrorFault">
+                <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+            </fault>
+        </operation>
+
+        <operation name="create">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:header use="literal" message="tns:Header" part="SessionHeader"/>
+
+                <soap:header use="literal" message="tns:Header" part="SaveOptions"/>
+                <soap:header use="literal" message="tns:Header" part="AssignmentRuleHeader"/>
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="InvalidSObjectFault">
+                <soap:fault name="InvalidSObjectFault" use="literal"/> 
+            </fault>
+            <fault name="UnexpectedErrorFault">
+                <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+            </fault>
+        </operation>
+        
+        <operation name="update">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:header use="literal" message="tns:Header" part="SessionHeader"/>
+
+                <soap:header use="literal" message="tns:Header" part="SaveOptions"/>
+                <soap:header use="literal" message="tns:Header" part="AssignmentRuleHeader"/>
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="InvalidSObjectFault">
+                <soap:fault name="InvalidSObjectFault" use="literal"/> 
+            </fault>
+            <fault name="UnexpectedErrorFault">
+                <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+            </fault>
+        </operation>
+        
+        <operation name="delete">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:header use="literal" message="tns:Header" part="SessionHeader"/>
+
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="UnexpectedErrorFault">
+               <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+            </fault>
+        </operation>
+
+        <operation name="retrieve">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:header use="literal" message="tns:Header" part="SessionHeader"/>
+
+                <soap:header use="literal" message="tns:Header" part="QueryOptions"/>
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="InvalidSObjectFault">
+               <soap:fault name="InvalidSObjectFault" use="literal"/> 
+            </fault>
+            <fault name="InvalidFieldFault">
+               <soap:fault name="InvalidFieldFault" use="literal"/> 
+            </fault>
+            <fault name="UnexpectedErrorFault">
+               <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+            </fault>
+        </operation>
+
+        <operation name="getDeleted">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:header use="literal" message="tns:Header" part="SessionHeader"/>
+
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="InvalidSObjectFault">
+               <soap:fault name="InvalidSObjectFault" use="literal"/> 
+            </fault>
+            <fault name="UnexpectedErrorFault">
+               <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+            </fault>
+        </operation>
+
+        <operation name="getUpdated">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:header use="literal" message="tns:Header" part="SessionHeader"/>
+
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="InvalidSObjectFault">
+               <soap:fault name="InvalidSObjectFault" use="literal"/> 
+            </fault>
+            <fault name="UnexpectedErrorFault">
+               <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+            </fault>
+        </operation>
+
+        <operation name="query">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:header use="literal" message="tns:Header" part="SessionHeader"/>
+
+                <soap:header use="literal" message="tns:Header" part="QueryOptions"/>
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="InvalidSObjectFault">
+               <soap:fault name="InvalidSObjectFault" use="literal"/> 
+            </fault>
+            <fault name="InvalidFieldFault">
+               <soap:fault name="InvalidFieldFault" use="literal"/> 
+            </fault>
+            <fault name="MalformedQueryFault">
+               <soap:fault name="MalformedQueryFault" use="literal"/>
+            </fault>
+            <fault name="UnexpectedErrorFault">
+               <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+            </fault>
+        </operation>
+
+        <operation name="queryMore">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:header use="literal" message="tns:Header" part="SessionHeader"/>
+
+                <soap:header use="literal" message="tns:Header" part="QueryOptions"/>
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="InvalidQueryLocatorFault">
+               <soap:fault name="InvalidQueryLocatorFault" use="literal"/> 
+            </fault>
+            <fault name="UnexpectedErrorFault">
+               <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+            </fault>
+        </operation>
+
+        <operation name="search">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:header use="literal" message="tns:Header" part="SessionHeader"/>
+
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="InvalidSObjectFault">
+               <soap:fault name="InvalidSObjectFault" use="literal"/>
+            </fault>
+            <fault name="InvalidFieldFault">
+               <soap:fault name="InvalidFieldFault" use="literal"/>
+            </fault>
+            <fault name="MalformedSearchFault">
+               <soap:fault name="MalformedSearchFault" use="literal"/>
+            </fault>
+            <fault name="UnexpectedErrorFault">
+               <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+            </fault>
+        </operation>
+
+
+
+        <operation name="getServerTimestamp">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:header use="literal" message="tns:Header" part="SessionHeader"/>
+
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="UnexpectedErrorFault">
+                <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+            </fault>
+        </operation>
+
+        <operation name="setPassword">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:header use="literal" message="tns:Header" part="SessionHeader"/>
+
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="InvalidIdFault">
+                <soap:fault name="InvalidIdFault" use="literal"/> 
+            </fault>
+            <fault name="UnexpectedErrorFault">
+                <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+            </fault>
+        </operation>
+
+        <operation name="resetPassword">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:header use="literal" message="tns:Header" part="SessionHeader"/>
+
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="InvalidIdFault">
+                <soap:fault name="InvalidIdFault" use="literal"/> 
+            </fault>
+            <fault name="UnexpectedErrorFault">
+                <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+            </fault>
+        </operation>
+
+        <operation name="getUserInfo">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:header use="literal" message="tns:Header" part="SessionHeader"/>
+
+                <soap:body parts="parameters" use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="UnexpectedErrorFault">
+                <soap:fault name="UnexpectedErrorFault" use="literal"/> 
+            </fault>
+        </operation>
+
+
+
+    </binding>
+    
+    <!-- Soap Service Endpoint -->
+    <service name="SforceService">
+        <documentation>Sforce SOAP API</documentation>
+        <port binding="tns:SoapBinding" name="Soap">
+            <soap:address location="https://www.salesforce.com/services/Soap/c/4.0"/>
+        </port>
+    </service>
+</definitions>
+
+    
+
+

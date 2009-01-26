@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:jdbc="http://www.metamatrix.com/metamodels/JDBC" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:relational="http://www.metamatrix.com/metamodels/Relational">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:c35ebbc0-7457-107b-ae22-fe286ea2174c" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" maxSetSize="1000" ProducerName="MetaMatrix" ProducerVersion="5.5">
+    <modelImports xmi:uuid="mmuuid:bfdb7680-7459-107b-ae22-fe286ea2174c" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
+  </mmcore:ModelAnnotation>
+  <relational:Schema xmi:uuid="mmuuid:c35ebbc4-7457-107b-ae22-fe286ea2174c" name="PARTS" nameInSource="PARTS">
+    <tables xsi:type="relational:BaseTable" xmi:uuid="mmuuid:c35ebbc5-7457-107b-ae22-fe286ea2174c" name="PARTS" nameInSource="PARTS">
+      <columns xmi:uuid="mmuuid:0cec1440-7458-107b-ae22-fe286ea2174c" name="PART_ID" nameInSource="PART_ID" nativeType="CHAR" length="4" fixedLength="true" nullable="NO_NULLS" uniqueKeys="mmuuid/1cc6eac0-7458-107b-ae22-fe286ea2174c">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:0cec1441-7458-107b-ae22-fe286ea2174c" name="PART_NAME" nameInSource="PART_NAME" nativeType="VARCHAR2" length="255">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:0cec1442-7458-107b-ae22-fe286ea2174c" name="PART_COLOR" nameInSource="PART_COLOR" nativeType="VARCHAR2" length="30">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:0cec1443-7458-107b-ae22-fe286ea2174c" name="PART_WEIGHT" nameInSource="PART_WEIGHT" nativeType="VARCHAR2" length="255">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <primaryKey xmi:uuid="mmuuid:1cc6eac0-7458-107b-ae22-fe286ea2174c" name="PK_PARTS" nameInSource="PK_PARTS" columns="mmuuid/0cec1440-7458-107b-ae22-fe286ea2174c" foreignKeys="mmuuid/bc296b01-7459-107b-ae22-fe286ea2174c"/>
+    </tables>
+    <tables xsi:type="relational:BaseTable" xmi:uuid="mmuuid:3320f680-7458-107b-ae22-fe286ea2174c" name="SHIP_VIA" nameInSource="SHIP_VIA">
+      <columns xmi:uuid="mmuuid:7cae4f00-7458-107b-ae22-fe286ea2174c" name="SHIPPER_ID" nameInSource="SHIPPER_ID" nativeType="NUMBER" fixedLength="true" precision="2" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE" uniqueKeys="mmuuid/8515cc40-7458-107b-ae22-fe286ea2174c">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7cae4f01-7458-107b-ae22-fe286ea2174c" name="SHIPPER_NAME" nameInSource="SHIPPER_NAME" nativeType="VARCHAR2" length="30">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <primaryKey xmi:uuid="mmuuid:8515cc40-7458-107b-ae22-fe286ea2174c" name="PK_SHIP_VIA" nameInSource="PK_SHIP_VIA" columns="mmuuid/7cae4f00-7458-107b-ae22-fe286ea2174c"/>
+    </tables>
+    <tables xsi:type="relational:BaseTable" xmi:uuid="mmuuid:93fc7ec0-7458-107b-ae22-fe286ea2174c" name="STATUS" nameInSource="STATUS">
+      <columns xmi:uuid="mmuuid:d70aa200-7458-107b-ae22-fe286ea2174c" name="STATUS_ID" nameInSource="STATUS_ID" nativeType="NUMBER" fixedLength="true" precision="2" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE" uniqueKeys="mmuuid/e0570100-7458-107b-ae22-fe286ea2174c">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d70aa201-7458-107b-ae22-fe286ea2174c" name="STATUS_NAME" nameInSource="STATUS_NAME" nativeType="VARCHAR2" length="30">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <primaryKey xmi:uuid="mmuuid:e0570100-7458-107b-ae22-fe286ea2174c" name="PK_STATUS" nameInSource="PK_STATUS" columns="mmuuid/d70aa200-7458-107b-ae22-fe286ea2174c" foreignKeys="mmuuid/bb354700-7459-107b-ae22-fe286ea2174c"/>
+    </tables>
+    <tables xsi:type="relational:BaseTable" xmi:uuid="mmuuid:ef3db380-7458-107b-ae22-fe286ea2174c" name="SUPPLIER" nameInSource="SUPPLIER">
+      <columns xmi:uuid="mmuuid:324bd6c0-7459-107b-ae22-fe286ea2174c" name="SUPPLIER_ID" nameInSource="SUPPLIER_ID" nativeType="VARCHAR2" length="10" nullable="NO_NULLS" uniqueKeys="mmuuid/3ab35400-7459-107b-ae22-fe286ea2174c">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:324bd6c1-7459-107b-ae22-fe286ea2174c" name="SUPPLIER_NAME" nameInSource="SUPPLIER_NAME" nativeType="VARCHAR2" length="30">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:324bd6c2-7459-107b-ae22-fe286ea2174c" name="SUPPLIER_STATUS" nameInSource="SUPPLIER_STATUS" nativeType="NUMBER" fixedLength="true" precision="2" caseSensitive="false" searchability="ALL_EXCEPT_LIKE" foreignKeys="mmuuid/bb354700-7459-107b-ae22-fe286ea2174c">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:324bd6c3-7459-107b-ae22-fe286ea2174c" name="SUPPLIER_CITY" nameInSource="SUPPLIER_CITY" nativeType="VARCHAR2" length="30">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:324bd6c4-7459-107b-ae22-fe286ea2174c" name="SUPPLIER_STATE" nameInSource="SUPPLIER_STATE" nativeType="VARCHAR2" length="2">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <foreignKeys xmi:uuid="mmuuid:bb354700-7459-107b-ae22-fe286ea2174c" name="FK_SPLIER_STATS" nameInSource="FK_SPLIER_STATS" foreignKeyMultiplicity="UNSPECIFIED" primaryKeyMultiplicity="UNSPECIFIED" columns="mmuuid/324bd6c2-7459-107b-ae22-fe286ea2174c" uniqueKey="mmuuid/e0570100-7458-107b-ae22-fe286ea2174c"/>
+      <primaryKey xmi:uuid="mmuuid:3ab35400-7459-107b-ae22-fe286ea2174c" name="PK_SUPPLIER" nameInSource="PK_SUPPLIER" columns="mmuuid/324bd6c0-7459-107b-ae22-fe286ea2174c" foreignKeys="mmuuid/bc296b00-7459-107b-ae22-fe286ea2174c"/>
+    </tables>
+    <tables xsi:type="relational:BaseTable" xmi:uuid="mmuuid:499a0680-7459-107b-ae22-fe286ea2174c" name="SUPPLIER_PARTS" nameInSource="SUPPLIER_PARTS">
+      <columns xmi:uuid="mmuuid:a119ed80-7459-107b-ae22-fe286ea2174c" name="SUPPLIER_ID" nameInSource="SUPPLIER_ID" nativeType="VARCHAR2" length="10" nullable="NO_NULLS" uniqueKeys="mmuuid/a9816ac0-7459-107b-ae22-fe286ea2174c" foreignKeys="mmuuid/bc296b00-7459-107b-ae22-fe286ea2174c">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:a119ed81-7459-107b-ae22-fe286ea2174c" name="PART_ID" nameInSource="PART_ID" nativeType="CHAR" length="4" fixedLength="true" nullable="NO_NULLS" uniqueKeys="mmuuid/a9816ac0-7459-107b-ae22-fe286ea2174c" foreignKeys="mmuuid/bc296b01-7459-107b-ae22-fe286ea2174c">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:a119ed82-7459-107b-ae22-fe286ea2174c" name="QUANTITY" nameInSource="QUANTITY" nativeType="NUMBER" fixedLength="true" precision="3" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:a119ed83-7459-107b-ae22-fe286ea2174c" name="SHIPPER_ID" nameInSource="SHIPPER_ID" nativeType="NUMBER" fixedLength="true" precision="2" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <foreignKeys xmi:uuid="mmuuid:bc296b00-7459-107b-ae22-fe286ea2174c" name="FK_SPLIER_PRTS_SPLY" nameInSource="FK_SPLIER_PRTS_SPLY" foreignKeyMultiplicity="UNSPECIFIED" primaryKeyMultiplicity="UNSPECIFIED" columns="mmuuid/a119ed80-7459-107b-ae22-fe286ea2174c" uniqueKey="mmuuid/3ab35400-7459-107b-ae22-fe286ea2174c"/>
+      <foreignKeys xmi:uuid="mmuuid:bc296b01-7459-107b-ae22-fe286ea2174c" name="FK_SPLIER_PRTS_PRTS" nameInSource="FK_SPLIER_PRTS_PRTS" foreignKeyMultiplicity="UNSPECIFIED" primaryKeyMultiplicity="UNSPECIFIED" columns="mmuuid/a119ed81-7459-107b-ae22-fe286ea2174c" uniqueKey="mmuuid/1cc6eac0-7458-107b-ae22-fe286ea2174c"/>
+      <primaryKey xmi:uuid="mmuuid:a9816ac0-7459-107b-ae22-fe286ea2174c" name="PK_SUPPLIER_PARTS" nameInSource="PK_SUPPLIER_PARTS" columns="mmuuid/a119ed80-7459-107b-ae22-fe286ea2174c mmuuid/a119ed81-7459-107b-ae22-fe286ea2174c"/>
+    </tables>
+  </relational:Schema>
+  <mmcore:AnnotationContainer xmi:uuid="mmuuid:c35ebbc1-7457-107b-ae22-fe286ea2174c"/>
+  <diagram:DiagramContainer xmi:uuid="mmuuid:c35ebbc2-7457-107b-ae22-fe286ea2174c">
+    <diagram xmi:uuid="mmuuid:d09b2ec0-7459-107b-ae22-fe286ea2174c" type="packageDiagramType" target="mmuuid/c35ebbc0-7457-107b-ae22-fe286ea2174c">
+      <diagramEntity xmi:uuid="mmuuid:d09b2ec1-7459-107b-ae22-fe286ea2174c" modelObject="mmuuid/c35ebbc4-7457-107b-ae22-fe286ea2174c" xPosition="10" yPosition="10"/>
+    </diagram>
+  </diagram:DiagramContainer>
+  <jdbc:JdbcSource xmi:uuid="mmuuid:a80173c0-7454-107b-ae22-fe286ea2174c" name="OracleParts" driverName="MetaMatrix Oracle" driverClass="com.metamatrix.jdbc.oracle.OracleDriver" username="system" url="jdbc:mmx:oracle://cardwell:1521;Sid=cardwell">
+    <importSettings xmi:uuid="mmuuid:abc2c180-7454-107b-ae22-fe286ea2174c">
+      <includedSchemaPaths>/PARTS</includedSchemaPaths>
+      <includedTableTypes>TABLE</includedTableTypes>
+    </importSettings>
+  </jdbc:JdbcSource>
+</xmi:XMI>

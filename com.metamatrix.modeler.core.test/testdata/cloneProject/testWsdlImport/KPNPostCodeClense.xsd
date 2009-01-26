@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema elementFormDefault="qualified"
+    targetNamespace="urn:kpn-postcode-datacleanse"
+    xmlns:tns="urn:kpn-postcode-datacleanse" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:complexType name="NLPostCodeType">
+        <xsd:sequence>
+            <xsd:element name="post-code-numeric-part" type="tns:NLPostCodeNumericPart"/>
+            <xsd:element name="post-code-alphabetic-part" type="tns:NLPostCodeAlphabeticPart"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="NLPostCodeNumericPart">
+        <xsd:restriction base="xsd:int">
+            <xsd:totalDigits value="4"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="NLPostCodeAlphabeticPart">
+        <xsd:restriction base="xsd:string">
+            <xsd:length value="2"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:element name="validate_post_code-request">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="post-code" type="tns:NLPostCodeType"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="validate_post_code-response">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="ok" type="xsd:int"/>
+                <xsd:element name="message" type="xsd:string"/>
+                <xsd:element minOccurs="0" name="clean_post_code" type="tns:NLPostCodeType"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

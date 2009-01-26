@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/Anonymous_Type" xmlns:tns="http://www.example.org/Anonymous_Type">
+
+	<!--  "Test for an anonymous type definition" -->
+	<complexType name="Alpha">
+		<sequence>
+			<element name="Beta" type="string" minOccurs="0" maxOccurs="unbounded" nillable="true"></element>
+		</sequence>
+	</complexType>
+
+	<element name="Gamma">
+		<complexType>
+			<sequence>
+				<element name="Delta" type="tns:Alpha" minOccurs="1" maxOccurs="1"></element>
+			</sequence>
+		</complexType>
+	</element>
+
+</schema>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://www.metamatrix.com/XMLSchema/DataSets/Books/BookDatatypes" xmlns:BookTypesNS="http://www.metamatrix.com/XMLSchema/DataSets/Books/BookDatatypes" xmlns:mmedt="http://www.metamatrix.com/2005/XmlSchema/EnterpriseDatatypes" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <!-- ============= -->
+  <!-- DOCUMENTATION -->
+  <!-- ============= -->
+
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      MetaMatrix Data Set Library Version 1.1.
+      Books Data Set Version 1.1.
+      Copyright 2002 MetaMatrix, Inc.
+      Permission is granted to use, copy, modify and distribute the schemas in the 
+      MetaMatrix Data Set Library subject to the terms and conditions specified
+      at http://www.metamatrix.com/Licensing/DataSetLicense.html.
+    </xsd:documentation>
+  </xsd:annotation>
+
+
+  <!-- ======================== -->
+  <!-- GENERIC TYPE DEFINITIONS -->
+  <!-- ======================== -->
+
+
+  <!-- Publication date, formatted as "12-Dec-2000" -->
+  <xsd:simpleType mmedt:UUID="mmuuid:70e9c502-06f5-101f-952b-94dbe9129b1e" mmedt:runtimeDataType="string" mmedt:runtimeDataTypeFixed="false" name="PublicationDate">
+    <xsd:annotation>
+      <xsd:documentation>Publication date, formatted as 12-Dec-2000.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="((\d{2,2}-)?[A-Z][a-z]{2,2}-)?\d{4,4}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- Publication year, formatted as "2000" (no timezone allowed). -->
+  <xsd:simpleType name="PublicationYear">
+    <xsd:annotation>
+      <xsd:documentation>Publication year, formatted as "2000" (no timezone allowed).</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:gYear">
+      <xsd:pattern value="\d{4,4}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- ISBN, using very simple formatting rules -->
+  <xsd:simpleType mmedt:UUID="mmuuid:70e9c506-06f5-101f-952b-94dbe9129b1e" mmedt:runtimeDataType="string" mmedt:runtimeDataTypeFixed="false" name="ISBN">
+    <xsd:annotation>
+      <xsd:documentation>ISBN, using very simple formatting rules.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9,\-,X]{10,13}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- Book edition, which can be an integer (1,2, ...) or nothing. -->
+  <xsd:simpleType mmedt:UUID="mmuuid:70e9c508-06f5-101f-952b-94dbe9129b1e" mmedt:runtimeDataType="string" mmedt:runtimeDataTypeFixed="false" name="BookEdition">
+    <xsd:annotation>
+      <xsd:documentation>Book edition, which can be an integer (1,2, ...) or nothing.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:union memberTypes="xsd:nonNegativeInteger">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value=""/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+
+  <!-- Book type, one of set of enumerated values -->
+  <xsd:simpleType name="BookType">
+    <xsd:annotation>
+      <xsd:documentation>Book type, one of set of enumerated values.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Hardback"/>
+      <xsd:enumeration value="Softback"/>
+      <xsd:enumeration value="Audio"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- Comma-separated list of names -->
+  <xsd:simpleType name="CommaSeparatedList">
+    <xsd:annotation>
+      <xsd:documentation>Comma-separated list of names.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="([\w])+(,([\w])+)*"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- Quantity -->
+  <xsd:simpleType name="Quantity">
+    <xsd:annotation>
+      <xsd:documentation>Quantity - a non-negative integer or the literal 'unknown'.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:union memberTypes="xsd:nonNegativeInteger">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="unknown"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+
+</xsd:schema>

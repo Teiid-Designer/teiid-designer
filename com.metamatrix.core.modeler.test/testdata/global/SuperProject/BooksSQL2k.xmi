@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:jdbc="http://www.metamatrix.com/metamodels/JDBC" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:8e01a300-ea05-1f23-8a17-8c1dce96562d" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" maxSetSize="16000" supportsOuterJoin="true">
+    <modelImports xmi:uuid="mmuuid:b1695b80-ea05-1f23-8a17-8c1dce96562d" name="XMLSchema" path="http://www.w3.org/2001/XMLSchema"/>
+  </mmcore:ModelAnnotation>
+  <Relational:Catalog xmi:uuid="mmuuid:b25d7f80-ea05-1f23-8a17-8c1dce96562d" name="books" nameInSource="books">
+    <schemas xmi:uuid="mmuuid:b25d7f81-ea05-1f23-8a17-8c1dce96562d" name="dbo" nameInSource="dbo">
+      <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:b25d7f87-ea05-1f23-8a17-8c1dce96562d" name="AUTHORS" nameInSource="AUTHORS" cardinality="59">
+        <columns xmi:uuid="mmuuid:b25d7f8b-ea05-1f23-8a17-8c1dce96562d" name="AUTHOR_ID" nameInSource="AUTHOR_ID" nativeType="int identity" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE" uniqueKeys="mmuuid/b25d7f8a-ea05-1f23-8a17-8c1dce96562d">
+          <type href="http://www.w3.org/2001/XMLSchema#int"/>
+        </columns>
+        <columns xmi:uuid="mmuuid:b25d7f88-ea05-1f23-8a17-8c1dce96562d" name="FIRSTNAME" nameInSource="FIRSTNAME" nativeType="varchar" length="255">
+          <type href="http://www.w3.org/2001/XMLSchema#string"/>
+        </columns>
+        <columns xmi:uuid="mmuuid:b25d7f8c-ea05-1f23-8a17-8c1dce96562d" name="LASTNAME" nameInSource="LASTNAME" nativeType="varchar" length="255">
+          <type href="http://www.w3.org/2001/XMLSchema#string"/>
+        </columns>
+        <columns xmi:uuid="mmuuid:b25d7f89-ea05-1f23-8a17-8c1dce96562d" name="MIDDLEINIT" nameInSource="MIDDLEINIT" nativeType="varchar" length="255">
+          <type href="http://www.w3.org/2001/XMLSchema#string"/>
+        </columns>
+        <primaryKey xmi:uuid="mmuuid:b25d7f8a-ea05-1f23-8a17-8c1dce96562d" name="PK_AUTHORS" nameInSource="PK_AUTHORS" columns="mmuuid/b25d7f8b-ea05-1f23-8a17-8c1dce96562d"/>
+      </tables>
+      <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:b25d7f82-ea05-1f23-8a17-8c1dce96562d" name="PUBLISHERS" nameInSource="PUBLISHERS" cardinality="17">
+        <columns xmi:uuid="mmuuid:b25d7f83-ea05-1f23-8a17-8c1dce96562d" name="PUBLISHER_ID" nameInSource="PUBLISHER_ID" nativeType="int identity" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE" uniqueKeys="mmuuid/b25d7f84-ea05-1f23-8a17-8c1dce96562d">
+          <type href="http://www.w3.org/2001/XMLSchema#int"/>
+        </columns>
+        <columns xmi:uuid="mmuuid:b25d7f85-ea05-1f23-8a17-8c1dce96562d" name="NAME" nameInSource="NAME" nativeType="varchar" length="255">
+          <type href="http://www.w3.org/2001/XMLSchema#string"/>
+        </columns>
+        <columns xmi:uuid="mmuuid:b25d7f86-ea05-1f23-8a17-8c1dce96562d" name="LOCATION" nameInSource="LOCATION" nativeType="varchar" length="255">
+          <type href="http://www.w3.org/2001/XMLSchema#string"/>
+        </columns>
+        <primaryKey xmi:uuid="mmuuid:b25d7f84-ea05-1f23-8a17-8c1dce96562d" name="PK_PUBLISHERS" nameInSource="PK_PUBLISHERS" columns="mmuuid/b25d7f83-ea05-1f23-8a17-8c1dce96562d"/>
+      </tables>
+    </schemas>
+  </Relational:Catalog>
+  <jdbc:JdbcSource xmi:uuid="mmuuid:0b95e8c0-ea02-1f23-8a17-8c1dce96562d" name="BooksSQL2k" driverName="MetaMatrix SQL Server" driverClass="com.metamatrix.jdbc.sqlserver.SQLServerDriver" username="books" url="jdbc:mmx:sqlserver://slntds05:1433;DatabaseName=books">
+    <importSettings xmi:uuid="mmuuid:2d155940-ea02-1f23-8a17-8c1dce96562d">
+      <includedTableTypes>TABLE</includedTableTypes>
+    </importSettings>
+  </jdbc:JdbcSource>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:e942d7c1-ea05-1f23-8a17-8c1dce96562d">
+    <diagram xmi:uuid="mmuuid:e942d7c0-ea05-1f23-8a17-8c1dce96562d" type="packageDiagramType" target="mmuuid/8e01a300-ea05-1f23-8a17-8c1dce96562d">
+      <diagramEntity xmi:uuid="mmuuid:ea36fbc0-ea05-1f23-8a17-8c1dce96562d" modelObject="mmuuid/b25d7f80-ea05-1f23-8a17-8c1dce96562d" xPosition="10" yPosition="10" height="42" width="109"/>
+    </diagram>
+  </Diagram:DiagramContainer>
+</xmi:XMI>
