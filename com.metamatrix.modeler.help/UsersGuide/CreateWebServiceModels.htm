@@ -1,8 +1,9 @@
 <link rel="stylesheet" href="designer_help.css" type="text/css" />
 <body>
 <p><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<hr>
 <p class="maintitle_b24">Create Web Service Models</p>
-<hr/>
+
 <p class="medium"><strong>Web services</strong>  bridge the gap between your existing relational and file-based data sources and the new XML data structures that represent how you plan to exchange data with new applications. <strong>Web service models</strong> contain the web service  interface and operation definitions (which are described in the <strong>WSDL</strong> interface  document) and the procedures executed by the operations to process the input  request to the operation and generate the output response.</p>
 <p class="medium">You can <strong>create Web service models</strong> using one of the following processes:</p>
 <ul>
@@ -11,14 +12,14 @@
   <li><a href="#newWSModelFromXML">Create from XML Document view model</a></li>
   <li><a href="#newWSModelFromWSDL">Create from WSDL </a></li>
 </ul>
-<hr/>
+
 <p class="subtitle_b16"><a name="newWSModel"></a>Create new empty Web Service model </p>
 <blockquote>
   <p class="medium"><strong>Step 1:</strong> Launch  the <a href="ModelingYourData.htm#newModelWizard"> <strong>New Model Wizard</strong></a> dialog by either choosing the<strong> File &gt; New... &gt; Metadata Model</strong> action <img src="images/icons/newmodel_wiz.gif" alt="new model action" width="16" height="16">, selecting a project or folder in the <a href="ModelExplorer.htm"> <strong>Model Explorer</strong></a>and choosing the same action in the right-click menu or selecting the <strong>New</strong> button on the main toolbar <img src="images/icons/newResourceButton.jpg" alt="new resource button" width="44" height="30" hspace="5">and selecting the <strong> Metadata Model</strong> action <img src="images/icons/newmodel_wiz.gif" alt="new model action" width="16" height="16"></p>
   <p class="medium"><strong>Step 2:</strong> In the <strong><a href="ModelingYourData.htm#newModelWizard">New Model Wizard </a></strong>, specify the model name, choose &quot;<strong>Web Service</strong>&quot; model class and click &quot;<strong>Finish</strong>&quot; </p>
   <p><img src="images/views/NewModelWizardWS.jpg" hspace="20"></p>
 </blockquote>
-<hr/>
+
 <p class="subtitle_b16"><a name="newWSModelFromRelational"></a>Create Web Service model from relational model</p>
 <blockquote>
   <p class="note">Note: This method is recommended for experienced users for consistent and rapid deployment of Web services designed to query relational sources. It provides detailed control of all Web service interfaces, operations and required transformations from XML Views. </p>
@@ -33,7 +34,7 @@
   <p class="medium"><strong>Step 4: </strong>When model generation is complete, a confirmation dialog should appear. Click <strong>OK</strong>. </p>
   <p class="medium"><img src="images/views/CreateWebServiceConfirmationDialog.jpg" hspace="20"></p>
 </blockquote>
-<hr/>
+
 <p class="medium"><span class="subtitle_b16"><a name="newWSModelFromXML"></a>Create Web Service model from XML document view models </span></p>
 <p class="medium"><strong>Web Service</strong> models and their corresponding <strong>Interfaces</strong> and <strong>Operations</strong> can be generated in <strong>Designer</strong> from <strong>XML View</strong> model components. Namely, XML View Documents and XML View Document roots.</p>
 <p class="medium">To create a new Web service model from XML components: </p>
@@ -46,16 +47,16 @@
   <p class="medium"><img src="images/views/generateWebServiceWizardConfirmation.jpg" hspace="29"></p>
   <p class="note">Note: Users can change the Web Service Model and Interface Name values (via &quot;...&quot; buttons) to use existing Web service model components. This will create a new operation in an existing model.</p>
 </blockquote>
-<hr/>
+
 <p class="medium"><span class="subtitle_b16"><a name="newWSModelFromWSDL"></a>Create Web Service model from WSDL </span></p>
 <p class="medium">You can create a<strong> Web service</strong> in your <strong>VDB</strong> by importing <strong>WSDL</strong> files. <strong>Designer</strong> will interpret the <strong>WSDL</strong>, locate any associated or dependent<strong> XML schema</strong> files, generate an<strong> XML View</strong> of the schema components and create a <strong>Web service model</strong> representing the interfaces and operations defined in the <strong>WSDL</strong>. </p>
 <p class="medium">To import from WSDL, see &quot;<strong><a href="ImportWsdl.htm">Creating a Web Service model from imported WSDL file</a></strong>.&quot; </p>
-<hr />
+
 <p class="subtitle_b16">Related Topics</p>
 <ul>
   <li><a href="CreateXmlViewModel.htm" class="medium">Create XML View Model</a></li>
   <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
 </ul>
-<hr />
+<hr>
 <p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
 </body>

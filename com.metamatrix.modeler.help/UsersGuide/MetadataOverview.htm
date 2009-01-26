@@ -9,8 +9,9 @@
 </style>
 <body>
 <p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<hr>
 <p class="maintitle_b24">Metadata Overview </p>
-<hr />
+
 <ul class="small_toc_item">
   <li><a href="#whatIsMetadata">What is Metadata ?</a></li>
   <li><a href="#editingMetadata">Editing Metadata vs. Editing Data</a></li>
@@ -25,7 +26,6 @@
     </ul>
   </li>
 </ul>
-<hr />
 
 <p><span class="subtitle_b16"><a name="whatIsMetadata"></a>What is Metadata? </span></p>
 <p><strong>Metadata</strong> is <span class="style1">data about data</span>. A piece of metadata, called a <strong>meta object</strong> in the   <strong>Designer</strong>, contains information about a specific information structure, irrespective of whatever individual data fields that may comprise that structure.</p>
@@ -48,12 +48,12 @@
   <li>What data does the metadata represent? (see <a href="#sourceAndViewMetadata"><strong>Source and View Metadata</strong></a>)</li>
   <li>How will my organization use and manage this metadata? (see <a href="#designtimeRuntimeMetadata"><strong>Design-Time and Runtime Metadata</strong></a>)</li>
 </ul>
-<hr />
+
 <p><span class="subtitle_b16"><a name="editingMetadata"></a>Editing Metadata vs. Editing Data</span></p>
 <p>The  <strong>Designer</strong> helps you to create and describe an abstract graphic representation of your data structure of your data in the original data sources. It also describes whether those data sources are composed of Relational databases, text files, data streams, legacy database systems, or some other information type.</p>
 <p>The  <strong>Designer</strong> allows you to create, edit, and link these graphically-represented meta objects that are really a description of your data, and not the data itself. </p>
 <p>So when this documentation describes the process of creating, deleting, or editing these meta objects, <em><strong>remember</strong></em> that you are not, in fact, modifying the underlying data.</p>
-<hr />
+
 <p><span class="subtitle_b16"><a name="metadataModels"></a>Metadata Models </span><br>
   <br>
   A <strong>metadata model</strong> represents a collection of metadata information that describes a complete structure of data.</p>
@@ -63,7 +63,7 @@
 <blockquote>
   <p><span class="note">NOTE:	For more information about using models as you model your metadata, see <a href="ModelingYourData.htm">Modeling Your Metadata</a> and<a href="Models1001.htm"> Models 101 </a></span></p>
 </blockquote>
-<hr />
+
 <p><span class="subtitle_b16"><a name="businessMetadata"></a>Business and Technical Metadata </span></p>
 <p>Metadata can include different types of information about a piece of data.</p>
 <ul>
@@ -104,18 +104,17 @@
   <p>Although the first might seem technical, it does not directly relate to the physical storage of the data. It represents a business rule applied to the contents of the column, not the contents themselves.</p>
   <p>The second, of course, represents some business information about the way the column was populated. This information, although useful to associate with our definition of the column, does not reflect the physical storage of the data.</p>
 </blockquote>
-<hr />
+
 <p><span class="subtitle_b16"><a name="designtimeRuntimeMetadata"></a>Design-Time and Runtime Metadata </span></p>
-<p>MetaMatrix software distinguishes between design-time metadata and run-time metadata. This distinction becomes important if you use both MetaMatrix MetaBase and the MetaMatrix Server. Design-time data is laden with details and representations that help the user understand and efficiently organize metadata. Much of that detail is unnecessary to the underlying system that runs the Virtual Database that you will create. Any information that is not absolutely necessary to running the Virtual Database is stripped out of the run-time metadata to ensure maximum system performance.</p>
+<p>Federate software distinguishes between design-time metadata and run-time metadata. This distinction becomes important if you use the Federate Server. Design-time data is laden with details and representations that help the user understand and efficiently organize metadata. Much of that detail is unnecessary to the underlying system that runs the Virtual Database that you will create. Any information that is not absolutely necessary to running the Virtual Database is stripped out of the run-time metadata to ensure maximum system performance.</p>
 <p><span class="subtitle_b14">Design-Time Metadata</span></p>
 <blockquote>
-  <p>Design-time metadata refers to data within the Metabase Repository or your local directory that you have created or have imported. You can model this metadata in the  Designer, adding <strong>Source</strong> and <strong>View</strong> metadata. If you only use the MetaBase product, you will work exclusively with <strong>design-time metadata</strong>.</p>
-  <p>The  Designer handles <strong>design-time metadata</strong>, but within the Metabase Repository Manager you take the preliminary steps to create the <strong>runtime metadata</strong>. For more information, see &ldquo;<strong>Sharing Projects and Files</strong>.&rdquo;</p>
+  <p>Design-time metadata refers to data within the Federate Designer or your local directory that you have created or have imported. You can model this metadata in the Designer, adding <strong>Source</strong> and <strong>View</strong> metadata.</p>
 </blockquote>
 <p class="body14"><strong><span class="subtitle_b14">Runtime Metadata</span></strong></p>
 <blockquote>
   <p>Once you have adequately modeled your enterprise information systems, including the necessary technical metadata that describes the physical structure of your sources, you can use the metadata for data access.</p>
-  <p>To prepare the metadata for use in the MetaMatrix Server, you take a snapshot of a metadata model for the MetaMatrix Server to use when resolving queries from your client applications. This run-time metadata represents a static version of design-time metadata you created or imported. This snapshot is in the form of a <a href="WebServiceVdbSummary.htm"><strong>Virtual Database</strong></a> definition, or <strong>VDB</strong>. </p>
+  <p>To prepare the metadata for use in the MetaMatrix Server, you take a snapshot of a metadata model for the MetaMatrix Server to use when resolving queries from your client applications. This run-time metadata represents a static version of design-time metadata you created or imported. This snapshot is in the form of a <a href="VdbSummary.htm"><strong>Virtual Database</strong></a> definition, or <strong>VDB</strong>. </p>
   <p>As you create this <strong>runtime metadata</strong>, the  Designer:</p>
   <ul>
     <li>derives the runtime metadata from a consistent set of metadata models.</li>
@@ -124,13 +123,13 @@
   </ul>
   <p>You can continue to work with the design-time metadata, but once you have created a runtime metadata model, it remains static.</p>
 </blockquote>
-<hr />
+
 <p><span class="subtitle_b16"><a name="sourceAndViewMetadata"></a>Source and View Metadata  </span></p>
 <p>In addition to the distinction between business and technical metadata, you should know the difference between <strong>Source Metadata</strong> and <strong>View Metadata</strong>. </p>
 <p><em><strong>Source and View metadata refer to what the metadata represents, not its content.</strong></em></p>
-<p><strong>Source Metadata</strong> directly represents metadata for an enterprise information system and captures exactly where and how the data is maintained. Source Metadata sounds similar to technical metadata, but Source Metadata can contain both technical and business metadata. When you model Source Metadata, you are modeling the data that your enterprise information systems contain. For more information, see &ldquo;Modeling Your Enterprise Information Systems.&rdquo;</p>
-<p><strong>View Metadata</strong>, on the other hand, represent tailored views that <strong>transform</strong> the <strong>Source Metadata</strong> into the terminology and domain of different applications. <strong>View Metadata</strong>, too, can contain both <a href="#businessMetadata">technical and business metadata</a>. When you model <strong>View Metadata</strong>, you&rsquo;re modeling the data as your applications (and your enterprise) ultimately use it. For more information, see &ldquo;Modeling Your Enterprise Data Needs.&rdquo;</p>
-<hr />
+<p><strong>Source Metadata</strong> directly represents metadata for an enterprise information system and captures exactly where and how the data is maintained. Source Metadata sounds similar to technical metadata, but Source Metadata can contain both technical and business metadata. When you model Source Metadata, you are modeling the data that your enterprise information systems contain.</p>
+<p><strong>View Metadata</strong>, on the other hand, represent tailored views that <strong>transform</strong> the <strong>Source Metadata</strong> into the terminology and domain of different applications. <strong>View Metadata</strong>, too, can contain both <a href="#businessMetadata">technical and business metadata</a>. When you model <strong>View Metadata</strong>, you&rsquo;re modeling the data as your applications (and your enterprise) ultimately use it.</p>
+
 <p><span class="subtitle_b16"><a name="modelingSourceMetadata"></a>Modeling Your Source Metadata</span></p>
 <p>When you model the <strong>Source Metadata</strong> within your enterprise information systems, you capture some detailed information, including:</p>
 <ul>
@@ -144,7 +143,7 @@
 <p>For example, our ZIPCode column and its parent table StreetAddress map directly to fields within our hypothetical address book database.<br>
   <br>
   To extend our example, we might have a second source of information, a comma-separated text file provided by a marketing research vendor. This text file can supply additional demographic information based upon address or ZIP code. This text file would represent another EIS, and the meta objects in its Source Model would describe each comma-separated value.</p>
-<hr />
+
 <p><span class="subtitle_b16"><a name="modelingViewMetadata"></a>Modeling Your View Metadata</span></p>
 <p>When you create<strong> View Metadata</strong>, you are not describing the nature of your physical data storage. Instead, you describe the way your enterprise uses the information in its day-to-day operations.<br>
   <strong>View Metadata</strong> derives its classes and attributes from other metadata. You can derive <strong>View Metadata </strong>from <strong>Source Metadata</strong> that describes the ultimate sources for the metadata or even from other <strong>View Metadata</strong>. However, when you model <strong>View Metadata</strong>, you create special &ldquo;views&rdquo; on your existing enterprise information systems that you can tailor to your business use or application expectations. This<strong> View Metadata </strong>offers many benefits:</p>
@@ -159,7 +158,7 @@
 <p>By creating a<strong> View Metadata</strong> model, we could accurately show that this single View Table, the AddressPool, contains information from the two enterprise information systems. The <strong>View Metadata</strong> model not only shows from where it gets the information, but also the SQL operations it performs to select its information from its source models.</p>
 <p>This <strong>View Metadata</strong> can not only reflect and describe how your organization uses that information, but, if your enterprise uses the MetaMatrix Server, your applications can use the <strong>View Metadata</strong> to resolve queries.</p>
 <p>To create this <strong>View Metadata</strong>, you create a view and define a <em><strong>transformation</strong></em> for that view, a special query that enables you to select information from the source (or even other view) metadata models. For more information, see &ldquo;<strong>Modeling Transformations.</strong>&rdquo;</p>
-<hr />
+
 <p><span class="subtitle_b16"><a name="modelingMetadataTransformations"></a>Modeling Metadata Transformations </span></p>
 <p class="subtitle_b14">Metadata Transformations </p>
 <blockquote>
@@ -181,10 +180,10 @@
   <p><img src="images/views/AddressPoolXMLTransformation.jpg" width="304" height="301" hspace="20" vspace="10"></p>
   <p>In this example, the Address Pool View Metadata model still selects its information from the Address Book Database and the Vendor Text File, but it also maps the resulting columns into tags in the Address XML document.</p>
 </blockquote>
-<hr />
+
 <p class="subtitle_b16">Related Topics</p>
 <ul><li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
 </ul>
-<hr />
+<hr>
 <p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
 </body>

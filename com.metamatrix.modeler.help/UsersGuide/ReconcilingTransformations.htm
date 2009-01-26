@@ -1,15 +1,16 @@
 <link rel="stylesheet" href="designer_help.css" type="text/css" />
 <body>
 <p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<hr>
 <p class="maintitle_b24">Reconciling Transformations </p>
-<hr />
+
 <p><span class="subtitle_b16"><a name="reconcilerDialog"></a></span>When you have modified a  transformation or the target virtual class, you might create discrepancies between  the symbols you enter in the transformation and the attributes within your  virtual metadata class. These descrepancies will typically reflect unbound attributes, unmatched SQL symbols and/or mis-matched datatypes. You can manually resolve these discrepancies using the <strong><a href="#reconcilerTargetAttributes">Reconcile  Virtual Target Attributes</a></strong> dialog.</p>
 <p><img src="images/views/ReconcilerDialog.jpg" hspace="20"></p>
 <p>&nbsp;</p>
 <p>The table on the left of the dialog contains the a list of all virtual target attributes  and their bound SQL symbols. This defines the mapping or &quot;transformation&quot; of your source data into your virtual, or view table. </p>
 <p>You can lock your target attributes for virtual models  that your enterprise already uses with its applications, especially in  situations where renaming an attribute might render the application  inoperative.
 </p>
-<hr />
+
 <p class="subtitle_b16"><a name="reconcilerTargetAttributes"></a>Reconcile Target Attributes </p>
 <p>To reconcile your transformations target attributes </p>
 <blockquote>
@@ -51,7 +52,7 @@
 </blockquote>
 <p><br>
   The Designer reconciles the query as  you specified. This dialog box can alter the Select statement&rsquo;s output by  removing or aliasing the existing SQL symbols. <span class="note">If you want to add or remove  attributes to the query, you must use the <a href="TransformationEditor.htm">Transformation Editor</a>.</span></p>
-<hr />
+
 <p><span class="subtitle_b16"><a name="typeResolver"></a>Type Resolver  </span></p>
 <p>Your SQL Bindings may require resolving mismatched datatypes. The figure below provides a simple example of a target attribute with type string bound to a column of type short. </p>
 <p><img src="images/views/SqlBindingsMismatchedType.jpg" hspace="20" border="1"></p>
@@ -66,13 +67,13 @@
     <li>Change the SQL Symbol to perform a convert() function by selecting <strong>Apply</strong>. Typically the conversion will be pre-constructed for you.</li>
   </ul>
   <strong>Step 4</strong>: Select <strong>OK</strong> when finished. Note, as each binding is corrected, it should be reflected by a change in Status and color of the row in the table.</blockquote>
-<hr />
+
 <p class="subtitle_b16">Related Topics</p>
 <ul>
   <li><a href="DiagramEditor.htm#transformationDiagram" class="medium">Transformation Diagram </a> </li>
   <li><a href="TransformationEditor.htm" class="medium">Transformation Editor </a></li>
   <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a></li>
 </ul>
-<hr />
+<hr>
 <p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
 </body>

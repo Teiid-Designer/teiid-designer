@@ -1,8 +1,9 @@
 <link rel="stylesheet" href="designer_help.css" type="text/css" />
 <body>
 <p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<hr>
 <p class="maintitle_b24">Editing Recursive XML Element </p>
-<hr />
+
 <p class="subtitle_b16"><a name="recursiveXmlSchema"></a>Handling Recursive XML Schema</p>
 <p>Some <strong>XML schemas</strong> define data  structures that contain self-referencing elements or datatypes. When generating  XML documents, such data structures can produce an endless repetition of nested  tags. This self-nesting pattern is known as <strong>recursion</strong>.</p>
 <p>When generating virtual  documents from<strong> XML Schema</strong>, the <strong> Designer</strong> detects recursive data  structures in the XML Schema model and halts the recursive nesting pattern  after two cycles. These two cycles serve different purposes when mapping the  document:</p>
@@ -14,7 +15,7 @@
 <p><img src="images/views/RecursiveMappingClass.jpg" width="329" height="363" hspace="20" border="1"></p>
 <p>When you model a virtual  document based on an XML Schema model containing recursion, you can choose  whether to treat the nested fragments as recursive. You should only use  recursion when the data access pattern from your data source(s) is also  recursive; in other words, when the same query transformation should be  executed over and over to generate and map the nested document's data content.</p>
 By default, the <strong> Designer</strong> does not mark the  recursive fragments in document models to execute recursively in the MetaMatrix  Server. To take advantage of this behavior, you must open the <strong>Recursion Editor</strong>  in the recursive mapping class<a href="DiagramEditor.htm#mappingTransformationDiagram"> mapping transformation diagram</a>, mark the transformation  query as recursive, and specify the recursion limit properties.
-<hr />
+
 <p class="subtitle_b16"><a name="recursionEditor" id="recursionEditor"></a>Recursion Editor </p>
 <p>The <strong>Recursion Editor</strong> lets you enable and limit  recursion. The Recursion Editor button <img src="images/icons/recursion.gif" width="15" height="16" hspace="5">only displays on mapping classes, which  have recursive patterns. For example, if you have an element named Employee  which contains a element named Supervisor which itself contains an Employee  element nested within it, you might need to limit the number of times the  elements are nested within the document.</p>
 <p>You can set the following conditions to limit the recursion:</p>
@@ -38,11 +39,11 @@ By default, the <strong> Designer</strong> does not mark the  recursive fragment
   </blockquote>
 </blockquote>
 <p>When the MetaMatrix Server dynamically populates  your XML documents at runtime, it will use the recursion specifications you  entered here.</p>
-<hr />
+
 <p class="subtitle_b16">Related Topics</p>
 <ul>
   <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
 </ul>
-<hr />
+<hr>
 <p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
 </body>

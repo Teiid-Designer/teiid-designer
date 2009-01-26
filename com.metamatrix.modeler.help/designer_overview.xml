@@ -8,7 +8,6 @@
 <toc label="The Designer">
 	<topic label="Perspectives" href="UsersGuide/DesignerPerspectives.htm">
 		<topic label="Designer Perspective" 			href="UsersGuide/DesignerPerspectives.htm#modelingPerspective"/>
-		<topic label="Metabase Repository Perspective" 	href="UsersGuide/DesignerPerspectives.htm#metabaseRepositoryPerspective"/>
 		<topic label="Sql Explorer Perspective" 		href="UsersGuide/DesignerPerspectives.htm#sqlExplorerPerspective"/>
 		<topic label="Changing Perspectives" 			href="UsersGuide/DesignerPerspectives.htm#openNewPerspective"/>
 	</topic>
@@ -31,8 +30,7 @@
 	<topic label="Views" href="UsersGuide/DesignerViews.htm">
 		<topic label="Model Explorer" 			href="UsersGuide/ModelExplorer.htm"/>
 		<topic label="Outline" 					href="UsersGuide/OutlineView.htm"/>
-		<topic label="User Defined Functions" 	href="UsersGuide/UDFView.htm"/>
-		<topic label="Connectors" 			href="UsersGuide/ConnectorsView.htm"/>
+		<topic label="User Defined Functions" 	href="UsersGuide/UDFView.htm"/>		<topic label="Connectors" 			href="UsersGuide/ConnectorsView.htm"/>
 		<topic label="Properties" 			href="UsersGuide/PropertiesView.htm"/>
 		<topic label="Description" 			href="UsersGuide/DescriptionView.htm"/>
 		<topic label="Problems" 			href="UsersGuide/ProblemsView.htm"/>
@@ -41,10 +39,6 @@
 		<topic label="Search Results" 		href="UsersGuide/SearchingInDesigner.htm#searchResultsView"/>
 		<topic label="Datatypes" 			href="UsersGuide/DatatypesView.htm"/>
 		<topic label="System Catalog" 		href="UsersGuide/SystemCatalogView.htm"/>
-		<topic label="Repository Explorer" 	href="UsersGuide/RepositoryExplorer.htm"/>
-		<topic label="Repository Contents" 	href="UsersGuide/RepositoryExplorer.htm#repositoryContents"/>
-		<topic label="Repository Console" 	href="UsersGuide/RepositoryExplorer.htm#repositoryConsole"/>
-		<topic label="Repository Status " 	href="UsersGuide/RepositoryExplorer.htm#repositoryStatus"/>
 	</topic>
 	<topic label="Wizards">
 		<topic label="Import Wizard" href="UsersGuide/ModelingYourData.htm#importWizard">

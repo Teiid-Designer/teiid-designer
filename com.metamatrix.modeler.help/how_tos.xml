@@ -90,9 +90,4 @@
 			<topic label="Create New VDB" 				href="UsersGuide/CreateVirtualDatabase.htm#newVDB"/>
 			<topic label="Test your VDB" 				href="UsersGuide/ExecuteVdbHelp.htm"/>
 		</topic>
-		<topic label="Sharing Your Metadata">
-			<topic label="Connecting to Repositories" 	href="UsersGuide/MetaMatrixRepository.htm#createRepositoryConnection"/>
-			<topic label="Sharing your resources" 		href="UsersGuide/MetaMatrixRepository.htm#teamShareProject"/>
-			<topic label="Team Actions" 				href="UsersGuide/ModelExplorerTeamActions.htm"/>
-		</topic>
 </toc>
