@@ -6,7 +6,7 @@
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <toc label="Getting Things Done">
-		<topic label="Create Models">
+		<topic label="Create Models" href="UsersGuide/ModelingYourData.htm">
 			<topic label="Import Wizard" 			href="UsersGuide/ModelingYourData.htm#importWizard">
 				<topic label="Archive File" 									href="UsersGuide/ImportArchiveFile.htm" />
 				<topic label="File System" 										href="UsersGuide/ImportFromFileSystem.htm" />
