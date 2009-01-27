@@ -17,7 +17,6 @@
 		<topic label="VDB Facts" 				href="UsersGuide/VdbSummary.htm"/>
 	</topic>
 	<topic label="Getting acquainted" href="UsersGuide/DesignerGettingStarted.htm#gettingAcquainted">
-	    <topic label="Welcome aboard..."		href="UsersGuide/WelcomePage.htm"/>
 		<topic label="A new perspective..." 	href="UsersGuide/DesignerPerspectives.htm"/>
 		<topic label="A view on things" 		href="UsersGuide/DesignerViews.htm"/>
 		<topic label="What's on the menu? " 	href="UsersGuide/DesignerMainMenus.htm"/>

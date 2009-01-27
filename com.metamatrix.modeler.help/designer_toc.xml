@@ -12,7 +12,7 @@
     <topic label="Getting Started" href="UsersGuide/DesignerGettingStarted.htm">
        <link toc="getting_started.xml"/>
     </topic>
-    <topic label="The Designer">
+    <topic href="UsersGuide/TheDesigner.htm" label="The Designer">
        <link toc="designer_overview.xml"/>
     </topic>
     <topic label="Getting Things Done">
