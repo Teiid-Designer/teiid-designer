@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2005 rel. 3 U (http://www.altova.com) by Ryan Sammons (Northrop Grumman Mission Systems) -->
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="java:i3.intel.model" targetNamespace="java:i3.intel.model" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
 	<xs:simpleType name="EntityKeys">
 		<xs:restriction base="xsd:string">

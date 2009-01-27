@@ -37,11 +37,6 @@ import com.metamatrix.core.vdb.VdbConstants;
 import com.metamatrix.vdb.edit.VdbEditPlugin;
 import com.metamatrix.vdb.internal.runtime.model.BasicVDBModelDefn;
 
-/**
- * Copyright MetaMatrix 2000-2002.
- * 
- * @author vhalbert Date Dec 3, 2002
- */
 public class VDBWriter {
 
     private static final Random random = new Random(System.currentTimeMillis());

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xs:schema targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" xmlns:mmedt="http://www.metamatrix.com/2005/XmlSchema/EnterpriseDatatypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:simpleType mmedt:UUID="mmuuid:4ca2ae00-3a95-1e20-921b-eeee28353879" mmedt:runtimeDataType="string" mmedt:runtimeDataTypeFixed="false" name="NMTOKEN">
         <xs:annotation>

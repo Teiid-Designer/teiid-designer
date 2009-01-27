@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="ASCII"?>
-<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:Sdt="http://www.metamatrix.com/metamodels/SimpleDatatypes" xmlns:jdbc="http://www.metamatrix.com/metamodels/JDBC" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
   <mmcore:ModelAnnotation xmi:uuid="mmuuid:afd535c0-89c3-1ece-af0a-abe869ccda23" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>
   <Relational:Schema xmi:uuid="mmuuid:5792a080-8abf-1ece-892c-a645066ff32d" name="PARTSSUPPLIER" nameInSource="PARTSSUPPLIER">

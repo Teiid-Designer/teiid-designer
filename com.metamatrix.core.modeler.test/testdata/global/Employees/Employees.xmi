@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="ASCII"?>
-<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:Sdt="http://www.metamatrix.com/metamodels/SimpleDatatypes" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
   <mmcore:ModelAnnotation xmi:uuid="mmuuid:d8996140-b186-1edc-9534-b3fbce3e7be0" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL">
     <modelImports xmi:uuid="mmuuid:10f71100-3182-1ee8-8019-f7a7f6e6676c" name="SimpleDatatypes-instance" path="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" uuid="mmuuid:6b862080-3019-1e20-921b-eeee28353879" modelType="TYPE" primaryMetamodelUri="http://www.metamatrix.com/metamodels/SimpleDatatypes"/>

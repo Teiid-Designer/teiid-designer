@@ -30,7 +30,8 @@
 	<topic label="Views" href="UsersGuide/DesignerViews.htm">
 		<topic label="Model Explorer" 			href="UsersGuide/ModelExplorer.htm"/>
 		<topic label="Outline" 					href="UsersGuide/OutlineView.htm"/>
-		<topic label="User Defined Functions" 	href="UsersGuide/UDFView.htm"/>		<topic label="Connectors" 			href="UsersGuide/ConnectorsView.htm"/>
+		<topic label="User Defined Functions" 	href="UsersGuide/UDFView.htm"/>
+		<topic label="Connectors" 			href="UsersGuide/ConnectorsView.htm"/>
 		<topic label="Properties" 			href="UsersGuide/PropertiesView.htm"/>
 		<topic label="Description" 			href="UsersGuide/DescriptionView.htm"/>
 		<topic label="Problems" 			href="UsersGuide/ProblemsView.htm"/>

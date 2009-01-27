@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Paul Nittel (MetaMatrix) -->
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xs:schema targetNamespace="http://www.metamatrix.com/Employees" xmlns="http://www.metamatrix.com/Employees" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:annotation>
-		<xs:documentation xml:lang="en">Employee schema Copyright (c) 2002, MetaMatrix. All right reserved.
+		<xs:documentation xml:lang="en">
+		Employee schema
 		Version 1.1 includes:
 		pattern (phone #)
 		annotation: documentation and appInfo

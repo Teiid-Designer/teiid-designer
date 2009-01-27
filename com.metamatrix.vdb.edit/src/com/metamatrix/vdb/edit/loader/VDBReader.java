@@ -64,11 +64,6 @@ import com.metamatrix.vdb.materialization.ScriptType;
 import com.metamatrix.vdb.runtime.BasicModelInfo;
 import com.metamatrix.vdb.runtime.BasicVDBDefn;
 
-/**
- * Copyright MetaMatrix 2000-2002.
- * 
- * @author vhalbert Date Dec 3, 2002
- */
 public class VDBReader {
 
     private static final String TEMP_VDB_NAME = "tmp.vdb";//$NON-NLS-1$

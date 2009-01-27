@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xs:schema targetNamespace="java:i3.intel.aoi" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="java:i3.intel.aoi" xmlns:util="java:i3.intel.util" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
 	<xs:annotation>
 		<xs:documentation>All measurements are in Meters</xs:documentation>

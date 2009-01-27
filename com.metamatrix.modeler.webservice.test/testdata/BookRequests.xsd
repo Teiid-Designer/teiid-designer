@@ -1,5 +1,11 @@
 <?xml version="1.0"?>
-<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <schema targetNamespace="http://www.metamatrix.com/books/request"
     xmlns="http://www.w3.org/2001/XMLSchema" xmlns:request="http://www.metamatrix.com/books/request">
     <!-- The element and type defining the 'getAuthorsRequest' -->

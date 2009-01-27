@@ -8,12 +8,7 @@
 
   <xsd:annotation>
     <xsd:documentation xml:lang="en">
-      MetaMatrix Data Set Library Version 1.1.
       Books Data Set Version 1.1.
-      Copyright 2002 MetaMatrix, Inc.
-      Permission is granted to use, copy, modify and distribute the schemas in the 
-      MetaMatrix Data Set Library subject to the terms and conditions specified
-      at http://www.metamatrix.com/Licensing/DataSetLicense.html.
     </xsd:documentation>
   </xsd:annotation>
 

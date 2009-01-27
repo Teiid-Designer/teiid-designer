@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <XMI xmi.version="1.1" timestamp="2002-01-31T11:55:24.356-06:00" xmlns:Relational="Relational.xml" xmlns:Diagram="Diagram.xml">
   <XMI.header>
     <XMI.documentation>

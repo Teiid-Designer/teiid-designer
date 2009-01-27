@@ -1,4 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <model name="SimplePhysicalForDDL" uuid="mmuuid:86b7a100-3ca3-1e8c-ae26-b498e3fd8787" generateComments="true" generateDrops="false" exportTool="MetaMatrix MetaBase Modeler" exportToolVersion="Release current(Build 1173)" exportDate="2003-03-24" exportTime="11:12:49" modelFilename="SimplePhysicalForDDL.xml" modelType="PhysicalModel" metaModel="Relational" metaModelURL="http://www.metamatrix.com/metabase/3.0/metamodels/Relational.xml">
    <table name="Table1" description="Description for 'Table1'." uuid="mmuuid:9524c140-3ca4-1e8c-ae26-b498e3fd8787" supportsUpdate="true">
       <column name="ColumnWithoutAlias" description="Description for 'Table1.ColumnWithoutAlias'." uuid="mmuuid:1640ca00-3ca8-1e8c-ae26-b498e3fd8787" multiplicity="1" changeability="true" isLengthFixed="false" isNullable="false" supportsSelect="true" supportsSet="false" supportsSubscription="false" supportsUpdate="true" isCaseSensitive="false" isSigned="false" isCurrency="false" isAutoIncremented="false" searchType="Searchable"/>
