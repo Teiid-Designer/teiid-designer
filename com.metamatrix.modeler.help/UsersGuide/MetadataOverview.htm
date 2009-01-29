@@ -121,7 +121,7 @@
 <p class="body14"><strong><span class="subtitle_b14">Runtime Metadata</span></strong></p>
 <blockquote>
   <p>Once you have adequately modeled your enterprise information systems, including the necessary technical metadata that describes the physical structure of your sources, you can use the metadata for data access.</p>
-  <p>To prepare the metadata for use in the MetaMatrix Server, you take a snapshot of a metadata model for the MetaMatrix Server to use when resolving queries from your client applications. This run-time metadata represents a static version of design-time metadata you created or imported. This snapshot is in the form of a <a href="VdbSummary.htm"><strong>Virtual Database</strong></a> definition, or <strong>VDB</strong>. </p>
+  <p>To prepare the metadata for use in the Federate Server, you take a snapshot of a metadata model for the Federate Server to use when resolving queries from your client applications. This run-time metadata represents a static version of design-time metadata you created or imported. This snapshot is in the form of a <a href="VdbSummary.htm"><strong>Virtual Database</strong></a> definition, or <strong>VDB</strong>. </p>
   <p>As you create this <strong>runtime metadata</strong>, the  Designer:</p>
   <ul>
     <li>derives the runtime metadata from a consistent set of metadata models.</li>
@@ -146,7 +146,7 @@
   <li>Source-specific locations and names</li>
 </ul>
 <p>The <strong>Source Metadata</strong> captures this detailed technical metadata to provide a map of the data, the location of the data, and how you access it.</p>
-<p>This collection of <strong>Source Metadata</strong> comprises a direct mapping of the information sources within your enterprise. If you use the MetaMatrix Server for information integration, this technical metadata plays an integral part in query resolution.</p>
+<p>This collection of <strong>Source Metadata</strong> comprises a direct mapping of the information sources within your enterprise. If you use the Federate Server for information integration, this technical metadata plays an integral part in query resolution.</p>
 <p>For example, our ZIPCode column and its parent table StreetAddress map directly to fields within our hypothetical address book database.<br>
   <br>
   To extend our example, we might have a second source of information, a comma-separated text file provided by a marketing research vendor. This text file can supply additional demographic information based upon address or ZIP code. This text file would represent another EIS, and the meta objects in its Source Model would describe each comma-separated value.</p>
@@ -163,7 +163,7 @@
 </ul>
 <p>Our example enterprise information sources, the address book database, and the vendor-supplied comma-delimited text file, reside in two different native storage formats and therefore have two Source Metadata models. However, they can represent one business need: a pool of addresses for a mass mailing.</p>
 <p>By creating a<strong> View Metadata</strong> model, we could accurately show that this single View Table, the AddressPool, contains information from the two enterprise information systems. The <strong>View Metadata</strong> model not only shows from where it gets the information, but also the SQL operations it performs to select its information from its source models.</p>
-<p>This <strong>View Metadata</strong> can not only reflect and describe how your organization uses that information, but, if your enterprise uses the MetaMatrix Server, your applications can use the <strong>View Metadata</strong> to resolve queries.</p>
+<p>This <strong>View Metadata</strong> can not only reflect and describe how your organization uses that information, but, if your enterprise uses the Federate Server, your applications can use the <strong>View Metadata</strong> to resolve queries.</p>
 <p>To create this <strong>View Metadata</strong>, you create a view and define a <em><strong>transformation</strong></em> for that view, a special query that enables you to select information from the source (or even other view) metadata models. For more information, see &ldquo;<strong>Modeling Transformations.</strong>&rdquo;</p>
 
 <p><span class="subtitle_b16"><a name="modelingMetadataTransformations"></a>Modeling Metadata Transformations </span></p>
