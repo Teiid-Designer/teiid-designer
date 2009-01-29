@@ -225,7 +225,7 @@ public class WorkspaceResourceFinderUtil {
     /**
      * Return IPath[] array representing the workspace paths to dependent IResource instances. The dependent paths are found by
      * reading the model imports declaratations in the specified resource. Only paths to IResource instances will be returned
-     * whereas import declarations to one of the well-know MetaMatrix/Emf global resouces such as
+     * whereas import declarations to one of the well-know Federate Designer/Emf global resouces such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
      * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
@@ -259,7 +259,7 @@ public class WorkspaceResourceFinderUtil {
     /**
      * Return IResource[] array representing the dependent IResource instances. The dependent resources are found by reading the
      * model imports declarations in the specified resource. Only references to IResource instances that can be found in the
-     * workspace will be returned. If an import declaration to one of the well-know MetaMatrix/Emf global resouces such as
+     * workspace will be returned. If an import declaration to one of the well-know Federate Designer/Emf global resouces such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
      * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
@@ -399,7 +399,7 @@ public class WorkspaceResourceFinderUtil {
 
     /**
      * Return the IResource instance corresponding to the specified Emf resource. If the resource is one of the well-known
-     * MetaMatrix/Emf global resources such as
+     * Federate Designer/Emf global resources such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
      * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
@@ -424,7 +424,7 @@ public class WorkspaceResourceFinderUtil {
 
     /**
      * Return the IResource instance corresponding to the specified URI string. The URI represents a relative path within the
-     * workspace to particular file resource. If the URI is one of the well-known MetaMatrix/Emf identifiers to a global resouce
+     * workspace to particular file resource. If the URI is one of the well-known Federate Designer/Emf identifiers to a global resouce
      * such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
@@ -458,7 +458,7 @@ public class WorkspaceResourceFinderUtil {
 
     /**
      * Return the IResource instance corresponding to the specified URI string. The URI represents a relative path within the
-     * workspace to particular file resource. If the URI is one of the well-known MetaMatrix/Emf identifiers to a global resouce
+     * workspace to particular file resource. If the URI is one of the well-known Federate Designer/Emf identifiers to a global resouce
      * such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
@@ -504,7 +504,7 @@ public class WorkspaceResourceFinderUtil {
             return false;
         }
 
-        // If the URI is to the MetaMatrix built-in datatypes resource or to one
+        // If the URI is to the Federate Designer built-in datatypes resource or to one
         // of the Emf XMLSchema resources then return null since there is no
         // IResource in the workspace for any of these models
         if (isGlobalResource(workspaceUri)) {
@@ -636,7 +636,7 @@ public class WorkspaceResourceFinderUtil {
 
     /**
      * Return the URI string defining the relative path within the workspace for the specified Emf resource. If the resource is
-     * one of the well-known MetaMatrix/Emf global resources such as
+     * one of the well-known Federate Designer/Emf global resources such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
      * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
@@ -649,7 +649,7 @@ public class WorkspaceResourceFinderUtil {
     public static String getWorkspaceUri( final Resource resource ) {
         if (resource != null && resource.getURI() != null && getWorkspace() != null) {
 
-            // If the resource is the MetaMatrix built-in datatypes model
+            // If the resource is the Federate Designer built-in datatypes model
             // then return the specific logical URI for that model
             final URI resourceUri = resource.getURI();
 
@@ -757,7 +757,7 @@ public class WorkspaceResourceFinderUtil {
     }
 
     /**
-     * Returns true if the specified URI string is one of the well-known MetaMatrix/Emf identifiers to a global resouce such as
+     * Returns true if the specified URI string is one of the well-known Federate Designer/Emf identifiers to a global resouce such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"
      * "http://www.metamatrix.com/metamodels/UmlPrimitiveTypes-instance"
@@ -778,7 +778,7 @@ public class WorkspaceResourceFinderUtil {
         //       "http://www.w3.org/2001/MagicXMLSchema"; //$NON-NLS-1$
         //       "http://www.w3.org/2001/XMLSchema-instance"; //$NON-NLS-1$
 
-        // If the URI is to the MetaMatrix built-in datatypes model ...
+        // If the URI is to the Federate Designer built-in datatypes model ...
         if (uri.startsWith(DatatypeConstants.BUILTIN_DATATYPES_URI)) {
             return true;
         }
@@ -786,7 +786,7 @@ public class WorkspaceResourceFinderUtil {
             return true;
         }
 
-        // If the URI is to the MetaMatrix built-in UML primitive types model ...
+        // If the URI is to the Federate Designer built-in UML primitive types model ...
         if (uri.startsWith(UML_PRIMITIVE_TYPES_INTERNAL_URI)) {
             return true;
         }
@@ -797,7 +797,7 @@ public class WorkspaceResourceFinderUtil {
             return true;
         }
 
-        // If the URI is to the MetaMatrix built-in relationship model ...
+        // If the URI is to the Federate Designer built-in relationship model ...
         if (uri.endsWith(RELATIONSHIP_PRIMITIVE_TYPES_INTERNAL_URI)) {
             return true;
         }
@@ -881,7 +881,7 @@ public class WorkspaceResourceFinderUtil {
     }
 
     /**
-     * Returns true if the specified URI string is one of the well-known MetaMatrix/Emf identifiers to a global resouce such as
+     * Returns true if the specified URI string is one of the well-known Federate Designer/Emf identifiers to a global resouce such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"
      * "http://www.metamatrix.com/metamodels/UmlPrimitiveTypes-instance"
@@ -897,7 +897,7 @@ public class WorkspaceResourceFinderUtil {
             return null;
         }
 
-        // If the URI is to the MetaMatrix built-in datatypes model ...
+        // If the URI is to the Federate Designer built-in datatypes model ...
         if (uri.startsWith(DatatypeConstants.BUILTIN_DATATYPES_URI)) {
             return DatatypeConstants.BUILTIN_DATATYPES_URI;
         }
@@ -905,7 +905,7 @@ public class WorkspaceResourceFinderUtil {
             return DatatypeConstants.BUILTIN_DATATYPES_URI;
         }
 
-        // If the URI is to the MetaMatrix built-in UML primitive types model ...
+        // If the URI is to the Federate Designer built-in UML primitive types model ...
         if (uri.startsWith(UML_PRIMITIVE_TYPES_INTERNAL_URI)) {
             return UML_PRIMITIVE_TYPES_INTERNAL_URI;
         }
@@ -916,7 +916,7 @@ public class WorkspaceResourceFinderUtil {
             return UML_METAMODEL_URI;
         }
 
-        // If the URI is to the MetaMatrix built-in relationship model ...
+        // If the URI is to the Federate Designer built-in relationship model ...
         if (uri.endsWith(RELATIONSHIP_PRIMITIVE_TYPES_INTERNAL_URI)) {
             return RELATIONSHIP_PRIMITIVE_TYPES_INTERNAL_URI;
         }
@@ -1144,7 +1144,7 @@ public class WorkspaceResourceFinderUtil {
             for (int i = 0; i < paths.length; i++) {
                 if (paths[i].equals(targetPath)) {
                     String modelPath = nextResource.getFullPath().toString();
-                    // If the URI is to the MetaMatrix built-in datatypes resource or to one
+                    // If the URI is to the Federate Designer built-in datatypes resource or to one
                     // of the Emf XMLSchema resources then continue since there is no
                     // ModelReference to add.
                     if (modelPath != null && !isGlobalResource(modelPath)) {
@@ -1172,7 +1172,7 @@ public class WorkspaceResourceFinderUtil {
             for (int i = 0; i < paths.length; i++) {
                 if (paths[i].equals(targetPath)) {
                     String modelPath = nextResource.getFullPath().toString();
-                    // If the URI is to the MetaMatrix built-in datatypes resource or to one
+                    // If the URI is to the Federate Designer built-in datatypes resource or to one
                     // of the Emf XMLSchema resources then continue since there is no
                     // ModelReference to add.
                     if (modelPath != null && !isGlobalResource(modelPath) && !dependentResources.contains(nextResource)) {

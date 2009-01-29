@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
-  <mmcore:ModelAnnotation xmi:uuid="mmuuid:8d51c900-2d77-102a-9105-c93e8cc4584e" description="The description for the model:  Interface Model" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" ProducerName="MetaMatrix" ProducerVersion="5.0">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:8d51c900-2d77-102a-9105-c93e8cc4584e" description="The description for the model:  Interface Model" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" ProducerName="Federate Designer" ProducerVersion="5.0">
     <modelImports xmi:uuid="mmuuid:c36181c0-2d77-102a-9105-c93e8cc4584e" name="InterfaceExtModel" modelLocation="InterfaceExtModel.xmi" uuid="mmuuid:cb857140-1b47-1026-9b3b-db39dc8c2bab" modelType="EXTENSION" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Extension"/>
     <modelImports xmi:uuid="mmuuid:aee07bc1-2d77-102a-9105-c93e8cc4584e" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
     <extensionPackage href="InterfaceExtModel.xmi#mmuuid/d6ba1840-1b47-1026-9b3b-db39dc8c2bab"/>

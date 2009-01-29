@@ -74,9 +74,9 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
 
     // Map, keyed on datatype name, of EMF's built-in datatypes as defined in the org.eclipse.xsd plugin.
     Map emfDatatypeMap;
-    // Map, keyed on datatype name, of MetaMatrix's built-in datatypes as defined in the modeler.sdt plugin.
+    // Map, keyed on datatype name, of built-in datatypes as defined in the modeler.sdt plugin.
     Map mmDatatypeMap;
-    // Map, keyed on uuid string, of MetaMatrix's built-in datatypes as defined in the modeler.sdt plugin.
+    // Map, keyed on uuid string, of built-in datatypes as defined in the modeler.sdt plugin.
     private Map uuidToMmTypeMap;
 
     // DEFECT 23839 - Maps keyed to mmType. Caching these types improves performance because getting the type from the SqlAspect
@@ -92,7 +92,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
     // The unmodifiable list of built-in primitive types
     private List primitiveTypes;
 
-    // The Emf and MetaMatrix resources for the built-in datatype model
+    // The Emf and Federate Designer resources for the built-in datatype model
     private Resource emfResource;
     private Resource mmResource;
     private boolean hasEMFEnterpriseInfoInit;
@@ -121,7 +121,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
      * @see com.metamatrix.modeler.core.types.DatatypeManager#getUUID(org.eclipse.emf.ecore.EObject)
      */
     public ObjectID getUuid( final EObject type ) {
-        // Use the MetaMatrix built-in datatype reference to get the UUID
+        // Use the Federate Designer built-in datatype reference to get the UUID
         final EObject mmType = this.getMmType(type);
         final SqlDatatypeAspect aspect = getSqlAspect(mmType);
         if (aspect != null) {
@@ -136,7 +136,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
     public String getUuidString( EObject type ) {
         String uuidString = null;
 
-        // Use the MetaMatrix built-in datatype reference to get the UUID
+        // Use the Federate Designer built-in datatype reference to get the UUID
 
         final EObject mmType = this.getMmType(type);
         // Defect 23839 - check for cached type-UUID
@@ -162,7 +162,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
             return DatatypeConstants.RuntimeTypeNames.OBJECT;
         }
 
-        // Use the MetaMatrix built-in datatype reference to get the runtime type
+        // Use the Federate Designer built-in datatype reference to get the runtime type
         final EObject mmType = this.getMmType(type);
         // Defect 23839 - check for cached type-runtimeType
         String theRuntimeTypeName = (String)mmTypeToRuntimeTypeNameMap.get(mmType);
@@ -187,7 +187,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
         if (type == this.anySimpleType || type == this.anyType) {
             result = Boolean.FALSE;
         }
-        // Use the MetaMatrix built-in datatype reference to get the runtime type
+        // Use the Federate Designer built-in datatype reference to get the runtime type
         final EObject mmType = this.getMmType(type);
         final SqlDatatypeAspect aspect = getSqlAspect(mmType);
         if (aspect != null) {
@@ -200,7 +200,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
      * @see com.metamatrix.modeler.core.types.DatatypeManager#getEnterpriseExtensionsMap(org.eclipse.emf.ecore.EObject)
      */
     public Map getEnterpriseExtensionsMap( EObject type ) {
-        // Use the MetaMatrix built-in datatype reference to get the extension map
+        // Use the Federate Designer built-in datatype reference to get the extension map
         final EObject mmType = this.getMmType(type);
         final SqlDatatypeAspect aspect = getSqlAspect(mmType);
         if (aspect != null) {
@@ -320,7 +320,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
             }
 
             // If the basetype is a built-in datatype then return the EMF XSD built-in
-            // instead of the MetaMatrix built-in type.
+            // instead of the Federate Designer built-in type.
             final XSDSimpleTypeDefinition emfType = (XSDSimpleTypeDefinition)this.getEmfType(basetype);
             if (emfType != null) {
                 basetype = emfType;
@@ -358,7 +358,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
         List tmp = new ArrayList();
         tmp.add(this.getAnySimpleType());
 
-        // Added in all the EMF XSD built-in datatypes and the MetaMatrix
+        // Added in all the EMF XSD built-in datatypes and the Federate Designer
         // extensions to the built-in dataytpes
         for (Iterator iter = this.mmDatatypeMap.values().iterator(); iter.hasNext();) {
             final XSDTypeDefinition mmType = (XSDTypeDefinition)iter.next();
@@ -483,12 +483,12 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
             return this.getAnySimpleType();
         }
 
-        // Lookup the MetaMatrix built-in datatype by UUID
+        // Lookup the Federate Designer built-in datatype by UUID
         EObject mmType = null;
         if (id.startsWith(UUID.PROTOCOL)) {
             mmType = (EObject)this.uuidToMmTypeMap.get(id);
         }
-        // Lookup the MetaMatrix built-in datatype by name
+        // Lookup the Federate Designer built-in datatype by name
         else {
             mmType = (EObject)this.mmDatatypeMap.get(id.toLowerCase());
         }
@@ -523,7 +523,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
      * @see com.metamatrix.modeler.core.types.DatatypeManager#getRuntimeTypeJavaClassName(java.lang.String)
      */
     public String getRuntimeTypeJavaClassName( final String id ) {
-        // Use the MetaMatrix built-in datatype reference to get the java class name
+        // Use the Federate Designer built-in datatype reference to get the java class name
         final EObject type = this.getBuiltInDatatype(id);
         final EObject mmType = this.getMmType(type);
         final SqlDatatypeAspect aspect = getSqlAspect(mmType);
@@ -605,7 +605,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
      */
     public boolean isBinary( final EObject type ) {
         ArgCheck.isNotNull(type);
-        XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition)this.getMetaMatrixExtendedBuiltInBaseType(type);
+        XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition)this.getExtendedBuiltInBaseType(type);
         if (simpleType != null) {
             final String typeName = simpleType.getName();
             if (DatatypeConstants.BuiltInNames.OBJECT.equals(typeName) || DatatypeConstants.BuiltInNames.BLOB.equals(typeName)
@@ -714,18 +714,18 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
     }
 
     /**
-     * Return the EObject instance corresponding to the MetaMatrix extended built-in type that the specified type restricts. If no
-     * MetaMatrix extended type exists anywhere in the type hierarchy for this datatype then null is returned.
+     * Return the EObject instance corresponding to the extended built-in type that the specified type restricts. If no extended
+     * type exists anywhere in the type hierarchy for this datatype then null is returned.
      * 
      * @param type
      * @return
      */
-    public EObject getMetaMatrixExtendedBuiltInBaseType( final EObject type ) {
+    public EObject getExtendedBuiltInBaseType( final EObject type ) {
         ArgCheck.isNotNull(type);
         ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, type);
 
-        // Check the type hierarchy for a MetaMatrix extended built-in type ...
-        final List mmExtendedTypes = this.getMetaMatrixExtendedTypesList();
+        // Check the type hierarchy for a extended built-in type ...
+        final List mmExtendedTypes = this.getExtendedTypesList();
         final EObject[] typeHierarchy = this.getTypeHierarchy(type);
         for (int i = 0; i != typeHierarchy.length; ++i) {
             if (mmExtendedTypes.contains(typeHierarchy[i])) {
@@ -737,10 +737,10 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
     }
 
     /**
-     * Return the list of all MetaMatrix built-in types. These types represent MetaMatrix extensions to the XML Schema of schema
+     * Return the list of all Federate Designer built-in types. These types represent extensions to the XML Schema of schema
      * built-in types.
      */
-    public List getMetaMatrixExtendedTypesList() {
+    public List getExtendedTypesList() {
         final List mmExtendedTypes = new ArrayList();
         final Collection mmExtendedTypeNames = DatatypeConstants.getMetaMatrixExtendedBuiltInTypeNames();
         for (Iterator iter = mmExtendedTypeNames.iterator(); iter.hasNext();) {
@@ -783,15 +783,15 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
                 return emfType;
             }
             // If not found in the EMF XSD built-in datatypes map then the
-            // type is probably one of the MetaMatrix extended built-in datatypes
+            // type is probably one of the extended built-in datatypes
             return type;
         }
         return null;
     }
 
     /**
-     * If the specified XSDTypeDefinition is a built-in datatype then return the MetaMatrix built-in datatype as defined in the
-     * modeler.sdt plugin. If specified type is not a built-in datatype then null is returned.
+     * If the specified XSDTypeDefinition is a built-in datatype then return the Federate Designer built-in datatype as defined in
+     * the modeler.sdt plugin. If specified type is not a built-in datatype then null is returned.
      * 
      * @param type
      * @return
@@ -799,7 +799,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
     protected EObject getMmType( final EObject type ) {
         final SqlDatatypeAspect aspect = getSqlAspect(type);
         if (aspect != null && aspect.isBuiltInDatatype(type)) {
-            // Lookup the MetaMatrix built-in datatype by name
+            // Lookup the Federate Designer built-in datatype by name
             final String typeName = ((XSDTypeDefinition)type).getName();
             final EObject emfType = (EObject)this.mmDatatypeMap.get(typeName.toLowerCase());
             // If found in the map then return the reference

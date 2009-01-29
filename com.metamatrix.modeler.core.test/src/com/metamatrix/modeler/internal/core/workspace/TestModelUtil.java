@@ -18,7 +18,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-
 import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.internal.core.xml.vdb.VdbHeader;
 import com.metamatrix.internal.core.xml.vdb.VdbModelInfo;
@@ -31,9 +30,10 @@ public class TestModelUtil extends TestCase {
 
     /**
      * Constructor for TestModelUtil.
+     * 
      * @param name
      */
-    public TestModelUtil(String name) {
+    public TestModelUtil( String name ) {
         super(name);
     }
 
@@ -49,6 +49,7 @@ public class TestModelUtil extends TestCase {
             public void setUp() {
                 // do nothing
             }
+
             @Override
             public void tearDown() {
                 // do nothing
@@ -215,12 +216,12 @@ public class TestModelUtil extends TestCase {
         assertTrue(false == ModelUtil.isModelFile(f));
     }
 
-    public void testIsModelFileWithMetaMatrix0200File() {
+    public void testIsModelFileWith0200File() {
         File f = SmartTestSuite.getTestDataFile("partsSupplierOracle_v0200.xml"); //$NON-NLS-1$
         assertTrue(false == ModelUtil.isModelFile(f));
     }
 
-    public void testIsModelFileWithMetaMatrix0300File() {
+    public void testIsModelFileWith0300File() {
         File f = SmartTestSuite.getTestDataFile("VirtualNorthwind.xml"); //$NON-NLS-1$
         assertTrue(false == ModelUtil.isModelFile(f));
     }
@@ -284,12 +285,12 @@ public class TestModelUtil extends TestCase {
         assertTrue(false == ModelUtil.isXmiFile(f));
     }
 
-    public void testIsXmiFileWithMetaMatrix0200File() {
+    public void testIsXmiFileWith0200File() {
         File f = SmartTestSuite.getTestDataFile("partsSupplierOracle_v0200.xml"); //$NON-NLS-1$
         assertTrue(false == ModelUtil.isXmiFile(f));
     }
 
-    public void testIsXmiFileWithMetaMatrix0300File() {
+    public void testIsXmiFileWith0300File() {
         File f = SmartTestSuite.getTestDataFile("VirtualNorthwind.xml"); //$NON-NLS-1$
         assertTrue(false == ModelUtil.isXmiFile(f));
     }
@@ -355,16 +356,16 @@ public class TestModelUtil extends TestCase {
         File f = SmartTestSuite.getTestDataFile("emptyModel.xmi"); //$NON-NLS-1$
         XMIHeader header = ModelUtil.getXmiHeader(f);
         assertTrue(null != header);
-		assertTrue(header.getXmiVersion().startsWith("2.")); //$NON-NLS-1$
-		assertTrue(null != header.getUUID());
+        assertTrue(header.getXmiVersion().startsWith("2.")); //$NON-NLS-1$
+        assertTrue(null != header.getUUID());
     }
 
     public void testGetXmiHeaderWithNonEmptyModelFile() {
         File f = SmartTestSuite.getTestDataFile("nonEmptyModel.xmi"); //$NON-NLS-1$
         XMIHeader header = ModelUtil.getXmiHeader(f);
         assertTrue(null != header);
-		assertTrue(header.getXmiVersion().startsWith("2.")); //$NON-NLS-1$
-		assertTrue(null != header.getUUID());
+        assertTrue(header.getXmiVersion().startsWith("2.")); //$NON-NLS-1$
+        assertTrue(null != header.getUUID());
     }
 
     public void testGetXmiHeaderWithNonModelFile() {
@@ -381,16 +382,16 @@ public class TestModelUtil extends TestCase {
         File f = SmartTestSuite.getTestDataFile("MetaMatrix-VdbManifestModel.xmi"); //$NON-NLS-1$
         XMIHeader header = ModelUtil.getXmiHeader(f);
         assertTrue(null != header);
-		assertTrue(header.getXmiVersion().startsWith("2.")); //$NON-NLS-1$
-		assertTrue(null != header.getUUID());
+        assertTrue(header.getXmiVersion().startsWith("2.")); //$NON-NLS-1$
+        assertTrue(null != header.getUUID());
     }
 
     public void testGetXmiHeaderWithVdbArchive() {
         File f = SmartTestSuite.getTestDataFile("PartSupplierVirtual.vdb"); //$NON-NLS-1$
         XMIHeader header = ModelUtil.getXmiHeader(f);
         assertTrue(null != header);
-		assertTrue(header.getXmiVersion().startsWith("2.")); //$NON-NLS-1$
-		assertTrue(null != header.getUUID());
+        assertTrue(header.getXmiVersion().startsWith("2.")); //$NON-NLS-1$
+        assertTrue(null != header.getUUID());
     }
 
     public void testGetXmiHeaderWithZipFile() {
@@ -467,9 +468,9 @@ public class TestModelUtil extends TestCase {
         assertTrue(f.exists());
         VdbHeader header = ModelUtil.getVdbHeader(f);
         assertNotNull(header);
-        assertEquals(5,header.getModelInfos().length);
-        assertEquals(0,header.getNonModelInfos().length);
-        assertEquals("mmuuid:89582d80-0e17-1eec-8518-c32201e76066",header.getUUID()); //$NON-NLS-1$
+        assertEquals(5, header.getModelInfos().length);
+        assertEquals(0, header.getNonModelInfos().length);
+        assertEquals("mmuuid:89582d80-0e17-1eec-8518-c32201e76066", header.getUUID()); //$NON-NLS-1$
     }
 
     public void testGetVdbHeaderForPartsVdbArchive() {
@@ -478,52 +479,52 @@ public class TestModelUtil extends TestCase {
         assertTrue(f.exists());
         VdbHeader header = ModelUtil.getVdbHeader(f);
         assertNotNull(header);
-        assertEquals(3,header.getModelInfos().length);
-        assertEquals(0,header.getNonModelInfos().length);
-        assertEquals("mmuuid:155720c0-14df-1eec-8518-c32201e76066",header.getUUID()); //$NON-NLS-1$
+        assertEquals(3, header.getModelInfos().length);
+        assertEquals(0, header.getNonModelInfos().length);
+        assertEquals("mmuuid:155720c0-14df-1eec-8518-c32201e76066", header.getUUID()); //$NON-NLS-1$
 
         VdbModelInfo info = header.getModelInfos()[0];
-        assertEquals("PartSupplier_Oracle.xmi",info.getName()); //$NON-NLS-1$
-        assertEquals("/Parts Project/PartSupplier_Oracle.xmi",info.getPath()); //$NON-NLS-1$
-        assertEquals("mmuuid:579b2e80-1274-1eec-8518-c32201e76066",info.getUUID()); //$NON-NLS-1$
-        assertEquals("PHYSICAL",info.getModelType()); //$NON-NLS-1$
-        assertEquals("http://www.metamatrix.com/metamodels/Relational",info.getPrimaryMetamodelURI()); //$NON-NLS-1$
+        assertEquals("PartSupplier_Oracle.xmi", info.getName()); //$NON-NLS-1$
+        assertEquals("/Parts Project/PartSupplier_Oracle.xmi", info.getPath()); //$NON-NLS-1$
+        assertEquals("mmuuid:579b2e80-1274-1eec-8518-c32201e76066", info.getUUID()); //$NON-NLS-1$
+        assertEquals("PHYSICAL", info.getModelType()); //$NON-NLS-1$
+        assertEquals("http://www.metamatrix.com/metamodels/Relational", info.getPrimaryMetamodelURI()); //$NON-NLS-1$
 
         info = header.getModelInfos()[2];
-        assertEquals("PartsVirtual.xmi",info.getName()); //$NON-NLS-1$
-        assertEquals("/Parts Project/PartsVirtual.xmi",info.getPath()); //$NON-NLS-1$
-        assertEquals("mmuuid:fb52cb80-128a-1eec-8518-c32201e76066",info.getUUID()); //$NON-NLS-1$
-        assertEquals("VIRTUAL",info.getModelType()); //$NON-NLS-1$
-        assertEquals("http://www.metamatrix.com/metamodels/Relational",info.getPrimaryMetamodelURI()); //$NON-NLS-1$
+        assertEquals("PartsVirtual.xmi", info.getName()); //$NON-NLS-1$
+        assertEquals("/Parts Project/PartsVirtual.xmi", info.getPath()); //$NON-NLS-1$
+        assertEquals("mmuuid:fb52cb80-128a-1eec-8518-c32201e76066", info.getUUID()); //$NON-NLS-1$
+        assertEquals("VIRTUAL", info.getModelType()); //$NON-NLS-1$
+        assertEquals("http://www.metamatrix.com/metamodels/Relational", info.getPrimaryMetamodelURI()); //$NON-NLS-1$
     }
 
-    public void testGetXmiHeaderWithMetaMatrix0200File() {
+    public void testGetXmiHeaderWith0200File() {
         File f = SmartTestSuite.getTestDataFile("partsSupplierOracle_v0200.xml"); //$NON-NLS-1$
         XMIHeader header = ModelUtil.getXmiHeader(f);
         assertTrue(null != header);
-		assertTrue(header.getXmiVersion().startsWith("1.")); //$NON-NLS-1$
-		assertTrue(null == header.getUUID());
+        assertTrue(header.getXmiVersion().startsWith("1.")); //$NON-NLS-1$
+        assertTrue(null == header.getUUID());
     }
 
-    public void testGetXmiHeaderWithMetaMatrix0300File() {
+    public void testGetXmiHeaderWith0300File() {
         File f = SmartTestSuite.getTestDataFile("VirtualNorthwind.xml"); //$NON-NLS-1$
         XMIHeader header = ModelUtil.getXmiHeader(f);
         assertTrue(null != header);
-		assertTrue(header.getXmiVersion().startsWith("1.")); //$NON-NLS-1$
-		assertTrue(null == header.getUUID());
+        assertTrue(header.getXmiVersion().startsWith("1.")); //$NON-NLS-1$
+        assertTrue(null == header.getUUID());
     }
 
     public void testGetContentsFromZipWithNonExistentFile() {
         ZipFile zipFile = null;
         try {
             zipFile = new ZipFile(new File("")); //$NON-NLS-1$
-            InputStream extractedFile = ModelUtil.getFileContentsFromArchive(zipFile,ModelUtil.MANIFEST_MODEL_NAME);
+            InputStream extractedFile = ModelUtil.getFileContentsFromArchive(zipFile, ModelUtil.MANIFEST_MODEL_NAME);
             assertTrue(null == extractedFile);
         } catch (ZipException e) {
             // expected
             return;
         } catch (Exception e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         } finally {
             if (zipFile != null) {
                 try {
@@ -540,13 +541,13 @@ public class TestModelUtil extends TestCase {
         try {
             File f = SmartTestSuite.getTestDataFile("PartSupplierVirtual.vdb"); //$NON-NLS-1$
             zipFile = new ZipFile(f);
-            InputStream extractedFile = ModelUtil.getFileContentsFromArchive(zipFile,ModelUtil.MANIFEST_MODEL_NAME);
-    		XMIHeader header = ModelUtil.getXmiHeader(extractedFile);
+            InputStream extractedFile = ModelUtil.getFileContentsFromArchive(zipFile, ModelUtil.MANIFEST_MODEL_NAME);
+            XMIHeader header = ModelUtil.getXmiHeader(extractedFile);
             assertTrue(null != extractedFile);
-			assertTrue(header.getUUID() != null);
-			assertTrue(header.getXmiVersion().startsWith("2.")); //$NON-NLS-1$
+            assertTrue(header.getUUID() != null);
+            assertTrue(header.getXmiVersion().startsWith("2.")); //$NON-NLS-1$
         } catch (Exception e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         } finally {
             if (zipFile != null) {
                 try {
@@ -563,10 +564,10 @@ public class TestModelUtil extends TestCase {
         try {
             File f = SmartTestSuite.getTestDataFile("PartSupplierVirtual.vdb"); //$NON-NLS-1$
             zipFile = new ZipFile(f);
-            InputStream extractedFile = ModelUtil.getFileContentsFromArchive(zipFile,"keys.index"); //$NON-NLS-1$
+            InputStream extractedFile = ModelUtil.getFileContentsFromArchive(zipFile, "keys.index"); //$NON-NLS-1$
             assertTrue(null == extractedFile);
         } catch (Exception e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         } finally {
             if (zipFile != null) {
                 try {
@@ -583,10 +584,10 @@ public class TestModelUtil extends TestCase {
         try {
             File f = SmartTestSuite.getTestDataFile("PartSupplierVirtual.vdb"); //$NON-NLS-1$
             zipFile = new ZipFile(f);
-            InputStream extractedFile = ModelUtil.getFileContentsFromArchive(zipFile,"runtime-inf/keys.index"); //$NON-NLS-1$
+            InputStream extractedFile = ModelUtil.getFileContentsFromArchive(zipFile, "runtime-inf/keys.index"); //$NON-NLS-1$
             assertTrue(null != extractedFile);
         } catch (Exception e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         } finally {
             if (zipFile != null) {
                 try {
@@ -603,10 +604,10 @@ public class TestModelUtil extends TestCase {
         try {
             File f = SmartTestSuite.getTestDataFile("builtInDatatypes.zip"); //$NON-NLS-1$
             zipFile = new ZipFile(f);
-            InputStream extractedFile = ModelUtil.getFileContentsFromArchive(zipFile,ModelUtil.MANIFEST_MODEL_NAME);
+            InputStream extractedFile = ModelUtil.getFileContentsFromArchive(zipFile, ModelUtil.MANIFEST_MODEL_NAME);
             assertTrue(null == extractedFile);
         } catch (Exception e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         } finally {
             if (zipFile != null) {
                 try {
@@ -629,7 +630,7 @@ public class TestModelUtil extends TestCase {
             // expected
             return;
         } catch (Exception e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         } finally {
             if (zipFile != null) {
                 try {
@@ -649,7 +650,7 @@ public class TestModelUtil extends TestCase {
             InputStream extractedFile = ModelUtil.getManifestModelContentsFromVdbArchive(zipFile);
             assertTrue(null == extractedFile);
         } catch (Exception e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         } finally {
             if (zipFile != null) {
                 try {
@@ -668,9 +669,9 @@ public class TestModelUtil extends TestCase {
             zipFile = new ZipFile(f);
             InputStream extractedFile = ModelUtil.getManifestModelContentsFromVdbArchive(zipFile);
             assertTrue(null != extractedFile);
-			assertTrue(null != ModelUtil.getXmiHeader(extractedFile));
+            assertTrue(null != ModelUtil.getXmiHeader(extractedFile));
         } catch (Exception e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         } finally {
             if (zipFile != null) {
                 try {
@@ -731,9 +732,9 @@ public class TestModelUtil extends TestCase {
         assertEquals("../c/x.xsd", ModelUtil.getRelativePath(s, b));//$NON-NLS-1$
 
     }
-// Currently only works when run inside Eclipse environment ...
-//    public void testModelFileNameWithInvalidCharacters() {
-	//        assertTrue( false == ModelUtil.isValidModelFileName("Model / file with invalid ? characters.xml") ); //$NON-NLS-1$
-//    }
+    // Currently only works when run inside Eclipse environment ...
+    // public void testModelFileNameWithInvalidCharacters() {
+    //        assertTrue( false == ModelUtil.isValidModelFileName("Model / file with invalid ? characters.xml") ); //$NON-NLS-1$
+    // }
 
 }

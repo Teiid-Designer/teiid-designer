@@ -81,7 +81,7 @@ public class WebServiceComponentNameRule extends StringNameRule {
         if (super.getFeatureID() != eStructuralFeature.getFeatureID()) {
             return;
         }
-        // apply the default metamatrix name validation checks
+        // apply the default name validation checks
         super.validate(eStructuralFeature, eObject, value, context);
         // get results for the eObject
         final Collection results = context.getTargetResults(eObject);

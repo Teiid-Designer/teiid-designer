@@ -74,7 +74,8 @@ import com.metamatrix.rose.internal.impl.Message;
 import com.metamatrix.rose.internal.impl.Unit;
 
 /**
- * One instance of this class should be instantiated for each Rose model that is to be imported to one or more MetaMatrix models.
+ * One instance of this class should be instantiated for each Rose model that is to be imported to one or more Federate Designer
+ * models.
  * 
  * @since 4.1
  */
@@ -144,10 +145,10 @@ public final class RoseImporter implements FileUtils.Constants, IRoseConstants, 
     private URIConverter uriConverter = new ResourceSetImpl().getURIConverter();
 
     /**
-     * Creates an importer that can import a Rose model to a MetaMatrix model using the specified MetaMatrix metamodel-specific
+     * Creates an importer that can import a Rose model to a Federate Designer model using the specified metamodel-specific
      * IRoseHandler.
      * 
-     * @param handler The MetaMatrix metamodel-specific IRoseHandler; never null.
+     * @param handler The metamodel-specific IRoseHandler; never null.
      * @throws LicenseException If a valid license cannot be found for either the Modeler product or the Rose import capability.
      * @since 4.1
      */
@@ -251,7 +252,7 @@ public final class RoseImporter implements FileUtils.Constants, IRoseConstants, 
     /**
      * @param monitor A cancelable progress monitor that will be updated during processing; may be null.
      * @return The list of {@link DifferenceReport difference reports}describing the changes that will be made to the workspace
-     *         once the new or updated MetaMatrix models are saved; never null, unmodifiable.
+     *         once the new or updated Federate Designer models are saved; never null, unmodifiable.
      * @since 4.1
      */
     public List generateDifferenceReports( IProgressMonitor monitor ) {

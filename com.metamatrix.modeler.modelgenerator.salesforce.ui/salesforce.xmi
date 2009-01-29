@@ -7,7 +7,7 @@
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:mmext="http://www.metamatrix.com/metamodels/Extension">
-  <mmcore:ModelAnnotation xmi:uuid="mmuuid:29ebfd00-cfe9-108c-a71f-9e23a5e79cc6" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Extension" modelType="EXTENSION" ProducerName="MetaMatrix" ProducerVersion="5.5"/>
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:29ebfd00-cfe9-108c-a71f-9e23a5e79cc6" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Extension" modelType="EXTENSION" ProducerName="Federate Designer" ProducerVersion="5.5"/>
   <diagram:DiagramContainer xmi:uuid="mmuuid:4dec4c00-cfe9-108c-a71f-9e23a5e79cc6">
     <diagram xmi:uuid="mmuuid:4e295500-cfe9-108c-a71f-9e23a5e79cc6" type="packageDiagramType" target="mmuuid/29ebfd00-cfe9-108c-a71f-9e23a5e79cc6">
       <diagramEntity xmi:uuid="mmuuid:ed028100-cfea-108c-a71f-9e23a5e79cc6" name="salesforce" modelObject="mmuuid/be936880-cfe9-108c-a71f-9e23a5e79cc6" xPosition="20" yPosition="20"/>

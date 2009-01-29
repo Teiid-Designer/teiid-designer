@@ -41,8 +41,6 @@ import com.metamatrix.modeler.internal.core.ExternalResourceLoader;
  * underlying infrastructure and made available for modeling.
  */
 public class PrimitiveTypeManager {
-    //============================================================================================================================
-    // Constants
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(PrimitiveTypeManager.class);
 
@@ -91,38 +89,29 @@ public class PrimitiveTypeManager {
 
     private static final String MESSAGE_ID_7 = "Error_creating_the_absolute_path_to_the_data_directory_for_resource_0_7"; //$NON-NLS-1$
 
-    //============================================================================================================================
-    // Static Utility Methods
-
     /**
      * @since 4.1
      */
-    private static String getString(final String id) {
+    private static String getString( final String id ) {
         return Uml2Plugin.Util.getString(I18N_PREFIX + id);
     }
 
     /**
      * @since 4.1
      */
-    private static String getString(final String id,
-                                    final Object parameter) {
+    private static String getString( final String id,
+                                     final Object parameter ) {
         return Uml2Plugin.Util.getString(I18N_PREFIX + id, parameter);
     }
 
     /**
      * @since 4.1
      */
-    private static String getString(final String id,
-                                    final Object parameter1,
-                                    final Object parameter2) {
+    private static String getString( final String id,
+                                     final Object parameter1,
+                                     final Object parameter2 ) {
         return Uml2Plugin.Util.getString(I18N_PREFIX + id, parameter1, parameter2);
     }
-
-    //============================================================================================================================
-    // Variables
-
-    //    /** Name of the container used to store the resource */
-    //    private static final String UML_PRIMITIVE_TYPES_CONTAINER_NAME = "primitiveTypesContainer"; //$NON-NLS-1$
 
     /** Reference to the EMF resource for the primitive types model */
     private Resource primitiveTypesResource;
@@ -130,25 +119,15 @@ public class PrimitiveTypeManager {
     /** Map of primitive type name to PrimitiveType instance */
     private Map nameToType = new HashMap();
 
-    // ==================================================================================
-    //                        C O N S T R U C T O R S
-    // ==================================================================================
-
-    /**
-     * Construct an instance of PrimitiveTypeManager.
-     */
     private PrimitiveTypeManager() {
         init();
     }
 
-    // ==================================================================================
-    //                      P U B L I C M E T H O D S
-    // ==================================================================================
-
     /**
      * @since 4.1
      */
-    public ValueSpecification createValueSpecification(final PrimitiveType type, final String value) {
+    public ValueSpecification createValueSpecification( final PrimitiveType type,
+                                                        final String value ) {
         ArgCheck.isNotNull(type);
         // If the value is "null" assume it is meant to represent null, i.e., the absence of a value.
         if (value == null || value.length() == 0 || value.equalsIgnoreCase("null")) { //$NON-NLS-1$
@@ -182,14 +161,14 @@ public class PrimitiveTypeManager {
     }
 
     /**
-     * Return the {@link org.eclipse.uml2.PrimitiveType}instance with the specified case-insensitive name. Only
-     * the MetaMatrix predefined primitive types are available through this manager. This method will return
-     * null for any name that is not one of these predefined types.
-     *
+     * Return the {@link org.eclipse.uml2.PrimitiveType}instance with the specified case-insensitive name. Only the predefined
+     * primitive types are available through this manager. This method will return null for any name that is not one of these
+     * predefined types.
+     * 
      * @param name
      * @return
      */
-    public PrimitiveType getPrimitiveType(final String name) {
+    public PrimitiveType getPrimitiveType( final String name ) {
         if (hasPrimitiveType(name)) {
             return (PrimitiveType)nameToType.get(name.toLowerCase());
         }
@@ -198,7 +177,7 @@ public class PrimitiveTypeManager {
 
     /**
      * Return the collection of all {@link org.eclipse.uml2.PrimitiveType} instances known by this manager.
-     *
+     * 
      * @param name
      * @return
      */
@@ -209,29 +188,27 @@ public class PrimitiveTypeManager {
     /**
      * Return true if a {@link org.eclipse.uml2.PrimitiveType}instance already exists with the specified name, otherwise return
      * false.
-     *
+     * 
      * @param name
      * @return
      */
-    public boolean hasPrimitiveType(final String name) {
+    public boolean hasPrimitiveType( final String name ) {
         ArgCheck.isNotZeroLength(name);
         return nameToType.get(name.toLowerCase()) != null;
     }
 
-
     /**
-     * Return the corresponding XSD built-in datatype for the
-     * pre-defined primitive type, if one exists, else return null.
-     *
+     * Return the corresponding XSD built-in datatype for the pre-defined primitive type, if one exists, else return null.
+     * 
      * @param name
      * @return
      */
-    public EObject getBuiltInTypeForPrimitiveType(final PrimitiveType type) {
+    public EObject getBuiltInTypeForPrimitiveType( final PrimitiveType type ) {
         ArgCheck.isNotNull(type);
         final String typeName = type.getName();
         if (this.hasPrimitiveType(typeName)) {
             try {
-                return ModelerCore.getDatatypeManager(type,true).getBuiltInDatatype(typeName);
+                return ModelerCore.getDatatypeManager(type, true).getBuiltInDatatype(typeName);
             } catch (ModelerCoreException e) {
                 Uml2Plugin.Util.log(IStatus.ERROR, e, e.getMessage());
             }
@@ -239,39 +216,12 @@ public class PrimitiveTypeManager {
         return null;
     }
 
-    //    /**
-    //     * Create a new {@link org.eclipse.uml2.PrimitiveType} instance with
-    //     * the specified name. The new instance will replace any existing
-    //     * primitive type with that name in the manager's cache. Note that
-    //     * newly created primitive type elements must be added to the ownedMember
-    //     * collection of the model (for example Package.getOwnedMember().add(primitiveType)).
-    //     * @param name
-    //     * @return
-    //     */
-    //    public PrimitiveType createPrimitiveType(final String name) {
-    //        ArgCheck.isNotZeroLength(name);
-    //        PrimitiveType pt = UMLFactory.eINSTANCE.createPrimitiveType();
-    //        nameToType.put(name,pt);
-    //        return pt;
-    //    }
-    //
-    //  /**
-    //   * Return the singleton instance
-    //   */
-    //  public static PrimitiveTypeManager getInstance() {
-    //      return INSTANCE;
-    //  }
-
-    // ==================================================================================
-    //                    P R O T E C T E D M E T H O D S
-    // ==================================================================================
-
     protected void init() {
         // Create a descriptor defining the primitive types external resource
         final ExternalResourceDescriptor descriptor = getExternalResourceDescriptor();
 
-        //        // Create an empty container to hold the external resource
-        //        final Container container = createContainer(UML_PRIMITIVE_TYPES_CONTAINER_NAME);
+        // // Create an empty container to hold the external resource
+        // final Container container = createContainer(UML_PRIMITIVE_TYPES_CONTAINER_NAME);
 
         // Use the model container to hold the external resource
         final Container container = getModelContainer();
@@ -308,7 +258,7 @@ public class PrimitiveTypeManager {
         return container;
     }
 
-    protected static Container createContainer(final String containerName) {
+    protected static Container createContainer( final String containerName ) {
         Container container = null;
         try {
             container = ModelerCore.createEmptyContainer(containerName);
@@ -321,8 +271,8 @@ public class PrimitiveTypeManager {
         return container;
     }
 
-    protected static Resource loadContainer(final ExternalResourceDescriptor descriptor,
-                                            final Container container) {
+    protected static Resource loadContainer( final ExternalResourceDescriptor descriptor,
+                                             final Container container ) {
         Resource resource = null;
         if (container != null) {
             final ExternalResourceLoader loader = new ExternalResourceLoader();
@@ -353,7 +303,7 @@ public class PrimitiveTypeManager {
         String resourceURL = null;
         try {
             final URL installURL = FileLocator.resolve(Uml2Plugin.getDefault().getBundle().getEntry("/")); //$NON-NLS-1$
-			resourceURL = FileLocator.toFileURL(new URL(installURL, UML_PRIMITIVE_TYPES_ZIP_FILE_NAME)).getFile();
+            resourceURL = FileLocator.toFileURL(new URL(installURL, UML_PRIMITIVE_TYPES_ZIP_FILE_NAME)).getFile();
             if (resourceURL == null || resourceURL.length() == 0) {
                 Uml2Plugin.Util.log(IStatus.ERROR, getString(MESSAGE_ID_4, UML_PRIMITIVE_TYPES_ZIP_FILE_NAME));
             } else {

@@ -193,8 +193,8 @@ public class ModelUtil {
     }
 
     /**
-     * Return true if the IResource represents a MetaMatrix model file, this method also check if the file exists in a project
-     * with model nature.
+     * Return true if the IResource represents a Federate Designer model file, this method also check if the file exists in a
+     * project with model nature.
      * 
      * @param resource The file that may be a model file
      * @return true if it is a ModelFile and part of a ModelProject
@@ -204,7 +204,7 @@ public class ModelUtil {
     }
 
     /**
-     * Return true if the IPath represents a MetaMatrix model file,
+     * Return true if the IPath represents a Federate Designer model file,
      * 
      * @param path The file that may be a model file
      * @return true if it is a has a model file extension
@@ -215,8 +215,8 @@ public class ModelUtil {
     }
 
     /**
-     * Return true if the IResource represents a MetaMatrix model file, this method may also check if the file exists in a project
-     * with model nature.
+     * Return true if the IResource represents a Federate Designer model file, this method may also check if the file exists in a
+     * project with model nature.
      * 
      * @param resource The file that may be a model file
      * @param projectCheck A boolean to determine to perform 'model part of model project' check.
@@ -239,8 +239,8 @@ public class ModelUtil {
     }
 
     /**
-     * Return true if the File represents a MetaMatrix model file or an xsd file this method does not check if the file exists in
-     * a project with model nature. Returns a false for vdb files.
+     * Return true if the File represents a Federate Designer model file or an xsd file this method does not check if the file
+     * exists in a project with model nature. Returns a false for vdb files.
      * 
      * @param resource The file that may be a model file
      * @return true if it is a ModelFile.
@@ -250,8 +250,8 @@ public class ModelUtil {
     }
 
     /**
-     * Return true if the File represents a MetaMatrix model file, this method does not check if the file exists in a project with
-     * model nature.
+     * Return true if the File represents a Federate Designer model file, this method does not check if the file exists in a
+     * project with model nature.
      * 
      * @param resource The file that may be a model file
      * @return true if it is a ModelFile.
@@ -288,7 +288,7 @@ public class ModelUtil {
     /**
      * Return the XMIHeader for the specified inputstream of a model file.
      * 
-     * @param resourceStream The inputStream of a metamatrix model file.
+     * @param resourceStream The inputStream of a Federate Designer model file.
      * @return The XMIHeader for the model file
      */
     public static XMIHeader getXmiHeader( final InputStream resourceStream ) {
@@ -296,9 +296,9 @@ public class ModelUtil {
     }
 
     /**
-     * Return the XMIHeader for the specified File or null if the file does not represent a MetaMatrix model file.
+     * Return the XMIHeader for the specified File or null if the file does not represent a Federate Designer model file.
      * 
-     * @param resource The file of a metamatrix model file.
+     * @param resource The file of a Federate Designer model file.
      * @return The XMIHeader for the model file
      */
     public static XMIHeader getXmiHeader( final File resource ) {
@@ -306,9 +306,9 @@ public class ModelUtil {
     }
 
     /**
-     * Return the XMIHeader for the specified IResource or null if the file does not represent a MetaMatrix model file.
+     * Return the XMIHeader for the specified IResource or null if the file does not represent a Federate Designer model file.
      * 
-     * @param resource The IResource of a metamatrix model file.
+     * @param resource The IResource of a Federate Designer model file.
      * @return The XMIHeader for the model file
      */
     public static XMIHeader getXmiHeader( final IResource resource ) {
@@ -334,7 +334,7 @@ public class ModelUtil {
     /**
      * Return the VdbHeader for the specified vdb file or null if the file does not represent a vdb.
      * 
-     * @param resource The file of a metamatrix vdb file.
+     * @param resource The file of a Federate Designer vdb file.
      * @return The VdbHeader for the model file
      */
     public static VdbHeader getVdbHeader( final File resource ) {
@@ -353,7 +353,7 @@ public class ModelUtil {
     /**
      * Return the XsdHeader for the specified xsd file or null if the file does not represent a XSD.
      * 
-     * @param resource The file of a metamatrix xsd file.
+     * @param resource The file of a Federate Designer xsd file.
      * @return The XsdHeader for the model file
      */
     public static XsdHeader getXsdHeader( final File resource ) {
@@ -461,10 +461,10 @@ public class ModelUtil {
     }
 
     /**
-     * Return true if the IResource represents a MetaMatrix xmi model file.
+     * Return true if the IResource represents a Federate Designer xmi model file.
      * 
-     * @param resource The file that may be a MetaMatrix xmi model file
-     * @return true if it is a MetaMatrix xmi model
+     * @param resource The file that may be a Federate Designer xmi model file
+     * @return true if it is a Federate Designer xmi model
      */
     public static boolean isXmiFile( final File resource ) {
         // Check that the resource has the correct lower-case extension
@@ -486,7 +486,7 @@ public class ModelUtil {
                     return false;
                 }
                 // If the UUID for the header is not null, then the file is a
-                // MetaMatrix model file containing a ModelAnnotation element.
+                // Federate Designer model file containing a ModelAnnotation element.
                 if (header.getUUID() != null) {
                     return true;
                 }
@@ -496,10 +496,10 @@ public class ModelUtil {
     }
 
     /**
-     * Return true if the Resource represents a MetaMatrix xmi model file.
+     * Return true if the Resource represents a Federate Designer xmi model file.
      * 
-     * @param resource The file that may be a MetaMatrix xmi model file
-     * @return true if it is a MetaMatrix xmi model
+     * @param resource The file that may be a Federate Designer xmi model file
+     * @return true if it is a Federate Designer xmi model
      */
     public static boolean isXmiFile( final Resource resource ) {
         if (resource != null) {
@@ -511,10 +511,10 @@ public class ModelUtil {
     }
 
     /**
-     * Return true if the IResource represents a MetaMatrix xmi model file.
+     * Return true if the IResource represents a Federate Designer xmi model file.
      * 
-     * @param resource The file that may be a MetaMatrix xmi model file
-     * @return true if it is a MetaMatrix xmi model
+     * @param resource The file that may be a Federate Designer xmi model file
+     * @return true if it is a Federate Designer xmi model
      */
     public static boolean isXmiFile( final IResource resource ) {
         // Check that the resource has the correct lower-case extension
@@ -529,7 +529,7 @@ public class ModelUtil {
                     return false;
                 }
                 // If the UUID for the header is not null, then the file is a
-                // MetaMatrix model file containing a ModelAnnotation element.
+                // Federate Designer model file containing a ModelAnnotation element.
                 if (header.getUUID() != null) {
                     return true;
                 }
@@ -552,7 +552,7 @@ public class ModelUtil {
     }
 
     /**
-     * Return true if the IResource represents a MetaMatrix vdb file.
+     * Return true if the IResource represents a Federate Designer vdb file.
      * 
      * @param resource The file that may be a vdb file
      * @return true if it is a vdb File.

@@ -153,9 +153,6 @@ import com.metamatrix.vdb.materialization.template.TemplateData;
  */
 public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEditingContext {
 
-    // ============================================================================================================================
-    // Constants
-
     private static final boolean DEBUG_ON = ModelerCore.DEBUG_VDB_EDITING_CONTEXT;
 
     protected static final int AMOUNT_OF_WORK_FOR_MANIFEST_MODEL = 400;
@@ -647,36 +644,6 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
 
     }
 
-    // private void resolveSchemaDirectives() {
-    // final List resources = new ArrayList(this.getVdbContainer().getResources());
-    // for (Iterator iter = resources.iterator(); iter.hasNext();) {
-    // final Resource resource = (Resource)iter.next();
-    //
-    // if (resource instanceof XSDResourceImpl) {
-    // XSDResourceImpl xsdResource = (XSDResourceImpl)resource;
-    // boolean hasUnresolvedDirectives = false;
-    //                
-    // // Check if any unresolved XSDSchemaDirective in the schema
-    // for (final Iterator i = xsdResource.getSchema().eContents().iterator(); i.hasNext();) {
-    // EObject eObj = (EObject)i.next();
-    // if (eObj instanceof XSDSchemaDirective) {
-    // XSDSchemaDirective directive = (XSDSchemaDirective)eObj;
-    // XSDSchema resolvedSchema = directive.getResolvedSchema();
-    // if (resolvedSchema == null || resolvedSchema.eIsProxy()) {
-    // hasUnresolvedDirectives = true;
-    // break;
-    // }
-    // }
-    // }
-    //                
-    // // If unresolved XSDSchemaDirective were found, resolve by resetting the XSDSchema
-    // if (hasUnresolvedDirectives) {
-    // xsdResource.getSchema().reset();
-    // }
-    // }
-    // }
-    // }
-
     /**
      * @see com.metamatrix.vdb.edit.VdbEditingContext#isOpen()
      */
@@ -726,7 +693,7 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
                 // if true, ignore all operations and save the VDB
                 boolean hasFatalProblems = false;
 
-                // Add the MetaMatrix "built-in types" resource to the VDB
+                // Add the built-in types resource to the VDB
                 addGlobalResourcesToInternalResourceSet();
 
                 // Depending on the order the XSDResources were loaded into the VDB there may
@@ -872,21 +839,6 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
                             problems.add(genStatus);
                         }
                     }
-
-                    // // Create a Resource in the editor's internal resource set for the generated wsdl model
-                    // if (wsdlFile != null) {
-                    // URI fakeUri = this.getInternalResourceUri(GENERATED_WSDL_FILENAME);
-                    // try {
-                    // InputStream istream = new FileInputStream(wsdlFile);
-                    // this.addToInternalResourceSet(istream, fakeUri, GENERATED_WSDL_FILENAME);
-                    // } catch (IOException e) {
-                    // final Object[] params = new Object[]{wsdlFile.getAbsolutePath(),this.vdbFilePath};
-                    // final String msg =
-                    // VdbEditPlugin.Util.getString("VdbEditingContextImpl.ErrorWritingTemporaryFileForWsdl",params);
-                    // //$NON-NLS-1$
-                    // problems.add( new Status(IStatus.ERROR,VdbEditPlugin.PLUGIN_ID,0,msg,e));
-                    // }
-                    // }
                 } else {
                     monitor.worked(AMOUNT_OF_WORK_FOR_WSDL);
                 }
@@ -2067,21 +2019,6 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
             return existing;
         }
 
-        // Disabling the following check until we can determine a consistent policy about DEF files in a VDB.
-        // The DEF file should be the same name as the VDB so what happens if the VDB is renamed?
-        // // Make sure there is only one DEF file per vdb and prevent someone from adding a
-        // // second DEF file in different location
-        // if(fileName.endsWith(CoreConstants.EXPORTED_VDB_FILE_EXTENSION)) {
-        // for (final Iterator iter = this.getVirtualDatabase().getNonModels().iterator(); iter.hasNext();) {
-        // final NonModelReference nonModelRef = (NonModelReference)iter.next();
-        // if (nonModelRef.getName().endsWith(CoreConstants.EXPORTED_VDB_FILE_EXTENSION)) {
-        //                    final String msg = VdbEditPlugin.Util.getString("VdbEditingContextImpl.definition_already_exists"); //$NON-NLS-1$
-        // final IStatus status = new Status(IStatus.ERROR, VdbEditPlugin.PLUGIN_ID, IStatus.OK, msg, null);
-        // throw new VdbEditException(status);
-        // }
-        // }
-        // }
-
         // If the file does not exist on the file system ...
         final String filePath = nonModel.getAbsolutePath();
         if (!nonModel.exists()) {
@@ -2505,7 +2442,7 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
                 primaryMetamodelUri = XSDPackage.eNS_URI;
 
                 // Else no ModelResource was found so the path must represent a
-                // non-MetaMatrix model file so store information about the
+                // non-Federate Designer model file so store information about the
                 // file in the ModelReference properties
             } else {
                 // Set the model type information on the reference
@@ -3293,12 +3230,6 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
         return results;
     }
 
-    // =========================================================================
-    // Helper Methods
-    // =========================================================================
-
-    /**
-     */
     protected IStatus produce( final IStatus modelStatus,
                                final List indexFiles,
                                final List indexFilenames,
@@ -3460,8 +3391,8 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
     }
 
     /**
-     * Add {@link Resource}references to the specified list for any of the well-known MetaMatrix/Emf resources that are required
-     * for index file production such as
+     * Add {@link Resource}references to the specified list for any of the well-known Federate Designer/Emf resources that are
+     * required for index file production such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
      * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
@@ -3475,7 +3406,7 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
 
         final List problems = new LinkedList();
 
-        // Add a reference to the MetaMatrix "built-in datatypes" resource
+        // Add a reference to the built-in datatypes resource
         URI builtInDatatypesURI = URI.createURI(DatatypeConstants.BUILTIN_DATATYPES_URI);
         Resource builtInDatatypes = getVdbContainer().getResource(builtInDatatypesURI, false);
         if (builtInDatatypes != null && !eResources.contains(builtInDatatypes)) {
@@ -3489,8 +3420,8 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
 
     // dffFIXME - finish implementation
     /**
-     * Add {@link Resource}references to the specified list for any of the well-known MetaMatrix/Emf resources that are required
-     * for index file production such as
+     * Add {@link Resource}references to the specified list for any of the well-known Federate Designer/Emf resources that are
+     * required for index file production such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
      * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
@@ -3506,7 +3437,7 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
 
         try {
             // Create a list of any XSDSchemaDirectives and ModelImports that reference the
-            // MetaMatrix "built-in datatypes" resource identified by
+            // built-in datatypes resource identified by
             // "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"
             final List xsdDirectives = new ArrayList();
             final List modelImports = new ArrayList();
@@ -3552,10 +3483,10 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
                 IPath builtInDatatypesPath = new Path(builtInDatatypesName);
                 URI internalResourceUri = this.getInternalResourceUri(builtInDatatypesPath);
 
-                // Add a reference to the MetaMatrix "built-in datatypes" resource
+                // Add a reference to the built-in datatypes resource
                 if (builtInDatatypes != null && !getVdbContainer().getResources().contains(builtInDatatypes)) {
 
-                    // Add the MetaMatrix "built-in datatypes" resource to the temporary directory folder
+                    // Add the built-in datatypes resource to the temporary directory folder
                     File tempDirFile = null;
                     InputStream istream = null;
                     try {
@@ -3564,7 +3495,7 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
                         VdbEditPlugin.Util.log(IStatus.ERROR, theException, theException.getLocalizedMessage());
                     }
 
-                    // Add the MetaMatrix "built-in datatypes" resource to the internal resource set
+                    // Add the built-in datatypes resource to the internal resource set
                     try {
                         if (tempDirFile != null && tempDirFile.exists()) {
                             istream = new FileInputStream(tempDirFile);
@@ -4282,10 +4213,6 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
 
     }
 
-    // =========================================================================
-    // Methods that can be overridden to specialize behavior
-    // =========================================================================
-
     /**
      * Create the options used when saving and loading the manifest model. This implementation returns an empty map.
      * 
@@ -4515,10 +4442,6 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
         container.getMarkers().clear();
     }
 
-    // -------------------------------------------------------------------------
-    // Helper methods for accessing vdb archive resources
-    // -------------------------------------------------------------------------
-
     /**
      * Return an InputStream to the archive entry specified by the ModelReference
      * 
@@ -4568,10 +4491,6 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
 
         return istream;
     }
-
-    // --------------------------------------------------------------------------------
-    // Helper methods for maintaining the vdb editing context internal resource set
-    // --------------------------------------------------------------------------------
 
     /**
      * Return the URI for the internal resource
@@ -4817,10 +4736,6 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
             this.pathsByResourceUri.remove(eResource.getURI()); // remove last!
         }
     }
-
-    // --------------------------------------------------------------------------------
-    // Helper methods for maintaining the vdb editing context temp directory
-    // --------------------------------------------------------------------------------
 
     protected synchronized TempDirectory getTempDirectory() {
         if (this.tempDirectory == null) {
@@ -5162,10 +5077,6 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
         // Remember that template data has been created for this table
         created.add(virtTable);
     }
-
-    // --------------------------------------------------------------------------------
-    // Helper methods for ????
-    // --------------------------------------------------------------------------------
 
     private long getCheckSum( final File f ) {
         ArgCheck.isNotNull(f);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:Transformation="http://www.metamatrix.com/metamodels/Transformation" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
-  <mmcore:ModelAnnotation xmi:uuid="mmuuid:d506a080-3d40-1f1c-b821-997729710353" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="VIRTUAL" ProducerName="MetaMatrix" ProducerVersion="5.0">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:d506a080-3d40-1f1c-b821-997729710353" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="VIRTUAL" ProducerName="Federate Designer" ProducerVersion="5.0">
     <modelImports xmi:uuid="mmuuid:68288782-d2f6-1f84-aa04-f32fa0061602" name="US_CustomerAccounts" modelLocation="../DataSources/US_CustomerAccounts.xmi" uuid="mmuuid:7680aa80-2f6a-1f1c-b821-997729710353" modelType="PHYSICAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>
     <modelImports xmi:uuid="mmuuid:84df8c40-3d48-1f1c-b821-997729710353" name="DataDictionary" modelLocation="DataDictionary.xsd"/>
     <modelImports xmi:uuid="mmuuid:2c227905-6a4b-1f32-8a2a-f810bd78f363" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema"/>

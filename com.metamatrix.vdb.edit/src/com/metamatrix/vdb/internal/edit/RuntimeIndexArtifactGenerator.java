@@ -249,7 +249,7 @@ public class RuntimeIndexArtifactGenerator implements VdbArtifactGenerator {
     }
 
     /**
-     * Add a reference to the MetaMatrix "built-in datatypes" resource, referenced by the URI
+     * Add a reference to the built-in datatypes resource, referenced by the URI
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" to the specified list
      */
     protected void addGlobalResourcesToList( final InternalVdbGenerationContext context,

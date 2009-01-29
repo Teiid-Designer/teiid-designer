@@ -24,7 +24,6 @@ import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.vdb.edit.VdbGenerationContext;
 import com.metamatrix.vdb.edit.VdbGenerationContext.ModelType;
 
-
 /**
  * @since 4.2
  */
@@ -48,7 +47,7 @@ public class VdbGenerationModelHelper implements VdbGenerationContext.ModelHelpe
      * @see com.metamatrix.vdb.edit.VdbGenerationContext.ModelObjectHelper#getUuid(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public String getUuid(Resource model) {
+    public String getUuid( Resource model ) {
         ArgCheck.isNotNull(model);
         final ObjectID id = getObjectId(model);
         return id.toString();
@@ -58,80 +57,67 @@ public class VdbGenerationModelHelper implements VdbGenerationContext.ModelHelpe
      * @see com.metamatrix.vdb.edit.VdbGenerationContext.ModelObjectHelper#getUuid(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public ObjectID getObjectId(Resource model) {
-        if ( model instanceof EmfResource ) {
+    public ObjectID getObjectId( Resource model ) {
+        if (model instanceof EmfResource) {
             final EmfResource emfResource = (EmfResource)model;
             final ModelAnnotation modelAnn = emfResource.getModelAnnotation();
-            if ( modelAnn != null ) {
+            if (modelAnn != null) {
                 return ModelerCore.getObjectId(modelAnn);
             }
         }
         return null;
     }
 
-
     /**
      * @see com.metamatrix.vdb.edit.VdbGenerationContext.ModelHelper#getName(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.2
      */
-    public String getName(Resource model) {
+    public String getName( Resource model ) {
         return (String)this.modelNameByResource.get(model);
     }
-
 
     /**
      * @see com.metamatrix.vdb.edit.VdbGenerationContext.ModelHelper#getPath(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.2
      */
-    public String getPath(Resource model) {
+    public String getPath( Resource model ) {
         return (String)this.modelPathByResource.get(model);
     }
-
 
     /**
      * @see com.metamatrix.vdb.edit.VdbGenerationContext.ModelHelper#getDescription(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.2
      */
-    public String getDescription(Resource model) {
-        if ( model instanceof EmfResource ) {
+    public String getDescription( Resource model ) {
+        if (model instanceof EmfResource) {
             final EmfResource emfResource = (EmfResource)model;
             final ModelAnnotation modelAnn = emfResource.getModelAnnotation();
-            if ( modelAnn != null ) {
+            if (modelAnn != null) {
                 return modelAnn.getDescription();
             }
-        } else if ( model instanceof XSDResourceImpl ) {
-            //final XSDSchema xsd = ((XSDResourceImpl)model).getSchema();
-            //final List annotations = xsd.getAnnotations();
-            //final Iterator iter = annotations.iterator();
-            //while (iter.hasNext()) {
-            //    final XSDAnnotation annotation = (XSDAnnotation)iter.next();
-            //    final List userInfos = annotation.getUserInformation();
-            //    //final Iterator userInfoIter = userInfos.iterator();
-            //}
         }
         return null;
     }
-
 
     /**
      * @see com.metamatrix.vdb.edit.VdbGenerationContext.ModelHelper#getPrimaryMetamodelUri(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.2
      */
-    public String getPrimaryMetamodelUri(Resource model) {
-        // Look for MetaMatrix resources ...
-        if ( model instanceof EmfResource ) {
-            final EmfResource emfResource = (EmfResource) model;
+    public String getPrimaryMetamodelUri( Resource model ) {
+        // Look for model resources ...
+        if (model instanceof EmfResource) {
+            final EmfResource emfResource = (EmfResource)model;
             final ModelContents contents = emfResource.getModelContents();
-            if ( contents != null ) {
+            if (contents != null) {
                 final ModelAnnotation modelAnnotation = contents.getModelAnnotation();
-                if ( modelAnnotation != null ) {
+                if (modelAnnotation != null) {
                     return modelAnnotation.getPrimaryMetamodelUri();
                 }
             }
         }
 
         // Look for XSD resources ...
-        if ( model instanceof XSDResourceImpl ) {
+        if (model instanceof XSDResourceImpl) {
             return XSDPackage.eNS_URI;
         }
 
@@ -143,16 +129,16 @@ public class VdbGenerationModelHelper implements VdbGenerationContext.ModelHelpe
      * @see com.metamatrix.vdb.edit.VdbGenerationContext.ModelHelper#getTargetNamespaceUri(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.2
      */
-    public String getTargetNamespaceUri(Resource model) {
-        if ( model instanceof EmfResource ) {
+    public String getTargetNamespaceUri( Resource model ) {
+        if (model instanceof EmfResource) {
             final EmfResource emfResource = (EmfResource)model;
             final ModelAnnotation modelAnn = emfResource.getModelAnnotation();
-            if ( modelAnn != null ) {
-                //return modelAnn.getTargetNamespace();
+            if (modelAnn != null) {
+                // return modelAnn.getTargetNamespace();
             }
-        } else if ( model instanceof XSDResourceImpl ) {
+        } else if (model instanceof XSDResourceImpl) {
             final XSDSchema schema = ((XSDResourceImpl)model).getSchema();
-            if ( schema != null ) {
+            if (schema != null) {
                 return schema.getTargetNamespace();
             }
         }
@@ -163,16 +149,16 @@ public class VdbGenerationModelHelper implements VdbGenerationContext.ModelHelpe
      * @see com.metamatrix.vdb.edit.VdbGenerationContext.ModelObjectHelper#getProperties(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public Properties getProperties(Resource model) {
+    public Properties getProperties( Resource model ) {
         ArgCheck.isNotNull(model);
         final Properties properties = new Properties();
-        // Look for MetaMatrix resources ...
-        if ( model instanceof EmfResource ) {
-            final EmfResource emfResource = (EmfResource) model;
+        // Look for model resources ...
+        if (model instanceof EmfResource) {
+            final EmfResource emfResource = (EmfResource)model;
             final ModelContents contents = emfResource.getModelContents();
-            if ( contents != null ) {
+            if (contents != null) {
                 final ModelAnnotation modelAnnotation = contents.getModelAnnotation();
-                if ( modelAnnotation != null ) {
+                if (modelAnnotation != null) {
                     final EMap props = modelAnnotation.getTags();
                     final Iterator iter = props.iterator();
                     while (iter.hasNext()) {
@@ -191,29 +177,29 @@ public class VdbGenerationModelHelper implements VdbGenerationContext.ModelHelpe
      * @see com.metamatrix.vdb.edit.VdbGenerationContext.ModelHelper#getModelType(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.3
      */
-    public ModelType getModelType(Resource model) {
+    public ModelType getModelType( Resource model ) {
         ArgCheck.isNotNull(model);
 
         com.metamatrix.metamodels.core.ModelType type = null;
 
-        // Look for MetaMatrix resources ...
-        if ( model instanceof EmfResource ) {
-            final EmfResource emfResource = (EmfResource) model;
+        // Look for model resources ...
+        if (model instanceof EmfResource) {
+            final EmfResource emfResource = (EmfResource)model;
             final ModelContents contents = emfResource.getModelContents();
-            if ( contents != null ) {
+            if (contents != null) {
                 final ModelAnnotation modelAnnotation = contents.getModelAnnotation();
-                if ( modelAnnotation != null ) {
+                if (modelAnnotation != null) {
                     type = modelAnnotation.getModelType();
                 }
             }
         }
 
         // Look for XSD resources ...
-        if ( model instanceof XSDResourceImpl ) {
+        if (model instanceof XSDResourceImpl) {
             type = com.metamatrix.metamodels.core.ModelType.TYPE_LITERAL;
         }
 
-        if ( type == null ) {
+        if (type == null) {
             return ModelType.UNKNOWN;
         }
         return ModelType.getModelType(type);
@@ -223,7 +209,7 @@ public class VdbGenerationModelHelper implements VdbGenerationContext.ModelHelpe
      * @see com.metamatrix.vdb.edit.VdbGenerationContext.ModelHelper#isVisible(org.eclipse.emf.ecore.resource.Resource)
      * @since 4.3
      */
-    public boolean isVisible(Resource model) {
+    public boolean isVisible( Resource model ) {
         final Boolean isVisible = (Boolean)this.modelVisibilityByResource.get(model);
         return (isVisible != null ? isVisible.booleanValue() : true);
     }

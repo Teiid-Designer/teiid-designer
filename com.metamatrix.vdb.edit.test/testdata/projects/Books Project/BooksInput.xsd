@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<!-- edited with XMLSPY v5 rel. 3 U (http://www.xmlspy.com) by jpoulsen (MetaMatrix, Inc.) -->
 <xs:schema attributeFormDefault="unqualified"
     elementFormDefault="qualified"
     targetNamespace="http://metamatrix.com/books/input"

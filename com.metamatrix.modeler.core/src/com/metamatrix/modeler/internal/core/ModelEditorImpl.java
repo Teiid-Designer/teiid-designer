@@ -3827,8 +3827,7 @@ public class ModelEditorImpl implements ModelEditor {
     }
 
     /**
-     * Return a {@link XMIHeader} instance for the specified resource or null if the resource is not an instance of a MetaMatrix
-     * EmfResource.
+     * Return a {@link XMIHeader} instance for the specified resource or null if the resource is not an instance of a EmfResource.
      * 
      * @param resource
      * @return
@@ -4065,7 +4064,7 @@ public class ModelEditorImpl implements ModelEditor {
 
         // If the URI of the proxy resource is a logical URI of a built-in resource then use this value as the location
         if (uriString.startsWith("http") || //$NON-NLS-1$
-            uriString.startsWith(ResourceFinder.METAMATRIX_METAMODEL_PREFIX)
+            uriString.startsWith(ResourceFinder.METAMODEL_PREFIX)
             || uriString.startsWith(ResourceFinder.UML2_METAMODELS_PREFIX)) {
             newModelLocation = uriString;
             if (isVdbResource && newModelLocation.equalsIgnoreCase(DatatypeConstants.BUILTIN_DATATYPES_URI)) {

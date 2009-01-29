@@ -821,7 +821,7 @@ public class RelationalObjectGeneratorImpl implements RelationalObjectGenerator 
         } else {
 
             /*
-             * In this case we just create a new table with a column with the default MetaMatrix relational datatype
+             * In this case we just create a new table with a column with the default relational datatype
              * as specified in the generator wizard as a place to put the property value.  We then create a foreign key
              * to that table.  This is a fix for defect 14928 whereby no relational output at all was being generated
              * for the property in this situation.
@@ -907,7 +907,7 @@ public class RelationalObjectGeneratorImpl implements RelationalObjectGenerator 
 
         } else {
             /*
-             * In this case we just create a column with the default MetaMatrix relational datatype
+             * In this case we just create a column with the default relational datatype
              * as specified in the generator wizard as a placeholder for the property value. This
              * is a fix for defect 14928 whereby no relational output at all was being generated
              * for the property in this situation.

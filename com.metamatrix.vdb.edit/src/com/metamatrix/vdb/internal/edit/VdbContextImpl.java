@@ -116,10 +116,6 @@ public class VdbContextImpl implements VdbContext {
 
     private Properties executionProperties;
 
-    // ==================================================================================
-    // C O N S T R U C T O R S
-    // ==================================================================================
-
     /**
      * Create an instance of the context for the specified VDB file. If the file does not yet exist on the file system it is
      * considered a new VDB. The VDB may be opened or viewed through this context but cannot be modified.
@@ -146,10 +142,6 @@ public class VdbContextImpl implements VdbContext {
         this.vetoListeners = new ListenerList(ListenerList.IDENTITY);
 
     }
-
-    // ==================================================================================
-    // I N T E R F A C E M E T H O D S
-    // ==================================================================================
 
     /**
      * @see com.metamatrix.vdb.edit.VdbContext#getTempDirectory()
@@ -719,10 +711,6 @@ public class VdbContextImpl implements VdbContext {
         return this.executionProperties;
     }
 
-    // ==================================================================================
-    // P R O T E C T E D M E T H O D S
-    // ==================================================================================
-
     protected void assertContextIsOpen() {
         if (!isOpen()) {
             final String msg = VdbEditPlugin.Util.getString("VdbContextImpl.Context_must_be_open_before_calling"); //$NON-NLS-1$
@@ -820,10 +808,6 @@ public class VdbContextImpl implements VdbContext {
         final IPath path = new Path(pathInArchive);
         return (path.segmentCount() == 1 ? path.removeTrailingSeparator().makeRelative() : path.makeAbsolute());
     }
-
-    // -------------------------------------------------------------------------
-    // Helper methods for accessing vdb archive entries
-    // -------------------------------------------------------------------------
 
     protected File writeArchiveEntryToTempDirectory( final String pathInArchive,
                                                      final ZipFile archiveFile,
@@ -941,10 +925,6 @@ public class VdbContextImpl implements VdbContext {
 
         return istream;
     }
-
-    // --------------------------------------------------------------------------------
-    // Helper methods for accessing temp directory files
-    // --------------------------------------------------------------------------------
 
     protected File copyTempDirectoryEntryForSave( final String pathInTempDir,
                                                   final TempDirectory sourceDir,
@@ -1168,10 +1148,6 @@ public class VdbContextImpl implements VdbContext {
         return tempDir;
     }
 
-    // --------------------------------------------------------------------------------
-    // Helper methods to work with XSD file using JDOM
-    // --------------------------------------------------------------------------------
-
     /**
      * Build a JDOM Document instance from the specified stream.
      * 
@@ -1203,7 +1179,7 @@ public class VdbContextImpl implements VdbContext {
     }
 
     /**
-     * Encode any xs:import or xs:include "schemaLocation" values such that the path can be used as a URL within a MetaMatrix
+     * Encode any xs:import or xs:include "schemaLocation" values such that the path can be used as a URL within a Federate
      * server.
      * 
      * @param doc the JDOM Document instance for the XSD file being processed
@@ -1247,7 +1223,7 @@ public class VdbContextImpl implements VdbContext {
 
                     // Next convert the import/include location to be consistent with the path to
                     // that file within the zip or temp directory then encode the path so that it
-                    // can be used as a URL within a MetaMatrix server
+                    // can be used as a URL within a Federate server
                     if (locationUri.isFile()) {
                         String relativePath = getPathRelativeToFolder(targetDirectory, new File(locationUri.toFileString()));
                         String updatedPath = encodePathForUrl(new Path(relativePath)).toString();
@@ -1268,7 +1244,7 @@ public class VdbContextImpl implements VdbContext {
 
     /**
      * Decode any xs:import or xs:include "schemaLocation" values associated with XSD files stored within a VDB. Those paths would
-     * have been previously encoded so that they can be used as a URL within a MetaMatrix server.
+     * have been previously encoded so that they can be used as a URL within a Federate server.
      * 
      * @param doc the JDOM Document instance for the XSD file being processed
      * @param pathInArchive the archive path for the XSD file being processed

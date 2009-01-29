@@ -233,7 +233,7 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
             @Override
             protected void execute( IProgressMonitor progressMonitor ) {
                 try {
-                    progressMonitor.beginTask(ModelerXsdUiConstants.Util.getString("MetaMatrixXsdEditor._22"), 10); //$NON-NLS-1$
+                    progressMonitor.beginTask(ModelerXsdUiConstants.Util.getString("XsdEditor._22"), 10); //$NON-NLS-1$
 
                     IFileEditorInput modelFile = (IFileEditorInput)getEditorInput();
                     IFile file = modelFile.getFile();
@@ -680,7 +680,7 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
                     IMarker marker = null;
                     for (int i = 0; i < markers.length; ++i) {
                         if (markers[i].getAttribute(XSDDiagnostic.URI_FRAGMENT_ATTRIBUTE,
-                                                    ModelerXsdUiConstants.Util.getString("MetaMatrixXsdEditor._29")).equals(uriReferencePath)) //$NON-NLS-1$
+                                                    ModelerXsdUiConstants.Util.getString("XsdEditor._29")).equals(uriReferencePath)) //$NON-NLS-1$
                         {
                             marker = markers[i];
                             deletableMarkers.remove(marker);
@@ -878,7 +878,7 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
                 // Get the IFile associated with the editor
                 final IResource xsdFile = ((IFileEditorInput)input).getFile();
                 if (xsdFile == null) {
-                    final String msg = ModelerXsdUiConstants.Util.getString("MetaMatrixXsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", input.getName()); //$NON-NLS-1$
+                    final String msg = ModelerXsdUiConstants.Util.getString("XsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", input.getName()); //$NON-NLS-1$
                     throw new PartInitException(msg);
                 }
 
@@ -889,7 +889,7 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
 
                 // The resource must exist in the container
                 if (xsdResource == null) {
-                    final String msg = ModelerXsdUiConstants.Util.getString("MetaMatrixXsdEditor.Input_Error__Model_Editor_cannot_open_{0}_1", input.getName()); //$NON-NLS-1$
+                    final String msg = ModelerXsdUiConstants.Util.getString("XsdEditor.Input_Error__Model_Editor_cannot_open_{0}_1", input.getName()); //$NON-NLS-1$
                     throw new PartInitException(msg);
                 }
 
@@ -897,16 +897,16 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
                 ModelUtilities.addNotifyChangedListener(notifyChangedListener);
 
             } catch (ModelWorkspaceException e) {
-                final String msg = ModelerXsdUiConstants.Util.getString("MetaMatrixXsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", input.getName()); //$NON-NLS-1$
+                final String msg = ModelerXsdUiConstants.Util.getString("XsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", input.getName()); //$NON-NLS-1$
                 throw new PartInitException(msg, e);
             } catch (CoreException e) {
-                final String msg = ModelerXsdUiConstants.Util.getString("MetaMatrixXsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", input.getName()); //$NON-NLS-1$
+                final String msg = ModelerXsdUiConstants.Util.getString("XsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", input.getName()); //$NON-NLS-1$
                 throw new PartInitException(msg, e);
             }
 
         } else {
             throw new PartInitException(
-                                        ModelerXsdUiConstants.Util.getString("MetaMatrixXsdEditor.Invalid_Input__Must_be_IFileEditorInput._33")); //$NON-NLS-1$
+                                        ModelerXsdUiConstants.Util.getString("XsdEditor.Invalid_Input__Must_be_IFileEditorInput._33")); //$NON-NLS-1$
         }
     }
 

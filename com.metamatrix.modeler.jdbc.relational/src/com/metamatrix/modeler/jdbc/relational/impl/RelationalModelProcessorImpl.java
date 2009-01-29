@@ -1019,8 +1019,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
 
         // Check for an invalid name ...
         if (nodeName == null || nodeName.trim().length() == 0) {
-            // There is no reason to model Relational objects that have no name, since
-            // they can't be used by a MetaMatrix client application!
+            // There is no reason to model Relational objects that have no name, since they can't be used by a client application!
             final String typeName = node.getTypeName();
             final Object[] params = new Object[] {typeName};
             final String msg = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.Skipping_{0}_with_no_name", params); //$NON-NLS-1$
@@ -1028,7 +1027,6 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                               com.metamatrix.modeler.jdbc.relational.ModelerJdbcRelationalConstants.PLUGIN_ID, 0,
                                               msg, null);
             problems.add(status);
-            // return null;
         }
 
         RelationalEntity obj = null;

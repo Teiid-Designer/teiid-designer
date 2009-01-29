@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:relational="http://www.metamatrix.com/metamodels/Relational">
-  <mmcore:ModelAnnotation xmi:uuid="mmuuid:f8384100-0dae-1eec-8518-c32201e76066" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" ProducerName="MetaMatrix" ProducerVersion="5.5">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:f8384100-0dae-1eec-8518-c32201e76066" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" ProducerName="Federate Designer" ProducerVersion="5.5">
     <modelImports xmi:uuid="mmuuid:fbd7c501-bf14-1f2c-9911-b53abd16b14e" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema" modelType="PHYSICAL" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
     <modelImports xmi:uuid="mmuuid:f0d089f8-73cb-106f-a731-824b328fab95" name="ChameleonDatatypes" modelLocation="ChameleonDatatypes.xsd" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
   </mmcore:ModelAnnotation>

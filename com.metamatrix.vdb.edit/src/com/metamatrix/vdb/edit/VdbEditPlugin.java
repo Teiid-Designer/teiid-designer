@@ -153,7 +153,7 @@ public class VdbEditPlugin extends Plugin {
     /**
      * Called by the {@link com.metamatrix.metamodels.transformation.provider.TransformationEditPlugin}
      * 
-     * @return the EMF ResourceLocator used when run as a plugin
+     * @return the EMF ResourceLocator used when run as a plug-in
      */
     public static ResourceLocator getPluginResourceLocator() {
         return RESOURCE_LOCATOR;
@@ -196,7 +196,7 @@ public class VdbEditPlugin extends Plugin {
     public static final String URL_FOR_DATA_WEBSERVICE = com.metamatrix.core.CoreConstants.URL_FOR_DATA_WEBSERVICE;
 
     /**
-     * Constant that defines the replaceable token in WSDL generated in the VDB which represents the Metamatrix Server properties
+     * Constant that defines the replaceable token in WSDL generated in the VDB which represents the Federate Server properties
      * for connecting the to VDB.
      */
     public static final String ACTION_PREFIX_FOR_DATA_WEBSERVICE = com.metamatrix.core.CoreConstants.ACTION_PREFIX_FOR_DATA_WEBSERVICE;

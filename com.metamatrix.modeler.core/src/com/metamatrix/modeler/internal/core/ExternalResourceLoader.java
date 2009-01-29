@@ -73,7 +73,7 @@ public class ExternalResourceLoader {
         }
         if (!ModelUtil.isModelFile(resourceFile)) {
             throw new ModelerCoreException(
-                                           ModelerCore.Util.getString("ExternalResourceLoader.The_external_resource_with_the_name_is_not_a_MetaMatrix_model_resource._8", resourceName)); //$NON-NLS-1$
+                                           ModelerCore.Util.getString("ExternalResourceLoader.The_external_resource_with_the_name_is_not_a_model_resource._8", resourceName)); //$NON-NLS-1$
         }
 
         // Load the EMF resource into the container

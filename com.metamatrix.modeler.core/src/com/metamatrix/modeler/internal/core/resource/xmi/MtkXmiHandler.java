@@ -673,7 +673,7 @@ public class MtkXmiHandler extends SAXXMIHandler {
 
             // If the modelLocation value represents a logical location of a built-in resource then ignore it
             if (modelLocation.startsWith("http") || //$NON-NLS-1$
-                modelLocation.startsWith(ResourceFinder.METAMATRIX_METAMODEL_PREFIX)
+                modelLocation.startsWith(ResourceFinder.METAMODEL_PREFIX)
                 || modelLocation.startsWith(ResourceFinder.UML2_METAMODELS_PREFIX)) {
                 unconvertedImports.remove(modelImport);
                 continue;

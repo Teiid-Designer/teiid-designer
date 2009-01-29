@@ -106,12 +106,6 @@ public class DiagramPlugin extends Plugin {
     static DiagramPlugin INSTANCE = null;
 
     /**
-     * Construct an instance of MetaMatrixPlugin.
-     */
-    public DiagramPlugin() {
-    }
-
-    /**
      * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
      * @since 4.3.2
      */

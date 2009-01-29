@@ -221,7 +221,7 @@ public class EmfResourceSetImpl extends ResourceSetImpl implements EmfResourceSe
             // If the resource was still not found, check if the resource URI has a
             // file extension that is currently unknown to the resource factory registry
             if (resource == null) {
-                // If this URI represents a MetaMatrix model file for which
+                // If this URI represents a Federate Designer model file for which
                 // there is no set Resource.Factory registered, then register
                 // one before loading it.  Fix for defect 11168.
                 this.registerResourceExtension(resourceURI,loadOnDemand);
@@ -450,7 +450,7 @@ public class EmfResourceSetImpl extends ResourceSetImpl implements EmfResourceSe
 
     /**
      * Register a Resource.Factory for URI's file extension if this URI represents
-     * a MetaMatrix model file for which there is no set factory.
+     * a Federate Designer model file for which there is no set factory.
      */
     protected void registerResourceExtension(final URI uri, final boolean loadOnDemand) {
         // If we are demanding the load of a resource for which we do not
@@ -484,7 +484,7 @@ public class EmfResourceSetImpl extends ResourceSetImpl implements EmfResourceSe
                     return;
                 }
                 // If the UUID for the header is not null, then the file is a
-                // MetaMatrix model file containing a ModelAnnotation element
+                // Federate Designer model file containing a ModelAnnotation element
                 // Register the same Resource.Factory used with .xmi model files
                 // for this extension ...
                 if (header.getUUID() != null) {

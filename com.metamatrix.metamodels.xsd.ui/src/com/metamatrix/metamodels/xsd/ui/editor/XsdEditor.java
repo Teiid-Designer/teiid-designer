@@ -186,7 +186,7 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 /**
  * This is a an example of a xsd model editor.
  */
-public class MetaMatrixXsdEditor extends MultiPageEditorPart
+public class XsdEditor extends MultiPageEditorPart
     implements IEditingDomainProvider, ISelectionProvider, IMenuListener, IGotoMarker {
 
     /**
@@ -326,7 +326,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
     /**
      * This creates a model editor.
      */
-    public MetaMatrixXsdEditor() {
+    public XsdEditor() {
         super();
 
         // Create an adapter factory that yields item providers.
@@ -453,13 +453,13 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
             }
         } else if (workbenchPart instanceof ContentOutline) {
             if (((ContentOutline)workbenchPart).getCurrentPage() == contentOutlinePage) {
-                getEditorSite().getActionBarContributor().setActiveEditor(MetaMatrixXsdEditor.this);
+                getEditorSite().getActionBarContributor().setActiveEditor(XsdEditor.this);
 
                 setCurrentViewer(contentOutlineViewer);
             }
         } else if (workbenchPart instanceof PropertySheet) {
             if (((PropertySheet)workbenchPart).getCurrentPage() == propertySheetPage) {
-                getActionBarContributor().setActiveEditor(MetaMatrixXsdEditor.this);
+                getActionBarContributor().setActiveEditor(XsdEditor.this);
             }
         }
     }
@@ -606,16 +606,16 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
             // duplicate the menu contribution in the plugin.xml
             IMenuManager submenuManager = new MenuManager(
                                                           XsdUiPlugin.Util.getString("_UI_XSDEditor_menu"), "org.eclipse.xsdMenuID"); //$NON-NLS-1$ //$NON-NLS-2$
-            menuManager.insertAfter(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.additions_4"), submenuManager); //$NON-NLS-1$
-            submenuManager.add(new Separator(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.settings_5"))); //$NON-NLS-1$
-            submenuManager.add(new Separator(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.additions_6"))); //$NON-NLS-1$
+            menuManager.insertAfter(XsdUiPlugin.Util.getString("XsdEditor.additions_4"), submenuManager); //$NON-NLS-1$
+            submenuManager.add(new Separator(XsdUiPlugin.Util.getString("XsdEditor.settings_5"))); //$NON-NLS-1$
+            submenuManager.add(new Separator(XsdUiPlugin.Util.getString("XsdEditor.additions_6"))); //$NON-NLS-1$
 
             // prepare for child and sibling creation item addition/removal
             createChildMenuManager = new MenuManager(XsdUiPlugin.Util.getString("_UI_CreateChild_menu_item")); //$NON-NLS-1$
             createSiblingMenuManager = new MenuManager(XsdUiPlugin.Util.getString("_UI_CreateSibling_menu_item")); //$NON-NLS-1$
-            submenuManager.insertBefore(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.additions_9"), new Separator(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.actions_10"))); //$NON-NLS-1$ //$NON-NLS-2$
-            submenuManager.insertBefore(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.additions_11"), createChildMenuManager); //$NON-NLS-1$
-            submenuManager.insertBefore(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.additions_12"), createSiblingMenuManager); //$NON-NLS-1$
+            submenuManager.insertBefore(XsdUiPlugin.Util.getString("XsdEditor.additions_9"), new Separator(XsdUiPlugin.Util.getString("XsdEditor.actions_10"))); //$NON-NLS-1$ //$NON-NLS-2$
+            submenuManager.insertBefore(XsdUiPlugin.Util.getString("XsdEditor.additions_11"), createChildMenuManager); //$NON-NLS-1$
+            submenuManager.insertBefore(XsdUiPlugin.Util.getString("XsdEditor.additions_12"), createSiblingMenuManager); //$NON-NLS-1$
         }
 
         /**
@@ -623,8 +623,8 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
          */
         @Override
         public void contributeToToolBar( IToolBarManager toolBarManager ) {
-            toolBarManager.add(new Separator(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.xsd-settings_13"))); //$NON-NLS-1$
-            toolBarManager.add(new Separator(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.xsd-additions_14"))); //$NON-NLS-1$
+            toolBarManager.add(new Separator(XsdUiPlugin.Util.getString("XsdEditor.xsd-settings_13"))); //$NON-NLS-1$
+            toolBarManager.add(new Separator(XsdUiPlugin.Util.getString("XsdEditor.xsd-additions_14"))); //$NON-NLS-1$
         }
 
         /**
@@ -762,15 +762,15 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
         public void menuAboutToShow( IMenuManager menuManager ) {
             super.menuAboutToShow(menuManager);
 
-            menuManager.insertAfter(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.additions_15"), new Separator()); //$NON-NLS-1$
+            menuManager.insertAfter(XsdUiPlugin.Util.getString("XsdEditor.additions_15"), new Separator()); //$NON-NLS-1$
 
             MenuManager submenuManager = new MenuManager(XsdUiPlugin.Util.getString("_UI_CreateSibling_menu_item")); //$NON-NLS-1$
             populateManager(submenuManager, createSiblingActions, null);
-            menuManager.insertAfter(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.additions_17"), submenuManager); //$NON-NLS-1$
+            menuManager.insertAfter(XsdUiPlugin.Util.getString("XsdEditor.additions_17"), submenuManager); //$NON-NLS-1$
 
             submenuManager = new MenuManager(XsdUiPlugin.Util.getString("_UI_CreateChild_menu_item")); //$NON-NLS-1$
             populateManager(submenuManager, createChildActions, null);
-            menuManager.insertAfter(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.additions_19"), submenuManager); //$NON-NLS-1$
+            menuManager.insertAfter(XsdUiPlugin.Util.getString("XsdEditor.additions_19"), submenuManager); //$NON-NLS-1$
         }
     }
 
@@ -779,7 +779,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
      */
     protected void createContextMenuFor( StructuredViewer viewer ) {
         MenuManager contextMenu = new MenuManager("#PopUp"); //$NON-NLS-1$
-        contextMenu.add(new Separator(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.additions_21"))); //$NON-NLS-1$
+        contextMenu.add(new Separator(XsdUiPlugin.Util.getString("XsdEditor.additions_21"))); //$NON-NLS-1$
         contextMenu.setRemoveAllWhenShown(true);
         contextMenu.addMenuListener(this);
         Menu menu = contextMenu.createContextMenu(viewer.getControl());
@@ -842,7 +842,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
                     display.asyncExec(new Runnable() {
                         public void run() {
                             if (sourceViewer != null) {
-                                getSite().getPage().closeEditor(MetaMatrixXsdEditor.this, false);
+                                getSite().getPage().closeEditor(XsdEditor.this, false);
                             }
                         }
                     });
@@ -866,7 +866,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
             @Override
             protected void execute( IProgressMonitor progressMonitor ) {
                 try {
-                    progressMonitor.beginTask(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor._22"), 10); //$NON-NLS-1$
+                    progressMonitor.beginTask(XsdUiPlugin.Util.getString("XsdEditor._22"), 10); //$NON-NLS-1$
 
                     IFileEditorInput modelFile = (IFileEditorInput)getEditorInput();
                     IFile file = modelFile.getFile();
@@ -1052,7 +1052,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
                 encodingSupport.setEncoding(encoding);
             }
 
-            setPageText(pageIndex, XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Source_26")); //$NON-NLS-1$
+            setPageText(pageIndex, XsdUiPlugin.Util.getString("XsdEditor.Source_26")); //$NON-NLS-1$
 
             IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
             document.addDocumentListener(new IDocumentListener() {
@@ -1103,7 +1103,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
         // Create a page for the selection tree view.
         //
         {
-            ViewerPane viewerPane = new ViewerPane(getSite().getPage(), MetaMatrixXsdEditor.this) {
+            ViewerPane viewerPane = new ViewerPane(getSite().getPage(), XsdEditor.this) {
                 @Override
                 public Viewer createViewer( Composite composite ) {
                     Tree tree = new Tree(composite, SWT.MULTI);
@@ -1149,7 +1149,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
         // Create a page for the selection tree view.
         //
         {
-            ViewerPane viewerPane = new ViewerPane(getSite().getPage(), MetaMatrixXsdEditor.this) {
+            ViewerPane viewerPane = new ViewerPane(getSite().getPage(), XsdEditor.this) {
                 @Override
                 public Viewer createViewer( Composite composite ) {
                     Tree tree = new Tree(composite, SWT.MULTI);
@@ -1242,7 +1242,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
                     IMarker marker = null;
                     for (int i = 0; i < markers.length; ++i) {
                         if (markers[i].getAttribute(XSDDiagnostic.URI_FRAGMENT_ATTRIBUTE,
-                                                    XsdUiPlugin.Util.getString("MetaMatrixXsdEditor._29")).equals(uriReferencePath)) //$NON-NLS-1$
+                                                    XsdUiPlugin.Util.getString("XsdEditor._29")).equals(uriReferencePath)) //$NON-NLS-1$
                         {
                             marker = markers[i];
                             deletableMarkers.remove(marker);
@@ -1778,7 +1778,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
                     || MessageDialog.openQuestion(getSite().getShell(), XsdUiPlugin.Util.getString("_UI_FileExists_title"), //$NON-NLS-1$
                                                   XsdUiPlugin.Util.getString("_UI_FileExists_description", new Object[] {file.getFullPath()}))) //$NON-NLS-1$
                 {
-                    getXsdSchema().eResource().setURI(URI.createURI(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.platform_/resource_32") + file.getFullPath())); //$NON-NLS-1$
+                    getXsdSchema().eResource().setURI(URI.createURI(XsdUiPlugin.Util.getString("XsdEditor.platform_/resource_32") + file.getFullPath())); //$NON-NLS-1$
                     IFileEditorInput modelFile = new FileEditorInput(file);
                     setInput(modelFile);
                     setPartName(file.getName());
@@ -1816,7 +1816,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
                 // Get the IFile associated with the editor
                 final IResource xsdFile = ((IFileEditorInput)editorInput).getFile();
                 if (xsdFile == null) {
-                    final String msg = XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", editorInput.getName()); //$NON-NLS-1$
+                    final String msg = XsdUiPlugin.Util.getString("XsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", editorInput.getName()); //$NON-NLS-1$
                     throw new PartInitException(msg);
                 }
 
@@ -1827,16 +1827,16 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
 
                 // The resource must exist in the container
                 if (xsdResource == null) {
-                    final String msg = XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Input_Error__Model_Editor_cannot_open_{0}_1", editorInput.getName()); //$NON-NLS-1$
+                    final String msg = XsdUiPlugin.Util.getString("XsdEditor.Input_Error__Model_Editor_cannot_open_{0}_1", editorInput.getName()); //$NON-NLS-1$
                     throw new PartInitException(msg);
                 }
                 // modelProject =
                 xsdFile.getProject();
             } catch (ModelWorkspaceException e) {
-                final String msg = XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", editorInput.getName()); //$NON-NLS-1$
+                final String msg = XsdUiPlugin.Util.getString("XsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", editorInput.getName()); //$NON-NLS-1$
                 throw new PartInitException(msg, e);
             } catch (CoreException e) {
-                final String msg = XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", editorInput.getName()); //$NON-NLS-1$
+                final String msg = XsdUiPlugin.Util.getString("XsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", editorInput.getName()); //$NON-NLS-1$
                 throw new PartInitException(msg, e);
             }
 
@@ -1847,7 +1847,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
             site.getPage().addPartListener(partListener);
         } else {
             throw new PartInitException(
-                                        XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Invalid_Input__Must_be_IFileEditorInput._33")); //$NON-NLS-1$
+                                        XsdUiPlugin.Util.getString("XsdEditor.Invalid_Input__Must_be_IFileEditorInput._33")); //$NON-NLS-1$
         }
     }
 
@@ -2016,7 +2016,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
                                        StructuredViewer structuredViewer ) {
             super(
                   structuredViewer,
-                  isForward ? XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Select_&Next_Diagnosed_Object_38") : XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Select_&Previous_Diagnosed_Object_39"), //$NON-NLS-1$ //$NON-NLS-2$
+                  isForward ? XsdUiPlugin.Util.getString("XsdEditor.Select_&Next_Diagnosed_Object_38") : XsdUiPlugin.Util.getString("XsdEditor.Select_&Previous_Diagnosed_Object_39"), //$NON-NLS-1$ //$NON-NLS-2$
                   ExtendedImageRegistry.INSTANCE.getImageDescriptor(XsdUiPlugin.INSTANCE.getImage(isForward ? "icons/full/elcl16/SelectNextDiagnosticObject.gif" : "icons/full/elcl16/SelectPreviousDiagnosticObject.gif"))); //$NON-NLS-1$ //$NON-NLS-2$
             this.isForward = isForward;
 
@@ -2024,8 +2024,8 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
 
             setDisabledImageDescriptor(ExtendedImageRegistry.INSTANCE.getImageDescriptor(XsdUiPlugin.INSTANCE.getImage(isForward ? "icons/full/dlcl16/SelectNextDiagnosticObject.gif" : "icons/full/dlcl16/SelectPreviousDiagnosticObject.gif"))); //$NON-NLS-1$ //$NON-NLS-2$
 
-            setToolTipText(isForward ? XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Select_&Next_Diagnosed_Object_38") //$NON-NLS-1$
-            : XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Select_&Previous_Diagnosed_Object_39")); //$NON-NLS-1$
+            setToolTipText(isForward ? XsdUiPlugin.Util.getString("XsdEditor.Select_&Next_Diagnosed_Object_38") //$NON-NLS-1$
+            : XsdUiPlugin.Util.getString("XsdEditor.Select_&Previous_Diagnosed_Object_39")); //$NON-NLS-1$
         }
 
         public void updateAction() {
@@ -2070,15 +2070,15 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
                                 StructuredViewer structuredViewer ) {
             super(
                   structuredViewer,
-                  isForward ? XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Select_&Next_Use_46") : XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Select_&Previous_Use_47"), //$NON-NLS-1$ //$NON-NLS-2$
+                  isForward ? XsdUiPlugin.Util.getString("XsdEditor.Select_&Next_Use_46") : XsdUiPlugin.Util.getString("XsdEditor.Select_&Previous_Use_47"), //$NON-NLS-1$ //$NON-NLS-2$
                   ExtendedImageRegistry.INSTANCE.getImageDescriptor(XsdUiPlugin.INSTANCE.getImage(isForward ? "icons/full/elcl16/SelectNextUseObject.gif" : "icons/full/elcl16/SelectPreviousUseObject.gif"))); //$NON-NLS-1$ //$NON-NLS-2$
             this.isForward = isForward;
 
             setHoverImageDescriptor(ExtendedImageRegistry.INSTANCE.getImageDescriptor(XsdUiPlugin.INSTANCE.getImage(isForward ? "icons/full/clcl16/SelectNextUseObject.gif" : "icons/full/clcl16/SelectPreviousUseObject.gif"))); //$NON-NLS-1$ //$NON-NLS-2$
             setDisabledImageDescriptor(ExtendedImageRegistry.INSTANCE.getImageDescriptor(XsdUiPlugin.INSTANCE.getImage(isForward ? "icons/full/dlcl16/SelectNextUseObject.gif" : "icons/full/dlcl16/SelectPreviousUseObject.gif"))); //$NON-NLS-1$ //$NON-NLS-2$
 
-            setToolTipText(isForward ? XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Select_&Next_Use_46") //$NON-NLS-1$
-            : XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Select_&Previous_Use_47")); //$NON-NLS-1$
+            setToolTipText(isForward ? XsdUiPlugin.Util.getString("XsdEditor.Select_&Next_Use_46") //$NON-NLS-1$
+            : XsdUiPlugin.Util.getString("XsdEditor.Select_&Previous_Use_47")); //$NON-NLS-1$
         }
 
         public void updateAction() {
@@ -2194,7 +2194,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
                                 }
 
                                 if (XSDConstants.SCHEMA_INSTANCE_URI_2001.equals(attributeNamespaceURI)
-                                    && (namespaceURI == null ? XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.noSchemaLocation_57") : XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.schemaLocation_58")).equals(attributeLocalName)) //$NON-NLS-1$ //$NON-NLS-2$
+                                    && (namespaceURI == null ? XsdUiPlugin.Util.getString("XsdEditor.noSchemaLocation_57") : XsdUiPlugin.Util.getString("XsdEditor.schemaLocation_58")).equals(attributeLocalName)) //$NON-NLS-1$ //$NON-NLS-2$
                                 {
                                     String schemaLocationHint = null;
 
@@ -2230,7 +2230,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
 
                             if (xsdEcoreBuilder == null) {
                                 error(new XMIException(
-                                                       XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Cannot_resolve_schema_location_59"), getLocation(), getLineNumber(), getColumnNumber())); //$NON-NLS-1$
+                                                       XsdUiPlugin.Util.getString("XsdEditor.Cannot_resolve_schema_location_59"), getLocation(), getLineNumber(), getColumnNumber())); //$NON-NLS-1$
                             } else {
                                 XSDElementDeclaration xsdElementDeclaration = xsdEcoreBuilder.getSchema().resolveElementDeclaration(namespaceURI,
                                                                                                                                     name);
@@ -2246,7 +2246,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
                                     }
                                 } else {
                                     error(new XMIException(
-                                                           XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Cannot_resolve_EClass__60"), getLocation(), getLineNumber(), getColumnNumber())); //$NON-NLS-1$
+                                                           XsdUiPlugin.Util.getString("XsdEditor.Cannot_resolve_EClass__60"), getLocation(), getLineNumber(), getColumnNumber())); //$NON-NLS-1$
                                 }
                             }
                         }
@@ -2266,12 +2266,12 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
                                     XSDParticle.DFA.State state = (XSDParticle.DFA.State)dfaStates.peek();
                                     if (state == null) {
                                         error(new XMIException(
-                                                               XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Cannot_contain_content__61"), getLocation(), getLineNumber(), getColumnNumber())); //$NON-NLS-1$
+                                                               XsdUiPlugin.Util.getString("XsdEditor.Cannot_contain_content__61"), getLocation(), getLineNumber(), getColumnNumber())); //$NON-NLS-1$
                                     } else {
                                         XSDParticle.DFA.Transition transition = state.accept(helper.getURI(prefix), localName);
                                         if (transition == null) {
                                             error(new XMIException(
-                                                                   XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Not_expecting_this_element__62"), getLocation(), getLineNumber(), getColumnNumber())); //$NON-NLS-1$
+                                                                   XsdUiPlugin.Util.getString("XsdEditor.Not_expecting_this_element__62"), getLocation(), getLineNumber(), getColumnNumber())); //$NON-NLS-1$
                                         } else {
                                             dfaStates.set(dfaStates.size() - 1, transition.getState());
 
@@ -2288,7 +2288,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
                                             EClass eClass = (EClass)xsdEcoreBuilder.getXSDComponentToEModelElementMap().get(xsdElementDeclaration);
                                             if (eClass != null) {
                                                 EObject eObject = eClass.getEPackage().getEFactoryInstance().create(eClass);
-                                                ((EList)peekObject.eGet(peekObject.eClass().getEStructuralFeature(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.contents_63")))).add(eObject); //$NON-NLS-1$
+                                                ((EList)peekObject.eGet(peekObject.eClass().getEStructuralFeature(XsdUiPlugin.Util.getString("XsdEditor.contents_63")))).add(eObject); //$NON-NLS-1$
 
                                                 processObject(eObject);
                                                 elementDeclarations.push(xsdElementDeclaration);
@@ -2299,7 +2299,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
                                                     dfaStates.push(null);
                                                     XSDSimpleTypeDefinition xsdSimpleTypeDefinition = xsdElementDeclaration.getTypeDefinition().getSimpleType();
                                                     if (xsdSimpleTypeDefinition != null) {
-                                                        EStructuralFeature valueFeature = eClass.getEStructuralFeature(XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.value_64")); //$NON-NLS-1$
+                                                        EStructuralFeature valueFeature = eClass.getEStructuralFeature(XsdUiPlugin.Util.getString("XsdEditor.value_64")); //$NON-NLS-1$
                                                         if (valueFeature != null) {
                                                             text = new StringBuffer();
                                                             types.set(types.size() - 1, valueFeature);
@@ -2308,7 +2308,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
                                                 }
                                             } else {
                                                 error(new XMIException(
-                                                                       XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Cannot_resolve_EClass__65"), getLocation(), getLineNumber(), getColumnNumber())); //$NON-NLS-1$
+                                                                       XsdUiPlugin.Util.getString("XsdEditor.Cannot_resolve_EClass__65"), getLocation(), getLineNumber(), getColumnNumber())); //$NON-NLS-1$
                                             }
                                         }
                                     }
@@ -2336,7 +2336,7 @@ public class MetaMatrixXsdEditor extends MultiPageEditorPart
                             XSDParticle.DFA.State state = (XSDParticle.DFA.State)dfaStates.pop();
                             if (state != null && !state.isAccepting()) {
                                 error(new XMIException(
-                                                       XsdUiPlugin.Util.getString("MetaMatrixXsdEditor.Need_more_content__66"), getLocation(), getLineNumber(), getColumnNumber())); //$NON-NLS-1$
+                                                       XsdUiPlugin.Util.getString("XsdEditor.Need_more_content__66"), getLocation(), getLineNumber(), getColumnNumber())); //$NON-NLS-1$
                             }
                             elementDeclarations.pop();
                         }

@@ -47,9 +47,6 @@ import com.metamatrix.rose.internal.impl.Unit;
  */
 public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandler, StringUtil.Constants {
 
-    // ============================================================================================================================
-    // Constants
-
     private static final char MULTIPLICITY_START_DELIMITER = '[';
     private static final char MULTIPLICITY_END_DELIMITER = ']';
 
@@ -60,9 +57,6 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
     private static final String DATA_MODELER = "Data Modeler"; //$NON-NLS-1$
     static final String DEFAULT_SET = "default__"; //$NON-NLS-1$
 
-    // ============================================================================================================================
-    // Static Utility Methods
-
     /**
      * @since 4.1
      */
@@ -70,9 +64,6 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
                                      final Object parameter ) {
         return UTIL.getString(I18N_PREFIX + id, parameter);
     }
-
-    // ============================================================================================================================
-    // Variables
 
     private Map idMap, ownerMap, nameMap;
 
@@ -91,9 +82,6 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
     private IProgressMonitor mon;
 
     private StringNameValidator nameValidator;
-
-    // ============================================================================================================================
-    // Constructors
 
     /**
      * @since 4.1
@@ -142,9 +130,6 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
         this.workspaceModels = models;
     }
 
-    // ============================================================================================================================
-    // Implemented Methods
-
     /**
      * @see com.metamatrix.rose.internal.IRoseHandler#cleanup()
      * @since 4.2.2
@@ -166,9 +151,6 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
         this.ownerMap.clear();
         this.unresolvedRefs.clear();
         this.unit = null;
-        // if (this.roots != null) {
-        // this.roots.clear();
-        // }
     }
 
     /**
@@ -250,13 +232,13 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
             if (node.isLoaded()) {
                 // Visit package
                 elem = createPackage(name, node);
-                // Save mapping from Rose node to MetaMatrix object
+                // Save mapping from Rose node to EMF object
                 node.setNode(elem);
             }
         } else if (RoseStrings.CLASS.equals(type)) {
             elem = createClass(name, node);
             if (elem != null) {
-                // Save mapping from Rose node to MetaMatrix object
+                // Save mapping from Rose node to EMF object
                 node.setNode(elem);
                 // Map Rose node's ID to type
                 this.idMap.put(node.getRoseId(), elem);
@@ -283,16 +265,16 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
                 multiplicity = node.getStereotype();
             }
             elem = createClassAttribute(name, node, multiplicity);
-            // Save mapping from Rose node to MetaMatrix object
+            // Save mapping from Rose node to EMF object
             node.setNode(elem);
         } else if (RoseStrings.INHERITANCE_RELATIONSHIP.equals(type)) {
             createInheritanceRelationship(name, node);
         } else if (RoseStrings.ASSOCIATION.equals(type)) {
-            // Save mapping from Rose node to MetaMatrix object
+            // Save mapping from Rose node to EMF object
             elem = createAssociation(name, node);
             node.setNode(elem);
         } else if (RoseStrings.ROLE.equals(type)) {
-            // Save mapping from Rose node to MetaMatrix object
+            // Save mapping from Rose node to EMF object
             elem = createRole(name, node);
             node.setNode(elem);
             // Save Rose node for reference resolution in complete method
@@ -351,7 +333,7 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
             }
         } else if (RoseStrings.OPERATION.equals(type)) {
             elem = createOperation(name, node);
-            // Save mapping from Rose node to MetaMatrix object
+            // Save mapping from Rose node to EMF object
             node.setNode(elem);
         }
         // Add description to object if available
@@ -368,9 +350,6 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
             }
         }
     }
-
-    // ============================================================================================================================
-    // Property Methods
 
     /**
      * Adds a new problem encountered during parsing, containing the specified attributes, to the {@link #getProblems() problems
@@ -412,7 +391,7 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
     }
 
     /**
-     * @return The map of ID's to MetaMatrix model objects; never null, modifiable.
+     * @return The map of ID's to Federate Designer model objects; never null, modifiable.
      * @since 4.1
      */
     protected final Map getIdMap() {
@@ -420,7 +399,7 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
     }
 
     /**
-     * @return The map of unqualified object names to the list of MetaMatrix model objects with those names; never null,
+     * @return The map of unqualified object names to the list of Federate Designer model objects with those names; never null,
      *         modifiable.
      * @since 4.1
      */
@@ -429,7 +408,7 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
     }
 
     /**
-     * @return The map of MetaMatrix ownable objects to owning Rose nodes; never null, modifiable.
+     * @return The map of EMF ownable objects to owning Rose nodes; never null, modifiable.
      * @since 4.1
      */
     protected final Map getOwnerMap() {
@@ -445,7 +424,8 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
     }
 
     /**
-     * @return The root objects of the target MetaMatrix model for the current Rose model being parsed; never null, modifiable.
+     * @return The root objects of the target Federate Designer model for the current Rose model being parsed; never null,
+     *         modifiable.
      * @since 4.1
      */
     protected final List getRoots() {
@@ -468,17 +448,14 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
         return this.unresolvedRefs;
     }
 
-    // ============================================================================================================================
-    // Controller Methods
-
     /**
-     * Implemented by subclasses to create a MetaMatrix model object that represents the specified Rose Association node. After
-     * this method is called, the Rose node's ID will be mapped to the returned object for later {@link #getIdMap() use}by other
-     * create methods. The Rose node's "node" property will also be set to the returned object.
+     * Implemented by subclasses to create a Federate Designer model object that represents the specified Rose Association node.
+     * After this method is called, the Rose node's ID will be mapped to the returned object for later {@link #getIdMap() use}by
+     * other create methods. The Rose node's "node" property will also be set to the returned object.
      * 
      * @param name The Rose node's name.
      * @param node A Rose Association node.
-     * @return The newly created MetaMatrix model object that corresponds to the specified Rose node.
+     * @return The newly created Federate Designer model object that corresponds to the specified Rose node.
      * @since 4.1
      */
     protected abstract Object createAssociation( String name,
@@ -497,27 +474,27 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
                                              Map propertyMap );
 
     /**
-     * Implemented by subclasses to create a MetaMatrix model object that represents the specified Rose Class node. After this
-     * method is called, the Rose node's ID will be mapped to the returned object for later {@link #getIdMap() use}by other create
-     * methods. The Rose node's "node" property will also be set to the returned object.
+     * Implemented by subclasses to create a Federate Designer model object that represents the specified Rose Class node. After
+     * this method is called, the Rose node's ID will be mapped to the returned object for later {@link #getIdMap() use}by other
+     * create methods. The Rose node's "node" property will also be set to the returned object.
      * 
      * @param name The Rose node's name.
      * @param node A Rose Class node.
-     * @return The newly created MetaMatrix model object that corresponds to the specified Rose node.
+     * @return The newly created Federate Designer model object that corresponds to the specified Rose node.
      * @since 4.1
      */
     protected abstract Object createClass( String name,
                                            RoseNode node );
 
     /**
-     * Implemented by subclasses to create a MetaMatrix model object that represents the specified Rose Class Attribute node.
-     * After this method is called, the Rose node's ID will be mapped to the returned object for later {@link #getIdMap() use}by
-     * other create methods. The Rose node's "node" property will also be set to the returned object.
+     * Implemented by subclasses to create a Federate Designer model object that represents the specified Rose Class Attribute
+     * node. After this method is called, the Rose node's ID will be mapped to the returned object for later {@link #getIdMap()
+     * use}by other create methods. The Rose node's "node" property will also be set to the returned object.
      * 
      * @param name The Rose node's name.
      * @param node The Rose Attribute node.
      * @param multiplicity The Rose Attribute's multiplicity.
-     * @return The newly created MetaMatrix model object that corresponds to the specified Rose node.
+     * @return The newly created Federate Designer model object that corresponds to the specified Rose node.
      * @since 4.1
      */
     protected abstract Object createClassAttribute( String name,
@@ -525,8 +502,8 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
                                                     String multiplicity );
 
     /**
-     * Implemented by subclasses to create a MetaMatrix model object that represents the specified Rose Inheritance Relationship
-     * node.
+     * Implemented by subclasses to create a Federate Designer model object that represents the specified Rose Inheritance
+     * Relationship node.
      * 
      * @param name The Rose node's name.
      * @param node A Rose Inheritance Relationship node.
@@ -536,19 +513,19 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
                                                            RoseNode node );
 
     /**
-     * Implemented by subclasses to create a MetaMatrix model object that represents the specified Rose Operation node.
+     * Implemented by subclasses to create a Federate Designer model object that represents the specified Rose Operation node.
      * 
      * @param name The Rose node's name.
      * @param node A Rose Operation node.
-     * @return The newly created MetaMatrix model object that corresponds to the specified Rose node.
+     * @return The newly created Federate Designer model object that corresponds to the specified Rose node.
      * @since 4.1
      */
     protected abstract Object createOperation( String name,
                                                RoseNode node );
 
     /**
-     * Must be implemented by subclasses to create a MetaMatrix model object that represents the specified Rose Package node. The
-     * following steps will be performed <em>after</em> calling this method:
+     * Must be implemented by subclasses to create a Federate Designer model object that represents the specified Rose Package
+     * node. The following steps will be performed <em>after</em> calling this method:
      * <ul>
      * <li>The Rose node's ID will be mapped to the returned object for later {@link #getIdMap() use}by other create methods.
      * <li>The Rose node's "node" property will be set to the returned object.
@@ -557,18 +534,18 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
      * 
      * @param name The Rose node's name.
      * @param node A Rose Package node.
-     * @return The newly created MetaMatrix model object that corresponds to the specified Rose node.
+     * @return The newly created Federate Designer model object that corresponds to the specified Rose node.
      * @since 4.1
      */
     protected abstract Object createPackage( String name,
                                              RoseNode node );
 
     /**
-     * Must be implemented by subclasses to create a MetaMatrix model object that represents the specified Rose Role node.
+     * Must be implemented by subclasses to create a Federate Designer model object that represents the specified Rose Role node.
      * 
      * @param name The Rose node's name.
      * @param node A Rose Role node.
-     * @return The newly created MetaMatrix model object that corresponds to the specified Rose node.
+     * @return The newly created Federate Designer model object that corresponds to the specified Rose node.
      * @since 4.1
      */
     protected abstract Object createRole( String name,
@@ -604,9 +581,6 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
         }
         return null;
     }
-
-    // ============================================================================================================================
-    // Utility Methods
 
     /**
      * @since 4.1

@@ -38,38 +38,19 @@ import com.metamatrix.modeler.sdt.ModelerSdtPlugin;
  */
 public class TestBuiltInTypesManager extends TestCase {
 
-    // private static final URI BUILTIN_DATATYPES_URI = URI.createURI(DatatypeConstants.BUILTIN_DATATYPES_URI);
-    // private static final String DATATYPES_MODEL_FILE_NAME = DatatypeConstants.DATATYPES_MODEL_FILE_NAME;
-
     // http://www.w3.org/2001/XMLSchema
     private static final String XSD_SCHEMA_URI_STRING = ModelerCore.XML_SCHEMA_GENERAL_URI;
 
-    // -------------------------------------------------
-    // Variables initialized during one-time startup ...
-    // -------------------------------------------------
-
     private static BuiltInTypesManager dtMgr;
 
-    // ---------------------------------------
-    // Variables initialized for each test ...
-    // ---------------------------------------
-
-    // =========================================================================
-    // F R A M E W O R K
-    // =========================================================================
-
     /**
-     * Constructor for PdeTestBuiltInTypesManager.
+     * Constructor for TestBuiltInTypesManager.
      * 
      * @param name
      */
     public TestBuiltInTypesManager( String name ) {
         super(name);
     }
-
-    // =========================================================================
-    // T E S T C O N T R O L
-    // =========================================================================
 
     /**
      * Construct the test suite, which uses a one-time setup call and a one-time tear-down call.
@@ -93,18 +74,10 @@ public class TestBuiltInTypesManager extends TestCase {
         };
     }
 
-    // =========================================================================
-    // M A I N
-    // =========================================================================
-
     public static void main( String args[] ) {
         junit.textui.TestRunner.run(suite());
         System.exit(0);
     }
-
-    // =========================================================================
-    // S E T U P A N D T E A R D O W N
-    // =========================================================================
 
     @Override
     protected void setUp() throws Exception {
@@ -133,10 +106,6 @@ public class TestBuiltInTypesManager extends TestCase {
     public static void oneTimeTearDown() {
         dtMgr = null;
     }
-
-    // =========================================================================
-    // H E L P E R M E T H O D S
-    // =========================================================================
 
     private static Resource helpGetEmfXsdResource() {
         final XSDSchema schema = XSDSchemaImpl.getSchemaForSchema(XSD_SCHEMA_URI_STRING);
@@ -168,8 +137,8 @@ public class TestBuiltInTypesManager extends TestCase {
         }
         assertEquals(true, dtMgr.isBuiltInDatatype(eObject));
 
-        // If the data type is a MetaMatrix extended built-in type then it
-        // should be contained within the MetaMatrix built-in datatypes resource
+        // If the data type is a extended built-in type then it
+        // should be contained within the Federate Designer built-in datatypes resource
         if (DatatypeConstants.getMetaMatrixExtendedBuiltInTypeNames().contains(name)) {
             assertEquals("Resource checked failed for " + name, helpGetMmXsdResource(), type.eResource()); //$NON-NLS-1$
         } else if (DatatypeConstants.BuiltInNames.ANY_SIMPLE_TYPE.equals(name)
@@ -222,10 +191,6 @@ public class TestBuiltInTypesManager extends TestCase {
         }
     }
 
-    // =========================================================================
-    // T E S T C A S E S
-    // =========================================================================
-
     public void testNothing() {
         // placeholder until I can get the ModelerSdtPlugin.getBuiltInTypesResource()
         // method to work in the nightly test environment. I do not have to comment
@@ -245,27 +210,27 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetAnyType() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetAnyType()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetAnyType()"); //$NON-NLS-1$
         EObject eObject = dtMgr.getAnyType();
         helpCheckType(eObject, DatatypeConstants.BuiltInNames.ANY_TYPE);
         printEObject(eObject);
     }
 
     public void testGetAnySimpleType() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetAnySimpleType()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetAnySimpleType()"); //$NON-NLS-1$
         EObject eObject = dtMgr.getAnySimpleType();
         helpCheckType(eObject, DatatypeConstants.BuiltInNames.ANY_SIMPLE_TYPE);
         printEObject(eObject);
     }
 
-    public void testGetMetaMatrixExtendedTypesList() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetMetaMatrixExtendedTypesList()"); //$NON-NLS-1$
-        List types = dtMgr.getMetaMatrixExtendedTypesList();
+    public void testGetExtendedTypesList() {
+        System.out.println("\nTestBuiltInTypesManager.testGetExtendedTypesList()"); //$NON-NLS-1$
+        List types = dtMgr.getExtendedTypesList();
         assertEquals(8, types.size());
     }
 
     public void testGetAllDatatypes() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetAllDatatypes()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetAllDatatypes()"); //$NON-NLS-1$
         EObject[] eObjects = dtMgr.getAllDatatypes();
         assertNotNull(eObjects);
         assertEquals(53, eObjects.length);
@@ -283,7 +248,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetBuiltInDatatypeByName() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetBuiltInDatatypeByName()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetBuiltInDatatypeByName()"); //$NON-NLS-1$
         // Look up the datatype by name
         String id = "string"; //$NON-NLS-1$
         EObject eObject = dtMgr.getBuiltInDatatype(id);
@@ -297,7 +262,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetBuiltInDatatypeByAllNames() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetBuiltInDatatypeByAllNames()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetBuiltInDatatypeByAllNames()"); //$NON-NLS-1$
         final Collection builtInNames = DatatypeConstants.getBuiltInTypeNames();
         final List unresolvedTypeNames = new ArrayList(3);
         for (Iterator iter = builtInNames.iterator(); iter.hasNext();) {
@@ -315,7 +280,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetBuiltInDatatypeByUUID() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetBuiltInDatatypeByUUID()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetBuiltInDatatypeByUUID()"); //$NON-NLS-1$
         // Look up the datatype by name
         String id = "mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"; //$NON-NLS-1$
         EObject eObject = dtMgr.getBuiltInDatatype(id);
@@ -324,7 +289,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetBuiltInDatatypeByURI() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetBuiltInDatatypeByURI()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetBuiltInDatatypeByURI()"); //$NON-NLS-1$
         String id = "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#sTrinG"; //$NON-NLS-1$
         EObject eObject = dtMgr.getBuiltInDatatype(id);
         helpCheckType(eObject, DatatypeConstants.BuiltInNames.STRING);
@@ -336,7 +301,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetBuiltInDatatypeByURI2() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetBuiltInDatatypeByURI2()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetBuiltInDatatypeByURI2()"); //$NON-NLS-1$
         String id = "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#cloB"; //$NON-NLS-1$
         EObject eObject = dtMgr.getBuiltInDatatype(id);
         helpCheckType(eObject, DatatypeConstants.BuiltInNames.CLOB);
@@ -348,7 +313,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetBuiltInDatatypeByNonExistentName() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetBuiltInDatatypeByNonExistentName()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetBuiltInDatatypeByNonExistentName()"); //$NON-NLS-1$
         // Look up the datatype by name
         String id = "spring"; //$NON-NLS-1$
         EObject eObject = dtMgr.getBuiltInDatatype(id);
@@ -356,7 +321,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetBuiltInDatatypeByNonExistentUUID() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetBuiltInDatatypeByNonExistentUUID()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetBuiltInDatatypeByNonExistentUUID()"); //$NON-NLS-1$
         // Look up the datatype by name
         String id = "mmuuid:abcc34c0-c442-1e24-9b01-c8207cd53eb7"; //$NON-NLS-1$
         EObject eObject = dtMgr.getBuiltInDatatype(id);
@@ -364,14 +329,14 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetBuiltInDatatypeByNonExistentURI() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetBuiltInDatatypeByNonExistentURI()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetBuiltInDatatypeByNonExistentURI()"); //$NON-NLS-1$
         String id = "http://www.w3.org/2020/XMLSchemaOfSchema#StriNg"; //$NON-NLS-1$
         EObject eObject = dtMgr.getBuiltInDatatype(id);
         assertNull(eObject);
     }
 
     public void testIsBuiltInDatatype() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testIsBuiltInDatatype()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testIsBuiltInDatatype()"); //$NON-NLS-1$
         String id = "int"; //$NON-NLS-1$
         EObject eObject = dtMgr.getBuiltInDatatype(id);
         helpCheckType(eObject, DatatypeConstants.BuiltInNames.INT);
@@ -380,7 +345,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testIsBuiltInDatatypeForNonExistentType() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testIsBuiltInDatatypeForNonExistentType()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testIsBuiltInDatatypeForNonExistentType()"); //$NON-NLS-1$
         String id = "nonExistentType"; //$NON-NLS-1$
         EObject eObject = dtMgr.getBuiltInDatatype(id);
         assertNull(eObject);
@@ -388,7 +353,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetBasetype() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetBasetype()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetBasetype()"); //$NON-NLS-1$
         String id = "http://www.w3.org/2001/XMLSchema#long"; //$NON-NLS-1$
         EObject eObject = dtMgr.findDatatype(id);
         helpCheckType(eObject, DatatypeConstants.BuiltInNames.LONG);
@@ -399,7 +364,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetRuntimeTypeNameById() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetRuntimeTypeNameById()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetRuntimeTypeNameById()"); //$NON-NLS-1$
         String id = "http://www.w3.org/2001/XMLSchema#long"; //$NON-NLS-1$
         String runtimeType = dtMgr.getRuntimeTypeName(id);
         assertNotNull(runtimeType);
@@ -411,7 +376,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetRuntimeTypeNameById2() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetRuntimeTypeNameById2()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetRuntimeTypeNameById2()"); //$NON-NLS-1$
         EObject eObject = dtMgr.getBuiltInDatatype("long"); //$NON-NLS-1$
         helpCheckType(eObject, DatatypeConstants.BuiltInNames.LONG);
         String runtimeType = dtMgr.getRuntimeTypeName(eObject);
@@ -420,7 +385,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetSubtypesForNCName() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetSubtypesForNCName()"); //$NON-NLS-1$        String filepath = UnitTestUtil.Data.getTestDataPath() + File.separator + TEST_ZIP_FILE_NAME;
+        System.out.println("\nTestBuiltInTypesManager.testGetSubtypesForNCName()"); //$NON-NLS-1$        String filepath = UnitTestUtil.Data.getTestDataPath() + File.separator + TEST_ZIP_FILE_NAME;
         String id = "http://www.w3.org/2001/XMLSchema#NCName"; //$NON-NLS-1$
         EObject eObject = dtMgr.findDatatype(id);
         helpCheckType(eObject, DatatypeConstants.BuiltInNames.NCNAME);
@@ -438,7 +403,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetSubtypesForInt() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetSubtypesForInt()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetSubtypesForInt()"); //$NON-NLS-1$
         String id = "http://www.w3.org/2001/XMLSchema#int"; //$NON-NLS-1$
         EObject eObject = dtMgr.findDatatype(id);
         helpCheckType(eObject, DatatypeConstants.BuiltInNames.INT);
@@ -451,7 +416,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetSubtypesForAnyType() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetSubtypesForAnyType()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetSubtypesForAnyType()"); //$NON-NLS-1$
         EObject eObject = dtMgr.getAnyType();
         assertNotNull(eObject);
         printEObject(eObject);
@@ -462,7 +427,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetSubtypesForAnySimpleType() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetSubtypesForAnySimpleType()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetSubtypesForAnySimpleType()"); //$NON-NLS-1$
         EObject eObject = dtMgr.getAnySimpleType();
         assertNotNull(eObject);
         printEObject(eObject);
@@ -473,7 +438,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetBuiltInPrimitiveTypes() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetBuiltInPrimitiveTypes()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetBuiltInPrimitiveTypes()"); //$NON-NLS-1$
         EObject[] eObjects = dtMgr.getBuiltInPrimitiveTypes();
         assertNotNull(eObjects);
         assertEquals(19, eObjects.length);
@@ -481,7 +446,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetBuiltInPrimitiveType() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetBuiltInPrimitiveType()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetBuiltInPrimitiveType()"); //$NON-NLS-1$
         // Check the primitive type returned for unsignedShort
         String id = "unsignedShort"; //$NON-NLS-1$
         EObject dataType = dtMgr.getBuiltInDatatype(id);
@@ -516,7 +481,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testIsNumeric() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testIsNumeric()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testIsNumeric()"); //$NON-NLS-1$
         // Check the primitive type returned for unsignedShort
         String id = "unsignedShort"; //$NON-NLS-1$
         EObject dataType = dtMgr.getBuiltInDatatype(id);
@@ -537,7 +502,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testIsCharacter() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testIsCharacter()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testIsCharacter()"); //$NON-NLS-1$
         // Check the primitive type returned for unsignedShort
         String id = "unsignedShort"; //$NON-NLS-1$
         EObject dataType = dtMgr.getBuiltInDatatype(id);
@@ -558,7 +523,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testIsBinary() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testIsBinary()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testIsBinary()"); //$NON-NLS-1$
         // Check the primitive type returned for unsignedShort
         String id = "unsignedShort"; //$NON-NLS-1$
         EObject dataType = dtMgr.getBuiltInDatatype(id);
@@ -591,7 +556,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetBuiltInPrimitiveTypeRuntimeTypes() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetBuiltInPrimitiveTypeRuntimeTypes()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetBuiltInPrimitiveTypeRuntimeTypes()"); //$NON-NLS-1$
         EObject[] eObjects = dtMgr.getBuiltInPrimitiveTypes();
         assertNotNull(eObjects);
         assertEquals(19, eObjects.length);
@@ -603,7 +568,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetAllDatatypeRuntimeTypes() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetAllDatatypeRuntimeTypes()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetAllDatatypeRuntimeTypes()"); //$NON-NLS-1$
         EObject[] eObjects = dtMgr.getAllDatatypes();
         assertNotNull(eObjects);
         for (int i = 0; i != eObjects.length; ++i) {
@@ -617,26 +582,26 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetDatatypeHierarchyForAnySimpleType() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetDatatypeHierarchyForAnySimpleType()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetDatatypeHierarchyForAnySimpleType()"); //$NON-NLS-1$
         EObject eObject = dtMgr.getAnySimpleType();
         helpPrintSubtypesRecursive(dtMgr, eObject, "  "); //$NON-NLS-1$
     }
 
     public void testGetDatatypeHierarchyForAnyType() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetDatatypeHierarchyForAnyType()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetDatatypeHierarchyForAnyType()"); //$NON-NLS-1$
         EObject eObject = dtMgr.getAnyType();
         helpPrintSubtypesRecursive(dtMgr, eObject, "  "); //$NON-NLS-1$
     }
 
     public void testGetDefaultDatatypeForRuntimeTypeName() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetDefaultDatatypeForRuntimeTypeName()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetDefaultDatatypeForRuntimeTypeName()"); //$NON-NLS-1$
         EObject eObject = dtMgr.getDefaultDatatypeForRuntimeTypeName("integer"); //$NON-NLS-1$
         helpCheckType(eObject, DatatypeConstants.BuiltInNames.INT);
         printEObject(eObject);
     }
 
     public void testGetUuidString() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetUuidString()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetUuidString()"); //$NON-NLS-1$
         EObject eObject = dtMgr.getBuiltInDatatype("string"); //$NON-NLS-1$
         helpCheckType(eObject, DatatypeConstants.BuiltInNames.STRING);
         final String uuid = dtMgr.getUuidString(eObject);
@@ -646,7 +611,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetUuid() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetUuid()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetUuid()"); //$NON-NLS-1$
         EObject eObject = dtMgr.getBuiltInDatatype("string"); //$NON-NLS-1$
         helpCheckType(eObject, DatatypeConstants.BuiltInNames.STRING);
         final Object uuid = dtMgr.getUuid(eObject);
@@ -656,7 +621,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetExtensionMap() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetExtensionMap()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetExtensionMap()"); //$NON-NLS-1$
         EObject eObject = dtMgr.getBuiltInDatatype("integer"); //$NON-NLS-1$
         helpCheckType(eObject, DatatypeConstants.BuiltInNames.INTEGER);
         Map extensionMap = dtMgr.getEnterpriseExtensionsMap(eObject);
@@ -666,42 +631,42 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetRuntimeTypeJavaClassName() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetRuntimeTypeJavaClassName()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetRuntimeTypeJavaClassName()"); //$NON-NLS-1$
         String className = dtMgr.getRuntimeTypeJavaClassName("string"); //$NON-NLS-1$
         System.out.println(className);
         assertNotNull(className);
         assertEquals("java.lang.String", className); //$NON-NLS-1$
     }
 
-    public void testGetMetaMatrixExtendedBuiltInBaseType() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetMetaMatrixExtendedBuiltInBaseType()"); //$NON-NLS-1$
+    public void testGetExtendedBuiltInBaseType() {
+        System.out.println("\nTestBuiltInTypesManager.testGetExtendedBuiltInBaseType()"); //$NON-NLS-1$
         EObject dataType = dtMgr.getAnySimpleType();
         helpCheckType(dataType, DatatypeConstants.BuiltInNames.ANY_SIMPLE_TYPE);
-        assertEquals(null, dtMgr.getMetaMatrixExtendedBuiltInBaseType(dataType));
+        assertEquals(null, dtMgr.getExtendedBuiltInBaseType(dataType));
 
         String id = "unsignedShort"; //$NON-NLS-1$
         dataType = dtMgr.getBuiltInDatatype(id);
         helpCheckType(dataType, DatatypeConstants.BuiltInNames.UNSIGNED_SHORT);
-        assertEquals(null, dtMgr.getMetaMatrixExtendedBuiltInBaseType(dataType));
+        assertEquals(null, dtMgr.getExtendedBuiltInBaseType(dataType));
 
         id = "object"; //$NON-NLS-1$
         dataType = dtMgr.getBuiltInDatatype(id);
         helpCheckType(dataType, DatatypeConstants.BuiltInNames.OBJECT);
-        assertEquals(dataType, dtMgr.getMetaMatrixExtendedBuiltInBaseType(dataType));
+        assertEquals(dataType, dtMgr.getExtendedBuiltInBaseType(dataType));
 
         id = "timestamp"; //$NON-NLS-1$
         dataType = dtMgr.getBuiltInDatatype(id);
         helpCheckType(dataType, DatatypeConstants.BuiltInNames.TIMESTAMP);
-        assertEquals(dataType, dtMgr.getMetaMatrixExtendedBuiltInBaseType(dataType));
+        assertEquals(dataType, dtMgr.getExtendedBuiltInBaseType(dataType));
 
         id = "char"; //$NON-NLS-1$
         dataType = dtMgr.getBuiltInDatatype(id);
         helpCheckType(dataType, DatatypeConstants.BuiltInNames.CHAR);
-        assertEquals(dataType, dtMgr.getMetaMatrixExtendedBuiltInBaseType(dataType));
+        assertEquals(dataType, dtMgr.getExtendedBuiltInBaseType(dataType));
     }
 
     public void testGetTypeHierarchy() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetTypeHierarchy()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetTypeHierarchy()"); //$NON-NLS-1$
         String id = "short"; //$NON-NLS-1$
         EObject dataType = dtMgr.getBuiltInDatatype(id);
         helpCheckType(dataType, DatatypeConstants.BuiltInNames.SHORT);
@@ -730,7 +695,7 @@ public class TestBuiltInTypesManager extends TestCase {
     }
 
     public void testGetAllDescriptions() {
-        System.out.println("\nPdeTestBuiltInTypesManager.testGetAllDescriptions()"); //$NON-NLS-1$
+        System.out.println("\nTestBuiltInTypesManager.testGetAllDescriptions()"); //$NON-NLS-1$
         EObject[] eObjects = dtMgr.getAllDatatypes();
         assertNotNull(eObjects);
         for (int i = 0; i != eObjects.length; ++i) {

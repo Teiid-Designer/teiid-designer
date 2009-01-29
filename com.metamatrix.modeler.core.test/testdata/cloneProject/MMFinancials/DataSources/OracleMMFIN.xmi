@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:jdbc="http://www.metamatrix.com/metamodels/JDBC" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
-  <mmcore:ModelAnnotation xmi:uuid="mmuuid:5a0cacc0-fb5d-1004-9613-9e80c6d51212" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" maxSetSize="1000" supportsWhereAll="false" ProducerName="MetaMatrix" ProducerVersion="5.0">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:5a0cacc0-fb5d-1004-9613-9e80c6d51212" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" maxSetSize="1000" supportsWhereAll="false" ProducerName="Federate Designer" ProducerVersion="5.0">
     <modelImports xmi:uuid="mmuuid:35cfd480-fb5e-1004-9613-9e80c6d51212" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
   </mmcore:ModelAnnotation>
   <Relational:Schema xmi:uuid="mmuuid:5be5b280-fb5d-1004-9613-9e80c6d51212" name="MMFIN" nameInSource="MMFIN">

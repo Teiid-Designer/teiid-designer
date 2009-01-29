@@ -12,50 +12,45 @@ import com.metamatrix.modeler.diagram.ui.editor.IDiagramSelectionHandler;
 import com.metamatrix.modeler.diagram.ui.figure.DiagramFigureFactory;
 
 /**
- * AbstractDiagramEditPart provides a base class for all Metamatrix EditParts.
- * These classes are specialized to provide a standard set of methods coordinated with
- * DiagramFigure and DiagramModelNode interface methods to simplify coordinate of selection,
- * resizing, updates and other control-type functions.
+ * AbstractDiagramEditPart provides a base class for all EditParts. These classes are specialized to provide a standard set of
+ * methods coordinated with DiagramFigure and DiagramModelNode interface methods to simplify coordinate of selection, resizing,
+ * updates and other control-type functions.
  */
 public abstract class AbstractDiagramEditPart extends AbstractDefaultEditPart {
-	private boolean supportsExpanding = false;
+    private boolean supportsExpanding = false;
     private DiagramFigureFactory figureFactory;
     private IDiagramSelectionHandler selectionHandler;
 
-    /* 
-     * 
-     */
     public DiagramFigureFactory getFigureFactory() {
-        if( this.figureFactory == null )
-            this.figureFactory = DiagramUiPlugin.getDiagramTypeManager().getDiagram(getDiagramTypeId()).getFigureFactory();
-            
+        if (this.figureFactory == null) this.figureFactory = DiagramUiPlugin.getDiagramTypeManager().getDiagram(getDiagramTypeId()).getFigureFactory();
+
         return this.figureFactory;
     }
-    
-    public void setFigureFactory(DiagramFigureFactory ff) {
+
+    public void setFigureFactory( DiagramFigureFactory ff ) {
         this.figureFactory = ff;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see com.metamatrix.modeler.diagram.ui.part.DiagramEditPart#getSelectionHandler()
      */
     public IDiagramSelectionHandler getSelectionHandler() {
         return selectionHandler;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see com.metamatrix.modeler.diagram.ui.part.DiagramEditPart#setSelectionHandler(com.metamatrix.modeler.diagram.ui.editor.DiagramSelectionHandler)
      */
-    public void setSelectionHandler(IDiagramSelectionHandler selectionHandler) {
+    public void setSelectionHandler( IDiagramSelectionHandler selectionHandler ) {
         this.selectionHandler = selectionHandler;
     }
 
-	public boolean supportsExpanding() {
-		return supportsExpanding;
-	}
+    public boolean supportsExpanding() {
+        return supportsExpanding;
+    }
 
-	public void setSupportsExpanding(boolean supportsExpanding) {
-		this.supportsExpanding = supportsExpanding;
-	}
+    public void setSupportsExpanding( boolean supportsExpanding ) {
+        this.supportsExpanding = supportsExpanding;
+    }
 
 }

@@ -66,9 +66,8 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.widget.AbstractTableLabelProvider;
 
 /**
- * FavoritesView is a class designed to provide a table summary of user-defined EObjects or objects contained in MetaMatrix
- * models. The objects can be added to this table in various ways and removed or cleared via the actions and toolbar buttons
- * provided.
+ * FavoritesView is a class designed to provide a table summary of user-defined EObjects or objects contained in models. The
+ * objects can be added to this table in various ways and removed or cleared via the actions and toolbar buttons provided.
  */
 public class FavoritesView extends ViewPart
     implements ISelectionProvider, ISelectionListener, IModelerCacheListener, StringUtil.Constants {

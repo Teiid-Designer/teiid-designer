@@ -56,7 +56,7 @@ import com.metamatrix.metamodels.xsd.ui.XsdUiPlugin;
  * <!-- end-user-doc -->
  * @generated
  */
-public class MetaMatrixXsdModelWizard extends Wizard implements
+public class XsdModelWizard extends Wizard implements
                                                     INewWizard {
 
     /**
@@ -317,7 +317,7 @@ public class MetaMatrixXsdModelWizard extends Wizard implements
             gd.horizontalAlignment = GridData.FILL;
             gd.grabExcessHorizontalSpace = true;
             schemaPrefixText.setLayoutData(gd);
-            schemaPrefixText.setText(XsdUiPlugin.Util.getString("MetaMatrixXsdModelWizard.this_6")); //$NON-NLS-1$
+            schemaPrefixText.setText(XsdUiPlugin.Util.getString("XsdModelWizard.this_6")); //$NON-NLS-1$
 
             // -------------------------------------------------------------------------------------------------------------------
             Label schemaNamespaceLabel = new Label(composite, SWT.LEFT);
@@ -416,7 +416,7 @@ public class MetaMatrixXsdModelWizard extends Wizard implements
         //
         newFilePage = new XSDModelWizardNewFileCreationPage(
                                                                     XsdUiPlugin.Util
-                                                                                    .getString("MetaMatrixXsdModelWizard.Whatever_13"), initialSelection); //$NON-NLS-1$
+                                                                                    .getString("XsdModelWizard.Whatever_13"), initialSelection); //$NON-NLS-1$
         newFilePage.setTitle(XsdUiPlugin.Util.getString("_UI_XSDModelWizard_label")); //$NON-NLS-1$
         newFilePage.setDescription(XsdUiPlugin.Util.getString("_UI_XSDModelWizard_description")); //$NON-NLS-1$
         newFilePage
@@ -456,7 +456,7 @@ public class MetaMatrixXsdModelWizard extends Wizard implements
                 }
             }
         }
-        initialObjectPage = new XSDModelWizardInitialObjectCreationPage(XsdUiPlugin.Util.getString("MetaMatrixXsdModelWizard.Whatever2_23")); //$NON-NLS-1$
+        initialObjectPage = new XSDModelWizardInitialObjectCreationPage(XsdUiPlugin.Util.getString("XsdModelWizard.Whatever2_23")); //$NON-NLS-1$
         initialObjectPage.setTitle(XsdUiPlugin.Util.getString("_UI_XSDModelWizard_label")); //$NON-NLS-1$
         initialObjectPage.setDescription(XsdUiPlugin.Util.getString("_UI_Wizard_initial_object_description")); //$NON-NLS-1$
         // add wizard banner

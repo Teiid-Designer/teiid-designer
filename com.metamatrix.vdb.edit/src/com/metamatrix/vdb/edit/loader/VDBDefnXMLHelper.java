@@ -757,7 +757,7 @@ public class VDBDefnXMLHelper {
         userName.addContent(userNameContent);
         headerElement.addContent(userName);
 
-        Element serverVersion = new Element(VDBDefPropertyNames.METAMATRIX_SYSTEM_VERSION);
+        Element serverVersion = new Element(VDBDefPropertyNames.SYSTEM_VERSION);
         serverVersion.addContent(serverVersionContent);
         headerElement.addContent(serverVersion);
 

@@ -7,53 +7,57 @@
  */
 package com.metamatrix.ui.product;
 
-/** 
- * An <code>IProductCustomizer</code> provides the ability to customize the MetaMatrix Modeler product.
+/**
+ * An <code>IProductCustomizer</code> provides the ability to customize the Federate Designer product.
+ * 
  * @since 4.3
  */
 public interface IProductCustomizer {
-    
+
     /**
-     * Obtains the product identifier. 
+     * Obtains the product identifier.
+     * 
      * @return the ID (never <code>null</code>)
      * @since 4.3
      */
     String getProductId();
-    
+
     /**
-     * Informs the customizer to load it's product customizations. 
+     * Informs the customizer to load it's product customizations.
+     * 
      * @since 4.3
      */
     void loadCustomizations();
-    
+
     /**
-     * Indicates if the product supports the specified context. 
+     * Indicates if the product supports the specified context.
+     * 
      * @param theContext the context being checked
      * @return <code>true</code> if supported; <code>false</code> otherwise.
      * @throws IllegalArgumentException if an input parameter is <code>null</code>
      * @since 4.3
      */
-    boolean supports(IProductContext theContext);
-    
+    boolean supports( IProductContext theContext );
+
     /**
-     * Indicates if the product supports the specified value in the specified context. 
+     * Indicates if the product supports the specified value in the specified context.
+     * 
      * @param theContext the context being checked
      * @param theValue the value being checked
      * @return <code>true</code> if supported; <code>false</code> otherwise.
      * @throws IllegalArgumentException if an input parameter is <code>null</code>
      * @since 4.3
      */
-    boolean supports(IProductContext theContext, Object theValue);
-    
-    
+    boolean supports( IProductContext theContext,
+                      Object theValue );
+
     /**
-     * Obtains the product's primary navigation view id.
-     * This is required by some actions so they can programmatically set selection or reveal specific objects... typically
-     * in a tree view.  The default will be eclipse's resource navigator.
+     * Obtains the product's primary navigation view id. This is required by some actions so they can programmatically set
+     * selection or reveal specific objects... typically in a tree view. The default will be eclipse's resource navigator.
+     * 
      * @return the ID
      * @since 4.3
      */
     IProductCharacteristics getProductCharacteristics();
-    
-    
+
 }

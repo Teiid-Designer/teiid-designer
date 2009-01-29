@@ -319,7 +319,7 @@ public class XsdSemanticsEditorPage implements ModelEditorPage, ISelectionChange
                 // Get the IFile associated with the editor
                 final IResource xsdFile = ((IFileEditorInput)input).getFile();
                 if (xsdFile == null) {
-                    final String msg = ModelerXsdUiConstants.Util.getString("MetaMatrixXsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", input.getName()); //$NON-NLS-1$
+                    final String msg = ModelerXsdUiConstants.Util.getString("XsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", input.getName()); //$NON-NLS-1$
                     throw new PartInitException(msg);
                 }
 
@@ -330,27 +330,20 @@ public class XsdSemanticsEditorPage implements ModelEditorPage, ISelectionChange
 
                 // The resource must exist in the container
                 if (xsdResource == null) {
-                    final String msg = ModelerXsdUiConstants.Util.getString("MetaMatrixXsdEditor.Input_Error__Model_Editor_cannot_open_{0}_1", input.getName()); //$NON-NLS-1$
+                    final String msg = ModelerXsdUiConstants.Util.getString("XsdEditor.Input_Error__Model_Editor_cannot_open_{0}_1", input.getName()); //$NON-NLS-1$
                     throw new PartInitException(msg);
                 }
-                // modelProject =
                 xsdFile.getProject();
             } catch (ModelWorkspaceException e) {
-                final String msg = ModelerXsdUiConstants.Util.getString("MetaMatrixXsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", input.getName()); //$NON-NLS-1$
+                final String msg = ModelerXsdUiConstants.Util.getString("XsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", input.getName()); //$NON-NLS-1$
                 throw new PartInitException(msg, e);
             } catch (CoreException e) {
-                final String msg = ModelerXsdUiConstants.Util.getString("MetaMatrixXsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", input.getName()); //$NON-NLS-1$
+                final String msg = ModelerXsdUiConstants.Util.getString("XsdEditor.Input_Error__Model_Editor_cannot_open_{0}_2", input.getName()); //$NON-NLS-1$
                 throw new PartInitException(msg, e);
             }
-
-            // setSite(site);
-            // setInput(editorInput);
-            // title = (((IFileEditorInput)editorInput).getFile().getName());
-            // site.setSelectionProvider(new MultiPageSelectionProvider(this)); // EATM
-            // site.getPage().addPartListener(partListener);
         } else {
             throw new PartInitException(
-                                        ModelerXsdUiConstants.Util.getString("MetaMatrixXsdEditor.Invalid_Input__Must_be_IFileEditorInput._33")); //$NON-NLS-1$
+                                        ModelerXsdUiConstants.Util.getString("XsdEditor.Invalid_Input__Must_be_IFileEditorInput._33")); //$NON-NLS-1$
         }
     }
 

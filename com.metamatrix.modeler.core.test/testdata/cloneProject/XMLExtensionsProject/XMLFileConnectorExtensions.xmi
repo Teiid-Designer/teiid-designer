@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:mmext="http://www.metamatrix.com/metamodels/Extension">
-  <mmcore:ModelAnnotation xmi:uuid="mmuuid:61d94280-b86d-1ffe-bb3d-c715e2d4aaf4" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Extension" modelType="EXTENSION" ProducerName="MetaMatrix" ProducerVersion="5.0"/>
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:61d94280-b86d-1ffe-bb3d-c715e2d4aaf4" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Extension" modelType="EXTENSION" ProducerName="Federate Designer" ProducerVersion="5.0"/>
   <Diagram:DiagramContainer xmi:uuid="mmuuid:61d94281-b86d-1ffe-bb3d-c715e2d4aaf4">
     <diagram xmi:uuid="mmuuid:61d94282-b86d-1ffe-bb3d-c715e2d4aaf4" type="packageDiagramType" target="mmuuid/61d94280-b86d-1ffe-bb3d-c715e2d4aaf4">
       <diagramEntity xmi:uuid="mmuuid:61d94283-b86d-1ffe-bb3d-c715e2d4aaf4" name="XMLFileExtension" modelObject="mmuuid/61d94286-b86d-1ffe-bb3d-c715e2d4aaf4" xPosition="20" yPosition="20"/>

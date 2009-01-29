@@ -1283,7 +1283,7 @@ public class XsdUtil {
     }
 
     /**
-     * Get the MetaMatrix built-in datatype of the supplied type.
+     * Get the Federate Designer built-in datatype of the supplied type.
      * 
      * @param type
      * @return the built-in datatype or null if there is none.
@@ -1316,7 +1316,7 @@ public class XsdUtil {
     }
 
     /**
-     * Get the MetaMatrix built-in datatype of the supplied element declaration
+     * Get the Federate Designer built-in datatype of the supplied element declaration
      * 
      * @param element the element declaration; may not be null
      * @return the built-in datatype of the (resolved) element, or null if there is no type.
@@ -1327,7 +1327,7 @@ public class XsdUtil {
     }
 
     /**
-     * Get the MetaMatrix built-in datatype of the supplied supplied schema component
+     * Get the Federate Designer built-in datatype of the supplied supplied schema component
      * 
      * @param xsdComponent the component for which the datatype is to be returned
      * @return the built-in datatype or null if there is none.

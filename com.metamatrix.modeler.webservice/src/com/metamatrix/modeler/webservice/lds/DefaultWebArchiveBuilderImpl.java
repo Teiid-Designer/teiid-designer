@@ -171,7 +171,6 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
             replaceVariables(webInfDirectoryName, properties, contextName);
             // Get the external files.
             getExternalFiles(webInfLibDirectoryName);
-            copyLicenseFilesToClassesDirectory(webInfClassesDirectoryName, properties);
             monitor.worked(10);
 
             // Create JAR file containing the MMQuery (Embedded) files.
@@ -612,14 +611,6 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 
         String oswegoDir = PluginUtilities.getPluginProjectLocation("edu.oswego.util.concurrent", true); //$NON-NLS-1$
         FileUtils.copyFile(oswegoDir, libDirectoryName, "concurrent.jar"); //$NON-NLS-1$    
-    }
-
-    private void copyLicenseFilesToClassesDirectory( String classesDirName,
-                                                     Map properties ) throws Exception {
-        // Copy the license file to the web-inf/classes directory of the war file.
-        final String path = (String)properties.get(WebArchiveBuilderConstants.PROPERTY_LICENSE_FILE_PATH);
-        FileUtils.copyFile(path, classesDirName, WebArchiveBuilderConstants.LICENSE_NAME);
-        FileUtils.copyFile(path, classesDirName, WebArchiveBuilderConstants.LICENSE_CERT_NAME);
     }
 
 }

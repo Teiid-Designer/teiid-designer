@@ -29,8 +29,8 @@ import com.metamatrix.modeler.internal.core.ExternalResourceDescriptorImpl;
 import com.metamatrix.modeler.internal.core.ExternalResourceLoader;
 
 /**
- * RelationshipTypeManager is a singleton used for managing built-in Relationship Types.
- * A built-in relationship type is available to all Relationship models.
+ * RelationshipTypeManager is a singleton used for managing built-in Relationship Types. A built-in relationship type is available
+ * to all Relationship models.
  */
 public class RelationshipTypeManager {
 
@@ -53,8 +53,7 @@ public class RelationshipTypeManager {
     private final URI uri;
 
     /** Reference to the EMF resource for the primitive types model */
-//    private final Resource resource;
-
+    // private final Resource resource;
     /** Map of primitive type name to PrimitiveType instance */
     private final Map nameToType = new HashMap();
 
@@ -68,21 +67,21 @@ public class RelationshipTypeManager {
     private static final Object LOCK = new Object();
 
     public static class Names {
-        public static final String ANY              = "Any"; //$NON-NLS-1$
-        public static final String GENERIC          = "Generic"; //$NON-NLS-1$
-        public static final String COMPOSITION      = "Composition"; //$NON-NLS-1$
-        public static final String GENERALIZATION   = "Generalization"; //$NON-NLS-1$
-        public static final String DEPENDENCY       = "Dependency"; //$NON-NLS-1$
-        public static final String CLASSIFICATION   = "Classification"; //$NON-NLS-1$
-        public static final String CAUSALITY        = "Causality"; //$NON-NLS-1$
-        public static final String PROCESS          = "Process"; //$NON-NLS-1$
-        public static final String REALIZATION      = "Realization"; //$NON-NLS-1$
-        public static final String USAGE            = "Usage"; //$NON-NLS-1$
-        public static final String REFINEMENT       = "Refinement"; //$NON-NLS-1$
-        public static final String TRANSFORMATION   = "Transformation"; //$NON-NLS-1$
-        public static final String MANIFESTATION    = "Manifestation"; //$NON-NLS-1$
-        public static final String CONSUMPTION      = "Consumption"; //$NON-NLS-1$
-        public static final String COMPLIANCE       = "Compliance"; //$NON-NLS-1$
+        public static final String ANY = "Any"; //$NON-NLS-1$
+        public static final String GENERIC = "Generic"; //$NON-NLS-1$
+        public static final String COMPOSITION = "Composition"; //$NON-NLS-1$
+        public static final String GENERALIZATION = "Generalization"; //$NON-NLS-1$
+        public static final String DEPENDENCY = "Dependency"; //$NON-NLS-1$
+        public static final String CLASSIFICATION = "Classification"; //$NON-NLS-1$
+        public static final String CAUSALITY = "Causality"; //$NON-NLS-1$
+        public static final String PROCESS = "Process"; //$NON-NLS-1$
+        public static final String REALIZATION = "Realization"; //$NON-NLS-1$
+        public static final String USAGE = "Usage"; //$NON-NLS-1$
+        public static final String REFINEMENT = "Refinement"; //$NON-NLS-1$
+        public static final String TRANSFORMATION = "Transformation"; //$NON-NLS-1$
+        public static final String MANIFESTATION = "Manifestation"; //$NON-NLS-1$
+        public static final String CONSUMPTION = "Consumption"; //$NON-NLS-1$
+        public static final String COMPLIANCE = "Compliance"; //$NON-NLS-1$
     }
 
     /**
@@ -92,8 +91,8 @@ public class RelationshipTypeManager {
         super();
         ArgCheck.isNotNull(uri);
         this.uri = uri;
-//        this.resource =
-            doLoad(this.uri);
+        // this.resource =
+        doLoad(this.uri);
     }
 
     /**
@@ -103,16 +102,17 @@ public class RelationshipTypeManager {
         super();
         ArgCheck.isNotNull(resource);
         this.uri = resource.getURI();
-//        this.resource = resource;
+        // this.resource = resource;
     }
 
     /**
      * Obtain the shared instance.
+     * 
      * @return
      */
     public static RelationshipTypeManager getInstance() {
-        if ( INSTANCE == null ) {
-            synchronized(LOCK) {
+        if (INSTANCE == null) {
+            synchronized (LOCK) {
                 INSTANCE = new RelationshipTypeManager(BUILTIN_RELATIONSHIP_TYPES_URI);
             }
         }
@@ -121,6 +121,7 @@ public class RelationshipTypeManager {
 
     /**
      * Return the {@link ANY_TYPE_NAME Any} built-in {@link RelationshipType} instance.
+     * 
      * @return the reference to the Any built-in type
      */
     public RelationshipType getAnyRelationshipType() {
@@ -128,28 +129,28 @@ public class RelationshipTypeManager {
     }
 
     /**
-     * Return the built-in {@link RelationshipType} instance with the specified case-insensitive name. Only
-     * the MetaMatrix predefined built-in types are available through this manager. This method will return
-     * null for any name that is not one of these predefined types.
-     *
+     * Return the built-in {@link RelationshipType} instance with the specified case-insensitive name. Only the predefined
+     * built-in types are available through this manager. This method will return null for any name that is not one of these
+     * predefined types.
+     * 
      * @param name
      * @return
      */
     public RelationshipType getBuiltInRelationshipType( final String name ) {
-        return getBuiltInRelationshipType(name,false);
+        return getBuiltInRelationshipType(name, false);
     }
 
     /**
-     * Return the built-in {@link RelationshipType} instance with the specified name. Only
-     * the MetaMatrix predefined built-in types are available through this manager. This method will return
-     * null for any name that is not one of these predefined types.
-     *
+     * Return the built-in {@link RelationshipType} instance with the specified name. Only the predefined built-in types are
+     * available through this manager. This method will return null for any name that is not one of these predefined types.
+     * 
      * @param name
      * @return
      */
-    public RelationshipType getBuiltInRelationshipType( final String name, final boolean caseSensitive ) {
+    public RelationshipType getBuiltInRelationshipType( final String name,
+                                                        final boolean caseSensitive ) {
         ArgCheck.isNotZeroLength(name);
-        if ( caseSensitive ) {
+        if (caseSensitive) {
             return (RelationshipType)this.nameToType.get(name);
         }
         return (RelationshipType)this.lowercaseNameToType.get(name.toLowerCase());
@@ -161,38 +162,41 @@ public class RelationshipTypeManager {
 
     /**
      * Determine whether a built-in {@link RelationshipType} instance exists with the specified case-insensitive name.
+     * 
      * @param name
      * @return return true if a built-in RelationshipType instance exists with the specified name, or false otherwise.
      */
-    public boolean hasBuiltInRelationshipType(final String name) {
-        return hasBuiltInRelationshipType(name,false);
+    public boolean hasBuiltInRelationshipType( final String name ) {
+        return hasBuiltInRelationshipType(name, false);
     }
 
     /**
      * Determine whether a built-in {@link RelationshipType} instance exists with the specified name.
+     * 
      * @param name
      * @return return true if a built-in RelationshipType instance exists with the specified name, or false otherwise.
      */
-    public boolean hasBuiltInRelationshipType(final String name, final boolean caseSensitive) {
+    public boolean hasBuiltInRelationshipType( final String name,
+                                               final boolean caseSensitive ) {
         ArgCheck.isNotZeroLength(name);
-        if ( caseSensitive ) {
+        if (caseSensitive) {
             return this.nameToType.containsKey(name);
         }
         return this.lowercaseNameToType.containsKey(name.toLowerCase());
     }
 
     /**
-     * Return true if the supplied relationship type is one of the built-in types exposed by
-     * this manager.
+     * Return true if the supplied relationship type is one of the built-in types exposed by this manager.
+     * 
      * @param type the type; may not be null
      * @return
      */
     public boolean isBuiltInRelationshipType( final RelationshipType type ) {
         ArgCheck.isNotNull(type);
         final Resource resource = type.eResource();
-        if ( resource != null ) {
+        if (resource != null) {
             final URI typeResourceUri = resource.getURI();
-            if ( this.uri.equals(typeResourceUri) ) {
+            if (this.uri.equals(typeResourceUri)) {
                 return true;
             }
         }
@@ -202,15 +206,15 @@ public class RelationshipTypeManager {
     public boolean isBuiltInAnyRelationshipType( final RelationshipType type ) {
         ArgCheck.isNotNull(type);
         final String name = type.getName();
-        if ( ANY_TYPE_NAME.equals(name) ) {
-            if ( isBuiltInRelationshipType(type) ) {
+        if (ANY_TYPE_NAME.equals(name)) {
+            if (isBuiltInRelationshipType(type)) {
                 return true;
             }
             final Resource resource = type.eResource();
-            if ( resource != null ) {
+            if (resource != null) {
                 final String uriFragment = resource.getURIFragment(type);
-                if ( ANY_TYPE_URI_FRAGMENT.equals(uriFragment) ) {
-                    return true;        // the built-in model must be in the workspace as a normal model
+                if (ANY_TYPE_URI_FRAGMENT.equals(uriFragment)) {
+                    return true; // the built-in model must be in the workspace as a normal model
                 }
             }
         }
@@ -218,7 +222,7 @@ public class RelationshipTypeManager {
     }
 
     // ==================================================================================
-    //                    P R O T E C T E D       M E T H O D S
+    // P R O T E C T E D M E T H O D S
     // ==================================================================================
 
     protected URI getUri() {
@@ -232,12 +236,12 @@ public class RelationshipTypeManager {
         Resource theResource = null;
         if (container.getResource(modelUri, false) != null) {
             theResource = container.getResource(modelUri, false);
-            //System.out.println("Obtaining previously loaded resource " + modelUri);
+            // System.out.println("Obtaining previously loaded resource " + modelUri);
         } else {
             // Create a descriptor defining the primitive types external resource
             final ExternalResourceDescriptor descriptor = getExternalResourceDescriptor();
 
-            //System.out.println("Loading resource " + modelUri);
+            // System.out.println("Loading resource " + modelUri);
             theResource = loadContainer(descriptor, container);
         }
 
@@ -271,34 +275,34 @@ public class RelationshipTypeManager {
         return container;
     }
 
-    protected static Container createContainer(final String containerName) {
+    protected static Container createContainer( final String containerName ) {
         Container container = null;
         try {
             container = ModelerCore.createEmptyContainer(containerName);
         } catch (Throwable t) {
-            final Object[] params = new Object[]{containerName,BUILTIN_RELATIONSHIP_TYPES_MODEL_FILE_NAME};
-            final String msg = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeManager.Error_creating_model_container_{0}_when_loading_{1}_3",params); //$NON-NLS-1$
-            RelationshipMetamodelPlugin.Util.log(IStatus.ERROR, t,msg);
+            final Object[] params = new Object[] {containerName, BUILTIN_RELATIONSHIP_TYPES_MODEL_FILE_NAME};
+            final String msg = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeManager.Error_creating_model_container_{0}_when_loading_{1}_3", params); //$NON-NLS-1$
+            RelationshipMetamodelPlugin.Util.log(IStatus.ERROR, t, msg);
         }
         if (container == null) {
-            final Object[] params = new Object[]{containerName,BUILTIN_RELATIONSHIP_TYPES_MODEL_FILE_NAME};
-            final String msg = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeManager.Failed_to_create_model_container_{0}_when_loading_{1}_4",params); //$NON-NLS-1$
+            final Object[] params = new Object[] {containerName, BUILTIN_RELATIONSHIP_TYPES_MODEL_FILE_NAME};
+            final String msg = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeManager.Failed_to_create_model_container_{0}_when_loading_{1}_4", params); //$NON-NLS-1$
             RelationshipMetamodelPlugin.Util.log(IStatus.ERROR, msg);
         }
         return container;
     }
 
-    protected static Resource loadContainer(final ExternalResourceDescriptor descriptor,
-                                            final Container container) {
+    protected static Resource loadContainer( final ExternalResourceDescriptor descriptor,
+                                             final Container container ) {
         Resource resource = null;
         if (container != null) {
             final ExternalResourceLoader loader = new ExternalResourceLoader();
             try {
                 resource = loader.load(descriptor, container);
             } catch (Throwable t) {
-                final Object[] params = new Object[]{descriptor.getResourceName(),container.getName()};
-                final String msg = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeManager.Error_loading_external_resource_{0}_into_model_container_{1}_5",params); //$NON-NLS-1$
-                RelationshipMetamodelPlugin.Util.log(IStatus.ERROR, t,msg);
+                final Object[] params = new Object[] {descriptor.getResourceName(), container.getName()};
+                final String msg = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeManager.Error_loading_external_resource_{0}_into_model_container_{1}_5", params); //$NON-NLS-1$
+                RelationshipMetamodelPlugin.Util.log(IStatus.ERROR, t, msg);
             }
         }
         return resource;
@@ -323,16 +327,16 @@ public class RelationshipTypeManager {
             final URL installURL = FileLocator.resolve(RelationshipMetamodelPlugin.getDefault().getBundle().getEntry("/")); //$NON-NLS-1$
             resourceURL = FileLocator.toFileURL(new URL(installURL, BUILTIN_RELATIONSHIP_TYPES_ZIP_FILE_NAME)).getFile();
             if (resourceURL == null || resourceURL.trim().length() == 0) {
-                final Object[] params = new Object[]{BUILTIN_RELATIONSHIP_TYPES_ZIP_FILE_NAME};
-                final String msg = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeManager.Unable_to_create_an_absolute_path_to_the_resource_{0}_6",params); //$NON-NLS-1$
+                final Object[] params = new Object[] {BUILTIN_RELATIONSHIP_TYPES_ZIP_FILE_NAME};
+                final String msg = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeManager.Unable_to_create_an_absolute_path_to_the_resource_{0}_6", params); //$NON-NLS-1$
                 RelationshipMetamodelPlugin.Util.log(IStatus.ERROR, msg);
             } else {
                 descriptor.setResourceUrl(resourceURL);
             }
         } catch (Throwable t) {
-            final Object[] params = new Object[]{BUILTIN_RELATIONSHIP_TYPES_ZIP_FILE_NAME};
-            final String msg = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeManager.Error_creating_local_URL_for_{0}_7",params); //$NON-NLS-1$
-            RelationshipMetamodelPlugin.Util.log(IStatus.ERROR, t,msg);
+            final Object[] params = new Object[] {BUILTIN_RELATIONSHIP_TYPES_ZIP_FILE_NAME};
+            final String msg = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeManager.Error_creating_local_URL_for_{0}_7", params); //$NON-NLS-1$
+            RelationshipMetamodelPlugin.Util.log(IStatus.ERROR, t, msg);
         }
 
         // Define the temporary working directory location in terms of the declaring plugin location on the a file system
@@ -340,16 +344,16 @@ public class RelationshipTypeManager {
         try {
             tempDirPath = RelationshipMetamodelPlugin.getDefault().getStateLocation().toOSString();
             if (tempDirPath == null || tempDirPath.trim().length() == 0) {
-                final Object[] params = new Object[]{descriptor.getResourceUrl()};
-                final String msg = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeManager.Unable_to_create_an_absolute_path_to_the_data_directory_for_{0}_8",params); //$NON-NLS-1$
+                final Object[] params = new Object[] {descriptor.getResourceUrl()};
+                final String msg = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeManager.Unable_to_create_an_absolute_path_to_the_data_directory_for_{0}_8", params); //$NON-NLS-1$
                 RelationshipMetamodelPlugin.Util.log(IStatus.ERROR, msg);
             } else {
                 descriptor.setTempDirectoryPath(tempDirPath);
             }
         } catch (Throwable t) {
-            final Object[] params = new Object[]{BUILTIN_RELATIONSHIP_TYPES_ZIP_FILE_NAME};
-            final String msg = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeManager.Error_creating_the_absolute_path_to_the_data_directory_for_{0}_9",params); //$NON-NLS-1$
-            RelationshipMetamodelPlugin.Util.log(IStatus.ERROR, t,msg);
+            final Object[] params = new Object[] {BUILTIN_RELATIONSHIP_TYPES_ZIP_FILE_NAME};
+            final String msg = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeManager.Error_creating_the_absolute_path_to_the_data_directory_for_{0}_9", params); //$NON-NLS-1$
+            RelationshipMetamodelPlugin.Util.log(IStatus.ERROR, t, msg);
         }
 
         return descriptor;

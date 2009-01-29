@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:relational="http://www.metamatrix.com/metamodels/Relational">
-  <mmcore:ModelAnnotation xmi:uuid="mmuuid:142be580-ba31-1077-9601-f6a6b34c5871" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" ProducerName="MetaMatrix" ProducerVersion="5.5">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:142be580-ba31-1077-9601-f6a6b34c5871" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" ProducerName="Federate Designer" ProducerVersion="5.5">
     <modelImports xmi:uuid="mmuuid:85da6640-ba39-1077-9601-f6a6b34c5871" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
     <modelImports xmi:uuid="mmuuid:d8ee5e40-ba52-1077-9601-f6a6b34c5871" name="ModExt" modelLocation="../Extender/ModExt.xmi" uuid="mmuuid:86a39fc0-b9e3-1077-9601-f6a6b34c5871" modelType="EXTENSION" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Extension"/>
     <extensionPackage href="../Extender/ModExt.xmi#mmuuid/63302340-b9ea-1077-9601-f6a6b34c5871"/>

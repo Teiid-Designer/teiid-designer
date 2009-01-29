@@ -120,14 +120,6 @@ public class CoreMetamodelPlugin extends Plugin {
     static CoreMetamodelPlugin INSTANCE = null;
 
     /**
-     * Construct an instance of MetaMatrixPlugin.
-     * 
-     * @param descriptor
-     */
-    public CoreMetamodelPlugin() {
-    }
-
-    /**
      * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
      * @since 4.3.2
      */

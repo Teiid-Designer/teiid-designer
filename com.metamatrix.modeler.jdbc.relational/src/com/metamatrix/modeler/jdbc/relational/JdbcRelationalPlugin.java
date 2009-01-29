@@ -25,19 +25,15 @@ import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.modeler.jdbc.relational.impl.RelationalModelProcessorImpl;
 
 /**
- * JdbcRelationalPlugin
- * 
  * @since 4.0
  */
 public class JdbcRelationalPlugin extends Plugin implements ModelerJdbcRelationalConstants {
-    // ============================================================================================================================
-    // Constants
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(JdbcRelationalPlugin.class);
 
     public static boolean DEBUG = false;
 
-    /** Control defining whether relational models are created within a single transction. */
+    /** Control defining whether relational models are created within a single transaction. */
     public static boolean CREATE_MODEL_IN_TRANSACTION = true;
 
     private static final JdbcNodeToRelationalMapping JDBC_TO_RELATIONAL_MAPPING = new JdbcNodeToRelationalMappingImpl();
@@ -69,16 +65,10 @@ public class JdbcRelationalPlugin extends Plugin implements ModelerJdbcRelationa
         }
     }
 
-    // ============================================================================================================================
-    // Static Variables
-
     // The shared instance.
     private static JdbcRelationalPlugin plugin;
 
     private static Container modelCtnr;
-
-    // ============================================================================================================================
-    // Static Methods
 
     /**
      * Returns the shared instance.
@@ -90,9 +80,6 @@ public class JdbcRelationalPlugin extends Plugin implements ModelerJdbcRelationa
     }
 
     /**
-     * <p>
-     * </p>
-     * 
      * @since 4.0
      */
     public static Container getModelContainer() throws CoreException {
@@ -102,58 +89,12 @@ public class JdbcRelationalPlugin extends Plugin implements ModelerJdbcRelationa
         return JdbcRelationalPlugin.modelCtnr;
     }
 
-    // ============================================================================================================================
-    // Static Utility Methods
-
     /**
-     * <p>
-     * </p>
-     * 
      * @since 4.0
      */
     private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + id);
     }
-
-    // ============================================================================================================================
-    // Constructors
-
-    /**
-     * Construct an instance of MetaMatrixPlugin.
-     * 
-     * @since 4.0
-     */
-    public JdbcRelationalPlugin() {
-        JdbcRelationalPlugin.plugin = this;
-    }
-
-    // ============================================================================================================================
-    // Overridden Methods
-
-    /**
-     * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
-     * @since 5.0
-     */
-    @Override
-    public void start( BundleContext context ) throws Exception {
-        super.start(context);
-        ((PluginUtilImpl)Util).initializePlatformLogger(this); // This must be called to initialize the platform logger!
-    }
-
-    /**
-     * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-     * @since 5.0
-     */
-    @Override
-    public void stop( BundleContext context ) throws Exception {
-        if (JdbcRelationalPlugin.modelCtnr != null) {
-            JdbcRelationalPlugin.modelCtnr.shutdown();
-        }
-        super.stop(context);
-    }
-
-    // ============================================================================================================================
-    // Utility Methods
 
     /**
      * Create a new {@link RelationalModelProcessor Relational model processor} that can transform
@@ -252,5 +193,34 @@ public class JdbcRelationalPlugin extends Plugin implements ModelerJdbcRelationa
      */
     public static JdbcNodeToRelationalMapping getJdbcNodeToRelationalMapping() {
         return JDBC_TO_RELATIONAL_MAPPING;
+    }
+
+    /**
+     * @since 4.0
+     */
+    public JdbcRelationalPlugin() {
+        JdbcRelationalPlugin.plugin = this;
+    }
+
+    /**
+     * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
+     * @since 5.0
+     */
+    @Override
+    public void start( BundleContext context ) throws Exception {
+        super.start(context);
+        ((PluginUtilImpl)Util).initializePlatformLogger(this); // This must be called to initialize the platform logger!
+    }
+
+    /**
+     * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+     * @since 5.0
+     */
+    @Override
+    public void stop( BundleContext context ) throws Exception {
+        if (JdbcRelationalPlugin.modelCtnr != null) {
+            JdbcRelationalPlugin.modelCtnr.shutdown();
+        }
+        super.stop(context);
     }
 }

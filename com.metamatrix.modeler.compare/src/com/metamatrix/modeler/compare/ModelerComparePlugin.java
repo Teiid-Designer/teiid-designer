@@ -144,12 +144,6 @@ public class ModelerComparePlugin extends Plugin {
     }
 
     /**
-     * Construct an instance of MetaMatrixPlugin.
-     */
-    public ModelerComparePlugin() {
-    }
-
-    /**
      * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
      * @since 4.3.2
      */

@@ -121,10 +121,6 @@ public class SharedWsVdbContextEditor extends VdbContextImpl implements VdbConte
     private int vdbArchiveForm;
     private boolean saveIsRequired;
 
-    // ==================================================================================
-    // C O N S T R U C T O R S
-    // ==================================================================================
-
     /**
      * @since 5.0
      */
@@ -138,10 +134,6 @@ public class SharedWsVdbContextEditor extends VdbContextImpl implements VdbConte
         this.vdbArchiveForm = DEFAULT_VDB_FORM;
         this.saveIsRequired = false;
     }
-
-    // ==================================================================================
-    // I N T E R F A C E M E T H O D S
-    // ==================================================================================
 
     /**
      * @see com.metamatrix.vdb.edit.VdbContext#open(org.eclipse.core.runtime.IProgressMonitor, boolean)
@@ -990,10 +982,6 @@ public class SharedWsVdbContextEditor extends VdbContextImpl implements VdbConte
         this.getExecutionProperties().setProperty(propertyName, propertyValue);
     }
 
-    // ==================================================================================
-    // P U B L I C M E T H O D S
-    // ==================================================================================
-
     public VdbGenerationContextFactory getVdbGenerationContextFactory() {
         if (this.vdbGenerationContextFactory == null) {
             this.vdbGenerationContextFactory = new VdbGenerationContextFactoryImpl();
@@ -1012,10 +1000,6 @@ public class SharedWsVdbContextEditor extends VdbContextImpl implements VdbConte
         }
         return this.vdbContextValidator;
     }
-
-    // ==================================================================================
-    // P R O T E C T E D M E T H O D S
-    // ==================================================================================
 
     protected File[] findAllFilesInDirectoryRecursively( final File directory ) {
         final File[] files = FileUtils.findAllFilesInDirectoryRecursively(directory.getAbsolutePath());
@@ -1146,10 +1130,6 @@ public class SharedWsVdbContextEditor extends VdbContextImpl implements VdbConte
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Helper methods for working with IStatus objects
-    // -------------------------------------------------------------------------
-
     protected IStatus merge( final IStatus status1,
                              final IStatus status2,
                              final String desc ) {
@@ -1228,10 +1208,6 @@ public class SharedWsVdbContextEditor extends VdbContextImpl implements VdbConte
         }
         return resultStatus;
     }
-
-    // -------------------------------------------------------------------------
-    // Helper methods for working with the manifest model
-    // -------------------------------------------------------------------------
 
     protected void synchronizeContainer( final ResourceSet cntr,
                                          final File directory,
@@ -1466,7 +1442,7 @@ public class SharedWsVdbContextEditor extends VdbContextImpl implements VdbConte
                 modelReference.setPrimaryMetamodelUri(XSDPackage.eNS_URI);
 
                 // Else no ModelResource was found so the path must represent a
-                // non-MetaMatrix model file so store information about the
+                // non-Federate Designer model file so store information about the
                 // file in the ModelReference properties
             } else {
                 modelReference.setModelType(ModelType.UNKNOWN_LITERAL);
@@ -1515,10 +1491,6 @@ public class SharedWsVdbContextEditor extends VdbContextImpl implements VdbConte
 
         return nonModelRef;
     }
-
-    // -------------------------------------------------------------------------
-    // Helper methods for working with resources in the VDB
-    // -------------------------------------------------------------------------
 
     protected void saveInternalResourceInVdb( final File targetDirectory,
                                               final Resource internalResource,
@@ -1570,13 +1542,13 @@ public class SharedWsVdbContextEditor extends VdbContextImpl implements VdbConte
         for (Iterator i = eResources.iterator(); i.hasNext();) {
             Resource eResource = (Resource)i.next();
 
-            // If any model resource has a reference to the MetaMatrix "built-in datatypes" resource
+            // If any model resource has a reference to the built-in datatypes resource
             // then save that resource to the scratch directory for archiving
             if (hasImportTo(eResource, DatatypeConstants.BUILTIN_DATATYPES_URI)) {
                 URI uri = URI.createURI(DatatypeConstants.BUILTIN_DATATYPES_URI);
                 Resource mmTypes = resourceSet.getResource(uri, false);
 
-                // Save the MetaMatrix "built-in datatypes" resource to the VDB
+                // Save the built-in datatypes resource to the VDB
                 if (mmTypes != null) {
                     IPath pathInArchive = new Path(DatatypeConstants.DATATYPES_MODEL_FILE_NAME);
                     saveInternalResourceInVdb(targetDirectory, mmTypes, pathInArchive, problems, artifactsToWrite);
@@ -1694,10 +1666,6 @@ public class SharedWsVdbContextEditor extends VdbContextImpl implements VdbConte
         }
         return false;
     }
-
-    // -------------------------------------------------------------------------
-    // Helper methods for working with artifact generators
-    // -------------------------------------------------------------------------
 
     /**
      * @param monitor
@@ -1985,10 +1953,6 @@ public class SharedWsVdbContextEditor extends VdbContextImpl implements VdbConte
         return null;
     }
 
-    // ==================================================================================
-    // I N N E R C L A S S
-    // ==================================================================================
-
     private class Artifact {
         public final IPath path;
         public final File content;
@@ -2002,10 +1966,6 @@ public class SharedWsVdbContextEditor extends VdbContextImpl implements VdbConte
             this.workToWrite = workToWrite;
         }
     }
-
-    // ==================================================================================
-    // I N N E R C L A S S
-    // ==================================================================================
 
     private class ArtifactGeneratorThread extends Thread {
         private VdbGenerationContext context;

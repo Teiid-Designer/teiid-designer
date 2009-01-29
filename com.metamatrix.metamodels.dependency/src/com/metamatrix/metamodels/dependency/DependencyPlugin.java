@@ -106,12 +106,6 @@ public class DependencyPlugin extends Plugin {
     static DependencyPlugin INSTANCE = null;
 
     /**
-     * Construct an instance of MetaMatrixPlugin.
-     */
-    public DependencyPlugin() {
-    }
-
-    /**
      * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
      * @since 4.3.2
      */

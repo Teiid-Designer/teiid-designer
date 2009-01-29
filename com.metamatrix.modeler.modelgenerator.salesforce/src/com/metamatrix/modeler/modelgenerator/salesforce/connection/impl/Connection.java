@@ -37,7 +37,7 @@ public class Connection implements SalesforceConnection {
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see com.metamatrix.modeler.modelgenerator.salesforce.connection.SalesforceConnection#getBinding()
      */
     public SoapBindingStub getBinding() {

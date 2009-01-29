@@ -22,7 +22,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
-import com.metamatrix.metamodels.xsd.ui.editor.MetaMatrixXsdEditor;
+import com.metamatrix.metamodels.xsd.ui.editor.XsdEditor;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.ui.AbstractUiPlugin;
 import com.metamatrix.ui.actions.ActionService;
@@ -116,7 +116,7 @@ public class XsdUiPlugin extends AbstractUiPlugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         XsdUiPlugin.INSTANCE = this;
-        MetaMatrixXsdEditor.setResourceSet(ModelerCore.getModelContainer() );
+        XsdEditor.setResourceSet(ModelerCore.getModelContainer() );
         ((PluginUtilImpl)Util).initializePlatformLogger(this);   // This must be called to initialize the platform logger!
     }
 

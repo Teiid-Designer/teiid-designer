@@ -110,11 +110,11 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      */
     public static interface ILicense {
         String PRODUCT = MetaMatrixProductVersion.MODELER_PRODUCT_TYPE_NAME;
-        String PRODUCER_NAME = "MetaMatrix"; //$NON-NLS-1$
+        String PRODUCER_NAME = "Federate Designer"; //$NON-NLS-1$
         String VERSION = MetaMatrixProductVersion.VERSION_NUMBER;
     }
 
-    private static final String MINIMUM_JAVA_VERSION = "1.4.1"; //$NON-NLS-1$
+    private static final String MINIMUM_JAVA_VERSION = "1.6"; //$NON-NLS-1$
 
     /**
      * The plug-in identifier of the Modeler Resources support (value <code>"com.metamatrix.modeler.core"</code>).
@@ -154,7 +154,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
 
     /**
      * <p>
-     * The file extension of MetaMatrix model files.
+     * The file extension of Federate Designer model files.
      * </p>
      * 
      * @since 4.0
@@ -174,7 +174,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
 
     /**
      * <p>
-     * The file extension of MetaMatrix Virtual Database (VDB) files.
+     * The file extension of Virtual Database (VDB) files.
      * </p>
      * 
      * @since 4.0

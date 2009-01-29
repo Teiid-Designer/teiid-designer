@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
-  <mmcore:ModelAnnotation xmi:uuid="mmuuid:fbad5100-0db6-1eec-8518-c32201e76066" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" ProducerName="MetaMatrix" ProducerVersion="5.0">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:fbad5100-0db6-1eec-8518-c32201e76066" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" ProducerName="Federate Designer" ProducerVersion="5.0">
     <modelImports xmi:uuid="mmuuid:fbd7c500-bf14-1f2c-9911-b53abd16b14e" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema" modelType="PHYSICAL" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
   </mmcore:ModelAnnotation>
   <Relational:BaseTable xmi:uuid="mmuuid:fd3c03c0-0db6-1eec-8518-c32201e76066" name="AUTHORS" nameInSource="AUTHORS" cardinality="59">

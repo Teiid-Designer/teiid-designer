@@ -49,13 +49,13 @@ public class ModelerSdtPlugin extends Plugin {
     private static final String BUNDLE_NAME = PLUGIN_ID + ".i18n"; //$NON-NLS-1$
     public static final PluginUtil Util = new PluginUtilImpl(PLUGIN_ID, BUNDLE_NAME, ResourceBundle.getBundle(BUNDLE_NAME));
 
-    /** Shared resource set containing the MetaMatrix built-in types resource */
+    /** Shared resource set containing the Federate Designer built-in types resource */
     protected static ResourceSet globalResourceSet;
 
-    /** Shared resource set containing the MetaMatrix built-in types resource */
+    /** Shared resource set containing the Federate Designer built-in types resource */
     protected static Resource builtInTypesResource;
 
-    /** Logical URI of the MetaMatrix built-in types resource */
+    /** Logical URI of the Federate Designer built-in types resource */
     protected static URI BUILTIN_DATATYPES_URI = URI.createURI(DatatypeConstants.BUILTIN_DATATYPES_URI);
 
     // The shared instance.
@@ -110,7 +110,7 @@ public class ModelerSdtPlugin extends Plugin {
     }
 
     /**
-     * Return the shared resource set containing the MetaMatrix built-in types resource
+     * Return the shared resource set containing the Federate Designer built-in types resource
      * 
      * @return
      * @since 4.3
@@ -126,7 +126,7 @@ public class ModelerSdtPlugin extends Plugin {
     }
 
     /**
-     * Return the shared MetaMatrix built-in types resource
+     * Return the shared Federate Designer built-in types resource
      * 
      * @return
      * @since 4.3
