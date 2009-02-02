@@ -1,14 +1,5 @@
 /*
- * JBoss, Home of Professional Open Source.
- *
- * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
- *
- * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
- */
-package com.metamatrix.query.internal.ui.sqleditor;
-
-/*
- * Copyright (C) 2002-2003 Andrea Mazzolini
+ * Copyright (C) 2002-2004 Andrea Mazzolini
  * andreamazzolini@users.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or
@@ -25,6 +16,7 @@ package com.metamatrix.query.internal.ui.sqleditor;
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+package com.metamatrix.query.internal.ui.sqleditor;
 
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
