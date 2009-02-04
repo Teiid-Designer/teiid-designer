@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="federate_embedded_query" default="build.jars" basedir=".">
+
+	<property name="basews" value="${ws}"/>
+	<property name="baseos" value="${os}"/>
+	<property name="basearch" value="${arch}"/>
+	<property name="basenl" value="${nl}"/>
+	<property name="bundleId" value="federate_embedded_query"/>
+	<property name="bundleVersion" value="6.0.0"/>
+
+	<!-- Compiler settings. -->
+	<property name="javacFailOnError" value="false"/>
+	<property name="javacDebugInfo" value="on"/>
+	<property name="javacVerbose" value="false"/>
+	<property name="logExtension" value=".log"/>
+	<property name="compilerArg" value=""/>
+	<property name="javacSource" value="1.3"/>
+	<property name="javacTarget" value="1.2"/>
+	<condition property="dir_bootclasspath" value="${java.home}/../Classes">
+		<os family="mac"/>
+	</condition>
+	<property name="dir_bootclasspath" value="${java.home}/lib"/>
+	<path id="path_bootclasspath">
+		<fileset dir="${dir_bootclasspath}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<property name="bootclasspath" refid="path_bootclasspath"/>
+<condition property="bundleBootClasspath" value="${JavaSE-1.6}"	>
+		<isset property="JavaSE-1.6"/>
+	</condition>
+<condition property="bundleJavacSource" value="1.6"	>
+		<isset property="JavaSE-1.6"/>
+	</condition>
+<condition property="bundleJavacTarget" value="1.6"	>
+		<isset property="JavaSE-1.6"/>
+	</condition>
+	<property name="bundleJavacSource" value="${javacSource}"/>
+	<property name="bundleJavacTarget" value="${javacTarget}"/>
+	<property name="bundleBootClasspath" value="${bootclasspath}"/>
+
+	<target name="init" depends="properties">
+<condition property="pluginTemp" value="${buildTempFolder}/plugins"		>
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="pluginTemp" value="${basedir}"/>
+<condition property="build.result.folder" value="${pluginTemp}/federate_embedded_query_6.0.0"		>
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="build.result.folder" value="${basedir}"/>
+		<property name="temp.folder" value="${basedir}/temp.folder"/>
+		<property name="plugin.destination" value="${basedir}"/>
+	</target>
+
+	<target name="properties" if="eclipse.running">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+	</target>
+
+	<target name="build.update.jar" depends="init" description="Build the plug-in: federate_embedded_query for an update site.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<jar destfile="${plugin.destination}/federate_embedded_query_6.0.0.jar" basedir="${temp.folder}/federate_embedded_query_6.0.0" filesetmanifest="merge"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="library.jar" depends="init" unless="library.jar" description="Create jar: federate_embedded_query library.jar.">
+		<delete dir="${temp.folder}/library.jar.bin"/>
+		<mkdir dir="${temp.folder}/library.jar.bin"/>
+		<path id="library.jar.classpath">
+			<pathelement path="federate-0.0.1-SNAPSHOT-embedded.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/federate-0.0.1-SNAPSHOT-embedded.jar"/>
+			<pathelement path="lib/axis-1.3.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/axis-1.3.jar"/>
+			<pathelement path="lib/axis-jaxrpc-1.2.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/axis-jaxrpc-1.2.jar"/>
+			<pathelement path="lib/axis-saaj-1.2.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/axis-saaj-1.2.jar"/>
+			<pathelement path="lib/axis-schema-1.3.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/axis-schema-1.3.jar"/>
+			<pathelement path="lib/axis-wsdl4j-1.5.1.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/axis-wsdl4j-1.5.1.jar"/>
+			<pathelement path="lib/commons-codec-1.2.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/commons-codec-1.2.jar"/>
+			<pathelement path="lib/commons-discovery-0.2.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/commons-discovery-0.2.jar"/>
+			<pathelement path="lib/commons-httpclient-3.0.1.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/commons-httpclient-3.0.1.jar"/>
+			<pathelement path="lib/commons-logging-1.0.4-jboss.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/commons-logging-1.0.4-jboss.jar"/>
+			<pathelement path="lib/commons-logging-1.1.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/commons-logging-1.1.jar"/>
+			<pathelement path="lib/concurrent-1.3.4.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/concurrent-1.3.4.jar"/>
+			<pathelement path="lib/connector-api-1.5.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/connector-api-1.5.jar"/>
+			<pathelement path="lib/guice-1.0.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/guice-1.0.jar"/>
+			<pathelement path="lib/jaxen-1.1.1.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jaxen-1.1.1.jar"/>
+			<pathelement path="lib/jboss-cache-2.0.0.GA.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jboss-cache-2.0.0.GA.jar"/>
+			<pathelement path="lib/jbossjta-4.3.0.GA.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jbossjta-4.3.0.GA.jar"/>
+			<pathelement path="lib/jbossjta-integration-4.3.0.GA.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jbossjta-integration-4.3.0.GA.jar"/>
+			<pathelement path="lib/jbossts-common-4.3.0.GA.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jbossts-common-4.3.0.GA.jar"/>
+			<pathelement path="lib/jdom-1.0.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jdom-1.0.jar"/>
+			<pathelement path="lib/jms-1.1.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jms-1.1.jar"/>
+			<pathelement path="lib/jta-1.1.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jta-1.1.jar"/>
+			<pathelement path="lib/log4j-1.2.8.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/log4j-1.2.8.jar"/>
+			<pathelement path="lib/opensaml-1.1b.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/opensaml-1.1b.jar"/>
+			<pathelement path="lib/saxon-8.7.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/saxon-8.7.jar"/>
+			<pathelement path="lib/saxon-dom-8.7.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/saxon-dom-8.7.jar"/>
+			<pathelement path="lib/servlet-api-2.5.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/servlet-api-2.5.jar"/>
+			<pathelement path="lib/wsdl4j-1.5.1.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/wsdl4j-1.5.1.jar"/>
+			<pathelement path="lib/wss4j-1.5.0.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/wss4j-1.5.0.jar"/>
+			<pathelement path="lib/xalan-2.7.0.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/xalan-2.7.0.jar"/>
+			<pathelement path="lib/xmlsec-1.3.0.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/xmlsec-1.3.0.jar"/>
+		</path>
+		<!-- compile the source code -->
+		<javac destdir="${temp.folder}/library.jar.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${bundleJavacSource}" target="${bundleJavacTarget}"		>
+			<compilerarg line="${compilerArg}" compiler="${build.compiler}"/>
+			<classpath refid="library.jar.classpath" />
+			<src path="src/"			/>
+			<compilerarg line="-log '${temp.folder}/library.jar.bin${logExtension}'" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+		</javac>
+		<!-- Copy necessary resources -->
+		<copy todir="${temp.folder}/library.jar.bin" failonerror="true" overwrite="false">
+			<fileset dir="src/">
+				<exclude name="**/*.java"/>
+				<exclude name="**/package.htm*"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${build.result.folder}"/>
+		<jar destfile="${build.result.folder}/library.jar" basedir="${temp.folder}/library.jar.bin"/>
+		<delete dir="${temp.folder}/library.jar.bin"/>
+	</target>
+
+	<target name="librarysrc.zip" depends="init" unless="librarysrc.zip">
+		<mkdir dir="${build.result.folder}"/>
+		<antcall target="zip.librarysrc.zip"/>
+	</target>
+	<target name="zip.librarysrc.zip">
+		<zip destfile="${build.result.folder}/librarysrc.zip" filesonly="false" whenempty="skip" update="false">
+			<fileset dir="src/">
+				<include name="**/*.java"/>
+			</fileset>
+		</zip>
+	</target>
+	<target name="copy.librarysrc.zip">
+		<copy todir="${source.destination.folder}/librarysrc" failonerror="true" overwrite="true">
+			<fileset dir="src/">
+				<include name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="build.jars" depends="init" description="Compile classes and build nested jars for the plug-in: federate_embedded_query.">
+		<available property="library.jar" file="${build.result.folder}/library.jar"/>
+		<antcall target="library.jar"/>
+	</target>
+
+	<target name="build.sources" depends="init">
+		<available property="librarysrc.zip" file="${build.result.folder}/librarysrc.zip"/>
+		<antcall target="librarysrc.zip"/>
+	</target>
+
+	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/federate_embedded_query_6.0.0"/>
+		<copy todir="${destination.temp.folder}/federate_embedded_query_6.0.0" failonerror="true" overwrite="false">
+			<fileset dir="${build.result.folder}">
+				<include name="library.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${destination.temp.folder}/federate_embedded_query_6.0.0" failonerror="true" overwrite="false">
+			<fileset dir="${basedir}">
+				<include name="library.jar"/>
+				<include name="plugin.xml"/>
+				<include name="plugin.properties"/>
+				<include name="META-INF/"/>
+				<include name="federate-0.0.1-SNAPSHOT-embedded.jar"/>
+				<include name="lib/axis-1.3.jar"/>
+				<include name="lib/axis-jaxrpc-1.2.jar"/>
+				<include name="lib/axis-saaj-1.2.jar"/>
+				<include name="lib/axis-schema-1.3.jar"/>
+				<include name="lib/axis-wsdl4j-1.5.1.jar"/>
+				<include name="lib/commons-codec-1.2.jar"/>
+				<include name="lib/commons-discovery-0.2.jar"/>
+				<include name="lib/commons-httpclient-3.0.1.jar"/>
+				<include name="lib/commons-logging-1.0.4-jboss.jar"/>
+				<include name="lib/commons-logging-1.1.jar"/>
+				<include name="lib/concurrent-1.3.4.jar"/>
+				<include name="lib/connector-api-1.5.jar"/>
+				<include name="lib/guice-1.0.jar"/>
+				<include name="lib/jaxen-1.1.1.jar"/>
+				<include name="lib/jboss-cache-2.0.0.GA.jar"/>
+				<include name="lib/jbossjta-4.3.0.GA.jar"/>
+				<include name="lib/jbossjta-integration-4.3.0.GA.jar"/>
+				<include name="lib/jbossts-common-4.3.0.GA.jar"/>
+				<include name="lib/jdom-1.0.jar"/>
+				<include name="lib/jms-1.1.jar"/>
+				<include name="lib/jta-1.1.jar"/>
+				<include name="lib/log4j-1.2.8.jar"/>
+				<include name="lib/opensaml-1.1b.jar"/>
+				<include name="lib/saxon-8.7.jar"/>
+				<include name="lib/saxon-dom-8.7.jar"/>
+				<include name="lib/servlet-api-2.5.jar"/>
+				<include name="lib/wsdl4j-1.5.1.jar"/>
+				<include name="lib/wss4j-1.5.0.jar"/>
+				<include name="lib/xalan-2.7.0.jar"/>
+				<include name="lib/xmlsec-1.3.0.jar"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="build.zips" depends="init">
+	</target>
+
+	<target name="gather.sources" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/federate_embedded_query_6.0.0"/>
+		<copy file="${build.result.folder}/librarysrc.zip" todir="${destination.temp.folder}/federate_embedded_query_6.0.0" failonerror="false" overwrite="false"/>
+		<antcall target="copy.src.includes">
+			<param name="source.destination.folder" value="${destination.temp.folder}/federate_embedded_query_6.0.0"/>
+		</antcall>
+	</target>
+
+	<target name="gather.individual.sources" depends="init">
+		<antcall target="copy.librarysrc.zip">
+			<param name="source.destination.folder" value="${destination.temp.folder}"/>
+		</antcall>
+		<antcall target="copy.src.includes">
+			<param name="source.destination.folder" value="${destination.temp.folder}"/>
+		</antcall>
+	</target>
+
+	<target name="copy.src.includes" depends="init">
+	</target>
+
+	<target name="gather.logs" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/federate_embedded_query_6.0.0"/>
+		<copy todir="${destination.temp.folder}/federate_embedded_query_6.0.0" failonerror="false" overwrite="false">
+			<fileset dir="${temp.folder}">
+				<include name="library.jar.bin${logExtension}"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean" depends="init" description="Clean the plug-in: federate_embedded_query of all the zips, jars and logs created.">
+		<delete file="${build.result.folder}/library.jar"/>
+		<delete file="${build.result.folder}/librarysrc.zip"/>
+		<delete file="${plugin.destination}/federate_embedded_query_6.0.0.jar"/>
+		<delete file="${plugin.destination}/federate_embedded_query_6.0.0.zip"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
+		<eclipse.convertPath fileSystemPath="/home/jverhaeg/workspace/metamatrix/federate_embedded_query" property="resourcePath"/>
+		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite"/>
+	</target>
+
+	<target name="zip.plugin" depends="init" description="Create a zip containing all the elements for the plug-in: federate_embedded_query.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="build.sources"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<antcall target="gather.sources">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<delete>
+			<fileset dir="${temp.folder}">
+				<include name="**/*.bin${logExtension}"/>
+			</fileset>
+		</delete>
+		<zip destfile="${plugin.destination}/federate_embedded_query_6.0.0.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+</project>

@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="com.metamatrix.modeler.diagram.ui" default="build.jars" basedir=".">
+
+	<property name="basews" value="${ws}"/>
+	<property name="baseos" value="${os}"/>
+	<property name="basearch" value="${arch}"/>
+	<property name="basenl" value="${nl}"/>
+	<property name="bundleId" value="com.metamatrix.modeler.diagram.ui"/>
+	<property name="bundleVersion" value="6.0.0"/>
+
+	<!-- Compiler settings. -->
+	<property name="javacFailOnError" value="false"/>
+	<property name="javacDebugInfo" value="on"/>
+	<property name="javacVerbose" value="false"/>
+	<property name="logExtension" value=".log"/>
+	<property name="compilerArg" value=""/>
+	<property name="javacSource" value="1.3"/>
+	<property name="javacTarget" value="1.2"/>
+	<condition property="dir_bootclasspath" value="${java.home}/../Classes">
+		<os family="mac"/>
+	</condition>
+	<property name="dir_bootclasspath" value="${java.home}/lib"/>
+	<path id="path_bootclasspath">
+		<fileset dir="${dir_bootclasspath}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<property name="bootclasspath" refid="path_bootclasspath"/>
+<condition property="bundleBootClasspath" value="${JavaSE-1.6}"	>
+		<isset property="JavaSE-1.6"/>
+	</condition>
+<condition property="bundleJavacSource" value="1.6"	>
+		<isset property="JavaSE-1.6"/>
+	</condition>
+<condition property="bundleJavacTarget" value="1.6"	>
+		<isset property="JavaSE-1.6"/>
+	</condition>
+	<property name="bundleJavacSource" value="${javacSource}"/>
+	<property name="bundleJavacTarget" value="${javacTarget}"/>
+	<property name="bundleBootClasspath" value="${bootclasspath}"/>
+
+	<target name="init" depends="properties">
+<condition property="pluginTemp" value="${buildTempFolder}/plugins"		>
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="pluginTemp" value="${basedir}"/>
+<condition property="build.result.folder" value="${pluginTemp}/com.metamatrix.modeler.diagram.ui_6.0.0"		>
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="build.result.folder" value="${basedir}"/>
+		<property name="temp.folder" value="${basedir}/temp.folder"/>
+		<property name="plugin.destination" value="${basedir}"/>
+	</target>
+
+	<target name="properties" if="eclipse.running">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+	</target>
+
+	<target name="build.update.jar" depends="init" description="Build the plug-in: com.metamatrix.modeler.diagram.ui for an update site.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<jar destfile="${plugin.destination}/com.metamatrix.modeler.diagram.ui_6.0.0.jar" basedir="${temp.folder}/com.metamatrix.modeler.diagram.ui_6.0.0" filesetmanifest="merge"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="modelerDiagramUi.jar" depends="init" unless="modelerDiagramUi.jar" description="Create jar: com.metamatrix.modeler.diagram.ui modelerDiagramUi.jar.">
+		<delete dir="${temp.folder}/modelerDiagramUi.jar.bin"/>
+		<mkdir dir="${temp.folder}/modelerDiagramUi.jar.bin"/>
+		<path id="modelerDiagramUi.jar.classpath">
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ui.ide_3.4.1.M20080903-2000.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/com.ibm.icu_3.8.1.v20080530.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.resources_3.4.1.R34x_v20080902.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.resources.compatibility_3.4.0.v20080604-1400.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ant.core_3.2.0.v20080529.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.variables_3.2.100.v20080529-1300.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.runtime_3.4.0.v20080512.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.osgi_3.4.2.R34x_v20080826-1230.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.equinox.common_3.4.0.v20080421-2006.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.jobs_3.4.0.v20080512.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.200.v20080610/runtime_registry_compatibility.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.200.v20080610/@dot"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.equinox.registry_3.4.0.v20080516-0950.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.equinox.preferences_3.2.201.R34x_v20080709.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.contenttype_3.3.0.v20080604-1400.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.runtime.compatibility.auth_3.2.100.v20070502.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.equinox.app_1.1.0.v20080421-2006.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.osgi.services_3.1.200.v20071203.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/javax.servlet_2.4.0.v200806031604.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.expressions_3.4.0.v20080603-2000.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.filesystem_1.2.0.v20080604-1400.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.filesystem.linux.x86_1.2.0.v20080604-1400.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.help_3.3.101.v20080702_34x.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ui_3.4.1.M20080910-0800.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.swt_3.4.1.v3449c.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.swt.gtk.linux.x86_3.4.1.v3449c.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.jface_3.4.1.M20080827-2000.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.commands_3.4.0.I20080509-2000.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ui.workbench_3.4.1.M20080827-0800a.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ui.workbench.compatibility_3.2.0.I20080509-2000/compatibility.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ui.workbench.compatibility_3.2.0.I20080509-2000/@dot"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.jface.databinding_1.2.1.M20080827-0800a.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.databinding_1.1.1.M20080827-0800b.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ui.views_3.3.0.I20080509-2000.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.update.configurator_3.2.201.R34x_v20080819.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.update.core_3.2.201.R34x_v20080714.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.update.core.linux_3.2.0.v20080422.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.net_1.1.0.I20080604.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.net.linux.x86_1.0.0.I20080521.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.equinox.security_1.0.1.R34x_v20080721.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.update.ui_3.2.100.v20080318.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ui.forms_3.3.101.v20080708_34x.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.jface.text_3.4.1.r341_v20080827-1100.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.text_3.4.0.v20080605-1800.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ui.workbench.texteditor_3.4.1.r341_v20080827-1100.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ui.editors_3.4.0.v20080603-2000.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.core.filebuffers_3.4.0.v20080603-2000.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.gef_3.4.0.v20080526.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.draw2d_3.4.0.v20080529.jar"/>
+			<pathelement path="../com.metamatrix.modeler.ui/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.ui_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.ui/modelerUi.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.ui_6.0.0/modelerUi.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ui.cheatsheets_3.3.101.v20080702_34x.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.lucene_1.9.1.v20080530-1600.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.help.base_3.3.101.M20080728_34x.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.equinox.http.jetty_1.1.0.v20080425.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.equinox.http.servlet_1.0.100.v20080427-0830.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.mortbay.jetty_5.1.14.v200806031611.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.commons.logging_1.0.4.v20080605-1930.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.lucene.analysis_1.9.1.v20080530-1600.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.help.ui_3.3.101.M20080715_34x.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.search_3.4.1.r341_v20080813-0800.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ltk.core.refactoring_3.4.1.r341_v20080716-0800.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ltk.ui.refactoring_3.4.1.r341_v20080716-0800.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ui.navigator_3.3.101.M20080827-0800.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.compare_3.4.0.I20080604.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.team.core_3.4.1.r34x_20080827.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.team.ui_3.4.1.r34x_20080827.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ui.navigator.resources_3.3.101.M20080910-0800.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.ui.views.properties.tabbed_3.4.1.M20080730-0800.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.emf.edit.ui_2.4.1.v200808251517.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.emf.edit_2.4.1.v200808251517.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.emf.common_2.4.0.v200808251517.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.emf.ecore_2.4.1.v200808251517.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.emf.ecore.change_2.4.0.v200808251517.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.emf.common.ui_2.4.0.v200808251517.jar"/>
+			<pathelement path="../com.metamatrix.modeler.core/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.core_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.core/modelerCore.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.core_6.0.0/modelerCore.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.emf.ecore.xmi_2.4.1.v200808251517.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.emf.ecore.edit_2.4.1.v200808251517.jar"/>
+			<pathelement path="../com.metamatrix.metamodels.diagram/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.diagram_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.diagram/metamodelsDiagram.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.diagram_6.0.0/metamodelsDiagram.jar"/>
+			<pathelement path="../com.metamatrix.core.modeler/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.core.modeler_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.core.modeler/coreModeler.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.core.modeler_6.0.0/coreModeler.jar"/>
+			<pathelement path="../federate_embedded_query/bin/"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/bin/"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query/library.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/library.jar"/>
+			<pathelement path="../federate_embedded_query/bin"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/bin"/>
+			<pathelement path="../federate_embedded_query/federate-0.0.1-SNAPSHOT-embedded.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/federate-0.0.1-SNAPSHOT-embedded.jar"/>
+			<pathelement path="../federate_embedded_query/lib/axis-1.3.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/axis-1.3.jar"/>
+			<pathelement path="../federate_embedded_query/lib/axis-jaxrpc-1.2.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/axis-jaxrpc-1.2.jar"/>
+			<pathelement path="../federate_embedded_query/lib/axis-saaj-1.2.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/axis-saaj-1.2.jar"/>
+			<pathelement path="../federate_embedded_query/lib/axis-schema-1.3.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/axis-schema-1.3.jar"/>
+			<pathelement path="../federate_embedded_query/lib/axis-wsdl4j-1.5.1.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/axis-wsdl4j-1.5.1.jar"/>
+			<pathelement path="../federate_embedded_query/lib/commons-codec-1.2.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/commons-codec-1.2.jar"/>
+			<pathelement path="../federate_embedded_query/lib/commons-discovery-0.2.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/commons-discovery-0.2.jar"/>
+			<pathelement path="../federate_embedded_query/lib/commons-httpclient-3.0.1.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/commons-httpclient-3.0.1.jar"/>
+			<pathelement path="../federate_embedded_query/lib/commons-logging-1.0.4-jboss.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/commons-logging-1.0.4-jboss.jar"/>
+			<pathelement path="../federate_embedded_query/lib/commons-logging-1.1.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/commons-logging-1.1.jar"/>
+			<pathelement path="../federate_embedded_query/lib/concurrent-1.3.4.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/concurrent-1.3.4.jar"/>
+			<pathelement path="../federate_embedded_query/lib/connector-api-1.5.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/connector-api-1.5.jar"/>
+			<pathelement path="../federate_embedded_query/lib/guice-1.0.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/guice-1.0.jar"/>
+			<pathelement path="../federate_embedded_query/lib/jaxen-1.1.1.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jaxen-1.1.1.jar"/>
+			<pathelement path="../federate_embedded_query/lib/jboss-cache-2.0.0.GA.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jboss-cache-2.0.0.GA.jar"/>
+			<pathelement path="../federate_embedded_query/lib/jbossjta-4.3.0.GA.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jbossjta-4.3.0.GA.jar"/>
+			<pathelement path="../federate_embedded_query/lib/jbossjta-integration-4.3.0.GA.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jbossjta-integration-4.3.0.GA.jar"/>
+			<pathelement path="../federate_embedded_query/lib/jbossts-common-4.3.0.GA.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jbossts-common-4.3.0.GA.jar"/>
+			<pathelement path="../federate_embedded_query/lib/jdom-1.0.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jdom-1.0.jar"/>
+			<pathelement path="../federate_embedded_query/lib/jms-1.1.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jms-1.1.jar"/>
+			<pathelement path="../federate_embedded_query/lib/jta-1.1.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/jta-1.1.jar"/>
+			<pathelement path="../federate_embedded_query/lib/log4j-1.2.8.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/log4j-1.2.8.jar"/>
+			<pathelement path="../federate_embedded_query/lib/opensaml-1.1b.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/opensaml-1.1b.jar"/>
+			<pathelement path="../federate_embedded_query/lib/saxon-8.7.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/saxon-8.7.jar"/>
+			<pathelement path="../federate_embedded_query/lib/saxon-dom-8.7.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/saxon-dom-8.7.jar"/>
+			<pathelement path="../federate_embedded_query/lib/servlet-api-2.5.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/servlet-api-2.5.jar"/>
+			<pathelement path="../federate_embedded_query/lib/wsdl4j-1.5.1.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/wsdl4j-1.5.1.jar"/>
+			<pathelement path="../federate_embedded_query/lib/wss4j-1.5.0.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/wss4j-1.5.0.jar"/>
+			<pathelement path="../federate_embedded_query/lib/xalan-2.7.0.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/xalan-2.7.0.jar"/>
+			<pathelement path="../federate_embedded_query/lib/xmlsec-1.3.0.jar"/>
+			<pathelement path="${build.result.folder}/../federate_embedded_query_6.0.0/lib/xmlsec-1.3.0.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.junit4_4.3.1/junit.jar"/>
+			<pathelement path="../com.metamatrix.metamodels.transformation/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.transformation_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.transformation/metamodelsTransformation.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.transformation_6.0.0/metamodelsTransformation.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.emf.mapping_2.4.0.v200808251517.jar"/>
+			<pathelement path="../com.metamatrix.metamodels.core/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.core_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.core/metamodelsCore.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.core_6.0.0/metamodelsCore.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.xsd_2.4.0.v200806091234.jar"/>
+			<pathelement path="../com.metamatrix.ui/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.ui_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.ui/ui.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.ui_6.0.0/ui.jar"/>
+			<pathelement path="../com.metamatrix.query.ui/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.query.ui_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.query.ui/queryUi.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.query.ui_6.0.0/queryUi.jar"/>
+			<pathelement path="../com.metamatrix.modeler.jdbc/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.jdbc_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.jdbc/modelerJdbc.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.jdbc_6.0.0/modelerJdbc.jar"/>
+			<pathelement path="../org.apache.poi/poi.jar"/>
+			<pathelement path="${build.result.folder}/../org.apache.poi_2.5.1/poi.jar"/>
+			<pathelement path="../org.apache.poi/poi-contrib.jar"/>
+			<pathelement path="${build.result.folder}/../org.apache.poi_2.5.1/poi-contrib.jar"/>
+			<pathelement path="../org.apache.poi/poi-scratchpad.jar"/>
+			<pathelement path="${build.result.folder}/../org.apache.poi_2.5.1/poi-scratchpad.jar"/>
+			<pathelement path="../com.metamatrix.modeler.jdbc.relational/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.jdbc.relational_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.jdbc.relational/modelerJdbcRelational.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.jdbc.relational_6.0.0/modelerJdbcRelational.jar"/>
+			<pathelement path="../com.metamatrix.metamodels.relational/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.relational_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.relational/metamodelsRelational.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.relational_6.0.0/metamodelsRelational.jar"/>
+			<pathelement path="../com.metamatrix.modeler.compare/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.compare_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.compare/modelerCompare.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.compare_6.0.0/modelerCompare.jar"/>
+			<pathelement path="../com.metamatrix.modeler.ddl/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.ddl_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.ddl/modelerDdl.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.ddl_6.0.0/modelerDdl.jar"/>
+			<pathelement path="../com.metamatrix.core.xslt/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.core.xslt_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.core.xslt/coreXslt.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.core.xslt_6.0.0/coreXslt.jar"/>
+			<pathelement path="../net.sf.saxon/saxon8.jar"/>
+			<pathelement path="${build.result.folder}/../net.sf.saxon_8.7.3/saxon8.jar"/>
+			<pathelement path="../net.sf.saxon/saxon8-dom.jar"/>
+			<pathelement path="${build.result.folder}/../net.sf.saxon_8.7.3/saxon8-dom.jar"/>
+			<pathelement path="../net.sf.saxon/saxon8-jdom.jar"/>
+			<pathelement path="${build.result.folder}/../net.sf.saxon_8.7.3/saxon8-jdom.jar"/>
+			<pathelement path="../net.sf.saxon/saxon8-sql.jar"/>
+			<pathelement path="${build.result.folder}/../net.sf.saxon_8.7.3/saxon8-sql.jar"/>
+			<pathelement path="../net.sf.saxon/saxon8-xpath.jar"/>
+			<pathelement path="${build.result.folder}/../net.sf.saxon_8.7.3/saxon8-xpath.jar"/>
+			<pathelement path="../com.metamatrix.vdb.edit/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.vdb.edit_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.vdb.edit/vdbEdit.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.vdb.edit_6.0.0/vdbEdit.jar"/>
+			<pathelement path="../com.metamatrix.modeler.sdt/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.sdt_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.sdt/modelerSdt.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.sdt_6.0.0/modelerSdt.jar"/>
+			<pathelement path="../com.metamatrix.metamodels.xsd/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.xsd_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.xsd/metamodelsXsd.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.xsd_6.0.0/metamodelsXsd.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.xsd.edit_2.4.0.v200806091234.jar"/>
+			<pathelement path="../com.metamatrix.metamodels.xmlservice/bin/"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.xmlservice_6.0.0/bin/"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.xmlservice/xmlservice.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.xmlservice_6.0.0/xmlservice.jar"/>
+			<pathelement path="../com.metamatrix.metamodels.webservice/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.webservice_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.webservice/webservice.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.webservice_6.0.0/webservice.jar"/>
+			<pathelement path="../com.metamatrix.metamodels.xml/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.xml_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.xml/metamodelsXml.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.xml_6.0.0/metamodelsXml.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.xerces_2.9.0.v200805270400.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/javax.xml_1.3.4.v200806030440.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.xml.resolver_1.2.0.v200806030312.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.xml.serializer_2.7.1.v200806030322.jar"/>
+			<pathelement path="../com.metamatrix.metamodels.wsdl/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.wsdl_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.wsdl/wsdl11.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.wsdl_6.0.0/wsdl11.jar"/>
+			<pathelement path="../com.metamatrix.modeler.webservice/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.webservice_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.webservice/mmwebservice.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.webservice_6.0.0/mmwebservice.jar"/>
+			<pathelement path="../com.metamatrix.modeler.xml/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.xml_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.xml/modelerXml.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.xml_6.0.0/modelerXml.jar"/>
+			<pathelement path="../com.metamatrix.modeler.mapping/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.mapping_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.mapping/modelerMapping.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.mapping_6.0.0/modelerMapping.jar"/>
+			<pathelement path="../com.metamatrix.modeler.transformation/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.transformation_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.transformation/modelerTransformation.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.modeler.transformation_6.0.0/modelerTransformation.jar"/>
+			<pathelement path="../org.apache.commons.validator/commons-validator-1.2.0.jar"/>
+			<pathelement path="${build.result.folder}/../org.apache.commons.validator_1.0.0/commons-validator-1.2.0.jar"/>
+			<pathelement path="../org.apache.oro/jakarta-oro-2.0.8.jar"/>
+			<pathelement path="${build.result.folder}/../org.apache.oro_1.0.0/jakarta-oro-2.0.8.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-antlr.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-apache-bcel.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-apache-bsf.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-apache-log4j.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-apache-oro.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-apache-regexp.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-apache-resolver.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-commons-logging.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-commons-net.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-jai.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-javamail.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-jdepend.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-jmf.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-jsch.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-junit.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-launcher.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-netrexx.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-nodeps.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-starteam.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-stylebook.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-swing.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-trax.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant-weblogic.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.wst.wsdl.validation_1.1.301.v200805140300.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.wst.common.uriresolver_1.1.301.v200805140415.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.wst.validation_1.2.0.v200806051402.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.wst.common.frameworks_1.1.200.v200805140020.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.jem.util_2.0.100.v200805140020.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.wst.common.environment_1.0.201.v200805140020.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.osgi.util_3.1.300.v20080303.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.wst.common.project.facet.core_1.3.0.v200805140020.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/javax.wsdl_1.4.0.v200806030407.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.wst.xml.core_1.1.300.v200806051910.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.wst.sse.core_1.1.300.v200805221633.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.wst.common.emf_1.1.200.v200805140020.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.wst.common.emfworkbench.integration_1.1.200.v200805140020.jar"/>
+			<pathelement path="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.wst.common.core_1.1.201.v200806010600.jar"/>
+			<pathelement path="../com.metamatrix.metamodels.function/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.function_6.0.0/bin"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.function/metamodelsFunction.jar"/>
+			<pathelement path="${build.result.folder}/../com.metamatrix.metamodels.function_6.0.0/metamodelsFunction.jar"/>
+		</path>
+		<!-- compile the source code -->
+		<javac destdir="${temp.folder}/modelerDiagramUi.jar.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${bundleJavacSource}" target="${bundleJavacTarget}"		>
+			<compilerarg line="${compilerArg}" compiler="${build.compiler}"/>
+			<classpath refid="modelerDiagramUi.jar.classpath" />
+			<src path="src/"			/>
+			<compilerarg value="@${basedir}/javaCompiler.modelerDiagramUi.jar.args" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+			<compilerarg line="-log '${temp.folder}/modelerDiagramUi.jar.bin${logExtension}'" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+		</javac>
+		<!-- Copy necessary resources -->
+		<copy todir="${temp.folder}/modelerDiagramUi.jar.bin" failonerror="true" overwrite="false">
+			<fileset dir="src/">
+				<exclude name="**/*.java"/>
+				<exclude name="**/package.htm*"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${build.result.folder}"/>
+		<jar destfile="${build.result.folder}/modelerDiagramUi.jar" basedir="${temp.folder}/modelerDiagramUi.jar.bin"/>
+		<delete dir="${temp.folder}/modelerDiagramUi.jar.bin"/>
+	</target>
+
+	<target name="modelerDiagramUisrc.zip" depends="init" unless="modelerDiagramUisrc.zip">
+		<mkdir dir="${build.result.folder}"/>
+		<antcall target="zip.modelerDiagramUisrc.zip"/>
+	</target>
+	<target name="zip.modelerDiagramUisrc.zip">
+		<zip destfile="${build.result.folder}/modelerDiagramUisrc.zip" filesonly="false" whenempty="skip" update="false">
+			<fileset dir="src/">
+				<include name="**/*.java"/>
+			</fileset>
+		</zip>
+	</target>
+	<target name="copy.modelerDiagramUisrc.zip">
+		<copy todir="${source.destination.folder}/modelerDiagramUisrc" failonerror="true" overwrite="true">
+			<fileset dir="src/">
+				<include name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="build.jars" depends="init" description="Compile classes and build nested jars for the plug-in: com.metamatrix.modeler.diagram.ui.">
+		<available property="modelerDiagramUi.jar" file="${build.result.folder}/modelerDiagramUi.jar"/>
+		<antcall target="modelerDiagramUi.jar"/>
+	</target>
+
+	<target name="build.sources" depends="init">
+		<available property="modelerDiagramUisrc.zip" file="${build.result.folder}/modelerDiagramUisrc.zip"/>
+		<antcall target="modelerDiagramUisrc.zip"/>
+	</target>
+
+	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/com.metamatrix.modeler.diagram.ui_6.0.0"/>
+		<copy todir="${destination.temp.folder}/com.metamatrix.modeler.diagram.ui_6.0.0" failonerror="true" overwrite="false">
+			<fileset dir="${build.result.folder}">
+				<include name="modelerDiagramUi.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${destination.temp.folder}/com.metamatrix.modeler.diagram.ui_6.0.0" failonerror="true" overwrite="false">
+			<fileset dir="${basedir}">
+				<include name="plugin.xml"/>
+				<include name="plugin.properties"/>
+				<include name="icons/"/>
+				<include name=".debug"/>
+				<include name="modelerDiagramUi.jar"/>
+				<include name="META-INF/"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="build.zips" depends="init">
+	</target>
+
+	<target name="gather.sources" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/com.metamatrix.modeler.diagram.ui_6.0.0"/>
+		<copy file="${build.result.folder}/modelerDiagramUisrc.zip" todir="${destination.temp.folder}/com.metamatrix.modeler.diagram.ui_6.0.0" failonerror="false" overwrite="false"/>
+		<antcall target="copy.src.includes">
+			<param name="source.destination.folder" value="${destination.temp.folder}/com.metamatrix.modeler.diagram.ui_6.0.0"/>
+		</antcall>
+	</target>
+
+	<target name="gather.individual.sources" depends="init">
+		<antcall target="copy.modelerDiagramUisrc.zip">
+			<param name="source.destination.folder" value="${destination.temp.folder}"/>
+		</antcall>
+		<antcall target="copy.src.includes">
+			<param name="source.destination.folder" value="${destination.temp.folder}"/>
+		</antcall>
+	</target>
+
+	<target name="copy.src.includes" depends="init">
+	</target>
+
+	<target name="gather.logs" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/com.metamatrix.modeler.diagram.ui_6.0.0"/>
+		<copy todir="${destination.temp.folder}/com.metamatrix.modeler.diagram.ui_6.0.0" failonerror="false" overwrite="false">
+			<fileset dir="${temp.folder}">
+				<include name="modelerDiagramUi.jar.bin${logExtension}"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean" depends="init" description="Clean the plug-in: com.metamatrix.modeler.diagram.ui of all the zips, jars and logs created.">
+		<delete file="${build.result.folder}/modelerDiagramUi.jar"/>
+		<delete file="${build.result.folder}/modelerDiagramUisrc.zip"/>
+		<delete file="${plugin.destination}/com.metamatrix.modeler.diagram.ui_6.0.0.jar"/>
+		<delete file="${plugin.destination}/com.metamatrix.modeler.diagram.ui_6.0.0.zip"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
+		<eclipse.convertPath fileSystemPath="/home/jverhaeg/workspace/metamatrix/com.metamatrix.modeler.diagram.ui" property="resourcePath"/>
+		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite"/>
+	</target>
+
+	<target name="zip.plugin" depends="init" description="Create a zip containing all the elements for the plug-in: com.metamatrix.modeler.diagram.ui.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="build.sources"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<antcall target="gather.sources">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<delete>
+			<fileset dir="${temp.folder}">
+				<include name="**/*.bin${logExtension}"/>
+			</fileset>
+		</delete>
+		<zip destfile="${plugin.destination}/com.metamatrix.modeler.diagram.ui_6.0.0.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+</project>

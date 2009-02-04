@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.ant.AntLaunchConfigurationType">
 <stringAttribute key="bad_container_name" value="/com.metamatrix.modeler-feature/l"/>
-<booleanAttribute key="org.eclipse.ant.ui.DEFAULT_VM_INSTALL" value="false"/>
 <stringAttribute key="org.eclipse.debug.core.ATTR_REFRESH_SCOPE" value="${workspace}"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/com.metamatrix.modeler-feature/build.xml"/>
@@ -11,8 +10,8 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="false"/>
 <mapAttribute key="org.eclipse.debug.core.environmentVariables">
-<mapEntry key="ANT_HOME" value="/home/jverhaeg/eclipse/3.4.1/eclipse/plugins/org.apache.ant_1.7.0.v200803061910"/>
 <mapEntry key="JAVA_HOME" value="/usr/java/jdk1.6.0_02"/>
+<mapEntry key="ANT_HOME" value="/home/jverhaeg/eclipse/3.4.1/eclipse/plugins/org.apache.ant_1.7.0.v200803061910"/>
 </mapAttribute>
 <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
 <listEntry value="org.eclipse.ui.externaltools.launchGroup"/>
@@ -21,27 +20,27 @@
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.metamatrix.modeler-feature"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.ant.ui.AntClasspathProvider"/>
 <mapAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES">
-<mapEntry key="eclipse.running" value="true"/>
-<mapEntry key="J2SE-1.4" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
-<mapEntry key="baseos" value="linux"/>
-<mapEntry key="javacFailOnError" value="true"/>
 <mapEntry key="javacVerbose" value="false"/>
-<mapEntry key="javacDebugInfo" value="on"/>
+<mapEntry key="eclipse.running" value="true"/>
 <mapEntry key="basenl" value="en_US"/>
-<mapEntry key="CDC-1.0/Foundation-1.0" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
+<mapEntry key="javacFailOnError" value="false"/>
 <mapEntry key="OSGi/Minimum-1.1" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
-<mapEntry key="basearch" value="x86"/>
-<mapEntry key="JavaSE-1.6" value="/usr/java/jdk1.6.0_02/jre/lib/resources.jar;/usr/java/jdk1.6.0_02/jre/lib/rt.jar;/usr/java/jdk1.6.0_02/jre/lib/jsse.jar;/usr/java/jdk1.6.0_02/jre/lib/jce.jar;/usr/java/jdk1.6.0_02/jre/lib/charsets.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/dnsns.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/localedata.jar"/>
-<mapEntry key="bootclasspath" value="/usr/java/jdk1.6.0_02/jre/lib/resources.jar;/usr/java/jdk1.6.0_02/jre/lib/rt.jar;/usr/java/jdk1.6.0_02/jre/lib/jsse.jar;/usr/java/jdk1.6.0_02/jre/lib/jce.jar;/usr/java/jdk1.6.0_02/jre/lib/charsets.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/dnsns.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/localedata.jar"/>
-<mapEntry key="J2SE-1.5" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
 <mapEntry key="OSGi/Minimum-1.0" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
-<mapEntry key="JRE-1.1" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
-<mapEntry key="J2SE-1.2" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
-<mapEntry key="CDC-1.1/Foundation-1.1" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
-<mapEntry key="J2SE-1.3" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
-<mapEntry key="javacTarget" value="1.6"/>
 <mapEntry key="basews" value="gtk"/>
+<mapEntry key="bootclasspath" value="/usr/java/jdk1.6.0_02/jre/lib/resources.jar;/usr/java/jdk1.6.0_02/jre/lib/rt.jar;/usr/java/jdk1.6.0_02/jre/lib/jsse.jar;/usr/java/jdk1.6.0_02/jre/lib/jce.jar;/usr/java/jdk1.6.0_02/jre/lib/charsets.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/dnsns.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/localedata.jar"/>
+<mapEntry key="CDC-1.0/Foundation-1.0" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
+<mapEntry key="javacDebugInfo" value="on"/>
+<mapEntry key="baseos" value="linux"/>
 <mapEntry key="javacSource" value="1.6"/>
+<mapEntry key="CDC-1.1/Foundation-1.1" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
+<mapEntry key="J2SE-1.4" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
+<mapEntry key="J2SE-1.5" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
+<mapEntry key="basearch" value="x86"/>
+<mapEntry key="J2SE-1.2" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
+<mapEntry key="J2SE-1.3" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
+<mapEntry key="JavaSE-1.6" value="/usr/java/jdk1.6.0_02/jre/lib/resources.jar;/usr/java/jdk1.6.0_02/jre/lib/rt.jar;/usr/java/jdk1.6.0_02/jre/lib/jsse.jar;/usr/java/jdk1.6.0_02/jre/lib/jce.jar;/usr/java/jdk1.6.0_02/jre/lib/charsets.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/dnsns.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.6.0_02/jre/lib/ext/localedata.jar"/>
+<mapEntry key="javacTarget" value="1.6"/>
+<mapEntry key="JRE-1.1" value="/usr/java/jdk1.5.0_15/jre/lib/rt.jar;/usr/java/jdk1.5.0_15/jre/lib/jsse.jar;/usr/java/jdk1.5.0_15/jre/lib/jce.jar;/usr/java/jdk1.5.0_15/jre/lib/charsets.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/dnsns.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunjce_provider.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/sunpkcs11.jar;/usr/java/jdk1.5.0_15/jre/lib/ext/localedata.jar"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_TARGETS" value="clean,build.update.jar,zip.distribution,"/>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${workspace_loc:/com.metamatrix.modeler-feature/build.xml}"/>
