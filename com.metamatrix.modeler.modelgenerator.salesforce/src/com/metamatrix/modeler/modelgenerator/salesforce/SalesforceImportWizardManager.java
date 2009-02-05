@@ -20,6 +20,7 @@ import com.metamatrix.modeler.compare.DifferenceProcessor;
 import com.metamatrix.modeler.compare.DifferenceReport;
 import com.metamatrix.modeler.compare.MergeProcessor;
 import com.metamatrix.modeler.compare.ModelerComparePlugin;
+import com.metamatrix.modeler.compare.util.CompareUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -243,6 +244,8 @@ public class SalesforceImportWizardManager {
 		diffProcessor = ModelerComparePlugin.createDifferenceProcessor(updateModel, tempModel);
 		diffProcessor.execute(monitor);
 		diffReport = diffProcessor.getDifferenceReport();
+		CompareUtil.skipDeletesOfStandardContainers(diffReport);			
+		
 		return diffReport;
 	}
 
