@@ -10,13 +10,18 @@ package com.metamatrix.modeler.jdbc.relational.impl.custom;
 import java.sql.Types;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 
+import com.metamatrix.jdbc.api.DatabaseMetaData;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.relational.Column;
+import com.metamatrix.metamodels.relational.ProcedureResult;
+import com.metamatrix.metamodels.relational.RelationalEntity;
 import com.metamatrix.metamodels.relational.RelationalFactory;
 import com.metamatrix.metamodels.relational.util.RelationalTypeMapping;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
+import com.metamatrix.modeler.jdbc.metadata.JdbcNode;
 import com.metamatrix.modeler.jdbc.metadata.JdbcTable;
 import com.metamatrix.modeler.jdbc.relational.impl.Context;
 import com.metamatrix.modeler.jdbc.relational.impl.RelationalModelProcessorImpl;
@@ -227,4 +232,19 @@ public class OracleModelProcessor extends RelationalModelProcessorImpl {
         }
         return super.isFixedLength(type, typeName);
     }
+
+    /** 
+     * @see com.metamatrix.modeler.jdbc.relational.impl.RelationalModelProcessorImpl#computeNameInSource(
+     *         com.metamatrix.metamodels.relational.RelationalEntity, java.lang.String, com.metamatrix.modeler.jdbc.metadata.JdbcNode, com.metamatrix.modeler.jdbc.relational.impl.Context, boolean)
+     * @since 4.2
+     */
+    @Override
+    protected String computeNameInSource( final RelationalEntity object, final String name, 
+            final JdbcNode node, final Context context, final boolean forced ) {
+    	
+    	String nis = super.computeNameInSource( object, name, node, context, forced );
+        nis = nis.replace('@', '.');
+    	return  nis;
+    }    
+
 }
