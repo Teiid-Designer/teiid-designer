@@ -80,9 +80,10 @@ public class XmlElementSqlAspect extends AbstractXmlDocumentEntitySqlAspect impl
     final static int DISTINCT_VALUES = 0;    
 
     // map between XmlElement and MappingClassColumn
-    Map elementMap = null;
+    private Map elementMap = null;
 	private Set elementFullNames;
-
+	private String currentDocumentName;
+	
     /**
      * Construct an instance of XmlContainerNodeSqlAspect.
      * 
@@ -175,7 +176,8 @@ public class XmlElementSqlAspect extends AbstractXmlDocumentEntitySqlAspect impl
         }
         
         Object lookupObj = elementMap.get(xmlElement);
-        if(lookupObj == null && elementFullNames.contains(this.getFullName(xmlElement))){
+        if(lookupObj == null && (elementFullNames.contains(this.getFullName(xmlElement)) 
+        		|| !currentDocumentName.equals(getXmlDocument(xmlElement).getName()))){
         	populateMappingInfo(xmlElement);
         	lookupObj = elementMap.get(xmlElement);
         }
@@ -555,6 +557,7 @@ public class XmlElementSqlAspect extends AbstractXmlDocumentEntitySqlAspect impl
         // model contents for this resource 
         ModelContents mdlContents = new ModelContents(resource);
         XmlDocument document = getXmlDocument(xmlEntity);
+        currentDocumentName = document.getName();
         // fill the map with element to its mappingClass column value
         this.elementMap = new HashMap();  
         this.elementFullNames = new HashSet();
