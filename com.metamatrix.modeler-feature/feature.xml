@@ -7,17 +7,17 @@
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <feature
-      id="federate.designer.feature"
+      id="teiid.designer.feature"
       label="%featureName"
       version="6.0.0"
       provider-name="%providerName"
       image="feature.gif">
 
-   <description url="www.jboss.org/projects/federate/designer">
+   <description url="www.jboss.org/projects/teiid/designer">
       %description
    </description>
 
-   <copyright url="www.jboss.org/projects/federate/designer">
+   <copyright url="www.jboss.org/projects/teiid/designer">
       %copyright
    </copyright>
 
