@@ -25,12 +25,12 @@
 <p><span class="subtitle_b16"><a name="Models"></a>What are Models?</span></p>
 <blockquote>
   <p>A <strong>model</strong> is a   representation of a set of information constructs. A familiar <strong>model</strong> is the <strong>relational</strong> <strong>model</strong>, which   defines tables composed of columns and containing records of data. Another   familiar model is the <strong>XML</strong> <strong>model</strong>, which defines hierarchical data sets. </p>
-  <p>In <strong>Federate Designer</strong>, models are used to define the entities, and relationships   between those entities, required to fully define the integration of information   sets so that they may be accessed in a uniform manner, using a single API and   access protocol. The file extension used for these models is '<strong>.xmi</strong>' ( Example: NorthwindOracle.xmi ). </p>
+  <p>In <strong>Teiid Designer</strong>, models are used to define the entities, and relationships   between those entities, required to fully define the integration of information   sets so that they may be accessed in a uniform manner, using a single API and   access protocol. The file extension used for these models is '<strong>.xmi</strong>' ( Example: NorthwindOracle.xmi ). </p>
   <p>Below is an example of the partial contents of a model file.</p>
   <p><img src="images/views/SampleModelFile.jpg" width="943" height="275" border="1"></p>
-  <p>The fundamental models in <strong>Federate Designer</strong> define the structural and data   characteristics of the information contained in data sources. These are referred to as <strong><EM>source</EM></strong> models<span class="medium"> (represented by <img src="images/icons/Model.gif" width="16" height="16">)</span>. Federate uses the information in <strong>source</strong> models to federate the information   in multiple sources, so that from a user's viewpoint these all appear to be in a   single source.</p>
+  <p>The fundamental models in <strong>Teiid Designer</strong> define the structural and data   characteristics of the information contained in data sources. These are referred to as <strong><EM>source</EM></strong> models<span class="medium"> (represented by <img src="images/icons/Model.gif" width="16" height="16">)</span>. Teiid uses the information in <strong>source</strong> models to federate the information   in multiple sources, so that from a user's viewpoint these all appear to be in a   single source.</p>
   <p align="left"><img src="images/views/ModelInternals.gif" width="318" height="201" hspace="20"></p>
-  <p>In addition to <strong>source</strong> models, Federate Designer provides the ability to define a   variety of <em><strong>view</strong></em> models<span class="medium">(represented by <img src="images/icons/ViewModel.gif" width="16" height="16">)</span>.   These can be used to define a layer of abstraction above the physical (or <strong>source</strong>) layer, so   that information can be presented to end users and consuming applications in   business terms rather than as it is physically stored. Views are mapped to sources using transformations between models. These <EM>business   views</EM> can be in a variety of forms: </p>
+  <p>In addition to <strong>source</strong> models, Teiid Designer provides the ability to define a   variety of <em><strong>view</strong></em> models<span class="medium">(represented by <img src="images/icons/ViewModel.gif" width="16" height="16">)</span>.   These can be used to define a layer of abstraction above the physical (or <strong>source</strong>) layer, so   that information can be presented to end users and consuming applications in   business terms rather than as it is physically stored. Views are mapped to sources using transformations between models. These <EM>business   views</EM> can be in a variety of forms: </p>
   <ul>
     <li><strong>Relational</strong> <img src="images/icons/Model.gif" width="16" height="16"></li>
     <li><strong>XML</strong><img src="images/icons/XmlViewModel.gif" width="16" height="16"></li>
@@ -47,7 +47,7 @@
 
 <p><span class="subtitle_b16"><a name="How"></a>How is a Model Defined??</span></p>
 <blockquote>
-  <p><strong>Models</strong> are defined using <strong>Federate Designer</strong>  in various ways:</p>
+  <p><strong>Models</strong> are defined using <strong>Teiid Designer</strong>  in various ways:</p>
   <ul>
     <li>Created via importing source data characteristics. (see<a href="ModelingYourData.htm#importWizard"> Import Wizard</a>) </li>
     <li>Manual creation via <a href="ModelingYourData.htm#newModelWizard">New Model Wizard </a></li>
@@ -59,7 +59,7 @@
 <p><span class="subtitle_b16"><a name="Classes"></a>Model Classes and Types</span></p>
 
 <blockquote>
-  <p><strong>Federate Designer</strong> can be used to model a variety of classes of models. Each of these represent a conceptually different classification of models.</p>
+  <p><strong>Teiid Designer</strong> can be used to model a variety of classes of models. Each of these represent a conceptually different classification of models.</p>
   <ul>
     <li><strong>Relational</strong>, which model data that can be represented in table � columns and records � form. Relational models can represent structures found in relational databases, spreadsheets, text files, or simple Web services. </li>
     <li><strong>XML</strong>, which model the basic structures of XML documents. These can be �backed� by XML Schemas. XML models represent nested structures, including recursive hierarchies.</li>
@@ -79,7 +79,7 @@
 <blockquote>
   <p><strong>Models</strong> used for data integration are packaged into a virtual database (<a href="VdbSummary.htm">VDB</a>). The models must be in a complete and consistent state when used for data integration. That is, the <a href="VdbSummary.htm">VDB</a> must contain all the models and all resources they depend upon.
 
-    Models contained within a <a href="VdbSummary.htm">VDB</a> can be imported into the <strong>Federate Designer</strong>. In this way, VDBs can be used as a way to exchange a set of related models. (See description of a <a href="VdbSummary.htm">Virtual Database</a>) </p>
+    Models contained within a <a href="VdbSummary.htm">VDB</a> can be imported into the <strong>Teiid Designer</strong>. In this way, VDBs can be used as a way to exchange a set of related models. (See description of a <a href="VdbSummary.htm">Virtual Database</a>) </p>
 </blockquote>
 
 <p><span class="subtitle_b16"><a name="Bindings"></a>Models and Connector Bindings</span></p>
@@ -87,19 +87,19 @@
   <p> A <strong>connector binding</strong> provides the connectivity to the source for the query engine when it is executing queries to that source.</p>
   <p>All <strong>Source</strong> models must  have <strong>connector bindings</strong> associated with them in a VDB in order to be tested in <strong>Designer</strong> or deployed for data access.</p>
   <p>It is possible that multiple models may use the same binding, but each model must have a binding.  </p>
-  <p> In <strong>Federate Designer</strong>, bindings are automatically created "under the hood" when you import from a  specific supported data source. You can also create and maintain your own custom  bindings. (see <a href="ConnectorBindingsHelp.htm">Connector Bindings</a>)</p>
+  <p> In <strong>Teiid Designer</strong>, bindings are automatically created "under the hood" when you import from a  specific supported data source. You can also create and maintain your own custom  bindings. (see <a href="ConnectorBindingsHelp.htm">Connector Bindings</a>)</p>
 </blockquote>
 
 <p><span class="subtitle_b16"><a name="Validation"></a>Model Validation</span></p>
 <blockquote>
   <p>Models must be in a valid state in order to be used for data access. Validation of a single model means that it must be in a self-consistent and complete state, meaning that there are no "missing pieces" and no references to non-existent entities. Validation of multiple models checks that all inter-model dependencies are present and resolvable.</p>
   <p>Models must always be validated when they are deployed in a VDB for data access purposes.</p>
-  <p><strong>Federate Designer</strong> will automatically validate your models whenever the user Saves ( Note: the &quot;Models &gt; Validate Automatically&quot; option must be checked). When editing models, the editor tabs will display a &quot;*&quot; to indicate that the model has unsaved changes.</p>
+  <p><strong>Teiid Designer</strong> will automatically validate your models whenever the user Saves ( Note: the &quot;Models &gt; Validate Automatically&quot; option must be checked). When editing models, the editor tabs will display a &quot;*&quot; to indicate that the model has unsaved changes.</p>
 </blockquote>
 
 <p><span class="subtitle_b16"><a name="Testing"></a>Testing Your Models</span></p>
 <blockquote>
-  <p>Models can be tested in <strong>Federate Designer</strong> by issuing SQL queries in the <a href="ExecuteVdbHelp.htm">VDB Execution</a> perspective. In this way, you can iterate between defining your integration models and testing them out to see if they are yielding the expected results.</p>
+  <p>Models can be tested in <strong>Teiid Designer</strong> by issuing SQL queries in the <a href="ExecuteVdbHelp.htm">VDB Execution</a> perspective. In this way, you can iterate between defining your integration models and testing them out to see if they are yielding the expected results.</p>
   <p> All the source models in your <strong>VDB</strong> must have <strong>connector bindings</strong> associated with them in order for the <strong>VDB</strong> to be executable. You can define the <strong>bindings</strong> for each source model in the Designer.
     (see <a href="ConnectorBindingsHelp.htm">Connector Bindings</a>) </p>
 </blockquote>
@@ -107,7 +107,7 @@
 <p><span class="subtitle_b16"><a name="File"></a>Model Files</span></p>
 <blockquote>
   <p>Models are stored in XML format, using the XMI syntax defined by the OMG.  </p>
-  <p>Model files should never be modified "by hand". While it is possible to do so, there is the possibility that you may corrupt the file such that it cannot be used within the Federate system. </p>
+  <p>Model files should never be modified "by hand". While it is possible to do so, there is the possibility that you may corrupt the file such that it cannot be used within the Teiid system. </p>
 </blockquote>
 
 <p class="subtitle_b16">Related Topics</p>

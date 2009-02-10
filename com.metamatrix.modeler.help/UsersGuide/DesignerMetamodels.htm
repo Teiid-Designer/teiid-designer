@@ -37,16 +37,16 @@
   <li><strong>Key</strong>, one or more of which belong to an instance  of the class.</li>
   <li><strong>Associations</strong>, which can exist between classes.</li>
 </ul>
-<p>The  Federate Designer supports several  different metamodels that adhere to this standard. See for<a href="Models1001.htm#Classes"> Model Classes and Types</a> for details. </p>
+<p>The  Teiid Designer supports several  different metamodels that adhere to this standard. See for<a href="Models1001.htm#Classes"> Model Classes and Types</a> for details. </p>
 Throughout this document, you&rsquo;ll find the terms <strong>package</strong>,<strong> class</strong>, and <strong>attribute </strong>refer to the different meta objects allowed in  a metamodel.
 
 <p><span class="subtitle_b16"><a name="allAboutMetamodels"></a>All about Metamodels </span></p>
-<p><strong>Federate Designer</strong>  supports different metamodels. These  metamodels reflect the way your different enterprise information systems  organize the information within and the different terminology associated with  each.</p>
+<p><strong>Teiid Designer</strong>  supports different metamodels. These  metamodels reflect the way your different enterprise information systems  organize the information within and the different terminology associated with  each.</p>
 <p>For example, you can select the Relational  metamodel when modeling or importing metadata from a Relational database  management system, but this changes the nomenclature available on the menus and  displays to reflect that specific metamodel&rsquo;s constructs and terminology</p>
-<p>The Federate Designer currently supports the following metamodels:</p>
+<p>The Teiid Designer currently supports the following metamodels:</p>
 <ul>
   <li><strong>Relational</strong>, which contains packages, classes, and attributes commonly used by Relational databases.</li>
-  <li><strong>Data Access</strong>, which contains package, class, and attribute terminology used by the Federate Server in 1.x releases to resolve queries.</li>
+  <li><strong>Data Access</strong>, which contains package, class, and attribute terminology used by the Teiid Server in 1.x releases to resolve queries.</li>
   <li><strong>XML Documents</strong>, used to capture the structure of a View Document.</li>
   <li><strong>Relationship</strong>, a secondary metamodel that provides generalized relationships between any model objects and provides a mechanism to constrain which model objects can participate in the relationships of the corresponding type.</li>
   <li><strong>People</strong>, a secondary metamodel that provides a simple model of people, typically used in conjunction with generalized relationships.</li>
@@ -59,7 +59,7 @@ Throughout this document, you&rsquo;ll find the terms <strong>package</strong>,<
   <li><strong>Model Extension</strong>, a metamodel that defines extensions to other metamodels.</li>
   <li><strong>Model Compare</strong>, a metamodel used to represent and persist model comparisons.</li>
   <li><strong>JDBC</strong>, used to represent JDBC driver libraries and JDBC sources.</li>
-  <li><strong>Function</strong>, used to capture the user-defined functions that are available to the Federate Server. Note that the category property is a required property in this metamodel.</li>
+  <li><strong>Function</strong>, used to capture the user-defined functions that are available to the Teiid Server. Note that the category property is a required property in this metamodel.</li>
   <li><strong>VDB</strong>, used in the manifest model of a virtual database file to capture the models that make up the virtual database and other information about the information contained within the virtual database file.</li>
   <li><strong>DQP</strong>, used in the configuration model for an embedded DQP component.</li>
   <li><strong>Web Services</strong>,  a metamodel used to create Web Services involving transformations defined using SQL procedures.</li>
@@ -107,7 +107,7 @@ Throughout this document, you&rsquo;ll find the terms <strong>package</strong>,<
   </tr>
 </table>
 <p><br>
-  In other Federate documentation, this distinction does not  exist; once you create a virtual database (VDB) for use with the Federate  Server, the VDB uses the Data Access metamodel. Therefore, other documentation  uses the Category/Group/Element type terminology to refer to the Package,  Class, and Attribute.</p>
+  In other Teiid documentation, this distinction does not  exist; once you create a virtual database (VDB) for use with the Teiid  Server, the VDB uses the Data Access metamodel. Therefore, other documentation  uses the Category/Group/Element type terminology to refer to the Package,  Class, and Attribute.</p>
 <p>These metamodels are based upon the Object  Management Group&rsquo;s Meta Object Facility (MOF) and Common Warehouse Metamodel  (CWM) standards. </p>
 
 <p class="subtitle_b16"><a name="relationalMetamodel"></a>Relational Metamodel </p>
@@ -128,7 +128,7 @@ Throughout this document, you&rsquo;ll find the terms <strong>package</strong>,<
 </table>
 
 <p class="subtitle_b16"><a name="dataAccessMetamodel"></a>Data Access Metamodel </p>
-    <p>The  Data Access metamodel describes metadata (and the native data storage) in  terminology used by the Federate Server in 1.x releases. The Data Access  metamodel reflects the following organization of information:</p>
+    <p>The  Data Access metamodel describes metadata (and the native data storage) in  terminology used by the Teiid Server in 1.x releases. The Data Access  metamodel reflects the following organization of information:</p>
     <p><img src="images/views/DataAccessMetamodelConstructs.jpg" width="220" height="183" hspace="20"></p>
     <p>As such, this metamodel names the Packages, Classes, and  Attributes as follows:</p>
 <table border="1" cellspacing="0" cellpadding="0" width="615">

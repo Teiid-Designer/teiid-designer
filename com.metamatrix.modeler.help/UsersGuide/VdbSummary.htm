@@ -26,14 +26,14 @@
 <p class="medium"><img src="images/views/VDBInternals.gif" width="267" height="267" hspace="20" /></p>
 
 <h3 class="subtitle_b16"><a name="How"></a>How is a VDB Defined?</h3>
-<p class="medium" ><strong> Federate Designer</strong> allows you to create and edit <strong>VDB</strong>s. The <strong>VDB</strong> is a zip-like file that contains <strong>sources</strong> and <strong>view</strong> <strong>models</strong>, <strong>source connection properties</strong> files and <strong> index</strong> files used at runtime for data identification and a <strong>manifest</strong> to pull it all together. </p>
+<p class="medium" ><strong> Teiid Designer</strong> allows you to create and edit <strong>VDB</strong>s. The <strong>VDB</strong> is a zip-like file that contains <strong>sources</strong> and <strong>view</strong> <strong>models</strong>, <strong>source connection properties</strong> files and <strong> index</strong> files used at runtime for data identification and a <strong>manifest</strong> to pull it all together. </p>
 
 <h3 class="subtitle_b16"><a name="Validation">VDB Validation</h3>
 <p class="medium"><strong>VDBs</strong> can contain one or more models representing the information to be integrated and exposed to consuming applications. Models must be in a valid state in order for the VDB to be used for data access. Validation of a single model means that it must be in a self-consistent and complete state, meaning that there are no &quot;missing pieces&quot; and no references to non-existent entities. Validation of multiple models checks that all inter-model dependencies are present and resolvable. </p>
 <p class="medium">A <strong>VDB</strong> must always be in a complete and valid state in order to be successfully deployed or <a href="ExecuteVdbHelp.htm">tested in  Designer.</a> Complete means that all information is contained within the <strong>VDB </strong>itself -- there are no external dependencies. During the creation or editing of your VDB, there may be times when errors exist and the VDB can not be deployed or tested, but it can be saved for editing at a later date. </p>
 
 <h3 class="subtitle_b16"><a name="Deploy">Deploying a VDB for Data Access </h3>
-<p class="medium">After a VDB is defined, it must be deployed to the Federate query engine to be accessed. </p>
+<p class="medium">After a VDB is defined, it must be deployed to the Teiid query engine to be accessed. </p>
 <p class="medium"><img src="images/views/MMQueryEngineWithVDB.gif" width="477" height="167" /></p>
 
 <h3 class="subtitle_b16"><a name="Access">VDB and Connector Bindings </h3>
@@ -52,7 +52,7 @@
 <h3 class="subtitle_b16"><a name="File">VDB File Format </h3>
 <p class="medium"><strong>VDB</strong>s are stored in an archive file format, similar to a standard Java JAR format, except for the &quot;.vdb&quot; file extension. </p>
 <p class="medium"><strong>VDB</strong> archive files can be exchanged.</p>
-<p class="medium"><strong>VDB</strong>s can be exported from the Designer or Federate Console and subsequently re-imported into another Console, or opened in Designer</p>
+<p class="medium"><strong>VDB</strong>s can be exported from the Designer or Teiid Console and subsequently re-imported into another Console, or opened in Designer</p>
 
 <p class="subtitle_b16">Related Topics</p>
 <ul>
