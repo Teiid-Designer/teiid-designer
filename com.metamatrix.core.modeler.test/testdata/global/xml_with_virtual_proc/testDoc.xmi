@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Transformation="http://www.metamatrix.com/metamodels/Transformation" xmlns:Xsd="http://www.eclipse.org/xsd/2002/XSD" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:vxmldoc="http://www.metamatrix.com/metamodels/XmlDocument">
   <mmcore:ModelAnnotation xmi:uuid="mmuuid:42e38300-841c-1f15-9526-ebd0cace03e1" primaryMetamodelUri="http://www.metamatrix.com/metamodels/XmlDocument" modelType="VIRTUAL">
     <modelImports xmi:uuid="mmuuid:012d0081-5f02-1f8b-b83e-884634e23d85" name="extensionTest" path="/XML with virtual proc/extensionTest.xmi" uuid="mmuuid:ca2c5bc0-c570-1f48-9b1a-c75f4b3c42fa" modelType="EXTENSION" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Extension"/>

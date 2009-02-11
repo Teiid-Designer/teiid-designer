@@ -880,7 +880,7 @@ public abstract class ModelUtilities implements UiConstants, InternalUiConstants
                     modelPath = ((ResourceImportRecord)importObject).getImportedPath();
                 }
 
-                // If the URI is to the Federate Designer built-in datatypes resource or to one
+                // If the URI is to the Teiid Designer built-in datatypes resource or to one
                 // of the Emf XMLSchema resources then continue since there is no
                 // ModelReference to add.
                 if (modelPath == null || WorkspaceResourceFinderUtil.isGlobalResource(modelPath)) {
@@ -937,7 +937,7 @@ public abstract class ModelUtilities implements UiConstants, InternalUiConstants
                     modelPath = ((ResourceImportRecord)importObject).getImportedPath();
                 }
 
-                // If the URI is to the Federate Designer built-in datatypes resource or to one
+                // If the URI is to the Teiid Designer built-in datatypes resource or to one
                 // of the Emf XMLSchema resources then continue since there is no
                 // ModelReference to add.
                 if (modelPath == null || WorkspaceResourceFinderUtil.isGlobalResource(modelPath)) {
@@ -1002,7 +1002,7 @@ public abstract class ModelUtilities implements UiConstants, InternalUiConstants
                     modelPath = ((ResourceImportRecord)importObject).getImportedPath();
                 }
 
-                // If the URI is to the Federate Designer built-in datatypes resource or to one
+                // If the URI is to the Teiid Designer built-in datatypes resource or to one
                 // of the Emf XMLSchema resources then continue since there is no
                 // ModelReference to add.
                 if (modelPath == null || WorkspaceResourceFinderUtil.isGlobalResource(modelPath)) {

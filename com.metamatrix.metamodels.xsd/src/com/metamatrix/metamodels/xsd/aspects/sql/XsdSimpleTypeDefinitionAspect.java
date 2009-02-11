@@ -83,7 +83,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     }
 
     /**
-     * Load a map of Federate Designer built-in datatype instances to use when retrieving UUID or runtime type information. Since
+     * Load a map of Teiid Designer built-in datatype instances to use when retrieving UUID or runtime type information. Since
      * there is only one XsdSimpleTypeDefinitionAspect ever created the overhead of creating the map is acceptable.
      */
     private void init() {
@@ -115,7 +115,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     @Override
     public Object getObjectID( EObject eObject ) {
         ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
-        // If the datatype is a built-in datatype then use the Federate Designer
+        // If the datatype is a built-in datatype then use the Teiid Designer
         // instance since the instance found in the org.eclipse.xsd plugin
         // does not have UUID information. If the datatype is not a
         // built-in datatype then the original EObject reference is used.
@@ -258,7 +258,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      */
     public String getUuidString( EObject eObject ) {
         ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
-        // If the datatype is a built-in datatype then use the Federate Designer
+        // If the datatype is a built-in datatype then use the Teiid Designer
         // instance since the instance found in the org.eclipse.xsd plugin
         // does not have UUID information. If the datatype is not a
         // built-in datatype then the original EObject reference is used.
@@ -300,7 +300,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
             return DatatypeConstants.RuntimeTypeNames.OBJECT;
         }
 
-        // If the datatype is a built-in datatype then use the Federate Designer
+        // If the datatype is a built-in datatype then use the Teiid Designer
         // instance since the instance found in the org.eclipse.xsd plugin
         // does not have runtime type information. If the datatype is not a
         // built-in datatype then the original EObject reference is used.
@@ -329,7 +329,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
         Boolean fixed = Boolean.FALSE;
         // If the datatype is a ur-type return a predefined runtime type
         if (!this.isURType(eObject)) {
-            // If the datatype is a built-in datatype then use the Federate Designer
+            // If the datatype is a built-in datatype then use the Teiid Designer
             // instance since the instance found in the org.eclipse.xsd plugin
             // does not have runtime type information. If the datatype is not a
             // built-in datatype then the original EObject reference is used.
@@ -395,7 +395,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
         } else {
             basetype = type.getBaseTypeDefinition();
             if (basetype != null && isPrimitiveType(type) && isPrimitiveType(basetype)) {
-                // If the type is a Federate Designer built-in primitive type
+                // If the type is a Teiid Designer built-in primitive type
                 // (e.g. "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#string")
                 // and its basetype is the XSD built-in primitive type
                 // (e.g. "http://www.w3.org/2001/XMLSchema#string")
@@ -468,7 +468,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      */
     public Map getEnterpriseExtensionsMap( EObject eObject ) {
         ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
-        // If the datatype is a built-in datatype then use the Federate Designer
+        // If the datatype is a built-in datatype then use the Teiid Designer
         // instance since the instance found in the org.eclipse.xsd plugin
         // does not have extension map information. If the datatype is not a
         // built-in datatype then the original EObject reference is used.
@@ -483,7 +483,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      */
     public String getDescription( EObject eObject ) {
         ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
-        // If the datatype is a built-in datatype then use the Federate Designer
+        // If the datatype is a built-in datatype then use the Teiid Designer
         // instance since the instance found in the org.eclipse.xsd plugin
         // does not have description information. If the datatype is not a
         // built-in datatype then the original EObject reference is used.
@@ -854,7 +854,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
 
     private void initializeMmDatatypeMap() {
         try {
-            // Retrieve the Federate Designer built-in datatype resource from the model container
+            // Retrieve the Teiid Designer built-in datatype resource from the model container
             Resource resource = null;
             final ResourceSet[] resourceSets = ModelerCore.getExternalResourceSets();
             for (int i = 0; i < resourceSets.length; i++) {
@@ -905,7 +905,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     }
 
     /**
-     * If the specified XSDTypeDefinition is a built-in datatype then return the Federate Designer built-in datatype as defined in
+     * If the specified XSDTypeDefinition is a built-in datatype then return the Teiid Designer built-in datatype as defined in
      * the modeler.sdt plugin. If specified type is not a built-in datatype then the original EObject reference is returned.
      * 
      * @param type

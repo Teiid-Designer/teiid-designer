@@ -8,7 +8,7 @@
 package com.metamatrix.ui.product;
 
 /**
- * An <code>IProductCustomizer</code> provides the ability to customize the Federate Designer product.
+ * An <code>IProductCustomizer</code> provides the ability to customize the Teiid Designer product.
  * 
  * @since 4.3
  */

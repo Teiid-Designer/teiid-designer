@@ -23,7 +23,7 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.emf.ecore.xmi,
- federate_embedded_query,
+ teiid_embedded_query,
  com.metamatrix.modeler.core,
  org.apache.poi,
  com.metamatrix.core.modeler

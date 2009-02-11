@@ -9,13 +9,13 @@ package com.metamatrix.core.util;
 
 /**
  * <p>
- * This is the interface to the Federate Designer Debug Facility, which provides debugging capabilities for all Federate Designer
- * plug-ins <em>and</em> third-party extensions to Federate Designer extension points. Debug code is enable or disabled via a set
+ * This is the interface to the Teiid Designer Debug Facility, which provides debugging capabilities for all Teiid Designer
+ * plug-ins <em>and</em> third-party extensions to Teiid Designer extension points. Debug code is enable or disabled via a set
  * of Boolean properties, which are generally associated with particular "contexts", or application processes. These properties
  * can be modified in one of three ways:
  * </p>
  * <ul>
- * <li>Changing the debug settings in a client Federate Designer application's
+ * <li>Changing the debug settings in a client Teiid Designer application's
  * {@link com.metamatrix.internal.ui.preferences.DebugPreferencePage debug preference page},</li>
  * <li>Programatically via the static methods in this interface's sole {@link DebuggerImpl implementation} , or</li>
  * <li>By manually editing the {@link Constants#FILENAME debug properties file} that resides in the

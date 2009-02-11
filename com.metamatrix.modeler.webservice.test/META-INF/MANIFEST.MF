@@ -21,5 +21,5 @@ Require-Bundle: com.metamatrix.modeler.webservice;bundle-version="6.0.0",
  com.metamatrix.modeler.compare;bundle-version="6.0.0",
  com.metamatrix.modeler.core;bundle-version="6.0.0",
  org.eclipse.core.resources;bundle-version="3.4.1",
- federate_embedded_query;bundle-version="6.0.0",
+ teiid_embedded_query;bundle-version="6.0.0",
  com.metamatrix.metamodels.webservice.test;bundle-version="6.0.0"

@@ -1179,7 +1179,7 @@ public class VdbContextImpl implements VdbContext {
     }
 
     /**
-     * Encode any xs:import or xs:include "schemaLocation" values such that the path can be used as a URL within a Federate
+     * Encode any xs:import or xs:include "schemaLocation" values such that the path can be used as a URL within a Teiid
      * server.
      * 
      * @param doc the JDOM Document instance for the XSD file being processed
@@ -1223,7 +1223,7 @@ public class VdbContextImpl implements VdbContext {
 
                     // Next convert the import/include location to be consistent with the path to
                     // that file within the zip or temp directory then encode the path so that it
-                    // can be used as a URL within a Federate server
+                    // can be used as a URL within a Teiid server
                     if (locationUri.isFile()) {
                         String relativePath = getPathRelativeToFolder(targetDirectory, new File(locationUri.toFileString()));
                         String updatedPath = encodePathForUrl(new Path(relativePath)).toString();
@@ -1244,7 +1244,7 @@ public class VdbContextImpl implements VdbContext {
 
     /**
      * Decode any xs:import or xs:include "schemaLocation" values associated with XSD files stored within a VDB. Those paths would
-     * have been previously encoded so that they can be used as a URL within a Federate server.
+     * have been previously encoded so that they can be used as a URL within a Teiid server.
      * 
      * @param doc the JDOM Document instance for the XSD file being processed
      * @param pathInArchive the archive path for the XSD file being processed

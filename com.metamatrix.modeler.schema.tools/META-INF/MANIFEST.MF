@@ -17,7 +17,7 @@ Export-Package: com.metamatrix.modeler.schema.tools,
 Require-Bundle: com.metamatrix.modeler.core,
  org.eclipse.xsd,
  com.metamatrix.core.modeler,
- federate_embedded_query,
+ teiid_embedded_query,
  org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

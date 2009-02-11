@@ -7,7 +7,7 @@
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:mmfunction="http://www.metamatrix.com/metamodels/MetaMatrixFunction">
-  <mmcore:ModelAnnotation xmi:uuid="mmuuid:1339aac0-1cd3-1f76-a60a-ef2ca142dae4" primaryMetamodelUri="http://www.metamatrix.com/metamodels/MetaMatrixFunction" modelType="FUNCTION" supportsDistinct="false" supportsJoin="false" supportsOrderBy="false" supportsOuterJoin="false" supportsWhereAll="false" ProducerName="Federate Designer" ProducerVersion="5.5"/>
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:1339aac0-1cd3-1f76-a60a-ef2ca142dae4" primaryMetamodelUri="http://www.metamatrix.com/metamodels/MetaMatrixFunction" modelType="FUNCTION" supportsDistinct="false" supportsJoin="false" supportsOrderBy="false" supportsOuterJoin="false" supportsWhereAll="false" ProducerName="Teiid Designer" ProducerVersion="5.5"/>
   <diagram:DiagramContainer xmi:uuid="mmuuid:141e8c80-1cd3-1f76-a60a-ef2ca142dae4">
     <diagram xmi:uuid="mmuuid:141e8c81-1cd3-1f76-a60a-ef2ca142dae4" type="packageDiagramType" target="mmuuid/1339aac0-1cd3-1f76-a60a-ef2ca142dae4">
       <diagramEntity xmi:uuid="mmuuid:1dbbe800-eaac-10be-8635-b792cc146054" name="includes" modelObject="mmuuid/9c645580-eaab-10be-8635-b792cc146054" xPosition="20" yPosition="20"/>

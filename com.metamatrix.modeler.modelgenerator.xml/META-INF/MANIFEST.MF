@@ -34,7 +34,7 @@ Require-Bundle: com.metamatrix.metamodels.relational,
  org.eclipse.xsd,
  com.metamatrix.vdb.edit,
  com.metamatrix.modeler.schema.tools,
- federate_embedded_query,
+ teiid_embedded_query,
  com.metamatrix.metamodels.core,
  org.eclipse.emf.edit
 Bundle-ActivationPolicy: lazy

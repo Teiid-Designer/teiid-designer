@@ -13,7 +13,7 @@ Export-Package: com.metamatrix.modeler.internal.xsd.aspects.uml,
 Require-Bundle: com.metamatrix.metamodels.xsd,
  com.metamatrix.modeler.core,
  com.metamatrix.core.modeler,
- federate_embedded_query,
+ teiid_embedded_query,
  org.eclipse.core.runtime,
  org.eclipse.xsd,
  org.eclipse.emf.edit

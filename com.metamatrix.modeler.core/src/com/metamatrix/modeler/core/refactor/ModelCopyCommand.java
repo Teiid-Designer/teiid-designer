@@ -211,7 +211,7 @@ public class ModelCopyCommand implements RefactorCommand {
         if (this.isXsdResource(this.newIFile)) {
             executeXsdCopy(monitor);
         }
-        // Create copy of an Federate Designer xmi model file ...
+        // Create copy of an Teiid Designer xmi model file ...
         else {
             executeXmiCopy(monitor);
         }

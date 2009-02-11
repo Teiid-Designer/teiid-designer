@@ -248,7 +248,7 @@ public final class UdfManager implements IResourceChangeListener, UdfModelListen
         }
 
         // now handle it ourselves (this is a placeholder for when validation is done on the modeler-side and not the
-        // federate-side)
+        // teiid-side)
 //        processEvent(event);
     }
 

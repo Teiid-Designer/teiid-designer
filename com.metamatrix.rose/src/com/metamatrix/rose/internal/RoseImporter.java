@@ -74,7 +74,7 @@ import com.metamatrix.rose.internal.impl.Message;
 import com.metamatrix.rose.internal.impl.Unit;
 
 /**
- * One instance of this class should be instantiated for each Rose model that is to be imported to one or more Federate Designer
+ * One instance of this class should be instantiated for each Rose model that is to be imported to one or more Teiid Designer
  * models.
  * 
  * @since 4.1
@@ -145,7 +145,7 @@ public final class RoseImporter implements FileUtils.Constants, IRoseConstants, 
     private URIConverter uriConverter = new ResourceSetImpl().getURIConverter();
 
     /**
-     * Creates an importer that can import a Rose model to a Federate Designer model using the specified metamodel-specific
+     * Creates an importer that can import a Rose model to a Teiid Designer model using the specified metamodel-specific
      * IRoseHandler.
      * 
      * @param handler The metamodel-specific IRoseHandler; never null.
@@ -252,7 +252,7 @@ public final class RoseImporter implements FileUtils.Constants, IRoseConstants, 
     /**
      * @param monitor A cancelable progress monitor that will be updated during processing; may be null.
      * @return The list of {@link DifferenceReport difference reports}describing the changes that will be made to the workspace
-     *         once the new or updated Federate Designer models are saved; never null, unmodifiable.
+     *         once the new or updated Teiid Designer models are saved; never null, unmodifiable.
      * @since 4.1
      */
     public List generateDifferenceReports( IProgressMonitor monitor ) {

@@ -14,8 +14,8 @@ import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.rose.internal.impl.Unit;
 
 /**
- * This interface must be implemented by classes responsible for parsing Rose models to one or more Federate Designer models.
- * Implementations will provide the logic and information necessary to map information from a Rose model to a Federate Designer
+ * This interface must be implemented by classes responsible for parsing Rose models to one or more Teiid Designer models.
+ * Implementations will provide the logic and information necessary to map information from a Rose model to a Teiid Designer
  * model based upon the metamodel {@link #getPrimaryMetamodelUri() indicated}.
  * 
  * @since 4.1
@@ -50,7 +50,7 @@ public interface IRoseHandler extends IRoseConstants.IReferenceTypes, RoseVisito
     List getProblems();
 
     /**
-     * @param object The Federate Designer model object containing the reference.
+     * @param object The Teiid Designer model object containing the reference.
      * @param type The type of the reference that cannot be resolved; either {@link #GENERALIZATION},{@link #OWNER}, or
      *        {@link #TYPE}.
      * @param name The name of the reference that cannot be resolved.
@@ -86,17 +86,17 @@ public interface IRoseHandler extends IRoseConstants.IReferenceTypes, RoseVisito
     void differenceReportGenerated( final List mappings );
 
     /**
-     * Called by the {@link RoseImporter}to determine the model type to set on newly created Federate Designer models.
+     * Called by the {@link RoseImporter}to determine the model type to set on newly created Teiid Designer models.
      * 
-     * @return The model type of the Federate Designer model; never null.
+     * @return The model type of the Teiid Designer model; never null.
      * @since 4.1
      */
     ModelType getModelType();
 
     /**
-     * Called by the {@link RoseImporter}to determine the primary metamodel URL to set on newly created Federate Designer models.
+     * Called by the {@link RoseImporter}to determine the primary metamodel URL to set on newly created Teiid Designer models.
      * 
-     * @return The primary metamodel URI of the Federate Designer model; never null.
+     * @return The primary metamodel URI of the Teiid Designer model; never null.
      * @since 4.1
      */
     String getPrimaryMetamodelUri();
@@ -109,7 +109,7 @@ public interface IRoseHandler extends IRoseConstants.IReferenceTypes, RoseVisito
     void initialize( List factories );
 
     /**
-     * Called by the {@link RoseImporter}to provide for any final difference analysis that needs to be performed before Federate
+     * Called by the {@link RoseImporter}to provide for any final difference analysis that needs to be performed before Teiid
      * Designer models changed by the importer are saved.
      * 
      * @param mappings The list of mappings between objects before and after being modified by the importer; never null,
@@ -122,7 +122,7 @@ public interface IRoseHandler extends IRoseConstants.IReferenceTypes, RoseVisito
      * Called by the {@link RoseImporter}to provide for any final handling (such as lazy reference resolution) that needs to be
      * performed after parsing all Rose units selected for import.
      * 
-     * @param rootsList The root objects of each of the target Federate Designer models for the Rose models being parsed (i.e., a
+     * @param rootsList The root objects of each of the target Teiid Designer models for the Rose models being parsed (i.e., a
      *        list of lists); must not be null, must be modifiable.
      * @since 4.1
      */
@@ -163,7 +163,7 @@ public interface IRoseHandler extends IRoseConstants.IReferenceTypes, RoseVisito
      * unit selected for import.
      * 
      * @param unit The Rose unit currently being parsed; must not be null.
-     * @param roots The root objects of the target Federate Designer model for the current Rose model being parsed; must not be
+     * @param roots The root objects of the target Teiid Designer model for the current Rose model being parsed; must not be
      *        null, must be modifiable.
      * @since 4.2
      */

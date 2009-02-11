@@ -62,7 +62,7 @@ public class InvalidModelImportRule implements ObjectValidationRule {
             context.addResult(result);
         }
 
-//        // Check to see if the import is to the Federate Designer built-in datatypes
+//        // Check to see if the import is to the Teiid Designer built-in datatypes
 //        // resource or to one of the Emf XMLSchema resources
 //        if (WorkspaceResourceFinderUtil.isGlobalResource(location)) {
 //            return;

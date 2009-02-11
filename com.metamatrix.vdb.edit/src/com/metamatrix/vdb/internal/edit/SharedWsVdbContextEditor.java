@@ -1442,7 +1442,7 @@ public class SharedWsVdbContextEditor extends VdbContextImpl implements VdbConte
                 modelReference.setPrimaryMetamodelUri(XSDPackage.eNS_URI);
 
                 // Else no ModelResource was found so the path must represent a
-                // non-Federate Designer model file so store information about the
+                // non-Teiid Designer model file so store information about the
                 // file in the ModelReference properties
             } else {
                 modelReference.setModelType(ModelType.UNKNOWN_LITERAL);

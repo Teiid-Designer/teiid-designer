@@ -22,7 +22,7 @@ Require-Bundle: org.eclipse.emf.ecore,
  com.metamatrix.modeler.core,
  com.metamatrix.metamodels.core,
  com.metamatrix.core.modeler,
- federate_embedded_query,
+ teiid_embedded_query,
  org.eclipse.emf.mapping,
  org.eclipse.emf.ecore.xmi
 Bundle-ActivationPolicy: lazy

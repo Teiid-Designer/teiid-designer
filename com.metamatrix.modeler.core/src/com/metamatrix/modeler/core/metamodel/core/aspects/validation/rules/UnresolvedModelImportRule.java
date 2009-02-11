@@ -54,7 +54,7 @@ public class UnresolvedModelImportRule implements ObjectValidationRule {
         if (container != null) {
             final ResourceFinder finder = container.getResourceFinder();
 
-            // Check to see if the import is to the Federate Designer built-in datatypes
+            // Check to see if the import is to the Teiid Designer built-in datatypes
             // resource or to one of the Emf XMLSchema resources
             URI uri = URI.createURI(location);
             if (finder.isBuiltInResource(uri)) {

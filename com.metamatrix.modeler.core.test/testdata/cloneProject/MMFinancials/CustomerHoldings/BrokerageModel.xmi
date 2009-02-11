@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:Transformation="http://www.metamatrix.com/metamodels/Transformation" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
-  <mmcore:ModelAnnotation xmi:uuid="mmuuid:f6760940-6be7-1f32-8a2a-f810bd78f363" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="VIRTUAL" ProducerName="Federate Designer" ProducerVersion="5.0">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:f6760940-6be7-1f32-8a2a-f810bd78f363" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="VIRTUAL" ProducerName="Teiid Designer" ProducerVersion="5.0">
     <modelImports xmi:uuid="mmuuid:9ca1eac0-7395-1007-a004-e6edaff23ad8" name="LIVELINK" modelLocation="../Documents/LIVELINK.xmi" uuid="mmuuid:972fba40-5e42-1f20-ad06-a70a6f8efcd0" modelType="PHYSICAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>
     <modelImports xmi:uuid="mmuuid:ba5fb442-79ea-1f87-863d-dcc32f26893c" name="All_CustomerAccounts" modelLocation="../EnterpriseDataModel/All_CustomerAccounts.xmi" uuid="mmuuid:3f7b3480-6b70-1f32-8a2a-f810bd78f363" modelType="VIRTUAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>
     <modelImports xmi:uuid="mmuuid:f457b4c0-6bf5-1f32-8a2a-f810bd78f363" name="DataDictionary" modelLocation="../EnterpriseDataModel/DataDictionary.xsd"/>

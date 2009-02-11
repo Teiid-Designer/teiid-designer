@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Transformation="http://www.metamatrix.com/metamodels/Transformation" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:mmws="http://www.metamatrix.com/metamodels/WebService">
   <mmcore:ModelAnnotation xmi:uuid="mmuuid:7eb0ad40-f589-1f59-a112-e0eac778cc3c" primaryMetamodelUri="http://www.metamatrix.com/metamodels/WebService" modelType="VIRTUAL">
     <modelImports xmi:uuid="mmuuid:46de19c0-f5d4-1f59-a112-e0eac778cc3c" name="BooksInput" path="/Books Project/BooksInput.xsd"/>

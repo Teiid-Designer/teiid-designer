@@ -138,7 +138,7 @@ public class TestBuiltInTypesManager extends TestCase {
         assertEquals(true, dtMgr.isBuiltInDatatype(eObject));
 
         // If the data type is a extended built-in type then it
-        // should be contained within the Federate Designer built-in datatypes resource
+        // should be contained within the Teiid Designer built-in datatypes resource
         if (DatatypeConstants.getMetaMatrixExtendedBuiltInTypeNames().contains(name)) {
             assertEquals("Resource checked failed for " + name, helpGetMmXsdResource(), type.eResource()); //$NON-NLS-1$
         } else if (DatatypeConstants.BuiltInNames.ANY_SIMPLE_TYPE.equals(name)

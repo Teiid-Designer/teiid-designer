@@ -173,7 +173,7 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
         this.modelContents = new ModelContents(this);
 
         // If the target of the load operation can be scanned, then verify that
-        // it represents a valid Federate Designer model file
+        // it represents a valid Teiid Designer model file
         if (this.uri != null && this.uri.isFile()) {
             File f = new File(this.uri.toFileString());
             if (f.exists()) {

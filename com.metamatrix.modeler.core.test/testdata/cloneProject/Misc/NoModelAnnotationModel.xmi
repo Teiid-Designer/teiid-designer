@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:jdbc="http://www.metamatrix.com/metamodels/JDBC" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:relational="http://www.metamatrix.com/metamodels/Relational" xmlns:transformation="http://www.metamatrix.com/metamodels/Transformation">
   <relational:BaseTable xmi:uuid="mmuuid:33b91c80-6ee7-106f-912d-ff6949ee2887" name="AUTHORS" nameInSource="AUTHORS" supportsUpdate="false">
     <columns xmi:uuid="mmuuid:33b91c85-6ee7-106f-912d-ff6949ee2887" name="AUTHOR_ID" nameInSource="AUTHOR_ID" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" updateable="false" caseSensitive="false" searchability="ALL_EXCEPT_LIKE" uniqueKeys="mmuuid/33b91c84-6ee7-106f-912d-ff6949ee2887">

@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xs:schema targetNamespace="http://www.metamatrix.com/BQT_SQLServer_Output" xmlns="http://www.metamatrix.com/BQT_SQLServer_Output" xmlns:Q1="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import namespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" schemaLocation="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"/>
   <xs:element name="HugeA_Output">

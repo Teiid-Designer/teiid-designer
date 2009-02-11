@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (c) XBRL International.  See www.xbrl.org/legal  
- 
-This version is non-normative - it should be identical to the normative
-version that is contained in Appendix A of the specification RECOMMENDATION
-with errata corrections to 2004-04-29 except for this comment
+<!--
+  JBoss, Home of Professional Open Source.
 
-Following the schema maintenance policy of XBRL International, its location on the
-web will be as follows:
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
 
-1) While it is the most current RECOMMENDED version of the schema and until it is 
-superseded by any additional errata corrections it will reside on the web at
-
-http://www.xbrl.org/2003/xl-2003-12-31.xsd 
-
-2) It will be archived in perpetuity at 
-
-http://www.xbrl.org/2003/2004-04-29/xl-2003-12-31.xsd
-
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <schema targetNamespace="http://www.xbrl.org/2003/XLink" 
   xmlns:xlink="http://www.w3.org/1999/xlink" 

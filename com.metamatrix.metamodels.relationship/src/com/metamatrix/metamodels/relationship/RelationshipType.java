@@ -210,7 +210,7 @@ public interface RelationshipType extends RelationshipEntity {
      * return false from this method are those that are "built-in" to the application.
      * </p>
      * <!-- end-user-doc --> <!-- begin-model-doc --> Defines whether a user has defined this type. The only relationship types
-     * that can have a value set to 'false' are those types created by Federate Designer and managed as built-in relationship
+     * that can have a value set to 'false' are those types created by Teiid Designer and managed as built-in relationship
      * types. <!-- end-model-doc -->
      * 
      * @return the value of the '<em>User Defined</em>' attribute.

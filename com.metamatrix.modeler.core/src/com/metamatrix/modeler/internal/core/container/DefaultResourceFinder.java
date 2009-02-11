@@ -282,17 +282,17 @@ public class DefaultResourceFinder implements ResourceFinder {
 
         String uriString = URI.decode(theUri.toString());
 
-        // If the URI is to the Federate Designer built-in datatypes model
+        // If the URI is to the Teiid Designer built-in datatypes model
         if (uriString.startsWith(BUILTIN_DATATYPES_URI) || uriString.endsWith(DATATYPES_MODEL_FILE_NAME)) {
             return true;
         }
 
-        // If the URI is to the Federate Designer built-in UML primitive types model
+        // If the URI is to the Teiid Designer built-in UML primitive types model
         if (uriString.startsWith(UML_PRIMITIVE_TYPES_INTERNAL_URI) || uriString.endsWith(UML_PRIMITIVE_TYPES_MODEL_FILE_NAME)) {
             return true;
         }
 
-        // If the URI is to the Federate Designer built-in relationship model
+        // If the URI is to the Teiid Designer built-in relationship model
         if (uriString.startsWith(RELATIONSHIP_PRIMITIVE_TYPES_INTERNAL_URI)
             || uriString.endsWith(RELATIONSHIP_PRIMITIVE_TYPES_MODEL_FILE_NAME)) {
             return true;
@@ -311,7 +311,7 @@ public class DefaultResourceFinder implements ResourceFinder {
             return true;
         }
 
-        // If the URI is to one of the Federate Designer metamodel resources
+        // If the URI is to one of the Teiid Designer metamodel resources
         if (uriString.startsWith(METAMODEL_PREFIX)) {
             return true;
         }
@@ -321,7 +321,7 @@ public class DefaultResourceFinder implements ResourceFinder {
             return true;
         }
 
-        // If the URI is to the Federate Designer built-in system models
+        // If the URI is to the Teiid Designer built-in system models
         if (isBuiltInSystemResource(theUri)) {
             return true;
         }

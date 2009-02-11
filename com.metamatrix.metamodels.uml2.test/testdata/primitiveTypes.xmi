@@ -14,7 +14,7 @@
       <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:951da084-36f5-1efb-8f0b-81da3fe7dab7" name="Boolean"/>
       <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:b42cf405-36f8-1efb-8f0b-81da3fe7dab7" name="String"/>
       <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:f6910b81-567c-1efb-bc0f-ca4ef31026bf" name="UnlimitedNatural"/>
-      <packagedElement xsi:type="uml2:Package" xmi:uuid="mmuuid:2596794e-e359-1efd-b118-b1a83b4bebfd" name="FederateDesigner">
+      <packagedElement xsi:type="uml2:Package" xmi:uuid="mmuuid:2596794e-e359-1efd-b118-b1a83b4bebfd" name="TeiidDesigner">
         <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:07f9d992-e35f-1efd-b118-b1a83b4bebfd" name="byte"/>
         <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:aa424112-e373-1efd-b118-b1a83b4bebfd" name="short"/>
         <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:92ab4452-e37a-1efd-b118-b1a83b4bebfd" name="char"/>
@@ -79,6 +79,6 @@
     <annotations xmi:uuid="mmuuid:ee3f6100-564c-1efb-bc0f-ca4ef31026bf" description="An integer is a primitive type representing integer values.An instance of Integer is an element in the (infinite) set of integers (&#x2026;-2, -1, 0, 1, 2&#x2026;). It is used for integer attributes and integer expressions in the metamodel." annotatedObject="mmuuid/0af241d2-36f2-1efb-8f0b-81da3fe7dab7"/>
     <annotations xmi:uuid="mmuuid:4315d640-5676-1efb-bc0f-ca4ef31026bf" description="A string is a sequence of characters in some suitable character set used to display information about the model. Character sets may include non-Roman alphabets and characters.&#xd;&#xa;&#xd;&#xa;An instance of String defines a piece of text. The semantics of the string itself depends on its purpose, it can be a comment, computational language expression, OCL expression, etc. It is used for String attributes and String expressions in the metamodel." annotatedObject="mmuuid/b42cf405-36f8-1efb-8f0b-81da3fe7dab7"/>
     <annotations xmi:uuid="mmuuid:02ae9240-5685-1efb-bc0f-ca4ef31026bf" description="An unlimited natural is a primitive type representing unlimited natural values. An instance of UnlimitedNatural is an element in the (infinite) set of naturals (0, 1, 2&#x2026;). The value of infinity is shown using an asterisk (*)." annotatedObject="mmuuid/f6910b81-567c-1efb-bc0f-ca4ef31026bf"/>
-    <annotations xmi:uuid="mmuuid:786d4f40-e485-1efd-a928-93d496ad97c2" description="Package defines the extended set of Federate Designer primitive types." annotatedObject="mmuuid/2596794e-e359-1efd-b118-b1a83b4bebfd"/>
+    <annotations xmi:uuid="mmuuid:786d4f40-e485-1efd-a928-93d496ad97c2" description="Package defines the extended set of Teiid Designer primitive types." annotatedObject="mmuuid/2596794e-e359-1efd-b118-b1a83b4bebfd"/>
   </mmcore:AnnotationContainer>
 </xmi:XMI>

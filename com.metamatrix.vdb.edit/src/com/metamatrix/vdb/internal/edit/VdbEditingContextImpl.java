@@ -2442,7 +2442,7 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
                 primaryMetamodelUri = XSDPackage.eNS_URI;
 
                 // Else no ModelResource was found so the path must represent a
-                // non-Federate Designer model file so store information about the
+                // non-Teiid Designer model file so store information about the
                 // file in the ModelReference properties
             } else {
                 // Set the model type information on the reference
@@ -3391,7 +3391,7 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
     }
 
     /**
-     * Add {@link Resource}references to the specified list for any of the well-known Federate Designer/Emf resources that are
+     * Add {@link Resource}references to the specified list for any of the well-known Teiid Designer/Emf resources that are
      * required for index file production such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
@@ -3420,7 +3420,7 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
 
     // dffFIXME - finish implementation
     /**
-     * Add {@link Resource}references to the specified list for any of the well-known Federate Designer/Emf resources that are
+     * Add {@link Resource}references to the specified list for any of the well-known Teiid Designer/Emf resources that are
      * required for index file production such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"

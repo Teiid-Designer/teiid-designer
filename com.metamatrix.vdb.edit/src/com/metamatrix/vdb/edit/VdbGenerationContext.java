@@ -247,7 +247,7 @@ public interface VdbGenerationContext {
 
         /**
          * Returns true if this model object has errors. Every model within the Modeler is validated against a set of rules to
-         * determine if its contents adhere to constraints or boundaries imposed by the metamodel, Federate Designer, or Federate
+         * determine if its contents adhere to constraints or boundaries imposed by the metamodel, Teiid Designer, or Teiid
          * Server. Errors on a model object would prevent the model from being used within the server.
          * 
          * @param object
@@ -259,7 +259,7 @@ public interface VdbGenerationContext {
 
         /**
          * Returns true if this model object has warnings. Every model within the Modeler is validated against a set of rules to
-         * determine if its contents adhere to constraints or boundaries imposed by the metamodel, Federate Designer, or Federate
+         * determine if its contents adhere to constraints or boundaries imposed by the metamodel, Teiid Designer, or Teiid
          * Server. Warnings on a model object will not prevent the model from being used within the server but should be examined
          * by the creator of the model.
          * 

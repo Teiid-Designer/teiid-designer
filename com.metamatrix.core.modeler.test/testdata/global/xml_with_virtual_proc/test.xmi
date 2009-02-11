@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:Transformation="http://www.metamatrix.com/metamodels/Transformation" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
   <mmcore:ModelAnnotation xmi:uuid="mmuuid:3406c880-4de9-1f13-890c-cdb9b341bd39" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="VIRTUAL">
     <modelImports xmi:uuid="mmuuid:f8d4c580-5f01-1f8b-b83e-884634e23d85" name="BQT1" path="/XML with virtual proc/BQT1.xmi" uuid="mmuuid:4bfaea40-8716-1e33-973a-94882775c267" modelType="PHYSICAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>

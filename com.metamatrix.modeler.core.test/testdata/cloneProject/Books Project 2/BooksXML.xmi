@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Transformation="http://www.metamatrix.com/metamodels/Transformation" xmlns:Xsd="http://www.eclipse.org/xsd/2002/XSD" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:vxmldoc="http://www.metamatrix.com/metamodels/XmlDocument">
-  <mmcore:ModelAnnotation xmi:uuid="mmuuid:096d8dc0-0dc9-1eec-8518-c32201e76066" primaryMetamodelUri="http://www.metamatrix.com/metamodels/XmlDocument" modelType="VIRTUAL" ProducerName="Federate Designer" ProducerVersion="5.0">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:096d8dc0-0dc9-1eec-8518-c32201e76066" primaryMetamodelUri="http://www.metamatrix.com/metamodels/XmlDocument" modelType="VIRTUAL" ProducerName="Teiid Designer" ProducerVersion="5.0">
     <modelImports xmi:uuid="mmuuid:f7965202-1210-1eec-b423-e8c868b983ec" name="Books" modelLocation="Books.xsd"/>
     <modelImports xmi:uuid="mmuuid:f87fd543-b1e2-1f55-853c-ed5dfdd1bb78" name="Books_Oracle" modelLocation="Books_SourceA.xmi" uuid="mmuuid:f8384100-0dae-1eec-8518-c32201e76066" modelType="PHYSICAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>
     <modelImports xmi:uuid="mmuuid:f87fd545-b1e2-1f55-853c-ed5dfdd1bb78" name="Books_SQLServer" modelLocation="Books_SourceB.xmi" uuid="mmuuid:fbad5100-0db6-1eec-8518-c32201e76066" modelType="PHYSICAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>

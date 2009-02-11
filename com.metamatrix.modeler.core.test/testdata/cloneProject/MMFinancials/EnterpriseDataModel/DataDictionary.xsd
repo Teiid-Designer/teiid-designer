@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:mmedt="http://www.metamatrix.com/2005/XmlSchema/EnterpriseDatatypes">
     <simpleType mmedt:UUID="mmuuid:e32dfb00-e551-1f0c-b503-9d47f4972726" mmedt:runtimeDataType="string" mmedt:runtimeDataTypeFixed="false" name="MiddleInitial">
         <annotation>

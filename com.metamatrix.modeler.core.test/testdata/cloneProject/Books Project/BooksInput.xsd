@@ -1,5 +1,11 @@
 <?xml version="1.0"?>
-<!-- edited with XMLSPY v5 rel. 3 U (http://www.xmlspy.com) by jpoulsen (MetaMatrix, Inc.) -->
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xs:schema attributeFormDefault="unqualified"
     elementFormDefault="qualified"
     targetNamespace="http://metamatrix.com/books/input"

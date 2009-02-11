@@ -192,7 +192,7 @@ public class WsVdbInputResourceFinder implements VdbInputResourceFinder {
         if (emfResource != null && emfResource.getURI() != null) {
             assertEclipseRuntime();
 
-            // If the resource is the Federate Designer built-in datatypes model
+            // If the resource is the Teiid Designer built-in datatypes model
             // then return the specific logical URI for that model
             final URI resourceUri = emfResource.getURI();
             String resourceUriString = (resourceUri.isFile() ? resourceUri.toFileString() : URI.decode(resourceUri.toString()));

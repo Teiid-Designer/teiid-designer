@@ -110,7 +110,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      */
     public static interface ILicense {
         String PRODUCT = MetaMatrixProductVersion.MODELER_PRODUCT_TYPE_NAME;
-        String PRODUCER_NAME = "Federate Designer"; //$NON-NLS-1$
+        String PRODUCER_NAME = "Teiid Designer"; //$NON-NLS-1$
         String VERSION = MetaMatrixProductVersion.VERSION_NUMBER;
     }
 
@@ -154,7 +154,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
 
     /**
      * <p>
-     * The file extension of Federate Designer model files.
+     * The file extension of Teiid Designer model files.
      * </p>
      * 
      * @since 4.0

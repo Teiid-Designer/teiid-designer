@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.edit,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
- federate_embedded_query,
+ teiid_embedded_query,
  com.metamatrix.core.modeler
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

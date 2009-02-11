@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:relational="http://www.metamatrix.com/metamodels/Relational" xmlns:transformation="http://www.metamatrix.com/metamodels/Transformation">
-  <mmcore:ModelAnnotation xmi:uuid="mmuuid:86312880-9bd6-1f55-9838-f1bcf0c80574" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="VIRTUAL" ProducerName="Federate Designer" ProducerVersion="5.0">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:86312880-9bd6-1f55-9838-f1bcf0c80574" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="VIRTUAL" ProducerName="Teiid Designer" ProducerVersion="5.0">
     <modelImports xmi:uuid="mmuuid:ccfdbc40-aadd-1f55-9838-f1bcf0c80574" name="SimpleDatatypes-instance" modelLocation="../builtInDataTypes.xsd"/>
     <modelImports xmi:uuid="mmuuid:cd9652c0-aadd-1f55-9838-f1bcf0c80574" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema"/>
   </mmcore:ModelAnnotation>

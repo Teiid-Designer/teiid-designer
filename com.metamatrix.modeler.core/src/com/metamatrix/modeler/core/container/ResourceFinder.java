@@ -44,7 +44,7 @@ public interface ResourceFinder {
     public static final URI SCHEMA_FOR_SCHEMA_URI = URI.createURI(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001);
     public static final URI SCHEMA_INSTANCE_URI = URI.createURI(XSDConstants.SCHEMA_INSTANCE_URI_2001);
 
-    /** Defines Federate Designer metamodel URI prefix */
+    /** Defines Teiid Designer metamodel URI prefix */
     public static final String METAMODEL_PREFIX = "mtkplugin://"; //$NON-NLS-1$
 
     /** Defines IBM UML2 metamodel URI prefix */
@@ -234,7 +234,7 @@ public interface ResourceFinder {
     boolean isExternalResource( Resource theResource );
 
     /**
-     * Returns true if the specified URI identifies one of the well-known Federate Designer/EMF built-in shared resources such as
+     * Returns true if the specified URI identifies one of the well-known Teiid Designer/EMF built-in shared resources such as
      * <p>
      * <li>"http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"</li>
      * <li>"http://www.metamatrix.com/metamodels/UmlPrimitiveTypes-instance"</li>
@@ -251,7 +251,7 @@ public interface ResourceFinder {
     boolean isBuiltInResource( URI theUri );
 
     /**
-     * Returns true if the specified resource is one of the well-known Federate Designer/EMF resources built-in shared resources
+     * Returns true if the specified resource is one of the well-known Teiid Designer/EMF resources built-in shared resources
      * such as
      * <p>
      * <li>"http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"</li>
@@ -304,7 +304,7 @@ public interface ResourceFinder {
      * called on every dependent resource until the complete dependency hierarchy is completed. If the recurse argument is false,
      * then only the immediate dependencies are returned. If the includeExternal argument is true, then references to resources in
      * one of the resource set's external resource sets will be included in the result. The external resource sets are used to
-     * store the well-known Federate Designer and EMF global resource instances shared across all resources, such as
+     * store the well-known Teiid Designer and EMF global resource instances shared across all resources, such as
      * <p>
      * <li>"http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"</li>
      * <li>"http://www.metamatrix.com/metamodels/UmlPrimitiveTypes-instance"</li>

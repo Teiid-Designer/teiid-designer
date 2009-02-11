@@ -10,7 +10,7 @@ Bundle-Localization: plugin
 Require-Bundle: com.metamatrix.core.modeler,
  net.sf.saxon,
  org.eclipse.core.runtime,
- federate_embedded_query
+ teiid_embedded_query
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.core.xslt,

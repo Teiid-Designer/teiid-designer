@@ -49,10 +49,10 @@ public class MetamodelBuilderExecutionPlugin extends Plugin {
     /** Defines the expected built-in datatypes model URI */
     public static final String BUILTIN_DATATYPES_URI_STRING = "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"; //$NON-NLS-1$
 
-    /** Shared resource set containing the Federate Designer built-in types resource */
+    /** Shared resource set containing the Teiid Designer built-in types resource */
     protected static ResourceSet globalResourceSet;
 
-    /** Shared resource set containing the Federate Designer built-in types resource */
+    /** Shared resource set containing the Teiid Designer built-in types resource */
     protected static Resource builtInTypesResource;
 
     // The shared instance.
@@ -103,7 +103,7 @@ public class MetamodelBuilderExecutionPlugin extends Plugin {
     }
 
     /**
-     * Return the shared resource set containing the Federate Designer built-in types resource
+     * Return the shared resource set containing the Teiid Designer built-in types resource
      * 
      * @return
      * @since 4.3
@@ -123,7 +123,7 @@ public class MetamodelBuilderExecutionPlugin extends Plugin {
     }
 
     /**
-     * Return the shared Federate Designer built-in types resource
+     * Return the shared Teiid Designer built-in types resource
      * 
      * @return
      * @since 4.3

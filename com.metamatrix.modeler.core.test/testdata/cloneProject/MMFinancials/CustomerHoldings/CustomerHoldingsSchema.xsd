@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xsd:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" xmlns:conn="http://www.metamatrix.com/metabase/3.0/metamodels/Connections.xml" xmlns:dgm="http://www.metamatrix.com/metabase/3.0/metamodels/Diagram.xml" xmlns:mm="http://www.metamatrix.com/metabase/3.0/metamodels/XMLSchema.xml" xmlns:sdt="http://www.metamatrix.com/metabase/3.0/metamodels/SimpleDatatypes.xml" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 <xsd:element name="Customer" type="CustomerType"/>
   <xsd:complexType name="CustomerType">

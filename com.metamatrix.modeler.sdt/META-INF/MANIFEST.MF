@@ -10,7 +10,7 @@ Bundle-Localization: plugin
 Require-Bundle: com.metamatrix.modeler.core,
  com.metamatrix.metamodels.xsd,
  com.metamatrix.core.modeler,
- federate_embedded_query,
+ teiid_embedded_query,
  org.eclipse.core.runtime,
  org.eclipse.xsd,
  org.eclipse.core.resources,

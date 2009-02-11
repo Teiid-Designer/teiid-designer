@@ -30,7 +30,7 @@ import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 
 /**
- * This class provides logging and resource functionality for a plugin. It is intended to be used by providing in all Federate
+ * This class provides logging and resource functionality for a plugin. It is intended to be used by providing in all Teiid
  * Designer plugins a single static final member variable that is initialized to an instance of this class. <code>
  *        public static final PluginUtil Util = new PluginUtilImpl(PLUGIN_ID);
  * </code> </p>

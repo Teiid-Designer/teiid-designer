@@ -517,7 +517,7 @@
          unpack="false"/>
 
    <plugin
-         id="federate_embedded_query"
+         id="teiid_embedded_query"
          download-size="0"
          install-size="0"
          version="0.0.0"

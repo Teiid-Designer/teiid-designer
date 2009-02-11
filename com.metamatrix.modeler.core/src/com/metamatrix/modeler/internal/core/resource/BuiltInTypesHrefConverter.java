@@ -124,7 +124,7 @@ public class BuiltInTypesHrefConverter implements EObjectHrefConverter {
      */
     protected synchronized void doInit() {
             
-        // Create URI mappings for the Federate Designer built-in datatypes resource
+        // Create URI mappings for the Teiid Designer built-in datatypes resource
         // "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"
         XSDResourceImpl xsdResource = getBuiltInTypesResource(BUILTIN_DATATYPES_URI);
         if (xsdResource != null) {

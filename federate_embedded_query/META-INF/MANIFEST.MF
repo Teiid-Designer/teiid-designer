@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: federate_embedded_query; singleton:=true
+Bundle-SymbolicName: teiid_embedded_query;singleton:=true
 Bundle-Version: 6.0.0
 Bundle-Vendor: %providerName
-Bundle-ClassPath: library.jar,
- federate-0.0.1-SNAPSHOT-embedded.jar,
+Bundle-ClassPath: teiidEmbeddedQuery.jar,
+ teiid-0.0.1-SNAPSHOT-embedded.jar,
  lib/axis-1.3.jar,
  lib/axis-jaxrpc-1.2.jar,
  lib/axis-saaj-1.2.jar,

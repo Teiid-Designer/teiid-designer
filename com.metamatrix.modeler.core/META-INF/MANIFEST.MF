@@ -76,6 +76,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xsd,
  org.eclipse.emf.mapping,
  com.metamatrix.core.modeler,
- federate_embedded_query
+ teiid_embedded_query
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

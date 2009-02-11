@@ -15,7 +15,7 @@ Export-Package: com.metamatrix.modeler.dqp,
  com.metamatrix.modeler.dqp.internal.workspace,
  com.metamatrix.modeler.dqp.util
 Require-Bundle: org.eclipse.core.runtime,
- federate_embedded_query,
+ teiid_embedded_query,
  org.eclipse.core.resources,
  com.metamatrix.vdb.edit,
  com.metamatrix.modeler.jdbc,

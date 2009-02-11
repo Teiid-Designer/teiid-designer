@@ -35,7 +35,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.wsdl.validation,
  org.jaxen,
  org.wsdl4j,
- federate_embedded_query,
+ teiid_embedded_query,
  com.metamatrix.modeler.modelgenerator.xml
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

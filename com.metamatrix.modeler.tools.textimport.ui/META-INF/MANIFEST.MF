@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.ui.views,
  com.metamatrix.modeler.ui,
  org.eclipse.ui.ide,
  com.metamatrix.core.modeler,
- federate_embedded_query,
+ teiid_embedded_query,
  org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

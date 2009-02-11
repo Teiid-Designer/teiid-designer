@@ -391,7 +391,7 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
     }
 
     /**
-     * @return The map of ID's to Federate Designer model objects; never null, modifiable.
+     * @return The map of ID's to Teiid Designer model objects; never null, modifiable.
      * @since 4.1
      */
     protected final Map getIdMap() {
@@ -399,7 +399,7 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
     }
 
     /**
-     * @return The map of unqualified object names to the list of Federate Designer model objects with those names; never null,
+     * @return The map of unqualified object names to the list of Teiid Designer model objects with those names; never null,
      *         modifiable.
      * @since 4.1
      */
@@ -424,7 +424,7 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
     }
 
     /**
-     * @return The root objects of the target Federate Designer model for the current Rose model being parsed; never null,
+     * @return The root objects of the target Teiid Designer model for the current Rose model being parsed; never null,
      *         modifiable.
      * @since 4.1
      */
@@ -449,13 +449,13 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
     }
 
     /**
-     * Implemented by subclasses to create a Federate Designer model object that represents the specified Rose Association node.
+     * Implemented by subclasses to create a Teiid Designer model object that represents the specified Rose Association node.
      * After this method is called, the Rose node's ID will be mapped to the returned object for later {@link #getIdMap() use}by
      * other create methods. The Rose node's "node" property will also be set to the returned object.
      * 
      * @param name The Rose node's name.
      * @param node A Rose Association node.
-     * @return The newly created Federate Designer model object that corresponds to the specified Rose node.
+     * @return The newly created Teiid Designer model object that corresponds to the specified Rose node.
      * @since 4.1
      */
     protected abstract Object createAssociation( String name,
@@ -474,27 +474,27 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
                                              Map propertyMap );
 
     /**
-     * Implemented by subclasses to create a Federate Designer model object that represents the specified Rose Class node. After
+     * Implemented by subclasses to create a Teiid Designer model object that represents the specified Rose Class node. After
      * this method is called, the Rose node's ID will be mapped to the returned object for later {@link #getIdMap() use}by other
      * create methods. The Rose node's "node" property will also be set to the returned object.
      * 
      * @param name The Rose node's name.
      * @param node A Rose Class node.
-     * @return The newly created Federate Designer model object that corresponds to the specified Rose node.
+     * @return The newly created Teiid Designer model object that corresponds to the specified Rose node.
      * @since 4.1
      */
     protected abstract Object createClass( String name,
                                            RoseNode node );
 
     /**
-     * Implemented by subclasses to create a Federate Designer model object that represents the specified Rose Class Attribute
+     * Implemented by subclasses to create a Teiid Designer model object that represents the specified Rose Class Attribute
      * node. After this method is called, the Rose node's ID will be mapped to the returned object for later {@link #getIdMap()
      * use}by other create methods. The Rose node's "node" property will also be set to the returned object.
      * 
      * @param name The Rose node's name.
      * @param node The Rose Attribute node.
      * @param multiplicity The Rose Attribute's multiplicity.
-     * @return The newly created Federate Designer model object that corresponds to the specified Rose node.
+     * @return The newly created Teiid Designer model object that corresponds to the specified Rose node.
      * @since 4.1
      */
     protected abstract Object createClassAttribute( String name,
@@ -502,7 +502,7 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
                                                     String multiplicity );
 
     /**
-     * Implemented by subclasses to create a Federate Designer model object that represents the specified Rose Inheritance
+     * Implemented by subclasses to create a Teiid Designer model object that represents the specified Rose Inheritance
      * Relationship node.
      * 
      * @param name The Rose node's name.
@@ -513,18 +513,18 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
                                                            RoseNode node );
 
     /**
-     * Implemented by subclasses to create a Federate Designer model object that represents the specified Rose Operation node.
+     * Implemented by subclasses to create a Teiid Designer model object that represents the specified Rose Operation node.
      * 
      * @param name The Rose node's name.
      * @param node A Rose Operation node.
-     * @return The newly created Federate Designer model object that corresponds to the specified Rose node.
+     * @return The newly created Teiid Designer model object that corresponds to the specified Rose node.
      * @since 4.1
      */
     protected abstract Object createOperation( String name,
                                                RoseNode node );
 
     /**
-     * Must be implemented by subclasses to create a Federate Designer model object that represents the specified Rose Package
+     * Must be implemented by subclasses to create a Teiid Designer model object that represents the specified Rose Package
      * node. The following steps will be performed <em>after</em> calling this method:
      * <ul>
      * <li>The Rose node's ID will be mapped to the returned object for later {@link #getIdMap() use}by other create methods.
@@ -534,18 +534,18 @@ public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandle
      * 
      * @param name The Rose node's name.
      * @param node A Rose Package node.
-     * @return The newly created Federate Designer model object that corresponds to the specified Rose node.
+     * @return The newly created Teiid Designer model object that corresponds to the specified Rose node.
      * @since 4.1
      */
     protected abstract Object createPackage( String name,
                                              RoseNode node );
 
     /**
-     * Must be implemented by subclasses to create a Federate Designer model object that represents the specified Rose Role node.
+     * Must be implemented by subclasses to create a Teiid Designer model object that represents the specified Rose Role node.
      * 
      * @param name The Rose node's name.
      * @param node A Rose Role node.
-     * @return The newly created Federate Designer model object that corresponds to the specified Rose node.
+     * @return The newly created Teiid Designer model object that corresponds to the specified Rose node.
      * @since 4.1
      */
     protected abstract Object createRole( String name,

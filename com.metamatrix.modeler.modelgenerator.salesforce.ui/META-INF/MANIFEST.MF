@@ -20,7 +20,7 @@ Require-Bundle: com.metamatrix.modeler.modelgenerator.salesforce,
  com.metamatrix.metamodels.builder,
  com.metamatrix.core.modeler,
  com.metamatrix.modeler.compare.ui,
- federate_embedded_query,
+ teiid_embedded_query,
  com.metamatrix.modeler.compare,
  org.eclipse.emf.ecore
 Bundle-ActivationPolicy: lazy

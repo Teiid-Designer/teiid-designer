@@ -126,7 +126,7 @@ public interface DatatypeManager {
     EObject getBuiltInDatatype( String name ) throws ModelerCoreException;
 
     /**
-     * Returns true if the <code>EObject</code> instance represents a Federate Designer built-in datatype (an extension of the XSD
+     * Returns true if the <code>EObject</code> instance represents a Teiid Designer built-in datatype (an extension of the XSD
      * built-in datatypes).
      * 
      * @param the EObject to check; may not be null.

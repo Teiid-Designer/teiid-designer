@@ -219,7 +219,7 @@ public class ModelMapperFactory implements DebugConstants,
     
     /**
      * Obtains the metamodel URI for the specified tree node.  If the tree node
-     * is contained within an EMF resource that is not a Federate Designer model resource,
+     * is contained within an EMF resource that is not a Teiid Designer model resource,
      * for example an XSD resource, then null will be returned.
      * @param theTreeNode the tree node whose metamodel URI is being requested
      * @return the metamodel URI; may return null for unsupported metamodels

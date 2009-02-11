@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:org.eclipse.emf.test.models.library="http://org.eclipse.emf.test.models/Library">
-  <mmcore:ModelAnnotation xmi:uuid="mmuuid:68ed6080-2d98-1066-9f18-f9d139b2a632" primaryMetamodelUri="http://org.eclipse.emf.test.models/Library" modelType="PHYSICAL" ProducerName="Federate Designer" ProducerVersion="5.0"/>
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:68ed6080-2d98-1066-9f18-f9d139b2a632" primaryMetamodelUri="http://org.eclipse.emf.test.models/Library" modelType="PHYSICAL" ProducerName="Teiid Designer" ProducerVersion="5.0"/>
   <mmcore:AnnotationContainer xmi:uuid="mmuuid:dd74cf00-2d99-1066-9f18-f9d139b2a632"/>
   <org.eclipse.emf.test.models.library:Library xmi:uuid="mmuuid:50d95341-2d99-1066-9f18-f9d139b2a632" name="Lib1">
     <writers xmi:uuid="mmuuid:5f47f2c0-2d9d-1066-9f18-f9d139b2a632" name="James Thurber" books="mmuuid/dccdf5c1-2d9b-1066-9f18-f9d139b2a632"/>
