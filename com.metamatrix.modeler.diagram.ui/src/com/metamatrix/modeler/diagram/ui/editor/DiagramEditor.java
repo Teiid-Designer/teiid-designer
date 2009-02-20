@@ -1380,7 +1380,7 @@ public class DiagramEditor extends GraphicalEditor
             }
         } else {
             if (meParentEditor != null && meParentEditor.getModelFile() != null
-                && meParentEditor.getModelFile().getRawLocation().toFile().exists()) {
+                && meParentEditor.getModelFile().exists()) {
                 // here's where we replace current diagram with bogus empty diagram by calling openContext(null)
                 openContext(null);
             }

@@ -69,6 +69,8 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
 
     /** Delegate action to delete resources. */
     private SelectionListenerAction deleteResourceAction;
+    
+    private SelectionListenerAction deleteProjectsAction;
 
     /** Delegate action to delete EObjects. */
     private AbstractAction deleteEObjectAction;
@@ -81,7 +83,7 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
      */
     public DeleteResourceAction() {
         super(UiPlugin.getDefault());
-        deleteResourceAction = initDelegateAction();
+        initDelegateActions();
         this.delegateAction = this.deleteResourceAction;
 
         setHoverImageDescriptor(deleteResourceAction.getHoverImageDescriptor());
@@ -100,16 +102,44 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
         }
     }
 
-    protected SelectionListenerAction initDelegateAction() {
-        return new org.eclipse.ui.actions.DeleteResourceAction(UiUtil.getWorkbenchWindowOnlyIfUiThread()) {
+    protected void initDelegateActions() {
+        this.deleteResourceAction = new org.eclipse.ui.actions.DeleteResourceAction(UiUtil.getWorkbenchWindowOnlyIfUiThread()) {
             @Override
             public void run() {
-                // setting this to testing mode in essence brings back the functionality of 5.5.3. Allowing the execution to
-                // use the DeleteResourceAction code that called LTKLauncher was causing problems with a Shell being disposed
+                // setting this to testing mode in essence brings back the functionality of 5.5.3. Eclipse's
+                // DeleteResourceAction was changed to now use the LTK framework. When "fTestingMode" is "false" the LTK
+                // framework is used. This was causing a problem problem with a Shell being disposed and had something to
+                // do with our dialog that warned the user when a dependent model was being deleted. Couldn't figure out
+                // a way to get the LTK stuff working so this is the workaround.
                 this.fTestingMode = true;
                 super.run();
             }
         };
+
+        // when deleting projects use the default behavior of the Eclipse action
+        this.deleteProjectsAction = new org.eclipse.ui.actions.DeleteResourceAction(UiUtil.getWorkbenchWindowOnlyIfUiThread());
+    }
+    
+    /**
+     * The resources being deleted will always either be all projects or all non-projects.
+     * 
+     * @param resources the resources being deleted (never <code>null</code> and never empty)
+     * @return the Eclipse {@link org.eclipse.ui.actions.DeleteResourceAction}
+     * @since 6.0.0
+     */
+    private SelectionListenerAction getDelegateDeleteResourceAction( List resources ) {
+        SelectionListenerAction action = null;
+
+        // either all projects or all non-projects
+        if (resources.iterator().next() instanceof IProject) {
+            // don't change "fTestingMode" variable here as setting this to "true" stops the confirmation dialog from showing
+            action = this.deleteProjectsAction;
+        } else {
+            action = this.deleteResourceAction;
+        }
+
+        action.selectionChanged(new StructuredSelection(resources));
+        return action;
     }
 
     /**
@@ -154,9 +184,11 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
 
                     if (okToDelete) {
                         closeResources(resources);
-                        deleteResourceAction.selectionChanged(new StructuredSelection(resources));
+                        
+                        // get the appropriate action based on the selected objects
+                        SelectionListenerAction action = getDelegateDeleteResourceAction(resources);
                         // If we make this call we can keep additional confirm dialogs from popping up
-                        deleteResourceAction.run();
+                        action.run();
 
                         // We need to check whether or not the resources were deleted. Only way to do that
                         // is to see if they "exist()". User may have said "No" to the "Do you wish to Delete xxxxx" dialog.
