@@ -103,6 +103,18 @@ public final class ModelerDqpUtils {
     // /////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
+     * @param msgKey the properties file key
+     * @param params the optional message data parameters
+     * @return the error status object with the localized message
+     * @since 6.0.0
+     */
+    public static IStatus createErrorStatus( String msgKey,
+                                             String... params ) {
+        String msg = (params == null) ? DqpPlugin.Util.getString(msgKey) : DqpPlugin.Util.getString(msgKey, params);
+        return new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, msg);
+    }
+
+    /**
      * Obtains the connector type for the specified connector binding.
      * 
      * @param theBinding the non-<code>null</code> binding whose connector type is being requested

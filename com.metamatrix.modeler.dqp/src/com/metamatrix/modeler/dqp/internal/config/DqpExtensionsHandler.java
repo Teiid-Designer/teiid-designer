@@ -33,7 +33,7 @@ import com.metamatrix.modeler.dqp.config.IExtensionModuleChangeListener;
 /**
  * @since 4.3
  */
-public class DqpExtensionsHandler /* extends DqpConfigHandler */{
+public class DqpExtensionsHandler {
 
 	/**
 	 * The name of the placeholder patch jar used in a connector classpath. A

@@ -175,6 +175,9 @@ public interface DqpUiConstants {
         
         public static final String IMPORT_CONNECTORS_WIZBAN    = PC.WIZBAN + "import_connectors.jpg"; //$NON-NLS-1$
         public static final String EXPORT_CONNECTORS_WIZBAN    = PC.WIZBAN + "export_connectors.jpg"; //$NON-NLS-1$
+        
+        String UDF_EXPORT_WIZBAN = PC.WIZBAN + "ExportUDFWizban.png"; //$NON-NLS-1$
+        String UDF_IMPORT_WIZBAN = PC.WIZBAN + "ImportUDFWizban.png"; //$NON-NLS-1$
     }
 
     interface Extensions {
@@ -196,6 +199,10 @@ public interface DqpUiConstants {
         String PREVIEW_DATA_VIEW = PLUGIN_ID + DOT + "views.PreviewDataView"; //$NON-NLS-1$
 
         String UDF_MODEL_VIEW = PLUGIN_ID + DOT + "workspace.udf.udfModelView"; //$NON-NLS-1$
+
+        String UDF_MODEL_EXPORTER = PLUGIN_ID + DOT + "workspace.udf.UdfModelExportWizard"; //$NON-NLS-1$
+
+        String UDF_MODEL_IMPORTER = PLUGIN_ID + DOT + "workspace.udf.UdfModelImportWizard"; //$NON-NLS-1$
     }
 
     interface ExtensionPoints {

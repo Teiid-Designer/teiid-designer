@@ -70,9 +70,11 @@ public class UdfModelView extends ModelExplorerResourceNavigator implements DqpU
     /**
      * Constructs a <code>UdfModelView</code> using the current Function Definitions model. If the functions model is not found
      * one is created.
+     * 
+     * @since 5.5.3
      */
     public UdfModelView() {
-        this.udfModelFile = UdfWorkspaceManager.getUdfModel(true);
+        this.udfModelFile = UdfWorkspaceManager.getUdfModel();
     }
 
     IFile accessUdfModel() {

@@ -288,4 +288,38 @@
          label="%previewTableDataContextAction.label">
       </specialAction>
    </extension>
+
+<!-- Eclipse Import Wizards -->
+    <extension
+        point="org.eclipse.ui.importWizards">
+
+        <!-- UDF Model Import Wizard -->
+        <wizard
+            name="%importUdfModelWizard.name"
+            icon="icons/full/ctool16/importUDFModel.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.internal.dqp.ui.workspace.udf.UdfModelImportWizard"
+            id="com.metamatrix.modeler.dqp.ui.workspace.udf.UdfModelImportWizard">
+            <description>
+                %importUdfModelWizard.description
+            </description>
+        </wizard>
+    </extension>
+   
+<!-- Eclipse Export Wizards -->
+    <extension
+        point="org.eclipse.ui.exportWizards">
+        
+        <!-- UDF Model Export Wizard -->
+        <wizard
+            name="%exportUdfModelWizard.name"
+            icon="icons/full/ctool16/exportUDFModel.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.internal.dqp.ui.workspace.udf.UdfModelExportWizard"
+            id="com.metamatrix.modeler.dqp.ui.workspace.udf.UdfModelExportWizard">
+            <description>
+                %exportUdfModelWizard.description
+            </description>
+        </wizard>
+    </extension>
 </plugin>

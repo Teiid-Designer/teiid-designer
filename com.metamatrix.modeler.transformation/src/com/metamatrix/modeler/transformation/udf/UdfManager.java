@@ -12,28 +12,40 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Path;
-
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.validation.ValidationContext;
+import com.metamatrix.modeler.core.validation.ValidationProblem;
+import com.metamatrix.modeler.core.validation.ValidationResult;
+import com.metamatrix.modeler.core.workspace.ModelProject;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.core.resource.EmfResource;
+import com.metamatrix.modeler.internal.core.validation.Validator;
+import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.udf.UdfModelEvent.Type;
@@ -78,12 +90,21 @@ public final class UdfManager implements IResourceChangeListener, UdfModelListen
      */
     private Map<URL, UDFSource> functionModels;
 
+    private boolean initialized;
+
     /**
      * The install location of the <code>modeler.transformation</code> plugin.
      * 
      * @since 6.0.0
      */
     private IPath installPath;
+
+    /**
+     * The project where the workspace UDF model is located.
+     * 
+     * @since 6.0.0
+     */
+    private ModelProject udfProject;
 
     /**
      * The workspace location of the <code>modeler.transformation</code> plugin.
@@ -139,11 +160,44 @@ public final class UdfManager implements IResourceChangeListener, UdfModelListen
      */
     public void addChangeListener( UdfModelListener listener ) {
         this.changeListeners.add(listener);
-        
+
         // notify new listener of the registered UDF models
         for (URL url : this.functionModels.keySet()) {
             listener.processEvent(new UdfModelEvent(url, Type.NEW));
         }
+    }
+
+    /**
+     * @return the UDF model project
+     * @throws CoreException if there is a problem creating the project
+     * @since 6.0.0
+     */
+    private ModelProject createProject() throws CoreException {
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IProject project = workspace.getRoot().getProject(UDF_PROJECT_NAME);
+
+        if (!project.exists()) {
+            IProjectDescription description = workspace.newProjectDescription(project.getName());
+            description.setLocation(getUdfModelPath());
+            description.setNatureIds(ModelerCore.NATURES);
+
+            project.create(description, null);
+            project.open(null);
+            ModelerCore.makeHidden(project);
+        }
+
+        // this will create the model project only if necessary
+        ModelProject modelProject = ModelerCore.create(project);
+
+        // adds the build command
+        if (modelProject instanceof IProjectNature) {
+            ((IProjectNature)modelProject).configure();
+        }
+
+        // now let the ModelWorkspaceManager know about the UDF model (will create if necessary)
+        ModelWorkspaceManager.create(project.findMember(UDF_MODEL_NAME), modelProject);
+
+        return modelProject;
     }
 
     private UDFSource findUdfSource( File functionModel ) {
@@ -156,6 +210,18 @@ public final class UdfManager implements IResourceChangeListener, UdfModelListen
         }
 
         return null;
+    }
+
+    /**
+     * @param udfModel the UDF model whose model resource is being requested
+     * @return the UDF model workspace resource
+     * @throws CoreException if there is a problem obtaining the resource
+     * @since 6.0.0
+     */
+    private EmfResource getFunctionModelResource( File udfModel ) throws CoreException {
+        String path = udfModel.getAbsolutePath();
+        URI uri = URI.createFileURI(path);
+        return (EmfResource)ModelerCore.getModelContainer().getResource(uri, false);
     }
 
     private IPath getPluginInstallPath() throws IOException {
@@ -184,6 +250,10 @@ public final class UdfManager implements IResourceChangeListener, UdfModelListen
         return (IPath)this.runtimePath.clone();
     }
 
+    /**
+     * @return the default UDF model
+     * @since 6.0.0
+     */
     private File getUdfModel() {
         return getUdfModelPath().append(UDF_MODEL_NAME).toFile();
     }
@@ -208,6 +278,14 @@ public final class UdfManager implements IResourceChangeListener, UdfModelListen
     }
 
     /**
+     * @return the workspace project where the UDF model is located (never <code>null</code>)
+     * @since 6.0.0
+     */
+    public IProject getUdfProject() {
+        return this.udfProject.getProject();
+    }
+
+    /**
      * Ensures the UDF model is located in the workspace and the FunctionLibraryManager has been initialized using the default UDF
      * model. <strong>This must be called before any other method can be used.</strong>
      * 
@@ -224,34 +302,101 @@ public final class UdfManager implements IResourceChangeListener, UdfModelListen
             FileUtils.copy(originalUdfModel.getAbsolutePath(), udfModel.getAbsolutePath());
         }
 
+        // make sure UDF model project exists
+        this.udfProject = createProject();
+
+        // make sure model is loaded
+        IFile file = this.udfProject.getProject().getFile(UDF_MODEL_NAME);
+        ModelResource modelResource = ModelerCore.getModelEditor().findModelResource(file);
+        modelResource.getEmfResource().load(new HashMap());
+
+        // if function model is valid register it
+        if (isFunctionModelValid(udfModel)) {
+            try {
+                processEvent(new UdfModelEvent(getUdfModel().toURI().toURL(), UdfModelEvent.Type.NEW));
+            } catch (MalformedURLException e) {
+                String msg = TransformationPlugin.Util.getString(I18nUtil.getPropertyPrefix(UdfManager.class)
+                                                                 + "errorRegisteringDefaultUdfModel"); //$NON-NLS-1$
+                throw new CoreException(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, msg, e));
+            }
+        }
+
         // tell listeners about the default UDF model
         notifyListeners(udfModel, Type.NEW);
 
         // register to receive resource events so that we can notify listeners when a function model changes
         ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+        initialized = true;
+    }
+
+    /**
+     * @param udfModel the UDF model being checked
+     * @return <code>true</code> if the workspace function model does not have validation errors
+     * @throws CoreException if there is a problem obtaining the EMF resource of the workspace function model
+     * @since 6.0.0
+     */
+    private boolean isFunctionModelValid( File udfModel ) throws CoreException {
+        ValidationContext context = new ValidationContext();
+
+        context.setResourceContainer(ModelerCore.getModelContainer());
+        EmfResource rsrc = getFunctionModelResource(udfModel);
+
+        if (rsrc == null) {
+            String msg = TransformationPlugin.Util.getString(I18nUtil.getPropertyPrefix(UdfManager.class)
+                                                             + "nullFunctionModelResource", udfModel.getAbsolutePath()); //$NON-NLS-1$
+            IStatus status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, msg);
+            throw new CoreException(status);
+        }
+
+        // run the model through the validator to see if there are any errors
+        Validator.validate(null, rsrc, context);
+        List<ValidationResult> results = context.getValidationResults();
+
+        // if one of the results has an error then the model is not valid
+        if (results != null) {
+            for (ValidationResult result : results) {
+                for (ValidationProblem problem : result.getProblems()) {
+                    if (problem.getSeverity() == IStatus.ERROR) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     private void notifyListeners( File udfModel,
                                   Type type ) throws Exception {
-        Object[] listeners = this.changeListeners.getListeners();
-        UdfModelEvent event = new UdfModelEvent(udfModel.toURI().toURL(), type);
+        if (this.changeListeners.size() != 0) {
+            if (type != Type.DELETED && !isFunctionModelValid(udfModel)) {
+                return;
+            }
 
-        for (Object listener : listeners) {
-            try {
-                ((UdfModelListener)listener).processEvent(event);
-            } catch (Exception e) {
-                String msg = TransformationPlugin.Util.getString(I18nUtil.getPropertyPrefix(UdfManager.class)
-                                                                 + "exceptionInHander", listener.getClass()); //$NON-NLS-1$
-                TransformationPlugin.Util.log(IStatus.ERROR, e, msg);
-                this.changeListeners.remove(listener);
+            Object[] listeners = this.changeListeners.getListeners();
+            UdfModelEvent event = new UdfModelEvent(udfModel.toURI().toURL(), type);
+
+            for (Object listener : listeners) {
+                try {
+                    ((UdfModelListener)listener).processEvent(event);
+                } catch (Exception e) {
+                    String msg = TransformationPlugin.Util.getString(I18nUtil.getPropertyPrefix(UdfManager.class)
+                                                                     + "exceptionInHander", listener.getClass()); //$NON-NLS-1$
+                    TransformationPlugin.Util.log(IStatus.ERROR, e, msg);
+                    this.changeListeners.remove(listener);
+                }
             }
         }
 
-        // now handle it ourselves (this is a placeholder for when validation is done on the modeler-side and not the
-        // teiid-side)
-//        processEvent(event);
+        // now handle it ourselves (this is a placeholder for when validation is done on the modeler-side and not the teiid-side)
+        // processEvent(event);
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.modeler.transformation.udf.UdfModelListener#processEvent(com.metamatrix.modeler.transformation.udf.UdfModelEvent)
+     */
     @Override
     public void processEvent( UdfModelEvent event ) {
         URL url = event.getUrl();
@@ -322,6 +467,10 @@ public final class UdfManager implements IResourceChangeListener, UdfModelListen
 
     @Override
     public void resourceChanged( IResourceChangeEvent event ) {
+        if (!initialized) {
+            return;
+        }
+
         if (ResourceChangeUtilities.isPostChange(event)) {
             if (ResourceChangeUtilities.isChanged(event.getDelta())) {
                 ModelEditor modelEditor = ModelerCore.getModelEditor();
@@ -345,9 +494,14 @@ public final class UdfManager implements IResourceChangeListener, UdfModelListen
 
                                     // model resource will be null for non-model files (like .project)
                                     if ((modelResource != null) && (modelResource.getItemType() == ModelType.FUNCTION)) {
-                                        // only update if the UDF model was saved
+                                        // only update if the UDF model was saved and does not have any errors.
+                                        // DQP throws an exception if you send it a model that has errors.
                                         if ((udfFiles[j].getFlags() & IResourceDelta.CONTENT) != 0) {
-                                            registerFunctionModel(modelResource); // inform listeners
+                                            File model = new File(modelResource.getEmfResource().getURI().toFileString());
+
+                                            if (isFunctionModelValid(model)) {
+                                                registerFunctionModel(modelResource); // inform listeners
+                                            }
                                         }
                                     }
                                 }

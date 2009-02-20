@@ -102,7 +102,7 @@ public class AddExistingUdfJarsDialog extends TitleAreaDialog implements DqpUiCo
                                    Object element ) {
                 if (element instanceof File) {
                     String name = ((File)element).getName();
-                    return (name.endsWith(FileUtil.Extensions.JAR_LOWER) || name.endsWith(FileUtil.Extensions.JAR_UPPER));
+                    return name.endsWith(FileUtil.Extensions.JAR);
                 }
 
                 return false;

@@ -7,6 +7,8 @@
  */
 package com.metamatrix.modeler.dqp.ui.workspace;
 
+import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.PLUGIN_ID;
+import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +17,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import com.metamatrix.admin.api.embedded.EmbeddedAdmin;
 import com.metamatrix.admin.api.exception.AdminException;
 import com.metamatrix.admin.api.objects.AdminObject;
@@ -32,35 +34,33 @@ import com.metamatrix.common.config.api.ConnectorBindingType;
 import com.metamatrix.common.config.xml.XMLConfigurationImportExportUtility;
 import com.metamatrix.common.types.DataTypeManager;
 import com.metamatrix.core.util.FileUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.embeddedquery.workspace.WorkspaceInfo;
 import com.metamatrix.embeddedquery.workspace.WorkspaceInfoHolder;
 import com.metamatrix.jdbc.api.Connection;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.container.Container;
-import com.metamatrix.modeler.core.workspace.ModelWorkspace;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.config.ConfigurationChangeEvent;
 import com.metamatrix.modeler.dqp.config.ConfigurationManager;
 import com.metamatrix.modeler.dqp.config.ExtensionModuleChangeEvent;
 import com.metamatrix.modeler.dqp.config.IConfigurationChangeListener;
 import com.metamatrix.modeler.dqp.config.IExtensionModuleChangeListener;
-import com.metamatrix.modeler.internal.core.index.ModelResourceIndexSelector;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.IResults;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.SqlResultsModel;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.XmlDocumentResultsModel;
-import com.metamatrix.modeler.transformation.metadata.QueryMetadataContext;
-import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
 import com.metamatrix.modeler.transformation.udf.UdfManager;
 import com.metamatrix.modeler.transformation.udf.UdfModelEvent;
 import com.metamatrix.modeler.transformation.udf.UdfModelListener;
 import com.metamatrix.modeler.transformation.ui.udf.UdfWorkspaceManager;
 import com.metamatrix.query.metadata.QueryMetadataInterface;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * This class used as mediator to run/execute any workspace execution related tasks.
  */
 public class WorkspaceExecutor extends QueryClient {
 
+    static final String PREFIX = I18nUtil.getPropertyPrefix(WorkspaceExecutor.class);
+    
     static final String DEBUG_CONTEXT = WorkspaceExecutor.class.getSimpleName();
     // private static final String PREFIX = I18nUtil.getPropertyPrefix(WorkspaceExecutor.class);
     private static WorkspaceExecutor _INSTANCE = new WorkspaceExecutor();
@@ -126,7 +126,7 @@ public class WorkspaceExecutor extends QueryClient {
                 Collection<ConnectorBinding> bindings = config.getConnectorBindings();
                 startConnnectorBindings(bindings);
 
-                // add a change listner with configuration as bindings are added or removed keep them in sync
+                // add a change listener with configuration as bindings are added or removed keep them in sync
                 DqpPlugin.getInstance().getConfigurationManager().addConfigurationChangeListener(new BindingListener());
 
                 UDFListener udfListener = new UDFListener();
@@ -147,7 +147,7 @@ public class WorkspaceExecutor extends QueryClient {
                     this.adminConnection = null;
                 }
             } catch (SQLException e) {
-                DqpPlugin.Util.log(IStatus.ERROR, e, "Failed to properly shutdown the Workspace Execution"); //$NON-NLS-1$
+                UTIL.log(IStatus.ERROR, e, UTIL.getString(PREFIX + "errorStoppingDqp")); //$NON-NLS-1$
             }
             started = false;
         }
@@ -174,8 +174,8 @@ public class WorkspaceExecutor extends QueryClient {
         ResultSet resultset = null;
 
         try {
-            if (DqpPlugin.Util.isDebugEnabled(DEBUG_CONTEXT)) {
-                DqpPlugin.Util.debug(DEBUG_CONTEXT, "executing the query = " + sql); //$NON-NLS-1$
+            if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
+                UTIL.debug(DEBUG_CONTEXT, "executing the query = " + sql); //$NON-NLS-1$
             }
 
             // inject the metadata into the current dqp instance
@@ -227,11 +227,14 @@ public class WorkspaceExecutor extends QueryClient {
     }
 
     private void startConnnectorBindings( Collection<ConnectorBinding> bindings ) throws SQLException {
-        ConnectorBinding binding = null;
         if (bindings != null && !bindings.isEmpty()) {
-            for (Iterator<ConnectorBinding> i = bindings.iterator(); i.hasNext();) {
-                binding = i.next();
-                startConnectorBinding(binding);
+            for (ConnectorBinding binding : bindings) {
+                try {
+                    startConnectorBinding(binding);
+                } catch (AdminException e) {
+                    String msg = UTIL.getString(PREFIX + "errorStartingBinding", binding.getFullName()); //$NON-NLS-1$
+                    UTIL.log(IStatus.ERROR, e, msg);
+                }
             }
         }
     }
@@ -239,24 +242,17 @@ public class WorkspaceExecutor extends QueryClient {
     /**
      * Start the given connector binding
      */
-    private boolean startConnectorBinding( ConnectorBinding binding ) throws SQLException {
+    private void startConnectorBinding( ConnectorBinding binding ) throws SQLException, AdminException {
         EmbeddedAdmin admin = (EmbeddedAdmin)this.adminConnection.getAdminAPI();
+        com.metamatrix.admin.api.objects.ConnectorBinding existing = findDeployedBinding(admin, binding.getFullName());
 
-        boolean started = false;
-        try {
-            com.metamatrix.admin.api.objects.ConnectorBinding existing = findDeployedBinding(admin, binding.getFullName());
-            if (existing != null) {
-                admin.startConnectorBinding(existing.getIdentifier());
-                started = true;
-                if (DqpPlugin.Util.isDebugEnabled(DEBUG_CONTEXT)) {
-                    DqpPlugin.Util.debug(DEBUG_CONTEXT, "Started the connector binding = " + existing.getName()); //$NON-NLS-1$
-                }
+        if (existing != null) {
+            admin.startConnectorBinding(existing.getIdentifier());
 
+            if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
+                UTIL.debug(DEBUG_CONTEXT, "Started the connector binding = " + existing.getName()); //$NON-NLS-1$
             }
-        } catch (AdminException e) {
-            DqpPlugin.Util.log(IStatus.ERROR, e, "Error loading the connector binding = " + binding.getFullName()); //$NON-NLS-1$
         }
-        return started;
     }
 
     private com.metamatrix.admin.api.objects.ConnectorBinding findDeployedBinding( EmbeddedAdmin admin,
@@ -287,40 +283,28 @@ public class WorkspaceExecutor extends QueryClient {
         return null;
     }
 
-    void removeConnectorBinding( String bindingName ) {
+    void removeConnectorBinding( String bindingName ) throws AdminException, SQLException {
         // if we already have this binding then remove it first.
-        try {
-            EmbeddedAdmin admin = (EmbeddedAdmin)this.adminConnection.getAdminAPI();
-            com.metamatrix.admin.api.objects.ConnectorBinding existing = findDeployedBinding(admin, bindingName);
-            if (existing != null) {
-                admin.stopConnectorBinding(existing.getIdentifier(), true);
-                admin.deleteConnectorBinding(existing.getIdentifier());
-                if (DqpPlugin.Util.isDebugEnabled(DEBUG_CONTEXT)) {
-                    DqpPlugin.Util.debug(DEBUG_CONTEXT, "stoped and removed connector binding = " + bindingName); //$NON-NLS-1$
-                }
+        EmbeddedAdmin admin = (EmbeddedAdmin)this.adminConnection.getAdminAPI();
+        com.metamatrix.admin.api.objects.ConnectorBinding existing = findDeployedBinding(admin, bindingName);
+        if (existing != null) {
+            admin.stopConnectorBinding(existing.getIdentifier(), true);
+            admin.deleteConnectorBinding(existing.getIdentifier());
+            if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
+                UTIL.debug(DEBUG_CONTEXT, "stoped and removed connector binding = " + bindingName); //$NON-NLS-1$
             }
-        } catch (AdminException e) {
-            DqpPlugin.Util.log(IStatus.ERROR, e, "Error removing the connector binding = " + bindingName); //$NON-NLS-1$
-        } catch (SQLException e) {
-            DqpPlugin.Util.log(IStatus.ERROR, e, "Error removing the connector binding = " + bindingName); //$NON-NLS-1$
         }
     }
 
-    void removeConnectorType( String typeName ) {
+    void removeConnectorType( String typeName ) throws AdminException, SQLException {
         // if we already have this binding then remove it first.
-        try {
-            EmbeddedAdmin admin = (EmbeddedAdmin)this.adminConnection.getAdminAPI();
-            com.metamatrix.admin.api.objects.ConnectorType existing = findDeployedConnectorType(admin, typeName);
-            if (existing != null) {
-                admin.deleteConnectorType(existing.getIdentifier());
-                if (DqpPlugin.Util.isDebugEnabled(DEBUG_CONTEXT)) {
-                    DqpPlugin.Util.debug(DEBUG_CONTEXT, "stoped and removed connector type = " + typeName); //$NON-NLS-1$
-                }
+        EmbeddedAdmin admin = (EmbeddedAdmin)this.adminConnection.getAdminAPI();
+        com.metamatrix.admin.api.objects.ConnectorType existing = findDeployedConnectorType(admin, typeName);
+        if (existing != null) {
+            admin.deleteConnectorType(existing.getIdentifier());
+            if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
+                UTIL.debug(DEBUG_CONTEXT, "stoped and removed connector type = " + typeName); //$NON-NLS-1$
             }
-        } catch (AdminException e) {
-            DqpPlugin.Util.log(IStatus.ERROR, e, "Error removing the connector type = " + typeName); //$NON-NLS-1$
-        } catch (SQLException e) {
-            DqpPlugin.Util.log(IStatus.ERROR, e, "Error removing the connector type = " + typeName); //$NON-NLS-1$
         }
     }
 
@@ -343,61 +327,37 @@ public class WorkspaceExecutor extends QueryClient {
                                                                                                              AdminOptions.OnConflict.OVERWRITE
                                                                                                              | AdminOptions.BINDINGS_IGNORE_DECRYPT_ERROR));
         admin.startConnectorBinding(added.getIdentifier());
-        if (DqpPlugin.Util.isDebugEnabled(DEBUG_CONTEXT)) {
-            DqpPlugin.Util.debug(DEBUG_CONTEXT, "Added and Started connector binding = " + added.getName()); //$NON-NLS-1$
+        if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
+            UTIL.debug(DEBUG_CONTEXT, "Added and Started connector binding = " + added.getName()); //$NON-NLS-1$
         }
     }
 
     /**
      * Look up and add and start the given connector binding
      */
-    void addConnectorType( ConnectorBindingType type ) throws AdminException, SQLException {
+    void addConnectorType( ConnectorBindingType type ) throws AdminException, SQLException, IOException {
         EmbeddedAdmin admin = (EmbeddedAdmin)this.adminConnection.getAdminAPI();
 
         // if we already have this binding then remove it first.
         removeConnectorType(type.getFullName());
 
-        try {
-            XMLConfigurationImportExportUtility exporter = new XMLConfigurationImportExportUtility();
-            ByteArrayOutputStream bos = new ByteArrayOutputStream(1024);
-            exporter.exportComponentType(bos, type, null);
+        XMLConfigurationImportExportUtility exporter = new XMLConfigurationImportExportUtility();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(1024);
+        exporter.exportComponentType(bos, type, null);
 
-            char[] typeContents = new String(bos.toByteArray()).toCharArray();
+        char[] typeContents = new String(bos.toByteArray()).toCharArray();
 
-            // if not started means that we did not find the binding in the configuration,
-            // so let's add and then start it
-            // add and start the new one.
-            admin.addConnectorType(type.getFullName(), typeContents);
-            if (DqpPlugin.Util.isDebugEnabled(DEBUG_CONTEXT)) {
-                DqpPlugin.Util.debug(DEBUG_CONTEXT, "Added connector type = " + type.getFullName()); //$NON-NLS-1$
-            }
-        } catch (IOException e) {
-            DqpPlugin.Util.log(IStatus.ERROR, e, "Failed to add the connector type = " + type.getFullName()); //$NON-NLS-1$
+        // if not started means that we did not find the binding in the configuration,
+        // so let's add and then start it
+        // add and start the new one.
+        admin.addConnectorType(type.getFullName(), typeContents);
+        if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
+            UTIL.debug(DEBUG_CONTEXT, "Added connector type = " + type.getFullName()); //$NON-NLS-1$
         }
     }
 
     public boolean modelHasConnectorBinding( String modelName ) {
         return !this.workspaceInfo.getBinding(modelName).isEmpty();
-    }
-
-    public static QueryMetadataInterface getMetadata( org.eclipse.emf.ecore.resource.Resource resource ) {
-        TransformationMetadataFactory factory = TransformationMetadataFactory.getInstance();
-        Container container = null;
-
-        // create a indexSelector for this resource and instantiate transformation validator
-        ModelResourceIndexSelector selector = new ModelResourceIndexSelector(resource);
-        QueryMetadataContext queryContext = new QueryMetadataContext(selector);
-        queryContext.setRestrictedSearch(false);
-        try {
-            // queryContext.setContainer(ModelerCore.getModelContainer());
-            container = ModelerCore.getModelContainer();
-            ModelWorkspace workspace = ModelerCore.getModelWorkspace();
-            queryContext.setResources(Arrays.asList(workspace.getEmfResources()));
-        } catch (CoreException e) {
-            DqpPlugin.Util.log(IStatus.ERROR, e, "Failed to get Metadata from transformation metadata"); //$NON-NLS-1$
-            return null;
-        }
-        return factory.getModelerMetadata(queryContext, container);
     }
 
     final class UDFListener implements IExtensionModuleChangeListener, UdfModelListener {
@@ -412,30 +372,37 @@ public class WorkspaceExecutor extends QueryClient {
         }
 
         private void udfChanged() {
-            IFile udfModel = UdfWorkspaceManager.getUdfModel(false);
+            IFile udfModel = UdfWorkspaceManager.getUdfModel();
 
             try {
                 File file = udfModel.getLocation().toFile();
 
+                // should always have a udf model file
+                if (file == null) {
+                    String msg = UTIL.getString(PREFIX + "dqpErrorProcessingUdfChange"); //$NON-NLS-1$
+                    IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, msg);
+                    throw new CoreException(status);
+                }
+                
                 if (file.exists()) {
                     EmbeddedAdmin admin = (EmbeddedAdmin)adminConnection.getAdminAPI();
                     FileUtil f = new FileUtil(file);
                     admin.addUDF(f.readBytes(), buildUDFClasspath());
-                    if (DqpPlugin.Util.isDebugEnabled(DEBUG_CONTEXT)) {
-                        DqpPlugin.Util.debug(DEBUG_CONTEXT, "updated the FunctionDefinitions.xmi in dqp"); //$NON-NLS-1$
+                    if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
+                        UTIL.debug(DEBUG_CONTEXT, "updated the FunctionDefinitions.xmi in dqp"); //$NON-NLS-1$
                     }
                 } else {
                     // delete
                     EmbeddedAdmin admin = (EmbeddedAdmin)adminConnection.getAdminAPI();
                     admin.deleteUDF();
-                    if (DqpPlugin.Util.isDebugEnabled(DEBUG_CONTEXT)) {
-                        DqpPlugin.Util.debug(DEBUG_CONTEXT, "deleted the FunctionDefinitions.xmi in dqp"); //$NON-NLS-1$
+                    if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
+                        UTIL.debug(DEBUG_CONTEXT, "deleted the FunctionDefinitions.xmi in dqp"); //$NON-NLS-1$
                     }
                 }
-            } catch (SQLException e) {
-                DqpPlugin.Util.log(IStatus.ERROR, e, "Error during the synchronization of UDF"); //$NON-NLS-1$
-            } catch (AdminException e) {
-                DqpPlugin.Util.log(IStatus.ERROR, e, "Error during the synchronization of UDF"); //$NON-NLS-1$
+            } catch (Exception e) {
+                String msg = UTIL.getString(PREFIX + "dqpErrorProcessingUdfChange"); //$NON-NLS-1$
+                UTIL.log(IStatus.ERROR, e, msg);
+                WidgetUtil.showError(msg);
             }
         }
 
@@ -501,7 +468,7 @@ public class WorkspaceExecutor extends QueryClient {
 
         private void handleConnectorTypeEvent( ConfigurationChangeEvent event,
                                                ConfigurationManager config,
-                                               String typeName ) throws AdminException, SQLException {
+                                               String typeName ) throws AdminException, SQLException, IOException {
             if (event.isAdded()) {
                 ConnectorBindingType type = (ConnectorBindingType)config.getComponentType(typeName);
                 addConnectorType(type);

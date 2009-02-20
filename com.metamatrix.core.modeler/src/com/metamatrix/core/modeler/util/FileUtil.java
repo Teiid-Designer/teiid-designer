@@ -53,32 +53,18 @@ public final class FileUtil {
         String JAVA_UPPER = ".JAVA"; //$NON-NLS-1$
 
         /**
-         * An archive file extension with the value of "{@value}."
+         * A jar file extension with the value of "{@value}."
          * 
          * @since 6.0.0
          */
-        String JAR_LOWER = ".jar"; //$NON-NLS-1$
+        String JAR = ".jar"; //$NON-NLS-1$
 
         /**
-         * An archive file extension with the value of "{@value}."
+         * A zip file extension with the value of "{@value}."
          * 
          * @since 6.0.0
          */
-        String JAR_UPPER = ".JAR"; //$NON-NLS-1$
-
-        /**
-         * An archive file extension with the value of "{@value}."
-         * 
-         * @since 6.0.0
-         */
-        String ZIP_LOWER = ".zip"; //$NON-NLS-1$
-
-        /**
-         * An archive file extension with the value of "{@value}."
-         * 
-         * @since 6.0.0
-         */
-        String ZIP_UPPER = ".ZIP"; //$NON-NLS-1$
+        String ZIP = ".zip"; //$NON-NLS-1$
     }
 
     // ===========================================================================================================================
@@ -92,37 +78,29 @@ public final class FileUtil {
      * @param checkZipExtension indicates if zip files should be considered an archive file
      * @return <code>true</code> if file name has an archive extension
      * @since 6.0.0
-     * @see Extensions#JAR_LOWER
-     * @see Extensions#JAR_UPPER
-     * @see Extensions#ZIP_LOWER
-     * @see Extensions#ZIP_UPPER
+     * @see Extensions#JAR
+     * @see Extensions#ZIP
      */
     public final static boolean isArchiveFileName( String name,
                                                    boolean checkZipExtension ) {
-        if (name.endsWith(Extensions.JAR_LOWER) || name.endsWith(Extensions.JAR_UPPER)) {
-            return (name.length() > Extensions.JAR_LOWER.length());
+        if (name.endsWith(Extensions.JAR)) {
+            return (name.length() > Extensions.JAR.length());
         }
 
         if (checkZipExtension) {
-            if (name.endsWith(Extensions.ZIP_LOWER) || name.endsWith(Extensions.ZIP_UPPER)) {
-                return (name.length() > Extensions.ZIP_LOWER.length());
-            }
+            return isZipFileName(name);
         }
 
         return false;
     }
-
-    // ===========================================================================================================================
-    // Constructors
-    // ===========================================================================================================================
-
+    
     /**
-     * Prevents instantiation.
-     * 
-     * @since 6.0
+     * @param name the name being tested (never <code>null</code>)
+     * @return <code>true</code> if the name ends with a zip file extension and has a simple name with length of one or more
+     * @see Extensions#ZIP
      */
-    private FileUtil() {
-        // nothing to do
+    public final static boolean isZipFileName( String name ) {
+        return (name.endsWith(Extensions.ZIP) && (name.length() > Extensions.ZIP.length()));
     }
     
     /**
@@ -140,10 +118,10 @@ public final class FileUtil {
      */
     public static String getFileExtension( final File resource ) {
         if ( resource != null ) {
-        	String ext = getExtension(resource);
-        	if( ext != null ) {
-        		return ext;
-        	}
+            String ext = getExtension(resource);
+            if( ext != null ) {
+                return ext;
+            }
         }
         return StringUtil.Constants.EMPTY_STRING;
     }
@@ -177,5 +155,18 @@ public final class FileUtil {
         }
         
         return result;
+    }
+
+    // ===========================================================================================================================
+    // Constructors
+    // ===========================================================================================================================
+
+    /**
+     * Prevents instantiation.
+     * 
+     * @since 6.0
+     */
+    private FileUtil() {
+        // nothing to do
     }
 }

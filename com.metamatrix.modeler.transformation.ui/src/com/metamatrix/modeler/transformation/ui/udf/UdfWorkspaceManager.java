@@ -10,12 +10,8 @@ package com.metamatrix.modeler.transformation.ui.udf;
 import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -25,7 +21,6 @@ import com.metamatrix.metamodels.function.FunctionPackage;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.internal.ui.viewsupport.NewModelProjectWorker;
 import com.metamatrix.modeler.transformation.udf.UdfManager;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 
@@ -92,57 +87,31 @@ public class UdfWorkspaceManager implements UiConstants {
     }
 
     /**
-     * @param create a flag indicating if the functions model should be created if not found
-     * @return the workspace UDF model
+     * @return the workspace UDF model (never <code>null</code>)
      * @since 6.0.0
      */
-    public static IFile getUdfModel( boolean create ) {
-        IFile result = null;
-        IProject project = getUdfProject(create);
+    public static IFile getUdfModel() {
+        IProject project = UdfManager.INSTANCE.getUdfProject();
+        IFile result = project.getFile(UdfManager.UDF_MODEL_NAME);
 
-        if (project != null) {
-            result = project.getFile(UdfManager.UDF_MODEL_NAME);
-
-            // in theory this should not be necessary since the model should've been copied over from the install directory
-            if ((result == null) || !result.exists()) {
-                result = constructFunctionModel(project);
-            }
+        // in theory this should not be necessary since the model should've been copied over from the install directory
+        if ((result == null) || !result.exists()) {
+            result = constructFunctionModel(project);
         }
 
         return result;
     }
 
+    // ===========================================================================================================================
+    // Constructors
+    // ===========================================================================================================================
+
     /**
-     * @param create a flag indicating if the UDF project should be created if it does not exist
-     * @return the workspace project where the UDF model is located (can be <code>null</code> if not wishing to create it)
+     * Don't allow construction.
+     * 
      * @since 6.0.0
      */
-    public static IProject getUdfProject( boolean create ) {
-        IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(UdfManager.UDF_PROJECT_NAME);
-
-        if ((proj != null) && !proj.exists()) {
-            proj = null;
-        }
-
-        if ((proj == null) && create) {
-            NewModelProjectWorker worker = new NewModelProjectWorker();
-            IPath workspacePath = UdfManager.INSTANCE.getUdfModelPath();
-            proj = worker.createNewProject(workspacePath, UdfManager.UDF_PROJECT_NAME, new NullProgressMonitor());
-        }
-        
-        // make sure project is open
-        if (proj != null) {
-            try {
-                proj.open(null);
-                
-                // make sure project is hidden
-                ModelerCore.makeHidden(proj);
-            } catch (CoreException e) {
-                proj = null;
-                UiConstants.Util.log(e);
-            }
-        }
-
-        return proj;
+    private UdfWorkspaceManager() {
+        // nothing to do
     }
 }

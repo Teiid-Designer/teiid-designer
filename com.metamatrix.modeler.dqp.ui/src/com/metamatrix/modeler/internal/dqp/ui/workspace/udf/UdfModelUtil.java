@@ -7,11 +7,13 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace.udf;
 
+import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
+import com.metamatrix.core.modeler.util.FileUtil.Extensions;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.ui.internal.util.UiUtil;
 
 /**
@@ -20,7 +22,24 @@ import com.metamatrix.ui.internal.util.UiUtil;
  * 
  * @since 5.5.3
  */
-public class UdfModelUtil implements UiConstants {
+public class UdfModelUtil {
+
+    /**
+     * Valid UDF Model archive file extensions.
+     * 
+     * @since 6.0.0
+     * @see com.metamatrix.core.modeler.util.FileUtil.Extensions#ZIP
+     */
+    public static final String[] FILE_EXTENSIONS = {'*' + Extensions.ZIP};
+
+    /**
+     * Names associated with the valid UDF Model archive file extensions.
+     * 
+     * @since 6.0.0
+     */
+    public static final String[] FILE_EXTENSION_NAMES = {UTIL.getString(I18nUtil.getPropertyPrefix(UdfModelUtil.class)
+                                                                        + "archiveFileName") //$NON-NLS-1$
+                                                         + " (" + FILE_EXTENSIONS[0] + ')'}; //$NON-NLS-1$
     private static final String UDFS_VIEW_ID = DqpUiConstants.Extensions.UDF_MODEL_VIEW;
 
     // ===========================================================================================================================
