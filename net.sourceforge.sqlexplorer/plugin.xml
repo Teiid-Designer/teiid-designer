@@ -229,4 +229,18 @@
             sequence="Ctrl+F9">
       </key>
    </extension>
+    
+<!-- Preferences exports -->
+    <extension
+        point="org.eclipse.ui.preferenceTransfer">
+        <transfer
+            icon="icons/perspective_icon.gif"
+            id="net.sourceforge.sqlexplorer.preferenceTransfer"
+            name="%preferenceTransfer.name">
+            <mapping scope="instance">
+                <entry node="net.sourceforge.sqlexplorer"/>
+            </mapping>
+            <description>%preferenceTransfer.description</description>
+        </transfer>
+    </extension>
 </plugin>

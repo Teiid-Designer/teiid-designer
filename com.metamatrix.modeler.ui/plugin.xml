@@ -478,6 +478,24 @@
             id="com.metamatrix.modeler.ui.preferences.validationPreferencePage">
       </page>
    </extension>
+    
+<!-- Preferences exports -->
+    <extension
+        point="org.eclipse.ui.preferenceTransfer">
+        <transfer
+            icon="icons/full/cview16/modelerPerspective.gif"
+            id="com.metamatrix.modeler.ui.preferenceTransfer"
+            name="%preferenceTransfer.name">
+            <mapping scope="instance">
+                <entry node="com.metamatrix.modeler.core"/>
+                <entry node="com.metamatrix.modeler.diagram.ui"/>
+                <entry node="com.metamatrix.modeler.ui"/>
+                <entry node="com.metamatrix.ui"/>
+            </mapping>
+            <description>%preferenceTransfer.description</description>
+        </transfer>
+    </extension>
+
 <!-- Filters
 	  Add filters in alphabetical order.
 	  These filters are added above the *.class and .* patterns which already existed.
