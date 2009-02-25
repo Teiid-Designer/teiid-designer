@@ -7,12 +7,14 @@
  */
 package com.metamatrix.modeler.dqp.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.common.config.api.ComponentType;
@@ -21,6 +23,7 @@ import com.metamatrix.common.config.api.ComponentTypeID;
 import com.metamatrix.common.config.api.ConfigurationModelContainer;
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ConnectorBindingType;
+import com.metamatrix.common.config.api.ConnectorBindingType.Attributes;
 import com.metamatrix.common.object.PropertyDefinition;
 import com.metamatrix.common.object.PropertyType;
 import com.metamatrix.common.util.crypto.CryptoException;
@@ -87,6 +90,8 @@ public final class ModelerDqpUtils {
      * @since 4.3
      */
     public static final int BINDING_NAME_WHITESPACE_ERROR = 400;
+
+    private static final String CONNECTOR_CLASSPATH = "ConnectorClassPath"; //$NON-NLS-1$
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS
@@ -322,6 +327,51 @@ public final class ModelerDqpUtils {
         ConfigurationManager configMgr = DqpPlugin.getInstance().getConfigurationManager();
         ConfigurationModelContainer container = configMgr.getDefaultConfig().getCMContainerImpl();
         return container.getComponentTypeDefinition(theId, thePropertyName);
+    }
+
+    /**
+     * Get the collection of extension jar names that are required by the supplied connector (may not be <code>null</code>)
+     * 
+     * @param conn the connector whose required jar names are being requested
+     * @return the required jar names (never <code>null</code>)
+     * @since 6.0.0
+     */
+    public static Collection<String> getRequiredExtensionJarNames( ConnectorBinding conn ) {
+        return getJarNames(conn.getProperty(CONNECTOR_CLASSPATH));
+    }
+
+    /**
+     * Get the collection of extension jar names that are required by the supplied connector type
+     * 
+     * @param connectorBindingType the connector type whose required jar names are being requested (may not be <code>null</code>)
+     * @return the required jar names  (never <code>null</code>)
+     * @since 6.0.0
+     */
+    public static Collection<String> getRequiredExtensionJarNames( ComponentType connectorBindingType ) {
+        return getJarNames(connectorBindingType.getDefaultValue(CONNECTOR_CLASSPATH));
+    }
+    
+    private static Collection<String> getJarNames(String classPath) {
+        Collection<String> jarNames = null;
+
+        if (classPath == null) {
+            jarNames = Collections.emptyList();
+        } else {
+            jarNames = new ArrayList<String>();
+            StringTokenizer st = new StringTokenizer(classPath, ";"); //$NON-NLS-1$
+
+            while (st.hasMoreTokens()) {
+                String path = st.nextToken();
+                int idx = path.indexOf(Attributes.MM_JAR_PROTOCOL);
+
+                if (idx != -1) {
+                    String jarFile = path.substring(idx + Attributes.MM_JAR_PROTOCOL.length() + 1);
+                    jarNames.add(jarFile);
+                }
+            }
+        }
+
+        return jarNames;
     }
 
     /**

@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -232,7 +233,45 @@ public class ConfigurationManagerImpl implements ConfigurationManager, Configura
     }
 
     public void removeBinding( ConnectorBinding existingBinding ) throws Exception {
+        // 1. get the binding classpath
+        Collection<String> requiredJars = ModelerDqpUtils.getRequiredExtensionJarNames(existingBinding);
+
+        // 2. remove the binding
         getDefaultConfig().removeBinding(existingBinding);
+
+        // 3. delete jars that only this binding depends on (must check all other bindings and all types)
+        Set<String> allJars = new HashSet<String>();
+        Collection connectors = new ArrayList(getConnectorBindings());
+        connectors.addAll(getConnectorTypes());
+        
+        for (Object bindingOrType : connectors) {
+            Collection<String> jarNames = null;
+            
+            if (bindingOrType instanceof ConnectorBinding) {
+                jarNames = ModelerDqpUtils.getRequiredExtensionJarNames((ConnectorBinding)bindingOrType);
+            } else {
+                jarNames = ModelerDqpUtils.getRequiredExtensionJarNames((ComponentType)bindingOrType);
+            }
+
+            allJars.addAll(jarNames);
+        }
+        
+        // after this call anything left can be removed
+        requiredJars.removeAll(allJars);
+        
+        if (!requiredJars.isEmpty()) {
+            File[] jarsToDelete = new File[requiredJars.size()];
+            int i = 0;
+            
+            for (String name : requiredJars) {
+                jarsToDelete[i++] = new File(DqpPath.getRuntimeExtensionsPath().toFile(), name);
+            }
+            
+            // this deletes the file(s)
+            DqpPlugin.getInstance().getExtensionsHandler().deleteConnectorJars(this, jarsToDelete);
+        }
+
+        // 4. save config
         saveConfigLocal(new ConfigurationChangeEvent(REMOVED_EVENT, CONNECTOR_BINDINGS_CHANGED, existingBinding.getName()));
     }
 

@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -31,7 +30,6 @@ import com.metamatrix.common.config.api.ConnectorArchive;
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ConnectorBindingType;
 import com.metamatrix.common.config.api.ExtensionModule;
-import com.metamatrix.common.config.api.ConnectorBindingType.Attributes;
 import com.metamatrix.common.config.model.BasicConfigurationObjectEditor;
 import com.metamatrix.common.config.util.ConfigObjectsNotResolvableException;
 import com.metamatrix.common.config.util.InvalidConfigurationElementException;
@@ -43,6 +41,7 @@ import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.config.ConfigurationManager;
 import com.metamatrix.modeler.dqp.internal.config.DqpExtensionsHandler;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
+import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 
 /**
  * Business Object which is used by the connector import wizard in Designer. Currently, the user can import from either a .cdk or
@@ -74,8 +73,6 @@ public class ConnectorImportHelper implements DqpUiConstants {
     }
 
     static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ConnectorImportHelper.class);
-
-    private static final String CONNECTOR_CLASSPATH = "ConnectorClassPath"; //$NON-NLS-1$
 
     // Import Selection Options
     private static final int SELECTED_FOR_IMPORT = 0;
@@ -220,7 +217,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
         // Iterate the connector types
         for (Iterator<ConnectorBindingType> ctIter = this.allImportFileConnectorTypes.iterator(); ctIter.hasNext();) {
             ConnectorBindingType cType = ctIter.next();
-            Collection<String> rqdJars = getRequiredExtensionJarNames(cType);
+            Collection<String> rqdJars = ModelerDqpUtils.getRequiredExtensionJarNames(cType);
             // Check if supplied jarName is in the required list
             if (rqdJars.contains(extJarName)) {
                 if (limitToSelected && isSelectedForImport(cType)) {
@@ -249,7 +246,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
         // Iterate the connectors
         for (Iterator<ConnectorBinding> cIter = this.allImportFileConnectors.iterator(); cIter.hasNext();) {
             ConnectorBinding conn = cIter.next();
-            Collection<String> rqdJars = getRequiredExtensionJarNames(conn);
+            Collection<String> rqdJars = ModelerDqpUtils.getRequiredExtensionJarNames(conn);
             // Check if supplied jarName is in the required list
             if (rqdJars.contains(extJarName)) {
                 if (limitToSelected && isSelectedForImport(conn)) {
@@ -568,7 +565,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
      */
     public String getExtensionJarPath( ConnectorBinding connector ) {
         StringBuffer sb = new StringBuffer();
-        Collection<String> extJars = getRequiredExtensionJarNames(connector);
+        Collection<String> extJars = ModelerDqpUtils.getRequiredExtensionJarNames(connector);
         Iterator<String> iter = extJars.iterator();
         while (iter.hasNext()) {
             String jarName = iter.next();
@@ -590,7 +587,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
      */
     public String getExtensionJarPath( ConnectorBindingType connType ) {
         StringBuffer sb = new StringBuffer();
-        Iterator<String> iter = getRequiredExtensionJarNames(connType).iterator();
+        Iterator<String> iter = ModelerDqpUtils.getRequiredExtensionJarNames(connType).iterator();
         while (iter.hasNext()) {
             String jarName = iter.next();
             sb.append(jarName);
@@ -648,48 +645,6 @@ public class ConnectorImportHelper implements DqpUiConstants {
         // No status objects means that nothing has been selected for import
         return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, IStatus.ERROR,
                           getString("connectorImportStatusError.msg"), null); //$NON-NLS-1$
-    }
-
-    /**
-     * Get the collection of extension jar names that are required by the supplied connector type
-     * 
-     * @param connType the connector type whose required jar names are being requested
-     * @return the required jar names of the specified connector type
-     * @since 5.5.3
-     */
-    public static Collection<String> getRequiredExtensionJarNames( ConnectorBindingType connType ) {
-        String[] moduleNames = connType.getExtensionModules();
-        Collection<String> requiredJars = new ArrayList<String>(moduleNames.length);
-
-        for (String moduleName : moduleNames) {
-            requiredJars.add(moduleName);
-        }
-
-        return requiredJars;
-    }
-
-    /**
-     * Get the collection of extension jar names that are required by the supplied connector
-     * 
-     * @param conn the connector whose required jar names are being requested
-     * @return the required jar names of the specified connector
-     * @since 5.5.3
-     */
-    public static Collection<String> getRequiredExtensionJarNames( ConnectorBinding conn ) {
-        Collection<String> modules = new ArrayList<String>();
-        String classPath = conn.getProperty(CONNECTOR_CLASSPATH);
-        if (classPath != null) {
-            StringTokenizer st = new StringTokenizer(classPath, ";"); //$NON-NLS-1$
-            while (st.hasMoreTokens()) {
-                String path = st.nextToken();
-                int idx = path.indexOf(Attributes.MM_JAR_PROTOCOL);
-                if (idx != -1) {
-                    String jarFile = path.substring(idx + Attributes.MM_JAR_PROTOCOL.length() + 1);
-                    modules.add(jarFile);
-                }
-            }
-        }
-        return modules;
     }
 
     /**
@@ -1330,7 +1285,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
         for (Iterator ctIter = this.allImportFileConnectorTypes.iterator(); ctIter.hasNext();) {
             ConnectorBindingType cType = (ConnectorBindingType)ctIter.next();
             if (isSelectedForImport(cType)) {
-                Collection cTypeModules = getRequiredExtensionJarNames(cType);
+                Collection cTypeModules = ModelerDqpUtils.getRequiredExtensionJarNames(cType);
                 for (Iterator jarIter = cTypeModules.iterator(); jarIter.hasNext();) {
                     String jarName = (String)jarIter.next();
                     if (!requiredExtJars.contains(jarName)) {
@@ -1344,7 +1299,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
         for (Iterator cIter = this.allImportFileConnectors.iterator(); cIter.hasNext();) {
             ConnectorBinding conn = (ConnectorBinding)cIter.next();
             if (isSelectedForImport(conn)) {
-                Collection connModules = getRequiredExtensionJarNames(conn);
+                Collection connModules = ModelerDqpUtils.getRequiredExtensionJarNames(conn);
                 for (Iterator jarIter = connModules.iterator(); jarIter.hasNext();) {
                     String jarName = (String)jarIter.next();
                     if (!requiredExtJars.contains(jarName)) {
@@ -1372,7 +1327,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
             ConnectorBindingType newType = types.get(i);
 
             // process jars first so that if a jar cannot be copied we won't add the type
-            JarCopyMgr copyMgr = new JarCopyMgr(getRequiredExtensionJarNames(newType));
+            JarCopyMgr copyMgr = new JarCopyMgr(ModelerDqpUtils.getRequiredExtensionJarNames(newType));
             IStatus jarStatus = copyMgr.copy(copiedJars);
 
             if (jarStatus.isOK()) {
@@ -1589,7 +1544,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
             ConnectorBinding newBinding = bindings.get(i);
 
             // process jars first so that if a jar cannot be copied we won't add the binding
-            JarCopyMgr copyMgr = new JarCopyMgr(getRequiredExtensionJarNames(newBinding));
+            JarCopyMgr copyMgr = new JarCopyMgr(ModelerDqpUtils.getRequiredExtensionJarNames(newBinding));
             IStatus jarStatus = copyMgr.copy(copiedJars);
 
             if (jarStatus.isOK()) {

@@ -24,7 +24,7 @@ import com.metamatrix.modeler.dqp.internal.config.DqpExtensionsHandler;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants.Images;
-import com.metamatrix.modeler.internal.dqp.ui.wizards.ConnectorImportHelper;
+import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.ui.internal.util.UiUtil;
 
 
@@ -250,7 +250,7 @@ public class DeleteConnectorTypeAction  extends ConfigurationManagerAction {
                  ComponentTypeID theTypeID = (ComponentTypeID)componentTypeIDs[i];
                  ComponentType theType = DqpPlugin.getInstance().getConfigurationManager().getConnectorType(theTypeID);
                  if(theType instanceof ConnectorBindingType) {
-                     Collection<String> typeJars = ConnectorImportHelper.getRequiredExtensionJarNames((ConnectorBindingType)theType);
+                     Collection<String> typeJars = ModelerDqpUtils.getRequiredExtensionJarNames(theType);
                      jarNames.addAll(typeJars);
                  }
              }
@@ -260,7 +260,7 @@ public class DeleteConnectorTypeAction  extends ConfigurationManagerAction {
          Set<ConnectorBinding> conns = getConnectorsForTypeIDs(componentTypeIDs);
          for(Iterator<ConnectorBinding> connIter = conns.iterator(); connIter.hasNext();) {
         	 ConnectorBinding conn = connIter.next();
-        	 Collection<String> connJars = ConnectorImportHelper.getRequiredExtensionJarNames(conn);
+        	 Collection<String> connJars = ModelerDqpUtils.getRequiredExtensionJarNames(conn);
         	 jarNames.addAll(connJars);
          }
          return jarNames;
