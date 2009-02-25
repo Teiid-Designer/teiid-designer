@@ -239,8 +239,10 @@ public class ConfigurationManagerImpl implements ConfigurationManager, Configura
         // 2. remove the binding
         getDefaultConfig().removeBinding(existingBinding);
 
-        // 3. delete jars that only this binding depends on (must check all other bindings and all types)
+        // 3. delete jars that only this binding depends on (must check all other bindings, all types, and UDFs)
         Set<String> allJars = new HashSet<String>();
+        allJars.addAll(DqpPlugin.getInstance().getExtensionsHandler().getUdfJarNames());
+
         Collection connectors = new ArrayList(getConnectorBindings());
         connectors.addAll(getConnectorTypes());
         
