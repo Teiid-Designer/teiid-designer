@@ -30,9 +30,11 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -41,6 +43,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
@@ -149,6 +152,7 @@ public class NewVirtualDocumentWizardPage extends WizardPage implements ModelerX
      */
     public void createControl( Composite parent ) {
         model.setWizHolder(parent);
+        
         panel = new NewVirtualDocumentWizardPanel(parent, model, this);
 
         // if a builder strategy has been set let the panel know
@@ -282,7 +286,7 @@ public class NewVirtualDocumentWizardPage extends WizardPage implements ModelerX
 
 }// end NewVirtualDocumentWizardPage
 
-class NewVirtualDocumentWizardPanel extends Composite implements ModelerXmlUiConstants, IAccumulatedValuesChangeListener {
+class NewVirtualDocumentWizardPanel extends ScrolledComposite implements ModelerXmlUiConstants, IAccumulatedValuesChangeListener {
 
     static final String NO_SCHEMA_SELECTED = Util.getString("NewVirtualDocumentWizardPage.noSchemaSelected"); //$NON-NLS-1$
     static final String MUST_SELECT_SCHEMA = Util.getString("NewVirtualDocumentWizardPage.mustSelectSchema"); //$NON-NLS-1$
@@ -330,7 +334,7 @@ class NewVirtualDocumentWizardPanel extends Composite implements ModelerXmlUiCon
     public NewVirtualDocumentWizardPanel( Composite parent,
                                           NewDocumentWizardModel model,
                                           WizardPage page ) {
-        super(parent, SWT.NULL);
+        super(parent, SWT.H_SCROLL | SWT.V_SCROLL);
         this.model = model;
         this.page = page;
         initialize();
@@ -340,22 +344,47 @@ class NewVirtualDocumentWizardPanel extends Composite implements ModelerXmlUiCon
         GridLayout layout = new GridLayout();
         layout.marginHeight = 0;
         this.setLayout(layout);
-        Composite fileComposite = new Composite(this, SWT.NONE);
+        GridData mainGridData = new GridData();
+        this.setLayoutData(mainGridData);
+        
+        // customize scroll bars to give better scrolling behavior
+        ScrollBar bar = getHorizontalBar();
+
+        if (bar != null) {
+            bar.setIncrement(12);
+            bar.setPageIncrement(60);
+        }
+
+        bar = getVerticalBar();
+
+        if (bar != null) {
+            bar.setIncrement(12);
+            bar.setPageIncrement(60);
+        }
+        
+        Composite pnlMain = WidgetFactory.createPanel(this, SWT.NONE, GridData.FILL_BOTH);
+        setContent(pnlMain);
+        
+        /*
+         * XSD File selection group
+         */
+        Composite fileComposite = new Composite(pnlMain, SWT.NONE);
         GridLayout fileCompositeLayout = new GridLayout();
         fileComposite.setLayout(fileCompositeLayout);
         fileCompositeLayout.numColumns = 3;
         fileCompositeLayout.marginWidth = 0;
-        GridData fileCompositeGridData = new GridData(GridData.FILL_HORIZONTAL);
-        fileComposite.setLayoutData(fileCompositeGridData);
+        fileComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
         Label schemaNameLabel = new Label(fileComposite, SWT.NONE);
         schemaNameLabel.setText(Util.getString("NewVirtualDocumentWizardPage.xmlSchemaFileLabel")); //$NON-NLS-1$
-        fileNameText = WidgetFactory.createTextField(fileComposite, SWT.NONE, null); // new StyledText(fileComposite,
-        // SWT.READ_ONLY);
+
+        fileNameText = WidgetFactory.createTextField(fileComposite, SWT.NONE, null);
         fileNameText.setEditable(false);
         GridData fileNameTextGridData = new GridData();
         fileNameTextGridData.widthHint = FILE_NAME_TEXT_WIDTH;
         fileNameTextGridData.heightHint = FILE_NAME_TEXT_HEIGHT;
         fileNameText.setLayoutData(fileNameTextGridData);
+
         browseButton = new Button(fileComposite, SWT.PUSH);
         browseButton.setText(BROWSE_SHORTHAND);
         browseButton.addSelectionListener(new SelectionAdapter() {
@@ -368,13 +397,16 @@ class NewVirtualDocumentWizardPanel extends Composite implements ModelerXmlUiCon
         accumulatorsLabelProvider = ModelUtilities.getEMFLabelProvider();
 
         if (NewVirtualDocumentWizardPage.getIncludeXMLDocuments()) {
-            Group documentsAccumulatorComposite = new Group(this, SWT.NONE);
+            Group documentsAccumulatorComposite = new Group(pnlMain, SWT.NONE);
             String documentsGroupName = Util.getString("NewVirtualDocumentWizardPage.virtualXMLDocumentsLabel"); //$NON-NLS-1$
             documentsAccumulatorComposite.setText(documentsGroupName);
             GridLayout documentsAccumulatorCompositeLayout = new GridLayout();
             documentsAccumulatorComposite.setLayout(documentsAccumulatorCompositeLayout);
             documentsAccumulatorCompositeLayout.marginWidth = 0;
             documentsAccumulatorCompositeLayout.marginHeight = 2;
+            GridData accumulatorGridData = new GridData(GridData.FILL_BOTH);
+            documentsAccumulatorComposite.setLayoutData(accumulatorGridData);
+            
             IAccumulatorSource documentsAccumulatorSource = new NewVirtualDocumentAccumulatorSource(this, DOCUMENTS);
             String documentsAvailableHdr = Util.getString("NewVirtualDocumentWizardPage.documentsAccumulatorLeftLabel"); //$NON-NLS-1$
             String documentsSelectedHdr = Util.getString("NewVirtualDocumentWizardPage.documentsAccumulatorRightLabel"); //$NON-NLS-1$
@@ -386,12 +418,15 @@ class NewVirtualDocumentWizardPanel extends Composite implements ModelerXmlUiCon
         }
 
         if (NewVirtualDocumentWizardPage.getIncludeXMLFragments()) {
-            Group fragmentsAccumulatorComposite = new Group(this, SWT.NONE);
+            Group fragmentsAccumulatorComposite = new Group(pnlMain, SWT.NONE);
             fragmentsAccumulatorComposite.setText(Util.getString("NewVirtualDocumentWizardPage.virtualXMLFragmentsLabel")); //$NON-NLS-1$
             GridLayout fragmentsAccumulatorCompositeLayout = new GridLayout();
             fragmentsAccumulatorComposite.setLayout(fragmentsAccumulatorCompositeLayout);
             fragmentsAccumulatorCompositeLayout.marginWidth = 0;
             fragmentsAccumulatorCompositeLayout.marginHeight = 2;
+            GridData accumulatorGridData = new GridData(GridData.FILL_HORIZONTAL);
+            fragmentsAccumulatorComposite.setLayoutData(accumulatorGridData);
+            
             IAccumulatorSource fragmentsAccumulatorSource = new NewVirtualDocumentAccumulatorSource(this, FRAGMENTS);
             String fragmentsAvailableHdr = Util.getString("NewVirtualDocumentWizardPage.fragmentsAccumulatorLeftLabel"); //$NON-NLS-1$
             String fragmentsSelectedHdr = Util.getString("NewVirtualDocumentWizardPage.fragmentsAccumulatorRightLabel"); //$NON-NLS-1$
@@ -402,7 +437,7 @@ class NewVirtualDocumentWizardPanel extends Composite implements ModelerXmlUiCon
             fragmentsAccumulatorPanel.addAccumulatedValuesChangeListener(this);
         }
 
-        Group group = new Group(this, SWT.NONE);
+        Group group = new Group(pnlMain, SWT.NONE);
         group.setLayout(new GridLayout(1, true));
         group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         group.setText(DOCUMENT_OPTIONS);
@@ -414,7 +449,7 @@ class NewVirtualDocumentWizardPanel extends Composite implements ModelerXmlUiCon
         buildGlobalOnlyButton = new Button(group, SWT.RADIO);
         buildGlobalOnlyButton.setText(BUILD_GLOBAL_ONLY);
 
-        Group typeGroup = new Group(this, SWT.NONE);
+        Group typeGroup = new Group(pnlMain, SWT.NONE);
         typeGroup.setLayout(new GridLayout(1, true));
         typeGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         typeGroup.setText(MAPPING_OPTIONS);
@@ -472,6 +507,8 @@ class NewVirtualDocumentWizardPanel extends Composite implements ModelerXmlUiCon
 
         Group datatypeGroup = new Group(typeGroup, SWT.NONE);
         datatypeGroup.setLayout(new GridLayout(1, true));
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalIndent = 10;
         datatypeGroup.setLayoutData(gd);
         datatypeGroup.setText(DATATYPE_OPTIONS);
 
@@ -540,6 +577,13 @@ class NewVirtualDocumentWizardPanel extends Composite implements ModelerXmlUiCon
                 }
             }
         });
+        
+        // need to size scroll panel
+        Point pt = pnlMain.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+        setMinWidth(pt.x);
+        setMinHeight(pt.y);
+        setExpandHorizontal(true);
+        setExpandVertical(true);
     }
 
     protected void setModelBuilderStrategy( MappingClassBuilderStrategy theStrategy ) {

@@ -119,12 +119,12 @@ public class AccumulatorPanel extends Composite implements InternalUiConstants {
         if (leftSideWidthHint < 1) {
             this.leftSideWidthHint = DEFAULT_LEFT_SIDE_WIDTH_HINT;
         } else {
-            this.leftSideWidthHint = leftSideWidthHint;
+        this.leftSideWidthHint = leftSideWidthHint;
         }
         if (rightSideWidthHint < 1) {
             this.rightSideWidthHint = DEFAULT_RIGHT_SIDE_WIDTH_HINT;
         } else {
-            this.rightSideWidthHint = rightSideWidthHint;
+        this.rightSideWidthHint = rightSideWidthHint;
         }
         if (leftAndRightSideHeightHint < 1) {
             this.leftAndRightSideHeightHint = DEFAULT_LEFT_AND_RIGHT_SIDE_HEIGHT_HINT;
@@ -182,8 +182,6 @@ public class AccumulatorPanel extends Composite implements InternalUiConstants {
         gridLayout.numColumns = 4;
         GridData gridData = new GridData(GridData.FILL_BOTH);
         this.setLayoutData(gridData);
-        gridData.horizontalAlignment = GridData.FILL;
-        gridData.verticalAlignment = GridData.FILL;
 
         // Set label above the Available side
         Label leftSideLabel = new Label(this, SWT.NONE);
@@ -367,7 +365,7 @@ public class AccumulatorPanel extends Composite implements InternalUiConstants {
         GridLayout resetButtonGridLayout = new GridLayout();
         resetButtonGridLayout.marginHeight = this.resetButtonMarginHeight;
         resetButtonComposite.setLayout(resetButtonGridLayout);
-        GridData resetButtonCompositeGridData = new GridData(GridData.FILL_BOTH);
+        GridData resetButtonCompositeGridData = new GridData();
         resetButtonCompositeGridData.horizontalSpan = 2;
         resetButtonComposite.setLayoutData(resetButtonCompositeGridData);
         resetButton = new Button(resetButtonComposite, SWT.PUSH);
@@ -395,19 +393,17 @@ public class AccumulatorPanel extends Composite implements InternalUiConstants {
         String sortButtonText = Util.getString("ButtonText.keepSortedAlphabetically"); //$NON-NLS-1$
         sortButton.setText(sortButtonText);
         GridData sortButtonGridData = new GridData();
-        sortButtonGridData.verticalAlignment = GridData.FILL;
-        sortButtonGridData.horizontalAlignment = GridData.END;
-        sortButtonGridData.horizontalIndent = 4;
+        sortButtonGridData.verticalAlignment = GridData.BEGINNING;
+        sortButtonGridData.horizontalAlignment = GridData.CENTER;
+        sortButtonGridData.horizontalSpan = 2;
         sortButton.setLayoutData(sortButtonGridData);
 
         messageLabel = new MessageLabel(this);
         messageLabel.setAlignment(SWT.LEFT);
         messageLabel.setErrorStatus(null);
         messageLabel.setFont(this.getFont());
-        GridData messageLabelGridData = new GridData();
+        GridData messageLabelGridData = new GridData(GridData.FILL_HORIZONTAL);
         messageLabelGridData.horizontalSpan = 4;
-        messageLabelGridData.horizontalAlignment = GridData.FILL;
-        messageLabelGridData.verticalAlignment = GridData.FILL;
         messageLabel.setLayoutData(messageLabelGridData);
 
         // Populate the list
@@ -419,7 +415,7 @@ public class AccumulatorPanel extends Composite implements InternalUiConstants {
         // Initialize changeListeners to empty
         changeListeners = new ArrayList();
     }
-
+    
     public void addAccumulatedValuesChangeListener( IAccumulatedValuesChangeListener listener ) {
         changeListeners.add(listener);
     }
