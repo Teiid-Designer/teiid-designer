@@ -2689,6 +2689,72 @@ public class TransformationHelper implements SqlConstants {
     public synchronized static EObject getMappingRoot( EObject targetVirtualGroupEObject ) {
         return getMappingRoot(targetVirtualGroupEObject, NOT_SIGNIFICANT, IS_UNDOABLE);
     }
+    
+    public synchronized static boolean hasMappingRoot( EObject targetVirtualGroupEObject ) {
+        // Throw exception if supplied target is null or invalid
+        if (!TransformationHelper.isValidTransformationTarget(targetVirtualGroupEObject)) {
+            throw new IllegalArgumentException(NULL_OR_INVALID_TARGET);
+        }
+        
+        List allTransforms = null;
+
+        ModelContents modelContents = ModelerCore.getModelEditor().getModelContents(targetVirtualGroupEObject);
+        if (modelContents != null) {
+            allTransforms = modelContents.getTransformations(targetVirtualGroupEObject);
+        }
+        if (!allTransforms.isEmpty()) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public synchronized static boolean hasSqlTransformationMappingRoot( EObject targetVirtualGroupEObject ) {
+        // Throw exception if supplied target is null or invalid
+        if (!TransformationHelper.isValidTransformationTarget(targetVirtualGroupEObject)) {
+            throw new IllegalArgumentException(NULL_OR_INVALID_TARGET);
+        }
+        
+        List allTransforms = null;
+
+        ModelContents modelContents = ModelerCore.getModelEditor().getModelContents(targetVirtualGroupEObject);
+        if (modelContents != null) {
+            allTransforms = modelContents.getTransformations(targetVirtualGroupEObject);
+        }
+        if (!allTransforms.isEmpty()) {
+        	// Should only be one....
+            Object nextObj = allTransforms.iterator().next();
+        	if (isSqlTransformationMappingRoot(nextObj)) {
+        		return true;
+        	}
+        }
+        
+        return false;
+    }
+    
+    
+    public synchronized static boolean hasXQueryTransformationMappingRoot( EObject targetVirtualGroupEObject ) {
+        // Throw exception if supplied target is null or invalid
+        if (!TransformationHelper.isValidTransformationTarget(targetVirtualGroupEObject)) {
+            throw new IllegalArgumentException(NULL_OR_INVALID_TARGET);
+        }
+        
+        List allTransforms = null;
+
+        ModelContents modelContents = ModelerCore.getModelEditor().getModelContents(targetVirtualGroupEObject);
+        if (modelContents != null) {
+            allTransforms = modelContents.getTransformations(targetVirtualGroupEObject);
+        }
+        if (!allTransforms.isEmpty()) {
+        	// Should only be one....
+            Object nextObj = allTransforms.iterator().next();
+        	if (isXQueryTransformationMappingRoot(nextObj)) {
+        		return true;
+        	}
+        }
+        
+        return false;
+    }
 
     /**
      * Indicates if the given <code>EObject</code> is contained within a read-only resource.

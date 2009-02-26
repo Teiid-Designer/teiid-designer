@@ -45,10 +45,7 @@ public class CheckedListSelectionDialog extends SelectionDialog {
     // sizing constants
     private final static int SIZING_SELECTION_WIDGET_HEIGHT = 250;
     private final static int SIZING_SELECTION_WIDGET_WIDTH = 350;
-
-    private static final String SELECT_ALL = InternalUiConstants.Util.getString("InternalUiConstants$Widgets.selectAllButton"); //$NON-NLS-1$
-    private static final String DESELECT_ALL = InternalUiConstants.Util.getString("InternalUiConstants$Widgets.deselectAllButton"); //$NON-NLS-1$
-
+    
     // the root element to populate the viewer with
     private Object inputElement;
 
@@ -104,7 +101,7 @@ public class CheckedListSelectionDialog extends SelectionDialog {
         data.grabExcessHorizontalSpace = true;
         composite.setData(data);
 
-        Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID, SELECT_ALL, false);
+        Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID, InternalUiConstants.Widgets.SELECT_ALL_BUTTON, false);
 
         SelectionListener listener = new SelectionAdapter() {
             @Override
@@ -115,7 +112,7 @@ public class CheckedListSelectionDialog extends SelectionDialog {
         };
         selectButton.addSelectionListener(listener);
 
-        Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID, DESELECT_ALL, false);
+        Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID, InternalUiConstants.Widgets.DESELECT_ALL_BUTTON, false);
 
         listener = new SelectionAdapter() {
             @Override

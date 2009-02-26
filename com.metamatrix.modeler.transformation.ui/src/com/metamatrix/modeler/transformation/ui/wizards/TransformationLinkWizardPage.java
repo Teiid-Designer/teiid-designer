@@ -9,6 +9,7 @@ package com.metamatrix.modeler.transformation.ui.wizards;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 
@@ -20,7 +21,6 @@ import com.metamatrix.modeler.internal.ui.wizards.IStructuralCopyTreePopulator;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.widget.INodeDescendantsDeselectionHandler;
-import com.metamatrix.ui.internal.widget.InheritanceCheckboxTreeViewer;
 
 /**
  * TransformationLinkWizardPage
@@ -34,7 +34,7 @@ public class TransformationLinkWizardPage extends WizardPage implements UiConsta
 
     private ISelection selection;
 	private MetamodelDescriptor metamodelDescriptor;
-	private TransformationCheckboxTreeViewerWizardPanel panel;
+	private TransformationTreeViewerWizardPanel panel;
 	protected boolean targetIsVirtual;
 	
 	////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +79,7 @@ public class TransformationLinkWizardPage extends WizardPage implements UiConsta
             }
         }
 
-    	panel = new TransformationCheckboxTreeViewerWizardPanel(parent, this, this, 
+    	panel = new TransformationTreeViewerWizardPanel(parent, this,
     			metamodelDescriptor, selectedResource, targetIsVirtual);
         super.setControl(panel);
     }
@@ -101,7 +101,7 @@ public class TransformationLinkWizardPage extends WizardPage implements UiConsta
         return panel.isCopyEntireModel();
     }
 
-    public InheritanceCheckboxTreeViewer getViewer() {
+    public TreeViewer getViewer() {
     	return panel.getViewer();
     }
     

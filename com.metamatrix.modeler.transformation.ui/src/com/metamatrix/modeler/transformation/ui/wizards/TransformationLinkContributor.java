@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizardPage;
 
 import com.metamatrix.modeler.core.ModelerCore;
@@ -24,7 +25,6 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationNewMode
 import com.metamatrix.modeler.internal.ui.wizards.IStructuralCopyTreePopulator;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.ui.wizards.INewModelWizardContributor;
-import com.metamatrix.ui.internal.widget.InheritanceCheckboxTreeViewer;
 
 /**
  * TransformationLinkContributor is the NewModelWizard builder contributor for generating
@@ -109,18 +109,12 @@ public class TransformationLinkContributor implements INewModelWizardContributor
         boolean succeeded = false;
 		try {
 			IStructuralCopyTreePopulator populator = transformationLinkPage.getTreePopulator();
-			InheritanceCheckboxTreeViewer viewer = transformationLinkPage.getViewer();
+			TreeViewer viewer = transformationLinkPage.getViewer();
             Map extraProperties = transformationLinkPage.isClearSupportsUpdate() ? MAP_CLEAR_SUPPORTS_UPDATES : MAP_KEEP_SUPPORTS_UPDATES;
 			if ((populator != null) && (viewer != null)) {
-                // exclude the viewer if the user wants to copy the entire model:
-                if (transformationLinkPage.isCopyEntireModel()) {
-                    // all nodes selected, copy all:
-                    populator.copyModel((ModelResource) viewer.getRoot(), modelResource, null, extraProperties, transformationLinkPage.isCopyAllDescriptions(), monitor);
 
-                } else {
-                    // user selected some nodes, and excluded others:
-                    populator.copyModel((ModelResource) viewer.getRoot(), modelResource, viewer, extraProperties, transformationLinkPage.isCopyAllDescriptions(), monitor);
-                } // endif
+                // all nodes selected, copy all:
+                populator.copyModel((ModelResource) viewer.getInput(), modelResource, extraProperties, transformationLinkPage.isCopyAllDescriptions(), monitor);
 			}
             succeeded = true;
         } catch (Exception ex) {

@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizardPage;
 
 import com.metamatrix.modeler.core.ModelerCore;
@@ -19,7 +20,6 @@ import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.ui.wizards.INewModelWizardContributor;
 import com.metamatrix.ui.UiConstants;
-import com.metamatrix.ui.internal.widget.InheritanceCheckboxTreeViewer;
 
 /**
  * StructuralCopyContributor
@@ -77,19 +77,12 @@ public class StructuralCopyContributor implements INewModelWizardContributor, Ui
     	boolean started = ModelerCore.startTxn(transactionName,this);
         boolean succeeded = false;
     	try {
-			IStructuralCopyTreePopulator populator = 
-					structuralCopyPage.getTreePopulator();
-			InheritanceCheckboxTreeViewer viewer = structuralCopyPage.getViewer();
+			IStructuralCopyTreePopulator populator = structuralCopyPage.getTreePopulator();
+			TreeViewer viewer = structuralCopyPage.getViewer();
 			if ((populator != null) && (viewer != null)) {
 				try {
-                    if (structuralCopyPage.isCopyEntireModel()) {
-                        // tree was disabled; copy everything:
-                        populator.copyModel((ModelResource) viewer.getRoot(), modelResource, null, null, structuralCopyPage.isCopyAllDescriptions(), monitor);
-
-                    } else {
-                        // use the tree's checked state to include and exclude stuff:
-                        populator.copyModel((ModelResource) viewer.getRoot(), modelResource, viewer, null, structuralCopyPage.isCopyAllDescriptions(), monitor);
-                    } // endif
+                    // tree was disabled; copy everything:
+                    populator.copyModel((ModelResource) viewer.getInput(), modelResource, null, structuralCopyPage.isCopyAllDescriptions(), monitor);
 				} catch (Exception ex) {
                     UiConstants.Util.log(IStatus.ERROR, ex, ex.getMessage());
 				}

@@ -15,12 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.ecore.EObject;
 
 import com.metamatrix.metamodels.core.AnnotationContainer;
@@ -62,6 +59,15 @@ public class TransformationCopyModelFeaturePopulator
      * Constructor
      * 
      * @param sourceFile        the source file
+     */     
+    public TransformationCopyModelFeaturePopulator(IFile sourceFile) {
+        super(sourceFile);
+    }
+    
+    /**
+     * Constructor
+     * 
+     * @param sourceFile        the source file
      * @param listenerController    controller for checkbox selection changes made
      *                              in the tree viewer
      */     
@@ -85,11 +91,36 @@ public class TransformationCopyModelFeaturePopulator
      * @param extraProperties       optional properties to tweak creation of objects.
      *   Currently, this only deals with whether virtual tables have their supportsUpdate
      *   properties cleared.  See TransformationNewModelObjectHelper for details.
-     * @param copyAllDescriptions   option to copy or supress coying all descriptions
+     * @param copyAllDescriptions option to copy or suppress copying all descriptions
      * @param monitor               a progress monitor
+     * @throws ModelerCoreException 
      */ 
     @Override
     public void copyModel(ModelResource sourceModelResource, ModelResource targetModelResource, InheritanceCheckboxTreeViewer viewer, 
+            Map extraProperties, boolean copyAllDescriptions, IProgressMonitor monitor) throws ModelerCoreException {
+
+        // This method is being revoked due to inadequate design and implementation.
+    	throw new UnsupportedOperationException();
+    }
+    
+    
+    
+    /**
+     * Overridden method from {@link StructuralCopyModelFeaturePopulator}.  Copy
+     * selected nodes of the source model to the target.  Overridden because also
+     * have to do transformations on tables and procedures.
+     * 
+     * @param sourceModelResource modelResource containing the old information
+     * @param targetResource        the target
+     * @param extraProperties       optional properties to tweak creation of objects.
+     *   Currently, this only deals with whether virtual tables have their supportsUpdate
+     *   properties cleared.  See TransformationNewModelObjectHelper for details.
+     * @param copyAllDescriptions option to copy or suppress copying all descriptions
+     * @param monitor               a progress monitor
+     * @throws ModelerCoreException 
+     */ 
+    @Override
+    public void copyModel(ModelResource sourceModelResource, ModelResource targetModelResource,
             Map extraProperties, boolean copyAllDescriptions, IProgressMonitor monitor) throws ModelerCoreException {
 
         //Since we cannot modify the original list of children, we must make
@@ -141,19 +172,6 @@ public class TransformationCopyModelFeaturePopulator
 
         //Add the selected nodes to the target              
         targetModelResource.getEmfResource().getContents().addAll(sourceFirstLevelChildrenCopies);
-
-        // delete things if needed:
-        if (viewer != null) {
-            //Get tree structure containing just the needed nodes.
-            DefaultMutableTreeNode neededNodesRoot = getParedTreeRoot(viewer, sourceModelResource);
-
-            //Delete unselected nodes.  Now has to be done after the fact.
-            adjustIndexOfFirstLevelChildren(neededNodesRoot, numInitialFirstLevelNodes);
-            insertInitialFirstLevelChildren(neededNodesRoot, targetFirstLevelChildren,
-                    numInitialFirstLevelNodes);
-            targetFirstLevelChildren = new ArrayList(targetModelResource.getEmfResource().getContents());
-            deleteUnneededNodes(neededNodesRoot, targetFirstLevelChildren, numInitialFirstLevelNodes);
-        } // endif
 
         //Do the transformations where needed
         List copiedFirstLevelChildrenList = 

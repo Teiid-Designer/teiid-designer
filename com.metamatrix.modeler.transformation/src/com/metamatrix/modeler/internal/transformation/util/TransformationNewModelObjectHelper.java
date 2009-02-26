@@ -30,10 +30,9 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
         super();
     }
 
-    /**
-     * @see com.metamatrix.modeler.ui.actions.INewModelObjectHelper#canCreate(com.metamatrix.modeler.core.workspace.ModelResource,
-     *      java.lang.Object, org.eclipse.emf.common.command.Command)
-     * @since 4.3
+    /*
+     * (non-Javadoc)
+     * @see com.metamatrix.modeler.core.util.INewModelObjectHelper#canHelpCreate(java.lang.Object)
      */
     public boolean canHelpCreate( Object newObject ) {
         ArgCheck.isNotNull(newObject);
@@ -59,17 +58,15 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
     }
 
     /**
-     * @see com.metamatrix.modeler.ui.actions.INewModelObjectHelper#getTransactionSetting()
-     * @since 4.3
+     * 
      */
     public Object getTransactionSetting() {
         return null;
     }
 
-    /**
-     * @see com.metamatrix.modeler.ui.actions.INewModelObjectHelper#create(com.metamatrix.modeler.core.workspace.ModelResource,
-     *      java.lang.Object, org.eclipse.emf.common.command.Command)
-     * @since 4.3
+    /*
+     * (non-Javadoc)
+     * @see com.metamatrix.modeler.core.util.INewModelObjectHelper#helpCreate(java.lang.Object, java.util.Map)
      */
     public boolean helpCreate( Object newObject,
                                Map properties ) {
@@ -77,44 +74,52 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
 
         if (newObject instanceof EObject) {
             EObject newTarget = (EObject)newObject;
-            if (TransformationHelper.isVirtual(newTarget)) {
-                // If the createdObject is VirtualTable, set supportsUpdate to false & create T-Root
+            if (TransformationHelper.isVirtual(newTarget)  ){
+                // If the createdObject is VirtualTable, set supportsUpdate to false & create T-Root if it doesn't exist
                 MetamodelAspect aspect = AspectManager.getSqlAspect(newTarget);
                 if (aspect != null && aspect instanceof SqlTableAspect) {
                     // Add T-Root
-                    EObject newRoot = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(newTarget, false, this);
-                    // Add Sql Mapping Helper under it.
-                    ModelResourceContainerFactory.addMappingHelper(newRoot);
-                    // defect 19675 - allow a straight-up copy of a table if desired
-                    if (isMapValueTrue(VIRTUAL_TABLE_CLEAR_SUPPORTS_UPDATE, properties, true)) { // default to clear
-                        SqlTableAspect tableAspect = (SqlTableAspect)aspect;
-                        tableAspect.setSupportsUpdate(newTarget, false);
-                    } // endif
-                    return true;
+                	if( !TransformationHelper.hasSqlTransformationMappingRoot(newTarget) ) {
+	                    EObject newRoot = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(newTarget, false, this);
+	                    // Add Sql Mapping Helper under it.
+	                    ModelResourceContainerFactory.addMappingHelper(newRoot);
+	                    // defect 19675 - allow a straight-up copy of a table if desired
+	                    if (isMapValueTrue(VIRTUAL_TABLE_CLEAR_SUPPORTS_UPDATE, properties, true)) { // default to clear
+	                        SqlTableAspect tableAspect = (SqlTableAspect)aspect;
+	                        tableAspect.setSupportsUpdate(newTarget, false);
+	                    } // endif
+	                    return true;
+                	}
                 } else if (TransformationHelper.isXQueryProcedure(newTarget)) {
-                    EObject newRoot = ModelResourceContainerFactory.createNewXQueryTransformationMappingRoot(newTarget,
-                                                                                                             false,
-                                                                                                             this);
-                    // Add Sql Mapping Helper under it.
-                    ModelResourceContainerFactory.addMappingHelper(newRoot);
-                    // Create Result Set
-                    EObject procResultSet = TransformationHelper.createProcResultSet(newTarget);
-                    // Create a column in the result set
-                    if (procResultSet != null) {
-                        TransformationHelper.createProcResultSetColumn(procResultSet);
-                    }
-
-                    return true;
+                	// Add T-Root
+                	if( !TransformationHelper.hasXQueryTransformationMappingRoot(newTarget) ) {
+	                    EObject newRoot = ModelResourceContainerFactory.createNewXQueryTransformationMappingRoot(newTarget,
+	                                                                                                             false,
+	                                                                                                             this);
+	                    // Add Sql Mapping Helper under it.
+	                    ModelResourceContainerFactory.addMappingHelper(newRoot);
+	                    // Create Result Set
+	                    EObject procResultSet = TransformationHelper.createProcResultSet(newTarget);
+	                    // Create a column in the result set
+	                    if (procResultSet != null) {
+	                        TransformationHelper.createProcResultSetColumn(procResultSet);
+	                    }
+	
+	                    return true;
+                	}
                 } else if (TransformationHelper.isSqlProcedure(newTarget)) {
-                    // Add T-Root
-                    EObject newRoot = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(newTarget, false, this);
-                    // Add Sql Mapping Helper under it.
-                    ModelResourceContainerFactory.addMappingHelper(newRoot);
-                    // Create Result Set
-                    TransformationHelper.createProcResultSet(newTarget);
-                    return true;
+                	// Add T-Root
+                	if( !TransformationHelper.hasSqlTransformationMappingRoot(newTarget) ) {
+	                    EObject newRoot = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(newTarget, false, this);
+	                    // Add Sql Mapping Helper under it.
+	                    ModelResourceContainerFactory.addMappingHelper(newRoot);
+	                    // Create Result Set
+	                    TransformationHelper.createProcResultSet(newTarget);
+	                    return true;
+                	}
                 }
             }
+            
             if (TransformationHelper.isPhysical(newTarget)) {
                 if (TransformationHelper.isXQueryProcedure(newTarget)) {
                     // Create Result Set

@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.metamodels.core.ModelAnnotation;
@@ -52,6 +53,17 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
      * @param sourceFile the source file
      * @param listenerController controller for checkbox selection changes made in the tree viewer
      */
+    public StructuralCopyModelFeaturePopulator( IFile sourceFile ) {
+        super();
+        this.sourceFile = sourceFile;
+    }
+    
+    /**
+     * Constructor
+     * 
+     * @param sourceFile the source file
+     * @param listenerController controller for checkbox selection changes made in the tree viewer
+     */
     public StructuralCopyModelFeaturePopulator( IFile sourceFile,
                                                 ICheckboxTreeViewerListenerController listenerController ) {
         super();
@@ -66,7 +78,7 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
      * @param theModel ModelResource for the model
      * @param targetIsVirtual flag indicating if target of copy is virtual
      */
-    public void populateModelFeaturesTree( InheritanceCheckboxTreeViewer viewer,
+    public void populateModelFeaturesTree( TreeViewer viewer,
                                            ModelResource theModel,
                                            boolean targetIsVirtual ) {
         ViewerFilter[] filters = viewer.getFilters();
@@ -114,12 +126,34 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
      * @param targetModelResource the target ModelResource
      * @param viewer the tree viewer; root is the ModelResource
      * @param extraProperties optional properties to tweak creation of objects.
-     * @param copyAllDescriptions option to copy or supress coying all descriptions
+     * @param copyAllDescriptions option to copy or suppress copying all descriptions
      * @param monitor a progress monitor
+     * @throws ModelerCoreException 
      */
     public void copyModel( ModelResource sourceModelResource,
                            ModelResource targetModelResource,
                            InheritanceCheckboxTreeViewer viewer,
+                           Map extraProperties,
+                           boolean copyAllDescriptions,
+                           IProgressMonitor monitor ) throws ModelerCoreException {
+
+    	// This method is being revoked due to inadequate design and implementation.
+    	throw new UnsupportedOperationException();
+    }
+    
+    /**
+     * Copy the model to the target, only copying those nodes selected in the tree viewer.
+     * 
+     * @param sourceModelResource modelResource containing the old information
+     * @param targetModelResource the target ModelResource
+     * @param viewer the tree viewer; root is the ModelResource
+     * @param extraProperties optional properties to tweak creation of objects.
+     * @param copyAllDescriptions option to copy or suppress copying all descriptions
+     * @param monitor a progress monitor
+     * @throws ModelerCoreException 
+     */
+    public void copyModel( ModelResource sourceModelResource,
+                           ModelResource targetModelResource,
                            Map extraProperties,
                            boolean copyAllDescriptions,
                            IProgressMonitor monitor ) throws ModelerCoreException {
@@ -179,27 +213,10 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
             throw ex;
         }
 
-        if (viewer == null) {
-            // viewer null, just add the nodes to the target:
-            targetModelResource.getEmfResource().getContents().addAll(sourceFirstLevelChildrenCopies);
-        } else {
-            // viewer not null, need to delete unselected thingies:
 
-            // Obtain a tree structure containing just the selected nodes of the copy
-            DefaultMutableTreeNode neededNodesRoot = getParedTreeRoot(viewer, sourceModelResource);
-            // Before filling, find out how many nodes already inserted into the target
-            List /*<EObject>*/targetFirstLevelChildren = targetModelResource.getEmfResource().getContents();
-            int numInitialFirstLevelNodes = targetFirstLevelChildren.size();
+        // just add the nodes to the target:
+        targetModelResource.getEmfResource().getContents().addAll(sourceFirstLevelChildrenCopies);
 
-            // Add the nodes to the target
-            targetModelResource.getEmfResource().getContents().addAll(sourceFirstLevelChildrenCopies);
-
-            // Delete unselected nodes. Now this has to be done after the fact.
-            adjustIndexOfFirstLevelChildren(neededNodesRoot, numInitialFirstLevelNodes);
-            insertInitialFirstLevelChildren(neededNodesRoot, targetFirstLevelChildren, numInitialFirstLevelNodes);
-            targetFirstLevelChildren = new ArrayList(targetModelResource.getEObjects());
-            deleteUnneededNodes(neededNodesRoot, targetFirstLevelChildren, numInitialFirstLevelNodes);
-        } // endif
 
         // Need to re-set the model type here.
         targetModelResource.getModelAnnotation().setModelType(targetModelType);
@@ -212,72 +229,6 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
                 }
             } catch (ModelerCoreException err) {
                 throw err;
-            }
-        }
-    }
-
-    protected void deleteUnneededNodes( DefaultMutableTreeNode structureRoot,
-                                        Collection /*<EObject>*/modelFirstLevelChildren,
-                                        int numInitialStructureRootChildren ) throws ModelerCoreException {
-        Object curNode = VIRTUAL_ROOT;
-        DefaultMutableTreeNode curStructureNode = structureRoot;
-        int curNodeIndex = 0;
-        // int depth = 0;
-        boolean done = false;
-        while (!done) {
-            // System.err.println("at top of loop, depth is " + depth + ", curNode is " + curNode);
-            Collection curNodeChildren = getChildren(curNode, modelFirstLevelChildren);
-            int numCurNodeChildren = curNodeChildren.size();
-            DefaultMutableTreeNode[] curStructureNodeChildren = getChildrenOfNode(curStructureNode);
-            int topIndexToDelete = numCurNodeChildren - 1;
-            for (int i = curStructureNodeChildren.length - 1; i >= 0; i--) {
-                IndexAndObject io = (IndexAndObject)curStructureNodeChildren[i].getUserObject();
-                int index = io.getIndex();
-                for (int j = topIndexToDelete; j > index; j--) {
-                    deleteChildAtIndex(curNode, j, modelFirstLevelChildren);
-                }
-                topIndexToDelete = index - 1;
-            }
-            // Once more to get indices numbered lower than the first index being saved
-            for (int j = topIndexToDelete; j >= 0; j--) {
-                if (!((curStructureNode == structureRoot) && (j <= numInitialStructureRootChildren - 1))) {
-                    deleteChildAtIndex(curNode, j, modelFirstLevelChildren);
-                }
-            }
-            // Find the next node to process
-            if (numCurNodeChildren > 0) {
-                if (curStructureNode == structureRoot) {
-                    curNodeIndex = numInitialStructureRootChildren;
-                } else {
-                    curNodeIndex = 0;
-                }
-                Object firstChild = getChildAtIndex(curNode, curNodeIndex, modelFirstLevelChildren);
-                // depth++;
-                curNode = firstChild;
-                curStructureNode = (DefaultMutableTreeNode)curStructureNode.getChildAt(curNodeIndex);
-            } else {
-                // Current node has no children, so look for sibling of current node
-                boolean nodeFound = false;
-                while ((!nodeFound) && (!done)) {
-                    Object curNodeParent = getParent(curNode, modelFirstLevelChildren);
-                    if (curNodeParent == null) {
-                        done = true;
-                    } else {
-                        DefaultMutableTreeNode curStructureNodeParent = (DefaultMutableTreeNode)curStructureNode.getParent();
-                        curNodeIndex = curStructureNodeParent.getIndex(curStructureNode);
-                        int numChildrenOfParent = curStructureNodeParent.getChildCount();
-                        if (curNodeIndex < numChildrenOfParent - 1) {
-                            curNodeIndex += 1;
-                            curNode = getChildAtIndex(curNodeParent, curNodeIndex, modelFirstLevelChildren);
-                            curStructureNode = (DefaultMutableTreeNode)curStructureNodeParent.getChildAt(curNodeIndex);
-                            nodeFound = true;
-                        } else {
-                            curNode = curNodeParent;
-                            // depth--;
-                            curStructureNode = curStructureNodeParent;
-                        }
-                    }
-                }
             }
         }
     }

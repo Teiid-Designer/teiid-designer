@@ -9,6 +9,7 @@ package com.metamatrix.modeler.internal.ui.wizards;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -35,7 +36,7 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
 	// Instance variables
 	//////////////////////////////////////////////////////////////////////////////////////
 	private ISelection selection;
-	private CheckboxTreeViewerWizardPanel panel;
+	private TreeViewerWizardPanel panel;
 	private MetamodelDescriptor metamodelDescriptor;
 	protected boolean targetIsVirtual;
 	
@@ -73,6 +74,8 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
                         selectedResource = ModelUtilities.getModelResource((IFile) obj, false);
                         if ( ! selectedResource.getPrimaryMetamodelDescriptor().equals(this.metamodelDescriptor) ) {
                             selectedResource = null;
+                        } else {
+                        	setPageComplete(true);
                         }
                     } catch (ModelWorkspaceException e) {
                         // no need to log, just launch the dialog empty
@@ -81,7 +84,7 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
             }
         }
         
-		panel = new CheckboxTreeViewerWizardPanel(parent, this, this, metamodelDescriptor, 
+		panel = new TreeViewerWizardPanel(parent, this, metamodelDescriptor, 
 				selectedResource, targetIsVirtual);
 		setControl(panel);
 	}
@@ -94,7 +97,7 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
 	 *             	the existing model, along with indication of which are selected for
 	 * 			  	copy
 	 */
-	public InheritanceCheckboxTreeViewer getViewer() {
+	public TreeViewer getViewer() {
 		return panel.getViewer();
 	}
 	
@@ -145,4 +148,5 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
     public boolean isCopyAllDescriptions() {
         return panel.isCopyAllDescriptions();
     }
+
 }//end StructuralCopyWizardPage
