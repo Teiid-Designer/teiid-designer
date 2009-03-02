@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="java:i3.intel.search" xmlns:model="java:i3.intel.model" xmlns:aoi="java:i3.intel.aoi" targetNamespace="java:i3.intel.search" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<xs:import namespace="java:i3.intel.aoi" schemaLocation="./AreaOfInterest.xsd"/>
+	<xs:import namespace="java:i3.intel.model" schemaLocation="./Entity.xsd"/>
+	<xs:element name="lookup">
+		<xs:annotation>
+			<xs:documentation>This element defines the way to retrieve information on a field</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="lookupParam" type="tns:LookupParameters"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="cancel">
+		<xs:annotation>
+			<xs:documentation>This is to let the client tell the server to clean up its connections.  The user canceled its query</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="id" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="cancelResponse">
+		<xs:annotation>
+			<xs:documentation>This is to let the client tell the server to clean up its connections.  The user canceled its query</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="outcome" type="tns:SearchResults"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="lookupResults">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="lookupResult" type="tns:LookupEntity" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="searchArguments">
+		<xs:annotation>
+			<xs:documentation>The AllSourceSearch service provides the flexibility to search predefined categories of intelligence data, identify a geographic location, and define the intelligence picture</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="arguments" type="tns:SearchParameters"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="searchOutcome">
+		<xs:annotation>
+			<xs:documentation>Results of the search</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="outcome" type="tns:SearchResults"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="nextResults">
+		<xs:annotation>
+			<xs:documentation>The next set of results based on the search unique identifier</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="value" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="searchExpression">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="expressionValue" type="tns:Expression"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="siteCodeCollection">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="siteCode" type="tns:SiteIdentity" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="siteCodeRequest"/>
+	<xs:complexType name="SearchResults">
+		<xs:sequence>
+			<xs:element name="data" type="tns:Datasheet" nillable="true"/>
+			<xs:element name="exceptionMessage" type="xs:string" nillable="true"/>
+			<xs:element name="numberOfResults" type="xs:string" nillable="true">
+				<xs:annotation>
+					<xs:documentation>The number of base entities returned from the query.  Since paging is used, the value of 0 or null will need to be checked for completion of the query.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="searchId" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>This id is for paging purposes.  The user will recieve 25 records back during each page. This unique identifier is used for the global searchId element</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AdvanceSearch">
+		<xs:complexContent>
+			<xs:extension base="tns:SearchParameters">
+				<xs:sequence>
+					<xs:element name="criteria" type="tns:Expression">
+						<xs:annotation>
+							<xs:documentation>
+                            The Expression can be built with two types:  
+                                ConjunctionExpression - this defines how to join (or, and) two different expression (Either another ConjunctionExpression or a ConditionExpression) 
+                                ConditionExpression - this defines the field, value pair and Condition (Also see Constraint type for more information)
+                        	Expressions built for Tracks cannot use the OR operator.  Also, Track queries only can use equal and contains as the Condition 
+                        </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="viewParameter" type="tns:View"/>
+					<xs:element name="installationRecords" type="xs:boolean" nillable="true"/>
+				</xs:sequence>
+				<xs:attribute name="type" type="model:EntityKeys">
+					<xs:annotation>
+						<xs:documentation>
+                                    Here are the valid EntityKeys for the type attribute:
+                                        FAC, UNIT, EQP, DOC_MGMT, MESSAGE, track, TACTICAL_ID, IND, TGT_DETAIL, TGT_LIST, EVENT, ITS_PRODUCT
+                        </xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SearchParameters">
+		<xs:sequence>
+			<xs:element name="relationships" type="tns:Associations" nillable="true" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+                        Relationship Table (This describes the base entities and their associations):
+                                    
+                        Base Entities
+                                    
+                        FAC                      -Any Base Entity, Assessment, Aliases, Remark
+                        UNIT                     -Any Base Entity, Assessment, Alternate Location, Aliases, Remark
+                        EQP                      -Any Base Entity, Assessment, Aliases, Remark
+                        DOC_MGMT                 -Any Base Entity, Aliases, Remark
+                        MESSAGE                  -Any Base Entity
+                        track                    -Any Base Entity
+                        TACTICAL_ID              -Any Base Entity, Reporting History (ReportingHistoryKey)
+                        IND                      -Any Base Entity, Altertnate Location, Aliases, Employment, Remark
+                        TGT_DETAIL               -Any Base Entity, Aliases, Assessment, Remark
+                        TGT_LIST                 -Any Base Entity, Remark
+                        EVENT                    -Any Base Entity, Alternate Location, Aliases, Remark
+                        ITS_PRODUCT              -Any Base Entity
+                        ExtendedReportingHistory -Any Base Entity, Extended Reports (ExtendedReportingHistoryKey)
+                                    
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="pagingSize" type="xs:string"/>
+			<xs:element name="areaOfInterest" type="aoi:Geometry" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="View">
+		<xs:annotation>
+			<xs:documentation>This type defines the database view to search.  It is extended by CustomView and IntelView</xs:documentation>
+		</xs:annotation>
+	</xs:complexType>
+	<xs:complexType name="CustomView">
+		<xs:annotation>
+			<xs:documentation>The CusomView type defines a custom view to search</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="tns:View">
+				<xs:sequence>
+					<xs:element name="serverId" type="xs:int">
+						<xs:annotation>
+							<xs:documentation>This element can be filled with the severId from the SiteIdentity complex type </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="IntelView">
+		<xs:annotation>
+			<xs:documentation>This type will use current site identifier</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="tns:View">
+				<xs:sequence>
+					<xs:element name="commonView" type="tns:IntelViews">
+						<xs:annotation>
+							<xs:documentation>This element defines what view to search for the current site identifier</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="IntelViews">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="National"/>
+			<xs:enumeration value="Local"/>
+			<xs:enumeration value="Common Intel Picture (CIP)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Associations">
+		<xs:sequence>
+			<xs:element name="assocType" type="tns:AssociationKeys"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Datasheet">
+		<xs:sequence>
+			<xs:element name="relatedEntities" type="model:Entity" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="relationshipEntities" type="model:Relationship" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="requestedEntities" type="model:Entity" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="AssociationKeys">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Site"/>
+			<xs:enumeration value="Document"/>
+			<xs:enumeration value="Event"/>
+			<xs:enumeration value="Image"/>
+			<xs:enumeration value="Person"/>
+			<xs:enumeration value="Target"/>
+			<xs:enumeration value="TargetList"/>
+			<xs:enumeration value="Track"/>
+			<xs:enumeration value="Unit"/>
+			<xs:enumeration value="Remark"/>
+			<xs:enumeration value="Aliases"/>
+			<xs:enumeration value="Employment"/>
+			<xs:enumeration value="Alternate Location"/>
+			<xs:enumeration value="Assessment"/>
+			<xs:enumeration value="Relationship"/>
+			<xs:enumeration value="Equipment"/>
+			<xs:enumeration value="Reporting History"/>
+			<xs:enumeration value="Extended Reports"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ReportChildrenKeys">
+		<xs:annotation>
+			<xs:documentation>List of Report children that can be requested</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="assets"/>
+			<xs:enumeration value="remarks"/>
+			<xs:enumeration value="acoustics"/>
+			<xs:enumeration value="parametrics"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="EquipmentKey">
+		<xs:annotation>
+			<xs:documentation>In order to perform a Equipment Association this complex type must be present in the xml
+           					 The assocType should be set to Equipment
+           </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="tns:Associations">
+				<xs:sequence>
+					<xs:element name="theKeys" type="tns:EquipmentKeys" minOccurs="0" maxOccurs="11">
+						<xs:annotation>
+							<xs:documentation>This enumeration only gets set when retreiving equipment associations, otherwise leave the enumeration null</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="EquipmentKeys">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Air Defense"/>
+			<xs:enumeration value="Armored Vehicles"/>
+			<xs:enumeration value="Communications"/>
+			<xs:enumeration value="Anti-Tank Weapons"/>
+			<xs:enumeration value="Indirect Fire Weapons"/>
+			<xs:enumeration value="Miscellaneous"/>
+			<xs:enumeration value="Other Vehicles"/>
+			<xs:enumeration value="Radars"/>
+			<xs:enumeration value="Ships"/>
+			<xs:enumeration value="Tanks"/>
+			<xs:enumeration value="Aircraft"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ReportingHistoryKey">
+		<xs:annotation>
+			<xs:documentation>In order to perform a Reporting History Association this complex type must be present in the xml.  It will be assumed that the assocType is Reporting History.
+           </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="tns:Associations">
+				<xs:sequence>
+					<xs:element name="numberOfDays" type="xs:int">
+						<xs:annotation>
+							<xs:documentation>The numberOfDays element refers to the number of days in back from the current date to retrieve associated reports.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ExtendedReportingHistoryKey">
+		<xs:annotation>
+			<xs:documentation>In order to obtain the Extended Reports for Extended Reporting History this complex type must be present in the xml.  It will be assumed that the assocType is Extended Reports.
+           </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="tns:Associations">
+				<xs:sequence>
+					<xs:element name="numberOfDays" type="xs:int" default="0">
+						<xs:annotation>
+							<xs:documentation>The numberOfDays element refers to the number of days in back from the current date to retrieve associated reports.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="sampleHourly" type="xs:boolean" default="false" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>If true, indicates reports are restricted to one per hour.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="reportChildren" type="tns:ReportChildrenKeys" minOccurs="0" maxOccurs="4">
+						<xs:annotation>
+							<xs:documentation>For each report, a set of related children may be requested as defined by ReportChildrenKeys</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="enableChildTracks" type="xs:boolean" default="false" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>If true, any child reporting histories (i.e. child tracks) are returned as relatedEntities.  Their reports are also constrained by the numberOfDays, sampleHourly and reportChildren elements.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Expression">
+		<xs:annotation>
+			<xs:documentation>Convenience type for the different expressions</xs:documentation>
+		</xs:annotation>
+	</xs:complexType>
+	<xs:complexType name="ConjunctionExpression">
+		<xs:complexContent>
+			<xs:extension base="tns:Expression">
+				<xs:sequence>
+					<xs:element name="firstExpression" type="tns:Expression"/>
+					<xs:element name="secondExpression" type="tns:Expression"/>
+				</xs:sequence>
+				<xs:attribute name="operator" type="tns:LogicalOperators"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ConditionExpression">
+		<xs:complexContent>
+			<xs:extension base="tns:Expression">
+				<xs:sequence>
+					<xs:element name="theConstraint" type="tns:Constraint"/>
+				</xs:sequence>
+				<xs:attribute name="condition" type="tns:Conditions"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="LogicalOperators">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="and"/>
+			<xs:enumeration value="or"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Constraint">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The AllSourceSearchQueryFields.xsd define the values that can be used for this element.  It can 
+                                      be found at http://appserver/ishop/webservice/schema/AllSourceSearchQueryFields.xsd
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="value" type="xs:string" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Multiple values can be used for conditions 'between' and 'not between'.  All other conditions should have a single value</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BaseConstraint">
+		<xs:complexContent>
+			<xs:annotation>
+				<xs:documentation>
+                    This constraint defines the field, value and condtion to perform a search.  The type
+                    attribute in the AdvanceSearch complex type defines the entity that this constraint should be 
+                    built from.
+                </xs:documentation>
+			</xs:annotation>
+			<xs:extension base="tns:Constraint"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AssociatedConstraint">
+		<xs:complexContent>
+			<xs:annotation>
+				<xs:documentation>
+                    This constraint defines the field, value and condition to perform a search.  The difference
+                    between this Constraint and the BaseConstraint is that the type used to perform the search 
+                    on is defined in this complex type.  This constraint should only be used when creating an 
+                    expression that needs to search on associated fields.
+                    (Example:
+                        If the user want to perform a query on all Facilities that have associated Equipment with 
+                        the name Tank then the following associated constraint should be built:
+                            <!-- <theConstraint>
+                                    <entityType>
+                                        EQP
+                                    </entityType>
+                                    <name>
+                                        name
+                                    </name>
+                                    <value>
+                                        Tank
+                                    </value>
+                                 </theConstraint>
+                             -->
+				</xs:documentation>
+			</xs:annotation>
+			<xs:extension base="tns:Constraint">
+				<xs:sequence>
+					<xs:element name="entityType" type="model:EntityKeys"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="Conditions">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="begins with"/>
+			<xs:enumeration value="ends with"/>
+			<xs:enumeration value="contains"/>
+			<xs:enumeration value="does not contain"/>
+			<xs:enumeration value="greater than"/>
+			<xs:enumeration value="greater than or equal to"/>
+			<xs:enumeration value="less than"/>
+			<xs:enumeration value="less than or equal to"/>
+			<xs:enumeration value="does not equal"/>
+			<xs:enumeration value="equal"/>
+			<xs:enumeration value="before"/>
+			<xs:enumeration value="after"/>
+			<xs:enumeration value="on"/>
+			<xs:enumeration value="last Month"/>
+			<xs:enumeration value="this Month"/>
+			<xs:enumeration value="last 7 days"/>
+			<xs:enumeration value="12 hours ago"/>
+			<xs:enumeration value="24 hours ago"/>
+			<xs:enumeration value="48 hours ago"/>
+			<xs:enumeration value="72 hours ago"/>
+			<xs:enumeration value="between"/>
+			<xs:enumeration value="not between"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SiteIdentity">
+		<xs:sequence>
+			<xs:element name="priority" type="xs:int"/>
+			<xs:element name="serverId" type="xs:int"/>
+			<xs:element name="serverName" type="xs:string"/>
+			<xs:element name="currentServer" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LookupParameters">
+		<xs:sequence>
+			<xs:element name="field" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LookupFieldValues">
+		<xs:complexContent>
+			<xs:extension base="tns:LookupParameters">
+				<xs:sequence>
+					<xs:element name="userName" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="LookupFieldDescription">
+		<xs:complexContent>
+			<xs:extension base="tns:LookupParameters">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="LookupEquipment">
+		<xs:complexContent>
+			<xs:extension base="tns:LookupParameters"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="LookupEntity">
+		<xs:sequence>
+			<xs:element name="code" type="xs:string"/>
+			<xs:element name="description" type="xs:string"/>
+			<xs:element name="displayName" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

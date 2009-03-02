@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+    
+<!-- Adding the Mapping Diagram Type extension-->
+   <extension
+         id="mappingDiagramType"
+         name="%mappingDiagramType"
+         point="org.teiid.designer.diagram.ui.diagramType">
+      <diagram
+            class="com.metamatrix.modeler.mapping.ui.diagram.MappingDiagramType"
+            simpleDiagram="false">
+      </diagram>
+   </extension>
+<!-- Adding the Mapping Diagram Type extension-->
+   <extension
+         id="mappingTransformationDiagramType"
+         name="%mappingTransformationDiagramType"
+         point="org.teiid.designer.diagram.ui.diagramType">
+      <diagram
+            class="com.metamatrix.modeler.mapping.ui.diagram.MappingDiagramType"
+            simpleDiagram="false">
+      </diagram>
+   </extension>
+<!-- Mapping Diagram Type Content And Label Providers -->
+   <extension
+         id="mappingDiagramContentProvider"
+         name="Mapping Diagram Content Provider"
+         point="org.teiid.designer.ui.diagramContentProvider">
+      <class
+            name="com.metamatrix.modeler.mapping.ui.diagram.MappingDiagramContentProvider">
+      </class>
+      <diagramType
+            name="mappingDiagramType">
+      </diagramType>
+   </extension>
+   <extension
+         id="mappingDiagramLabelProvider"
+         name="Mapping Diagram LabelProvider"
+         point="org.teiid.designer.ui.diagramLabelProvider">
+      <class
+            name="com.metamatrix.modeler.mapping.ui.diagram.MappingDiagramLabelProvider">
+      </class>
+      <diagramType
+            name="mappingDiagramType">
+      </diagramType>
+   </extension>
+   <extension
+         id="InputSetObjectEditorPage"
+         name="Input Set Object Editor"
+         point="org.teiid.designer.ui.modelObjectEditorPage">
+      <class
+            name="com.metamatrix.modeler.mapping.ui.editor.InputSetObjectEditorPage">
+      </class>
+   </extension>
+   <extension
+         id="RecursionObjectEditorPage"
+         name="Recursion Object Editor"
+         point="org.teiid.designer.ui.modelObjectEditorPage">
+      <class
+            name="com.metamatrix.modeler.mapping.ui.recursion.RecursionObjectEditorPage">
+      </class>
+   </extension>
+<!-- Mapping Diagram Type Permanent Model Object Action Contributor -->
+   <extension
+         id="mappingDiagramModelObjectActionContributor"
+         point="org.teiid.designer.ui.modelObjectActionContributor">
+      <class
+            name="com.metamatrix.modeler.mapping.ui.actions.MappingDiagramPermanentActionContributor">
+      </class>
+   </extension>
+   <!-- Helper method to allow external edit for objects. i.e. Delete, Copy, etc.. -->
+   <extension
+         id="mappingObjectEditHelper"
+         name="%mappingObjectEditHelper"
+         point="org.teiid.designer.ui.modelObjectEditHelper">
+      <class
+        name="com.metamatrix.modeler.mapping.ui.actions.MappingObjectEditHelper">
+      </class>
+   </extension>
+   <extension
+         point="org.teiid.ui.editorPreferences">
+         <editorPreferenceComponent
+         	class="com.metamatrix.modeler.mapping.ui.preferences.XmlDocumentPreferencesComponent"/>
+   </extension>   
+ <!-- Helper method to allow external edit for objects. i.e. Delete, Copy, etc.. -->
+   <extension
+         id="mappingUiNewModelObjectHelper"
+         name="%mappingUiNewModelObjectHelper"
+         point="org.teiid.designer.core.newModelObjectHelper">
+      <class
+        name="com.metamatrix.modeler.mapping.ui.util.MappingUiNewModelObjectHelper">
+      </class>
+   </extension>
+<!-- Actions contributed to the object/model generation -->
+   <extension
+		id="SetExcludeFromDocumentSpecialAction"
+		name="%setExcludeFromDocumentSpecialAction.name"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="com.metamatrix.modeler.mapping.ui.actions.SetExcludeFromDocumentSpecialAction"
+         label="%setExcludeFromDocumentSpecialAction.label">
+      </specialAction>
+   </extension>
+   <extension
+		id="SetIncludeInDocumentSpecialAction"
+		name="%setIncludeInDocumentSpecialAction.name"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="com.metamatrix.modeler.mapping.ui.actions.SetIncludeInDocumentSpecialAction"
+         label="%setIncludeInDocumentSpecialAction.label">
+      </specialAction>
+   </extension>
+</plugin>

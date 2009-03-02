@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<toc label="Designer User's Guide">
+	<topic label="Introduction" href="UsersGuide/DesignerIntro.htm"/>
+    <topic label="Getting Started" href="UsersGuide/DesignerGettingStarted.htm">
+       <link toc="getting_started.xml"/>
+    </topic>
+    <topic href="UsersGuide/TheDesigner.htm" label="The Designer">
+       <link toc="designer_overview.xml"/>
+    </topic>
+    <topic label="Getting Things Done">
+       <link toc="how_tos.xml"/>
+    </topic>
+</toc>

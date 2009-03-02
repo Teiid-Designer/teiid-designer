@@ -1,0 +1,59 @@
+// T%e following plugin projects were not availaable in the Modeler kit, so they were not included in the WAR file.
+// Testing showed that JAR files from these projects were not needed to run the SOAP LDS web service.
+
+		com.metamatrix.metamodels.db.metamodel/data		
+		oajava.sql
+		org.apache.jakarta.regexp
+		org.jgroups
+
+// The following code is from getExternalFiles() method in the DefaultWebArchiveBuilderImpl class.
+// It was removed because the JAR files included in the code were not needed to run the SOAP LDS web
+// service.  all of the projects below are available in the Modeler kit.
+
+        FileUtils.copyFile(pluginsDirectory, libDirectoryName, "org.eclipse.xsd_2.1.0.jar"); //$NON-NLS-1$
+        
+        String beanShellDir = PluginUtilities.getPluginProjectLocation("org.beanshell", true); //$NON-NLS-1$
+        FileUtils.copyFile(beanShellDir, libDirectoryName, "bsh-2.0b4.jar"); //$NON-NLS-1$
+
+        String aspectJRuntimeDir = PluginUtilities.getPluginProjectLocation("org.aspectj.runtime", true); //$NON-NLS-1$
+        FileUtils.copyFile(aspectJRuntimeDir, libDirectoryName, "aspectjrt.jar"); //$NON-NLS-1$
+
+        FileUtils.copyFile(pluginsDirectory, libDirectoryName, "org.eclipse.emf.common_2.1.0.jar"); //$NON-NLS-1$
+        FileUtils.copyFile(pluginsDirectory, libDirectoryName, "org.eclipse.emf.ecore_2.1.0.jar"); //$NON-NLS-1$        
+        FileUtils.copyFile(pluginsDirectory, libDirectoryName, "org.eclipse.emf.ecore.edit_2.1.0.jar"); //$NON-NLS-1$
+        FileUtils.copyFile(pluginsDirectory, libDirectoryName, "org.eclipse.emf.ecore.xmi_2.1.0.jar"); //$NON-NLS-1$
+        FileUtils.copyFile(pluginsDirectory, libDirectoryName, "org.eclipse.emf.edit_2.1.0.jar"); //$NON-NLS-1$
+        FileUtils.copyFile(pluginsDirectory, libDirectoryName, "org.eclipse.emf.mapping_2.1.0.jar"); //$NON-NLS-1$            
+
+        String atomikosDir = PluginUtilities.getPluginProjectLocation("com.atomikos", true); //$NON-NLS-1$
+        FileUtils.copyFile(atomikosDir, libDirectoryName, "licenseRMI.jar"); //$NON-NLS-1$
+        FileUtils.copyFile(atomikosDir, libDirectoryName, "TransactionsRMI.jar"); //$NON-NLS-1$
+        
+        String jaxenDir = PluginUtilities.getPluginProjectLocation("org.jaxen", true); //$NON-NLS-1$
+        FileUtils.copyFile(jaxenDir, libDirectoryName, "jaxen-jdom.jar"); //$NON-NLS-1$
+        FileUtils.copyFile(jaxenDir, libDirectoryName, "jaxen-core.jar"); //$NON-NLS-1$    
+        FileUtils.copyFile(jaxenDir, libDirectoryName, "saxpath.jar"); //$NON-NLS-1$  
+       
+        String saxonDir = PluginUtilities.getPluginProjectLocation("net.sf.saxon", true); //$NON-NLS-1$
+        FileUtils.copyFile(saxonDir, libDirectoryName, "saxon8.jar"); //$NON-NLS-1$          
+        FileUtils.copyFile(saxonDir, libDirectoryName, "saxon8-dom.jar"); //$NON-NLS-1$
+        FileUtils.copyFile(saxonDir, libDirectoryName, "saxon8-jdom.jar"); //$NON-NLS-1$
+        FileUtils.copyFile(saxonDir, libDirectoryName, "saxon8-sql.jar"); //$NON-NLS-1$
+        FileUtils.copyFile(saxonDir, libDirectoryName, "saxon8-xpath.jar"); //$NON-NLS-1$
+
+        String xercesDir = PluginUtilities.getPluginProjectLocation("org.apache.xerces", true); //$NON-NLS-1$
+        FileUtils.copyFile(xercesDir, libDirectoryName, "xercesImpl.jar"); //$NON-NLS-1$   
+
+        String antlrDir = PluginUtilities.getPluginProjectLocation("org.antlr", true); //$NON-NLS-1$
+        FileUtils.copyFile(antlrDir, libDirectoryName, "antlr.jar"); //$NON-NLS-1$   
+        FileUtils.copyFile(antlrDir, libDirectoryName, "stringtemplate.jar"); //$NON-NLS-1$
+
+        String jgroupsDir = PluginUtilities.getPluginProjectLocation("org.jgroups", true); //$NON-NLS-1$
+        FileUtils.copyFile(jgroupsDir, libDirectoryName, "commons-logging.jar"); //$NON-NLS-1$
+      
+        String transactionDir = PluginUtilities.getPluginProjectLocation("javax.transaction", true); //$NON-NLS-1$
+        FileUtils.copyFile(transactionDir, libDirectoryName, "jta.jar"); //$NON-NLS-1$ 
+
+        String jfreeDir = PluginUtilities.getPluginProjectLocation("org.jfree.chart", true); //$NON-NLS-1$
+        FileUtils.copyFile(jfreeDir, libDirectoryName, "jcommon-0.9.1.jar"); //$NON-NLS-1$   
+        FileUtils.copyFile(jfreeDir, libDirectoryName, "jfreechart-0.9.16.jar"); //$NON-NLS-1$    

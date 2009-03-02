@@ -1,0 +1,65 @@
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<link rel="stylesheet" href="designer_help.css" type="text/css" /><style type="text/css">
+<!--
+.style4 {font-weight: bold}
+-->
+</style>
+<body>
+<p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<hr>
+<p class="maintitle_b24">Edit Models </p>
+<p><strong>Teiid Designer </strong>offers three basic model edit actions: <strong><a href="#renameModel">Rename</a></strong>, <strong><a href="#moveModel">Move</a></strong> and <strong><a href="#saveModelAs">Save As....</a> </strong>These actions are described below. </p>
+<p class="style4"><span class="subtitle_b16"><a name="renameModel" id="renameModel"></a>Rename a Model</span></p>
+<p>To rename a model:</p>
+<blockquote>
+  <p><strong>Step 1:</strong> Select a model in the <strong><a href="ModelExplorer.htm">Model Explorer</a></strong>.</p>
+  <p><strong>Step 2: </strong>Right-click select the <strong>Refactor &gt; Rename</strong> action. </p>
+  <p><img src="images/views/RenameActionInExplorer.jpg"  hspace="20" border="1"></p>
+  <p><strong>Step 3:</strong> Specify unique model name in the <strong>Rename Model File</strong> dialog.</p>
+  <p><img src="images/views/RenameModelFileDialog.jpg" hspace="20"></p>
+  <p><strong>Step 4:</strong> Click <strong>OK</strong>.  </p>
+</blockquote>
+<p class="note">Note: Renaming a model that is a dependency to another model will automatically change the model imports for those models. If source model CustomerSource is renamed to <strong>OldCustomerSource</strong>, for instance, the import statement for the view model <strong>CustomerAccounts</strong> which imports CustomerSource will be changed to reflect the new name.</p>
+
+<p class="style4"><span class="subtitle_b16"><a name="moveModel" id="moveModel"></a>Move a Model</span></p>
+<p>To move a model:</p>
+<blockquote>
+  <p><strong>Step 1:</strong> Select a model in the <strong><a href="ModelExplorer.htm">Model Explorer</a></strong>.</p>
+  <p><strong>Step 2: </strong>Right-click select the <strong>Refactor &gt; Move</strong> action. </p>
+  <p><img src="images/views/MoveActionInExplorer.jpg"  hspace="20" border="1"></p>
+  <p><strong>Step 3:</strong> Select a new location (i.e. Project or Folder).</p>
+  <p><img src="images/views/MoveToFolderSelectionDialog.jpg" hspace="20"></p>
+  <p><strong>Step 4:</strong> Click <strong>OK</strong>.  </p>
+</blockquote>
+
+<p class="style4"><span class="subtitle_b16"><a name="saveModelAs" id="saveModelAs"></a>Save Copy of Model </span></p>
+<p>The <strong>Save As...</strong> action performs a similar function as the <strong>Rename</strong> action except the renamed model a structural copy of the original model.
+</p>
+<p>
+    <em>
+    Note: Each model object maintains it's own unique ID, so copying a model will result in a exact structural copy of your original model but with re-generated unique object IDs. Be aware that locating and copying your models via your local file system may result in runtime errors within Designer. Each model is expected to be unique and duplicate models are not permitted.</em>
+  </p>
+<p>To Save As...</p>
+<blockquote>
+  <p><strong>Step 1:</strong> Open the model you wish to copy in a <a href="ModelEditors.htm"><strong>Model Editor</strong></a> by double-clicking the model in <a href="ModelExplorer.htm"><strong>Model Explorer</strong></a> or right-click select <strong>Open</strong> action.</p>
+  <p><strong>Step 2:</strong> Select the editor tab for the model you opened. </p>
+  <p><img src="images/views/ModelEditorTabSelected.jpg" hspace="20"></p>
+  <p><strong>Step 3:</strong> Select <strong>File &gt; Save As...</strong> action to open the <strong>Save Model As </strong>dialog. </p>
+  <p><img src="images/views/SaveModelAsDialog.jpg"  hspace="20"></p>
+  <p><strong>Step 4:</strong> Enter a unique model name in the new model name text field and click<strong> OK</strong>.</p>
+  <p><strong>Step 5: </strong>If dependent models detected, the Save Model As - Import References dialog is presented to give you the opportunity to change any of the dependent models imports to reference the new model or not.</p>
+  <p><img src="images/views/SaveModelAsImportRefsDialog.jpg" hspace="20"> </p>
+</blockquote>
+
+<p class="subtitle_b16">Related Topics</p>
+<ul><li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr />
+<p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
+</body>

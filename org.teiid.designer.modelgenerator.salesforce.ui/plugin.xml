@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+      <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            class="com.metamatrix.modeler.modelgenerator.salesforce.ui.wizards.SalesforceToRelationalImportWizard"
+            name="%wizardName"
+            id="SalesforceToRelationalImportWizard"
+            icon="icons/salesforce_wiz.gif"
+            category="com.metamatrix.modeler.ui">
+         <description>
+            %wizardDescription
+         </description>
+      </wizard>
+   </extension>
+
+</plugin>
+

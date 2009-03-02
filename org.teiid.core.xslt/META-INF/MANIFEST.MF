@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.teiid.core.xslt;singleton:=true
+Bundle-Version: 6.0.0
+Bundle-ClassPath: coreXslt.jar
+Bundle-Activator: com.metamatrix.core.xslt.CoreXsltPlugin
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Require-Bundle: org.teiid.core.designer,
+ net.sf.saxon,
+ org.eclipse.core.runtime,
+ teiid_embedded_query
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: com.metamatrix.core.xslt,
+ com.metamatrix.core.xslt.impl

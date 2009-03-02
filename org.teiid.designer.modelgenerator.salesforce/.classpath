@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="axis.jar" sourcepath="com.metamatrix.modeler.modelgenerator.salesforcesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="salesforce.jar" sourcepath="com.metamatrix.modeler.modelgenerator.salesforcesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="jaxrpc.jar" sourcepath="com.metamatrix.modeler.modelgenerator.salesforcesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="commons-codec-1.2.jar" sourcepath="com.metamatrix.modeler.modelgenerator.salesforcesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="commons-httpclient-3.0.1.jar" sourcepath="com.metamatrix.modeler.modelgenerator.salesforcesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="commons-discovery-0.2.jar" sourcepath="com.metamatrix.modeler.modelgenerator.salesforcesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="log4j-1.2.8.jar" sourcepath="com.metamatrix.modeler.modelgenerator.salesforcesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="saaj.jar" sourcepath="com.metamatrix.modeler.modelgenerator.salesforcesrc.zip"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -1,0 +1,1 @@
+This directory will contain the work area for building a WAR file.

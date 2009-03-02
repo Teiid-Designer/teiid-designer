@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:8d51c900-2d77-102a-9105-c93e8cc4584e" description="The description for the model:  Interface Model" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" ProducerName="Teiid Designer" ProducerVersion="5.0">
+    <modelImports xmi:uuid="mmuuid:c36181c0-2d77-102a-9105-c93e8cc4584e" name="InterfaceExtModel" modelLocation="InterfaceExtModel.xmi" uuid="mmuuid:cb857140-1b47-1026-9b3b-db39dc8c2bab" modelType="EXTENSION" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Extension"/>
+    <modelImports xmi:uuid="mmuuid:aee07bc1-2d77-102a-9105-c93e8cc4584e" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
+    <extensionPackage href="InterfaceExtModel.xmi#mmuuid/d6ba1840-1b47-1026-9b3b-db39dc8c2bab"/>
+  </mmcore:ModelAnnotation>
+  <Relational:Catalog xmi:uuid="mmuuid:9f05a540-2d77-102a-9105-c93e8cc4584e" name="GTN" nameInSource="GTN">
+    <schemas xmi:uuid="mmuuid:a1d2cf00-2d77-102a-9105-c93e8cc4584e" name="DAAS" nameInSource="DAAS">
+      <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:a678fe80-2d77-102a-9105-c93e8cc4584e" name="DaasQrs" nameInSource="DaasQrs">
+        <columns xmi:uuid="mmuuid:aee07bc0-2d77-102a-9105-c93e8cc4584e" name="Event_ID_Type_Code" nameInSource="Event ID Type Code" nativeType="ALPHABETIC" length="1" nullable="NO_NULLS" updateable="false">
+          <type href="http://www.w3.org/2001/XMLSchema#string"/>
+        </columns>
+      </tables>
+    </schemas>
+  </Relational:Catalog>
+  <mmcore:AnnotationContainer xmi:uuid="mmuuid:a76d2280-2d77-102a-9105-c93e8cc4584e">
+    <annotations xmi:uuid="mmuuid:a76d2281-2d77-102a-9105-c93e8cc4584e" description="There are two mandatory parameters &quot;&quot;[QUERY]&quot;&quot; (must appear as shown between the quotes) and &quot;&quot;Name: DaasQrs&quot;&quot; (must appear as shown between the quotes).  Two qualifers maybe used; lasttime (optional) and thistime (optional)." annotatedObject="mmuuid/a678fe80-2d77-102a-9105-c93e8cc4584e">
+      <tags xmi:uuid="mmuuid:a76d2282-2d77-102a-9105-c93e8cc4584e" key="RCMNQ_PART_ID" value="237"/>
+      <tags xmi:uuid="mmuuid:a76d2284-2d77-102a-9105-c93e8cc4584e" key="IDE_DEF_TX" value="There are two mandatory parameters &quot;&quot;[QUERY]&quot;&quot; (must appear as shown between the quotes) and &quot;&quot;Name: DaasQrs&quot;&quot; (must appear as shown between the quotes).  Two qualifers maybe used; lasttime (optional) and thistime (optional)."/>
+      <tags xmi:uuid="mmuuid:a76d2286-2d77-102a-9105-c93e8cc4584e" key="S_AIS_ID" value="10000822"/>
+      <tags xmi:uuid="mmuuid:a76d2288-2d77-102a-9105-c93e8cc4584e" key="R_AIS_ID" value="10000254"/>
+      <tags xmi:uuid="mmuuid:a76d228a-2d77-102a-9105-c93e8cc4584e" key="SCMNQ_PART_ID" value="128"/>
+    </annotations>
+    <annotations xmi:uuid="mmuuid:aee07bc3-2d77-102a-9105-c93e8cc4584e" description="A = arrive, D = depart.  IRDD did not provide Data Definitions or Legal Checks   START-END BYTE:   1-1" annotatedObject="mmuuid/aee07bc0-2d77-102a-9105-c93e8cc4584e">
+      <tags xmi:uuid="mmuuid:aee07bc4-2d77-102a-9105-c93e8cc4584e" key="IDE_DEF_TX" value="Event ID Type Code"/>
+      <tags xmi:uuid="mmuuid:aee07bc6-2d77-102a-9105-c93e8cc4584e" key="INTE_SEQ_ID" value="1"/>
+    </annotations>
+  </mmcore:AnnotationContainer>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:eea14340-2f9e-102c-bb23-b5ceee4c6517">
+    <diagram xmi:uuid="mmuuid:eea14341-2f9e-102c-bb23-b5ceee4c6517" type="packageDiagramType" target="mmuuid/8d51c900-2d77-102a-9105-c93e8cc4584e">
+      <diagramEntity xmi:uuid="mmuuid:f2534ec0-2f9e-102c-bb23-b5ceee4c6517" modelObject="mmuuid/9f05a540-2d77-102a-9105-c93e8cc4584e" xPosition="10" yPosition="10"/>
+    </diagram>
+  </Diagram:DiagramContainer>
+</xmi:XMI>

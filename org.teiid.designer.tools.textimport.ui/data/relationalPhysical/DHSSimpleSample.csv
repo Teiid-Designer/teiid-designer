@@ -1,0 +1,10 @@
+OBJECT,TABLE NAME,Comments,,,
+TABLE,PA_PROJECT_ALL,"PA_PROJECTS_ALL stores the highest units of work defined in Oracle Projects at which funding can be allocated and at which revenue, invoices, unbilled receivables, and unearned revenue are generated and maintained. At the project level, users can specify the methods to be used for revenue accrual and billing, and the invoice formats to be used for invoicing. A project is broken down into one or more tasks. All projects can be funded by one or more agreements.",,,
+OBJECT,Name,Datatype,Length,Mandatory,Comments
+COLUMN,PROJECT_ID,NUMBER,-15,Yes,The system-generated number that uniquely identifies the project
+COLUMN,NAME,VARCHAR2,-30,Yes,User-defined name that uniquely identifies the project
+COLUMN,SEGMENT1,VARCHAR2,-25,Yes,The project number that uniquely identifies the project. The project number can be user-entered or system-generated as defined in the implementation options
+COLUMN,TABLE_2, NUMBER(5,2), Some Description
+COLUMN,TABLE SPACE NAME, VARCHAR(255), Some Description
+INDEX,PA_PROJECTS_U1 ,NORMAL ,UNIQUE ,APPS_TS_TX_IDX ,PROJECT_ID
+INDEX,PA_PROJECTS_U2 ,NORMAL ,UNIQUE ,APPS_TS_TX_IDX ,SEGMENT1, PROJECT_ID 
