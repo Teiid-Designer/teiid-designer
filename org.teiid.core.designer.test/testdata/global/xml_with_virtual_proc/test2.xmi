@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:DataAccess="http://www.metamatrix.com/metamodels/DataAccess" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Transformation="http://www.metamatrix.com/metamodels/Transformation" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:2199a400-2f02-1f15-890c-cdb9b341bd39" primaryMetamodelUri="http://www.metamatrix.com/metamodels/DataAccess" modelType="VIRTUAL">
+    <modelImports xmi:uuid="mmuuid:f9b9a740-5f01-1f8b-b83e-884634e23d85" name="test" path="/XML with virtual proc/test.xmi" uuid="mmuuid:3406c880-4de9-1f13-890c-cdb9b341bd39" modelType="VIRTUAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>
+    <modelImports xmi:uuid="mmuuid:3990e206-2f23-1f15-890c-cdb9b341bd39" name="XMLSchema" path="http://www.w3.org/2001/XMLSchema"/>
+  </mmcore:ModelAnnotation>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:3e72e501-2f02-1f15-890c-cdb9b341bd39">
+    <diagram xmi:uuid="mmuuid:3e72e500-2f02-1f15-890c-cdb9b341bd39" type="packageDiagramType" target="mmuuid/2199a400-2f02-1f15-890c-cdb9b341bd39">
+      <diagramEntity xmi:uuid="mmuuid:186c4940-2f03-1f15-890c-cdb9b341bd39" modelObject="mmuuid/b01d67c1-2f02-1f15-890c-cdb9b341bd39" xPosition="60" yPosition="40" height="46" width="100"/>
+    </diagram>
+    <diagram xmi:uuid="mmuuid:159f1f80-2f03-1f15-890c-cdb9b341bd39" type="transformationDiagramType" target="mmuuid/b01d67c1-2f02-1f15-890c-cdb9b341bd39">
+      <diagramEntity xmi:uuid="mmuuid:329764c0-2f04-1f15-890c-cdb9b341bd39" modelObject="mmuuid/b01d67c1-2f02-1f15-890c-cdb9b341bd39" xPosition="10" yPosition="72" height="88" width="179"/>
+      <diagramEntity xmi:uuid="mmuuid:329764c1-2f04-1f15-890c-cdb9b341bd39" name="T" modelObject="mmuuid/31a340c0-2f04-1f15-890c-cdb9b341bd39" xPosition="200" yPosition="75" height="40" width="40"/>
+      <diagramEntity xmi:uuid="mmuuid:45962b00-2f19-1f15-890c-cdb9b341bd39" xPosition="360" yPosition="10" height="161" width="179">
+        <modelObject href="test.xmi#mmuuid/5be3d144-9ab0-1f13-890c-cdb9b341bd39"/>
+      </diagramEntity>
+    </diagram>
+  </Diagram:DiagramContainer>
+  <DataAccess:Group xmi:uuid="mmuuid:b01d67c1-2f02-1f15-890c-cdb9b341bd39" name="NewGroup" supportsUpdate="false">
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:37b7dc42-2f23-1f15-890c-cdb9b341bd39" name="KEY" length="1">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:3990e200-2f23-1f15-890c-cdb9b341bd39" name="KEYVALUESTRING" length="1">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+  </DataAccess:Group>
+  <Transformation:TransformationContainer xmi:uuid="mmuuid:31a340c1-2f04-1f15-890c-cdb9b341bd39">
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:31a340c0-2f04-1f15-890c-cdb9b341bd39" outputs="mmuuid/b01d67c1-2f02-1f15-890c-cdb9b341bd39" target="mmuuid/b01d67c1-2f02-1f15-890c-cdb9b341bd39">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:329764c2-2f04-1f15-890c-cdb9b341bd39" selectSql="SELECT * FROM (EXEC mmuuid:5be3d144-9ab0-1f13-890c-cdb9b341bd39()) AS X">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:329764c3-2f04-1f15-890c-cdb9b341bd39" selectSql="SELECT * FROM (EXEC test.NewProcedure2()) AS X"/>
+        <aliases xmi:uuid="mmuuid:37b7dc41-2f23-1f15-890c-cdb9b341bd39" alias="X">
+          <aliasedObject href="test.xmi#mmuuid/5be3d144-9ab0-1f13-890c-cdb9b341bd39"/>
+        </aliases>
+      </helper>
+      <nested xmi:uuid="mmuuid:8eb86983-cf26-1f15-bd16-8e8b18a32c12" outputs="mmuuid/37b7dc42-2f23-1f15-890c-cdb9b341bd39"/>
+      <nested xmi:uuid="mmuuid:8eb86984-cf26-1f15-bd16-8e8b18a32c12" outputs="mmuuid/3990e200-2f23-1f15-890c-cdb9b341bd39"/>
+      <inputs href="test.xmi#mmuuid/5be3d144-9ab0-1f13-890c-cdb9b341bd39"/>
+    </transformationMappings>
+  </Transformation:TransformationContainer>
+</xmi:XMI>

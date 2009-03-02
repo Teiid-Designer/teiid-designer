@@ -1,0 +1,1367 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:Transformation="http://www.metamatrix.com/metamodels/Transformation" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:41aa12c0-0c61-1fdd-a111-9e2a025af01a" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="VIRTUAL" ProducerName="Teiid Designer" ProducerVersion="5.0">
+    <modelImports xmi:uuid="mmuuid:41aa12c1-0c61-1fdd-a111-9e2a025af01a" name="MetamodelRelationalModel" modelLocation="MetamodelRelationalModel.xmi" uuid="mmuuid:e905e9c0-0be1-1fdd-b71a-f192de768052" modelType="PHYSICAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>
+    <modelImports xmi:uuid="mmuuid:41aa12c2-0c61-1fdd-a111-9e2a025af01a" name="DtcBase" modelLocation="DtcBase.xmi" uuid="mmuuid:cc688ac0-0c59-1fdd-a111-9e2a025af01a" modelType="VIRTUAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>
+  </mmcore:ModelAnnotation>
+  <Relational:BaseTable xmi:uuid="mmuuid:41aa12c3-0c61-1fdd-a111-9e2a025af01a" name="NullableType" nameInSource="DD_RELT_NULLBLTYP" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:41aa12c6-0c61-1fdd-a111-9e2a025af01a" name="Id" nameInSource="ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa12c5-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12c4-0c61-1fdd-a111-9e2a025af01a" name="Value" nameInSource="VALUE" length="500" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:41aa12c5-0c61-1fdd-a111-9e2a025af01a" name="PkNullableType" nameInSource="DD_RELT_PKNLLBLTYP" columns="mmuuid/41aa12c6-0c61-1fdd-a111-9e2a025af01a" foreignKeys="mmuuid/41aa12de-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa134f-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:41aa12c7-0c61-1fdd-a111-9e2a025af01a" name="DirectionKind" nameInSource="DD_RELT_DIRCTNKND" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:41aa12ca-0c61-1fdd-a111-9e2a025af01a" name="Id" nameInSource="ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa12c8-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12c9-0c61-1fdd-a111-9e2a025af01a" name="Value" nameInSource="VALUE" length="500" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:41aa12c8-0c61-1fdd-a111-9e2a025af01a" name="PkDirectionKind" nameInSource="DD_RELT_PKDRCTNKND" columns="mmuuid/41aa12ca-0c61-1fdd-a111-9e2a025af01a" foreignKeys="mmuuid/41aa135b-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:41aa12cb-0c61-1fdd-a111-9e2a025af01a" name="MultiplicityKind" nameInSource="DD_RELT_MULTPLCTYK" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:41aa12cd-0c61-1fdd-a111-9e2a025af01a" name="Id" nameInSource="ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa12cc-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12ce-0c61-1fdd-a111-9e2a025af01a" name="Value" nameInSource="VALUE" length="500" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:41aa12cc-0c61-1fdd-a111-9e2a025af01a" name="PkMultiplicityKind" nameInSource="DD_RELT_PKMLTPLCTY" columns="mmuuid/41aa12cd-0c61-1fdd-a111-9e2a025af01a" foreignKeys="mmuuid/41aa131a-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa131b-0c61-1fdd-a111-9e2a025af01a mmuuid/429e36dc-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:41aa12cf-0c61-1fdd-a111-9e2a025af01a" name="SearchabilityType" nameInSource="DD_RELT_SEARCHBLTY" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:41aa12d1-0c61-1fdd-a111-9e2a025af01a" name="Id" nameInSource="ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa12d0-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12d2-0c61-1fdd-a111-9e2a025af01a" name="Value" nameInSource="VALUE" length="500" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:41aa12d0-0c61-1fdd-a111-9e2a025af01a" name="PkSearchabilityType" nameInSource="DD_RELT_PKSRCHBLTY" columns="mmuuid/41aa12d1-0c61-1fdd-a111-9e2a025af01a" foreignKeys="mmuuid/41aa12f4-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:41aa12d3-0c61-1fdd-a111-9e2a025af01a" name="Column" nameInSource="DD_RELT_COLMN" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:41aa12e8-0c61-1fdd-a111-9e2a025af01a" name="LogicalId" nameInSource="LGCL_ID" length="1000" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12ed-0c61-1fdd-a111-9e2a025af01a" name="UuidPart1" nameInSource="UUID1" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa12f3-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12f6-0c61-1fdd-a111-9e2a025af01a" name="UuidPart2" nameInSource="UUID2" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa12f3-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12ef-0c61-1fdd-a111-9e2a025af01a" name="UuidString" nameInSource="UUID_STRING" length="44" nullable="NO_NULLS" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12f2-0c61-1fdd-a111-9e2a025af01a" name="Name" nameInSource="NAM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12f1-0c61-1fdd-a111-9e2a025af01a" name="NameInSource" nameInSource="NAMNSRC" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12d9-0c61-1fdd-a111-9e2a025af01a" name="NativeType" nameInSource="NATVTYP" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12d8-0c61-1fdd-a111-9e2a025af01a" name="Length" nameInSource="LENGTH" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12df-0c61-1fdd-a111-9e2a025af01a" name="FixedLength" nameInSource="FIXDLNGTH" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12d7-0c61-1fdd-a111-9e2a025af01a" name="Precision" nameInSource="PRECSN" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12e2-0c61-1fdd-a111-9e2a025af01a" name="Scale" nameInSource="SCAL" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12d6-0c61-1fdd-a111-9e2a025af01a" name="Nullable" nameInSource="NULLBL" precision="20" updateable="false" foreignKeys="mmuuid/41aa12de-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12ee-0c61-1fdd-a111-9e2a025af01a" name="AutoIncremented" nameInSource="AUTNCRMNTD" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12dc-0c61-1fdd-a111-9e2a025af01a" name="DefaultValue" nameInSource="DEFLTVL" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12e7-0c61-1fdd-a111-9e2a025af01a" name="MinimumValue" nameInSource="MINMMVL" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12dd-0c61-1fdd-a111-9e2a025af01a" name="MaximumValue" nameInSource="MAXMMVL" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12eb-0c61-1fdd-a111-9e2a025af01a" name="Format" nameInSource="FORMT" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12e3-0c61-1fdd-a111-9e2a025af01a" name="CharacterSetName" nameInSource="CHARCTRSTNM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12f0-0c61-1fdd-a111-9e2a025af01a" name="CollationName" nameInSource="COLLTNNM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12e0-0c61-1fdd-a111-9e2a025af01a" name="Selectable" nameInSource="SELCTBL" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12e1-0c61-1fdd-a111-9e2a025af01a" name="Updateable" nameInSource="UPDTBL" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12ec-0c61-1fdd-a111-9e2a025af01a" name="CaseSensitive" nameInSource="CASSNSTV" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12e9-0c61-1fdd-a111-9e2a025af01a" name="Searchability" nameInSource="SEARCHBLTY" precision="20" updateable="false" foreignKeys="mmuuid/41aa12f4-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12d5-0c61-1fdd-a111-9e2a025af01a" name="Currency" nameInSource="CURRNCY" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12da-0c61-1fdd-a111-9e2a025af01a" name="Radix" nameInSource="RADX" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12f7-0c61-1fdd-a111-9e2a025af01a" name="Signed" nameInSource="SIGND" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12e6-0c61-1fdd-a111-9e2a025af01a" name="DistinctValueCount" nameInSource="DISTNCTVLCNT" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12e4-0c61-1fdd-a111-9e2a025af01a" name="NullValueCount" nameInSource="NULLVLCNT" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12e5-0c61-1fdd-a111-9e2a025af01a" name="UniqueKeys" nameInSource="UNIQKYS" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12ea-0c61-1fdd-a111-9e2a025af01a" name="Indexes" nameInSource="INDXS" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12f8-0c61-1fdd-a111-9e2a025af01a" name="ForeignKeys" nameInSource="FORGNKYS" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12db-0c61-1fdd-a111-9e2a025af01a" name="AccessPatterns" nameInSource="ACCSSPTTRNS" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12d4-0c61-1fdd-a111-9e2a025af01a" name="Type" nameInSource="TYP" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12f5-0c61-1fdd-a111-9e2a025af01a" name="TransactionId" nameInSource="TXN_ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa12f3-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <foreignKeys xmi:uuid="mmuuid:41aa12de-0c61-1fdd-a111-9e2a025af01a" name="FkNullable" nameInSource="DD_RELT_FK_NLLBL" columns="mmuuid/41aa12d6-0c61-1fdd-a111-9e2a025af01a" uniqueKey="mmuuid/41aa12c5-0c61-1fdd-a111-9e2a025af01a"/>
+    <foreignKeys xmi:uuid="mmuuid:41aa12f4-0c61-1fdd-a111-9e2a025af01a" name="FkSearchability" nameInSource="DD_RELT_FK_SRCHBLT" columns="mmuuid/41aa12e9-0c61-1fdd-a111-9e2a025af01a" uniqueKey="mmuuid/41aa12d0-0c61-1fdd-a111-9e2a025af01a"/>
+    <primaryKey xmi:uuid="mmuuid:41aa12f3-0c61-1fdd-a111-9e2a025af01a" name="PkColumn" nameInSource="DD_RELT_PK_CLMN" columns="mmuuid/41aa12ed-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa12f6-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa12f5-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:41aa12f9-0c61-1fdd-a111-9e2a025af01a" name="Schema" nameInSource="DD_RELT_SCHM" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:41aa12fe-0c61-1fdd-a111-9e2a025af01a" name="LogicalId" nameInSource="LGCL_ID" length="1000" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12fd-0c61-1fdd-a111-9e2a025af01a" name="UuidPart1" nameInSource="UUID1" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa12ff-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12fb-0c61-1fdd-a111-9e2a025af01a" name="UuidPart2" nameInSource="UUID2" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa12ff-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1301-0c61-1fdd-a111-9e2a025af01a" name="UuidString" nameInSource="UUID_STRING" length="44" nullable="NO_NULLS" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12fa-0c61-1fdd-a111-9e2a025af01a" name="Name" nameInSource="NAM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa12fc-0c61-1fdd-a111-9e2a025af01a" name="NameInSource" nameInSource="NAMNSRC" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1300-0c61-1fdd-a111-9e2a025af01a" name="TransactionId" nameInSource="TXN_ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa12ff-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:41aa12ff-0c61-1fdd-a111-9e2a025af01a" name="PkSchema" nameInSource="DD_RELT_PK_SCHM" columns="mmuuid/41aa12fd-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa12fb-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa1300-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:41aa1302-0c61-1fdd-a111-9e2a025af01a" name="PrimaryKey" nameInSource="DD_RELT_PRIMRYKY" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:41aa1307-0c61-1fdd-a111-9e2a025af01a" name="LogicalId" nameInSource="LGCL_ID" length="1000" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1306-0c61-1fdd-a111-9e2a025af01a" name="UuidPart1" nameInSource="UUID1" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa130c-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1308-0c61-1fdd-a111-9e2a025af01a" name="UuidPart2" nameInSource="UUID2" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa130c-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa130a-0c61-1fdd-a111-9e2a025af01a" name="UuidString" nameInSource="UUID_STRING" length="44" nullable="NO_NULLS" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1303-0c61-1fdd-a111-9e2a025af01a" name="Name" nameInSource="NAM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa130b-0c61-1fdd-a111-9e2a025af01a" name="NameInSource" nameInSource="NAMNSRC" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1309-0c61-1fdd-a111-9e2a025af01a" name="Columns" nameInSource="COLMNS" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1304-0c61-1fdd-a111-9e2a025af01a" name="ForeignKeys" nameInSource="FORGNKYS" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1305-0c61-1fdd-a111-9e2a025af01a" name="TransactionId" nameInSource="TXN_ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa130c-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:41aa130c-0c61-1fdd-a111-9e2a025af01a" name="PkPrimaryKey" nameInSource="DD_RELT_PK_PRMRYKY" columns="mmuuid/41aa1306-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa1308-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa1305-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:41aa130d-0c61-1fdd-a111-9e2a025af01a" name="ForeignKey" nameInSource="DD_RELT_FORGNKY" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:41aa1319-0c61-1fdd-a111-9e2a025af01a" name="LogicalId" nameInSource="LGCL_ID" length="1000" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1317-0c61-1fdd-a111-9e2a025af01a" name="UuidPart1" nameInSource="UUID1" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa1315-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa130e-0c61-1fdd-a111-9e2a025af01a" name="UuidPart2" nameInSource="UUID2" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa1315-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1314-0c61-1fdd-a111-9e2a025af01a" name="UuidString" nameInSource="UUID_STRING" length="44" nullable="NO_NULLS" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1313-0c61-1fdd-a111-9e2a025af01a" name="Name" nameInSource="NAM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1316-0c61-1fdd-a111-9e2a025af01a" name="NameInSource" nameInSource="NAMNSRC" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa130f-0c61-1fdd-a111-9e2a025af01a" name="ForeignKeyMultiplicity" nameInSource="FORGNKYMLTPLCTY" precision="20" updateable="false" foreignKeys="mmuuid/41aa131a-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1311-0c61-1fdd-a111-9e2a025af01a" name="PrimaryKeyMultiplicity" nameInSource="PRIMRYKYMLTPLCTY" precision="20" updateable="false" foreignKeys="mmuuid/41aa131b-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1310-0c61-1fdd-a111-9e2a025af01a" name="Columns" nameInSource="COLMNS" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1312-0c61-1fdd-a111-9e2a025af01a" name="UniqueKey" nameInSource="UNIQKY" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1318-0c61-1fdd-a111-9e2a025af01a" name="TransactionId" nameInSource="TXN_ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa1315-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <foreignKeys xmi:uuid="mmuuid:41aa131a-0c61-1fdd-a111-9e2a025af01a" name="FkForeignKeyMultiplicity" nameInSource="DD_RELT_FK_FRGNKYM" columns="mmuuid/41aa130f-0c61-1fdd-a111-9e2a025af01a" uniqueKey="mmuuid/41aa12cc-0c61-1fdd-a111-9e2a025af01a"/>
+    <foreignKeys xmi:uuid="mmuuid:41aa131b-0c61-1fdd-a111-9e2a025af01a" name="FkPrimaryKeyMultiplicity" nameInSource="DD_RELT_FK_PRMRYKY" columns="mmuuid/41aa1311-0c61-1fdd-a111-9e2a025af01a" uniqueKey="mmuuid/41aa12cc-0c61-1fdd-a111-9e2a025af01a"/>
+    <primaryKey xmi:uuid="mmuuid:41aa1315-0c61-1fdd-a111-9e2a025af01a" name="PkForeignKey" nameInSource="DD_RELT_PK_FRGNKY" columns="mmuuid/41aa1317-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa130e-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa1318-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:41aa131c-0c61-1fdd-a111-9e2a025af01a" name="View" nameInSource="DD_RELT_VIEW" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:41aa131d-0c61-1fdd-a111-9e2a025af01a" name="LogicalId" nameInSource="LGCL_ID" length="1000" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1328-0c61-1fdd-a111-9e2a025af01a" name="UuidPart1" nameInSource="UUID1" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa131f-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1327-0c61-1fdd-a111-9e2a025af01a" name="UuidPart2" nameInSource="UUID2" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa131f-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1326-0c61-1fdd-a111-9e2a025af01a" name="UuidString" nameInSource="UUID_STRING" length="44" nullable="NO_NULLS" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1324-0c61-1fdd-a111-9e2a025af01a" name="Name" nameInSource="NAM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1321-0c61-1fdd-a111-9e2a025af01a" name="NameInSource" nameInSource="NAMNSRC" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1323-0c61-1fdd-a111-9e2a025af01a" name="System" nameInSource="SYSTM" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1325-0c61-1fdd-a111-9e2a025af01a" name="Cardinality" nameInSource="CARDNLTY" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1320-0c61-1fdd-a111-9e2a025af01a" name="SupportsUpdate" nameInSource="SUPPRTSPDT" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1322-0c61-1fdd-a111-9e2a025af01a" name="Materialized" nameInSource="MATRLZD" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa131e-0c61-1fdd-a111-9e2a025af01a" name="LogicalRelationships" nameInSource="LOGCLRLTNSHPS" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1329-0c61-1fdd-a111-9e2a025af01a" name="TransactionId" nameInSource="TXN_ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa131f-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:41aa131f-0c61-1fdd-a111-9e2a025af01a" name="PkView" nameInSource="DD_RELT_PK_VW" columns="mmuuid/41aa1328-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa1327-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa1329-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:41aa132a-0c61-1fdd-a111-9e2a025af01a" name="Catalog" nameInSource="DD_RELT_CATLG" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:41aa1331-0c61-1fdd-a111-9e2a025af01a" name="LogicalId" nameInSource="LGCL_ID" length="1000" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa132d-0c61-1fdd-a111-9e2a025af01a" name="UuidPart1" nameInSource="UUID1" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa132e-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa132c-0c61-1fdd-a111-9e2a025af01a" name="UuidPart2" nameInSource="UUID2" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa132e-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa132f-0c61-1fdd-a111-9e2a025af01a" name="UuidString" nameInSource="UUID_STRING" length="44" nullable="NO_NULLS" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1330-0c61-1fdd-a111-9e2a025af01a" name="Name" nameInSource="NAM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa132b-0c61-1fdd-a111-9e2a025af01a" name="NameInSource" nameInSource="NAMNSRC" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1332-0c61-1fdd-a111-9e2a025af01a" name="TransactionId" nameInSource="TXN_ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa132e-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:41aa132e-0c61-1fdd-a111-9e2a025af01a" name="PkCatalog" nameInSource="DD_RELT_PK_CTLG" columns="mmuuid/41aa132d-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa132c-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa1332-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:41aa1333-0c61-1fdd-a111-9e2a025af01a" name="Procedure" nameInSource="DD_RELT_PROCDR" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:41aa133c-0c61-1fdd-a111-9e2a025af01a" name="LogicalId" nameInSource="LGCL_ID" length="1000" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa133a-0c61-1fdd-a111-9e2a025af01a" name="UuidPart1" nameInSource="UUID1" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa1335-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa133b-0c61-1fdd-a111-9e2a025af01a" name="UuidPart2" nameInSource="UUID2" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa1335-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1334-0c61-1fdd-a111-9e2a025af01a" name="UuidString" nameInSource="UUID_STRING" length="44" nullable="NO_NULLS" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1337-0c61-1fdd-a111-9e2a025af01a" name="Name" nameInSource="NAM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1339-0c61-1fdd-a111-9e2a025af01a" name="NameInSource" nameInSource="NAMNSRC" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1336-0c61-1fdd-a111-9e2a025af01a" name="Function" nameInSource="FUNCTN" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1338-0c61-1fdd-a111-9e2a025af01a" name="TransactionId" nameInSource="TXN_ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa1335-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:41aa1335-0c61-1fdd-a111-9e2a025af01a" name="PkProcedure" nameInSource="DD_RELT_PK_PRCDR" columns="mmuuid/41aa133a-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa133b-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa1338-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:41aa133d-0c61-1fdd-a111-9e2a025af01a" name="Index" nameInSource="DD_RELT_INDX" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:41aa1343-0c61-1fdd-a111-9e2a025af01a" name="LogicalId" nameInSource="LGCL_ID" length="1000" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1346-0c61-1fdd-a111-9e2a025af01a" name="UuidPart1" nameInSource="UUID1" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa1345-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa133e-0c61-1fdd-a111-9e2a025af01a" name="UuidPart2" nameInSource="UUID2" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa1345-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa133f-0c61-1fdd-a111-9e2a025af01a" name="UuidString" nameInSource="UUID_STRING" length="44" nullable="NO_NULLS" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1344-0c61-1fdd-a111-9e2a025af01a" name="Name" nameInSource="NAM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1349-0c61-1fdd-a111-9e2a025af01a" name="NameInSource" nameInSource="NAMNSRC" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1340-0c61-1fdd-a111-9e2a025af01a" name="FilterCondition" nameInSource="FILTRCNDTN" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1341-0c61-1fdd-a111-9e2a025af01a" name="Nullable" nameInSource="NULLBL" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1342-0c61-1fdd-a111-9e2a025af01a" name="AutoUpdate" nameInSource="AUTPDT" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1348-0c61-1fdd-a111-9e2a025af01a" name="Unique" nameInSource="UNIQ" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa134a-0c61-1fdd-a111-9e2a025af01a" name="Columns" nameInSource="COLMNS" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1347-0c61-1fdd-a111-9e2a025af01a" name="TransactionId" nameInSource="TXN_ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa1345-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:41aa1345-0c61-1fdd-a111-9e2a025af01a" name="PkIndex" nameInSource="DD_RELT_PK_NDX" columns="mmuuid/41aa1346-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa133e-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa1347-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:41aa134b-0c61-1fdd-a111-9e2a025af01a" name="ProcedureParameter" nameInSource="DD_RELT_PROCDRPRMT" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:41aa1352-0c61-1fdd-a111-9e2a025af01a" name="LogicalId" nameInSource="LGCL_ID" length="1000" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa135d-0c61-1fdd-a111-9e2a025af01a" name="UuidPart1" nameInSource="UUID1" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa1354-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa135e-0c61-1fdd-a111-9e2a025af01a" name="UuidPart2" nameInSource="UUID2" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa1354-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1356-0c61-1fdd-a111-9e2a025af01a" name="UuidString" nameInSource="UUID_STRING" length="44" nullable="NO_NULLS" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1359-0c61-1fdd-a111-9e2a025af01a" name="Name" nameInSource="NAM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa135a-0c61-1fdd-a111-9e2a025af01a" name="NameInSource" nameInSource="NAMNSRC" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa135c-0c61-1fdd-a111-9e2a025af01a" name="Direction" nameInSource="DIRCTN" precision="20" updateable="false" foreignKeys="mmuuid/41aa135b-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1355-0c61-1fdd-a111-9e2a025af01a" name="DefaultValue" nameInSource="DEFLTVL" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1351-0c61-1fdd-a111-9e2a025af01a" name="NativeType" nameInSource="NATVTYP" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1357-0c61-1fdd-a111-9e2a025af01a" name="Length" nameInSource="LENGTH" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa134e-0c61-1fdd-a111-9e2a025af01a" name="Precision" nameInSource="PRECSN" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa134c-0c61-1fdd-a111-9e2a025af01a" name="Scale" nameInSource="SCAL" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa134d-0c61-1fdd-a111-9e2a025af01a" name="Nullable" nameInSource="NULLBL" precision="20" updateable="false" foreignKeys="mmuuid/41aa134f-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1353-0c61-1fdd-a111-9e2a025af01a" name="Radix" nameInSource="RADX" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1358-0c61-1fdd-a111-9e2a025af01a" name="Type" nameInSource="TYP" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1350-0c61-1fdd-a111-9e2a025af01a" name="TransactionId" nameInSource="TXN_ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/41aa1354-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <foreignKeys xmi:uuid="mmuuid:41aa135b-0c61-1fdd-a111-9e2a025af01a" name="FkDirection_1" nameInSource="DD_RELT_FK_DRCTN" columns="mmuuid/41aa135c-0c61-1fdd-a111-9e2a025af01a" uniqueKey="mmuuid/41aa12c8-0c61-1fdd-a111-9e2a025af01a"/>
+    <foreignKeys xmi:uuid="mmuuid:41aa134f-0c61-1fdd-a111-9e2a025af01a" name="FkNullable_1" nameInSource="DD_RELT_FK_NLLBL_1" columns="mmuuid/41aa134d-0c61-1fdd-a111-9e2a025af01a" uniqueKey="mmuuid/41aa12c5-0c61-1fdd-a111-9e2a025af01a"/>
+    <primaryKey xmi:uuid="mmuuid:41aa1354-0c61-1fdd-a111-9e2a025af01a" name="PkProcedureParameter" nameInSource="DD_RELT_PK_PRCDRPR" columns="mmuuid/41aa135d-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa135e-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa1350-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:41aa135f-0c61-1fdd-a111-9e2a025af01a" name="UniqueConstraint" nameInSource="DD_RELT_UNIQCNSTRN" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:41aa1362-0c61-1fdd-a111-9e2a025af01a" name="LogicalId" nameInSource="LGCL_ID" length="1000" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1365-0c61-1fdd-a111-9e2a025af01a" name="UuidPart1" nameInSource="UUID1" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36c1-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1360-0c61-1fdd-a111-9e2a025af01a" name="UuidPart2" nameInSource="UUID2" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36c1-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36c0-0c61-1fdd-a111-9e2a025af01a" name="UuidString" nameInSource="UUID_STRING" length="44" nullable="NO_NULLS" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36c2-0c61-1fdd-a111-9e2a025af01a" name="Name" nameInSource="NAM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1364-0c61-1fdd-a111-9e2a025af01a" name="NameInSource" nameInSource="NAMNSRC" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1363-0c61-1fdd-a111-9e2a025af01a" name="Columns" nameInSource="COLMNS" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36c3-0c61-1fdd-a111-9e2a025af01a" name="ForeignKeys" nameInSource="FORGNKYS" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:41aa1361-0c61-1fdd-a111-9e2a025af01a" name="TransactionId" nameInSource="TXN_ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36c1-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:429e36c1-0c61-1fdd-a111-9e2a025af01a" name="PkUniqueConstraint" nameInSource="DD_RELT_PK_NQCNSTR" columns="mmuuid/41aa1365-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa1360-0c61-1fdd-a111-9e2a025af01a mmuuid/41aa1361-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:429e36c4-0c61-1fdd-a111-9e2a025af01a" name="AccessPattern" nameInSource="DD_RELT_ACCSSPTTRN" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:429e36c6-0c61-1fdd-a111-9e2a025af01a" name="LogicalId" nameInSource="LGCL_ID" length="1000" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36c5-0c61-1fdd-a111-9e2a025af01a" name="UuidPart1" nameInSource="UUID1" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36ca-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36cd-0c61-1fdd-a111-9e2a025af01a" name="UuidPart2" nameInSource="UUID2" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36ca-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36cc-0c61-1fdd-a111-9e2a025af01a" name="UuidString" nameInSource="UUID_STRING" length="44" nullable="NO_NULLS" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36c7-0c61-1fdd-a111-9e2a025af01a" name="Name" nameInSource="NAM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36cb-0c61-1fdd-a111-9e2a025af01a" name="NameInSource" nameInSource="NAMNSRC" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36c9-0c61-1fdd-a111-9e2a025af01a" name="Columns" nameInSource="COLMNS" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36c8-0c61-1fdd-a111-9e2a025af01a" name="TransactionId" nameInSource="TXN_ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36ca-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:429e36ca-0c61-1fdd-a111-9e2a025af01a" name="PkAccessPattern" nameInSource="DD_RELT_PK_CCSSPTT" columns="mmuuid/429e36c5-0c61-1fdd-a111-9e2a025af01a mmuuid/429e36cd-0c61-1fdd-a111-9e2a025af01a mmuuid/429e36c8-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:429e36ce-0c61-1fdd-a111-9e2a025af01a" name="LogicalRelationship" nameInSource="DD_RELT_LOGCLRLTNS" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:429e36d1-0c61-1fdd-a111-9e2a025af01a" name="LogicalId" nameInSource="LGCL_ID" length="1000" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36d0-0c61-1fdd-a111-9e2a025af01a" name="UuidPart1" nameInSource="UUID1" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36d2-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36cf-0c61-1fdd-a111-9e2a025af01a" name="UuidPart2" nameInSource="UUID2" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36d2-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36d3-0c61-1fdd-a111-9e2a025af01a" name="UuidString" nameInSource="UUID_STRING" length="44" nullable="NO_NULLS" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36d4-0c61-1fdd-a111-9e2a025af01a" name="Name" nameInSource="NAM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36d5-0c61-1fdd-a111-9e2a025af01a" name="NameInSource" nameInSource="NAMNSRC" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36d6-0c61-1fdd-a111-9e2a025af01a" name="TransactionId" nameInSource="TXN_ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36d2-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:429e36d2-0c61-1fdd-a111-9e2a025af01a" name="PkLogicalRelationship" nameInSource="DD_RELT_PK_LGCLRLT" columns="mmuuid/429e36d0-0c61-1fdd-a111-9e2a025af01a mmuuid/429e36cf-0c61-1fdd-a111-9e2a025af01a mmuuid/429e36d6-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:429e36d7-0c61-1fdd-a111-9e2a025af01a" name="LogicalRelationshipEnd" nameInSource="DD_RELT_LOGCLRLT_1" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:429e36dd-0c61-1fdd-a111-9e2a025af01a" name="LogicalId" nameInSource="LGCL_ID" length="1000" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36db-0c61-1fdd-a111-9e2a025af01a" name="UuidPart1" nameInSource="UUID1" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36df-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36d8-0c61-1fdd-a111-9e2a025af01a" name="UuidPart2" nameInSource="UUID2" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36df-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36da-0c61-1fdd-a111-9e2a025af01a" name="UuidString" nameInSource="UUID_STRING" length="44" nullable="NO_NULLS" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36e1-0c61-1fdd-a111-9e2a025af01a" name="Name" nameInSource="NAM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36de-0c61-1fdd-a111-9e2a025af01a" name="NameInSource" nameInSource="NAMNSRC" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36e0-0c61-1fdd-a111-9e2a025af01a" name="Multiplicity" nameInSource="MULTPLCTY" precision="20" updateable="false" foreignKeys="mmuuid/429e36dc-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36d9-0c61-1fdd-a111-9e2a025af01a" name="Table" nameInSource="TABL" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36e2-0c61-1fdd-a111-9e2a025af01a" name="TransactionId" nameInSource="TXN_ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36df-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <foreignKeys xmi:uuid="mmuuid:429e36dc-0c61-1fdd-a111-9e2a025af01a" name="FkMultiplicity" nameInSource="DD_RELT_FK_MLTPLCT" columns="mmuuid/429e36e0-0c61-1fdd-a111-9e2a025af01a" uniqueKey="mmuuid/41aa12cc-0c61-1fdd-a111-9e2a025af01a"/>
+    <primaryKey xmi:uuid="mmuuid:429e36df-0c61-1fdd-a111-9e2a025af01a" name="PkLogicalRelationshipEnd" nameInSource="DD_RELT_PK_LGCLR_1" columns="mmuuid/429e36db-0c61-1fdd-a111-9e2a025af01a mmuuid/429e36d8-0c61-1fdd-a111-9e2a025af01a mmuuid/429e36e2-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:429e36e3-0c61-1fdd-a111-9e2a025af01a" name="BaseTable" nameInSource="DD_RELT_BASTBL" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:429e36e5-0c61-1fdd-a111-9e2a025af01a" name="LogicalId" nameInSource="LGCL_ID" length="1000" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36ee-0c61-1fdd-a111-9e2a025af01a" name="UuidPart1" nameInSource="UUID1" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36ec-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36ed-0c61-1fdd-a111-9e2a025af01a" name="UuidPart2" nameInSource="UUID2" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36ec-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36e7-0c61-1fdd-a111-9e2a025af01a" name="UuidString" nameInSource="UUID_STRING" length="44" nullable="NO_NULLS" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36f0-0c61-1fdd-a111-9e2a025af01a" name="Name" nameInSource="NAM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36ea-0c61-1fdd-a111-9e2a025af01a" name="NameInSource" nameInSource="NAMNSRC" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36e4-0c61-1fdd-a111-9e2a025af01a" name="System" nameInSource="SYSTM" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36e6-0c61-1fdd-a111-9e2a025af01a" name="Cardinality" nameInSource="CARDNLTY" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36eb-0c61-1fdd-a111-9e2a025af01a" name="SupportsUpdate" nameInSource="SUPPRTSPDT" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36ef-0c61-1fdd-a111-9e2a025af01a" name="Materialized" nameInSource="MATRLZD" length="1" updateable="false">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36e8-0c61-1fdd-a111-9e2a025af01a" name="LogicalRelationships" nameInSource="LOGCLRLTNSHPS" precision="20" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36e9-0c61-1fdd-a111-9e2a025af01a" name="TransactionId" nameInSource="TXN_ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36ec-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:429e36ec-0c61-1fdd-a111-9e2a025af01a" name="PkBaseTable" nameInSource="DD_RELT_PK_BSTBL" columns="mmuuid/429e36ee-0c61-1fdd-a111-9e2a025af01a mmuuid/429e36ed-0c61-1fdd-a111-9e2a025af01a mmuuid/429e36e9-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:429e36f1-0c61-1fdd-a111-9e2a025af01a" name="ProcedureResult" nameInSource="DD_RELT_PROCDRRSLT" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:429e36f3-0c61-1fdd-a111-9e2a025af01a" name="LogicalId" nameInSource="LGCL_ID" length="1000" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36f5-0c61-1fdd-a111-9e2a025af01a" name="UuidPart1" nameInSource="UUID1" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36f4-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36f2-0c61-1fdd-a111-9e2a025af01a" name="UuidPart2" nameInSource="UUID2" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36f4-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36f7-0c61-1fdd-a111-9e2a025af01a" name="UuidString" nameInSource="UUID_STRING" length="44" nullable="NO_NULLS" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36f6-0c61-1fdd-a111-9e2a025af01a" name="Name" nameInSource="NAM" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36f8-0c61-1fdd-a111-9e2a025af01a" name="NameInSource" nameInSource="NAMNSRC" length="256" updateable="false">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:429e36f9-0c61-1fdd-a111-9e2a025af01a" name="TransactionId" nameInSource="TXN_ID" precision="20" nullable="NO_NULLS" updateable="false" uniqueKeys="mmuuid/429e36f4-0c61-1fdd-a111-9e2a025af01a">
+      <type href="http://www.w3.org/2001/XMLSchema#long"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:429e36f4-0c61-1fdd-a111-9e2a025af01a" name="PkProcedureResult" nameInSource="DD_RELT_PK_PRCDRRS" columns="mmuuid/429e36f5-0c61-1fdd-a111-9e2a025af01a mmuuid/429e36f2-0c61-1fdd-a111-9e2a025af01a mmuuid/429e36f9-0c61-1fdd-a111-9e2a025af01a"/>
+  </Relational:BaseTable>
+  <Transformation:TransformationContainer xmi:uuid="mmuuid:43831880-0c61-1fdd-a111-9e2a025af01a">
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:43831881-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12c3-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/41aa12c3-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:535def00-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:8000ecce-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:8000ecce-0be3-1fdd-b71a-f192de768052">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:535def01-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.NullableType.* FROM MetamodelRelationalModel.Relational.NullableType"/>
+        <aliases xmi:uuid="mmuuid:5bc56c40-0c61-1fdd-a111-9e2a025af01a" alias="NullableType">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/8000ecce-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:5bc56c41-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12c6-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8000ecd0-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:5bc56c42-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12c4-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510c0-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/8000ecce-0be3-1fdd-b71a-f192de768052"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:5bc56c43-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12c7-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/41aa12c7-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:61507d80-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:80f510c3-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:80f510c3-0be3-1fdd-b71a-f192de768052">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:61507d81-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.DirectionKind.* FROM MetamodelRelationalModel.Relational.DirectionKind"/>
+        <aliases xmi:uuid="mmuuid:69b7fac0-0c61-1fdd-a111-9e2a025af01a" alias="DirectionKind">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/80f510c3-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:69b7fac1-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12ca-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510c5-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:69b7fac2-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12c9-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510c7-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510c3-0be3-1fdd-b71a-f192de768052"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:69b7fac3-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12cb-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/41aa12cb-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:6e5e2a40-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:80f510ca-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:80f510ca-0be3-1fdd-b71a-f192de768052">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:6e5e2a41-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.MultiplicityKind.* FROM MetamodelRelationalModel.Relational.MultiplicityKind"/>
+        <aliases xmi:uuid="mmuuid:77aa8940-0c61-1fdd-a111-9e2a025af01a" alias="MultiplicityKind">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/80f510ca-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:77aa8941-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12cd-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510cc-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:77aa8942-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12ce-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510ce-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510ca-0be3-1fdd-b71a-f192de768052"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:789ead40-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12cf-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/41aa12cf-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:7d44dcc0-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:80f510d1-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:80f510d1-0be3-1fdd-b71a-f192de768052">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:7d44dcc1-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.SearchabilityType.* FROM MetamodelRelationalModel.Relational.SearchabilityType"/>
+        <aliases xmi:uuid="mmuuid:86913bc0-0c61-1fdd-a111-9e2a025af01a" alias="SearchabilityType">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/80f510d1-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:86913bc1-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12d1-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510d3-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:86913bc2-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12d2-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510d5-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510d1-0be3-1fdd-b71a-f192de768052"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:86913bc3-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12d3-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/41aa12d3-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:94930c80-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:80f510d8-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:80f510d8-0be3-1fdd-b71a-f192de768052, mmuuid:cd5caec0-0c59-1fdd-a111-9e2a025af01a WHERE (mmuuid:80f510d9-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec8-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:80f510da-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caecd-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:87744604-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec9-0c59-1fdd-a111-9e2a025af01a)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:94930c81-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.Column.* FROM MetamodelRelationalModel.Relational.Column,DtcBase.ObjectIndex WHERE MetamodelRelationalModel.Relational.Column.UuidPart1=DtcBase.ObjectIndex.UuidPart1 AND MetamodelRelationalModel.Relational.Column.UuidPart2=DtcBase.ObjectIndex.UuidPart2 AND MetamodelRelationalModel.Relational.Column.TransactionId=DtcBase.ObjectIndex.TransactionId"/>
+        <aliases xmi:uuid="mmuuid:a904d040-0c61-1fdd-a111-9e2a025af01a" alias="Column">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/80f510d8-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:a904d041-0c61-1fdd-a111-9e2a025af01a" alias="ObjectIndex">
+          <aliasedObject href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4200-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12e8-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510dc-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4201-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12ed-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510d9-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4202-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12f6-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510da-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4203-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12ef-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510db-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4204-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12f2-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510e0-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4205-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12f1-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510e2-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4206-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12d9-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510e4-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4207-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12d8-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/81e934c1-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4208-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12df-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/81e934c3-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4209-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12d7-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/81e934c5-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba420a-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12e2-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/81e934c7-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba420b-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12d6-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/81e934c9-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba420c-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12ee-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/82ce1680-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba420d-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12dc-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/82ce1682-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba420e-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12e7-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/82ce1684-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba420f-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12dd-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/82ce1686-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4210-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12eb-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/82ce1688-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4211-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12e3-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/83c23a81-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4212-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12f0-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/83c23a83-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4213-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12e0-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/83c23a85-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4214-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12e1-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/84a71c41-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4215-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12ec-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/84a71c43-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4216-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12e9-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/84a71c45-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4217-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12d5-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/84a71c48-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4218-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12da-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/859b4041-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4219-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12f7-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/859b4043-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba421a-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12e6-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/859b4045-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba421b-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12e4-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/859b4047-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba421c-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12e5-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/859b4049-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba421d-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12ea-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/859b404b-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba421e-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12f8-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/868f6441-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba421f-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12db-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/87744600-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4220-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12d4-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/87744602-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:adba4221-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12f5-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/87744604-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/80f510d8-0be3-1fdd-b71a-f192de768052"/>
+      <inputs href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:adba4222-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12f9-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/41aa12f9-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:b9d3cac0-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:87744609-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:87744609-0be3-1fdd-b71a-f192de768052, mmuuid:cd5caec0-0c59-1fdd-a111-9e2a025af01a WHERE (mmuuid:8774460a-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec8-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:8774460b-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caecd-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:87744615-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec9-0c59-1fdd-a111-9e2a025af01a)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:b9d3cac1-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.Schema.* FROM MetamodelRelationalModel.Relational.Schema,DtcBase.ObjectIndex WHERE MetamodelRelationalModel.Relational.Schema.UuidPart1=DtcBase.ObjectIndex.UuidPart1 AND MetamodelRelationalModel.Relational.Schema.UuidPart2=DtcBase.ObjectIndex.UuidPart2 AND MetamodelRelationalModel.Relational.Schema.TransactionId=DtcBase.ObjectIndex.TransactionId"/>
+        <aliases xmi:uuid="mmuuid:ca938300-0c61-1fdd-a111-9e2a025af01a" alias="Schema">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/87744609-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:ca938301-0c61-1fdd-a111-9e2a025af01a" alias="ObjectIndex">
+          <aliasedObject href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:ca938302-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12fe-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8774460d-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:ca938303-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12fd-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8774460a-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:ca938304-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12fb-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8774460b-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:ca938305-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1301-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8774460c-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:ca938306-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12fa-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/87744611-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:ca938307-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa12fc-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/87744613-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:ca938308-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1300-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/87744615-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/87744609-0be3-1fdd-b71a-f192de768052"/>
+      <inputs href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:cb87a700-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1302-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/41aa1302-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:d6ad0bc0-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:8774461a-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:8774461a-0be3-1fdd-b71a-f192de768052, mmuuid:cd5caec0-0c59-1fdd-a111-9e2a025af01a WHERE (mmuuid:8774461b-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec8-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:8774461c-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caecd-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:88686a0a-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec9-0c59-1fdd-a111-9e2a025af01a)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:d7a12fc0-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.PrimaryKey.* FROM MetamodelRelationalModel.Relational.PrimaryKey,DtcBase.ObjectIndex WHERE MetamodelRelationalModel.Relational.PrimaryKey.UuidPart1=DtcBase.ObjectIndex.UuidPart1 AND MetamodelRelationalModel.Relational.PrimaryKey.UuidPart2=DtcBase.ObjectIndex.UuidPart2 AND MetamodelRelationalModel.Relational.PrimaryKey.TransactionId=DtcBase.ObjectIndex.TransactionId"/>
+        <aliases xmi:uuid="mmuuid:e76cc400-0c61-1fdd-a111-9e2a025af01a" alias="PrimaryKey">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/8774461a-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:e76cc401-0c61-1fdd-a111-9e2a025af01a" alias="ObjectIndex">
+          <aliasedObject href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:e860e800-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1307-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8774461e-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:e860e801-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1306-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8774461b-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:e860e802-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1308-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8774461c-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:e860e803-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa130a-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8774461d-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:e860e804-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1303-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/88686a02-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:e860e805-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa130b-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/88686a04-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:e860e806-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1309-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/88686a06-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:e860e807-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1304-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/88686a08-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:e860e808-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1305-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/88686a0a-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/8774461a-0be3-1fdd-b71a-f192de768052"/>
+      <inputs href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:e860e809-0c61-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa130d-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/41aa130d-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:f47a70c0-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:88686a0f-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:88686a0f-0be3-1fdd-b71a-f192de768052, mmuuid:cd5caec0-0c59-1fdd-a111-9e2a025af01a WHERE (mmuuid:88686a10-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec8-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:88686a11-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caecd-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:895c8e0d-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec9-0c59-1fdd-a111-9e2a025af01a)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:f47a70c1-0c61-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.ForeignKey.* FROM MetamodelRelationalModel.Relational.ForeignKey,DtcBase.ObjectIndex WHERE MetamodelRelationalModel.Relational.ForeignKey.UuidPart1=DtcBase.ObjectIndex.UuidPart1 AND MetamodelRelationalModel.Relational.ForeignKey.UuidPart2=DtcBase.ObjectIndex.UuidPart2 AND MetamodelRelationalModel.Relational.ForeignKey.TransactionId=DtcBase.ObjectIndex.TransactionId"/>
+        <aliases xmi:uuid="mmuuid:053a2900-0c62-1fdd-a111-9e2a025af01a" alias="ForeignKey">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/88686a0f-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:053a2901-0c62-1fdd-a111-9e2a025af01a" alias="ObjectIndex">
+          <aliasedObject href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:062e4d00-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1319-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/88686a13-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:062e4d01-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1317-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/88686a10-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:062e4d02-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa130e-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/88686a11-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:062e4d03-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1314-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/88686a12-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:062e4d04-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1313-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/88686a17-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:062e4d05-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1316-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/895c8e01-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:062e4d06-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa130f-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/895c8e03-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:062e4d07-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1311-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/895c8e06-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:062e4d08-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1310-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/895c8e09-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:062e4d09-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1312-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/895c8e0b-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:062e4d0a-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1318-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/895c8e0d-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/88686a0f-0be3-1fdd-b71a-f192de768052"/>
+      <inputs href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:062e4d0b-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa131c-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/41aa131c-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:1247d5c0-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:8a416fc1-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:8a416fc1-0be3-1fdd-b71a-f192de768052, mmuuid:cd5caec0-0c59-1fdd-a111-9e2a025af01a WHERE (mmuuid:8a416fc2-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec8-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:8a416fc3-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caecd-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:8c1a7581-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec9-0c59-1fdd-a111-9e2a025af01a)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:1247d5c1-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.View.* FROM MetamodelRelationalModel.Relational.View,DtcBase.ObjectIndex WHERE MetamodelRelationalModel.Relational.View.UuidPart1=DtcBase.ObjectIndex.UuidPart1 AND MetamodelRelationalModel.Relational.View.UuidPart2=DtcBase.ObjectIndex.UuidPart2 AND MetamodelRelationalModel.Relational.View.TransactionId=DtcBase.ObjectIndex.TransactionId"/>
+        <aliases xmi:uuid="mmuuid:23078e00-0c62-1fdd-a111-9e2a025af01a" alias="View">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/8a416fc1-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:23078e01-0c62-1fdd-a111-9e2a025af01a" alias="ObjectIndex">
+          <aliasedObject href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:23fbb200-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa131d-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8a416fc5-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:23fbb201-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1328-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8a416fc2-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:23fbb202-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1327-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8a416fc3-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:23fbb203-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1326-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8a416fc4-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:23fbb204-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1324-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8a416fc9-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:23fbb205-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1321-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8a416fcb-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:23fbb206-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1323-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8a416fcd-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:23fbb207-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1325-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8a416fcf-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:23fbb208-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1320-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8b3593c1-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:23fbb209-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1322-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8b3593c3-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:23fbb20a-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa131e-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8b3593c5-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:23fbb20b-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1329-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a7581-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/8a416fc1-0be3-1fdd-b71a-f192de768052"/>
+      <inputs href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:23fbb20c-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa132a-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/41aa132a-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:30153ac0-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:8c1a7586-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:8c1a7586-0be3-1fdd-b71a-f192de768052, mmuuid:cd5caec0-0c59-1fdd-a111-9e2a025af01a WHERE (mmuuid:8c1a7587-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec8-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:8c1a7588-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caecd-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:8c1a7592-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec9-0c59-1fdd-a111-9e2a025af01a)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:30153ac1-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.Catalog.* FROM MetamodelRelationalModel.Relational.Catalog,DtcBase.ObjectIndex WHERE MetamodelRelationalModel.Relational.Catalog.UuidPart1=DtcBase.ObjectIndex.UuidPart1 AND MetamodelRelationalModel.Relational.Catalog.UuidPart2=DtcBase.ObjectIndex.UuidPart2 AND MetamodelRelationalModel.Relational.Catalog.TransactionId=DtcBase.ObjectIndex.TransactionId"/>
+        <aliases xmi:uuid="mmuuid:3efbed40-0c62-1fdd-a111-9e2a025af01a" alias="Catalog">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/8c1a7586-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:3ff01140-0c62-1fdd-a111-9e2a025af01a" alias="ObjectIndex">
+          <aliasedObject href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:3ff01141-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1331-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a758a-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:3ff01142-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa132d-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a7587-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:3ff01143-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa132c-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a7588-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:3ff01144-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa132f-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a7589-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:3ff01145-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1330-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a758e-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:3ff01146-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa132b-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a7590-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:3ff01147-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1332-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a7592-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a7586-0be3-1fdd-b71a-f192de768052"/>
+      <inputs href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:3ff01148-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1333-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/41aa1333-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:4c099a00-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:8c1a7597-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:8c1a7597-0be3-1fdd-b71a-f192de768052, mmuuid:cd5caec0-0c59-1fdd-a111-9e2a025af01a WHERE (mmuuid:8c1a7598-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec8-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:8c1a7599-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caecd-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:8ee79f41-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec9-0c59-1fdd-a111-9e2a025af01a)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:4c099a01-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.Procedure.* FROM MetamodelRelationalModel.Relational.Procedure,DtcBase.ObjectIndex WHERE MetamodelRelationalModel.Relational.Procedure.UuidPart1=DtcBase.ObjectIndex.UuidPart1 AND MetamodelRelationalModel.Relational.Procedure.UuidPart2=DtcBase.ObjectIndex.UuidPart2 AND MetamodelRelationalModel.Relational.Procedure.TransactionId=DtcBase.ObjectIndex.TransactionId"/>
+        <aliases xmi:uuid="mmuuid:5be47080-0c62-1fdd-a111-9e2a025af01a" alias="Procedure">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/8c1a7597-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:5cc95240-0c62-1fdd-a111-9e2a025af01a" alias="ObjectIndex">
+          <aliasedObject href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:5cc95241-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa133c-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a759b-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:5cc95242-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa133a-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a7598-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:5cc95243-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa133b-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a7599-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:5cc95244-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1334-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a759a-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:5cc95245-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1337-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a759f-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:5cc95246-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1339-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a75a1-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:5cc95247-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1336-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8e02bd80-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:5cc95248-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1338-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8ee79f41-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/8c1a7597-0be3-1fdd-b71a-f192de768052"/>
+      <inputs href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:5cc95249-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa133d-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/41aa133d-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:68e2db00-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:8ee79f46-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:8ee79f46-0be3-1fdd-b71a-f192de768052, mmuuid:cd5caec0-0c59-1fdd-a111-9e2a025af01a WHERE (mmuuid:8ee79f47-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec8-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:8ee79f48-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caecd-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:8fdbc347-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec9-0c59-1fdd-a111-9e2a025af01a)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:68e2db01-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.Index.* FROM MetamodelRelationalModel.Relational.Index,DtcBase.ObjectIndex WHERE MetamodelRelationalModel.Relational.Index.UuidPart1=DtcBase.ObjectIndex.UuidPart1 AND MetamodelRelationalModel.Relational.Index.UuidPart2=DtcBase.ObjectIndex.UuidPart2 AND MetamodelRelationalModel.Relational.Index.TransactionId=DtcBase.ObjectIndex.TransactionId"/>
+        <aliases xmi:uuid="mmuuid:79b1d580-0c62-1fdd-a111-9e2a025af01a" alias="Index">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/8ee79f46-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:79b1d581-0c62-1fdd-a111-9e2a025af01a" alias="ObjectIndex">
+          <aliasedObject href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:7a96b740-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1343-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8ee79f4a-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:7a96b741-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1346-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8ee79f47-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:7a96b742-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa133e-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8ee79f48-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:7a96b743-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa133f-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8ee79f49-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:7a96b744-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1344-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8ee79f4e-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:7a96b745-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1349-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8ee79f50-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:7a96b746-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1340-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8ee79f52-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:7a96b747-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1341-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8ee79f54-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:7a96b748-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1342-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8fdbc341-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:7a96b749-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1348-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8fdbc343-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:7a96b74a-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa134a-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8fdbc345-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:7a96b74b-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1347-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8fdbc347-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/8ee79f46-0be3-1fdd-b71a-f192de768052"/>
+      <inputs href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:7a96b74c-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa134b-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/41aa134b-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:87a46400-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:8fdbc34c-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:8fdbc34c-0be3-1fdd-b71a-f192de768052, mmuuid:cd5caec0-0c59-1fdd-a111-9e2a025af01a WHERE (mmuuid:8fdbc34d-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec8-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:8fdbc34e-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caecd-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:92a8ed06-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec9-0c59-1fdd-a111-9e2a025af01a)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:87a46401-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.ProcedureParameter.* FROM MetamodelRelationalModel.Relational.ProcedureParameter,DtcBase.ObjectIndex WHERE MetamodelRelationalModel.Relational.ProcedureParameter.UuidPart1=DtcBase.ObjectIndex.UuidPart1 AND MetamodelRelationalModel.Relational.ProcedureParameter.UuidPart2=DtcBase.ObjectIndex.UuidPart2 AND MetamodelRelationalModel.Relational.ProcedureParameter.TransactionId=DtcBase.ObjectIndex.TransactionId"/>
+        <aliases xmi:uuid="mmuuid:98641c40-0c62-1fdd-a111-9e2a025af01a" alias="ProcedureParameter">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/8fdbc34c-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:99584040-0c62-1fdd-a111-9e2a025af01a" alias="ObjectIndex">
+          <aliasedObject href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d2200-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1352-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8fdbc350-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d2201-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa135d-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8fdbc34d-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d2202-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa135e-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8fdbc34e-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d2203-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1356-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8fdbc34f-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d2204-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1359-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/8fdbc354-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d2205-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa135a-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/90cfe741-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d2206-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa135c-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/90cfe743-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d2207-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1355-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/90cfe746-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d2208-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1351-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/90cfe748-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d2209-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1357-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/91b4c901-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d220a-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa134e-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/91b4c903-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d220b-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa134c-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/91b4c905-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d220c-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa134d-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/91b4c907-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d220d-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1353-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/92a8ed02-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d220e-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1358-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/92a8ed04-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:9a3d220f-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1350-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/92a8ed06-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/8fdbc34c-0be3-1fdd-b71a-f192de768052"/>
+      <inputs href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:9a3d2210-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa135f-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/41aa135f-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:a665ed00-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:92a8ed0b-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:92a8ed0b-0be3-1fdd-b71a-f192de768052, mmuuid:cd5caec0-0c59-1fdd-a111-9e2a025af01a WHERE (mmuuid:92a8ed0c-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec8-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:92a8ed0d-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caecd-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:938dcec4-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec9-0c59-1fdd-a111-9e2a025af01a)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:a665ed01-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.UniqueConstraint.* FROM MetamodelRelationalModel.Relational.UniqueConstraint,DtcBase.ObjectIndex WHERE MetamodelRelationalModel.Relational.UniqueConstraint.UuidPart1=DtcBase.ObjectIndex.UuidPart1 AND MetamodelRelationalModel.Relational.UniqueConstraint.UuidPart2=DtcBase.ObjectIndex.UuidPart2 AND MetamodelRelationalModel.Relational.UniqueConstraint.TransactionId=DtcBase.ObjectIndex.TransactionId"/>
+        <aliases xmi:uuid="mmuuid:b725a540-0c62-1fdd-a111-9e2a025af01a" alias="UniqueConstraint">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/92a8ed0b-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:b725a541-0c62-1fdd-a111-9e2a025af01a" alias="ObjectIndex">
+          <aliasedObject href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:b725a542-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1362-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/92a8ed0f-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:b725a543-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1365-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/92a8ed0c-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:b725a544-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1360-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/92a8ed0d-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:b725a545-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36c0-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/92a8ed0e-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:b725a546-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36c2-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/92a8ed13-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:b725a547-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1364-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/92a8ed15-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:b725a548-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1363-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/938dcec0-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:b725a549-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36c3-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/938dcec2-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:b725a54a-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/41aa1361-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/938dcec4-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/92a8ed0b-0be3-1fdd-b71a-f192de768052"/>
+      <inputs href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:b80a8700-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36c4-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/429e36c4-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:c4335200-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:938dcec9-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:938dcec9-0be3-1fdd-b71a-f192de768052, mmuuid:cd5caec0-0c59-1fdd-a111-9e2a025af01a WHERE (mmuuid:938dceca-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec8-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:938dcecb-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caecd-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:938dced7-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec9-0c59-1fdd-a111-9e2a025af01a)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:c4335201-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.AccessPattern.* FROM MetamodelRelationalModel.Relational.AccessPattern,DtcBase.ObjectIndex WHERE MetamodelRelationalModel.Relational.AccessPattern.UuidPart1=DtcBase.ObjectIndex.UuidPart1 AND MetamodelRelationalModel.Relational.AccessPattern.UuidPart2=DtcBase.ObjectIndex.UuidPart2 AND MetamodelRelationalModel.Relational.AccessPattern.TransactionId=DtcBase.ObjectIndex.TransactionId"/>
+        <aliases xmi:uuid="mmuuid:d4f30a40-0c62-1fdd-a111-9e2a025af01a" alias="AccessPattern">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/938dcec9-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:d4f30a41-0c62-1fdd-a111-9e2a025af01a" alias="ObjectIndex">
+          <aliasedObject href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:d5d7ec00-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36c6-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/938dcecd-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:d5d7ec01-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36c5-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/938dceca-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:d5d7ec02-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36cd-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/938dcecb-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:d5d7ec03-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36cc-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/938dcecc-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:d5d7ec04-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36c7-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/938dced1-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:d5d7ec05-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36cb-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/938dced3-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:d5d7ec06-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36c9-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/938dced5-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:d5d7ec07-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36c8-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/938dced7-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/938dcec9-0be3-1fdd-b71a-f192de768052"/>
+      <inputs href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:d5d7ec08-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36ce-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/429e36ce-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:e200b700-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:9481f2c2-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:9481f2c2-0be3-1fdd-b71a-f192de768052, mmuuid:cd5caec0-0c59-1fdd-a111-9e2a025af01a WHERE (mmuuid:9481f2c3-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec8-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:9481f2c4-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caecd-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:9481f2ce-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec9-0c59-1fdd-a111-9e2a025af01a)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:e200b701-0c62-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.LogicalRelationship.* FROM MetamodelRelationalModel.Relational.LogicalRelationship,DtcBase.ObjectIndex WHERE MetamodelRelationalModel.Relational.LogicalRelationship.UuidPart1=DtcBase.ObjectIndex.UuidPart1 AND MetamodelRelationalModel.Relational.LogicalRelationship.UuidPart2=DtcBase.ObjectIndex.UuidPart2 AND MetamodelRelationalModel.Relational.LogicalRelationship.TransactionId=DtcBase.ObjectIndex.TransactionId"/>
+        <aliases xmi:uuid="mmuuid:f85ac2c0-0c62-1fdd-a111-9e2a025af01a" alias="LogicalRelationship">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/9481f2c2-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:f85ac2c1-0c62-1fdd-a111-9e2a025af01a" alias="ObjectIndex">
+          <aliasedObject href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:f93fa480-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36d1-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/9481f2c6-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:f93fa481-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36d0-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/9481f2c3-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:f93fa482-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36cf-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/9481f2c4-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:f93fa483-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36d3-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/9481f2c5-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:f93fa484-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36d4-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/9481f2ca-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:f93fa485-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36d5-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/9481f2cc-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:f93fa486-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36d6-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/9481f2ce-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/9481f2c2-0be3-1fdd-b71a-f192de768052"/>
+      <inputs href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:f93fa487-0c62-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36d7-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/429e36d7-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:0f99b040-0c63-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:957616c0-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:957616c0-0be3-1fdd-b71a-f192de768052, mmuuid:cd5caec0-0c59-1fdd-a111-9e2a025af01a WHERE (mmuuid:957616c1-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec8-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:957616c2-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caecd-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:965af880-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec9-0c59-1fdd-a111-9e2a025af01a)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:0f99b041-0c63-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.LogicalRelationshipEnd.* FROM MetamodelRelationalModel.Relational.LogicalRelationshipEnd,DtcBase.ObjectIndex WHERE MetamodelRelationalModel.Relational.LogicalRelationshipEnd.UuidPart1=DtcBase.ObjectIndex.UuidPart1 AND MetamodelRelationalModel.Relational.LogicalRelationshipEnd.UuidPart2=DtcBase.ObjectIndex.UuidPart2 AND MetamodelRelationalModel.Relational.LogicalRelationshipEnd.TransactionId=DtcBase.ObjectIndex.TransactionId"/>
+        <aliases xmi:uuid="mmuuid:25f3bc00-0c63-1fdd-a111-9e2a025af01a" alias="LogicalRelationshipEnd">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/957616c0-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:26e7e000-0c63-1fdd-a111-9e2a025af01a" alias="ObjectIndex">
+          <aliasedObject href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:26e7e001-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36dd-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/957616c4-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:26e7e002-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36db-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/957616c1-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:26e7e003-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36d8-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/957616c2-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:26e7e004-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36da-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/957616c3-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:26e7e005-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36e1-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/957616c8-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:26e7e006-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36de-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/957616ca-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:26e7e007-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36e0-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/957616cc-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:26e7e008-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36d9-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/957616cf-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:26e7e009-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36e2-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/965af880-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/957616c0-0be3-1fdd-b71a-f192de768052"/>
+      <inputs href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:320d44c0-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36e3-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/429e36e3-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:41e81b40-0c63-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:965af885-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:965af885-0be3-1fdd-b71a-f192de768052, mmuuid:cd5caec0-0c59-1fdd-a111-9e2a025af01a WHERE (mmuuid:965af886-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec8-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:965af887-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caecd-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:974f1c86-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec9-0c59-1fdd-a111-9e2a025af01a)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:41e81b41-0c63-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.BaseTable.* FROM MetamodelRelationalModel.Relational.BaseTable,DtcBase.ObjectIndex WHERE MetamodelRelationalModel.Relational.BaseTable.UuidPart1=DtcBase.ObjectIndex.UuidPart1 AND MetamodelRelationalModel.Relational.BaseTable.UuidPart2=DtcBase.ObjectIndex.UuidPart2 AND MetamodelRelationalModel.Relational.BaseTable.TransactionId=DtcBase.ObjectIndex.TransactionId"/>
+        <aliases xmi:uuid="mmuuid:56692140-0c63-1fdd-a111-9e2a025af01a" alias="BaseTable">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/965af885-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:574e0300-0c63-1fdd-a111-9e2a025af01a" alias="ObjectIndex">
+          <aliasedObject href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:58422700-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36e5-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/965af889-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:58422701-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36ee-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/965af886-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:58422702-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36ed-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/965af887-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:58422703-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36e7-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/965af888-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:58422704-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36f0-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/965af88d-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:58422705-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36ea-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/965af88f-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:58422706-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36e4-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/965af891-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:58422707-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36e6-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/965af893-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:58422708-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36eb-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/974f1c80-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:58422709-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36ef-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/974f1c82-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:5842270a-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36e8-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/974f1c84-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:5842270b-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36e9-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/974f1c86-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/965af885-0be3-1fdd-b71a-f192de768052"/>
+      <inputs href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:5842270c-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36f1-0c61-1fdd-a111-9e2a025af01a" target="mmuuid/429e36f1-0c61-1fdd-a111-9e2a025af01a">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:645bafc0-0c63-1fdd-a111-9e2a025af01a" selectSql="SELECT mmuuid:974f1c8b-0be3-1fdd-b71a-f192de768052.* FROM mmuuid:974f1c8b-0be3-1fdd-b71a-f192de768052, mmuuid:cd5caec0-0c59-1fdd-a111-9e2a025af01a WHERE (mmuuid:974f1c8c-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec8-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:974f1c8d-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caecd-0c59-1fdd-a111-9e2a025af01a) AND (mmuuid:98434080-0be3-1fdd-b71a-f192de768052 = mmuuid:cd5caec9-0c59-1fdd-a111-9e2a025af01a)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:645bafc1-0c63-1fdd-a111-9e2a025af01a" selectSql="SELECT MetamodelRelationalModel.Relational.ProcedureResult.* FROM MetamodelRelationalModel.Relational.ProcedureResult,DtcBase.ObjectIndex WHERE MetamodelRelationalModel.Relational.ProcedureResult.UuidPart1=DtcBase.ObjectIndex.UuidPart1 AND MetamodelRelationalModel.Relational.ProcedureResult.UuidPart2=DtcBase.ObjectIndex.UuidPart2 AND MetamodelRelationalModel.Relational.ProcedureResult.TransactionId=DtcBase.ObjectIndex.TransactionId"/>
+        <aliases xmi:uuid="mmuuid:751b6800-0c63-1fdd-a111-9e2a025af01a" alias="ProcedureResult">
+          <aliasedObject href="MetamodelRelationalModel.xmi#mmuuid/974f1c8b-0be3-1fdd-b71a-f192de768052"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:760f8c00-0c63-1fdd-a111-9e2a025af01a" alias="ObjectIndex">
+          <aliasedObject href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:760f8c01-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36f3-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/974f1c8f-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:760f8c02-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36f5-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/974f1c8c-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:760f8c03-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36f2-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/974f1c8d-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:760f8c04-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36f7-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/974f1c8e-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:760f8c05-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36f6-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/974f1c93-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:760f8c06-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36f8-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/974f1c95-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:760f8c07-0c63-1fdd-a111-9e2a025af01a" outputs="mmuuid/429e36f9-0c61-1fdd-a111-9e2a025af01a">
+        <inputs href="MetamodelRelationalModel.xmi#mmuuid/98434080-0be3-1fdd-b71a-f192de768052"/>
+      </nested>
+      <inputs href="MetamodelRelationalModel.xmi#mmuuid/974f1c8b-0be3-1fdd-b71a-f192de768052"/>
+      <inputs href="DtcBase.xmi#mmuuid/cd5caec0-0c59-1fdd-a111-9e2a025af01a"/>
+    </transformationMappings>
+  </Transformation:TransformationContainer>
+</xmi:XMI>
