@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.metamodels.xml.test
+Bundle-SymbolicName: org.teiid.designer.metamodels.xml.test
 Bundle-Version: 6.0.0
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.metamodels.xml.namespace,
  com.metamatrix.metamodels.xml.util
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.metamodels.xml;bundle-version="6.0.0",
+Require-Bundle: org.teiid.designer.metamodels.xml;bundle-version="6.0.0",
  org.junit4;bundle-version="4.3.1",
  org.eclipse.emf.ecore;bundle-version="2.4.1"

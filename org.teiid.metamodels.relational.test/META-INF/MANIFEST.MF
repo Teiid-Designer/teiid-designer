@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.metamodels.relational.test
+Bundle-SymbolicName: org.teiid.designer.metamodels.relational.test
 Bundle-Version: 6.0.0
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -9,7 +9,7 @@ Bundle-Localization: plugin
 Export-Package: com.metamatrix.metamodels.relational.aspects.validation.rules,
  com.metamatrix.metamodels.relational.provider,
  com.metamatrix.metamodels.relational.util
-Require-Bundle: org.teiid.metamodels.relational;bundle-version="6.0.0",
+Require-Bundle: org.teiid.designer.metamodels.relational;bundle-version="6.0.0",
  org.junit4;bundle-version="4.3.1",
  org.teiid.designer.core;bundle-version="6.0.0",
  org.eclipse.emf.ecore;bundle-version="2.4.1",

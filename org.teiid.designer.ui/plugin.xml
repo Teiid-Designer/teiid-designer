@@ -607,7 +607,7 @@
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
-            label="%findModelObjectActionSet.name"
+            label="%findModelObjectActionSet.label"
             visible="true"
             id="findModelObjectActionSet">
 		 <menu
@@ -709,7 +709,7 @@
       </class>
    </extension>
    <extension
-         point="org.teiid.ui.editorPreferences">
+         point="org.teiid.designer.ui.common.editorPreferences">
          <editorPreferenceComponent
          	class="com.metamatrix.modeler.internal.ui.preferences.TableEditorPreferencesComponent"/>
    </extension>

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.teiid.rose.ui;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.rose.ui;singleton:=true
 Bundle-Version: 6.0.0
 Bundle-ClassPath: roseUi.jar
 Bundle-Activator: com.metamatrix.rose.internal.ui.RoseUiPlugin
@@ -19,8 +19,8 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.editors,
  org.eclipse.ui,
  teiid_embedded_query,
- org.teiid.ui,
- org.teiid.rose,
+ org.teiid.designer.ui.common,
+ org.teiid.designer.rose,
  org.eclipse.emf.codegen.ecore,
  org.eclipse.core.resources,
  org.teiid.designer.core,

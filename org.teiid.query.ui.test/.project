@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.teiid.query.ui.test</name>
+	<name>org.teiid.designer.query.ui.test</name>
 	<comment></comment>
 	<projects>
 	</projects>

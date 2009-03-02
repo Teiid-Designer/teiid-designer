@@ -18,11 +18,11 @@ Export-Package: com.metamatrix.modeler.dqp,
 Require-Bundle: org.eclipse.core.runtime,
  teiid_embedded_query,
  org.eclipse.core.resources,
- org.teiid.vdb.edit,
+ org.teiid.designer.vdb.edit,
  org.teiid.designer.jdbc,
  org.teiid.designer.core,
  org.teiid.core.designer,
- org.teiid.metamodels.core,
+ org.teiid.designer.metamodels.core,
  org.eclipse.emf.edit,
  org.teiid.designer.transformation
 Bundle-ActivationPolicy: lazy

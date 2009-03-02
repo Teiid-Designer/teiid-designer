@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.teiid.metamodels.xml;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.metamodels.xml;singleton:=true
 Bundle-Version: 6.0.0
 Bundle-ClassPath: metamodelsXml.jar
 Bundle-Activator: com.metamatrix.metamodels.xml.XmlDocumentPlugin
@@ -19,12 +19,12 @@ Export-Package: com.metamatrix.metamodels.internal.xml,
  com.metamatrix.metamodels.xml.util
 Require-Bundle: org.eclipse.emf.ecore,
  org.teiid.designer.core,
- org.teiid.metamodels.xsd,
+ org.teiid.designer.metamodels.xsd,
  org.teiid.core.designer,
  teiid_embedded_query,
  org.eclipse.core.runtime,
  org.eclipse.emf.mapping,
  org.eclipse.xsd,
- org.teiid.metamodels.core
+ org.teiid.designer.metamodels.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

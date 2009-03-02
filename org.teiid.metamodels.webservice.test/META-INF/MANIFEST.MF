@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.metamodels.webservice.test
+Bundle-SymbolicName: org.teiid.designer.metamodels.webservice.test
 Bundle-Version: 6.0.0
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.metamodels.webservice
-Require-Bundle: org.teiid.metamodels.webservice;bundle-version="6.0.0",
+Require-Bundle: org.teiid.designer.metamodels.webservice;bundle-version="6.0.0",
  org.eclipse.emf.ecore;bundle-version="2.4.1",
  org.eclipse.emf.ecore.xmi;bundle-version="2.4.1"

@@ -28,7 +28,7 @@ import com.metamatrix.core.util.PluginUtilImpl;
  */
 public class DependencyPlugin extends Plugin {
 
-    public static final String PLUGIN_ID = "org.teiid.metamodels.dependency"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "org.teiid.designer.metamodels.dependency"; //$NON-NLS-1$
     
     public static final String PACKAGE_ID = DependencyPlugin.class.getPackage().getName();
 

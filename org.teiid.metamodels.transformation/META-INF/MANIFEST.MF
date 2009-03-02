@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.teiid.metamodels.transformation;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.metamodels.transformation;singleton:=true
 Bundle-Version: 6.0.0
 Bundle-ClassPath: metamodelsTransformation.jar
 Bundle-Activator: com.metamatrix.metamodels.transformation.TransformationPlugin
@@ -16,7 +16,7 @@ Require-Bundle: org.eclipse.emf.mapping,
  org.eclipse.emf.edit,
  org.eclipse.emf.ecore.edit,
  org.eclipse.core.runtime,
- org.teiid.metamodels.core,
+ org.teiid.designer.metamodels.core,
  org.teiid.core.designer,
  teiid_embedded_query
 Bundle-ActivationPolicy: lazy

@@ -25,7 +25,7 @@ import com.metamatrix.core.util.ArgCheck;
  */
 public class CoreXsltPlugin {
 
-    public static final String PLUGIN_ID = "org.teiid.core.xslt" ; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "org.teiid.designer.core.xslt" ; //$NON-NLS-1$
     
     public static final String PACKAGE_ID = CoreXsltPlugin.class.getPackage().getName();
 

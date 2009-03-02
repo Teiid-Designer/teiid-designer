@@ -42,21 +42,21 @@
          unpack="false"/>
 
    <plugin
-         id="org.teiid.core.xslt"
+         id="org.teiid.designer.core.xslt"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.relational"
+         id="org.teiid.designer.metamodels.relational"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.core"
+         id="org.teiid.designer.metamodels.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -98,49 +98,49 @@
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.diagram"
+         id="org.teiid.designer.metamodels.diagram"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.transformation"
+         id="org.teiid.designer.metamodels.transformation"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.teiid.query.ui"
+         id="org.teiid.designer.query.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.teiid.ui"
+         id="org.teiid.designer.ui.common"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.teiid.vdb.edit"
+         id="org.teiid.designer.vdb.edit"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.dependency"
+         id="org.teiid.designer.metamodels.dependency"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.history"
+         id="org.teiid.designer.metamodels.history"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -154,21 +154,21 @@
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.function"
+         id="org.teiid.designer.metamodels.function"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.xml"
+         id="org.teiid.designer.metamodels.xml"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.xsd"
+         id="org.teiid.designer.metamodels.xsd"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -244,7 +244,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.relationship"
+         id="org.teiid.designer.metamodels.relationship"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -272,21 +272,21 @@
          unpack="false"/>
 
    <plugin
-         id="org.teiid.rose"
+         id="org.teiid.designer.rose"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.teiid.rose.ui"
+         id="org.teiid.designer.rose.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.uml2"
+         id="org.teiid.designer.metamodels.uml2"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -314,14 +314,14 @@
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.webservice"
+         id="org.teiid.designer.metamodels.webservice"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.wsdl"
+         id="org.teiid.designer.metamodels.wsdl"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -419,7 +419,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.xmlservice"
+         id="org.teiid.designer.metamodels.xmlservice"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -433,14 +433,14 @@
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.builder"
+         id="org.teiid.designer.metamodels.builder"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.builder.execution"
+         id="org.teiid.designer.metamodels.builder.execution"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -496,7 +496,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.teiid.metamodels.xsd.ui"
+         id="org.teiid.designer.metamodels.xsd.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

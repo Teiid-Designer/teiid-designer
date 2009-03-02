@@ -28,7 +28,7 @@ import com.metamatrix.core.util.PluginUtilImpl;
  */
 public class RelationalPlugin extends Plugin {
 
-    public static final String PLUGIN_ID = "org.teiid.metamodels.relational"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "org.teiid.designer.metamodels.relational"; //$NON-NLS-1$
     
     public static final String PACKAGE_ID = RelationalPlugin.class.getPackage().getName();
 

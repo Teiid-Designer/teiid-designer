@@ -12,7 +12,7 @@
    <extension
          id="systemPhysicalResource"
          name="systemPhysicalResource"
-         point="com.metamatrix.modeler.core.externalResource">
+         point="org.teiid.designer.core.externalResource">
       <resourceName>
          /System/SystemPhysical.xmi
       </resourceName>
@@ -27,7 +27,7 @@
    <extension
          id="systemVirtualResource"
          name="systemVirtualResource"
-         point="com.metamatrix.modeler.core.externalResource">
+         point="org.teiid.designer.core.externalResource">
       <resourceName>
          /System/System.xmi
       </resourceName>

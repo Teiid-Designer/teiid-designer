@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.teiid.metamodels.function;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.metamodels.function;singleton:=true
 Bundle-Version: 6.0.0
 Bundle-ClassPath: metamodelsFunction.jar
 Bundle-Activator: com.metamatrix.metamodels.function.FunctionPlugin
@@ -24,6 +24,6 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.teiid.core.designer,
  teiid_embedded_query,
  org.eclipse.emf.mapping,
- org.teiid.metamodels.core
+ org.teiid.designer.metamodels.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

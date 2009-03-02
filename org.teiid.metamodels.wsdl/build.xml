@@ -6,7 +6,7 @@
 
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
-<project name="com.metamatrix.metamodels.wsdl" default="build.jars" basedir=".">
+<project name="org.teiid.designer.metamodels.wsdl" default="build.jars" basedir=".">
 
 	<property name="basews" value="${ws}"/>
 	<property name="baseos" value="${os}"/>

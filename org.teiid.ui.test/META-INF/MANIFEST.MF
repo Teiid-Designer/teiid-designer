@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.ui.test
+Bundle-SymbolicName: org.teiid.designer.ui.common.test
 Bundle-Version: 6.0.0
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -9,7 +9,7 @@ Export-Package: com.metamatrix.ui.actions,
  com.metamatrix.ui.dialogs,
  com.metamatrix.ui.internal.eventsupport
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.ui;bundle-version="6.0.0",
+Require-Bundle: org.teiid.designer.ui.common;bundle-version="6.0.0",
  org.junit4;bundle-version="4.3.1",
  org.eclipse.jface;bundle-version="3.4.1",
  org.eclipse.emf.ecore;bundle-version="2.4.1",

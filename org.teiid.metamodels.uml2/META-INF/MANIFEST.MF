@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.teiid.metamodels.uml2;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.metamodels.uml2;singleton:=true
 Bundle-Version: 6.0.0
 Bundle-ClassPath: metamodelsUml2.jar
 Bundle-Activator: com.metamatrix.metamodels.uml2.Uml2Plugin
@@ -22,6 +22,6 @@ Require-Bundle: org.eclipse.uml2.uml,
  teiid_embedded_query,
  org.eclipse.core.runtime,
  org.eclipse.emf.mapping,
- org.teiid.metamodels.core
+ org.teiid.designer.metamodels.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

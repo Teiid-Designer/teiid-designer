@@ -27,7 +27,7 @@ import com.metamatrix.core.util.PluginUtilImpl;
  * The main plugin class to be used in the desktop.
  */
 public class XmlServiceMetamodelPlugin extends Plugin {
-    public static final String PLUGIN_ID = "org.teiid.metamodels.xmlservice"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "org.teiid.designer.metamodels.xmlservice"; //$NON-NLS-1$
     
     public static final String PACKAGE_ID = XmlServiceMetamodelPlugin.class.getPackage().getName();
 

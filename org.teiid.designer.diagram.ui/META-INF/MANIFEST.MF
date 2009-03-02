@@ -54,17 +54,17 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.core.runtime,
  org.eclipse.draw2d,
  org.teiid.designer.ui,
- org.teiid.metamodels.diagram,
+ org.teiid.designer.metamodels.diagram,
  org.eclipse.emf.ecore,
  org.teiid.designer.core,
  org.eclipse.emf.common,
  org.eclipse.emf.edit,
- org.teiid.ui,
+ org.teiid.designer.ui.common,
  org.eclipse.emf.ecore.xmi,
  org.teiid.designer.jdbc,
- org.teiid.metamodels.relational,
+ org.teiid.designer.metamodels.relational,
  org.teiid.core.designer,
  teiid_embedded_query,
- org.teiid.metamodels.core
+ org.teiid.designer.metamodels.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

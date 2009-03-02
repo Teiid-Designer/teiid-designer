@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.teiid.metamodels.xsd.ui
+Bundle-SymbolicName: org.teiid.designer.metamodels.xsd.ui
 Bundle-Version: 6.0.0
 Bundle-ClassPath: metamodelsXsdUi.jar
 Bundle-Activator: com.metamatrix.metamodels.xsd.ui.XsdUiPlugin
@@ -18,12 +18,12 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.jface.text,
  org.eclipse.ui.editors,
  org.eclipse.ui.workbench.texteditor,
- org.teiid.ui,
+ org.teiid.designer.ui.common,
  teiid_embedded_query,
  org.teiid.designer.core,
  org.teiid.designer.ui,
  org.eclipse.ui.ide,
- org.teiid.metamodels.xsd,
+ org.teiid.designer.metamodels.xsd,
  org.apache.xerces,
  org.teiid.core.designer,
  org.eclipse.core.runtime

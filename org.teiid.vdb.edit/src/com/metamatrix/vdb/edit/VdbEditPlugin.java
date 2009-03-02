@@ -59,7 +59,7 @@ public class VdbEditPlugin extends Plugin {
 
     private static boolean autoBind = false;
 
-    public static final String PLUGIN_ID = "org.teiid.vdb.edit"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "org.teiid.designer.vdb.edit"; //$NON-NLS-1$
     
     public static final String PACKAGE_ID = VdbEditPlugin.class.getPackage().getName();
 

@@ -11,12 +11,12 @@ Export-Package: com.metamatrix.modeler.ddl,
  com.metamatrix.modeler.internal.ddl
 Require-Bundle: org.eclipse.core.runtime,
  org.teiid.designer.core,
- org.teiid.metamodels.relational,
+ org.teiid.designer.metamodels.relational,
  teiid_embedded_query,
- org.teiid.core.xslt,
+ org.teiid.designer.core.xslt,
  org.teiid.core.designer,
  org.eclipse.emf.ecore.xmi,
- org.teiid.metamodels.diagram,
- org.teiid.metamodels.core
+ org.teiid.designer.metamodels.diagram,
+ org.teiid.designer.metamodels.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

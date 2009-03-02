@@ -31,7 +31,7 @@ import com.metamatrix.ui.actions.ActionService;
  * RelationalPlugin
  */
 public class XsdUiPlugin extends AbstractUiPlugin {
-    public static final String PLUGIN_ID = "org.teiid.metamodels.xsd.ui" ; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "org.teiid.designer.metamodels.xsd.ui" ; //$NON-NLS-1$
     
     public static final String PACKAGE_ID = XsdUiPlugin.class.getPackage().getName();
 

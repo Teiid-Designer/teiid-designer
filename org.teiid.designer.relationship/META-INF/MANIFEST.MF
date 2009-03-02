@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.edit,
  org.teiid.designer.core,
- org.teiid.metamodels.relationship,
+ org.teiid.designer.metamodels.relationship,
  org.teiid.core.designer,
  teiid_embedded_query
 Bundle-ActivationPolicy: lazy

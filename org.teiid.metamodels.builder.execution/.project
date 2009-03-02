@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.teiid.metamodels.builder.execution</name>
+	<name>org.teiid.designer.metamodels.builder.execution</name>
 	<comment></comment>
 	<projects>
 	</projects>

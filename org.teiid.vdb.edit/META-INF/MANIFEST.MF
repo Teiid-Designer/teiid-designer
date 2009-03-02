@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.teiid.vdb.edit;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.vdb.edit;singleton:=true
 Bundle-Version: 6.0.0
 Bundle-ClassPath: vdbEdit.jar
 Bundle-Activator: com.metamatrix.vdb.edit.VdbEditPlugin
@@ -30,18 +30,18 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.xsd,
  org.teiid.designer.core,
  org.teiid.designer.sdt,
- org.teiid.metamodels.xmlservice,
- org.teiid.metamodels.webservice,
- org.teiid.metamodels.wsdl,
+ org.teiid.designer.metamodels.xmlservice,
+ org.teiid.designer.metamodels.webservice,
+ org.teiid.designer.metamodels.wsdl,
  org.teiid.designer.webservice,
- org.teiid.metamodels.relational,
+ org.teiid.designer.metamodels.relational,
  org.teiid.designer.ddl,
  org.teiid.core.designer,
  teiid_embedded_query,
- org.teiid.core.xslt,
+ org.teiid.designer.core.xslt,
  org.eclipse.emf.mapping,
- org.teiid.metamodels.xsd,
- org.teiid.metamodels.transformation,
- org.teiid.metamodels.core
+ org.teiid.designer.metamodels.xsd,
+ org.teiid.designer.metamodels.transformation,
+ org.teiid.designer.metamodels.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

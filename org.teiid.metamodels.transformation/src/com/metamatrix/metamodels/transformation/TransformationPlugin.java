@@ -26,7 +26,7 @@ public class TransformationPlugin extends Plugin {
 
     private static final String MISSING_RESOURCE = "<Missing message for key"; //$NON-NLS-1$
 
-    public static final String PLUGIN_ID = "org.teiid.metamodels.transformation"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "org.teiid.designer.metamodels.transformation"; //$NON-NLS-1$
     
     public static final String PACKAGE_ID = TransformationPlugin.class.getPackage().getName();
 

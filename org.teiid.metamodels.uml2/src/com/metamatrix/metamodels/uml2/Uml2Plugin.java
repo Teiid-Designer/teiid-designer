@@ -26,7 +26,7 @@ import com.metamatrix.core.util.PluginUtilImpl;
 
 public class Uml2Plugin extends Plugin {
 
-    public static final String PLUGIN_ID =  "org.teiid.metamodels.uml2";  //$NON-NLS-1$
+    public static final String PLUGIN_ID =  "org.teiid.designer.metamodels.uml2";  //$NON-NLS-1$
     
     public static final String PACKAGE_ID = Uml2Plugin.class.getPackage().getName();
 

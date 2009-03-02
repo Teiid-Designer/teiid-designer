@@ -6,7 +6,7 @@
 
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
-<project name="federate.designer.feature" default="build.update.jar" basedir=".">
+<project name="teiid.designer.feature" default="build.update.jar" basedir=".">
 
 	<taskdef name="eclipse.idReplacer"
 	         classname="org.eclipse.pde.internal.build.tasks.IdReplaceTask"

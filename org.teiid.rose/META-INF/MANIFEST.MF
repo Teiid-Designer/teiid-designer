@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.teiid.rose
+Bundle-SymbolicName: org.teiid.designer.rose
 Bundle-Version: 6.0.0
 Bundle-ClassPath: rose.jar
 Bundle-Activator: com.metamatrix.rose.internal.RosePlugin
@@ -18,12 +18,12 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.uml2,
  teiid_embedded_query,
  org.teiid.designer.core,
- org.teiid.metamodels.uml2,
+ org.teiid.designer.metamodels.uml2,
  org.teiid.designer.compare,
  org.teiid.core.designer,
  org.eclipse.emf.mapping,
  org.eclipse.core.runtime,
  org.eclipse.uml2.uml,
- org.teiid.metamodels.core
+ org.teiid.designer.metamodels.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

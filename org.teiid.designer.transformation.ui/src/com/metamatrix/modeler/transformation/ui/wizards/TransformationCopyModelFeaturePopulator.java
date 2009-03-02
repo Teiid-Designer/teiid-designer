@@ -14,12 +14,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -97,7 +95,7 @@ public class TransformationCopyModelFeaturePopulator
      */ 
     @Override
     public void copyModel(ModelResource sourceModelResource, ModelResource targetModelResource, InheritanceCheckboxTreeViewer viewer, 
-            Map extraProperties, boolean copyAllDescriptions, IProgressMonitor monitor) throws ModelerCoreException {
+            Map extraProperties, boolean copyAllDescriptions, IProgressMonitor monitor) {
 
         // This method is being revoked due to inadequate design and implementation.
     	throw new UnsupportedOperationException();

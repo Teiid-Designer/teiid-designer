@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.teiid.metamodels.relationship;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.metamodels.relationship;singleton:=true
 Bundle-Version: 6.0.0
 Bundle-ClassPath: relationship.jar
 Bundle-Activator: com.metamatrix.metamodels.relationship.RelationshipMetamodelPlugin
@@ -20,7 +20,7 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.edit,
  org.eclipse.core.runtime,
  org.teiid.designer.core,
- org.teiid.metamodels.core,
+ org.teiid.designer.metamodels.core,
  org.teiid.core.designer,
  teiid_embedded_query,
  org.eclipse.emf.mapping,

@@ -10,7 +10,7 @@ Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.internal.xsd.aspects.uml,
  com.metamatrix.modeler.xsd,
  com.metamatrix.modeler.xsd.util
-Require-Bundle: org.teiid.metamodels.xsd,
+Require-Bundle: org.teiid.designer.metamodels.xsd,
  org.teiid.designer.core,
  org.teiid.core.designer,
  teiid_embedded_query,

@@ -28,7 +28,7 @@ import com.metamatrix.core.util.PluginUtilImpl;
  */
 public class DiagramPlugin extends Plugin {
 
-    public static final String PLUGIN_ID = "org.teiid.metamodels.diagram"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "org.teiid.designer.metamodels.diagram"; //$NON-NLS-1$
     
     public static final String PACKAGE_ID = DiagramPlugin.class.getPackage().getName();
 

@@ -36,7 +36,7 @@ public class RelationshipMetamodelPlugin extends Plugin {
 
     public static final String BUILTIN_RELATIONSHIP_TYPES_URI = "http://www.metamatrix.com/relationships/BuiltInRelationshipTypes-instance"; //$NON-NLS-1$
 
-    public static final String PLUGIN_ID = "org.teiid.metamodels.relationship"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "org.teiid.designer.metamodels.relationship"; //$NON-NLS-1$
     
     public static final String PACKAGE_ID = RelationshipMetamodelPlugin.class.getPackage().getName();
 

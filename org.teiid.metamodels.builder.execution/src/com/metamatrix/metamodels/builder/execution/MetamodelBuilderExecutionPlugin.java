@@ -33,7 +33,7 @@ public class MetamodelBuilderExecutionPlugin extends Plugin {
     /**
      * The plug-in identifier of this plugin
      */
-    public static final String PLUGIN_ID = "org.teiid.metamodels.builder.execution"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "org.teiid.designer.metamodels.builder.execution"; //$NON-NLS-1$
     
     public static final String PACKAGE_ID = MetamodelBuilderExecutionPlugin.class.getPackage().getName();
 

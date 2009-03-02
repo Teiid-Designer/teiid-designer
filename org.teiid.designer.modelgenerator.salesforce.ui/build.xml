@@ -6,7 +6,7 @@
 
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
-<project name="com.metamatrix.modeler.modelgenerator.salesforce.ui" default="build.jars" basedir=".">
+<project name="org.teiid.designer.modelgenerator.salesforce.ui" default="build.jars" basedir=".">
 
 	<property name="basews" value="${ws}"/>
 	<property name="baseos" value="${os}"/>

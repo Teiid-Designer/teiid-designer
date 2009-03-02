@@ -14,7 +14,7 @@ Export-Package: com.metamatrix.modeler.internal.jdbc.relational,
  com.metamatrix.modeler.jdbc.relational.compare,
  com.metamatrix.modeler.jdbc.relational.impl,
  com.metamatrix.modeler.jdbc.relational.impl.custom
-Require-Bundle: org.teiid.metamodels.relational,
+Require-Bundle: org.teiid.designer.metamodels.relational,
  org.teiid.designer.jdbc,
  org.teiid.designer.core,
  org.eclipse.emf.ecore.xmi,
@@ -23,6 +23,6 @@ Require-Bundle: org.teiid.metamodels.relational,
  teiid_embedded_query,
  org.eclipse.core.runtime,
  org.eclipse.emf.mapping,
- org.teiid.metamodels.core
+ org.teiid.designer.metamodels.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

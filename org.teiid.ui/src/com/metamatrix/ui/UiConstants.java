@@ -27,7 +27,7 @@ public interface UiConstants {
      * The ID of the plug-in containing this constants class.
      * @since 4.0
      */
-    String PLUGIN_ID = "org.teiid.ui"; //$NON-NLS-1$ 
+    String PLUGIN_ID = "org.teiid.designer.ui.common"; //$NON-NLS-1$ 
     
     String PACKAGE_ID = UiConstants.class.getPackage().getName();
 

@@ -12,13 +12,13 @@ Export-Package: com.metamatrix.modeler.internal.mapping.factory,
  com.metamatrix.modeler.mapping.choice,
  com.metamatrix.modeler.mapping.factory
 Require-Bundle: org.teiid.designer.core,
- org.teiid.metamodels.transformation,
+ org.teiid.designer.metamodels.transformation,
  org.eclipse.emf.edit,
  org.teiid.core.designer,
  teiid_embedded_query,
  org.eclipse.core.runtime,
  org.eclipse.emf.mapping,
- org.teiid.metamodels.diagram,
- org.teiid.metamodels.core
+ org.teiid.designer.metamodels.diagram,
+ org.teiid.designer.metamodels.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

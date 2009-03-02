@@ -8,7 +8,7 @@ Bundle-Activator: com.metamatrix.modeler.sdt.ModelerSdtPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Require-Bundle: org.teiid.designer.core,
- org.teiid.metamodels.xsd,
+ org.teiid.designer.metamodels.xsd,
  org.teiid.core.designer,
  teiid_embedded_query,
  org.eclipse.core.runtime,

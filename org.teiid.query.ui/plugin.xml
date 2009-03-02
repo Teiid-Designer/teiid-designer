@@ -10,7 +10,7 @@
 <plugin>
 
      <extension
-         point="org.teiid.ui.editorPreferences">
+         point="org.teiid.designer.ui.common.editorPreferences">
          <editorPreferenceComponent
          	class="com.metamatrix.query.ui.preferences.QueryEditorPreferencesComponent"/>
    </extension>   

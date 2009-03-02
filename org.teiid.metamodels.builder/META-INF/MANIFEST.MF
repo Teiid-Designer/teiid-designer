@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.teiid.metamodels.builder;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.metamodels.builder;singleton:=true
 Bundle-Version: 6.0.0
 Bundle-ClassPath: metamodelBuilder.jar
 Bundle-Activator: com.metamatrix.metamodels.builder.MetamodelBuilderPlugin
@@ -14,7 +14,7 @@ Export-Package: com.metamatrix.metamodels.builder,
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore,
  org.eclipse.xsd,
- org.teiid.metamodels.xsd,
+ org.teiid.designer.metamodels.xsd,
  org.teiid.core.designer,
  teiid_embedded_query
 Bundle-ActivationPolicy: lazy

@@ -135,7 +135,7 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
                            InheritanceCheckboxTreeViewer viewer,
                            Map extraProperties,
                            boolean copyAllDescriptions,
-                           IProgressMonitor monitor ) throws ModelerCoreException {
+                           IProgressMonitor monitor ) {
 
     	// This method is being revoked due to inadequate design and implementation.
     	throw new UnsupportedOperationException();

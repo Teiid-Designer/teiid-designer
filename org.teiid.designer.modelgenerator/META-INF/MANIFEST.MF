@@ -12,14 +12,14 @@ Export-Package: com.metamatrix.modeler.modelgenerator,
  com.metamatrix.modeler.modelgenerator.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore,
- org.teiid.metamodels.relational,
+ org.teiid.designer.metamodels.relational,
  teiid_embedded_query,
  org.teiid.designer.core,
  org.teiid.designer.compare,
- org.teiid.metamodels.xsd,
- org.teiid.metamodels.relationship,
+ org.teiid.designer.metamodels.xsd,
+ org.teiid.designer.metamodels.relationship,
  org.teiid.core.designer,
  org.eclipse.xsd,
- org.teiid.metamodels.core
+ org.teiid.designer.metamodels.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

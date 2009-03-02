@@ -23,7 +23,7 @@ public interface IRoseConstants {
      * @since 4.1
      */
     
-    String PLUGIN_ID = "org.teiid.rose"; //$NON-NLS-1$
+    String PLUGIN_ID = "org.teiid.designer.rose"; //$NON-NLS-1$
     
     String PACKAGE_ID = IRoseConstants.class.getPackage().getName();
 }

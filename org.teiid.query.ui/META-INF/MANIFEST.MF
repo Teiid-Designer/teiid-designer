@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.teiid.query.ui;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.query.ui;singleton:=true
 Bundle-Version: 6.0.0
 Bundle-ClassPath: queryUi.jar
 Bundle-Activator: com.metamatrix.query.ui.UiPlugin
@@ -30,8 +30,8 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.editors,
  org.eclipse.core.resources,
  org.eclipse.ui,
- org.teiid.metamodels.transformation,
- org.teiid.ui,
+ org.teiid.designer.metamodels.transformation,
+ org.teiid.designer.ui.common,
  teiid_embedded_query,
  org.teiid.designer.core,
  org.teiid.core.designer,

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.teiid.metamodels.history;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.metamodels.history;singleton:=true
 Bundle-Version: 6.0.0
 Bundle-ClassPath: metamodelsHistory.jar
 Bundle-Activator: com.metamatrix.metamodels.history.HistoryPlugin

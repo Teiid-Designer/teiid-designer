@@ -87,7 +87,7 @@
       </class>
    </extension>
    <extension
-         point="org.teiid.ui.editorPreferences">
+         point="org.teiid.designer.ui.common.editorPreferences">
          <editorPreferenceComponent
          	class="com.metamatrix.modeler.mapping.ui.preferences.XmlDocumentPreferencesComponent"/>
    </extension>   
