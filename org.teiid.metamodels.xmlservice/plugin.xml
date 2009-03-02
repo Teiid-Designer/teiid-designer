@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+    
+<!--
+   	Each extension below represents a single metamodel.  Each metmodel is
+   	registered using under the specified <uri> value which must be the same
+   	eNS_URI value defined in the EPackage class for that metamodel.
+   -->
+   <extension
+         id="xmlservice"
+         name="%metamodelName"
+         point="org.teiid.designer.core.metamodel">
+      <uri>
+         http://www.metamatrix.com/metamodels/XmlService
+      </uri>
+      <alternateUri>
+         mtkplugin:///com.metamatrix.metamodels.XmlService
+      </alternateUri>
+      <rootEntityClass
+            name="com.metamatrix.metamodels.xmlservice.XmlOperation">
+      </rootEntityClass>
+      <properties
+            createAsPhysical="true"
+            requiresProxies="false"
+            participatoryOnly="false"
+            createAsVirtual="true"
+            supportsDiagrams="true"
+            supportsExtension="true">
+      </properties>
+      <allowableModelType>
+      	PHYSICAL
+      </allowableModelType>
+      <allowableModelType>
+      	VIRTUAL
+      </allowableModelType>
+      <packageClass
+            name="com.metamatrix.metamodels.xmlservice.XmlServicePackage">
+      </packageClass>
+      <adapterClass
+            name="com.metamatrix.metamodels.xmlservice.provider.XmlServiceItemProviderAdapterFactory">
+      </adapterClass>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.metamatrix.com/metamodels/XmlService"
+            class="com.metamatrix.metamodels.xmlservice.XmlServicePackage">
+      </package>
+   </extension>
+
+
+<!-- MetamodelAspect extensions -->
+   <extension
+         id="xmlserviceSqlAspect"
+         point="org.teiid.designer.core.sqlAspect">
+      <metamodelExtensionID>
+         xmlservice
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.metamodels.xmlservice.aspects.sql.XmlServiceSqlAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+   <extension
+         id="xmlserviceUmlAspect"
+         point="org.teiid.designer.core.umlDiagramAspect">
+      <metamodelExtensionID>
+         xmlservice
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.metamodels.xmlservice.aspects.uml.XmlServiceUmlAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+   <extension
+         id="xmlserviceValidationAspect"
+         point="org.teiid.designer.core.validationAspect">
+      <metamodelExtensionID>
+         xmlservice
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.metamodels.xmlservice.aspects.validation.XmlServiceValidationAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+
+</plugin>

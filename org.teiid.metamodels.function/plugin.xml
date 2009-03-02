@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+    
+<!--
+   	Each extension below represents a single metamodel.  Each metmodel is
+   	registered using under the specified <uri> value which must be the same
+   	eNS_URI value defined in the EPackage class for that metamodel.
+   -->
+   <extension
+         id="function"
+         name="%metamodelName"
+         point="org.teiid.designer.core.metamodel">
+      <uri>
+         http://www.metamatrix.com/metamodels/MetaMatrixFunction
+      </uri>
+      <alternateUri>
+         http://www.metamatrix.com/metamodels/MetaMatrixFunction
+      </alternateUri>
+      <rootEntityClass
+            name="com.metamatrix.metamodels.function.ScalarFunction">
+      </rootEntityClass>
+      <properties
+            createAsPhysical="true"
+            requiresProxies="false"
+            supportsDiagrams="true"
+            createAsNewModel="false"
+            participatoryOnly="false"
+            supportsExtension="true"
+            createAsVirtual="false">
+      </properties>
+      <allowableModelType>
+         FUNCTION
+      </allowableModelType>
+      <packageClass
+            name="com.metamatrix.metamodels.function.impl.FunctionPackageImpl">
+      </packageClass>
+      <adapterClass
+            name="com.metamatrix.metamodels.function.provider.FunctionItemProviderAdapterFactory">
+      </adapterClass>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.metamatrix.com/metamodels/MetaMatrixFunction"
+            class="com.metamatrix.metamodels.function.FunctionPackage">
+      </package>
+   </extension>
+
+
+<!-- MetamodelAspect extensions -->
+   <extension
+         id="functionValidationAspect"
+         point="org.teiid.designer.core.validationAspect">
+      <metamodelExtensionID>
+         function
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.metamodels.function.aspects.validation.FunctionValidationAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+   <extension
+         id="functionUmlAspect"
+         point="org.teiid.designer.core.umlDiagramAspect">
+      <metamodelExtensionID>
+         function
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.metamodels.function.aspects.uml.FunctionUmlAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+<!-- EObject Matcher extensions -->
+   <extension
+         id="functionMatcherFactory"
+         point="org.teiid.designer.core.eobjectMatcherFactory">
+      <class
+            name="com.metamatrix.metamodels.function.compare.FunctionMatcherFactory">
+      </class>
+   </extension>
+</plugin>
