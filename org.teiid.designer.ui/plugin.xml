@@ -488,10 +488,10 @@
             id="preferenceTransfer"
             name="%preferenceTransfer.name">
             <mapping scope="instance">
-                <entry node="com.metamatrix.modeler.core"/>
-                <entry node="com.metamatrix.modeler.diagram.ui"/>
-                <entry node="com.metamatrix.modeler.ui"/>
-                <entry node="com.metamatrix.ui"/>
+                <entry node="org.teiid.designer.core"/>
+                <entry node="org.teiid.designer.diagram.ui"/>
+                <entry node="org.teiid.designer.ui"/>
+                <entry node="org.teiid.designer.ui.common"/>
             </mapping>
             <description>%preferenceTransfer.description</description>
         </transfer>
