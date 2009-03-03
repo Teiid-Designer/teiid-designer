@@ -27,7 +27,6 @@
 
    <requires>
       <import feature="org.eclipse.emf" version="2.4.1"/>
-      <import feature="org.eclipse.emf.ecore.sdo" version="2.4.0"/>
       <import feature="org.eclipse.gef" version="3.4.0"/>
       <import feature="org.eclipse.platform" version="3.4.1"/>
       <import feature="org.eclipse.uml2" version="2.2.0"/>
