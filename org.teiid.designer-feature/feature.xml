@@ -7,7 +7,7 @@
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <feature
-      id="teiid.designer.feature"
+      id="org.teiid.designer"
       label="%featureName"
       version="6.0.0"
       provider-name="%providerName"
