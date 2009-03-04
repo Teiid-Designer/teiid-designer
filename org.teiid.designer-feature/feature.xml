@@ -9,15 +9,15 @@
 <feature
       id="org.teiid.designer"
       label="%featureName"
-      version="6.0.0"
+      version="6.0.0.v20090304"
       provider-name="%providerName"
       image="feature.gif">
 
-   <description url="www.jboss.org/projects/teiid/designer">
+   <description url="www.jboss.org/projects/teiiddesigner">
       %description
    </description>
 
-   <copyright url="www.jboss.org/projects/teiid/designer">
+   <copyright url="www.jboss.org/projects/teiiddesigner">
       %copyright
    </copyright>
 
