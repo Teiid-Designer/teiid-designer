@@ -8,10 +8,10 @@
 -->
 <introContent>
   <!-- Extension to the SDK Samples Page. -->
-  <extensionContent id="com.metamatrix.modeler" name="Teiid Designer" alt-style="css/samples.properties" style="css/samples.css" path="samples/@">
+  <extensionContent id="org.teiid.designer" name="Teiid Designer" alt-style="css/samples.properties" style="css/samples.css" path="samples/@">
     <group label="Teiid Designer" id="designer" style-id="content-group">
        <text style-id="group-description">The Teiid Designer example projects demonstrate some useful modeling techniques.</text>
-       <link label="Teiid Designer Models" url="http://org.eclipse.ui.intro/runAction?pluginId=com.metamatrix.modeler.help&amp;class=com.metamatrix.modeler.help.examples.ImportExamplesAction&amp;standby=true" id="teiid-designer" style-id="content-link">
+       <link label="Teiid Designer Models" url="http://org.eclipse.ui.intro/runAction?pluginId=org.teiid.designer.help&amp;class=com.metamatrix.modeler.help.examples.ImportExamplesAction&amp;standby=true" id="teiid-designer" style-id="content-link">
           <text>Import a sample Teiid Designer model project into your workspace.</text>
        </link>
     </group>

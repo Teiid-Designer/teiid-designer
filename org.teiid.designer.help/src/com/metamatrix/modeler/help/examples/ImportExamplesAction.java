@@ -55,7 +55,7 @@ public class ImportExamplesAction extends Action {
     @Override
     public void run() {
         try {
-            URL url = FileLocator.find(Platform.getBundle("com.metamatrix.modeler.help"), new Path("/"), null); //$NON-NLS-1$  //$NON-NLS-2$
+            URL url = FileLocator.find(Platform.getBundle("org.teiid.designer.help"), new Path("/"), null); //$NON-NLS-1$  //$NON-NLS-2$
             String helpPluginDir = FileLocator.toFileURL(url).getFile();
             File examplesDir = new File(helpPluginDir, EXAMPLES_DIR_NAME);
 
