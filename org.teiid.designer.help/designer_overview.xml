@@ -45,11 +45,8 @@
 		<topic label="Import Wizard" href="UsersGuide/ModelingYourData.htm#importWizard">
 			<topic label="Archive File" 									href="UsersGuide/ImportArchiveFile.htm" />
 			<topic label="File System" 										href="UsersGuide/ImportFromFileSystem.htm" />
-			<topic label="Metadata form ER/Studio" 							href="UsersGuide/ImportFromErwin.htm" />
-			<topic label="Metadata from ERwin " 							href="UsersGuide/ImportFromErwin.htm" />
 			<topic label="Metadata from IBM Rational Rose Model" 			href="UsersGuide/ImportFromRose.htm" />
 			<topic label="Metadata from JDBC Database" 						href="UsersGuide/ImportJdbc.htm" />
-			<topic label="Metadata from Popkin System Architect" 			/>
 			<topic label="Metadata from Text Files on file system" 			href="UsersGuide/ImportFromTextFiles.htm"/>
 			<topic label="Web Service as Relational Source Model" 			href="UsersGuide/CreateRelationalModelFromWSDL.htm" />
 			<topic label="WSDL File into Web Service Model" 				href="UsersGuide/ImportWsdl.htm" />
