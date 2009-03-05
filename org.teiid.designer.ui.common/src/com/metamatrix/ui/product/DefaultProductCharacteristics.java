@@ -27,6 +27,8 @@ import com.metamatrix.ui.internal.product.WorkbenchState;
  */
 public class DefaultProductCharacteristics implements IProductCharacteristics {
     private WorkbenchState defaultWorkbenchState;
+    
+    private static final String DEFAULT_EXPLORER_ID = "explorer.view"; //$NON-NLS-1$
 
     /** 
      * 
@@ -49,7 +51,7 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
      * @since 4.3
      */
     public String getPrimaryNavigationViewId() {
-        return null;
+        return DEFAULT_EXPLORER_ID;
     }
     
     /** 
