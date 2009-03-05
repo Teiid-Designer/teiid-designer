@@ -27,7 +27,7 @@ public interface DqpUiConstants {
     
     String PACKAGE_ID = DqpUiConstants.class.getPackage().getName();
     
-    String EXT_PREFIX = "com.metamatrix.modeler.dqp.ui";  //$NON-NLS-1$
+    //String EXT_PREFIX = "com.metamatrix.modeler.dqp.ui";  //$NON-NLS-1$
     
 
     /**
@@ -59,7 +59,7 @@ public interface DqpUiConstants {
     /**
      * Extension ID of the jdbc client perspective
      */
-    String JDBC_CLIENT_PERSPECTIVE_ID = EXT_PREFIX + "jdbcClientPluginPerspective"; //$NON-NLS-1$
+    String JDBC_CLIENT_PERSPECTIVE_ID = /*EXT_PREFIX + DOT + */"jdbcClientPluginPerspective"; //$NON-NLS-1$
 
     /**
      * Extension ID of the jdbc cconnection view
@@ -188,15 +188,15 @@ public interface DqpUiConstants {
 
     interface Extensions {
         // Connector Bindings VDB Editor Page
-        String CONNECTOR_BINDINGS_VDB_EDITOR_PAGE_ID = EXT_PREFIX + DOT + "connectorBindingsEditorpart"; //$NON-NLS-1$;
+        String CONNECTOR_BINDINGS_VDB_EDITOR_PAGE_ID = /*EXT_PREFIX + DOT + */ "connectorBindingsEditorpart"; //$NON-NLS-1$;
 
-        String XML_DOC_SQL_RESULTS_VIEW = EXT_PREFIX + DOT + "xmlDocumentSqlResultsView"; //$NON-NLS-1$
+        String XML_DOC_SQL_RESULTS_VIEW = /*EXT_PREFIX + DOT + */ "xmlDocumentSqlResultsView"; //$NON-NLS-1$
 
-        String XML_DOC_RESULTSET_PROCESSOR = EXT_PREFIX + DOT + "xmlDocumentResultSetProcessor"; //$NON-NLS-1$
+        String XML_DOC_RESULTSET_PROCESSOR = /*EXT_PREFIX + DOT + */ "xmlDocumentResultSetProcessor"; //$NON-NLS-1$
 
-        String SQL_RESULTS_VIEW = EXT_PREFIX + DOT + "sqlResultsView"; //$NON-NLS-1$
+        String SQL_RESULTS_VIEW = /*EXT_PREFIX + DOT + */ "sqlResultsView"; //$NON-NLS-1$
 
-        String SQL_RESULTSET_PROCESSOR = EXT_PREFIX + DOT + "sqlResultSetProcessor"; //$NON-NLS-1$
+        String SQL_RESULTSET_PROCESSOR = /*EXT_PREFIX + DOT + */ "sqlResultSetProcessor"; //$NON-NLS-1$
 
         String CONNECTORS_VIEW_ID = /*PLUGIN_ID + DOT + */ "connectorsView"; //$NON-NLS-1$
 
