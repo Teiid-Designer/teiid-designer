@@ -46,7 +46,7 @@
    </extension> 
    <extension
          point="org.eclipse.ui.importWizards">
-<!-- Modeler VDB Import wizard -->
+<!-- Modeler VDB Import wizard 
       <wizard
             name="%importVdbWizard.name"
             icon="icons/full/ctool16/importvdb.gif"
@@ -56,6 +56,7 @@
             %importVdbWizard.description
          </description>
       </wizard>
+-->
    </extension>
       <extension
 		id="SynchronizeVdbAction"
