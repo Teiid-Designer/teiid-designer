@@ -1,8 +1,0 @@
-##### modelMapper #####
-modelMapper$description = \
-	Enables debugging related to ModelMappingFactory and ITreeToRelationalMapper implementations
-modelMapper = false
-##### mappingClassFactory #####
-mappingClassFactory$description = \
-	Enables debugging related to the creation and editing of Mapping Classes
-mappingClassFactory = false
