@@ -175,7 +175,9 @@ public class DiagramViewForm extends Composite {
         int wHintToolBar = 25;
         if (toolBar != null) {
             ToolItem firstItem = toolBar.getItem(0);
-            if (firstItem != null) wHintToolBar = firstItem.getWidth() + 4;
+            if (firstItem != null) {
+            	wHintToolBar = firstItem.getWidth() + 4;
+            }
             toolBarSize = toolBar.computeSize(wHintToolBar, hHint);
             toolBarSize.x += 1; // +1 for highlight line
         }
@@ -221,6 +223,7 @@ public class DiagramViewForm extends Composite {
     public Rectangle getClientArea() {
         checkWidget();
         Rectangle clientArea = super.getClientArea();
+
         clientArea.x += BORDER_LEFT;
         clientArea.y += BORDER_TOP;
         clientArea.width -= BORDER_LEFT + BORDER_RIGHT;
@@ -260,7 +263,6 @@ public class DiagramViewForm extends Composite {
         checkWidget();
 
         Rectangle rect = getClientArea();
-
         drawLine2 = -1;
 
         int width = rect.x + marginWidth;
@@ -274,7 +276,7 @@ public class DiagramViewForm extends Composite {
             if (count > 0) {
                 final ToolItem firstItem = toolBar.getItem(0);
                 if (firstItem != null) {
-                    wHintToolBar = firstItem.getWidth();
+                    wHintToolBar = 25; //firstItem.getWidth();
                 }
             }
 
@@ -299,6 +301,7 @@ public class DiagramViewForm extends Composite {
             rectFinal.y = rect.y + marginHeight;
             rectFinal.width = rect.x + rect.width - width - marginWidth;
             rectFinal.height = rect.height - 2 * marginHeight;
+
             content.setBounds(rectFinal);
         }
         
