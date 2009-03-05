@@ -40,7 +40,7 @@ public final class SqlexplorerViewConstants
 	public static final String SQLEXPLORER_DBVIEW="net.sourceforge.sqlexplorer.plugin.views.DBView";//$NON-NLS-1$
 	public static final String SQLEXPLORER_CONNINFO="net.sourceforge.sqlexplorer.plugin.views.ConnectionInfo";//$NON-NLS-1$
 	public static final String SQLEXPLORER_SQLHISTORY="net.sourceforge.sqlexplorer.plugin.views.SQLHistoryView";
-    public static final String MESSAGE_LOG = "com.metamatrix.modeler.ui.views.logView";
+    public static final String MESSAGE_LOG = "views.logView";
 
     /** Collection of the default views which this plugin offers */
     private List defaultViewList = null;
