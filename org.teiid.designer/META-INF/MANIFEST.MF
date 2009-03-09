@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Teiid Designer
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer
 Bundle-Version: 6.0.0
-Bundle-Vendor: Red Hat, Inc.
+Bundle-Vendor: %providerName
