@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.Platform;
 import com.metamatrix.modeler.tools.textimport.ui.wizards.ITextImportMainPage;
 
 public abstract class TextImportContributionManager {
-    private static final String ID              = "com.metamatrix.modeler.tools.textimport.ui.textImportContributor"; //$NON-NLS-1$
+    private static final String ID              = "textImportContributor"; //$NON-NLS-1$
     private static final String CLASS           = "class"; //$NON-NLS-1$
     private static final String CLASSNAME       = "name"; //$NON-NLS-1$
     private static final String NO_DESCRIPTION  = "No Description"; //$NON-NLS-1$
