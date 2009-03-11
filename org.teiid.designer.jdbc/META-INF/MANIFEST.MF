@@ -28,4 +28,3 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.apache.poi,
  org.teiid.core.designer
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6

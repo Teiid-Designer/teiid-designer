@@ -37,4 +37,3 @@ Require-Bundle: org.teiid.designer.metamodels.webservice,
  org.teiid.designer.metamodels.core,
  org.eclipse.core.resources
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -31,4 +31,3 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.xsd,
  org.eclipse.emf.ecore.xmi
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -289,5 +289,4 @@ Export-Package: com.metamatrix.admin,
  org.jdom.output,
  org.jdom.transform,
  org.jdom.xpath
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin

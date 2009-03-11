@@ -26,4 +26,3 @@ Require-Bundle: org.eclipse.emf.ecore,
  teiid_embedded_query,
  org.eclipse.emf.mapping
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6

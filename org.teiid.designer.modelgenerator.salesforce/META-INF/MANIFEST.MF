@@ -38,4 +38,3 @@ Bundle-ClassPath: salesforcemodelgenerator.jar,
  saaj.jar,
  commons-logging-1.0.4.jar,
  wsdl4j-1.5.1.jar
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6

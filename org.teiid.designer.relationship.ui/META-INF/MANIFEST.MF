@@ -59,4 +59,3 @@ Require-Bundle: org.eclipse.ui.ide,
  org.teiid.designer.metamodels.transformation,
  org.teiid.designer.metamodels.core
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6

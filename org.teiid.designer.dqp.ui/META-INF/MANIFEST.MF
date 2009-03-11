@@ -52,4 +52,3 @@ Require-Bundle: org.eclipse.ui.views,
  org.eclipse.ui.forms,
  org.teiid.designer.metamodels.core
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6

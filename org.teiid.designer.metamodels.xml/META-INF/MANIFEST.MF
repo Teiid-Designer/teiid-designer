@@ -27,4 +27,3 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.xsd,
  org.teiid.designer.metamodels.core
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6

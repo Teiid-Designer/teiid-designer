@@ -26,4 +26,3 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.edit,
  org.teiid.designer.transformation
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6

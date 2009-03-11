@@ -25,7 +25,6 @@ Require-Bundle: org.teiid.designer.modelgenerator.salesforce,
  org.eclipse.emf.ecore
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: modelerModelgeneratorSalesforceUi.jar
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.modelgenerator.salesforce,
  com.metamatrix.modeler.modelgenerator.salesforce.ui,
  com.metamatrix.modeler.modelgenerator.salesforce.ui.util,

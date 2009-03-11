@@ -37,4 +37,3 @@ Export-Package: net.sf.saxon,
  net.sf.saxon.type,
  net.sf.saxon.value,
  net.sf.saxon.xpath
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6

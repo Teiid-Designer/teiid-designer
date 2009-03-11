@@ -20,4 +20,3 @@ Require-Bundle: org.teiid.designer.core,
  teiid_embedded_query,
  org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6

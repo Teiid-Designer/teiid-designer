@@ -18,4 +18,3 @@ Require-Bundle: org.teiid.designer.metamodels.xsd,
  org.eclipse.xsd,
  org.eclipse.emf.edit
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6

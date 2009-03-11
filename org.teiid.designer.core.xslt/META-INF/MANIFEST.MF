@@ -12,6 +12,5 @@ Require-Bundle: org.teiid.core.designer,
  org.eclipse.core.runtime,
  teiid_embedded_query
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.core.xslt,
  com.metamatrix.core.xslt.impl
