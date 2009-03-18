@@ -271,12 +271,12 @@ public class UdfModelExporter {
 
                 // jar file must exist
                 if (!new File(jarPath).exists()) {
-                    return ModelerDqpUtils.createErrorStatus(PREFIX + "udfJarDoesNotExist", jarPath);
+                    return ModelerDqpUtils.createErrorStatus(PREFIX + "udfJarDoesNotExist", jarPath);  //$NON-NLS-1$
                 }
 
                 // jar file must have a valid file extension
                 if (!jarPath.endsWith(Extensions.JAR)) {
-                    return ModelerDqpUtils.createErrorStatus(PREFIX + "invalidJarExtension", jarPath);
+                    return ModelerDqpUtils.createErrorStatus(PREFIX + "invalidJarExtension", jarPath); //$NON-NLS-1$
                 }
             }
         }

@@ -399,9 +399,9 @@ public final class SourceSelectionPage extends AbstractWizardPage {
         if (isPageComplete()) {
             setErrorMessage(null);
             if (numImported == 0) {
-                setMessage(UTIL.getString(PREFIX + "noArchivesImported"));
+                setMessage(UTIL.getString(PREFIX + "noArchivesImported")); //$NON-NLS-1$
             } else {
-                setMessage(UTIL.getString(PREFIX + "archivesBeingImported", numImported));
+                setMessage(UTIL.getString(PREFIX + "archivesBeingImported", numImported)); //$NON-NLS-1$
             }
 
             // this.viewer.refresh();
