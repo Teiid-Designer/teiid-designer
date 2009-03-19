@@ -58,7 +58,7 @@
       <extension
          id="HTTPExtensionReplaceAction"
 		 name="%httpExtensionReplaceAction.name"
-         point="org.teiid.designer..ui.modelResourceAction">
+         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
             label="%httpExtensionReplaceAction.label"
             name="com.metamatrix.modeler.modelgenerator.xml.modelextension.HTTPExtensionReplaceAction">
