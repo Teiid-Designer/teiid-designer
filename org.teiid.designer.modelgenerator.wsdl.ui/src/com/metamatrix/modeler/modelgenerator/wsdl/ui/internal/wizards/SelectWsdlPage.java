@@ -584,18 +584,11 @@ public class SelectWsdlPage extends WizardPage
 
                 // If WSDL file was selected, update the manager and the controls
                 if (validFile) {
-                    String fileStr;
-                    try {
-                        fileStr = ((File)wsdlFiles[0]).toURI().toURL().toString();
-                        this.importManager.setWSDLFileUri(fileStr);
-                        this.textFieldFileSystem.setText(fileStr);
-                        this.wsdlStatus = null;
-                        updateValidateWSDLButtonEnablement();
-                    } catch (MalformedURLException e) {
-                        // we should never get here.
-                        UTIL.log(e);
-                        return;
-                    }
+                    String fileStr = ((File) wsdlFiles[0]).getAbsolutePath();
+					this.importManager.setWSDLFileUri(fileStr);
+					this.textFieldFileSystem.setText(fileStr);
+					this.wsdlStatus = null;
+					updateValidateWSDLButtonEnablement();
                 } else {
                     // open file chooser again based on if user OK'd dialog
                     if (MessageDialog.openQuestion(getShell(), getString("dialog.browseFileSystemWsdl.wrongFileType.title"), //$NON-NLS-1$
@@ -707,13 +700,8 @@ public class SelectWsdlPage extends WizardPage
         text = text.replace('\\', '/');
         File file = new File(text);
         if (file.exists() && file.isFile() && ModelGeneratorWsdlUiUtil.isWsdlFile(file)) {
-            try {
-                this.importManager.setWSDLFileUri(file.toURI().toURL().toString());
-            } catch (IOException e) {
-                // ignore
-            }
+            this.importManager.setWSDLFileUri(file.getAbsolutePath());
         }
-
     }
 
     /**
