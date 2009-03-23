@@ -141,10 +141,16 @@ public class PreviewDataView extends AbstractPreviewDataView implements IResults
                     // create and setup results
                     final ResultsPanel pnl = new ResultsPanel(PreviewDataView.this, parentControl);
 
-                    // add to collections
-                    if (!list.contains(model)) {
+                    // store in collection used to populate the results table viewer
+                    int index = list.indexOf(model);
+                    
+                    if (index == -1) {
                         list.add(model);
+                    } else {
+                        list.set(index, model);
                     }
+
+                    // store in results map
                     map.put(model, pnl);
 
                     Control c = createResultsControl(pnl.getResultsDetailParent(), model);
