@@ -179,7 +179,7 @@ public class ModelObjectPropertySource extends PropertySource {
                 StatusBarUpdater.formatEObjectMessage((EObject) object);
             }
             String[] strings = new String[] { e.getClass().getName(), propertyId.toString(), value.toString(), objectString };
-            String message =  UiConstants.Util.getString("ModelObjectPropertySource.setPropertyValueError", strings); //$NON-NLS-1$
+            String message =  UiConstants.Util.getString("ModelObjectPropertySource.setPropertyValueError", (Object[])strings); //$NON-NLS-1$
             UiConstants.Util.log(IStatus.ERROR, e, message);
         }
     }
@@ -341,7 +341,7 @@ public class ModelObjectPropertySource extends PropertySource {
                     StatusBarUpdater.formatEObjectMessage((EObject) object);
                 }
                 String[] strings = new String[] { e.getClass().getName(), propertyId.toString(), objectString };
-                String message =  UiConstants.Util.getString("ModelObjectPropertySource.getPropertyValueError", strings); //$NON-NLS-1$
+                String message =  UiConstants.Util.getString("ModelObjectPropertySource.getPropertyValueError", (Object[])strings); //$NON-NLS-1$
                 UiConstants.Util.log(IStatus.ERROR, e, message);
             }
         }
@@ -388,7 +388,7 @@ public class ModelObjectPropertySource extends PropertySource {
                 StatusBarUpdater.formatEObjectMessage((EObject) object);
             }
             String[] strings = new String[] { e.getClass().getName(), propertyId.toString(), objectString };
-            String message =  UiConstants.Util.getString("ModelObjectPropertySource.resetPropertyValueError", strings); //$NON-NLS-1$
+            String message =  UiConstants.Util.getString("ModelObjectPropertySource.resetPropertyValueError", (Object[])strings); //$NON-NLS-1$
             UiConstants.Util.log(IStatus.ERROR, e, message);
         }
     }

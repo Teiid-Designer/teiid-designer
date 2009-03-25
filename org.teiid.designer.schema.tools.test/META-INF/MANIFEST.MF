@@ -14,4 +14,5 @@ Bundle-Localization: plugin
 Require-Bundle: org.teiid.designer.schema.tools;bundle-version="6.0.0",
  org.eclipse.xsd;bundle-version="2.4.0",
  org.junit4;bundle-version="4.3.1",
- teiid_embedded_query;bundle-version="6.0.0"
+ teiid_embedded_query;bundle-version="6.0.0",
+ org.jdom;bundle-version="1.0"

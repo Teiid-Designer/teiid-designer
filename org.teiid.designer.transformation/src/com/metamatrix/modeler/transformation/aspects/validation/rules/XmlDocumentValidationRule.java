@@ -844,7 +844,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
             ResolverVisitor.resolveLanguageObject(criteria, groups, metadata);
 
             // validate
-            ValidatorReport report = Validator.validate(criteria, metadata, false);
+            ValidatorReport report = Validator.validate(criteria, metadata);
             if (report.hasItems()) {
                 Collection problems = createValidationProblems(report);
                 for (Iterator probIter = problems.iterator(); probIter.hasNext();) {

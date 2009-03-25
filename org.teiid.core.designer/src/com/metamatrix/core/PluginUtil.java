@@ -7,8 +7,6 @@
  */
 package com.metamatrix.core;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
@@ -60,139 +58,6 @@ public interface PluginUtil extends
     public void log( Throwable t );
 
     /**
-     * Get the string identified by the given key and localized to the current locale.
-     * 
-     * @param key
-     *            the key in the resource file
-     * @return the localized String, or "!&lt;key>!" if the string could not be found in the current locale.
-     * @exception NullPointerException
-     *                if <code>key</code> is <code>null</code>.
-     */
-    String getString(String key);
-
-    /**
-     * Get the string identified by the given key and localized to the current locale, and replace placeholders in the localized
-     * string with the string form of the parameters.
-     * 
-     * @param key
-     *            the key in the resource file
-     * @param params
-     *            the list of parameters that should replace placeholders in the localized string (e.g., "{0}", "{1}", etc.)
-     * @return the localized String, or "!&lt;key>!" if the string could not be found in the current locale.
-     * @exception NullPointerException
-     *                if <code>key</code> is <code>null</code>.
-     */
-    String getString(String key,
-                     List params);
-
-    /**
-     * Convenience method that wraps the specified parameter in a Boolean object before calling
-     * {@link #getString(String, Object)}.
-     * 
-     * @since 4.0
-     */
-    String getString(String key,
-                     boolean parameter);
-
-    /**
-     * Convenience method that wraps the specified parameter in a Byte object before calling {@link #getString(String, Object)}.
-     * 
-     * @since 4.0
-     */
-    String getString(String key,
-                     byte parameter);
-
-    /**
-     * Convenience method that wraps the specified parameter in a Character object before calling
-     * {@link #getString(String, Object)}.
-     * 
-     * @since 4.0
-     */
-    String getString(String key,
-                     char parameter);
-
-    /**
-     * Convenience method that wraps the specified parameter in a Double object before calling {@link #getString(String, Object)}.
-     * 
-     * @since 4.0
-     */
-    String getString(String key,
-                     double parameter);
-
-    /**
-     * Convenience method that wraps the specified parameter in a Float object before calling {@link #getString(String, Object)}.
-     * 
-     * @since 4.0
-     */
-    String getString(String key,
-                     float parameter);
-
-    /**
-     * Convenience method that wraps the specified parameter in a Integer object before calling
-     * {@link #getString(String, Object)}.
-     * 
-     * @since 4.0
-     */
-    String getString(String key,
-                     int parameter);
-
-    /**
-     * Convenience method that wraps the specified parameter in a Long object before calling {@link #getString(String, Object)}.
-     * 
-     * @since 4.0
-     */
-    String getString(String key,
-                     long parameter);
-
-    /**
-     * Convenience method that adds the specified parameter to a list before calling {@link #getString(String, List)}.
-     * 
-     * @since 4.0
-     */
-    String getString(String key,
-                     Object parameter);
-
-    /**
-     * Convenience method that adds the specified parameters to a list before calling {@link #getString(String, List)}.
-     * 
-     * @since 4.0
-     */
-    String getString(String key,
-                     Object parameter1,
-                     Object parameter2);
-
-    /**
-     * Convenience method that adds the specified parameters to a list before calling {@link #getString(String, List)}.
-     * 
-     * @since 4.0
-     */
-    String getString(String key,
-                     Object parameter1,
-                     Object parameter2,
-                     Object parameter3);
-
-    /**
-     * Gets text substituting values from the given array into the proper place.
-     * 
-     * @param key
-     *            the property key
-     * @param parameters
-     *            the data placed into the text
-     * @return the locale-specific text
-     * @since 4.0
-     */
-    String getString(String key,
-                     Object[] parameters);
-
-    /**
-     * Convenience method that wraps the specified parameter in a Short object before calling {@link #getString(String, Object)}.
-     * 
-     * @since 4.0
-     */
-    String getString(String key,
-                     short parameter);
-
-    /**
      * Returns the localized string identified by the specified key if it exists, or the key itself if not.
      * 
      * @param key
@@ -221,4 +86,12 @@ public interface PluginUtil extends
      *            the runnable object to be executed
      */
     void run(ISafeRunnable runnable);
+    
+    /**
+     * 
+     * @param key
+     * @param parameters
+     * @return
+     */
+    String getString(String key, Object... parameters);
 }

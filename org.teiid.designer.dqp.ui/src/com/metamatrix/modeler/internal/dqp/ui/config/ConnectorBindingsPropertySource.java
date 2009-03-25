@@ -333,7 +333,7 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
             params[1] = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
             params[2] = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
 
-            this.messageLabel.setText(UTIL.getString("ResetPasswordDialog.msg", params)); //$NON-NLS-1$
+            this.messageLabel.setText(UTIL.getString("ResetPasswordDialog.msg", (Object[])params)); //$NON-NLS-1$
 
             return pnl;
         }

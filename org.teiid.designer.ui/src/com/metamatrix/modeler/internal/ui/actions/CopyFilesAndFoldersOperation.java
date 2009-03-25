@@ -705,7 +705,7 @@ public class CopyFilesAndFoldersOperation implements UiConstants {
                 InputDialog dialog = new InputDialog(
                                                      parentShell,
                                                      UiConstants.Util.getString("CopyFilesAndFoldersOperation.inputDialogTitle"), //$NON-NLS-1$
-                                                     UiConstants.Util.getString("CopyFilesAndFoldersOperation.inputDialogMessage", new String[] {resource.getName()}), //$NON-NLS-1$
+                                                     UiConstants.Util.getString("CopyFilesAndFoldersOperation.inputDialogMessage", (Object[])new String[] {resource.getName()}), //$NON-NLS-1$
                                                      getAutoNewNameFor(originalName, workspace).lastSegment().toString(),
                                                      validator);
                 dialog.setBlockOnOpen(true);

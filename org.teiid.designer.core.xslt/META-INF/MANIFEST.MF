@@ -10,7 +10,8 @@ Bundle-Localization: plugin
 Require-Bundle: org.teiid.core.designer,
  net.sf.saxon,
  org.eclipse.core.runtime,
- teiid_embedded_query
+ teiid_embedded_query,
+ org.jdom;bundle-version="1.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: com.metamatrix.core.xslt,
  com.metamatrix.core.xslt.impl

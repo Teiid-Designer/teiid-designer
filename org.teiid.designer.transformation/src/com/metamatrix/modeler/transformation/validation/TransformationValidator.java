@@ -417,7 +417,7 @@ public class TransformationValidator implements QueryValidator {
         Collection statusList = null;
         try {
             // Validate
-            ValidatorReport report = Validator.validate(command, getQueryMetadata(), false);
+            ValidatorReport report = Validator.validate(command, getQueryMetadata());
             // If Validation report has nothing, command is valid
             if (!report.hasItems()) {
                 // If no report items - validation is successful

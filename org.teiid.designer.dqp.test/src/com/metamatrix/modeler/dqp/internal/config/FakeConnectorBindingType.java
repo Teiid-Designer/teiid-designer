@@ -208,8 +208,8 @@ public class FakeConnectorBindingType implements
      * @since 4.3
      */
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public Object clone() {
+        return null;
     }
 
     /** 

@@ -15,7 +15,8 @@ Require-Bundle: org.teiid.designer.core;bundle-version="6.0.0",
  org.eclipse.emf.ecore.xmi;bundle-version="2.4.1",
  org.eclipse.core.runtime;bundle-version="3.4.0",
  org.eclipse.core.resources;bundle-version="3.4.1",
- org.junit4;bundle-version="4.3.1"
+ org.junit4;bundle-version="4.3.1",
+ org.jdom;bundle-version="1.0"
 Export-Package: com.metamatrix.modeler.core,
  com.metamatrix.modeler.core.compare,
  com.metamatrix.modeler.core.metamodel,

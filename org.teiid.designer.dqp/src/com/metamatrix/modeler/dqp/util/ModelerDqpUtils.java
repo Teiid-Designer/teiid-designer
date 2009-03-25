@@ -115,7 +115,7 @@ public final class ModelerDqpUtils {
      */
     public static IStatus createErrorStatus( String msgKey,
                                              String... params ) {
-        String msg = (params == null) ? DqpPlugin.Util.getString(msgKey) : DqpPlugin.Util.getString(msgKey, params);
+        String msg = (params == null) ? DqpPlugin.Util.getString(msgKey) : DqpPlugin.Util.getString(msgKey, (Object[])params);
         return new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, msg);
     }
 

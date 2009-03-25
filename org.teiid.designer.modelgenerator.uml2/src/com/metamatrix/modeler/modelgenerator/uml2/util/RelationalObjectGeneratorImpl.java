@@ -593,7 +593,7 @@ public class RelationalObjectGeneratorImpl implements RelationalObjectGenerator 
                             String className = StringUtil.getLastToken(type.getClass().getName(), "."); //$NON-NLS-1$
                             String[] params = new String[] {className,
                                 property.getNamespace().getName() + '.' + property.getName()};
-                            final String message = Uml2ModelGeneratorPlugin.Util.getString("RelationalObjectGeneratorImpl.UnsupportedPropertyType", params); //$NON-NLS-1$
+                            final String message = Uml2ModelGeneratorPlugin.Util.getString("RelationalObjectGeneratorImpl.UnsupportedPropertyType", (Object[])params); //$NON-NLS-1$
                             final IStatus status = new Status(IStatus.WARNING, Uml2ModelGeneratorPlugin.PLUGIN_ID,
                                                               UNSUPPORTED_PROPERTY_TYPE_ERROR_CODE, message, null);
                             problems.add(status);
@@ -1133,7 +1133,7 @@ public class RelationalObjectGeneratorImpl implements RelationalObjectGenerator 
                                                       IStatus.WARNING,
                                                       Uml2ModelGeneratorPlugin.PLUGIN_ID,
                                                       UNABLE_TO_CLONE_OBJECTS,
-                                                      Uml2ModelGeneratorPlugin.Util.getString("RelationalObjectGeneratorImpl.Unable_to_clone_an_EObject_to_create_an_FK_to_the_table_named__{0}._2", params), e); //$NON-NLS-1$
+                                                      Uml2ModelGeneratorPlugin.Util.getString("RelationalObjectGeneratorImpl.Unable_to_clone_an_EObject_to_create_an_FK_to_the_table_named__{0}._2", (Object[])params), e); //$NON-NLS-1$
                     problems.add(status);
                     return null;
                 }
@@ -1402,7 +1402,7 @@ public class RelationalObjectGeneratorImpl implements RelationalObjectGenerator 
                 simpleType = datatypeFinder.findDatatype(type.getName());
             } catch (CoreException e) {
                 String[] params = new String[] {};
-                final String message = Uml2ModelGeneratorPlugin.Util.getString("RelationalObjectGeneratorImpl.Unable_to_look_up_a_SimpleDatatype_using_the_instance_of_DatatypeFinder._1", params); //$NON-NLS-1$
+                final String message = Uml2ModelGeneratorPlugin.Util.getString("RelationalObjectGeneratorImpl.Unable_to_look_up_a_SimpleDatatype_using_the_instance_of_DatatypeFinder._1", (Object[])params); //$NON-NLS-1$
                 final IStatus status = new Status(IStatus.WARNING, Uml2ModelGeneratorPlugin.PLUGIN_ID,
                                                   CANNOT_FIND_SIMPLE_DATATYPE_ERROR_CODE, message, e);
                 problems.add(status);

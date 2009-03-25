@@ -523,11 +523,9 @@ public class VdbDefnHelper {
         // don't remove from VDBDefn as this would remove all mappings to this binding
         // calling add will replace existing binding of that name with this one.
         // then make sure defn has type
-        try {
-            clonedBinding = (BasicConnectorBinding)binding.clone();
-        } catch (CloneNotSupportedException e) {
-            // ignore, if not suppoerted use original
-        }
+
+        clonedBinding = (BasicConnectorBinding)binding.clone();
+
         
         // add a deploy name to all the connector bindings going into the VDBS
         clonedBinding.setDeployedName(basicDefn.getName()+"_"+basicDefn.getVersion()+"."+binding.getFullName()); //$NON-NLS-1$ //$NON-NLS-2$ 

@@ -28,5 +28,6 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.core.runtime,
  teiid_embedded_query,
  org.teiid.designer.core,
- org.teiid.core.designer
+ org.teiid.core.designer,
+ org.jdom;bundle-version="1.0"
 Bundle-ActivationPolicy: lazy

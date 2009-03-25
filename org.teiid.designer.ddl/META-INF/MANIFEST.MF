@@ -17,5 +17,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.teiid.core.designer,
  org.eclipse.emf.ecore.xmi,
  org.teiid.designer.metamodels.diagram,
- org.teiid.designer.metamodels.core
+ org.teiid.designer.metamodels.core,
+ org.jdom;bundle-version="1.0"
 Bundle-ActivationPolicy: lazy

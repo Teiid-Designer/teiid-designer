@@ -1192,7 +1192,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
         if (isPageComplete()) {
             // If displayModelNameTextField is true, build the model path, else just take was set programmatically.
             if (displayModelNameTextField) {
-                String locPath = modelLocationPath.toOSString() + "\\" + name + ".xmi"; //$NON-NLS-1$ //$NON-NLS-2$
+                String locPath = modelLocationPath.toOSString() + File.separator + name + ".xmi"; //$NON-NLS-1$
                 getBuilder().setModelPath(new Path(locPath));
             } else {
                 getBuilder().setModelPath(modelLocationPath);

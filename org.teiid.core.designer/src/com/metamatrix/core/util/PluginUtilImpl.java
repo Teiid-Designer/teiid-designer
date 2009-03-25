@@ -631,4 +631,5 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
             SafeRunner.run(wrapper);
         }
     }
+
 }

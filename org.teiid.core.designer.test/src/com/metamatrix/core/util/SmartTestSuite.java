@@ -14,12 +14,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+
 import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
+
 import org.junit.Ignore;
-import com.metamatrix.core.CoreConstants;
 
 @Ignore
 public class SmartTestSuite extends TestSuite {
@@ -228,11 +229,7 @@ public class SmartTestSuite extends TestSuite {
         }
         return stream;
     }
-
-    public static void setDefaultProperties() {
-        System.getProperties().setProperty(CoreConstants.NO_CONFIGURATION, "true"); //$NON-NLS-1$ 
-    }
-
+    
     /**
      * Obtain the file path to the root of the test data file tree. This first checks the property {@link TEST_DATA_ROOT_PROPERTY}
      * , and if that is not set to a valid path, uses the current directory.

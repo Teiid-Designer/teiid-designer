@@ -39,6 +39,7 @@ import java.util.Random;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -61,6 +62,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import org.jdom.Document;
+
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.ObjectID;
@@ -71,7 +73,6 @@ import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.ChecksumUtil;
 import com.metamatrix.core.util.DateUtil;
-import com.metamatrix.core.util.EnhancedStringTokenizer;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.core.util.TempDirectory;
@@ -104,6 +105,7 @@ import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlModelSourceAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
 import com.metamatrix.modeler.core.refactor.ExternalReferenceVisitor;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
+import com.metamatrix.modeler.core.util.EnhancedStringTokenizer;
 import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
 import com.metamatrix.modeler.core.validation.ValidationContext;
 import com.metamatrix.modeler.core.validation.ValidationProblem;
@@ -3736,7 +3738,7 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
             final String modelFileName = this.createValidFileName(MATERIALIZATION_DDL_FILE_PREFIX + typeName)
                                          + MATERIALIZATION_DDL_FILE_SUFFIX;
 
-            final DdlWriter writer = DdlPlugin.createDdlWriter();
+            final DdlWriter writer = DdlPlugin.getDefault().createDdlWriter();
             final DdlOptions ddlOptions = writer.getOptions();
             ddlOptions.setGenerateComments(false);
             ddlOptions.setGenerateDropStatements(true);

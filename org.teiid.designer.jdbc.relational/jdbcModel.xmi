@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="ASCII"?>
-<!--
-  JBoss, Home of Professional Open Source.
-
-  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
-
-  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
--->
+<!--  Copyright (c) 2000-2005 MetaMatrix, Inc.  All rights reserved. -->
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:jdbc="http://www.metamatrix.com/metamodels/JDBC">
   <jdbc:JdbcDriverContainer>    
+    <jdbcDrivers name="MySQL" urlSyntax="jdbc:mysql://&lt;host&gt;:3306/&lt;databaseName&gt;" preferredDriverClassName="com.mysql.jdbc.Driver">
+      <availableDriverClassNames>com.mysql.jdbc.Driver</availableDriverClassNames>
+      <availableDriverClassNames>com.mysql.jdbc.NonRegisteringDriver</availableDriverClassNames>
+      <availableDriverClassNames>com.mysql.jdbc.NonRegisteringReplicationDriver</availableDriverClassNames>
+      <availableDriverClassNames>com.mysql.jdbc.ReplicationDriver</availableDriverClassNames>
+      <availableDriverClassNames>org.gjt.mm.mysql.Driver</availableDriverClassNames>
+    </jdbcDrivers>
+    <jdbcDrivers name="PostgreSQL" urlSyntax="jdbc:postgresql://&lt;host&gt;:5432/&lt;databaseName&gt;" preferredDriverClassName="org.postgresql.Driver">
+      <availableDriverClassNames>org.postgresql.Driver</availableDriverClassNames>
+    </jdbcDrivers>
+    <jdbcDrivers name="Microsoft Access" urlSyntax="jdbc:odbc:Driver={MicroSoft Access Driver (*.mdb)};DBQ=&lt;filePathToAccessDbFile>" preferredDriverClassName="sun.jdbc.odbc.JdbcOdbcDriver">
+      <availableDriverClassNames>sun.jdbc.odbc.JdbcOdbcDriver</availableDriverClassNames>
+    </jdbcDrivers>
+    <jdbcDrivers name="Microsoft Excel" urlSyntax="jdbc:odbc:Driver={MicroSoft Excel Driver (*.xls)};DBQ=&lt;filePathToExcelFile>" preferredDriverClassName="sun.jdbc.odbc.JdbcOdbcDriver">
+      <availableDriverClassNames>sun.jdbc.odbc.JdbcOdbcDriver</availableDriverClassNames>
+    </jdbcDrivers>
+    <jdbcDrivers name="ODBC via DSN" urlSyntax="jdbc:odbc:&lt;DataSourceName>" preferredDriverClassName="sun.jdbc.odbc.JdbcOdbcDriver">
+      <availableDriverClassNames>sun.jdbc.odbc.JdbcOdbcDriver</availableDriverClassNames>
+    </jdbcDrivers>
+    <jdbcDrivers name="Apache Derby Embedded" urlSyntax="jdbc:derby:&lt;databaseName&gt;" preferredDriverClassName="org.apache.derby.jdbc.EmbeddedDriver">
+      <availableDriverClassNames>org.apache.derby.jdbc.EmbeddedDriver</availableDriverClassNames>
+    </jdbcDrivers>
+    <jdbcDrivers name="Apache Derby Network" urlSyntax="jdbc:derby://&lt;host&gt;:&lt;port&gt;/&lt;databaseName&gt;" preferredDriverClassName="org.apache.derby.jdbc.ClientDriver">
+      <availableDriverClassNames>org.apache.derby.jdbc.ClientDriver</availableDriverClassNames>
+    </jdbcDrivers>
   </jdbc:JdbcDriverContainer>
 </xmi:XMI>

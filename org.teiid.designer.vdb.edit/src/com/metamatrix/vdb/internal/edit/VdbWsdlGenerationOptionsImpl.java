@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -31,8 +32,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDSchema;
+
 import com.metamatrix.core.util.ArgCheck;
-import com.metamatrix.core.util.EnhancedStringTokenizer;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.core.util.UriUtil;
 import com.metamatrix.metamodels.core.ModelType;
@@ -43,6 +44,7 @@ import com.metamatrix.metamodels.wsdl.io.WsdlWriter;
 import com.metamatrix.metamodels.xmlservice.XmlServicePackage;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
+import com.metamatrix.modeler.core.util.EnhancedStringTokenizer;
 import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;

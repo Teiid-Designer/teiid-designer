@@ -50,5 +50,6 @@ Require-Bundle: org.eclipse.ui.views,
  org.teiid.designer.metamodels.webservice,
  org.eclipse.emf.edit.ui,
  org.eclipse.ui.forms,
- org.teiid.designer.metamodels.core
+ org.teiid.designer.metamodels.core,
+ org.jdom;bundle-version="1.0"
 Bundle-ActivationPolicy: lazy

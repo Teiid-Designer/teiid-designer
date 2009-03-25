@@ -338,7 +338,7 @@ public class ConnectorBindingPropertySource implements IPropertySource {
             params[1] = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
             params[2] = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
 
-            this.messageLabel.setText(DqpUiConstants.UTIL.getString("ResetPasswordDialog.msg", params)); //$NON-NLS-1$
+            this.messageLabel.setText(DqpUiConstants.UTIL.getString("ResetPasswordDialog.msg", (Object[])params)); //$NON-NLS-1$
 
             return pnl;
         }

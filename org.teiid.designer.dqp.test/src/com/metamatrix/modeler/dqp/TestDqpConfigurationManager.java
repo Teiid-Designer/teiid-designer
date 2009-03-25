@@ -166,7 +166,7 @@ public class TestDqpConfigurationManager extends TestCase {
             ConfigurationModelContainer cmc = cm.getCMContainerImpl();
             assertNotNull(cmc);
 
-            System.out.println("System Name : " + cmc.getSystemName()); //$NON-NLS-1$
+            //System.out.println("System Name : " + cmc.getSystemName()); //$NON-NLS-1$
         }catch(Exception e) {
             fail(e.getMessage());
         }
@@ -185,7 +185,7 @@ public class TestDqpConfigurationManager extends TestCase {
             ConfigurationModelContainer cmc = cm.getCMContainerImpl();
             assertNotNull(cmc);
 
-            System.out.println("System Name : " + cmc.getSystemName()); //$NON-NLS-1$
+            //System.out.println("System Name : " + cmc.getSystemName()); //$NON-NLS-1$
 
             boolean isConfigFileSave = configFileManager.saveConfig(cmc, cm.getConfigurationName());
             assertTrue(isConfigFileSave);
