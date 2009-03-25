@@ -9,7 +9,6 @@ package com.metamatrix.embeddedquery.workspace;
 
 import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.dqp.embedded.services.EmbeddedMetadataService;
-import com.metamatrix.dqp.service.DQPServiceRegistry;
 import com.metamatrix.query.metadata.QueryMetadataInterface;
 
 
@@ -19,10 +18,6 @@ import com.metamatrix.query.metadata.QueryMetadataInterface;
  */
 public class WorkspaceMetadataService extends EmbeddedMetadataService {
     private static String ADMIN = "admin"; //$NON-NLS-1$
-            
-    public WorkspaceMetadataService (DQPServiceRegistry svcRegistry) throws MetaMatrixComponentException{
-        super(svcRegistry);
-    }    
 
     @Override
     public QueryMetadataInterface lookupMetadata(String vdbName, String vdbVersion) throws MetaMatrixComponentException {

@@ -12,7 +12,6 @@ import java.util.List;
 import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.dqp.embedded.services.EmbeddedVDBService;
-import com.metamatrix.dqp.service.DQPServiceRegistry;
 
 
 /** 
@@ -20,10 +19,6 @@ import com.metamatrix.dqp.service.DQPServiceRegistry;
  */
 public class WorkspaceVDBService extends EmbeddedVDBService{
     private static String ADMIN = "admin"; //$NON-NLS-1$
-    
-    public WorkspaceVDBService(DQPServiceRegistry svcRegistry) throws MetaMatrixComponentException{
-        super(svcRegistry);
-    } 
     
     @Override
     public int getModelVisibility(String vdbName, String vdbVersion, String modelName) throws MetaMatrixComponentException {
