@@ -3738,7 +3738,7 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
             final String modelFileName = this.createValidFileName(MATERIALIZATION_DDL_FILE_PREFIX + typeName)
                                          + MATERIALIZATION_DDL_FILE_SUFFIX;
 
-            final DdlWriter writer = DdlPlugin.getDefault().createDdlWriter();
+            final DdlWriter writer = DdlPlugin.createDdlWriter();
             final DdlOptions ddlOptions = writer.getOptions();
             ddlOptions.setGenerateComments(false);
             ddlOptions.setGenerateDropStatements(true);
