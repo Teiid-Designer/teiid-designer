@@ -725,7 +725,7 @@ public class PreviewDataView extends AbstractPreviewDataView implements IResults
             if (previewModel.getResults() instanceof SqlResultsModel) {
                 String prefix = I18nUtil.getPropertyPrefix(SqlResultsView.class);
                 SqlResultsModel model = (SqlResultsModel)previewModel.getResults();
-                Object params = new Object[] {Integer.toString(((Table)c).getItemCount()),
+                Object[] params = new Object[] {Integer.toString(((Table)c).getItemCount()),
                     Integer.toString(model.getTotalRowCount())};
 
                 msg = UTIL.getString(prefix + "recordCount", params); //$NON-NLS-1$

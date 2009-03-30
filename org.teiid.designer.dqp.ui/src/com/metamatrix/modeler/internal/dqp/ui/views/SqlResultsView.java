@@ -195,7 +195,7 @@ public class SqlResultsView extends AbstractResultsView implements IResultsProvi
                     msg = UTIL.getString(PREFIX + "updateCount", Integer.toString(model.getTotalRowCount())); //$NON-NLS-1$
                 }
             } else {
-                Object params = new Object[] {Integer.toString(((Table)c).getItemCount()),
+                Object[] params = new Object[] {Integer.toString(((Table)c).getItemCount()),
                     Integer.toString(model.getTotalRowCount())};
                 msg = UTIL.getString(PREFIX + "recordCount", params); //$NON-NLS-1$
             }
