@@ -924,7 +924,7 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
                 IWorkbenchPart part = page.getActivePart();
 
                 if (part != null) {
-                    return new FindReplaceAction(ResourceBundle.getBundle(UiConstants.PLUGIN_ID + ".i18n"), //$NON-NLS-1$
+                    return new FindReplaceAction(ResourceBundle.getBundle(UiConstants.PACKAGE_ID + ".i18n"), //$NON-NLS-1$
                                                  "StyledTextEditor.findAction.", part); //$NON-NLS-1$
                 }
             }
