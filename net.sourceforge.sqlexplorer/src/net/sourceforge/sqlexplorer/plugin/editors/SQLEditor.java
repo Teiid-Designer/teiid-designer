@@ -19,6 +19,7 @@
 package net.sourceforge.sqlexplorer.plugin.editors;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import net.sourceforge.sqlexplorer.IConstants;
@@ -34,6 +35,12 @@ import net.sourceforge.sqlexplorer.sqlpanel.SQLTextViewer;
 import net.sourceforge.sqlexplorer.sqlpanel.actions.ClearTextAction;
 import net.sourceforge.sqlexplorer.sqlpanel.actions.ExecSQLAction;
 import net.sourceforge.sqlexplorer.sqlpanel.actions.OpenFileAction;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
@@ -97,7 +104,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
-public class SQLEditor extends TextEditor {
+public class SQLEditor extends TextEditor implements IResourceChangeListener {
     private MouseClickListener mcl = new MouseClickListener();
 
     @Override
@@ -318,6 +325,8 @@ public class SQLEditor extends TextEditor {
                 setNewDictionary(sessionTreeNode.getDictionary());
                 updateSessionStatus(stm);
             }
+            
+            ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
         }
     }
 
@@ -487,6 +496,7 @@ public class SQLEditor extends TextEditor {
         if (partListener != null) getEditorSite().getPage().removePartListener(partListener);
         stm.removeListener(listener);
         mcl.uninstall();
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
         super.dispose();
     }
 
@@ -1108,6 +1118,59 @@ public class SQLEditor extends TextEditor {
             fColor = new Color(display, new RGB(0, 0, 255));
         }
 
+    }
+
+    @Override
+    public void resourceChanged( IResourceChangeEvent event ) {
+        if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
+            if (getSite().getShell().isDisposed()) {
+                return;
+            }
+
+            final Display display = getSite().getShell().getDisplay();
+            IResourceDelta delta = event.getDelta();
+
+            if (delta != null) {
+                try {
+                    delta.accept(new IResourceDeltaVisitor() {
+
+                        @Override
+                        public boolean visit( IResourceDelta delta ) {
+                            String name = null;
+                            
+                            if (closedConnectionName != null) {
+                                name = new File(closedConnectionName).getName();
+                            } else {
+                                return false;
+                            }
+                            
+                            if (name.equals(delta.getResource().getName()) && (getSessionTreeNode() == null)
+                                && (delta.getKind() & IResourceDelta.REMOVED) != 0) {
+                                
+                                // close the editor
+                                display.asyncExec(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        if (display.isDisposed()) {
+                                            return;
+                                        }
+
+                                        getEditorSite().getWorkbenchWindow().getActivePage().closeEditor(SQLEditor.this, false);
+                                    }
+                                });
+
+                                return false;
+                            }
+
+                            return true;
+                        }
+                    });
+                } catch (CoreException e) {
+                    SQLExplorerPlugin.error("Error processing ResourceChangeEvent", e);
+                }
+            }
+        }
     }
 
 }
