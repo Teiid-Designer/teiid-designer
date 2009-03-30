@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
@@ -630,6 +631,26 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
             // Run the wrapper
             SafeRunner.run(wrapper);
         }
+    }
+    
+    /**
+     * Convenience method that adds the specified parameter to a list before calling {@link #getString(String, Object[])}.
+     * 
+     * Insures proper casting before calling the generalized signature.
+     *
+     * @since 2.1
+     */
+    public String getString(final String key,
+                            final Object parameter) {
+        if (parameter != null) {
+            if (parameter.getClass().isArray()) {
+                return getString(key, (Object[])parameter);
+            }
+            if (parameter instanceof List) {
+                return getString(key, (List)parameter);
+            }
+        }
+        return getString(key, new Object[] {parameter});
     }
 
 }

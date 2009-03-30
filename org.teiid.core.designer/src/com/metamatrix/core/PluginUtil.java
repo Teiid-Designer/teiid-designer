@@ -94,4 +94,13 @@ public interface PluginUtil extends
      * @return
      */
     String getString(String key, Object... parameters);
+    
+    /**
+     * 
+     * @param key
+     * @param parameter
+     * @return
+     */
+    String getString(String key, Object parameter);
+
 }

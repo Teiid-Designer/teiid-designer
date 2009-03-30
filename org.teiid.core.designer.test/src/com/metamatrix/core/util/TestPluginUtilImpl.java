@@ -42,6 +42,9 @@ public class TestPluginUtilImpl extends TestCase {
     public static final List LIST_WITH_THREE_PARAMS = Arrays.asList(new Object[] {PARAM1, PARAM2, PARAM3});
     public static final List LIST_WITH_TWO_COMPLEX_PARAMS = Arrays.asList(new Object[] {KEY1, PARAM2});
 
+    public static final Object OBJECT_WITH_TWO_PARAMS = new Object[] {PARAM1, PARAM2};
+    public static final Object[] OBJECT_ARRAY_WITH_TWO_PARAMS = new Object[] {PARAM1, PARAM2};
+    
     private PluginUtilImpl util;
 
     /**
@@ -118,6 +121,20 @@ public class TestPluginUtilImpl extends TestCase {
                  "\""); //$NON-NLS-1$
         }
     }
+    
+    public void helpTestGetString( final String key,
+            final Object params,
+            final String expected ) {
+			final String actual = util.getString(key, params);
+				if (actual == null && expected == null) {
+				return;
+				}
+				if ((actual != null && !actual.equals(expected)) || (expected != null && !expected.equals(actual))) {
+				fail("Expected compare to return \"" + expected + //$NON-NLS-1$
+				"\" but actual was \"" + actual + //$NON-NLS-1$
+				"\""); //$NON-NLS-1$
+				}
+			}
 
     // =========================================================================
     // T E S T C A S E S
@@ -179,4 +196,13 @@ public class TestPluginUtilImpl extends TestCase {
                                                                              " and " + PARAM2); //$NON-NLS-1$
     }
 
+    public void testGetStringWithArrayAsObject() {
+        helpTestGetString(KEY_WITH_TWO_PARAMS, OBJECT_WITH_TWO_PARAMS, "This string has 2 parameters: " + PARAM1 + //$NON-NLS-1$
+                                                                     " and " + PARAM2); //$NON-NLS-1$
+    }
+    
+    public void testGetStringWithArrayAsObjectArray() {
+        helpTestGetString(KEY_WITH_TWO_PARAMS, OBJECT_ARRAY_WITH_TWO_PARAMS, "This string has 2 parameters: " + PARAM1 + //$NON-NLS-1$
+                                                                     " and " + PARAM2); //$NON-NLS-1$
+    }
 }
