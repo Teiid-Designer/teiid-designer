@@ -19,7 +19,7 @@ public class JDBCConnectionPropertyNames {
      * This is the name of the property that stores driver class name on a connector binding.
      * This is same as the property {@link com.metamatrix.connector.jdbc.JDBCPropertyNames.DRIVER_CLASS}. 
      */
-    public static final String CONNECTOR_JDBC_DRIVER_CLASS = "Driver"; //$NON-NLS-1$
+    public static final String CONNECTOR_JDBC_DRIVER_CLASS = "ConnectionSource"; //"Driver"; //$NON-NLS-1$
 
     /**
      * This is the name of the property that stores the connection url name on a connector binding.
