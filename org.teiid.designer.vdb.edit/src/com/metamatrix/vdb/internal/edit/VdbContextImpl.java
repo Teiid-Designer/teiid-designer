@@ -27,7 +27,6 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -45,7 +44,6 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-
 import com.metamatrix.common.xml.XMLReaderWriter;
 import com.metamatrix.common.xml.XMLReaderWriterImpl;
 import com.metamatrix.core.MetaMatrixCoreException;
@@ -71,7 +69,6 @@ import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.util.EnhancedStringTokenizer;
 import com.metamatrix.modeler.internal.core.resource.EResourceImpl;
 import com.metamatrix.vdb.edit.VdbContext;
-import com.metamatrix.vdb.edit.VdbEditException;
 import com.metamatrix.vdb.edit.VdbEditPlugin;
 import com.metamatrix.vdb.edit.manifest.ManifestFactory;
 import com.metamatrix.vdb.edit.manifest.ManifestPackage;

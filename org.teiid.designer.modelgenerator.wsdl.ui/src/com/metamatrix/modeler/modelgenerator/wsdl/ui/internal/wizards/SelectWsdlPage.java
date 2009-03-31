@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
