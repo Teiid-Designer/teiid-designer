@@ -87,20 +87,6 @@ public class RelationshipProcessorImpl extends BaseRelationshipProcessor {
 
             int representation = rules.calculateRelationship(P_value, C_value, canBeRoot, F_value);
 
-            if (DEBUG_SOUT_REPRESENTATIONS) {
-                DebugPrintRepresentations(element.getNamespace(),
-                                          element.getSimpleName(),
-                                          element.getType().getName(),
-                                          element.getElementTypeNamespace(),
-                                          parents,
-                                          P_value,
-                                          C_value,
-                                          F_value,
-                                          canBeRoot,
-                                          representation,
-                                          debugWriter);
-            }
-
             if (representation != Relationship.MERGE_IN_PARENT_MULTIPLE || representation != Relationship.MERGE_IN_PARENT_SINGLE) {
                 element.setRepresentAsTable(true);
             }
