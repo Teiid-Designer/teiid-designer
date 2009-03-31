@@ -4,3 +4,4 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer
 Bundle-Version: 6.0.0
 Bundle-Vendor: %providerName
+Bundle-Localization: plugin

@@ -40,7 +40,7 @@
          point="org.eclipse.ui.preferencePages">
       <page
             name="%modelerXmlAsRelationalPreferences"
-            category="com.metamatrix.modeler.ui.preferences.modelerPreferencePage"
+            category="modelerPreferencePage"
             class="com.metamatrix.modeler.modelgenerator.xml.wizards.PreferencePage"
             id="modelgenerator.xml.wizards.PreferencePage">
       </page>
