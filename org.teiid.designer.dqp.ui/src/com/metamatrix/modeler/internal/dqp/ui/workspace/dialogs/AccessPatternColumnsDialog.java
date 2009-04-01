@@ -170,13 +170,13 @@ public class AccessPatternColumnsDialog extends TitleAreaDialog
     }
 
     /**
-     * Obtains the column names of the selected <code>AccessPattern</code>. Throws an exception if called when the dialog was
-     * cancelled.
+     * Obtains the <code>EObject</code>s for the columns referenced by the selected <code>AccessPattern</code>. Throws an
+     * exception if called when the dialog was cancelled.
      * 
-     * @return the column names
+     * @return the columns
      * @since 5.5.3
      */
-    public List getColumnNames() {
+    public List getColumns() {
         assert (getReturnCode() == OK);
         return ((SqlColumnSetAspect)SqlAspectHelper.getSqlAspect(getSelectedAccessPattern())).getColumns(getSelectedAccessPattern());
     }

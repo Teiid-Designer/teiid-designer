@@ -189,7 +189,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
             }
         }
 
-        Collection accessPatternsColumns = null;
+        List accessPatternsColumns = null;
         if (SqlAspectHelper.isTable(selected)) {
             SqlTableAspect tableAspect = (SqlTableAspect)SqlAspectHelper.getSqlAspect(selected);
             Collection accessPatterns = tableAspect.getAccessPatterns(selected);
@@ -205,7 +205,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
                 AccessPatternColumnsDialog dialog = new AccessPatternColumnsDialog(shell, patterns);
 
                 if (dialog.open() == Window.OK) {
-                    accessPatternsColumns = dialog.getColumnNames();
+                    accessPatternsColumns = dialog.getColumns();
                     paramValues = dialog.getColumnValues();
                 } else {
                     return;
@@ -335,7 +335,10 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
                                   List<String> paramValues ) {
         if (paramValues != null && !paramValues.isEmpty()) {
             for (String value : paramValues) {
-                sql = sql.replaceFirst("\\?", "'" + value + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                // skip over null values as those don't have a ? to replace
+                if (value != null) {
+                    sql = sql.replaceFirst("\\?", "'" + value + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                }
             }
         }
         return sql;

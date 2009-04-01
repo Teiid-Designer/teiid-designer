@@ -22,6 +22,7 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition.Assessment;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.metamodels.relational.NullableType;
 import com.metamatrix.metamodels.relational.aspects.sql.ProcedureParameterAspect;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
@@ -58,6 +59,34 @@ public class ParameterValueValidator implements
     // ===========================================================================================================================
 
     /**
+     * This method checks to see if a parameter can have a <code>null</code> value. Valid parameter object types are SQL table
+     * columns, procedure parameters, and XSD elements can be checked.
+     * 
+     * @param param the param being checked
+     * @return <code>true</code> if the object can have a <code>null</code> value or if not a parameter type
+     * @since 6.0.0
+     */
+    public static boolean canBeNull( EObject param ) {
+        if (param instanceof XSDElementDeclaration) {
+            return ((XSDElementDeclaration)param).isNillable();
+        }
+
+        SqlAspect aspect = SqlAspectHelper.getSqlAspect(param);
+
+        if (aspect instanceof SqlColumnAspect) {
+            SqlColumnAspect columnAspect = (SqlColumnAspect)aspect;
+            return (columnAspect.getNullType(param) == NullableType.NULLABLE);
+        }
+
+        if (aspect instanceof ProcedureParameterAspect) {
+            ProcedureParameterAspect paramAspect = (ProcedureParameterAspect)aspect;
+            return (paramAspect.getNullType(param) == NullableType.NULLABLE);
+        }
+
+        return false;
+    }
+
+    /**
      * Validates the value for the specified object. Empty or <code>null</code> values are not checked and will return
      * <code>null</code>.
      * 
@@ -69,12 +98,22 @@ public class ParameterValueValidator implements
      */
     public static IStatus isValidValue(EObject object,
                                        String value) {
-        if (StringUtil.isEmpty(value)) {
+        IStatus status = null;
+        EObject dataType = null;
+        
+        if (value == null) {
+            if (canBeNull(object)) {
+                // null value is OK
+                return null;
+            }
+            
+            // must have a value so it is an error
             return EMPTY_STATUS;
         }
 
-        IStatus status = null;
-        EObject dataType = null;
+        if (StringUtil.isEmpty(value)) {
+            return EMPTY_STATUS;
+        }
 
         if (object instanceof XSDElementDeclaration) {
             dataType = ((XSDElementDeclaration)object).getTypeDefinition();
@@ -83,7 +122,7 @@ public class ParameterValueValidator implements
 
             if (aspect instanceof SqlColumnAspect) {
                 SqlColumnAspect columnAspect = (SqlColumnAspect)aspect;
-
+                    
                 // check length first since it is not checked by the datatype
                 // note: for some types (like short) length defaults to zero
                 if ((columnAspect.getLength(object) > 0) && (value.length() > columnAspect.getLength(object))) {

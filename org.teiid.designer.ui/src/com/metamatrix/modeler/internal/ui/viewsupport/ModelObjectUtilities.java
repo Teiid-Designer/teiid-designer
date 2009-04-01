@@ -339,20 +339,24 @@ public abstract class ModelObjectUtilities {
     /**
      * Not appropriate to use for Web Service operations.
      */
-    public static String getSQL(EObject eObject, Object[] params, Collection accessPatterns) {
+    public static String getSQL(EObject eObject, Object[] params, List accessPatternColumns) {
 
         if (TransformationHelper.isSqlTable(eObject) || TransformationHelper.isXmlDocument(eObject)) {
             StringBuffer executeSQL = new StringBuffer();
             executeSQL.append("select * from "); //$NON-NLS-1$
             executeSQL.append(TransformationHelper.getSqlEObjectFullName(eObject)); 
 
-            if (accessPatterns != null && !accessPatterns.isEmpty()) {
+            if (accessPatternColumns != null && !accessPatternColumns.isEmpty()) {
                 executeSQL.append(" where "); //$NON-NLS-1$
-                for (final Iterator i = accessPatterns.iterator(); i.hasNext();) {
-                    final EObject pattern = (EObject)i.next();
-                    executeSQL.append(TransformationHelper.getSqlEObjectFullName(pattern));
-                    executeSQL.append(" = ?"); //$NON-NLS-1$
-                    if (i.hasNext()) {
+
+                for (int size = accessPatternColumns.size(), i = 0; i < size; ++i) {
+                    EObject column = (EObject)accessPatternColumns.get(i);
+                    
+                    // add SQL for column
+                    executeSQL.append(TransformationHelper.getSqlEObjectFullName(column));
+                    executeSQL.append((params[i] == null) ? " IS NULL" : " = ?"); //$NON-NLS-1$ //$NON-NLS-2$
+
+                    if ((i + 1) < size) {
                         executeSQL.append(" and "); //$NON-NLS-1$
                     }
                 }

@@ -17,10 +17,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -42,16 +45,16 @@ import com.metamatrix.ui.internal.util.WidgetFactory;
  * @since 5.5.3
  */
 public class PreviewParameterPanel extends ScrolledComposite implements DqpUiConstants, IChangeNotifier {
+    
+    private static final String PREFIX = I18nUtil.getPropertyPrefix(PreviewParameterPanel.class);
 
     private static final IStatus ERROR_STATUS;
 
     private static final IStatus GOOD_STATUS;
 
     static {
-        String prefix = I18nUtil.getPropertyPrefix(PreviewParameterPanel.class);
-
-        ERROR_STATUS = new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, UTIL.getString(prefix + "errorStatus"), null); //$NON-NLS-1$
-        GOOD_STATUS = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK, UTIL.getString(prefix + "goodStatus"), null); //$NON-NLS-1$
+        ERROR_STATUS = new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, UTIL.getString(PREFIX + "errorStatus"), null); //$NON-NLS-1$
+        GOOD_STATUS = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK, UTIL.getString(PREFIX + "goodStatus"), null); //$NON-NLS-1$
     }
 
     private List<Label> images;
@@ -92,7 +95,7 @@ public class PreviewParameterPanel extends ScrolledComposite implements DqpUiCon
         }
 
         this.pnlMain = WidgetFactory.createPanel(this, SWT.NONE, GridData.FILL_BOTH);
-        ((GridLayout)this.pnlMain.getLayout()).numColumns = 3;
+        ((GridLayout)this.pnlMain.getLayout()).numColumns = 4;
         setContent(this.pnlMain);
     }
 
@@ -141,8 +144,8 @@ public class PreviewParameterPanel extends ScrolledComposite implements DqpUiCon
             image.setImage(UiPlugin.getDefault().getImage(PluginConstants.Images.BLANK_ICON));
             this.images.add(image);
 
-            Text textField = WidgetFactory.createTextField(parent);
-            ModifyListener modifyListener = createModifyListener(param);
+            final Text textField = WidgetFactory.createTextField(parent);
+            final ModifyListener modifyListener = createModifyListener(param);
             textField.addModifyListener(modifyListener);
             textField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
@@ -157,6 +160,32 @@ public class PreviewParameterPanel extends ScrolledComposite implements DqpUiCon
             Event e = new Event();
             e.widget = textField;
             modifyListener.modifyText(new ModifyEvent(e));
+            
+            // add "make null" checkbox if value can be null
+            if (ParameterValueValidator.canBeNull(param)) {
+                final Button btn = WidgetFactory.createCheckBox(parent, UTIL.getString(PREFIX + "chkNullValue")); //$NON-NLS-1$
+                btn.setToolTipText(UTIL.getString(PREFIX + "chkNullValue.tip")); //$NON-NLS-1$
+                btn.addSelectionListener(new SelectionAdapter() {
+                    @Override
+                    public void widgetSelected( SelectionEvent e ) {
+                        // enable textfield only when checkbox is not checked
+                        textField.setEnabled(!btn.getSelection());
+                        
+                        // put focus back in textfield when the checkbox was unselected
+                        if (textField.isEnabled()) {
+                            textField.setFocus();
+                        }
+
+                        // send event to update status
+                        Event event = new Event();
+                        event.widget = textField;
+                        modifyListener.modifyText(new ModifyEvent(event));
+                    }
+                });
+            } else {
+                // add empty panel to fill area where the checkbox would've been
+                WidgetFactory.createPanel(parent);
+            }
         }
     }
 
@@ -166,7 +195,7 @@ public class PreviewParameterPanel extends ScrolledComposite implements DqpUiCon
 
             public void modifyText( ModifyEvent e ) {
                 Text textField = (Text)e.widget;
-                IStatus status = ParameterValueValidator.isValidValue(column, textField.getText());
+                IStatus status = ParameterValueValidator.isValidValue(column, getValue(textField));
                 setStatus(status, textField);
             }
         };
@@ -203,10 +232,22 @@ public class PreviewParameterPanel extends ScrolledComposite implements DqpUiCon
         List<String> values = new ArrayList<String>(this.textFields.size());
 
         for (Text textField : this.textFields) {
-            values.add(textField.getText());
+            // if textfield is enabled use its value else user wants to use a null value
+            values.add(getValue(textField));
         }
 
         return values;
+    }
+    
+    /**
+     * If the checkbox is selected indicating the value should be null then the textField will be disabled.
+     * 
+     * @param textField the widget being checked
+     * @return the text or <code>null</code> if the checkbox is selected
+     * @since 6.0.0
+     */
+    String getValue( Text textField ) {
+        return (textField.getEnabled() ? textField.getText() : null);
     }
 
     /**

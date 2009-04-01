@@ -186,7 +186,10 @@ public class WorkspaceExecutor extends QueryClient {
             if (paramValues != null && paramValues.length > 0) {
                 int params = 1;
                 for (int i = 0; i < paramValues.length; i++) {
-                    this.stmt.setObject(params++, paramValues[i]);
+                    // null values do not have to be bound to the parameter
+                    if (paramValues[i] != null) {
+                        this.stmt.setObject(params++, paramValues[i]);
+                    }
                 }
             }
             this.stmt.setMaxRows(maxrows);
