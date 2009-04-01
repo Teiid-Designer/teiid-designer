@@ -493,7 +493,6 @@ public class SchemaProcessorImpl implements SchemaProcessor {
 
     public void representTypes( boolean representTypes ) {
         this.representTypes = representTypes;
-        log.log(IStatus.INFO, ToolsPlugin.Util.getString("SchemaProcessorImpl.configured")); //$NON-NLS-1$
     }
 
     public void setNamespaces( Map namespaces ) {
