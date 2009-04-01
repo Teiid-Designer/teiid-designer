@@ -65,7 +65,7 @@ public class WSDLReader {
 
     private Model buildWSDLStructures() throws Exception {
         ModelBuilder builder = new ModelBuilder();
-        builder.setWSDL(m_fileURI);
+        builder.setWSDL(m_fileURI.replace("%20", " "));
         if (!builder.isWSDLParsed()) {
             Exception myEx = builder.getWSDLException();
             throw myEx;
