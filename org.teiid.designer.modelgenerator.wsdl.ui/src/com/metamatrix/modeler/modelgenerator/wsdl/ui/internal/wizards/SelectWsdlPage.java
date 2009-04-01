@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -584,8 +585,9 @@ public class SelectWsdlPage extends WizardPage
                 // If WSDL file was selected, update the manager and the controls
                 if (validFile) {
                     String fileStr = ((File) wsdlFiles[0]).getAbsolutePath();
+                    this.textFieldFileSystem.setText(fileStr);
+                    fileStr = URI.createFileURI(fileStr).toString();
 					this.importManager.setWSDLFileUri(fileStr);
-					this.textFieldFileSystem.setText(fileStr);
 					this.wsdlStatus = null;
 					updateValidateWSDLButtonEnablement();
                 } else {
