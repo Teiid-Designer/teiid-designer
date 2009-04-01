@@ -342,18 +342,21 @@ public interface ConfigurationManager extends
      *            the property name
      * @param value
      *            the string value of the property
+     * @param any errors thrown by notification handlers
+     * @throws Exception if the new property value was not saved
      * @since 5.0
      */
-    void setConnectorPropertyValue(ConnectorBinding theBinding,
+    Exception[] setConnectorPropertyValue(ConnectorBinding theBinding,
                                    String thePropertyId,
                                    String theValue) throws Exception;
 
     /**
-     * Notifys any change listeners that something in the configuration changed.
+     * Notifies any change listeners that something in the configuration changed.
      * 
+     * @return any errors thrown by the registered configuration listeners (never <code>null</code>)
      * @since 5.0
      */
-    void notifyConfigurationChanged(ConfigurationChangeEvent event) throws Exception;
+    Exception[] notifyConfigurationChanged(ConfigurationChangeEvent event);
 
     void addConfigurationChangeListener(IConfigurationChangeListener theListener);
 

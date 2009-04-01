@@ -132,18 +132,16 @@ public class ConfigurationManagerImpl implements ConfigurationManager, Configura
     }
 
     /**
-     * @return boolean
+     * @return any exceptions thrown by the configuration listeners
+     * @throws Exception if there is a problem saving the configuration
      * @since 4.3
      */
-    private boolean saveConfigLocal( ConfigurationChangeEvent event ) throws Exception {
+    private Exception[] saveConfigLocal( ConfigurationChangeEvent event ) throws Exception {
 
-        boolean isSaved = configFileManager.saveConfig(defaultConnectionManager.getCMContainerImpl(),
-                                                       defaultConnectionManager.getConfigurationName());
-        if (isSaved) {
-            fireChangeEvent(event);
-        }
+        configFileManager.saveConfig(defaultConnectionManager.getCMContainerImpl(),
+                                     defaultConnectionManager.getConfigurationName());
 
-        return isSaved;
+        return fireChangeEvent(event);
     }
 
     /**
@@ -495,30 +493,42 @@ public class ConfigurationManagerImpl implements ConfigurationManager, Configura
     /**
      * @since 4.3
      */
-    protected void fireChangeEvent( ConfigurationChangeEvent event ) throws Exception {
-
+    protected Exception[] fireChangeEvent( ConfigurationChangeEvent event ) {
+        Collection<Exception> errors = new ArrayList<Exception>();
+        
         if (listenerList != null && !listenerList.isEmpty()) {
             for (Iterator it = listenerList.iterator(); it.hasNext();) {
-                IChangeListener listener = (IChangeListener)it.next();
-                listener.stateChanged(this);
+                try {
+                    IChangeListener listener = (IChangeListener)it.next();
+                    listener.stateChanged(this);
+                } catch (Exception e) {
+                    errors.add(e);
+                }
             }
         }
 
         if (configurationChangeListenerList != null || !configurationChangeListenerList.isEmpty()) {
             for (Iterator it = configurationChangeListenerList.iterator(); it.hasNext();) {
-                IConfigurationChangeListener listener = (IConfigurationChangeListener)it.next();
-                listener.stateChanged(event);
+                try {
+                    IConfigurationChangeListener listener = (IConfigurationChangeListener)it.next();
+                    listener.stateChanged(event);
+                } catch (Exception e) {
+                    errors.add(e);
+                }
             }
         }
 
+        return errors.toArray(new Exception[errors.size()]);
     }
-
+    
     /**
-     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#notifyConfigurationChanged()
-     * @since 5.0
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#notifyConfigurationChanged(com.metamatrix.modeler.dqp.config.ConfigurationChangeEvent)
      */
-    public void notifyConfigurationChanged( ConfigurationChangeEvent event ) throws Exception {
-        fireChangeEvent(event);
+    @Override
+    public Exception[] notifyConfigurationChanged( ConfigurationChangeEvent event ) {
+        return fireChangeEvent(event);
     }
 
     @Override
@@ -645,22 +655,25 @@ public class ConfigurationManagerImpl implements ConfigurationManager, Configura
 
         return binding;
     }
-
+    
     /**
-     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#setConnectorPropertyValue(com.metamatrix.common.config.api.ConnectorBinding,
-     *      java.lang.String, java.lang.String)
-     * @since 5.0
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#setConnectorPropertyValue(com.metamatrix.common.config.api.ConnectorBinding, java.lang.String, java.lang.String)
      */
-    public void setConnectorPropertyValue( ConnectorBinding theBinding,
-                                           String thePropertyId,
-                                           String theValue ) throws Exception {
+    @Override
+    public Exception[] setConnectorPropertyValue( ConnectorBinding theBinding,
+                                                  String thePropertyId,
+                                                  String theValue ) throws Exception {
         DqpPlugin.getInstance().getConfigurationObjectEditor().setProperty(theBinding, thePropertyId, theValue);
 
         // For New Connector Binding action we don't add the binding until OK from dialog, so we need to check if binding exists
         // and if NOT, then we don't continue (i.e. don't save)
         if (DqpPlugin.getInstance().getConfigurationManager().getBinding(theBinding.getFullName()) != null) {
-            saveConfigLocal(new ConfigurationChangeEvent(CHANGED_EVENT, CONNECTOR_BINDINGS_CHANGED, theBinding.getName()));
+            return saveConfigLocal(new ConfigurationChangeEvent(CHANGED_EVENT, CONNECTOR_BINDINGS_CHANGED, theBinding.getName()));
         }
+        
+        return new Exception[0];
     }
 
     /**

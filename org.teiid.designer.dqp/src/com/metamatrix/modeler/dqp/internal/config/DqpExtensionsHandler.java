@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,6 +22,7 @@ import com.metamatrix.common.config.api.ComponentType;
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ExtensionModule;
 import com.metamatrix.common.config.api.ConnectorBindingType.Attributes;
+import com.metamatrix.core.modeler.util.FileUtil;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -445,18 +445,45 @@ public class DqpExtensionsHandler {
 		return udfJarNames;
 	}
 
-    public List<File> getConnectorJarFiles() {
+	/**
+	 * @return the jars in the extension modules directory (never <code>null</code>)
+	 */
+    public List<File> getExtensionJarFiles() {
 		File extDir = this.dqpExtensionsFolderPath.toFile();
 
 		if (extDir.exists() && extDir.isDirectory()) {
 			File[] extDirContents = extDir.listFiles();
 
 			if (extDirContents != null) {
-			    return Arrays.asList(extDirContents);
+			    List<File> result = new ArrayList<File>(extDirContents.length);
+			    
+			    // make sure we only return jar files
+			    for (File file : extDirContents) {
+			        if (FileUtil.isArchiveFileName(file.getName(), false)) {
+			            result.add(file);
+			        }
+			    }
+			    
+			    return result;
 			}
 		}
 
 		return new ArrayList<File>(0);
+    }
+    
+    /**
+     * @return the names of all the jars in the extension modules directory (never <code>null</code>)
+     * @since 6.0.0
+     */
+    public List<String> getExtensionJarNames() {
+        List<File> jarFiles = getExtensionJarFiles();
+        List<String> jarNames = new ArrayList<String>(jarFiles.size());
+
+        for (File jar : jarFiles) {
+            jarNames.add(jar.getName());
+        }
+        
+        return jarNames;
     }
 
 	/**

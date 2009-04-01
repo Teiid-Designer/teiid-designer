@@ -91,8 +91,6 @@ public final class ModelerDqpUtils {
      */
     public static final int BINDING_NAME_WHITESPACE_ERROR = 400;
 
-    private static final String CONNECTOR_CLASSPATH = "ConnectorClassPath"; //$NON-NLS-1$
-
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS
     // /////////////////////////////////////////////////////////////////////////////////////////////
@@ -328,6 +326,52 @@ public final class ModelerDqpUtils {
         ConfigurationModelContainer container = configMgr.getDefaultConfig().getCMContainerImpl();
         return container.getComponentTypeDefinition(theId, thePropertyName);
     }
+    
+    /**
+     * 
+     * @param classpath
+     * @return
+     */
+    public static String getConnectorClasspathDisplayValue(String classpath) {
+        List<String> jarNames = new ArrayList<String>(getJarNames(classpath));
+        StringBuilder sb = new StringBuilder();
+
+        for (int size = jarNames.size(), i = 0; i < size; ++i) {
+            sb.append(jarNames.get(i));
+
+            if (i < (size - 1)) {
+                sb.append("; "); //$NON-NLS-1$
+            }
+        }
+
+        return sb.toString();
+    }
+    
+    /**
+     * Adds the extension jar protocol and jar separators.
+     * 
+     * @param jarNames the jar names to include in the connector class path (can be <code>null</code>)
+     * @return the connector class path property value (never <code>null</code>)
+     * @since 6.0.0
+     */
+    public static String getConnectorClassPathPropertValue( List<String> jarNames ) {
+        if ((jarNames == null) || jarNames.isEmpty()) {
+            return StringUtil.Constants.EMPTY_STRING;
+        }
+
+        String protocol = Attributes.MM_JAR_PROTOCOL + ':';
+        StringBuilder classPath = new StringBuilder(protocol);
+
+        for (int size = jarNames.size(), i = 0; i < size; ++i) {
+            classPath.append(jarNames.get(i));
+
+            if (i < (size - 1)) {
+                classPath.append(';').append(protocol);
+            }
+        }
+
+        return classPath.toString();
+    }
 
     /**
      * Get the collection of extension jar names that are required by the supplied connector (may not be <code>null</code>)
@@ -337,7 +381,7 @@ public final class ModelerDqpUtils {
      * @since 6.0.0
      */
     public static Collection<String> getRequiredExtensionJarNames( ConnectorBinding conn ) {
-        return getJarNames(conn.getProperty(CONNECTOR_CLASSPATH));
+        return getJarNames(conn.getProperty(Attributes.CONNECTOR_CLASSPATH));
     }
 
     /**
@@ -348,10 +392,15 @@ public final class ModelerDqpUtils {
      * @since 6.0.0
      */
     public static Collection<String> getRequiredExtensionJarNames( ComponentType connectorBindingType ) {
-        return getJarNames(connectorBindingType.getDefaultValue(CONNECTOR_CLASSPATH));
+        return getJarNames(connectorBindingType.getDefaultValue(Attributes.CONNECTOR_CLASSPATH));
     }
     
-    private static Collection<String> getJarNames(String classPath) {
+    /**
+     * @param classPath the connector classpath being parsed to find the jar file names (can be <code>null</code>)
+     * @return a collection of jar names (never <code>null</code>)
+     * @since 6.0.0
+     */
+    public static Collection<String> getJarNames(String classPath) {
         Collection<String> jarNames = null;
 
         if (classPath == null) {
@@ -361,13 +410,14 @@ public final class ModelerDqpUtils {
             StringTokenizer st = new StringTokenizer(classPath, ";"); //$NON-NLS-1$
 
             while (st.hasMoreTokens()) {
-                String path = st.nextToken();
+                String path = st.nextToken().trim();
                 int idx = path.indexOf(Attributes.MM_JAR_PROTOCOL);
 
                 if (idx != -1) {
-                    String jarFile = path.substring(idx + Attributes.MM_JAR_PROTOCOL.length() + 1);
-                    jarNames.add(jarFile);
+                    path = path.substring(idx + Attributes.MM_JAR_PROTOCOL.length() + 1);
                 }
+
+                jarNames.add(path);
             }
         }
 
@@ -470,9 +520,14 @@ public final class ModelerDqpUtils {
         return result;
     }
 
-    public static boolean setConnectorBindingPassword( ConnectorBinding theBinding,
-                                                       String thePassword ) throws Exception {
-        boolean result = false;
+    /**
+     * @param theBinding the connector binding whose password is being changed
+     * @param thePassword the new password
+     * @return a list of errors thrown by property/configuration listeners after the property was successfully set
+     * @throws Exception if the property was not set
+     */
+    public static Exception[] setConnectorBindingPassword( ConnectorBinding theBinding,
+                                                           String thePassword ) throws Exception {
         Collection defns = getConnectorType(theBinding).getComponentTypeDefinitions();
         Object propId = null;
 
@@ -490,87 +545,90 @@ public final class ModelerDqpUtils {
         }
 
         if (propId != null) {
-            result = setPropertyValue(theBinding, propId, thePassword);
+            return setPropertyValue(theBinding, propId, thePassword);
         }
 
-        return result;
+        // could not find a masked property definition
+        throw new Exception(DqpPlugin.Util.getString(PREFIX + "unableToFindPasswordPropertyDefinition")); //$NON-NLS-1$
     }
 
     /**
      * Sets a connector binding property.
      * 
-     * @param theBinding the binding whose property is being set.
+     * @param theBinding the binding whose property is being set (may not be <code>null</code>)
      * @param thePropertyId the property ID
      * @param theNewValue the new property value
-     * @return <code>true</code> if the property was set; <code>false</code> otherwise.
+     * @return a list of errors thrown by property/configuration listeners after the property was successfully set
+     * @throws Exception if the property was not set
      * @since 5.0
      */
-    public static boolean setPropertyValue( ConnectorBinding theBinding,
-                                            Object thePropertyId,
-                                            Object theNewValue ) throws Exception {
-        boolean result = false;
+    public static Exception[] setPropertyValue( ConnectorBinding theBinding,
+                                                Object thePropertyId,
+                                                Object theNewValue ) throws Exception {
         ComponentType type = getConnectorType(theBinding);
 
-        if (type != null) {
-            Assertion.isInstanceOf(thePropertyId, String.class, thePropertyId.getClass().getName());
-            Assertion.isInstanceOf(theNewValue, String.class, theNewValue.getClass().getName());
-            Assertion.isInstanceOf(type.getID(), ComponentTypeID.class, type.getID().getClass().getName());
+        if (type == null) {
+            throw new Exception(DqpPlugin.Util.getString(PREFIX + "unableToFindConnectorType", theBinding.getComponentTypeID())); //$NON-NLS-1$
+        }
+    
+        Assertion.isInstanceOf(thePropertyId, String.class, thePropertyId.getClass().getName());
+        Assertion.isInstanceOf(theNewValue, String.class, theNewValue.getClass().getName());
+        Assertion.isInstanceOf(type.getID(), ComponentTypeID.class, type.getID().getClass().getName());
 
-            result = true;
-            String value = (String)theNewValue;
-            ComponentTypeDefn typeDefn = type.getComponentTypeDefinition((String)thePropertyId);
+        String value = (String)theNewValue;
+        ComponentTypeDefn typeDefn = type.getComponentTypeDefinition((String)thePropertyId);
 
-            // if not found search parents for it
-            if (typeDefn == null) {
-                typeDefn = getComponentTypeDefinition((ComponentTypeID)type.getID(), (String)thePropertyId);
-            }
-
-            if (typeDefn == null) {
-                result = false;
-            } else {
-                PropertyDefinition propDefn = typeDefn.getPropertyDefinition();
-                PropertyType propType = typeDefn.getPropertyType();
-
-                // validate proposed new value
-                if (propDefn.isMasked()) {
-                    value = ModelerDqpUtils.encryptValue(value);
-
-                    if (value == null) {
-                        value = ""; //$NON-NLS-1$
-                    }
-                } else {
-                    result = propType.isValidValue(value);
-
-                    if (propDefn.hasAllowedValues() && propDefn.isConstrainedToAllowedValues()) {
-                        List values = propDefn.getAllowedValues();
-
-                        if (values != null && !values.isEmpty()) {
-                            result = false;
-                            for (int size = values.size(), i = 0; i < size; ++i) {
-                                if (value.equals(values.get(i))) {
-                                    result = true;
-                                    break;
-                                }
-                            }
-                        } else {
-                            // if there are no allowed values, this is an illegal state for the property defn
-                            // but we need to allow the user to continue - just log it.
-                            Object[] msgArray = new Object[] {propDefn.getName(), type.getName()};
-                            DqpPlugin.Util.log(IStatus.WARNING,
-                                               DqpPlugin.Util.getString("ModelerDqpUtils.noAllowedValuesWarning", //$NON-NLS-1$
-                                                                        msgArray));
-                            result = true;
-                        }
-                    }
-                }
-            }
-
-            // if proposed value is valid set the property
-            if (result) {
-                DqpPlugin.getInstance().getConfigurationManager().setConnectorPropertyValue(theBinding, (String)thePropertyId, value);
-            }
+        // if not found search parents for it
+        if (typeDefn == null) {
+            typeDefn = getComponentTypeDefinition((ComponentTypeID)type.getID(), (String)thePropertyId);
         }
 
-        return result;
+        if (typeDefn == null) {
+            throw new Exception(DqpPlugin.Util.getString(PREFIX + "unableToFindTypeDefinition", thePropertyId)); //$NON-NLS-1$
+        }
+
+        PropertyDefinition propDefn = typeDefn.getPropertyDefinition();
+        PropertyType propType = typeDefn.getPropertyType();
+        boolean result = true;
+
+        // validate proposed new value
+        if (propDefn.isMasked()) {
+            value = ModelerDqpUtils.encryptValue(value);
+
+            if (value == null) {
+                value = ""; //$NON-NLS-1$
+            }
+        } else {
+            result = propType.isValidValue(value);
+
+            if (propDefn.hasAllowedValues() && propDefn.isConstrainedToAllowedValues()) {
+                List values = propDefn.getAllowedValues();
+
+                if (values != null && !values.isEmpty()) {
+                    result = false;
+                    for (int size = values.size(), i = 0; i < size; ++i) {
+                        if (value.equals(values.get(i))) {
+                            result = true;
+                            break;
+                        }
+                    }
+                } else {
+                    // if there are no allowed values, this is an illegal state for the property defn
+                    // but we need to allow the user to continue - just log it.
+                    Object[] msgArray = new Object[] {propDefn.getName(), type.getName()};
+                    DqpPlugin.Util.log(IStatus.WARNING,
+                                       DqpPlugin.Util.getString(PREFIX + "noAllowedValuesWarning", msgArray)); //$NON-NLS-1$
+                }
+            }
+        }
+        
+        if (result) {
+            // set the property
+            return DqpPlugin.getInstance().getConfigurationManager().setConnectorPropertyValue(theBinding,
+                                                                                               (String)thePropertyId,
+                                                                                               value);
+        }
+        
+        throw new Exception(DqpPlugin.Util.getString(PREFIX + "invalidPropertyValue", theNewValue, thePropertyId)); //$NON-NLS-1$
     }
 }

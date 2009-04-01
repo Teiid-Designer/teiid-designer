@@ -363,22 +363,27 @@ public class FakeConfigurationManager implements ConfigurationManager {
                                                     Properties props ) throws Exception {
         return null;
     }
-
+    
     /**
-     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#setConnectorPropertyValue(com.metamatrix.common.config.api.ConnectorBinding,
-     *      java.lang.String, java.lang.String)
-     * @since 5.0
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#setConnectorPropertyValue(com.metamatrix.common.config.api.ConnectorBinding, java.lang.String, java.lang.String)
      */
-    public void setConnectorPropertyValue( ConnectorBinding theBinding,
-                                           String thePropertyId,
-                                           String theValue ) {
+    @Override
+    public Exception[] setConnectorPropertyValue( ConnectorBinding theBinding,
+                                                  String thePropertyId,
+                                                  String theValue ) throws Exception {
+        return new Exception[0];
     }
-
+    
     /**
-     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#notifyConfigurationChanged()
-     * @since 5.0
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#notifyConfigurationChanged(com.metamatrix.modeler.dqp.config.ConfigurationChangeEvent)
      */
-    public void notifyConfigurationChanged( ConfigurationChangeEvent event ) {
+    @Override
+    public Exception[] notifyConfigurationChanged( ConfigurationChangeEvent event ) {
+        return new Exception[0];
     }
 
     /**

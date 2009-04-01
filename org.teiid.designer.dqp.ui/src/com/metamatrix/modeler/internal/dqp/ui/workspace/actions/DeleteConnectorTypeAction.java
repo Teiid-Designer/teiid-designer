@@ -157,7 +157,7 @@ public class DeleteConnectorTypeAction  extends ConfigurationManagerAction {
     	List<File> jarFilesToDelete = new ArrayList<File>();
 
     	// Iterate all jar files
-    	List<File> nonStdJars = DqpPlugin.getInstance().getExtensionsHandler().getConnectorJarFiles();
+    	List<File> nonStdJars = DqpPlugin.getInstance().getExtensionsHandler().getExtensionJarFiles();
     	for(Iterator<File> jIter = nonStdJars.iterator(); jIter.hasNext();) {
     		File jarFile = jIter.next();
     		String jarName = jarFile.getName();

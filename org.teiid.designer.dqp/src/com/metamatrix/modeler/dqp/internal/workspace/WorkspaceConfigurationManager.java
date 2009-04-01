@@ -541,7 +541,14 @@ public class WorkspaceConfigurationManager implements IChangeNotifier, IChangeLi
             }
         } else {
             ConnectorBinding binding = bindingMatches.iterator().next();
-            ModelerDqpUtils.setConnectorBindingPassword(binding, password);
+            
+            try {
+                ModelerDqpUtils.setConnectorBindingPassword(binding, password);
+            } catch (Exception e) {
+                // still want to create the source binding if setting the password failed
+                DqpPlugin.Util.log(e);
+            }
+            
             createSourceBinding(modelResource, binding);
         }
 
@@ -568,7 +575,14 @@ public class WorkspaceConfigurationManager implements IChangeNotifier, IChangeLi
         	Properties props = new Properties();
         	props.setProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_PASSWORD, password);
             ConnectorBinding binding = this.configMgr.createConnectorBinding(jdbcSource, connectorBindingType, newBindingName, props);
-            ModelerDqpUtils.setConnectorBindingPassword(binding, password);
+            
+            try {
+                ModelerDqpUtils.setConnectorBindingPassword(binding, password);
+            } catch (Exception e) {
+                // still want to create the source binding if setting the password failed
+                DqpPlugin.Util.log(e);
+            }
+            
             createSourceBinding(modelResource, binding);
         } catch (Exception e) {
             result = BindingAssignmentResult.ERROR;

@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,25 +36,29 @@ import com.metamatrix.common.config.api.ComponentTypeDefn;
 import com.metamatrix.common.config.api.ComponentTypeID;
 import com.metamatrix.common.config.api.ConfigurationModelContainer;
 import com.metamatrix.common.config.api.ConnectorBinding;
+import com.metamatrix.common.config.api.ConnectorBindingType;
 import com.metamatrix.common.object.PropertyDefinition;
 import com.metamatrix.common.util.crypto.CryptoException;
 import com.metamatrix.common.util.crypto.CryptoUtil;
 import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
 import com.metamatrix.modeler.dqp.config.ConfigurationManager;
+import com.metamatrix.modeler.dqp.internal.config.DqpExtensionsHandler;
+import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * @since 5.5
  */
 public class ConnectorBindingPropertySource implements IPropertySource {
-
-    private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
     private ConnectorBinding binding;
     private ComponentType type;
@@ -150,6 +155,8 @@ public class ConnectorBindingPropertySource implements IPropertySource {
                         if (isEditable && propDefn.isModifiable()) {
                             if (propDefn.isMasked()) {
                                 descriptor = new ConnectorBindingPasswordDescriptor(id, displayName);
+                            } else if (ConnectorBindingType.Attributes.CONNECTOR_CLASSPATH.equals(id)) {
+                                descriptor = new ConnectorClasspathPropertyDescriptor(this.binding, displayName);
                             } else {
                                 descriptor = new TextPropertyDescriptor(id, displayName);
                             }
@@ -209,11 +216,13 @@ public class ConnectorBindingPropertySource implements IPropertySource {
                         }
                     }
                 }
+            } else if (ConnectorBindingType.Attributes.CONNECTOR_CLASSPATH.equals(id)) {
+                result = ModelerDqpUtils.getConnectorClasspathDisplayValue(result);
             }
         }
 
         if (result == null) {
-            result = EMPTY_STRING;
+            result = StringUtil.Constants.EMPTY_STRING;
         }
         return result;
     }
@@ -240,9 +249,13 @@ public class ConnectorBindingPropertySource implements IPropertySource {
     public void setPropertyValue( Object id,
                                   Object value ) {
         try {
-            if (ModelerDqpUtils.setPropertyValue(getConnectorBinding(), id, value)) {
-                this.provider.propertyChanged(this.binding);
+            if (ConnectorBindingType.Attributes.CONNECTOR_CLASSPATH.equals(id)) {
+                processClasspathChange((String)value);
+            } else {
+                ModelerDqpUtils.setPropertyValue(getConnectorBinding(), id, value);
             }
+
+            this.provider.propertyChanged(this.binding);
         } catch (final Exception error) {
             UiUtil.runInSwtThread(new Runnable() {
 
@@ -250,6 +263,90 @@ public class ConnectorBindingPropertySource implements IPropertySource {
                     DqpUiPlugin.showErrorDialog(Display.getCurrent().getActiveShell(), error);
                 }
             }, false);
+        }
+    }
+
+    /**
+     * If jars are no longer being used by this connector, or any other connector, delete them from the extension modules
+     * directory. Also, if a jar from the file system has been added, copy it over to the extension modules directory.
+     * 
+     * @since 6.0.0
+     */
+    private void processClasspathChange( String newValue ) throws Exception {
+        // get the old value before setting the new value
+        String oldValue = (String)getPropertyValue(ConnectorBindingType.Attributes.CONNECTOR_CLASSPATH);
+
+        // a list of the new jars to put on the classpath
+        List<String> classpathJars = null;
+
+        // check to see if classpath has been cleared out
+        if (StringUtil.isEmpty(newValue)) {
+            newValue = StringUtil.Constants.EMPTY_STRING;
+        } else {
+            // process the new value
+            List<String> temp = new ArrayList<String>(ModelerDqpUtils.getJarNames(newValue));
+            classpathJars = new ArrayList<String>(temp.size());
+
+            for (int size = temp.size(), i = 0; i < size; ++i) {
+                File jarFile = new File(temp.get(i));
+
+                // a null parent means that the jar being added to the class path is already in the extensions directory
+                // so there is no need to copy it
+                if (jarFile.getParent() != null) {
+                    // copy to extension module folder
+                    if (DqpPlugin.getInstance().getExtensionsHandler().addConnectorJar(this, jarFile)) {
+                        // change value here to get rid of file system path
+                        classpathJars.add(jarFile.getName());
+                    }
+                } else {
+                    classpathJars.add(jarFile.getName());
+                }
+            }
+
+            // let user know if any problems constructing classpath
+            if (temp.size() != classpathJars.size()) {
+                WidgetUtil.showError(DqpUiConstants.UTIL.getString(I18nUtil.getPropertyPrefix(ConnectorBindingPropertySource.class)
+                                                                   + "errorCopyingJarsMsg")); //$NON-NLS-1$
+            }
+
+            // calculate the string representation of the classpath
+            newValue = ModelerDqpUtils.getConnectorClassPathPropertValue(classpathJars);
+        }
+
+        // set the new value
+        Exception[] errors = ModelerDqpUtils.setPropertyValue(getConnectorBinding(),
+                                                              ConnectorBindingType.Attributes.CONNECTOR_CLASSPATH,
+                                                              newValue);
+
+        // log errors
+        for (Exception e : errors) {
+            DqpUiConstants.UTIL.log(e);
+        }
+
+        // need to clean up jars that are no longer being used
+        Collection<String> oldJars = ModelerDqpUtils.getJarNames(oldValue);
+
+        // remove the jars that are still being used by this connector
+        if (classpathJars != null) {
+            oldJars.removeAll(classpathJars);
+        }
+
+        // need to delete from the extension modules directory those remaining jars that are not being used by
+        // other connectors or by UDF models
+        if (!oldJars.isEmpty()) {
+            DqpExtensionsHandler extHandler = DqpPlugin.getInstance().getExtensionsHandler();
+            Collection<File> jarsToDelete = new ArrayList<File>(oldJars.size());
+
+            for (String name : oldJars) {
+                if (!extHandler.isConnectorJar(name) && !extHandler.isUdfJar(name)) {
+                    jarsToDelete.add(new File(DqpPath.getRuntimeExtensionsPath().toFile(), name));
+                }
+            }
+
+            // finally delete the file(s)
+            if (!jarsToDelete.isEmpty()) {
+                extHandler.deleteConnectorJars(this, jarsToDelete.toArray(new File[jarsToDelete.size()]));
+            }
         }
     }
 

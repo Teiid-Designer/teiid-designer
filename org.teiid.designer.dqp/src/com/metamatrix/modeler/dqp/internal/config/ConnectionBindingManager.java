@@ -20,8 +20,8 @@ import com.metamatrix.common.config.api.ComponentTypeDefn;
 import com.metamatrix.common.config.api.ComponentTypeID;
 import com.metamatrix.common.config.api.ConfigurationModelContainer;
 import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.api.ConnectorBindingType;
 import com.metamatrix.common.config.model.BasicConfiguration;
+import com.metamatrix.common.config.model.BasicConnectorBindingType;
 import com.metamatrix.common.config.model.ConfigurationModelContainerImpl;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 
@@ -130,10 +130,15 @@ public class ConnectionBindingManager {
         for (Iterator iter = componentTypes.iterator(); iter.hasNext();) {
             Object componentType = iter.next();
             // save off all the ConnectorBindingTypes
-            if (componentType instanceof ConnectorBindingType) {
-                ConnectorBindingType bindingType = (ConnectorBindingType)componentType;
+            if (componentType instanceof BasicConnectorBindingType) {
+                BasicConnectorBindingType bindingType = (BasicConnectorBindingType)componentType;
                 Object id = bindingType.getID();
 
+                // get all properties and set them on the binding type so that calls to get the properties of the type
+                // gets all properties in it's hierarchy
+                Collection propDefns = getCMContainerImpl().getAllComponentTypeDefinitions((ComponentTypeID)id);
+                bindingType.setComponentTypeDefinitions(propDefns);
+                
                 connectorTypes_temp.add(bindingType);
                 typeIdToTypeMap_temp.put(id, componentType);
                 connectorTypeIds_temp.add(id);

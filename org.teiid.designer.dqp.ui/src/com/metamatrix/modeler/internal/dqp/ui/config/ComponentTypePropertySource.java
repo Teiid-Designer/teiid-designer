@@ -16,6 +16,8 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import com.metamatrix.common.config.api.ComponentType;
 import com.metamatrix.common.config.api.ComponentTypeDefn;
 import com.metamatrix.common.config.api.ConfigurationObjectEditor;
+import com.metamatrix.common.config.api.ConnectorBindingType;
+import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 
 
 /**
@@ -79,7 +81,10 @@ public class ComponentTypePropertySource implements
 
         if ( defValue == null ) {
             defValue = EMPTY_STRING;
+        } else if (ConnectorBindingType.Attributes.CONNECTOR_CLASSPATH.equals(defID)) {
+            defValue = ModelerDqpUtils.getConnectorClasspathDisplayValue(defValue);
         }
+
         return defValue;
     }
 

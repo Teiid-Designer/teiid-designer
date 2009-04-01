@@ -98,8 +98,21 @@ public class SoapBindingInfo {
         }
         if (type == null) return;
         ConnectorBinding bind = impl.createConnectorBinding(type, name, false);
-        ModelerDqpUtils.setPropertyValue(bind, DESTINATION, getDestinationURL());
-        ModelerDqpUtils.setPropertyValue(bind, STYLE, getStyleString());
+        
+        try {
+            ModelerDqpUtils.setPropertyValue(bind, DESTINATION, getDestinationURL());
+        } catch (Exception e) {
+            // property was not set
+            ModelGeneratorWsdlPlugin.Util.log(e);
+        }
+
+        try {
+            ModelerDqpUtils.setPropertyValue(bind, STYLE, getStyleString());
+        } catch (Exception e) {
+            // property was not set
+            ModelGeneratorWsdlPlugin.Util.log(e);
+        }
+        
         impl.addBinding(bind);
     }
 

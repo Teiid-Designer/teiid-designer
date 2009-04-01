@@ -239,9 +239,8 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
     public void setPropertyValue( Object id,
                                   Object value ) {
         try {
-            if (ModelerDqpUtils.setPropertyValue(getConnectorBinding(), id, value)) {
-                this.provider.propertyChanged(this.binding);
-            }
+            ModelerDqpUtils.setPropertyValue(getConnectorBinding(), id, value);
+            this.provider.propertyChanged(this.binding);
         } catch (final Exception error) {
             UiUtil.runInSwtThread(new Runnable() {
 

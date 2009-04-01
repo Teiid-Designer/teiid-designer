@@ -9,7 +9,6 @@ package com.metamatrix.modeler.modelgenerator.salesforce;
 
 import java.util.Collection;
 import java.util.Iterator;
-
 import com.metamatrix.common.config.api.ComponentType;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.config.ConfigurationManager;
@@ -44,10 +43,25 @@ public class BindingGenerator {
 		String bindingName = generateUniqueName(modelName);
 		try {
 			com.metamatrix.common.config.api.ConnectorBinding bind = configMan.createConnectorBinding(type, bindingName, false);		
-			ModelerDqpUtils.setPropertyValue(bind, BINDING_USERNAME, wizMan.getUsername());
-			ModelerDqpUtils.setPropertyValue(bind, BINDING_PASSWORD, wizMan.getPassword());
+			
+			try {
+			    ModelerDqpUtils.setPropertyValue(bind, BINDING_USERNAME, wizMan.getUsername());
+			} catch (Exception e) {
+			    // property was not set
+			}
+			
+			try {
+			    ModelerDqpUtils.setPropertyValue(bind, BINDING_PASSWORD, wizMan.getPassword());
+			} catch (Exception e) {
+			    // property was not set
+			}
+
 			if(null != wizMan.getConnectionURL()) {
-				ModelerDqpUtils.setPropertyValue(bind, BINDING_CONNECTION_URL, wizMan.getConnectionURL().toString());
+			    try {
+			        ModelerDqpUtils.setPropertyValue(bind, BINDING_CONNECTION_URL, wizMan.getConnectionURL().toString());
+			    } catch (Exception e) {
+			        // property was not set
+			    }
 			}
 			configMan.addBinding(bind);
 		} catch(Exception e) {
