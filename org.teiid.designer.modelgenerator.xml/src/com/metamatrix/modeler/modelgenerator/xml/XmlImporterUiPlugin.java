@@ -29,6 +29,7 @@ public class XmlImporterUiPlugin extends AbstractUiPlugin
     public static final String F_threshold = "f_Threshold"; //$NON-NLS-1$
     public static final String requestTable = "requestTable"; //$NON-NLS-1$
     public static final String mergedChildSep = "mergedChildSep"; //$NON-NLS-1$
+    public static final String xsdLibrary	 = "xsdLibrary"; //$NON-NLS-1$
 
     /**
      * Provides access to the plugin's log, internationalized properties, and debugger.

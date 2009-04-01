@@ -24,6 +24,7 @@ public class UserSettings {
     private int F_threshold;
     private String requestTableLocalName;
     private static String mergedChildSep;
+    private String xsdLibrary;
     private int sourceType = 0;
 
     private Object syncObject;
@@ -149,4 +150,12 @@ public class UserSettings {
     public void setUpdatedRootSelections( boolean updatedRootSelections ) {
         this.updatedRootSelections = updatedRootSelections;
     }
+
+	public void setXsdLibrary(String xsdLibrary) {
+		this.xsdLibrary = xsdLibrary;
+	}
+	
+	public String getXsdLibrary() {
+		return xsdLibrary;
+	}
 }
