@@ -35,6 +35,13 @@ public class WSDLValidatorImpl implements com.metamatrix.modeler.modelgenerator.
         }
         MultiStatus status;
         WSDLValidator validator = new WSDLValidator();
+        try {
+			validator.addURIResolver(new NamespaceResolver());
+		} catch (Exception e) {
+			status = new MultiStatus(ModelGeneratorWsdlPlugin.PLUGIN_ID, 500, new IStatus[0],
+                    util.getString("WSDLValidationImpl.validation.error"), e); //$NON-NLS-1$
+            return status;
+		}
         if (monitor != null) monitor.worked(20);
         IValidationReport report = validator.validate(fileUri);
         if (monitor != null) monitor.worked(60);
@@ -66,7 +73,7 @@ public class WSDLValidatorImpl implements com.metamatrix.modeler.modelgenerator.
                     URLConnection connection = url.openConnection();
                     String contentType = connection.getContentType();
                     if (messages.length == 0) {
-                        if ((null != contentType) && (!contentType.equals("text/xml") || !contentType.equals("application/xml"))) { //$NON-NLS-1$ //$NON-NLS-2$
+                        if ((null != contentType) && (!contentType.contains("text/xml") || !contentType.contains("application/xml"))) { //$NON-NLS-1$ //$NON-NLS-2$
                             String messageSuffix = MessageFormat.format(util.getString("WSDLValidationImpl.validation.content.type.error"), //$NON-NLS-1$
                                                                         fileUri,
                                                                         contentType);
@@ -84,7 +91,7 @@ public class WSDLValidatorImpl implements com.metamatrix.modeler.modelgenerator.
                                                      util.getString("WSDLValidationImpl.wsdl.invalid"), new WSDLValidationException()); //$NON-NLS-1$
                         }
                     } else {
-                        if (!url.getProtocol().equals("file") && !contentType.equals("text/xml") //$NON-NLS-1$//$NON-NLS-2$
+                        if (!url.getProtocol().equals("file") && !contentType.contains("text/xml") //$NON-NLS-1$//$NON-NLS-2$
                             || !contentType.equals("application/xml")) { //$NON-NLS-1$
                             String messageSuffix = MessageFormat.format(util.getString("WSDLValidationImpl.validation.content.type.error"), //$NON-NLS-1$
                                                                         fileUri,
