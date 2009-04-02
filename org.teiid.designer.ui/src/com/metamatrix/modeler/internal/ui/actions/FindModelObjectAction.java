@@ -24,9 +24,9 @@ import org.eclipse.emf.ecore.EObject;
 
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.search.ModelObjectSelectionDialog;
+import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
-import com.metamatrix.query.ui.UiConstants;
 import com.metamatrix.ui.actions.AbstractAction;
 import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 import com.metamatrix.ui.internal.util.UiUtil;
@@ -38,7 +38,7 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
  */
 public class FindModelObjectAction extends AbstractAction
                                    implements IWorkbenchWindowActionDelegate,
-                                              UiConstants {
+                                              UiConstants{
 
     /** 
      * @param thePlugin
