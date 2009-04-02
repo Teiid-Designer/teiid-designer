@@ -31,7 +31,7 @@ public class WSDLValidatorImpl implements com.metamatrix.modeler.modelgenerator.
     public MultiStatus validateWSDL( String fileUri,
                                      IProgressMonitor monitor ) {
         if (monitor != null) {
-            monitor.beginTask("Validating WSDL", 100); //$NON-NLS-1$
+            monitor.beginTask("Validating WSDL", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
         }
         MultiStatus status;
         WSDLValidator validator = new WSDLValidator();
@@ -42,9 +42,9 @@ public class WSDLValidatorImpl implements com.metamatrix.modeler.modelgenerator.
                     util.getString("WSDLValidationImpl.validation.error"), e); //$NON-NLS-1$
             return status;
 		}
-        if (monitor != null) monitor.worked(20);
+        if (monitor != null) monitor.worked(1);
         IValidationReport report = validator.validate(fileUri);
-        if (monitor != null) monitor.worked(60);
+        if (monitor != null) monitor.worked(1);
         boolean success = !report.hasErrors() && report.isWSDLValid();
 
         if (success) {
@@ -124,7 +124,10 @@ public class WSDLValidatorImpl implements com.metamatrix.modeler.modelgenerator.
                 }
             }
         }
-        if (monitor != null) monitor.done();
+        if (monitor != null) {
+        	monitor.worked(1);
+        	monitor.done();
+        }
         return status;
     }
 
