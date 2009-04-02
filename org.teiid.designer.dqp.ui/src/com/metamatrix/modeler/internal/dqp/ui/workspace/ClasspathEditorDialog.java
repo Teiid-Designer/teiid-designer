@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
@@ -127,7 +128,7 @@ public class ClasspathEditorDialog extends Dialog {
         boolean closed = super.close();
 
         // make sure if cancel was pressed that the call to get classpath jars does not return anything
-        if (getReturnCode() != Dialog.OK) {
+        if (getReturnCode() != Window.OK) {
             this.classpathJars = Collections.emptyList();
         }
 
@@ -360,7 +361,7 @@ public class ClasspathEditorDialog extends Dialog {
         // show dialog
         AvailableJarsDialog dialog = new AvailableJarsDialog(getShell(), getAvailableJars());
 
-        if (dialog.open() == Dialog.OK) {
+        if (dialog.open() == Window.OK) {
             this.classpathJars.addAll(dialog.getSelectedJars());
             refresh();
         }
@@ -581,7 +582,7 @@ public class ClasspathEditorDialog extends Dialog {
             boolean closed = super.close();
 
             // make sure if cancel was pressed that the call to get selected jars does not return anything
-            if (getReturnCode() != Dialog.OK) {
+            if (getReturnCode() != Window.OK) {
                 this.selectedJars = Collections.emptyList();
             }
 
@@ -614,7 +615,7 @@ public class ClasspathEditorDialog extends Dialog {
             Button btn = super.createButton(parent, id, label, defaultButton);
 
             // disable OK initially
-            if (id == Dialog.OK) {
+            if (id == Window.OK) {
                 btn.setEnabled(false);
             }
 
@@ -668,7 +669,7 @@ public class ClasspathEditorDialog extends Dialog {
         void handleJarSelected() {
             this.selectedJars = Arrays.asList(this.list.getSelection());
             int count = this.list.getSelectionCount();
-            getButton(Dialog.OK).setEnabled(count != 0);
+            getButton(Window.OK).setEnabled(count != 0);
         }
     }
 }
