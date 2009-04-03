@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="password_patch.jar"/>
-	<classpathentry exported="true" kind="lib" path="connectorid_patch.jar"/>
+	<classpathentry exported="true" kind="lib" path="teiid-6.0.0-client.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid-6.0.0-embedded.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
@@ -11,24 +11,16 @@
 	<classpathentry kind="lib" path="extensions/commons-codec-1.2.jar"/>
 	<classpathentry kind="lib" path="extensions/commons-discovery-0.2.jar"/>
 	<classpathentry kind="lib" path="extensions/commons-httpclient-3.0.1.jar"/>
-	<classpathentry kind="lib" path="extensions/connector-jdbc-6.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="extensions/connector-ldap-6.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="extensions/connector-loopback-6.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="extensions/connector-salesforce-6.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="extensions/connector-text-6.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="extensions/connector-xml-6.0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="extensions/jaxen-1.1.1.jar"/>
 	<classpathentry kind="lib" path="extensions/jms-1.1.jar"/>
 	<classpathentry kind="lib" path="extensions/log4j-1.2.8.jar"/>
 	<classpathentry kind="lib" path="extensions/opensaml-1.1b.jar"/>
-	<classpathentry kind="lib" path="extensions/salesforce-api-6.0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="extensions/servlet-api-2.5.jar"/>
 	<classpathentry kind="lib" path="extensions/wss4j-1.5.0.jar"/>
 	<classpathentry kind="lib" path="extensions/xalan-2.7.0.jar"/>
 	<classpathentry kind="lib" path="extensions/xmlsec-1.3.0.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-2.7.7.jar"/>
 	<classpathentry kind="lib" path="lib/bsh-2.0b4.jar"/>
-	<classpathentry kind="lib" path="lib/commons-logging-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/concurrent-1.3.4.jar"/>
 	<classpathentry kind="lib" path="lib/connector-api-1.5.jar"/>
 	<classpathentry kind="lib" path="lib/guice-1.0.jar"/>
@@ -45,7 +37,12 @@
 	<classpathentry kind="lib" path="lib/saxon-dom-8.7.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api-2.3.jar"/>
 	<classpathentry kind="lib" path="lib/stringtemplate-3.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid-6.0.0-SNAPSHOT-embedded.jar" sourcepath="teiid-0.0.1-SNAPSHOT-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="teiid-6.0.0-SNAPSHOT-client.jar" sourcepath="teiid-0.0.1-SNAPSHOT-src.zip"/>
+	<classpathentry kind="lib" path="extensions/connector-jdbc-6.0.0.jar"/>
+	<classpathentry kind="lib" path="extensions/connector-ldap-6.0.0.jar"/>
+	<classpathentry kind="lib" path="extensions/connector-loopback-6.0.0.jar"/>
+	<classpathentry kind="lib" path="extensions/connector-salesforce-6.0.0.jar"/>
+	<classpathentry kind="lib" path="extensions/connector-text-6.0.0.jar"/>
+	<classpathentry kind="lib" path="extensions/connector-xml-6.0.0.jar"/>
+	<classpathentry kind="lib" path="extensions/salesforce-api-6.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
