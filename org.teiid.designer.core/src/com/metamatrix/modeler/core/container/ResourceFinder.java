@@ -50,7 +50,7 @@ public interface ResourceFinder {
     /** Defines IBM UML2 metamodel URI prefix */
     public static final String UML2_METAMODELS_PREFIX = "pathmap://UML2_METAMODELS/"; //$NON-NLS-1$
 
-    public static final String VDB_WORKING_FOLDER_URI_PATH_SEGEMENT = ".metadata/.plugins/com.metamatrix.vdb.edit/vdbWorkingFolder"; //$NON-NLS-1$
+    public static final String VDB_WORKING_FOLDER_URI_PATH_SEGEMENT = ".metadata/.plugins/org.teiid.designer.vdb.edit/vdbWorkingFolder"; //$NON-NLS-1$
     public static final String VDB_WORKING_FOLDER = "vdbWorkingFolder"; //$NON-NLS-1$
 
     /**
