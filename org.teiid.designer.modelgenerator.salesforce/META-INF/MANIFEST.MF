@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.teiid.designer.dqp,
  org.teiid.designer.vdb.edit,
  org.teiid.designer.schema.tools,
- org.teiid.designer.compare
+ org.teiid.designer.compare,
+ org.apache.commons.logging;bundle-version="1.0.4"
 Bundle-ActivationPolicy: lazy
 Export-Package: com.metamatrix.modeler.modelgenerator.salesforce;uses:="junit.framework",
  com.metamatrix.modeler.modelgenerator.salesforce.connection,
@@ -36,5 +37,4 @@ Bundle-ClassPath: salesforcemodelgenerator.jar,
  commons-discovery-0.2.jar,
  log4j-1.2.8.jar,
  saaj.jar,
- commons-logging-1.0.4.jar,
  wsdl4j-1.5.1.jar
