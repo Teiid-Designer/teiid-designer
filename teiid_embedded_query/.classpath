@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry exported="true" kind="lib" path="teiid-6.0.0-client.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/teiid-6.0.0-embedded.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/teiid-6.0.0-embedded.jar" sourcepath="teiid-6.0.0-src.zip"/>
 	<classpathentry kind="lib" path="extensions/connector-salesforce-6.0.0.jar"/>
 	<classpathentry kind="lib" path="extensions/salesforce-api-6.0.0.jar"/>
 	<classpathentry kind="lib" path="extensions/commons-logging-1.1.jar"/>
