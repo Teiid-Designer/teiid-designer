@@ -684,7 +684,8 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
         XSDSimpleTypeDefinition sourceType = type.getType();
         List validFacets = sourceType.getValidFacets();
         String typeName = null;
-        if (sourceType.getBaseTypeDefinition().getName().equals("anySimpleType")) { //$NON-NLS-1$
+    	String baseTypeName = sourceType.getBaseTypeDefinition().getName();
+        if (baseTypeName!=null && baseTypeName.equals("anySimpleType")) { //$NON-NLS-1$
             typeName = sourceType.getRootTypeDefinition().getName();
         } else {
             typeName = sourceType.getBaseTypeDefinition().getName();
@@ -732,7 +733,8 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
         row.add(""); // 13 //$NON-NLS-1$
         row.add(""); // 14 //$NON-NLS-1$
         row.add(""); // 15 //$NON-NLS-1$
-        if (type.getBaseType().equals("string")) { //$NON-NLS-1$
+        String bType = type.getBaseType();      
+        if (bType!=null && bType.equals("string")) { //$NON-NLS-1$
             row.add(new Integer(actualLength * 2)); // 16
         } else {
             row.add(new Integer(0)); // 16
@@ -750,7 +752,9 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
 
     private int getSQLtype( String schemaTypeName ) {
         int retval = Types.VARCHAR;
-        // trim off NS prefix if present
+		if(schemaTypeName==null) return retval;
+
+		// trim off NS prefix if present
         String lschemaTypeName = null;
         int idx = schemaTypeName.indexOf(":"); //$NON-NLS-1$
         if (idx != -1) {
