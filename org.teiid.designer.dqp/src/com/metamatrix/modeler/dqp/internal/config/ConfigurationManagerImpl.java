@@ -264,7 +264,7 @@ public class ConfigurationManagerImpl implements ConfigurationManager, Configura
             int i = 0;
             
             for (String name : requiredJars) {
-                jarsToDelete[i++] = new File(DqpPath.getRuntimeExtensionsPath().toFile(), name);
+                jarsToDelete[i++] = new File(DqpPath.getRuntimeConnectorsPath().toFile(), name);
             }
             
             // this deletes the file(s)

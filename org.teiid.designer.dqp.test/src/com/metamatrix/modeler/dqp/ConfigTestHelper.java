@@ -59,7 +59,7 @@ public class ConfigTestHelper {
     }
     
     public IPath getExtensionsPath() {
-        return DqpPath.getRuntimeExtensionsPath();
+        return DqpPath.getRuntimeConnectorsPath();
     }
 
     public ConfigurationManager getConfigurationManager()throws Exception {

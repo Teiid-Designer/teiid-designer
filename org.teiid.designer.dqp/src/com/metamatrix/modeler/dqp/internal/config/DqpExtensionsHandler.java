@@ -51,7 +51,7 @@ public class DqpExtensionsHandler {
 
 	public DqpExtensionsHandler() {
 		this.listeners = new ArrayList<IExtensionModuleChangeListener>();
-		this.dqpExtensionsFolderPath = DqpPath.getRuntimeExtensionsPath();
+		this.dqpExtensionsFolderPath = DqpPath.getRuntimeConnectorsPath();
 		this.udfJarMapperManager = new UdfJarMapperManager(this.dqpExtensionsFolderPath, this);
 		this.udfJarMapperManager.load();
 	}

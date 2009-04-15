@@ -339,7 +339,7 @@ public class ConnectorBindingPropertySource implements IPropertySource {
 
             for (String name : oldJars) {
                 if (!extHandler.isConnectorJar(name) && !extHandler.isUdfJar(name)) {
-                    jarsToDelete.add(new File(DqpPath.getRuntimeExtensionsPath().toFile(), name));
+                    jarsToDelete.add(new File(DqpPath.getRuntimeConnectorsPath().toFile(), name));
                 }
             }
 

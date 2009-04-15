@@ -222,7 +222,7 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants  {
                
         File vdbFile = getVdbFile();
 
-        File executionDir = DqpPath.getVdbExecutionPath().toFile();
+        File executionDir = DqpPath.getRuntimePath().toFile();
         String url = buildConnectionURL(executionDir.getAbsolutePath(), vdbName, vdbVersion, getExecutionProperties());
         ISQLDriver driver = null;
 

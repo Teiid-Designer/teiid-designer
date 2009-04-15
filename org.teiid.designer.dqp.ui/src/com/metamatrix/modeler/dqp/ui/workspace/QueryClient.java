@@ -39,17 +39,23 @@ public class QueryClient {
     
     protected Connection getAdminConnection() throws SQLException {
         if (this.adminConnection == null) {
+        	ClassLoader current = Thread.currentThread().getContextClassLoader();
             try {
-                File executionDir = DqpPath.getVdbExecutionPath().toFile();
-                String url = buildConnectionURL(executionDir.getAbsolutePath(), "admin", "1", new Properties()); //$NON-NLS-1$ //$NON-NLS-2$ 
+                File propertiesDir = DqpPath.getRuntimePath().toFile();
+                String url = buildConnectionURL(propertiesDir.getAbsolutePath(), "admin", "1", new Properties()); //$NON-NLS-1$ //$NON-NLS-2$ 
                 DqpPlugin.Util.log(IStatus.INFO, "starting workspace execution with url = \"" + url); //$NON-NLS-1$ 
                 EmbeddedDriver driver = new EmbeddedDriver();
+                
+                Thread.currentThread().setContextClassLoader(driver.getClass().getClassLoader());
+                
                 this.adminConnection = (com.metamatrix.jdbc.api.Connection)driver.connect(url, null);
                 
                 // wire the logging so that the messages are flown into designer
                 ((EmbeddedAdmin)this.adminConnection.getAdminAPI()).setLogListener(new DesignerLogger());
             } catch (AdminException e) {
             	throw new RuntimeException(e);
+            }  finally {
+            	Thread.currentThread().setContextClassLoader(current);
             }
         }
         return this.adminConnection;

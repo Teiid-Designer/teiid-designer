@@ -8,6 +8,8 @@
 package com.metamatrix.modeler.dqp;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -21,7 +23,7 @@ import com.metamatrix.common.config.api.ConfigurationObjectEditor;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.util.FileUtils;
+import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.dqp.config.ConfigurationManager;
@@ -52,6 +54,8 @@ public class DqpPlugin extends Plugin {
     private static final String WORKSPACE_PROPERTIES = "workspace.properties"; //$NON-NLS-1$
 
     public static final String UDF_JAR_MAPPER_FILE_NAME = "udfJarMappings.properties"; //$NON-NLS-1$
+    
+    public static final String SVN_DIR_NAME = ".svn"; //$NON-NLS-1$
 
     /**
      * Provides access to the plugin's log and to it's resources.
@@ -102,7 +106,7 @@ public class DqpPlugin extends Plugin {
             IPath configLocation = DqpPath.getRuntimeConfigPath();
 
             // create required directories for running the DQP
-            DqpPath.getRuntimeExtensionsPath();
+            DqpPath.getRuntimeConnectorsPath();
             DqpPath.getLogPath();
 
             // ensure that the configuration files have been loaded to the state location
@@ -128,17 +132,23 @@ public class DqpPlugin extends Plugin {
                 FileUtils.copy(src.getAbsolutePath(), target.getAbsolutePath());
             }
 
-            // copy the workspace.properties each time eclipse starts as we may
+            // copy the workspace.properties each if  time eclipse starts as we may
             // have modified the properties file
             src = DqpPath.getInstallDqpPath().append(WORKSPACE_PROPERTIES).toFile();
-            target = new File(vdbExecDir, WORKSPACE_PROPERTIES);
+
+            // Put workspace.properties at root of dqp state location
+            target = new File(DqpPath.getRuntimePath().toFile(), WORKSPACE_PROPERTIES);
+            
             if (target.exists()) {
                 target.delete();
             }
             FileUtils.copy(src.getAbsolutePath(), target.getAbsolutePath());
 
             // initialize the workspace configuration
-            inititalizeWorkspaceConfig();
+            initializeWorkspaceConfig();
+            
+            // make call to copy embedded teiid extensions & lib jars
+            initializeEmbedded();
         } catch (Exception e) {
             if (e instanceof CoreException) {
                 throw (CoreException)e;
@@ -245,7 +255,7 @@ public class DqpPlugin extends Plugin {
         }
     }
 
-    private void inititalizeWorkspaceConfig() {
+    private void initializeWorkspaceConfig() {
         File workspaceDefnDirectory = DqpPath.getWorkspaceDefnPath().toFile();
         assert (workspaceDefnDirectory.exists() && workspaceDefnDirectory.isDirectory());
 
@@ -271,6 +281,35 @@ public class DqpPlugin extends Plugin {
             }
         }
     }
+    
+    private void initializeEmbedded() throws IOException, Exception {
+    	
+    	IPath runtimeDqpWorkspacePath = DqpPath.getRuntimePath();
+        
+        IPath embeddedExtensionsInstallPath = DqpPath.getInstallExtensionsPath();
+        
+        IPath embeddedLibsInstallPath = DqpPath.getInstallLibPath();
+        
+        
+        // If extensions folder already exists delete contents
+        File runtimeDqpWorkspaceFolder = runtimeDqpWorkspacePath.toFile();
+        
+        File runtimeExtensionsPath = DqpPath.getRuntimeExtensionsPath().toFile();
+        if( runtimeExtensionsPath.exists() ) {
+        	FileUtils.removeChildrenRecursively(runtimeExtensionsPath);
+        }
+        
+        File runtimeLibsPath = DqpPath.getRuntimeLibsPath().toFile();
+        if( runtimeLibsPath.exists() ) {
+        	FileUtils.removeChildrenRecursively(runtimeLibsPath);
+        }
+
+        SvnFilenameFilter filter = new SvnFilenameFilter();
+        
+        FileUtils.copyDirectoriesRecursively(embeddedExtensionsInstallPath.toFile(), runtimeDqpWorkspaceFolder, filter);
+
+        FileUtils.copyDirectoriesRecursively(embeddedLibsInstallPath.toFile(), runtimeDqpWorkspaceFolder, filter);
+    }
 
     /**
      * <strong>Method to facilitate testing. Should not be considered part of the public API.</strong>
@@ -280,5 +319,22 @@ public class DqpPlugin extends Plugin {
      */
     public boolean testVdbContextHelperMapContains( VdbEditingContext theContext ) {
         return this.vdbHelperMap.containsKey(theContext);
+    }
+    
+    /*
+	 * Inner class which filters .svn folders if they exist. Should only be applicable for running
+     * from IDE at development/debug time. Should not matter if running from kitted Designer.
+	 */
+    class SvnFilenameFilter implements FilenameFilter {
+
+		@Override
+		public boolean accept(File dir, String name) {
+			if( name != null && name.equalsIgnoreCase(SVN_DIR_NAME)) {
+			return false;
+			}
+			
+			return true;
+		}
+    	
     }
 }

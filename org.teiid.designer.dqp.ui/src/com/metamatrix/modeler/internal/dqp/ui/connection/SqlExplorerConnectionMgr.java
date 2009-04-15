@@ -427,7 +427,7 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants,
                 Date connTime = connection.getConnection().getTimeOpened();
                 
                 if (connTime != null) {
-                    IPath connPath = DqpPath.getRuntimeExtensionsPath();
+                    IPath connPath = DqpPath.getRuntimeConnectorsPath();
                     String udfPath = UdfManager.INSTANCE.getUdfModelPath().toFile().getAbsolutePath();
                     result = hasStaleFile(new File(connPath.toOSString()), connTime.getTime())
                              || hasStaleFile(new File(udfPath), connTime.getTime());
