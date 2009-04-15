@@ -311,7 +311,10 @@ public class Binding {
     public void applyAttrNameModification( Object txnSource ) {
         if (hasAttrNameModification()) {
             String newName = getCurrentAttrName();
-            TransformationHelper.setSqlColumnName((EObject)getAttribute(), newName, txnSource);
+            Object attribute = getAttribute();
+            if (attribute instanceof EObject) {
+            	TransformationHelper.setSqlColumnName((EObject)getAttribute(), newName, txnSource);
+            }
         }
     }
 
