@@ -63,7 +63,7 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
 
         this.pnlBindings = new NewConnectorBindingPanel(mainComposite);
         this.pnlBindings.addChangeListener(this);
-        this.pnlBindings.setSaveOnChange(true);
+        //this.pnlBindings.setSaveOnChange(true);
         this.pnlBindings.setFocus();
         if (initialConnectorType != null) {
             pnlBindings.setConnectorType(initialConnectorType);
@@ -138,7 +138,9 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
     @Override
     protected void okPressed() {
         this.pnlBindings.save();
+        
         this.pnlBindings.internalDispose();
+        
         super.okPressed();
     }
 

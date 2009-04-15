@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Status;
@@ -42,6 +43,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetSorter;
+
 import com.metamatrix.common.config.api.ComponentType;
 import com.metamatrix.common.config.api.ComponentTypeID;
 import com.metamatrix.common.config.api.ConnectorBinding;
@@ -49,7 +51,6 @@ import com.metamatrix.common.namedobject.BaseID;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.config.ConfigurationManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -74,8 +75,6 @@ public class NewConnectorBindingPanel extends Composite
     }
 
     private ListenerList changeListeners;
-
-    private boolean saveOnChange;
 
     Map componentTypes;
     List sortedTypes;
@@ -107,8 +106,9 @@ public class NewConnectorBindingPanel extends Composite
         createContents(this);
 
         this.typeCombo.select(0);
+        
+        // When Type changes, New Binding is created because properties may be different
         connectorTypeChanged();
-        this.connectorBinding = getConnectorBinding(false);
 
         propertyPage.selectionChanged(null, new StructuredSelection(connectorBinding));
     }
@@ -160,7 +160,7 @@ public class NewConnectorBindingPanel extends Composite
         bindingNameText.setEditable(true);
 
         // Line Below will maintain White background, if desired.
-        // fileNameText.setBackground(UiUtil.getSystemColor(SWT.COLOR_WHITE));
+
         GridData fileNameTextGridData = new GridData();
         fileNameTextGridData.widthHint = FILE_NAME_TEXT_WIDTH;
         bindingNameText.setLayoutData(fileNameTextGridData);
@@ -229,8 +229,7 @@ public class NewConnectorBindingPanel extends Composite
     }
 
     private void createProperties( Composite theParent ) {
-        // Composite c = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH, 1, 2);
-        // WidgetFactory.createLabel(c, getString("lblBindingProperties")); //$NON-NLS-1$
+
         Composite propertyGroup = WidgetFactory.createGroup(theParent, getString("lblBindingProperties"), SWT.FILL, 1, 2); //$NON-NLS-1$
 
         GridLayout gridLayout = new GridLayout();
@@ -284,10 +283,6 @@ public class NewConnectorBindingPanel extends Composite
         this.propertyPage.setPropertySourceProvider(sourceProvider);
     }
 
-    public boolean isSaveOnChange() {
-        return this.saveOnChange;
-    }
-
     private void packPropertiesPage() {
         Tree tree = (Tree)this.propertyPage.getControl();
         TreeColumn[] treeCols = tree.getColumns();
@@ -298,14 +293,8 @@ public class NewConnectorBindingPanel extends Composite
     }
 
     void handleBindingNameChanged() {
-        boolean noCurrentBinding = (this.connectorBinding == null);
         // need to refresh properties panel if binding created after name change
-
-        // call this method to get a binding created if one is needed
-        if ((getConnectorBinding(false) != null) && noCurrentBinding) {
-            // need to refresh properties panel if binding created after name change
-            refreshPropertyPage();
-        }
+        refreshPropertyPage();
 
         // // alert listeners
         fireChangeEvent();
@@ -314,76 +303,19 @@ public class NewConnectorBindingPanel extends Composite
     public ConnectorBinding getConnectorBinding() {
         return this.connectorBinding;
     }
-
-    /**
-     * Obtains the binding.
-     * 
-     * @param theAddToConfigurationFlag the flag indicating if a new binding should be added to the configuration
-     * @return the binding
-     * @since 5.0
-     */
-    private ConnectorBinding getConnectorBinding( boolean theAddToConfigurationFlag ) {
-        ConnectorBinding result = null;
-        boolean createBinding = false;
-        boolean useExisting = false;
-
+    
+    private void createConnectorBinding() {
         // bindings must have a type
         if (this.currentType != null) {
-            // bindings must have a name
-            if (!StringUtil.isEmpty(getNewBindingName())) {
-                if (this.connectorBinding == null) {
-                    createBinding = true;
-                } else if (this.connectorBinding.getComponentTypeID() == this.currentTypeID) {
-                    // types are the same. only create if adding to configuration
-                    createBinding = theAddToConfigurationFlag;
-                    useExisting = true;
-                    result = this.connectorBinding;
-                } else {
-                    // always create if type changed
-                    createBinding = true;
-                }
-            } else if ((this.connectorBinding != null) && !(this.connectorBinding.getComponentTypeID() == this.currentTypeID)) {
-                // type change when name is empty
-                this.connectorBinding = null;
-            }
-        } else {
-            // make sure all other fields are cleared
-            this.currentTypeID = null;
-            this.connectorBinding = null;
+            try {
+            	this.connectorBinding = configManager.createConnectorBinding(this.currentType, getNewBindingName(), false);
+	        } catch (Exception theException) {
+	            DqpUiConstants.UTIL.log(theException);
+	            theException.printStackTrace();
+	            MessageDialog.openError(getShell(), getString("errorDialog.creatingConnector.title"), //$NON-NLS-1$
+	                                    getString("errorDialog.creatingConnector.msg")); //$NON-NLS-1$
+	        }
         }
-
-        if (createBinding) {
-            if (theAddToConfigurationFlag && useExisting) {
-                // create from existing binding
-                try {
-                    this.connectorBinding = configManager.createConnectorBinding(this.connectorBinding, getNewBindingName());
-                    result = this.connectorBinding;
-                } catch (Exception theException) {
-                    String msg = StringUtil.isEmpty(theException.getLocalizedMessage()) ? getString("errorDialog.creatingConnector.msg") //$NON-NLS-1$
-                    : theException.getLocalizedMessage();
-                    DqpUiConstants.UTIL.log(IStatus.ERROR, theException, msg);
-                    theException.printStackTrace();
-                    MessageDialog.openError(getShell(), getString("errorDialog.creatingConnector.title"), //$NON-NLS-1$
-                                            getString("errorDialog.creatingConnector.msg")); //$NON-NLS-1$
-                }
-            } else {
-                // create new binding
-                try {
-
-                    this.connectorBinding = configManager.createConnectorBinding(this.currentType,
-                                                                                 getNewBindingName(),
-                                                                                 theAddToConfigurationFlag);
-                    result = this.connectorBinding;
-                } catch (Exception theException) {
-                    DqpUiConstants.UTIL.log(theException);
-                    theException.printStackTrace();
-                    MessageDialog.openError(getShell(), getString("errorDialog.creatingConnector.title"), //$NON-NLS-1$
-                                            getString("errorDialog.creatingConnector.msg")); //$NON-NLS-1$
-                }
-            }
-        }
-
-        return result;
     }
 
     private String getNewBindingName() {
@@ -402,8 +334,8 @@ public class NewConnectorBindingPanel extends Composite
             }
         }
 
-        // getting the binding will cause a new binding to be created
-        getConnectorBinding(false);
+        // If Component Type is changed, we need to create a new binding
+        createConnectorBinding();
 
         refreshPropertyPage();
 
@@ -522,10 +454,6 @@ public class NewConnectorBindingPanel extends Composite
      */
     public void propertyChange( PropertyChangeEvent theEvent ) {
 
-        if (this.saveOnChange) {
-            saveInternal();
-        }
-
         packPropertiesPage();
 
         // alert listeners something has changed
@@ -544,19 +472,16 @@ public class NewConnectorBindingPanel extends Composite
         this.changeListeners.remove(theListener);
     }
 
-    private void saveInternal() {
-        try {
-
-        } catch (Exception theException) {
-            DqpUiConstants.UTIL.log(theException);
-            theException.printStackTrace();
-        }
-    }
-
     public void save() {
-        if (!this.saveOnChange) {
-            saveInternal();
-        }
+    	// Copy the connector binding so we get the new name
+    	try {
+			DqpPlugin.getInstance().getConfigurationManager().createConnectorBinding(this.connectorBinding, getNewBindingName());
+		} catch (Exception theException) {
+			DqpUiConstants.UTIL.log(theException);
+           
+            MessageDialog.openError(getShell(), getString("errorDialog.creatingConnector.title"), //$NON-NLS-1$
+                                    getString("errorDialog.creatingConnector.msg")); //$NON-NLS-1$
+		}
     }
 
     /**
@@ -582,26 +507,20 @@ public class NewConnectorBindingPanel extends Composite
         int colorCode = (theReadonlyFlag ? SWT.COLOR_WIDGET_BACKGROUND : SWT.COLOR_WHITE);
         Color bkg = UiUtil.getSystemColor(colorCode);
         propertyPage.getControl().setBackground(bkg);
-
-        // this.btnEdit.setEnabled(this.btnEdit.getEnabled() && theReadonlyFlag);
-    }
-
-    public void setSaveOnChange( boolean theSaveOnChangeFlag ) {
-        this.saveOnChange = theSaveOnChangeFlag;
     }
 
     /**
      * The normal dispose() method was not getting called when the bindings editor was closed. Needed a way to remove listeners.
+     * @throws Exception 
      * 
      * @since 5.5
      */
     public void internalDispose() {
-        // Copy the connector binding so we get the new name
-        this.connectorBinding = getConnectorBinding(true);
 
+        
         DqpPlugin.getInstance().getConfigurationManager().removeChangeListener(this.configListener);
     }
-
+    
     /**
      * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
      * @since 5.5
@@ -634,12 +553,6 @@ public class NewConnectorBindingPanel extends Composite
             typeCombo.select(typeIndex);
             connectorTypeChanged(); // needed to get the property page to update
         }
-
-        // ComponentType cType = (ComponentType)NewConnectorBindingPanel.this.componentTypes.get(typeID);
-        // if(cType != null) {
-        // NewConnectorBindingPanel.this.currentType = cType;
-        // NewConnectorBindingPanel.this.currentTypeID = typeID;
-        // }
     }
 
     /**
