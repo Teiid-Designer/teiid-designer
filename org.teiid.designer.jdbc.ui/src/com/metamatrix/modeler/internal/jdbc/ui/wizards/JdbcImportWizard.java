@@ -679,6 +679,22 @@ public class JdbcImportWizard extends AbstractWizard
             sWatch.stop();
             if (debugTimingEnabled) Stopwatch.logTimedMessage(" JDBC Import Wizard:  Creating Model Processor - Delta ", sWatch.getTotalDuration(), InternalModelerJdbcUiPluginConstants.Util); //$NON-NLS-1$
 
+            //
+            // post processors
+            //
+
+            if (!monitor.isCanceled() && JdbcImportWizard.this.status.getSeverity() != IStatus.ERROR) {
+                IJdbcImportPostProcessor[] processors = getPostProcessors();
+
+                for (int i = 0; i < processors.length; ++i) {
+                    try {
+                        processors[i].postProcess(getImportInfoProvider());
+                    } catch (Exception theException) {
+                        Util.log(IStatus.ERROR, Util.getString(I18N_PREFIX + "postProcessingError", processors[i].getClass())); //$NON-NLS-1$
+                    }
+                }
+            }
+
             // cleanup
             if (JdbcImportWizard.this.status.getSeverity() != IStatus.ERROR) {
                 sWatch.start(true);
@@ -717,22 +733,6 @@ public class JdbcImportWizard extends AbstractWizard
                 sWatch.stop();
                 if (debugTimingEnabled) Stopwatch.logTimedMessage(" JDBC Import Wizard:  Opening Model In Editor - Delta ", sWatch.getTotalDuration(), InternalModelerJdbcUiPluginConstants.Util); //$NON-NLS-1$
 
-            }
-
-            //
-            // post processors
-            //
-
-            if (!monitor.isCanceled() && JdbcImportWizard.this.status.getSeverity() != IStatus.ERROR) {
-                IJdbcImportPostProcessor[] processors = getPostProcessors();
-
-                for (int i = 0; i < processors.length; ++i) {
-                    try {
-                        processors[i].postProcess(getImportInfoProvider());
-                    } catch (Exception theException) {
-                        Util.log(IStatus.ERROR, Util.getString(I18N_PREFIX + "postProcessingError", processors[i].getClass())); //$NON-NLS-1$
-                    }
-                }
             }
         } catch (final OperationCanceledException err) {
             // do nothing in particular

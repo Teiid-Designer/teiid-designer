@@ -41,7 +41,6 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.config.ModelConnectorBindingMapper;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
-import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.edit.loader.VDBReader;
@@ -487,12 +486,6 @@ public class VdbDefnHelper {
                                                    String sConnBindName,
                                                    boolean theAddToConfigurationFlag) throws Exception {
         return DqpPlugin.getInstance().getConfigurationManager().createConnectorBinding(ctConnector, sConnBindName, theAddToConfigurationFlag);
-    }
-    
-    public ConnectorBinding createConnectorBinding(JdbcSource theSource,
-                                                   ComponentType theConnectorType,
-                                                   String theNewBindingName) throws Exception {
-        return DqpPlugin.getInstance().getConfigurationManager().createConnectorBinding(theSource, theConnectorType, theNewBindingName, new Properties());
     }
     
     /**

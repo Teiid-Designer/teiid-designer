@@ -11,9 +11,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IPath;
-
 import com.metamatrix.common.config.api.ComponentType;
 import com.metamatrix.common.config.api.ComponentTypeID;
 import com.metamatrix.common.config.api.ConnectorBinding;
@@ -22,7 +20,6 @@ import com.metamatrix.common.config.api.exceptions.ConfigurationException;
 import com.metamatrix.common.config.model.BasicConfigurationObjectEditor;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.modeler.dqp.internal.config.ConnectionManager;
-import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 
 /**
@@ -314,24 +311,6 @@ public interface ConfigurationManager extends
     ConnectorBinding createConnectorBinding(ComponentType theConnectorType,
                                             String theNewBindingName,
                                             boolean theAddToConfigurationFlag) throws Exception;
-
-    /**
-     * Creates a new <code>ConnectorBinding</code> and adds it to the configuration. The <code>JdbcSource</code> is used to
-     * set the binding user, URL, and driver class.
-     * 
-     * @param theSource
-     *            the JDBC import source
-     * @param theConnectorBindingType
-     *            the connector binding type
-     * @param theNewBindingName
-     *            the name of the new binding
-     * @return the new binding
-     * @since 5.0
-     */
-    ConnectorBinding createConnectorBinding(JdbcSource theSource,
-                                            ComponentType theConnectorBindingType,
-                                            String theNewBindingName,
-                                            Properties props) throws Exception;
 
     /**
      * Sets the property value for a connector binding

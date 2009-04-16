@@ -46,6 +46,22 @@ public class ClasspathEditorDialog extends Dialog {
     // ===========================================================================================================================
 
     static final String PREFIX = I18nUtil.getPropertyPrefix(ClasspathEditorDialog.class);
+    
+    // ===========================================================================================================================
+    // Class Methods
+    // ===========================================================================================================================
+
+    /**
+     * Displays a confirmation dialog asking the user to confirm the overwrite of an existing JAR extension module with the
+     * specified name.
+     * 
+     * @param jarName the name of the file being overwritten
+     * @return <code>true</code> if the user confirms the overwrite
+     * @since 6.0.0
+     */
+    public static boolean showConfirmOverwriteDialog( String jarName ) {
+        return WidgetUtil.showConfirmation(UTIL.getString(PREFIX + "addDialog.jarExistsConfirmationMsg", jarName)); //$NON-NLS-1$
+    }
 
     // ===========================================================================================================================
     // Fields
@@ -451,7 +467,7 @@ public class ClasspathEditorDialog extends Dialog {
         // jars may have a path if they were added from the file system
         for (String name : this.classpathJars) {
             if (new File(name).getName().equals(jarName)) {
-                if (WidgetUtil.showConfirmation(UTIL.getString(PREFIX + "addDialog.jarExistsConfirmationMsg", jarName))) { //$NON-NLS-1$
+                if (showConfirmOverwriteDialog(jarName)) {
                     // user wants to overwrite
                     this.classpathJars.remove(name);
                     this.classpathJars.add(jarPath);
@@ -466,7 +482,7 @@ public class ClasspathEditorDialog extends Dialog {
         if (!processed) {
             // extension jars will never have a path so just look at name
             if (this.allExtensionJars.contains(jarName)) {
-                if (WidgetUtil.showConfirmation(UTIL.getString(PREFIX + "addDialog.jarExistsConfirmationMsg", jarName))) { //$NON-NLS-1$
+                if (showConfirmOverwriteDialog(jarName)) {
                     this.classpathJars.add(jarPath);
                 }
 

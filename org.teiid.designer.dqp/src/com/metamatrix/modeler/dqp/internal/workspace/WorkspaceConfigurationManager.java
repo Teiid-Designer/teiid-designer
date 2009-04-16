@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Properties;
-
 import org.eclipse.core.internal.resources.WorkspaceRoot;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -28,7 +27,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
-
 import com.metamatrix.common.config.api.Configuration;
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ConnectorBindingType;
@@ -36,7 +34,6 @@ import com.metamatrix.common.config.model.BasicConfigurationObjectEditor;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.refactor.IRefactorResourceListener;
 import com.metamatrix.modeler.core.refactor.RefactorResourceEvent;
@@ -65,10 +62,6 @@ import com.metamatrix.modeler.jdbc.JdbcSource;
  * @since 5.0
  */
 public class WorkspaceConfigurationManager implements IChangeNotifier, IChangeListener, IResourceChangeListener, IRefactorResourceListener {
-    
-    public enum BindingAssignmentResult {SUCCESS, MULTIPLE_TYPES, TYPE_NOT_FOUND, ERROR}
-
-    //private static final String PREFIX = I18nUtil.getPropertyPrefix(WorkspaceConfigurationManager.class);
 
     private Collection listenerList;
     
@@ -500,100 +493,6 @@ public class WorkspaceConfigurationManager implements IChangeNotifier, IChangeLi
         }
 
         return newBindingName.toString();
-    }
-
-    /**
-     * Finds or creates a <code>ConnectorBinding</code> for the specified model and JDBC source. Once found or created the
-     * binding is assigned into the workspace configuration. If more than one matching binding is found the first one is assigned.
-     * If no matching binding is found, one is created if possible.
-     * 
-     * @param modelResource
-     *            the model that needs a binding
-     * @param jdbcSource
-     *            the source information
-     * @return <code>true</code> if the connector binding was assigned; <code>false</code> if a binding could not be created
-     *         because multiple connector types were found, no connector types were found, or if an exception was caught creating
-     *         the binding
-     * @since 5.5.3
-     */
-    public BindingAssignmentResult assignConnectorBinding(ModelResource modelResource,
-                                                          JdbcSource jdbcSource,
-                                                          String password) throws Exception {
-        BindingAssignmentResult bindingAssigned = BindingAssignmentResult.SUCCESS;
-        Collection<ConnectorBinding> bindingMatches = findMatchingConnectorBindings(jdbcSource);
-
-        if (bindingMatches.isEmpty()) {
-            Collection<ConnectorBindingType> bindingTypeMatches = findMatchingConnectorBindingTypes(jdbcSource);
-            int numTypesFound = bindingTypeMatches.size();
-
-            if (numTypesFound == 1) {
-                ConnectorBindingType type = bindingTypeMatches.iterator().next();
-                bindingAssigned = assignConnectorBinding(modelResource, type, jdbcSource, password);
-            } else if (numTypesFound > 1) {
-                bindingAssigned = BindingAssignmentResult.MULTIPLE_TYPES;
-            } else {
-                bindingAssigned = BindingAssignmentResult.TYPE_NOT_FOUND;
-                String key = I18nUtil.getPropertyPrefix(WorkspaceConfigurationManager.class) + "missingConnectorBindingType"; //$NON-NLS-1$
-                String msg = DqpPlugin.Util.getString(key, new Object[] {
-                    modelResource.getItemName(), jdbcSource.getDriverName()
-                });
-                DqpPlugin.Util.log(IStatus.ERROR, msg);
-            }
-        } else {
-            ConnectorBinding binding = bindingMatches.iterator().next();
-            
-            try {
-                ModelerDqpUtils.setConnectorBindingPassword(binding, password);
-            } catch (Exception e) {
-                // still want to create the source binding if setting the password failed
-                DqpPlugin.Util.log(e);
-            }
-            
-            createSourceBinding(modelResource, binding);
-        }
-
-        return bindingAssigned;
-    }
-
-    public BindingAssignmentResult assignConnectorBinding(ModelResource modelResource,
-                                                          ConnectorBindingType connectorBindingType,
-                                                          JdbcSource jdbcSource,
-                                                          String password) {
-        BindingAssignmentResult result = BindingAssignmentResult.SUCCESS;
-        String name = modelResource.getItemName();
-        
-        // if item name includes the file extension remove it
-        int index = name.indexOf('.');
-        
-        if (index != -1) {
-            name = name.substring(0, index);
-        }
-        
-        String newBindingName = createConnectorBindingName(name);
-
-        try {
-        	Properties props = new Properties();
-        	props.setProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_PASSWORD, password);
-            ConnectorBinding binding = this.configMgr.createConnectorBinding(jdbcSource, connectorBindingType, newBindingName, props);
-            
-            try {
-                ModelerDqpUtils.setConnectorBindingPassword(binding, password);
-            } catch (Exception e) {
-                // still want to create the source binding if setting the password failed
-                DqpPlugin.Util.log(e);
-            }
-            
-            createSourceBinding(modelResource, binding);
-        } catch (Exception e) {
-            result = BindingAssignmentResult.ERROR;
-            String key = I18nUtil.getPropertyPrefix(WorkspaceConfigurationManager.class) + "errorCreatingConnectorBinding"; //$NON-NLS-1$
-            String msg = DqpPlugin.Util.getString(key, new Object[] {
-                modelResource.getItemName(), connectorBindingType.getName()
-            });
-            DqpPlugin.Util.log(IStatus.ERROR, e, msg);
-        }
-
-        return result;
     }
 
     public Collection<ConnectorBindingType> findMatchingConnectorBindingTypes(JdbcSource jdbcSource) {

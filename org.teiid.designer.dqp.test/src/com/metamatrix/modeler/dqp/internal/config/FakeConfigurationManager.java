@@ -25,7 +25,6 @@ import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
 import com.metamatrix.modeler.dqp.config.ConfigurationChangeEvent;
 import com.metamatrix.modeler.dqp.config.ConfigurationManager;
 import com.metamatrix.modeler.dqp.config.IConfigurationChangeListener;
-import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 
 /**
@@ -349,18 +348,6 @@ public class FakeConfigurationManager implements ConfigurationManager {
     public ConnectorBinding createConnectorBinding( ComponentType theConnectorType,
                                                     String theNewBindingName,
                                                     boolean theAddToConfigurationFlag ) throws Exception {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#createConnectorBinding(com.metamatrix.modeler.jdbc.JdbcSource,
-     *      com.metamatrix.common.config.api.ComponentType, java.lang.String)
-     * @since 5.0
-     */
-    public ConnectorBinding createConnectorBinding( JdbcSource theSource,
-                                                    ComponentType theConnectorBindingType,
-                                                    String theNewBindingName,
-                                                    Properties props ) throws Exception {
         return null;
     }
     

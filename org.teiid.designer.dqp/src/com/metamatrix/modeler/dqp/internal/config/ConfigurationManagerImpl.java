@@ -35,7 +35,6 @@ import com.metamatrix.modeler.dqp.config.ConfigurationConstants;
 import com.metamatrix.modeler.dqp.config.ConfigurationManager;
 import com.metamatrix.modeler.dqp.config.IConfigurationChangeListener;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
-import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 
 /**
@@ -589,43 +588,6 @@ public class ConfigurationManagerImpl implements ConfigurationManager, Configura
 
         binding = (ConnectorBinding)coe.modifyProperties(binding, props, ObjectEditor.ADD);
         binding = (ConnectorBinding)coe.modifyProperties(binding, bindingProps, ObjectEditor.ADD);
-        addBinding(binding);
-
-        return binding;
-    }
-
-    /**
-     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#createConnectorBinding(com.metamatrix.modeler.jdbc.JdbcSource,
-     *      com.metamatrix.common.config.api.ComponentType, java.lang.String)
-     * @since 5.0
-     */
-    public ConnectorBinding createConnectorBinding( JdbcSource theSource,
-                                                    ComponentType theConnectorBindingType,
-                                                    String theNewBindingName,
-                                                    Properties props ) throws Exception {
-        ConfigurationObjectEditor coe = DqpPlugin.getInstance().getConfigurationObjectEditor();
-        ConnectorBinding binding = coe.createConnectorComponent(Configuration.NEXT_STARTUP_ID,
-                                                                (ComponentTypeID)theConnectorBindingType.getID(),
-                                                                theNewBindingName,
-                                                                null);
-
-        // Put All defaults in first, then set the known perf
-        props.putAll(theConnectorBindingType.getDefaultPropertyValues());
-
-        // can't set a null value in Properties class so check before setting property
-        if (!StringUtil.isEmpty(theSource.getDriverClass())) {
-            props.setProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS, theSource.getDriverClass());
-        }
-
-        if (!StringUtil.isEmpty(theSource.getUrl())) {
-            props.setProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL, theSource.getUrl());
-        }
-
-        if (!StringUtil.isEmpty(theSource.getUsername())) {
-            props.setProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER, theSource.getUsername());
-        }
-
-        binding = (ConnectorBinding)coe.modifyProperties(binding, props, ObjectEditor.SET);
         addBinding(binding);
 
         return binding;
