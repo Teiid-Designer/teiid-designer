@@ -317,7 +317,7 @@ public final class JdbcDriverWizard extends AbstractWizard
             final List urls = this.driver.getJarFileUris();
             final int count = urls.size();
             for (int ndx = 0; ndx < archives.length; ++ndx) {
-                final String url = ((IFile)archives[ndx]).getFullPath().toString();
+                final String url = ((IFile)archives[ndx]).getLocation().toString();
                 selectedUrls[ndx] = url;
                 if (!urls.contains(url)) {
                     urls.add(url);

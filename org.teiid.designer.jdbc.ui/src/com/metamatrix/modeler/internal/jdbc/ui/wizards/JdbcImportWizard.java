@@ -690,7 +690,9 @@ public class JdbcImportWizard extends AbstractWizard
                     try {
                         processors[i].postProcess(getImportInfoProvider());
                     } catch (Exception theException) {
-                        Util.log(IStatus.ERROR, Util.getString(I18N_PREFIX + "postProcessingError", processors[i].getClass())); //$NON-NLS-1$
+                        Util.log(IStatus.ERROR,
+                                 theException,
+                                 Util.getString(I18N_PREFIX + "postProcessingError", processors[i].getClass())); //$NON-NLS-1$
                     }
                 }
             }

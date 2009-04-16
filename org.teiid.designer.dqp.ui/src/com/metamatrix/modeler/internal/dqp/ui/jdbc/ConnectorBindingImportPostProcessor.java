@@ -144,25 +144,39 @@ public class ConnectorBindingImportPostProcessor implements
 
                 for (Iterator itr = jarUris.iterator(); itr.hasNext();) {
                     String uri = (String)itr.next();
-                    File jarFile = new File(FileLocator.resolve(new URL(uri)).getFile());
-                    String jarName = jarFile.getName();
+                    File jarFile;
+
+                    // if the path has a colon we know the path is not relative to this bundle so it is a file system path
+                    if (uri.indexOf(':') < 0) {
+                        jarFile = new File(uri);
+                    } else {
+                        jarFile = new File(FileLocator.resolve(new URL(uri)).getFile());
+                    }
+
+                    final String jarName = jarFile.getName();
 
                     // add jar name to classpath
                     classpathJarNames.add(jarName);
 
                     // copy to extension modules directory if unique name or if user wants to overwrite existing jar
-                    boolean copy = true;
+                    final boolean[] copy = new boolean[] {true};
 
                     // if jar exists ask for confirmation to overwrite
                     if (extHandler.extensionModuleExists(jarName)) {
                         // if user does not confirm overwrite do not copy
-                        if (!ClasspathEditorDialog.showConfirmOverwriteDialog(jarName)) {
-                            copy = false;
-                        }
+                        UiUtil.runInSwtThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                if (!ClasspathEditorDialog.showConfirmOverwriteDialog(jarName)) {
+                                    copy[0] = false;
+                                }
+                            }
+                        }, false);
                     }
 
                     // if required copy over jar
-                    if (copy && !extHandler.addConnectorJar(this, jarFile)) {
+                    if (copy[0] && !extHandler.addConnectorJar(this, jarFile)) {
                         classpathJarNames.remove(jarName);
                     }
                 }

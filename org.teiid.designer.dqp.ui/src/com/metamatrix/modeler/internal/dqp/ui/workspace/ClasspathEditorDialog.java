@@ -53,7 +53,7 @@ public class ClasspathEditorDialog extends Dialog {
 
     /**
      * Displays a confirmation dialog asking the user to confirm the overwrite of an existing JAR extension module with the
-     * specified name.
+     * specified name. <strong>Caller must be in the UI thread.</strong>
      * 
      * @param jarName the name of the file being overwritten
      * @return <code>true</code> if the user confirms the overwrite

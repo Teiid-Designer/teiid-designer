@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
@@ -372,17 +373,16 @@ public class JdbcSourceWizard extends AbstractWizard
                                                new DefaultIgnorableNotificationSource(JdbcSourceWizard.this));
         boolean succeeded = false;
         try {
-            final Combo combo = (Combo)event.widget;
-            final String text = combo.getText();
+            final String text = this.driverCombo.getText();
             final JdbcDriver[] drivers = this.mgr.findDrivers(text);
             if (drivers.length > 0) {
                 final JdbcDriver driver = drivers[0];
                 this.src.setJdbcDriver(driver);
                 this.src.setDriverName(driver.getName());
                 this.src.setDriverClass(driver.getPreferredDriverClassName());
-                JdbcUiUtil.setText(this.urlSyntaxLabel, driver.getUrlSyntax());
-                // If url is empty, pre-populate w/ syntax
-                if (driver.getUrlSyntax() != null) {
+                // If URL syntax is different, replace
+                if (!this.urlSyntaxLabel.getText().equals(driver.getUrlSyntax())) {
+                    JdbcUiUtil.setText(this.urlSyntaxLabel, driver.getUrlSyntax());
                     this.urlCombo.setText(driver.getUrlSyntax());
                 }
             } else {
@@ -472,8 +472,30 @@ public class JdbcSourceWizard extends AbstractWizard
         final WizardDialog dlg = WidgetFactory.createOnePageWizardDialog(getShell(), wizard);
         wizard.setSelection(this.src.getJdbcDriver());
         if (dlg.open() == Window.OK) {
-            // Update drivers combo, preserving any previous selection
+            // Update drivers combo, preserving any previous selection but first unregister all modify listeners because the call
+            // to WidgetUtil.setComboItems sends a lot of events (it removes all items first and then adds all back in). THis was
+            // causing the URL to be set back to the template version.
+            
+            // unregister all listeners
+            Listener[] listeners = this.driverCombo.getListeners(SWT.Modify);
+            for (Listener listener : listeners) {
+                this.driverCombo.removeListener(SWT.Modify, listener);
+            }
+            
+            // populate driver combo
             WidgetUtil.setComboItems(this.driverCombo, this.mgr.getJdbcDrivers(), this.driverLabelProvider, true);
+            
+            // re-register all listeners
+            for (Listener listener : listeners) {
+                this.driverCombo.addListener(SWT.Modify, listener);
+            }
+            
+            // now notify all listeners
+            Event e = new Event();
+            e.type = SWT.Modify;
+            e.widget = this.driverCombo;
+            this.driverCombo.notifyListeners(SWT.Modify, e);
+
             final JdbcDriver driver = wizard.getSelection();
             if (driver != null && this.src.getJdbcDriver() != driver) {
                 WidgetUtil.setComboText(this.driverCombo, driver, this.driverLabelProvider);
