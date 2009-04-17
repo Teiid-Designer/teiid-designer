@@ -280,6 +280,20 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
             XMLHelper xmiHelper = createXMLHelper();
             MtkXmiResourceLoader loader = new MtkXmiResourceLoader(xmiHelper, getContainer());
             loader.load(this, inputStream, options == null ? Collections.EMPTY_MAP : options);
+            // Loop through contents to ensure even transient objects created by EMF during the load have a UUID.
+            // This is a very inefficient way of handling this problem, but no other reasonable solution is currently apparent.
+            for (Iterator iter = getAllContents(); iter.hasNext();) {
+                EObject eObject = (EObject)iter.next();
+                if (getUuid(eObject) == null) {
+                    String uuid = MtkXmiResourceImpl.DETACHED_EOBJECT_TO_UUID_MAP.remove(eObject);
+                    if (uuid == null) {
+                        uuid = IDGenerator.getInstance().create().toString();
+                    } else {
+                        MtkXmiResourceImpl.DETACHED_UUID_TO_EOBJECT_MAP.remove(uuid);
+                    }
+                    setID(eObject, uuid);
+                }
+            }
             if (xmiHelper instanceof MtkXmiHelper) {
                 this.prefixesToURIs = ((MtkXmiHelper)xmiHelper).getPrefixesToURIs();
             }
