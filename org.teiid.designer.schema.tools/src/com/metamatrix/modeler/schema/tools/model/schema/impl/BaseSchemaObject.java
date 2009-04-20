@@ -451,7 +451,7 @@ public abstract class BaseSchemaObject implements SchemaObject {
         XSDComplexTypeContent result = null;
         if (type instanceof XSDComplexTypeDefinition) {
             XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition)type;
-            result = complexType.getContent();
+            result = complexType.getContentType();
         }
         return result;
     }
@@ -462,7 +462,7 @@ public abstract class BaseSchemaObject implements SchemaObject {
             textType = (XSDSimpleTypeDefinition)getType();
         } else if (hasComplexTypeDefinition()) {
             XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition)getType();
-            XSDComplexTypeContent content = complexType.getContent();
+            XSDComplexTypeContent content = complexType.getContentType();
             if (content instanceof XSDSimpleTypeDefinition) {
                 textType = (XSDSimpleTypeDefinition)content;
             } else if (complexType.isMixed()) {
