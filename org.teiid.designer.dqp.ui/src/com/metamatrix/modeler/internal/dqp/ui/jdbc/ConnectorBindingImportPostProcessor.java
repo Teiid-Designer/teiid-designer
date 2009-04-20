@@ -115,6 +115,7 @@ public class ConnectorBindingImportPostProcessor implements
      * @since 5.5.3
      */
     public void postProcess( final IJdbcImportInfoProvider infoProvider ) throws Exception {
+        ConnectorBinding binding = null;
         final WorkspaceConfigurationManager wsConfigMgr = DqpPlugin.getWorkspaceConfig();
         String modelName = infoProvider.getModelName();
 
@@ -131,67 +132,77 @@ public class ConnectorBindingImportPostProcessor implements
         // if model does not have a connector binding we need to find/create one
         if (bindings.isEmpty()) {
             JdbcSource jdbcSource = infoProvider.getSource();
-            ConnectorBinding newBinding = createConnectorBinding(modelName, jdbcSource);
-
-            // If a new binding was created we need to set its classpath, URL, user, and password properties and create a
-            // source binding.
-            if (newBinding != null) {
-                DqpExtensionsHandler extHandler = DqpPlugin.getInstance().getExtensionsHandler();
-
-                // need to set classpath to the jars needed by the JDBC driver
-                List jarUris = jdbcSource.getJdbcDriver().getJarFileUris();
-                List<String> classpathJarNames = new ArrayList<String>(jarUris.size());
-
-                for (Iterator itr = jarUris.iterator(); itr.hasNext();) {
-                    String uri = (String)itr.next();
-                    File jarFile;
-
-                    // if the path has a colon we know the path is not relative to this bundle so it is a file system path
-                    if (uri.indexOf(':') < 0) {
-                        jarFile = new File(uri);
-                    } else {
-                        jarFile = new File(FileLocator.resolve(new URL(uri)).getFile());
-                    }
-
-                    final String jarName = jarFile.getName();
-
-                    // add jar name to classpath
-                    classpathJarNames.add(jarName);
-
-                    // copy to extension modules directory if unique name or if user wants to overwrite existing jar
-                    final boolean[] copy = new boolean[] {true};
-
-                    // if jar exists ask for confirmation to overwrite
-                    if (extHandler.extensionModuleExists(jarName)) {
-                        // if user does not confirm overwrite do not copy
-                        UiUtil.runInSwtThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                if (!ClasspathEditorDialog.showConfirmOverwriteDialog(jarName)) {
-                                    copy[0] = false;
+            Collection<ConnectorBinding> matchingBindings = wsConfigMgr.findMatchingConnectorBindings(jdbcSource);
+            
+            if (matchingBindings.isEmpty()) {
+                ConnectorBinding newBinding = createConnectorBinding(modelName, jdbcSource);
+    
+                // If a new binding was created we need to set its classpath, URL, user, and password properties and create a
+                // source binding.
+                if (newBinding != null) {
+                    DqpExtensionsHandler extHandler = DqpPlugin.getInstance().getExtensionsHandler();
+    
+                    // need to set classpath to the jars needed by the JDBC driver
+                    List jarUris = jdbcSource.getJdbcDriver().getJarFileUris();
+                    List<String> classpathJarNames = new ArrayList<String>(jarUris.size());
+    
+                    for (Iterator itr = jarUris.iterator(); itr.hasNext();) {
+                        String uri = (String)itr.next();
+                        File jarFile;
+    
+                        // if the path has a colon we know the path is not relative to this bundle so it is a file system path
+                        if (uri.indexOf(':') < 0) {
+                            jarFile = new File(uri);
+                        } else {
+                            jarFile = new File(FileLocator.resolve(new URL(uri)).getFile());
+                        }
+    
+                        final String jarName = jarFile.getName();
+    
+                        // add jar name to classpath
+                        classpathJarNames.add(jarName);
+    
+                        // copy to extension modules directory if unique name or if user wants to overwrite existing jar
+                        final boolean[] copy = new boolean[] {true};
+    
+                        // if jar exists ask for confirmation to overwrite
+                        if (extHandler.extensionModuleExists(jarName)) {
+                            // if user does not confirm overwrite do not copy
+                            UiUtil.runInSwtThread(new Runnable() {
+    
+                                @Override
+                                public void run() {
+                                    if (!ClasspathEditorDialog.showConfirmOverwriteDialog(jarName)) {
+                                        copy[0] = false;
+                                    }
                                 }
-                            }
-                        }, false);
+                            }, false);
+                        }
+    
+                        // if required copy over jar
+                        if (copy[0] && !extHandler.addConnectorJar(this, jarFile)) {
+                            classpathJarNames.remove(jarName);
+                        }
                     }
-
-                    // if required copy over jar
-                    if (copy[0] && !extHandler.addConnectorJar(this, jarFile)) {
-                        classpathJarNames.remove(jarName);
-                    }
+    
+                    // set properties
+                    setConnectorProperties(newBinding, infoProvider, classpathJarNames);
+    
+                    // finally add binding to configuration since the classpath has been set and the jars copied over (now the binding
+                    // should start) and create a source binding so that preview will work
+                    DqpPlugin.getInstance().getConfigurationManager().addBinding(newBinding);
+                    binding = newBinding;
                 }
-
-                // set properties
-                setConnectorProperties(newBinding, infoProvider, classpathJarNames);
-
-                // finally add binding to configuration since the classpath has been set and the jars copied over (now the binding
-                // should start) and create a source binding so that preview will work
-                DqpPlugin.getInstance().getConfigurationManager().addBinding(newBinding);
-                wsConfigMgr.createSourceBinding(infoProvider.getModelResource(), newBinding);
-
-                // make sure ModelExplorer tree shows the new connector binding
-                ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();
+            } else {
+                // found one or more matching bindings so just use the first one
+                binding = matchingBindings.iterator().next();
             }
+
+            // create source binding
+            wsConfigMgr.createSourceBinding(infoProvider.getModelResource(), binding);
+            
+            // make sure ModelExplorer tree shows the new connector binding
+            ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();
         }
     }
 
