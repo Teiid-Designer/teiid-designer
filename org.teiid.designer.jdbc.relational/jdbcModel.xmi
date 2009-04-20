@@ -27,5 +27,14 @@
     <jdbcDrivers name="Apache Derby Network" urlSyntax="jdbc:derby://&lt;host&gt;:&lt;port&gt;/&lt;databaseName&gt;" preferredDriverClassName="org.apache.derby.jdbc.ClientDriver">
       <availableDriverClassNames>org.apache.derby.jdbc.ClientDriver</availableDriverClassNames>
     </jdbcDrivers>
+    <jdbcDrivers name="Oracle" urlSyntax="jdbc:oracle:thin:@&lt;host&gt;:1521:&lt;sid&gt;" preferredDriverClassName="oracle.jdbc.driver.OracleDriver">
+      <availableDriverClassNames>oracle.jdbc.driver.OracleDriver</availableDriverClassNames>
+    </jdbcDrivers>
+    <jdbcDrivers name="DB2" urlSyntax="jdbc:db2://&lt;server&gt;:50000/&lt;db-name&gt;" preferredDriverClassName="com.ibm.db2.jcc.DB2Driver">
+      <availableDriverClassNames>com.ibm.db2.jcc.DB2Driver</availableDriverClassNames>
+    </jdbcDrivers>
+    <jdbcDrivers name="SQL Server" urlSyntax="jdbc:sqlserver://&lt;host&gt;:1433;databaseName=&lt;db-name&gt;" preferredDriverClassName="com.microsoft.jdbc.sqlserver.SQLServerDriver">
+      <availableDriverClassNames>com.microsoft.sqlserver.jdbc.SQLServerDriver</availableDriverClassNames>
+    </jdbcDrivers>
   </jdbc:JdbcDriverContainer>
 </xmi:XMI>
