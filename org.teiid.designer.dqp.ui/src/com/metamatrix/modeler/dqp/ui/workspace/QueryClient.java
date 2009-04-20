@@ -94,17 +94,8 @@ public class QueryClient {
             sb.append("txnAutoWrap").append("=").append(txnAutoWrap).append(";"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         
-        appendLogFile(sb, executionDir);
         return sb.toString();
     }
-        
-    private void appendLogFile(StringBuffer sb, String executionDir) {
-        String timestamp = dateFormat.format(new Date());
-        String logFileName = "workspace"+timestamp+".log"; //$NON-NLS-1$ //$NON-NLS-2$
-        
-        File logFile = new File(executionDir, logFileName);
-        sb.append("dqp.logFile=").append(StringUtil.replaceAll(logFile.getAbsolutePath(), "\\", "/")).append(";"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    }    
     
     static class DesignerLogger implements EmbeddedLogger{
 

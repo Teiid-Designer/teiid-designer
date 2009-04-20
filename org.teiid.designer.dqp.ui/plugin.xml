@@ -104,40 +104,6 @@
    </extension>
 <!-- Action to open the log file for a given Connection in SQLExplorer -->   
    <extension
-         point="org.eclipse.ui.viewActions">
-      <viewContribution
-            targetID="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView"
-            id="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView.DqpLogActions">
-         <action
-               label="%setDqpLogLevel.label"
-               icon="icons/full/cview16/SetLogLevel.gif"
-               class="com.metamatrix.modeler.internal.dqp.ui.actions.SetLogLevelAction"
-               tooltip="%setDqpLogLevel.tooltip"
-               enablesFor="1"
-               toolbarPath="additions"
-               id="SetLogLevelAction">
-            <selection
-                  name="*"
-                  class="net.sourceforge.sqlexplorer.sessiontree.model.SessionTreeNode">
-            </selection>
-         </action>
-         <action
-               label="%showDqpLog.label"
-               icon="icons/full/cview16/ViewLog.gif"
-               class="com.metamatrix.modeler.internal.dqp.ui.actions.ShowDqpLogAction"
-               tooltip="%showDqpLog.tooltip"
-               enablesFor="1"
-               toolbarPath="additions"
-               id="ShowDqpLogAction">
-            <selection
-                  name="*"
-                  class="net.sourceforge.sqlexplorer.sessiontree.model.SessionTreeNode">
-            </selection>
-               
-         </action>
-      </viewContribution>
-   </extension>
-   <extension
         id="staledVDBChecker"
         name="%staledVDBChecker.name"
         point="net.sourceforge.sqlexplorer.sqlExecVetoListener">
