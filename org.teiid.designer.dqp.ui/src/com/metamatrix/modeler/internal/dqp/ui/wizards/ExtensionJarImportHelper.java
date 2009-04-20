@@ -547,12 +547,8 @@ public class ExtensionJarImportHelper implements DqpUiConstants {
     	this.existingWorkpaceExtJarNames = new ArrayList<String>();
 
     	// Add all Connector jarNames
-    	Collection<String> allConnJarNames = DqpPlugin.getInstance().getExtensionsHandler().getAllConnectorJars();
+    	Collection<String> allConnJarNames = DqpPlugin.getInstance().getExtensionsHandler().getExtensionJarNames();
     	this.existingWorkpaceExtJarNames.addAll(allConnJarNames);
-
-    	// Add all Udf jarNames
-    	Collection<String> allUDFJarNames = DqpPlugin.getInstance().getExtensionsHandler().getUdfJarNames();
-    	this.existingWorkpaceExtJarNames.addAll(allUDFJarNames);
     }
 
     /**
