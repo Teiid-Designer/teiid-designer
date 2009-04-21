@@ -41,7 +41,8 @@ public class XMLFileExtensionManager extends BaseXMLRelationalExtensionManagerIm
 
     @Override
     public void assignAttribute( XAttribute attribute ) {
-        if (attribute.getName().equals(getTableName())) {
+        super.assignAttribute(attribute);
+    	if (attribute.getName().equals(getTableName())) {
             fileNameTableAttribute = attribute;
         }
     }
