@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" sourcepath="jdom-1.0.zip" kind="lib" path="jdom.jar"/>
+	<classpathentry exported="true" kind="lib" path="jdom.jar" sourcepath="src.zip"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path=""/>
