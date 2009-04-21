@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Build feature" default="build.update.jar" basedir=".">
 
-	<taskdef name="eclipse.idReplacer"
-	         classname="org.eclipse.pde.internal.build.tasks.IdReplaceTask"
-	         classpath="../../../svn/metamatrix/products/trunk/designer/targetPlatform-3.4.1-Linux-x86-GTK2/eclipse/plugins/org.eclipse.pde.build_3.4.1.R34x_v20080805/lib/pdebuild-ant.jar"
-	/>
+	<property name="targetPlatform" value="../targetPlatform-3.4.2-MacOSX-x86-Carbon" />
 
-	<taskdef resource="tools/metamatrix/pakkage/ant/antTask.properties" classpath="../tools.metamatrix.pakkage/bin" />
+	<taskdef name="eclipse.idReplacer" classname="org.eclipse.pde.internal.build.tasks.IdReplaceTask" classpath="${targetPlatform}/eclipse/plugins/org.eclipse.pde.build_3.4.1.R34x_v20081217/lib/pdebuild-ant.jar" />
 
-    <featureIdProperty name="feature.id" />
-    <featureVersionProperty name="feature.version" />
-	
+	<taskdef resource="org/teiid/designer/ant/antTask.properties" classpath="bin"/>
+
+	<featureIdProperty name="feature.id" />
+	<featureVersionProperty name="feature.version" />
+
 	<target name="init">
 		<property name="feature.temp.folder" value="${basedir}/feature.temp.folder" />
 		<property name="feature.destination" value="${basedir}" />
 	</target>
 
 	<target name="all.plugins" depends="init">
-	    <featurePluginsPath name="feature.plugins" />
+		<featurePluginsPath name="feature.plugins" />
 		<subant genericantfile="buildPlugin.xml" inheritall="true" target="${target}">
 			<buildpath refid="feature.plugins" />
 			<property name="arch" value="x86" />
@@ -55,10 +54,7 @@
 		</antcall>
 	</target>
 
-	<target name="build.update.jar"
-	        depends="init"
-	        description="Build the feature jar of: ${feature.id} for an update site."
-	>
+	<target name="build.update.jar" depends="init" description="Build the feature jar of: ${feature.id} for an update site.">
 		<antcall target="all.children">
 			<param name="target" value="build.update.jar" />
 		</antcall>
@@ -74,9 +70,7 @@
 			<param name="arch" value="*" />
 			<param name="nl" value="*" />
 		</antcall>
-		<jar destfile="${feature.destination}/${feature.id}_${feature.version}.jar"
-		     basedir="${feature.temp.folder}/features/${feature.id}_${feature.version}"
-		/>
+		<jar destfile="${feature.destination}/${feature.id}_${feature.version}.jar" basedir="${feature.temp.folder}/features/${feature.id}_${feature.version}" />
 		<delete dir="${feature.temp.folder}" />
 	</target>
 
@@ -94,11 +88,7 @@
 			</fileset>
 		</copy>
 		<eclipseIdReplacerPluginIdsProperty name="pluginIds" />
-		<eclipse.idReplacer featureFilePath="${feature.base}/features/${feature.id}_${feature.version}/feature.xml"
-		                    selfVersion="${feature.version}"
-		                    featureIds=""
-		                    pluginIds="${pluginIds}"
-		/>
+		<eclipse.idReplacer featureFilePath="${feature.base}/features/${feature.id}_${feature.version}/feature.xml" selfVersion="${feature.version}" featureIds="" pluginIds="${pluginIds}" />
 		<antcall target="rootFiles">
 			<param name="rootTarget" value="rootFiles${os}_${ws}_${arch}" />
 		</antcall>
@@ -115,10 +105,7 @@
 		<antcall target="rootFileslinux_gtk_x86" />
 	</target>
 
-	<target name="zip.distribution"
-	        depends="init"
-	        description="Create a zip containing all the plug-ins and features for the feature: ${feature.id}."
-	>
+	<target name="zip.distribution" depends="init" description="Create a zip containing all the plug-ins and features for the feature: ${feature.id}.">
 		<delete dir="${feature.temp.folder}" />
 		<mkdir dir="${feature.temp.folder}" />
 		<antcall target="gather.bin.parts">
@@ -129,12 +116,7 @@
 			<param name="nl" value="*" />
 			<param name="include.children" value="true" />
 		</antcall>
-		<zip destfile="${feature.destination}/${feature.id}_${feature.version}.bin.dist.zip"
-		     basedir="${feature.temp.folder}"
-		     filesonly="false"
-		     whenempty="skip"
-		     update="false"
-		/>
+		<zip destfile="${feature.destination}/${feature.id}_${feature.version}.bin.dist.zip" basedir="${feature.temp.folder}" filesonly="false" whenempty="skip" update="false" />
 		<delete dir="${feature.temp.folder}" />
 	</target>
 
@@ -146,12 +128,7 @@
 			<param name="destination.temp.folder" value="${feature.temp.folder}/plugins/null/src" />
 			<param name="include.children" value="true" />
 		</antcall>
-		<zip destfile="${feature.destination}/${feature.id}_${feature.version}.src.zip"
-		     basedir="${feature.temp.folder}"
-		     filesonly="true"
-		     whenempty="skip"
-		     update="false"
-		/>
+		<zip destfile="${feature.destination}/${feature.id}_${feature.version}.src.zip" basedir="${feature.temp.folder}" filesonly="true" whenempty="skip" update="false" />
 		<delete dir="${feature.temp.folder}" />
 	</target>
 
@@ -163,19 +140,11 @@
 			<param name="destination.temp.folder" value="${feature.temp.folder}/plugins" />
 			<param name="include.children" value="true" />
 		</antcall>
-		<zip destfile="${feature.destination}/${feature.id}_${feature.version}.log.zip"
-		     basedir="${feature.temp.folder}"
-		     filesonly="true"
-		     whenempty="skip"
-		     update="false"
-		/>
+		<zip destfile="${feature.destination}/${feature.id}_${feature.version}.log.zip" basedir="${feature.temp.folder}" filesonly="true" whenempty="skip" update="false" />
 		<delete dir="${feature.temp.folder}" />
 	</target>
 
-	<target name="clean"
-	        depends="init"
-	        description="Clean the feature: ${feature.id} of all the zips, jars and logs created."
-	>
+	<target name="clean" depends="init" description="Clean the feature: ${feature.id} of all the zips, jars and logs created.">
 		<delete file="${feature.destination}/${feature.id}_${feature.version}.jar" />
 		<delete file="${feature.destination}/${feature.id}_${feature.version}.bin.dist.zip" />
 		<delete file="${feature.destination}/${feature.id}_${feature.version}.log.zip" />
@@ -187,9 +156,7 @@
 	</target>
 
 	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
-		<eclipse.convertPath fileSystemPath="/home/jverhaeg/workspace/metamatrix/com.metamatrix.modeler-feature/"
-		                     property="resourcePath"
-		/>
+		<eclipse.convertPath fileSystemPath="/home/jverhaeg/workspace/metamatrix/com.metamatrix.modeler-feature/" property="resourcePath" />
 		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite" />
 		<antcall target="all.children">
 			<param name="target" value="refresh" />
