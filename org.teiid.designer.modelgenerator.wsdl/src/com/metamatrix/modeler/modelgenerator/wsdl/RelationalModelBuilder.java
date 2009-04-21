@@ -381,6 +381,7 @@ public class RelationalModelBuilder {
         }
         if (isRequest) {
             m_extPropManager.setColumnXPathForInput(relCol, column.getInputXPath());
+            relCol.setNameInSource(column.getName());
         }
 
         if (null != column.getMultipleValues()) {
