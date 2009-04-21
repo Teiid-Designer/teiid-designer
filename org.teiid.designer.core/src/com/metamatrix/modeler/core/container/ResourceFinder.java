@@ -229,7 +229,7 @@ public interface ResourceFinder {
      * otherwise false is returned.
      * 
      * @param theResource The EMF resource to use; may not be null
-     * @return true if the reosurce is one of the external resources
+     * @return true if the resource is one of the external resources
      */
     boolean isExternalResource( Resource theResource );
 
@@ -251,8 +251,8 @@ public interface ResourceFinder {
     boolean isBuiltInResource( URI theUri );
 
     /**
-     * Returns true if the specified resource is one of the well-known Teiid Designer/EMF resources built-in shared resources
-     * such as
+     * Returns true if the specified resource is one of the well-known Teiid Designer/EMF resources built-in shared resources such
+     * as
      * <p>
      * <li>"http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"</li>
      * <li>"http://www.metamatrix.com/metamodels/UmlPrimitiveTypes-instance"</li>
@@ -266,7 +266,7 @@ public interface ResourceFinder {
      * otherwise false is returned.
      * 
      * @param theResource The EMF resource to use; may not be null
-     * @return true if the reosurce is one of the external resources
+     * @return true if the resource is one of the external resources
      */
     boolean isBuiltInResource( Resource theResource );
 
@@ -300,7 +300,7 @@ public interface ResourceFinder {
 
     /**
      * Find the resources that this resource references. The resultant array represents dependent resources that the specified
-     * resource requires to resolve its cross references. If the recurse argument is true, then this method will be recursely
+     * resource requires to resolve its cross references. If the recurse argument is true, then this method will be recursively
      * called on every dependent resource until the complete dependency hierarchy is completed. If the recurse argument is false,
      * then only the immediate dependencies are returned. If the includeExternal argument is true, then references to resources in
      * one of the resource set's external resource sets will be included in the result. The external resource sets are used to

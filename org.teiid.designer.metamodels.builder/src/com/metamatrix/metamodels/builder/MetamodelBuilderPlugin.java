@@ -30,10 +30,10 @@ import com.metamatrix.metamodels.xsd.XsdResourceFactory;
 public class MetamodelBuilderPlugin extends Plugin {
 
     /**
-     * The plug-in identifier of this plugin (value <code>"com.metamatrix.metamodels.builder"</code>).
+     * The plug-in identifier of this plug-in (value <code>"com.metamatrix.metamodels.builder"</code>).
      */
     public static final String PLUGIN_ID = "org.teiid.designer.metamodels.builder"; //$NON-NLS-1$
-    
+
     public static final String PACKAGE_ID = MetamodelBuilderPlugin.class.getPackage().getName();
 
     /**

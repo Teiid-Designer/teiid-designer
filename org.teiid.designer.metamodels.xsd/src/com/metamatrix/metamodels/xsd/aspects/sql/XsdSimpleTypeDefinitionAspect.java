@@ -1021,11 +1021,11 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     }
 
     /**
-     * Helper method to extract the uuid string from the simple datatype definition's enterprise data
+     * Helper method to extract the UUID string from the simple datatype definition's enterprise data
      * 
      * @param type
      * @param name
-     * @return the value of the uuid
+     * @return the value of the UUID
      */
     private String getEnterpriseAttributeValue( final XSDSimpleTypeDefinition type,
                                                 final String name ) {

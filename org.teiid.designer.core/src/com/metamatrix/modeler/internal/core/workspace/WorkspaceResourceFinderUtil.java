@@ -224,8 +224,8 @@ public class WorkspaceResourceFinderUtil {
 
     /**
      * Return IPath[] array representing the workspace paths to dependent IResource instances. The dependent paths are found by
-     * reading the model imports declaratations in the specified resource. Only paths to IResource instances will be returned
-     * whereas import declarations to one of the well-know Teiid Designer/Emf global resouces such as
+     * reading the model imports declarations in the specified resource. Only paths to IResource instances will be returned
+     * whereas import declarations to one of the well-know Teiid Designer/EMF global resources such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
      * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
@@ -259,7 +259,7 @@ public class WorkspaceResourceFinderUtil {
     /**
      * Return IResource[] array representing the dependent IResource instances. The dependent resources are found by reading the
      * model imports declarations in the specified resource. Only references to IResource instances that can be found in the
-     * workspace will be returned. If an import declaration to one of the well-know Teiid Designer/Emf global resouces such as
+     * workspace will be returned. If an import declaration to one of the well-know Teiid Designer/EMF global resources such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
      * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
@@ -398,8 +398,8 @@ public class WorkspaceResourceFinderUtil {
     }
 
     /**
-     * Return the IResource instance corresponding to the specified Emf resource. If the resource is one of the well-known
-     * Teiid Designer/Emf global resources such as
+     * Return the IResource instance corresponding to the specified EMF resource. If the resource is one of the well-known Teiid
+     * Designer/EMF global resources such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
      * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
@@ -424,8 +424,8 @@ public class WorkspaceResourceFinderUtil {
 
     /**
      * Return the IResource instance corresponding to the specified URI string. The URI represents a relative path within the
-     * workspace to particular file resource. If the URI is one of the well-known Teiid Designer/Emf identifiers to a global resouce
-     * such as
+     * workspace to particular file resource. If the URI is one of the well-known Teiid Designer/EMF identifiers to a global
+     * resource such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
      * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
@@ -458,8 +458,8 @@ public class WorkspaceResourceFinderUtil {
 
     /**
      * Return the IResource instance corresponding to the specified URI string. The URI represents a relative path within the
-     * workspace to particular file resource. If the URI is one of the well-known Teiid Designer/Emf identifiers to a global resouce
-     * such as
+     * workspace to particular file resource. If the URI is one of the well-known Teiid Designer/EMF identifiers to a global
+     * resource such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
      * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
@@ -635,8 +635,8 @@ public class WorkspaceResourceFinderUtil {
     }
 
     /**
-     * Return the URI string defining the relative path within the workspace for the specified Emf resource. If the resource is
-     * one of the well-known Teiid Designer/Emf global resources such as
+     * Return the URI string defining the relative path within the workspace for the specified EMF resource. If the resource is
+     * one of the well-known Teiid Designer/EMF global resources such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
      * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
@@ -757,7 +757,8 @@ public class WorkspaceResourceFinderUtil {
     }
 
     /**
-     * Returns true if the specified URI string is one of the well-known Teiid Designer/Emf identifiers to a global resouce such as
+     * Returns true if the specified URI string is one of the well-known Teiid Designer/EMF identifiers to a global resource such
+     * as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"
      * "http://www.metamatrix.com/metamodels/UmlPrimitiveTypes-instance"
@@ -881,7 +882,8 @@ public class WorkspaceResourceFinderUtil {
     }
 
     /**
-     * Returns true if the specified URI string is one of the well-known Teiid Designer/Emf identifiers to a global resouce such as
+     * Returns true if the specified URI string is one of the well-known Teiid Designer/EMF identifiers to a global resource such
+     * as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"
      * "http://www.metamatrix.com/metamodels/UmlPrimitiveTypes-instance"
