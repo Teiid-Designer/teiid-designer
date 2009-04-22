@@ -596,10 +596,18 @@ public final class JdbcDriverWizard extends AbstractWizard
     @Override
     public boolean performCancel() {
         final List connections = new ArrayList(this.mgr.getJdbcSources());
+        
+        // Because of a change in EMF (maybe a bug) the reload() method will turn the jdbcSources in this list
+        // to EProxy objects. Need to clear the list BEFORE reloading model. This cleanly breaks these objects
+        // away from their container preventing the conversion to EProxy's
+        this.mgr.getJdbcSources().clear();
+        
         JdbcUiUtil.reload();
+        
         final List loadedConnections = this.mgr.getJdbcSources();
         loadedConnections.clear();
         loadedConnections.addAll(connections);
+        
         return super.performCancel();
     }
 
