@@ -233,9 +233,9 @@ public class XsdAsRelationalImportWizard extends AbstractWizard implements IImpo
 
         String mergedChildSep = prefs.getString(XmlImporterUiPlugin.mergedChildSep);
         userSettings.setMergedChildSep(mergedChildSep);
-        
+
         String xsdLibrary = prefs.getString(XmlImporterUiPlugin.xsdLibrary);
-        userSettings.setXsdLibrary(mergedChildSep);
+        userSettings.setXsdLibrary(xsdLibrary);
 
         jdbcFactory = new JdbcFactoryImpl();
         jdbcConnection = new ConnectionImpl(manager, userSettings, this);
