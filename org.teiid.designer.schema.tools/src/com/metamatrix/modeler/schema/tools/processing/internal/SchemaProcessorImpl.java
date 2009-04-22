@@ -180,8 +180,8 @@ public class SchemaProcessorImpl implements SchemaProcessor {
             if (key == null || key.trim().equals("")) key = "mmn0"; //$NON-NLS-1$ //$NON-NLS-2$
             String value = (String)schemaNamespaces.get(key);
             if (null == value) continue;
-            if(value.equals("http://www.w3.org/XML/1998/namespace")) {
-            	key = "xml";
+            if (value.equals("http://www.w3.org/XML/1998/namespace")) { //$NON-NLS-1$
+                key = "xml"; //$NON-NLS-1$
             }
             // ensure unique
             int i = 1;
@@ -204,13 +204,13 @@ public class SchemaProcessorImpl implements SchemaProcessor {
 
         String namespace = schema.getTargetNamespace();
         if ((null != namespace) && (null == duplicateNamespaceFilter.get(namespace))) {
-        	if(namespace.equals("http://www.w3.org/XML/1998/namespace")) {
-        		namespaces.put("xml", namespace);;
+            if (namespace.equals("http://www.w3.org/XML/1998/namespace")) { //$NON-NLS-1$
+                namespaces.put("xml", namespace); //$NON-NLS-1$
             } else {
-            	final String tns = "mmn"; //$NON-NLS-1$
-            	int ctr = 0;
-            	if (namespaces.get(tns + ctr) != null) ++ctr;
-            	namespaces.put(tns + ctr, namespace);
+                final String tns = "mmn"; //$NON-NLS-1$
+                int ctr = 0;
+                if (namespaces.get(tns + ctr) != null) ++ctr;
+                namespaces.put(tns + ctr, namespace);
             }
         }
     }
