@@ -35,6 +35,5 @@ Bundle-ClassPath: salesforcemodelgenerator.jar,
  commons-codec-1.2.jar,
  commons-httpclient-3.0.1.jar,
  commons-discovery-0.2.jar,
- log4j-1.2.8.jar,
  saaj.jar,
  wsdl4j-1.5.1.jar
