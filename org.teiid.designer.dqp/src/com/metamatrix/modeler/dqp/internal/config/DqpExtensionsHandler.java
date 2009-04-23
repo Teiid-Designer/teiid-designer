@@ -23,7 +23,7 @@ import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ExtensionModule;
 import com.metamatrix.common.config.api.ConnectorBindingType.Attributes;
 import com.metamatrix.core.modeler.util.FileUtil;
-import com.metamatrix.core.util.FileUtils;
+import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.config.ConfigurationManager;
@@ -100,7 +100,7 @@ public class DqpExtensionsHandler {
 	}
 	
 	private void copyFileToExtensionsFolder(File file) throws Exception {
-		FileUtils.copyFile(file.getParent(), this.dqpExtensionsFolderPath.toOSString(), file.getName());
+		FileUtils.copy(file, dqpExtensionsFolderPath.toFile(), true);
 	}
 
 	/**

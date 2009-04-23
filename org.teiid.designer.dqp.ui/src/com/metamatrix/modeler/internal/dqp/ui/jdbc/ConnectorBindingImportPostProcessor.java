@@ -8,13 +8,13 @@
 package com.metamatrix.modeler.internal.dqp.ui.jdbc;
 
 import java.io.File;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import org.eclipse.core.runtime.FileLocator;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.dialogs.ListDialog;
+
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ConnectorBindingType;
 import com.metamatrix.common.config.api.ConnectorBindingType.Attributes;
@@ -151,11 +152,7 @@ public class ConnectorBindingImportPostProcessor implements
                         File jarFile;
     
                         // if the path has a colon we know the path is not relative to this bundle so it is a file system path
-                        if (uri.indexOf(':') < 0) {
-                            jarFile = new File(uri);
-                        } else {
-                            jarFile = new File(FileLocator.resolve(new URL(uri)).getFile());
-                        }
+                        jarFile = new File(new URI(uri));
     
                         final String jarName = jarFile.getName();
     

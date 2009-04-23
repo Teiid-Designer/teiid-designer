@@ -19,10 +19,12 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import com.metamatrix.api.exception.MetaMatrixException;
 import com.metamatrix.core.MetaMatrixCoreException;
 import com.metamatrix.core.MetaMatrixRuntimeException;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
@@ -37,12 +39,15 @@ public class FileUtils {
         char DRIVE_SEPARATOR_CHAR          = ':';
         char FILE_EXTENSION_SEPARATOR_CHAR = '.';
         char FILE_NAME_WILDCARD_CHAR       = '*';
+        char SPACE_CHAR					   = ' ';
         
         String CURRENT_FOLDER_SYMBOL    = String.valueOf(CURRENT_FOLDER_SYMBOL_CHAR);
         String DRIVE_SEPARATOR          = String.valueOf(DRIVE_SEPARATOR_CHAR);
         String FILE_EXTENSION_SEPARATOR = String.valueOf(FILE_EXTENSION_SEPARATOR_CHAR);
         String FILE_NAME_WILDCARD       = String.valueOf(FILE_NAME_WILDCARD_CHAR);
         String PARENT_FOLDER_SYMBOL     = ".."; //$NON-NLS-1$
+        String SPACE					= " "; //$NON-NLS-1$
+        String WINDOWS_SPACE			= "%20"; //$NON-NLS-1$
     }
 
     public static final char SEPARATOR = '/';
@@ -140,6 +145,56 @@ public class FileUtils {
      */
     public static boolean isFilenameValid( String newName ) {
     	return true; //TODO: just catch an exception when the file is accessed or created
+    }
+    
+    public static String normalizeFileName( String theFileName )  {
+    	if( theFileName == null ) {
+    		return null;
+    	}
+    	if( theFileName.length() == 0 ) {
+    		return theFileName;
+    	}
+    	
+    	try {
+			return URLDecoder.decode(theFileName, "UTF-8"); //$NON-NLS-1$
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			return theFileName;
+		}
+    }
+    
+    /**
+     * Copy a file.  Overwrites the destination file if it exists. 
+     * @param fromFileName
+     * @param toFileName
+     * @throws Exception
+     * @since 4.3
+     */
+    public static void copy(File fromFile, File destDirectory, boolean overwrite) throws IOException {
+        File toFile = new File(destDirectory, fromFile.getName());
+        
+        if (toFile.exists()) {
+            if (overwrite) {
+                toFile.delete();
+            } else {
+                final String msg = CoreModelerPlugin.Util.getString("FileUtils.File_already_exists", toFile.getName()); //$NON-NLS-1$            
+                throw new IOException(msg);
+            }
+        }
+        
+        if (!fromFile.exists()) {
+            throw new FileNotFoundException(CoreModelerPlugin.Util.getString("FileUtils.File_does_not_exist._1", fromFile.getName())); //$NON-NLS-1$
+        }
+        
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(fromFile);
+            write(fis, toFile);    
+        } finally {
+            if (fis != null) {
+                fis.close();
+            }
+        }
     }
 
     /**

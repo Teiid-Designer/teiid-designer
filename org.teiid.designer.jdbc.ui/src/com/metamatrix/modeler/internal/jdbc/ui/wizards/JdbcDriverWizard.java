@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -44,7 +45,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
@@ -52,6 +52,7 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
+
 import com.metamatrix.core.util.ClassUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
@@ -79,9 +80,7 @@ public final class JdbcDriverWizard extends AbstractWizard
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(JdbcDriverWizard.class);
 
-    private static final String ADD_EXTERNAL_FOLDER_DIALOG_TITLE = getString("addExternalFolderDialogTitle"); //$NON-NLS-1$
     private static final String ADD_EXTERNAL_LIBRARY_DIALOG_TITLE = getString("addExternalLibraryDialogTitle"); //$NON-NLS-1$
-    private static final String ADD_FOLDER_DIALOG_TITLE = getString("addFolderDialogTitle"); //$NON-NLS-1$
     private static final String ADD_LIBRARY_DIALOG_TITLE = getString("addLibraryDialogTitle"); //$NON-NLS-1$
     private static final String PAGE_TITLE = getString("pageTitle"); //$NON-NLS-1$
     private static final String TITLE = getString("title"); //$NON-NLS-1$
@@ -89,14 +88,11 @@ public final class JdbcDriverWizard extends AbstractWizard
     private static final int COLUMN_COUNT = 3;
 
     private static final String ADD_EXTERNAL_BUTTON = getString("addExternalButton"); //$NON-NLS-1$
-    private static final String ADD_EXTERNAL_FOLDER_BUTTON = getString("addExternalFolderButton"); //$NON-NLS-1$
-    private static final String ADD_FOLDER_BUTTON = getString("addFolderButton"); //$NON-NLS-1$
     private static final String DRIVERS_GROUP = getString("driversGroup"); //$NON-NLS-1$
     private static final String LIBRARIES_GROUP = getString("librariesGroup"); //$NON-NLS-1$
     private static final String UPDATE_BUTTON = getString("updateButton"); //$NON-NLS-1$
     private static final String UPDATE_LABEL = getString("updateLabel"); //$NON-NLS-1$
 
-    private static final String ADD_FOLDER_DIALOG_MESSAGE = getString("addFolderDialogMessage"); //$NON-NLS-1$
     private static final String ADD_LIBRARY_DIALOG_MESSAGE = getString("addLibraryDialogMessage"); //$NON-NLS-1$
     private static final String DUPLICATE_DRIVER_MESSAGE = getString("duplicateDriverMessage"); //$NON-NLS-1$
     static final String FINDING_CLASSES_MESSAGE = getString("findingClassesMessage"); //$NON-NLS-1$
@@ -185,29 +181,6 @@ public final class JdbcDriverWizard extends AbstractWizard
     /**
      * @since 4.0
      */
-    void addExternalFolder() {
-        // Display folder dialog for user to choose a class folder
-        final DirectoryDialog dlg = new DirectoryDialog(getShell());
-        dlg.setText(ADD_EXTERNAL_FOLDER_DIALOG_TITLE);
-        final String url = dlg.open();
-        if (url == null) {
-            return;
-        }
-        // Add selected class folder to driver's list of URL's
-        final List urls = this.driver.getJarFileUris();
-        final int count = urls.size();
-        if (!urls.contains(url)) {
-            urls.add(url);
-            this.libraryPanel.getTableViewer().add(url);
-        }
-        if (urls.size() != count) {
-            enableClassNameButton();
-        }
-    }
-
-    /**
-     * @since 4.0
-     */
     void addExternalLibraries() {
         // Display file dialog for user to choose libraries
         final FileDialog dlg = new FileDialog(getShell(), SWT.MULTI);
@@ -224,7 +197,7 @@ public final class JdbcDriverWizard extends AbstractWizard
         final int count = urls.size();
         final String path = dlg.getFilterPath();
         for (int ndx = 0; ndx < names.length; ++ndx) {
-            final String url = path + File.separator + names[ndx];
+            final String url = new File(path, names[ndx]).toURI().toString();
             if (!urls.contains(url)) {
                 urls.add(url);
                 this.libraryPanel.getTableViewer().add(url);
@@ -233,45 +206,6 @@ public final class JdbcDriverWizard extends AbstractWizard
         if (urls.size() != count) {
             enableClassNameButton();
         }
-    }
-
-    /**
-     * @since 4.0
-     */
-    Object[] addFolder() {
-        final ElementTreeSelectionDialog dlg = new ElementTreeSelectionDialog(getShell(), new WorkbenchLabelProvider(),
-                                                                              new WorkbenchContentProvider());
-        dlg.setTitle(ADD_FOLDER_DIALOG_TITLE);
-        dlg.setMessage(ADD_FOLDER_DIALOG_MESSAGE);
-        dlg.setComparator(new ResourceComparator(ResourceComparator.NAME));
-        dlg.addFilter(new ViewerFilter() {
-
-            @Override
-            public boolean select( final Viewer viewer,
-                                   final Object parent,
-                                   final Object element ) {
-                return (element instanceof IContainer);
-            }
-        });
-        dlg.setInput(ResourcesPlugin.getWorkspace().getRoot());
-        if (dlg.open() == Window.OK) {
-            final Object[] archives = dlg.getResult();
-            final String[] selectedUrls = new String[archives.length];
-            final List urls = this.driver.getJarFileUris();
-            final int count = urls.size();
-            for (int ndx = 0; ndx < archives.length; ++ndx) {
-                final String url = ((IContainer)archives[ndx]).getFullPath().makeRelative().addTrailingSeparator().toString();
-                selectedUrls[ndx] = url;
-                if (!urls.contains(url)) {
-                    urls.add(url);
-                }
-            }
-            if (urls.size() != count) {
-                enableClassNameButton();
-            }
-            return selectedUrls;
-        }
-        return EMPTY_STRING_ARRAY;
     }
 
     /**
@@ -317,7 +251,8 @@ public final class JdbcDriverWizard extends AbstractWizard
             final List urls = this.driver.getJarFileUris();
             final int count = urls.size();
             for (int ndx = 0; ndx < archives.length; ++ndx) {
-                final String url = ((IFile)archives[ndx]).getLocation().toString();
+                //final String url = ((IFile)archives[ndx]).getLocation().toString();
+                final String url = new File(((IFile)archives[ndx]).getLocation().toString()).toURI().toString();
                 selectedUrls[ndx] = url;
                 if (!urls.contains(url)) {
                     urls.add(url);
@@ -448,13 +383,13 @@ public final class JdbcDriverWizard extends AbstractWizard
                                           GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_VERTICAL);
         ((GridData)this.libraryPanel.getLayoutData()).horizontalSpan = COLUMN_COUNT;
         // Add extra buttons to list edit panel (in reverse order that they should appear in wizard)
-        this.libraryPanel.addButton(ADD_EXTERNAL_FOLDER_BUTTON).addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                addExternalFolder();
-            }
-        });
+//        this.libraryPanel.addButton(ADD_EXTERNAL_FOLDER_BUTTON).addSelectionListener(new SelectionAdapter() {
+//
+//            @Override
+//            public void widgetSelected( final SelectionEvent event ) {
+//                addExternalFolder();
+//            }
+//        });
         this.libraryPanel.addButton(ADD_EXTERNAL_BUTTON).addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -462,13 +397,13 @@ public final class JdbcDriverWizard extends AbstractWizard
                 addExternalLibraries();
             }
         });
-        this.libraryPanel.addButton(ADD_FOLDER_BUTTON).addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                addFolder();
-            }
-        });
+//        this.libraryPanel.addButton(ADD_FOLDER_BUTTON).addSelectionListener(new SelectionAdapter() {
+//
+//            @Override
+//            public void widgetSelected( final SelectionEvent event ) {
+//                addFolder();
+//            }
+//        });
         WidgetFactory.createLabel(this.editPanel, CLASS_NAME_LABEL);
         this.classNameCombo = WidgetFactory.createCombo(this.editPanel, SWT.READ_ONLY, GridData.FILL_HORIZONTAL);
         this.classNameCombo.addModifyListener(new ModifyListener() {
