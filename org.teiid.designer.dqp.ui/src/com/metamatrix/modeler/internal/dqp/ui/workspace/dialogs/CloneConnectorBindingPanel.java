@@ -18,9 +18,8 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
@@ -108,9 +107,9 @@ public class CloneConnectorBindingPanel extends Composite implements ControlList
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         nameGroup.setLayoutData(gridData);
 
-        Label schemaNameLabel = new Label(nameGroup, SWT.NONE);
-        schemaNameLabel.setText(getString("name")); //$NON-NLS-1$
-        setGridData(schemaNameLabel, GridData.BEGINNING, false, GridData.CENTER, false);
+//        Label schemaNameLabel = new Label(nameGroup, SWT.NONE);
+//        schemaNameLabel.setText(getString("name")); //$NON-NLS-1$
+//        setGridData(schemaNameLabel, GridData.BEGINNING, false, GridData.CENTER, false);
 
         bindingNameText = WidgetFactory.createTextField(nameGroup, GridData.HORIZONTAL_ALIGN_FILL);
         bindingNameText.setEditable(true);
@@ -133,28 +132,6 @@ public class CloneConnectorBindingPanel extends Composite implements ControlList
         });
 
         handleBindingNameChanged();
-    }
-
-    /**
-     * Attaches the given layout specification to the <code>component</code>.
-     * 
-     * @param component the component
-     * @param horizontalAlignment horizontal alignment
-     * @param grabExcessHorizontalSpace grab excess horizontal space
-     * @param verticalAlignment vertical alignment
-     * @param grabExcessVerticalSpace grab excess vertical space
-     */
-    private void setGridData( Control component,
-                              int horizontalAlignment,
-                              boolean grabExcessHorizontalSpace,
-                              int verticalAlignment,
-                              boolean grabExcessVerticalSpace ) {
-        GridData gd = new GridData();
-        gd.horizontalAlignment = horizontalAlignment;
-        gd.grabExcessHorizontalSpace = grabExcessHorizontalSpace;
-        gd.verticalAlignment = verticalAlignment;
-        gd.grabExcessVerticalSpace = grabExcessVerticalSpace;
-        component.setLayoutData(gd);
     }
 
     void handleBindingNameChanged() {

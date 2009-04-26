@@ -164,7 +164,7 @@ public class NewConnectorBindingPanel extends Composite
         GridData fileNameTextGridData = new GridData();
         fileNameTextGridData.widthHint = FILE_NAME_TEXT_WIDTH;
         bindingNameText.setLayoutData(fileNameTextGridData);
-        String startName = "New Connector Binding"; //$NON-NLS-1$
+        String startName = getString("initialName"); //$NON-NLS-1$
         if (connectorBinding != null) {
             startName = connectorBinding.getName();
         }
