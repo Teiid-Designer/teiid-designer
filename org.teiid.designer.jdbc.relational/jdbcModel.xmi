@@ -33,7 +33,7 @@
     <jdbcDrivers name="DB2" urlSyntax="jdbc:db2://&lt;server&gt;:50000/&lt;db-name&gt;" preferredDriverClassName="com.ibm.db2.jcc.DB2Driver">
       <availableDriverClassNames>com.ibm.db2.jcc.DB2Driver</availableDriverClassNames>
     </jdbcDrivers>
-    <jdbcDrivers name="SQL Server" urlSyntax="jdbc:sqlserver://&lt;host&gt;:1433;databaseName=&lt;db-name&gt;" preferredDriverClassName="com.microsoft.jdbc.sqlserver.SQLServerDriver">
+    <jdbcDrivers name="SQL Server" urlSyntax="jdbc:sqlserver://&lt;host&gt;:1433;databaseName=&lt;db-name&gt;" preferredDriverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver">
       <availableDriverClassNames>com.microsoft.sqlserver.jdbc.SQLServerDriver</availableDriverClassNames>
     </jdbcDrivers>
   </jdbc:JdbcDriverContainer>
