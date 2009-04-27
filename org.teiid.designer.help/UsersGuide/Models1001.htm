@@ -16,7 +16,7 @@
   <li><a href="#How">How is a Model Defined?</a></li>
   <li><a href="#Classes">Model Classes and Types</a></li>
   <li><a href="#ModelsAndVdbs">Models and VDBs</a></li>
-  <li><a href="#Bindings">Models and Connector Bindings</a></li>
+  <li><a href="#Bindings">Models and Connectors</a></li>
   <li><a href="#Validation">Model Validation</a></li>
   <li><a href="#Testing">Testing Your Models</a></li>
   <li><a href="#File">Model Files</a></li>
@@ -82,12 +82,12 @@
     Models contained within a <a href="VdbSummary.htm">VDB</a> can be imported into the <strong>Teiid Designer</strong>. In this way, VDBs can be used as a way to exchange a set of related models. (See description of a <a href="VdbSummary.htm">Virtual Database</a>) </p>
 </blockquote>
 
-<p><span class="subtitle_b16"><a name="Bindings"></a>Models and Connector Bindings</span></p>
+<p><span class="subtitle_b16"><a name="Bindings"></a>Models and Connectors</span></p>
 <blockquote>
-  <p> A <strong>connector binding</strong> provides the connectivity to the source for the query engine when it is executing queries to that source.</p>
-  <p>All <strong>Source</strong> models must  have <strong>connector bindings</strong> associated with them in a VDB in order to be tested in <strong>Designer</strong> or deployed for data access.</p>
-  <p>It is possible that multiple models may use the same binding, but each model must have a binding.  </p>
-  <p> In <strong>Teiid Designer</strong>, bindings are automatically created "under the hood" when you import from a  specific supported data source. You can also create and maintain your own custom  bindings. (see <a href="ConnectorBindingsHelp.htm">Connector Bindings</a>)</p>
+  <p> A <strong>connector</strong> provides the connectivity to the source for the query engine when it is executing queries to that source.</p>
+  <p>All <strong>Source</strong> models must  have <strong>connectors</strong> associated with them in a VDB in order to be tested in <strong>Designer</strong> or deployed for data access.</p>
+  <p>It is possible that multiple models may use the same connector, but each model must be bound to a connector.  </p>
+  <p> In <strong>Teiid Designer</strong>, connectors are automatically created "under the hood" when you import from a  specific supported data source. You can also create and maintain your own custom connectors. (see <a href="ConnectorBindingsHelp.htm">Connectors</a>)</p>
 </blockquote>
 
 <p><span class="subtitle_b16"><a name="Validation"></a>Model Validation</span></p>
@@ -100,8 +100,8 @@
 <p><span class="subtitle_b16"><a name="Testing"></a>Testing Your Models</span></p>
 <blockquote>
   <p>Models can be tested in <strong>Teiid Designer</strong> by issuing SQL queries in the <a href="ExecuteVdbHelp.htm">VDB Execution</a> perspective. In this way, you can iterate between defining your integration models and testing them out to see if they are yielding the expected results.</p>
-  <p> All the source models in your <strong>VDB</strong> must have <strong>connector bindings</strong> associated with them in order for the <strong>VDB</strong> to be executable. You can define the <strong>bindings</strong> for each source model in the Designer.
-    (see <a href="ConnectorBindingsHelp.htm">Connector Bindings</a>) </p>
+  <p> All the source models in your <strong>VDB</strong> must have <strong>connectors</strong> associated with them in order for the <strong>VDB</strong> to be executable. You can define the <strong>bindings</strong> for each source model in the Designer.
+    (see <a href="ConnectorBindingsHelp.htm">Connectors</a>) </p>
 </blockquote>
 
 <p><span class="subtitle_b16"><a name="File"></a>Model Files</span></p>
@@ -115,7 +115,7 @@
   <li><a href="CreateVirtualDatabase.htm" class="medium">Create a New VDB</a> </li>
   <li><a href="ModelingYourData.htm">Modeling Your Data </a></li>
   <li><a href="ImportJdbc.htm" class="medium">Import Relational Data</a> </li>
-  <li><a href="ConnectorBindingsHelp.htm" class="medium">Connector Bindings</a> </li>
+  <li><a href="ConnectorBindingsHelp.htm" class="medium">Connectors</a> </li>
   <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
 </ul>
 <hr>

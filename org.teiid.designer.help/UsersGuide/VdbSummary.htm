@@ -16,7 +16,7 @@
   <li><a href="#How">How is a VDB Defined?</a></li>
   <li><a href="#Validation">VDB Validation</a></li>
   <li><a href="#Deploy">Deploying a VDB for Data Access</a></li>
-  <li><a href="#Access">VDBs and Connector Bindings</a></li>
+  <li><a href="#Access">VDBs and Connectors</a></li>
   <li><a href="#Execution">Testing Your VDB</a></li>
   <li><a href="#File">VDB File Formats</a></li>
 </ul>
@@ -36,18 +36,18 @@
 <p class="medium">After a VDB is defined, it must be deployed to the Teiid query engine to be accessed. </p>
 <p class="medium"><img src="images/views/MMQueryEngineWithVDB.gif" width="477" height="167" /></p>
 
-<h3 class="subtitle_b16"><a name="Access">VDB and Connector Bindings </h3>
+<h3 class="subtitle_b16"><a name="Access">VDB and Connectors </h3>
 <p class="medium"><strong>VDB</strong>s contain two primary varieties of model types - source and view. <strong>Source</strong> models represent the structure and characteristics of physical data sources, whereas <strong>view</strong> models represent the structure and characteristics of abstract structures you want to expose to your applications.</p>
-<p class="medium">A <strong>connector binding</strong> is the collection of information stored in a VDB which  provides the connectivity to a source for the query engine when it is executing federated queries against multiple a source.</p>
-<p class="medium"> <strong>Source</strong> models must be associated with a single<strong> connector binding</strong>. It is possible that multiple models may use the same binding, but each model must have a binding. </p>
-<p class="medium">You can define <strong>connector bindings</strong> in the <strong> Designer</strong> via the <a href="ConnectorBindingsHelp.htm">Connector Bindings Editor</a>. If you <a href="ImportJdbc.htm">import your source data</a> from relational data sources within <strong> Designer</strong>, your bindings can be automatically created "under the hood". </p>
-<p class="medium">Any passwords required by bindings for connecting to sources are stored in encrypted form.</p>
-<p class="medium"> Once defined, connector bindings are stored with a VDB, so that when a VDB is exchanged, the existing bindings can be used.
+<p class="medium">A <strong>connector</strong> is the collection of information stored in a VDB which  provides the connectivity to a source for the query engine when it is executing federated queries against multiple a source.</p>
+<p class="medium"> <strong>Source</strong> models must be associated with a single<strong> connector</strong>. It is possible that multiple models may use the same connector, but each model must be bound to a connector. </p>
+<p class="medium">You can define <strong>connectors</strong> in the <strong> Designer</strong> via the <a href="ConnectorBindingsHelp.htm">Connectors Editor</a>. If you <a href="ImportJdbc.htm">import your source data</a> from relational data sources within <strong> Designer</strong>, your connectors can be automatically created "under the hood". </p>
+<p class="medium">Any passwords required by connectors for connecting to sources are stored in encrypted form.</p>
+<p class="medium"> Once defined, connector s are stored with a VDB, so that when a VDB is exchanged, the existing connectors can be used.
   .</p>
 
 <h3 class="subtitle_b16"><a name="Execution">Testing Your VDB </h3>
 <p class="medium"><strong>VDB</strong>s can be tested in  <strong> Designer</strong> by issuing SQL queries in the   <a href="DesignerPerspectives.htm#sqlExplorerPerspective">Sql Explorer</a> perspective. In this way, you can iterate between   defining your integration models and testing them out to see if they are   yielding the expected results. </p>
-<p class="medium">Your <strong>VDB</strong> must have <strong>connector bindings</strong> associated with all <strong>source</strong> models in   order to be executable. You can define the <a href="ConnectorBindingsHelp.htm">bindings</a> for each source model in the   Designer.</p>
+<p class="medium">Your <strong>VDB</strong> must have <strong>connector s</strong> associated with all <strong>source</strong> models in   order to be executable. You can define the <a href="ConnectorBindingsHelp.htm">bindings</a> for each source model in the   Designer.</p>
 
 <h3 class="subtitle_b16"><a name="File">VDB File Format </h3>
 <p class="medium"><strong>VDB</strong>s are stored in an archive file format, similar to a standard Java JAR format, except for the &quot;.vdb&quot; file extension. </p>
