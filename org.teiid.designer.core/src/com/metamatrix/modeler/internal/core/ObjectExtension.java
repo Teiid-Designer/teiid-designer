@@ -100,6 +100,21 @@ public class ObjectExtension extends EObjectImpl {
             doDynamicSet(eFeature, newValue);
         }
     }
+    
+    /**
+     * @see org.eclipse.emf.ecore.impl.EObjectImpl#eDynamicSet(int, org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object)
+     * @generated NOT
+     */
+    @Override
+    public void eDynamicSet(int dynamicFeatureID, EStructuralFeature eFeature, Object newValue) {
+        super.eDynamicSet(dynamicFeatureID, eFeature, newValue);
+        if ( this.extendedObject != null ) {
+            if ( eFeature.isTransient() || !eFeature.isChangeable() ) {
+                return;
+            }
+            doDynamicSet(eFeature, newValue);
+        }
+    }
 
     /**
      * @see org.eclipse.emf.ecore.impl.EObjectImpl#eDynamicUnset(org.eclipse.emf.ecore.EStructuralFeature)
@@ -126,6 +141,7 @@ public class ObjectExtension extends EObjectImpl {
         }
         return result;
     }
+
 
     /**
      * @see org.eclipse.emf.ecore.impl.EObjectImpl#eDynamicIsSet(org.eclipse.emf.ecore.EStructuralFeature)
@@ -402,5 +418,5 @@ public class ObjectExtension extends EObjectImpl {
         
         return result;
     }
-    
+
 }
