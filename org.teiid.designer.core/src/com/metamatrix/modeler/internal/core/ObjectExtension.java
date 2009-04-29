@@ -125,6 +125,18 @@ public class ObjectExtension extends EObjectImpl {
         super.eDynamicUnset(eFeature);
         doDynamicUnset(eFeature);
     }
+    
+
+    /**
+     * 
+     * @see org.eclipse.emf.ecore.impl.BasicEObjectImpl#eGet(org.eclipse.emf.ecore.EStructuralFeature, boolean)
+     * @generated NOT
+     */
+	@Override
+	public Object eGet(EStructuralFeature feature, boolean resolve) {
+		// TODO Auto-generated method stub
+		return this.eDynamicGet(feature, resolve);
+	}
 
     /**
      * @see org.eclipse.emf.ecore.impl.EObjectImpl#eDynamicGet(org.eclipse.emf.ecore.EStructuralFeature, boolean)
@@ -141,7 +153,24 @@ public class ObjectExtension extends EObjectImpl {
         }
         return result;
     }
+    
 
+    /**
+     * @see org.eclipse.emf.ecore.impl.EObjectImpl#eDynamicGet(int, org.eclipse.emf.ecore.EStructuralFeature, boolean)
+     * @generated NOT
+     */
+	@Override
+	public Object eDynamicGet(int featureID, boolean resolve, boolean coreType) {
+        Object result = null;
+        if ( this.extendedObject != null ) {
+        	EStructuralFeature eFeature = eClass().getEStructuralFeature(featureID);
+            result = doDynamicGet(eFeature, result);
+        }
+        if ( result == null ) {
+            result = super.eDynamicGet(featureID, resolve, coreType);
+        }
+        return result;
+	}
 
     /**
      * @see org.eclipse.emf.ecore.impl.EObjectImpl#eDynamicIsSet(org.eclipse.emf.ecore.EStructuralFeature)
@@ -418,5 +447,7 @@ public class ObjectExtension extends EObjectImpl {
         
         return result;
     }
+
+
 
 }
