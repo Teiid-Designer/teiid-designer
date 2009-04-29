@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -107,7 +108,7 @@ public class ExtensionManager {
 		ModelResource modelExtension = ModelerCore.create(file);
 
 		ModelAnnotation annotation = CoreFactory.eINSTANCE.createModelAnnotation();
-		annotation.setPrimaryMetamodelUri(RelationalPackage.eINSTANCE.getNsURI());
+		annotation.setPrimaryMetamodelUri(ExtensionPackage.eINSTANCE.getNsURI());
 		annotation.setModelType(ModelType.EXTENSION_LITERAL);
 		
 		ExtensionPackage xPackage = ExtensionPackage.eINSTANCE;
@@ -315,32 +316,32 @@ public class ExtensionManager {
 	
 	public void setTableQueryable(BaseTable table, Boolean bool) {
 		ObjectExtension extension = new ObjectExtension(table, salesforceTableXClass, ModelerCore.getModelEditor());
-		extension.eDynamicSet(supportsQueryTableAttribute, bool);
+		extension.eSet(supportsQueryTableAttribute, bool);
 	}
 
 	public void setTableDeletable(BaseTable table, Boolean bool) {
 		ObjectExtension extension = new ObjectExtension(table, salesforceTableXClass, ModelerCore.getModelEditor());
-		extension.eDynamicSet(supportsDeleteTableAttribute, bool);		
+		extension.eSet(supportsDeleteTableAttribute, bool);		
 	}
 	
 	public void setTableCreatable(BaseTable table, Boolean bool) {
 		ObjectExtension extension = new ObjectExtension(table, salesforceTableXClass, ModelerCore.getModelEditor());
-		extension.eDynamicSet(supportsCreateTableAttribute, bool);		
+		extension.eSet(supportsCreateTableAttribute, bool);	
 	}
 	
 	public void setTableSearchable(BaseTable table, Boolean bool) {
 		ObjectExtension extension = new ObjectExtension(table, salesforceTableXClass, ModelerCore.getModelEditor());
-		extension.eDynamicSet(supportsSearchTableAttribute, bool);		
+		extension.eSet(supportsSearchTableAttribute, bool);	
 	}
 	
 	public void setTableReplicate(BaseTable table, Boolean bool) {
 		ObjectExtension extension = new ObjectExtension(table, salesforceTableXClass, ModelerCore.getModelEditor());
-		extension.eDynamicSet(supportsReplicateTableAttribute, bool);		
+		extension.eSet(supportsReplicateTableAttribute, bool);		
 	}
 	
 	public void setTableRetrieve(BaseTable table, Boolean bool) {
 		ObjectExtension extension = new ObjectExtension(table, salesforceTableXClass, ModelerCore.getModelEditor());
-		extension.eDynamicSet(supportsRetrieveTableAttribute, bool);		
+		extension.eSet(supportsRetrieveTableAttribute, bool);		
 	}
 
 	/////
@@ -362,23 +363,32 @@ public class ExtensionManager {
 			}	
 		}
 		ObjectExtension extension = new ObjectExtension(column, salesforceColumnXClass, ModelerCore.getModelEditor());
-		extension.eDynamicSet(picklistValuesColumnAttribute, picklistValues.toString());
+		this.setPropertyValue(extension, picklistValues.toString(), picklistValuesColumnAttribute);
+		//extension.eDynamicSet(picklistValuesColumnAttribute, picklistValues.toString());
 	}
 
 	public void setColumnCustom(Column column, Boolean bool) {
 		ObjectExtension extension = new ObjectExtension(column, salesforceColumnXClass, ModelerCore.getModelEditor());
-		extension.eDynamicSet(customColumnAttribute, bool);
+		this.setPropertyValue(extension, bool, customColumnAttribute);
+		//extension.eDynamicSet(customColumnAttribute, bool);
 	}
 
 	public void setColumnCalculated(Column column, Boolean bool) {
 		ObjectExtension extension = new ObjectExtension(column, salesforceColumnXClass, ModelerCore.getModelEditor());
-		extension.eDynamicSet(calculatedColumnAttribute, bool);
+		this.setPropertyValue(extension, bool, calculatedColumnAttribute);
+		//extension.eDynamicSet(calculatedColumnAttribute, bool);
 	}
 
 	public void setColumnDefaultedOnCreate(Column column, Boolean bool) {
 		ObjectExtension extension = new ObjectExtension(column, salesforceColumnXClass, ModelerCore.getModelEditor());
-		extension.eDynamicSet(defaultedColumnAttribute, bool);
+		this.setPropertyValue(extension, bool, defaultedColumnAttribute);
+		//extension.eDynamicSet(defaultedColumnAttribute, bool);
 	}
 
+	private void setPropertyValue(  final EObject eObject,
+                					final Object value,
+                					final Object feature ) {
+		ModelerCore.getModelEditor().setPropertyValue(eObject, value, feature);
+	}
 
 }
