@@ -52,7 +52,7 @@ import com.metamatrix.modeler.transformation.udf.UdfModelEvent.Type;
 import com.metamatrix.query.function.FunctionLibraryManager;
 import com.metamatrix.query.function.UDFSource;
 
-public final class UdfManager implements IResourceChangeListener, UdfModelListener {
+public final class UdfManager implements IResourceChangeListener {
 
     // ===========================================================================================================================
     // Constants
@@ -310,19 +310,8 @@ public final class UdfManager implements IResourceChangeListener, UdfModelListen
         ModelResource modelResource = ModelerCore.getModelEditor().findModelResource(file);
         modelResource.getEmfResource().load(new HashMap());
 
-        // if function model is valid register it
-        if (isFunctionModelValid(udfModel)) {
-            try {
-                processEvent(new UdfModelEvent(getUdfModel().toURI().toURL(), UdfModelEvent.Type.NEW));
-            } catch (MalformedURLException e) {
-                String msg = TransformationPlugin.Util.getString(I18nUtil.getPropertyPrefix(UdfManager.class)
-                                                                 + "errorRegisteringDefaultUdfModel"); //$NON-NLS-1$
-                throw new CoreException(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, msg, e));
-            }
-        }
-
-        // tell listeners about the default UDF model
-        notifyListeners(udfModel, Type.NEW);
+        // handle the default function model at startup as if it was a function model being added
+        notifyListeners(getUdfModel(), UdfModelEvent.Type.NEW);
 
         // register to receive resource events so that we can notify listeners when a function model changes
         ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
@@ -368,13 +357,18 @@ public final class UdfManager implements IResourceChangeListener, UdfModelListen
 
     private void notifyListeners( File udfModel,
                                   Type type ) throws Exception {
-        if (this.changeListeners.size() != 0) {
-            if (type != Type.DELETED && !isFunctionModelValid(udfModel)) {
-                return;
-            }
+        // don't notify if model is added or changed and is not valid
+        if (type != Type.DELETED && !isFunctionModelValid(udfModel)) {
+            return;
+        }
 
+        UdfModelEvent event = new UdfModelEvent(udfModel.toURI().toURL(), type);
+
+        // let query engine know of the change so that functions can be available for modeling
+        udfModelChanged(event);
+
+        if (this.changeListeners.size() != 0) {
             Object[] listeners = this.changeListeners.getListeners();
-            UdfModelEvent event = new UdfModelEvent(udfModel.toURI().toURL(), type);
 
             for (Object listener : listeners) {
                 try {
@@ -387,18 +381,9 @@ public final class UdfManager implements IResourceChangeListener, UdfModelListen
                 }
             }
         }
-
-        // now handle it ourselves (this is a placeholder for when validation is done on the modeler-side and not the teiid-side)
-        // processEvent(event);
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see com.metamatrix.modeler.transformation.udf.UdfModelListener#processEvent(com.metamatrix.modeler.transformation.udf.UdfModelEvent)
-     */
-    @Override
-    public void processEvent( UdfModelEvent event ) {
+    private void udfModelChanged( UdfModelEvent event ) {
         URL url = event.getUrl();
         UDFSource udfSource = this.functionModels.get(url);
         boolean remove = (udfSource != null);
@@ -494,14 +479,10 @@ public final class UdfManager implements IResourceChangeListener, UdfModelListen
 
                                     // model resource will be null for non-model files (like .project)
                                     if ((modelResource != null) && (modelResource.getItemType() == ModelType.FUNCTION)) {
-                                        // only update if the UDF model was saved and does not have any errors.
+                                        // only update if the UDF model was saved
                                         // DQP throws an exception if you send it a model that has errors.
                                         if ((udfFiles[j].getFlags() & IResourceDelta.CONTENT) != 0) {
-                                            File model = new File(modelResource.getEmfResource().getURI().toFileString());
-
-                                            if (isFunctionModelValid(model)) {
-                                                registerFunctionModel(modelResource); // inform listeners
-                                            }
+                                            registerFunctionModel(modelResource); // inform listeners
                                         }
                                     }
                                 }
