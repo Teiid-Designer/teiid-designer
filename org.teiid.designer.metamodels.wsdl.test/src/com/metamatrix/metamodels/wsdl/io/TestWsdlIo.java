@@ -314,11 +314,6 @@ public class TestWsdlIo extends TestCase {
 
     }
 
-    public void testRead_SalesforceEnterprise() throws Exception {
-        helpReadAndWrite("Salesforce Enterprise.wsdl"); //$NON-NLS-1$
-
-    }
-
     public void testWrite_SpacesInLocationUrls() throws Exception {
         // Create a new resource ...
         final Resource output = helpCreateNewResource("WsdlWithSpacesInUrls.wsdl"); //$NON-NLS-1$

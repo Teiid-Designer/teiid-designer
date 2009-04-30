@@ -19,20 +19,19 @@ import org.eclipse.core.runtime.Status;
  */
 public class TestCoreXsltPlugin extends TestCase {
 
-    public final static String[] REAL_KEYS = new String[]{
-                                        "StyleFromResource.Unable_to_load_XSLT_stylesheet_from_URI", //$NON-NLS-1$
-                                        "CoreXsltPlugin.Error_loading_the_XSLT_transform" //$NON-NLS-1$
-                                        };
-    public final static String[] REAL_VALUES = new String[]{
-                                        "Unable to load XSLT stylesheet from {0}", //$NON-NLS-1$
-                                        "Error loading the XSLT transform" //$NON-NLS-1$
-                                        };
+    public final static String[] REAL_KEYS = new String[] {"StyleFromResource.Unable_to_load_XSLT_stylesheet_from_URI", //$NON-NLS-1$
+        "CoreXsltPlugin.Error_loading_the_XSLT_transform" //$NON-NLS-1$
+    };
+    public final static String[] REAL_VALUES = new String[] {"Unable to load XSLT stylesheet from {0}", //$NON-NLS-1$
+        "Error loading the XSLT transform" //$NON-NLS-1$
+    };
 
     /**
      * Constructor for TestCoreXsltPlugin.Util.
+     * 
      * @param name
      */
-    public TestCoreXsltPlugin(String name) {
+    public TestCoreXsltPlugin( String name ) {
         super(name);
     }
 
@@ -63,6 +62,7 @@ public class TestCoreXsltPlugin extends TestCase {
             @Override
             public void setUp() {
             }
+
             @Override
             public void tearDown() {
             }
@@ -70,44 +70,44 @@ public class TestCoreXsltPlugin extends TestCase {
     }
 
     // =========================================================================
-    //                      H E L P E R   M E T H O D S
+    // H E L P E R M E T H O D S
     // =========================================================================
 
-    public void helpTestGetString( final String key, final String expectedValue ) {
-        final String actualValue = CoreXsltPlugin.Util.getString(key);   // may throw exception
-        if ( actualValue == null ) {
+    public void helpTestGetString( final String key,
+                                   final String expectedValue ) {
+        final String actualValue = CoreXsltPlugin.Util.getString(key); // may throw exception
+        if (actualValue == null) {
             fail("CoreXsltPlugin.Util.getString(\"" + key + //$NON-NLS-1$
-                                  "\") should not return null");  //$NON-NLS-1$
+                 "\") should not return null"); //$NON-NLS-1$
         }
-        if ( !actualValue.equals(expectedValue) ) {
+        if (!actualValue.equals(expectedValue)) {
             fail("Expected \"" + expectedValue + //$NON-NLS-1$
-                                  "\" but got \"" + actualValue + //$NON-NLS-1$
-                                  "\""); //$NON-NLS-1$
+                 "\" but got \"" + actualValue + //$NON-NLS-1$
+                 "\""); //$NON-NLS-1$
         }
     }
 
     // =========================================================================
-    //                         T E S T     C A S E S
+    // T E S T C A S E S
     // =========================================================================
 
     public void testNonPlatformGetStringWithNullKey() {
         final String key = null;
         final String expectedValue = "<No message available>"; //$NON-NLS-1$
-        helpTestGetString(key,expectedValue);
+        helpTestGetString(key, expectedValue);
     }
 
     public void testNonPlatformGetStringWithZeroLengthKey() {
         final String key = ""; //$NON-NLS-1$
-        final String expectedValue = "<Missing message for key \"\" in: " +  //$NON-NLS-1$
-                                      CoreXsltPlugin.PLUGIN_ID + ".i18n>"; //$NON-NLS-1$
-        helpTestGetString(key,expectedValue);
+        final String expectedValue = "<Missing message for key \"\" in: com.metamatrix.core.xslt.i18n>"; //$NON-NLS-1$
+        helpTestGetString(key, expectedValue);
     }
 
     public void testNonPlatformGetStringThatShouldBeFound() {
-        for ( int i=0; i!=REAL_KEYS.length; ++i ) {
+        for (int i = 0; i != REAL_KEYS.length; ++i) {
             final String key = REAL_KEYS[i];
             final String expectedValue = REAL_VALUES[i];
-            helpTestGetString(key,expectedValue);
+            helpTestGetString(key, expectedValue);
         }
     }
 
@@ -121,10 +121,10 @@ public class TestCoreXsltPlugin extends TestCase {
         final Throwable t = null;
         final String pluginID = "my.plugin.id"; //$NON-NLS-1$
         try {
-            new Status(severity,pluginID,code,message,t);
-        } catch ( IllegalArgumentException e ) {
-        	fail("Should have been able to create a Status " + //$NON-NLS-1$
-            "with a null message"); //$NON-NLS-1$
+            new Status(severity, pluginID, code, message, t);
+        } catch (IllegalArgumentException e) {
+            fail("Should have been able to create a Status " + //$NON-NLS-1$
+                 "with a null message"); //$NON-NLS-1$
         }
     }
 
@@ -139,10 +139,10 @@ public class TestCoreXsltPlugin extends TestCase {
         t.fillInStackTrace();
         final String pluginID = "my.plugin.id"; //$NON-NLS-1$
         try {
-            new Status(severity,pluginID,code,message,t);
-        } catch ( IllegalArgumentException e ) {
+            new Status(severity, pluginID, code, message, t);
+        } catch (IllegalArgumentException e) {
             fail("Should have been able to create a Status " + //$NON-NLS-1$
-            "with a null message"); //$NON-NLS-1$
+                 "with a null message"); //$NON-NLS-1$
         }
     }
 

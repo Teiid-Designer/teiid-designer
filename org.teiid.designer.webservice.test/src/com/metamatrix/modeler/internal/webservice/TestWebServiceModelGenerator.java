@@ -7,21 +7,18 @@
  */
 package com.metamatrix.modeler.internal.webservice;
 
-import org.eclipse.core.runtime.Path;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
+import org.eclipse.core.runtime.Path;
 import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.modeler.compare.selector.ModelSelector;
 import com.metamatrix.modeler.compare.selector.TransientModelSelector;
 import com.metamatrix.modeler.webservice.FakeIWebServiceModelBuilder;
 import com.metamatrix.modeler.webservice.IWebServiceModelBuilder;
 
-
-/** 
+/**
  * @since 4.2
  */
 public class TestWebServiceModelGenerator extends TestCase {
@@ -33,9 +30,10 @@ public class TestWebServiceModelGenerator extends TestCase {
 
     /**
      * Constructor for TestWebServiceModelGenerator.
+     * 
      * @param name
      */
-    public TestWebServiceModelGenerator(String name) {
+    public TestWebServiceModelGenerator( String name ) {
         super(name);
     }
 
@@ -45,18 +43,18 @@ public class TestWebServiceModelGenerator extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        
+
         this.builder = new FakeIWebServiceModelBuilder();
         this.builder.setModelPath(new Path("/Project/WebServiceModelGenerator_WsdlFile.wsdl")); //$NON-NLS-1$
         this.builder.setXmlModel(new Path("/Project/WebServiceModelGenerator_XmlDocumentModelOutput.xmi")); //$NON-NLS-1$
 
         final String uri = this.builder.getModelPath().toString();
         this.wsSelector = new TransientModelSelector(uri);
-        
+
         final String uri2 = this.builder.getXmlModel().toString();
         this.xmlSelector = new TransientModelSelector(uri2);
-        
-        this.generator = new WebServiceModelGenerator(this.builder,this.wsSelector,this.xmlSelector);
+
+        this.generator = new WebServiceModelGenerator(this.builder, this.wsSelector, this.xmlSelector);
     }
 
     /*
@@ -66,12 +64,12 @@ public class TestWebServiceModelGenerator extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
     }
-    
+
     /**
      * Test suite, with one-time setup.
      */
     public static Test suite() {
-        TestSuite suite = new SmartTestSuite("com.metamatrix.modeler.webservice", "TestWebServiceModelGenerator"); //$NON-NLS-1$ //$NON-NLS-2$
+        TestSuite suite = new SmartTestSuite("org.teiid.designer.webservice", "TestWebServiceModelGenerator"); //$NON-NLS-1$ //$NON-NLS-2$
         suite.addTestSuite(TestWebServiceModelGenerator.class);
         // One-time setup and teardown
         return new TestSetup(suite) {
@@ -87,17 +85,15 @@ public class TestWebServiceModelGenerator extends TestCase {
     }
 
     // =========================================================================
-    //                      H E L P E R   M E T H O D S
+    // H E L P E R M E T H O D S
     // =========================================================================
 
     // =========================================================================
-    //                         T E S T     C A S E S
+    // T E S T C A S E S
     // =========================================================================
-
-
 
     public void testGetWebServiceModelBuilder() {
-        assertSame(this.builder,this.generator.getWebServiceModelBuilder());
+        assertSame(this.builder, this.generator.getWebServiceModelBuilder());
     }
 
     public void testGetDescription() {
@@ -106,12 +102,12 @@ public class TestWebServiceModelGenerator extends TestCase {
 
     public void testSetDescription() {
         assertNotNull(this.generator.getDescription());
-        
+
         final String desc = "This is the new description"; //$NON-NLS-1$
         this.generator.setDescription(desc);
         assertNotNull(this.generator.getDescription());
-        assertEquals(desc,this.generator.getDescription());
-        assertSame(desc,this.generator.getDescription());
+        assertEquals(desc, this.generator.getDescription());
+        assertSame(desc, this.generator.getDescription());
     }
 
     public void testClose() {

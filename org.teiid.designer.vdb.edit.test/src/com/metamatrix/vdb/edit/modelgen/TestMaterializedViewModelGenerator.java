@@ -67,7 +67,7 @@ public class TestMaterializedViewModelGenerator extends TestCase {
      * Test suite, with one-time setup.
      */
     public static Test suite() {
-        final TestSuite suite = new SmartTestSuite("com.metamatrix.vdb.edit", "TestMaterializedViewModelGenerator"); //$NON-NLS-1$//$NON-NLS-2$
+        final TestSuite suite = new SmartTestSuite("org.teiid.designer.vdb.edit", "TestMaterializedViewModelGenerator"); //$NON-NLS-1$//$NON-NLS-2$
         suite.addTestSuite(TestMaterializedViewModelGenerator.class);
         return new TestSetup(suite);
     }

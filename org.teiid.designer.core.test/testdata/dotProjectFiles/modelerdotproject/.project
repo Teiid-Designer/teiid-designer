@@ -12,6 +12,6 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
-		<nature>com.metamatrix.modeler.core.modelNature</nature>
+		<nature>org.teiid.designer.core.modelNature</nature>
 	</natures>
 </projectDescription>

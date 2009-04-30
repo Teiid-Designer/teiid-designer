@@ -209,8 +209,7 @@ public class TestModelGeneratorPlugin extends TestCase {
 
     public void testNonPlatformGetStringWithZeroLengthKey() {
         final String key = ""; //$NON-NLS-1$
-        final String expectedValue = "<Missing message for key \"\" in: " + //$NON-NLS-1$
-                                     ModelGeneratorPlugin.PLUGIN_ID + ".i18n>"; //$NON-NLS-1$
+        final String expectedValue = "<Missing message for key \"\" in: com.metamatrix.modeler.modelgenerator.i18n>"; //$NON-NLS-1$
         helpTestGetString(key, expectedValue);
     }
 

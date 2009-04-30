@@ -8,14 +8,11 @@
 package com.metamatrix.modeler.webservice.lds;
 
 import java.util.Properties;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.webservice.WebServicePlugin;
@@ -35,7 +32,7 @@ public class TestWebArchiveBuilder extends TestCase {
      * 
      * @param name
      */
-    public TestWebArchiveBuilder(String name) {
+    public TestWebArchiveBuilder( String name ) {
         super(name);
     }
 
@@ -63,7 +60,7 @@ public class TestWebArchiveBuilder extends TestCase {
      */
     public static Test suite() {
 
-        TestSuite suite = new SmartTestSuite("com.metamatrix.modeler.webservice", "TestWebArchiveBuilder"); //$NON-NLS-1$ //$NON-NLS-2$
+        TestSuite suite = new SmartTestSuite("org.teiid.designer.webservice", "TestWebArchiveBuilder"); //$NON-NLS-1$ //$NON-NLS-2$
         suite.addTestSuite(TestWebArchiveBuilder.class);
 
         // One-time setup and teardown
@@ -96,17 +93,17 @@ public class TestWebArchiveBuilder extends TestCase {
      * @since 4.4
      */
     public void testContextNameValidation() {
-        
+
         IStatus status = null;
 
-        // These should succeed        
+        // These should succeed
         status = builder.validateContextName("myapp"); //$NON-NLS-1$
         assertEquals(IStatus.OK, status.getSeverity());
         assertEquals(WebServicePlugin.PLUGIN_ID, status.getPlugin());
         assertEquals(WebArchiveBuilderConstants.STATUS_CODE_CONTEXT_NAME_VALIDATION_SUCCEEDED, status.getCode());
         assertEquals("Context name is valid", status.getMessage()); //$NON-NLS-1$ 
         assertNull(status.getException());
-        
+
         assertEquals(IStatus.OK, builder.validateContextName("myApp").getSeverity()); //$NON-NLS-1$
         assertEquals(IStatus.OK, builder.validateContextName("my-app").getSeverity()); //$NON-NLS-1$
         assertEquals(IStatus.OK, builder.validateContextName("my_app").getSeverity()); //$NON-NLS-1$
@@ -132,38 +129,38 @@ public class TestWebArchiveBuilder extends TestCase {
         assertEquals("Context name cannot be empty", status.getMessage()); //$NON-NLS-1$
         assertNull(status.getException());
 
-        // These should fail, because of forward slash        
+        // These should fail, because of forward slash
         status = builder.validateContextName("/myapp"); //$NON-NLS-1$
         assertEquals(IStatus.ERROR, status.getSeverity());
         assertEquals(WebServicePlugin.PLUGIN_ID, status.getPlugin());
         assertEquals(WebArchiveBuilderConstants.STATUS_CODE_CONTEXT_NAME_VALIDATION_FAILED, status.getCode());
         assertEquals("Context name contains an invalid character: /", status.getMessage()); //$NON-NLS-1$
         assertNull(status.getException());
-        
+
         assertEquals(IStatus.ERROR, builder.validateContextName("myapp/").getSeverity()); //$NON-NLS-1$
         assertEquals(IStatus.ERROR, builder.validateContextName("my/app").getSeverity()); //$NON-NLS-1$
         assertEquals(IStatus.ERROR, builder.validateContextName("myapp/index.html").getSeverity()); //$NON-NLS-1$
 
-        // These should fail, because of back slash        
+        // These should fail, because of back slash
         status = builder.validateContextName("\\myapp"); //$NON-NLS-1$
         assertEquals(IStatus.ERROR, status.getSeverity());
         assertEquals(WebServicePlugin.PLUGIN_ID, status.getPlugin());
         assertEquals(WebArchiveBuilderConstants.STATUS_CODE_CONTEXT_NAME_VALIDATION_FAILED, status.getCode());
         assertEquals("Context name contains an invalid character: \\", status.getMessage()); //$NON-NLS-1$
-        assertNull(status.getException());      
-        
+        assertNull(status.getException());
+
         assertEquals(IStatus.ERROR, builder.validateContextName("my\\app").getSeverity()); //$NON-NLS-1$
         assertEquals(IStatus.ERROR, builder.validateContextName("myapp\\").getSeverity()); //$NON-NLS-1$
         assertEquals(IStatus.ERROR, builder.validateContextName("myapp\\index.html").getSeverity()); //$NON-NLS-1$
 
         // These should fail, because of space
         status = builder.validateContextName("my app"); //$NON-NLS-1$
-        assertEquals(IStatus.ERROR, status.getSeverity()); 
-        assertEquals(WebServicePlugin.PLUGIN_ID, status.getPlugin()); 
+        assertEquals(IStatus.ERROR, status.getSeverity());
+        assertEquals(WebServicePlugin.PLUGIN_ID, status.getPlugin());
         assertEquals(WebArchiveBuilderConstants.STATUS_CODE_CONTEXT_NAME_VALIDATION_FAILED, status.getCode());
         assertEquals("Context name cannot contain a space", status.getMessage()); //$NON-NLS-1$
         assertNull(status.getException());
-        
+
         assertEquals(IStatus.ERROR, builder.validateContextName(" ").getSeverity()); //$NON-NLS-1$        
 
         // These should fail, because of some other reason
@@ -173,7 +170,7 @@ public class TestWebArchiveBuilder extends TestCase {
         assertEquals(WebArchiveBuilderConstants.STATUS_CODE_CONTEXT_NAME_VALIDATION_FAILED, status.getCode());
         assertEquals("Context name is invalid", status.getMessage()); //$NON-NLS-1$
         assertNull(status.getException());
-        
+
         assertEquals(IStatus.ERROR, builder.validateContextName("myapp)").getSeverity()); //$NON-NLS-1$
         assertEquals(IStatus.ERROR, builder.validateContextName("myapp[").getSeverity()); //$NON-NLS-1$
         assertEquals(IStatus.ERROR, builder.validateContextName("myapp]").getSeverity()); //$NON-NLS-1$
@@ -186,14 +183,14 @@ public class TestWebArchiveBuilder extends TestCase {
         props.setProperty("key1>", "value1"); //$NON-NLS-1$ //$NON-NLS-2$
         props.setProperty("key13 & this", "value1 < other"); //$NON-NLS-1$ //$NON-NLS-2$
         props.setProperty("key2", "value2"); //$NON-NLS-1$ //$NON-NLS-2$
-        
+
         String propString = ((DefaultWebArchiveBuilderImpl)builder).createAddlPropertiesString(props);
-        assertTrue(propString.indexOf("key1=value1;")>-1); //$NON-NLS-1$
-        assertTrue(propString.indexOf("key1&gt;=value1;")>-1); //$NON-NLS-1$
-        assertTrue(propString.indexOf("key13 &amp; this=value1 &lt; other;")>-1); //$NON-NLS-1$
-        assertTrue(propString.indexOf("key2=value2")>-1); //$NON-NLS-1$
+        assertTrue(propString.indexOf("key1=value1;") > -1); //$NON-NLS-1$
+        assertTrue(propString.indexOf("key1&gt;=value1;") > -1); //$NON-NLS-1$
+        assertTrue(propString.indexOf("key13 &amp; this=value1 &lt; other;") > -1); //$NON-NLS-1$
+        assertTrue(propString.indexOf("key2=value2") > -1); //$NON-NLS-1$
         System.out.print(propString);
-        
+
     }
 
 }

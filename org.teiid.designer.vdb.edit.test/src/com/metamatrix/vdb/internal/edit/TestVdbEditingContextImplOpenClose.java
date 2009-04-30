@@ -19,8 +19,10 @@ import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import com.metamatrix.core.util.FileUtils;
+import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.core.util.TempDirectory;
+import com.metamatrix.vdb.edit.VdbEditPlugin;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 
@@ -117,13 +119,15 @@ public class TestVdbEditingContextImplOpenClose extends TestCase {
      * Test suite, with one-time setup.
      */
     public static Test suite() {
-        TestSuite suite = new SmartTestSuite("com.metamatrix.vdb.edit", "TestVdbEditingContextImplOpenClose"); //$NON-NLS-1$ //$NON-NLS-2$
+        VdbEditPlugin plugin = new VdbEditPlugin();
+        ((PluginUtilImpl)VdbEditPlugin.Util).initializePlatformLogger(plugin);
+        TestSuite suite = new SmartTestSuite("org.teiid.designer.vdb.edit", "TestVdbEditingContextImplOpenClose"); //$NON-NLS-1$ //$NON-NLS-2$
         suite.addTestSuite(TestVdbEditingContextImplOpenClose.class);
         //suite.addTest(new TestVdbEditingContextImplOpenClose("testOpenReadOnlyFile")); //$NON-NLS-1$
         // One-time setup and teardown
         return new TestSetup(suite) {
             @Override
-            public void setUp() {
+            public void setUp() throws Exception {
             }
 
             @Override

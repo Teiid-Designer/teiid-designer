@@ -14,12 +14,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-
 import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
-
 import org.junit.Ignore;
 
 @Ignore
@@ -60,7 +58,7 @@ public class SmartTestSuite extends TestSuite {
     private String testSourcePath;
 
     private static final String PROJECT_ROOT_PROPERTY_NAME = "projectRoot"; //$NON-NLS-1$ 
-    private static final String GLOBAL_TEST_DATA_SUBDIR = "/com.metamatrix.core.modeler.test/testdata/"; //$NON-NLS-1$
+    private static final String GLOBAL_TEST_DATA_SUBDIR = "/org.teiid.core.designer.test/testdata/"; //$NON-NLS-1$
     private static final String DEFAULT_TESTSOURCE_PATH = "testsrc"; //$NON-NLS-1$
 
     private static String projectRootDir = null;
@@ -229,7 +227,7 @@ public class SmartTestSuite extends TestSuite {
         }
         return stream;
     }
-    
+
     /**
      * Obtain the file path to the root of the test data file tree. This first checks the property {@link TEST_DATA_ROOT_PROPERTY}
      * , and if that is not set to a valid path, uses the current directory.

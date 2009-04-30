@@ -19,8 +19,8 @@ import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
 import com.metamatrix.metamodels.relational.util.FakeRelationalTypeMapping;
 import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.jdbc.relational.impl.RelationalModelProcessorImpl;
 import com.metamatrix.modeler.internal.jdbc.relational.ModelerJdbcRelationalConstants;
+import com.metamatrix.modeler.jdbc.relational.impl.RelationalModelProcessorImpl;
 
 /**
  * TestJdbcRelationalPlugin
@@ -102,8 +102,7 @@ public class TestJdbcRelationalPlugin extends TestCase {
 
     public void testNonPlatformGetStringWithZeroLengthKey() {
         final String key = ""; //$NON-NLS-1$
-        final String expectedValue = "<Missing message for key \"\" in: " + //$NON-NLS-1$
-                                     com.metamatrix.modeler.jdbc.relational.ModelerJdbcRelationalConstants.PLUGIN_ID + ".i18n>"; //$NON-NLS-1$
+        final String expectedValue = "<Missing message for key \"\" in: com.metamatrix.modeler.jdbc.relational.i18n>"; //$NON-NLS-1$
         helpTestGetString(key, expectedValue);
     }
 

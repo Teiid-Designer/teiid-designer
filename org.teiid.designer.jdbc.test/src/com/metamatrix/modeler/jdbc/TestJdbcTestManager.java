@@ -126,18 +126,6 @@ public class TestJdbcTestManager extends TestCase {
         assertNotNull(manager);
     }
 
-    public void testGetOracleDriver() {
-        final JdbcDriver driver = standardUtil.getOracleDriver();
-        assertNotNull(driver);
-        assertEquals(JdbcTestManager.ORACLE_DRIVER_NAME, driver.getName());
-    }
-
-    public void testGetMetaMatrixOracleDriver() {
-        final JdbcDriver driver = standardUtil.getMetaMatrixOracleDriver();
-        assertNotNull(driver);
-        assertEquals(JdbcTestManager.MM_ORACLE_DRIVER_NAME, driver.getName());
-    }
-
     public void testGetJdbcSourcesToCreateNewSource() throws Exception {
         final List sources = scratchUtil.getJdbcManager().getJdbcSources();
         final JdbcSource source = scratchUtil.getJdbcManager().getFactory().createJdbcSource();
@@ -148,10 +136,4 @@ public class TestJdbcTestManager extends TestCase {
         sources.add(source);
         scratchUtil.getJdbcManager().saveChanges(null);
     }
-
-    public void testGetJdbcSources() {
-        final List sources = standardUtil.getJdbcManager().getJdbcSources();
-        assertTrue(sources.size() != 0);
-    }
-
 }

@@ -10,12 +10,10 @@ package com.metamatrix.modeler.internal.webservice.gen;
 import java.io.File;
 import java.util.Collections;
 import java.util.Map;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
@@ -23,19 +21,17 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDResourceFactoryImpl;
 import org.eclipse.xsd.util.XSDResourceImpl;
-
 import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.metamodels.webservice.WebServiceTestUtil;
 
-
-/** 
+/**
  * @since 4.2
  */
 public class TestBasicWsdlGenerator extends TestCase {
 
     public static final String PATH_TO_XSD1 = "BookRequests.xsd"; //$NON-NLS-1$
     public static final String PATH_TO_XSD2 = "BookDatatypes.xsd"; //$NON-NLS-1$
-    
+
     private Resource webService1;
     private Resource webService2;
     private XSDResourceImpl xsd1;
@@ -44,14 +40,15 @@ public class TestBasicWsdlGenerator extends TestCase {
     private XSDSchema schema2;
     private IPath schema1LocationPath;
     private IPath schema2LocationPath;
-    
+
     private BasicWsdlGenerator generator;
-    
+
     /**
      * Constructor for TestBasicWsdlGenerator.
+     * 
      * @param name
      */
-    public TestBasicWsdlGenerator(String name) {
+    public TestBasicWsdlGenerator( String name ) {
         super(name);
     }
 
@@ -61,18 +58,18 @@ public class TestBasicWsdlGenerator extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        
+
         this.generator = new BasicWsdlGenerator();
-        
+
         final URI uri1 = URI.createURI("/someProject/webservice1"); //$NON-NLS-1$
         this.webService1 = WebServiceTestUtil.createMinimalWebServiceModel(uri1);
-        
+
         final URI uri2 = URI.createURI("/someProject/webservice2"); //$NON-NLS-1$
         this.webService2 = WebServiceTestUtil.createMinimalWebServiceModel(uri2);
-        
+
         final XSDResourceFactoryImpl xsdFactory = new XSDResourceFactoryImpl();
         final File xsdFile = SmartTestSuite.getTestDataFile(PATH_TO_XSD1);
-        if ( xsdFile.exists() == false ) {
+        if (xsdFile.exists() == false) {
             System.out.println("Missing File " + xsdFile.getCanonicalPath()); //$NON-NLS-1$
         }
         final URI xsdUri = URI.createFileURI(xsdFile.getCanonicalPath());
@@ -82,7 +79,7 @@ public class TestBasicWsdlGenerator extends TestCase {
         this.schema1 = this.xsd1.getSchema();
 
         final File xsdFile2 = SmartTestSuite.getTestDataFile(PATH_TO_XSD2);
-        if ( xsdFile2.exists() == false ) {
+        if (xsdFile2.exists() == false) {
             System.out.println("Missing File " + xsdFile2.getCanonicalPath()); //$NON-NLS-1$
         }
         final URI xsdUri2 = URI.createFileURI(xsdFile2.getCanonicalPath());
@@ -90,7 +87,7 @@ public class TestBasicWsdlGenerator extends TestCase {
         options = (this.xsd2.getResourceSet() != null ? this.xsd2.getResourceSet().getLoadOptions() : Collections.EMPTY_MAP);
         this.xsd2.load(options);
         this.schema2 = this.xsd2.getSchema();
-        
+
         this.schema1LocationPath = new Path("/someProject/" + PATH_TO_XSD1); //$NON-NLS-1$
         this.schema1LocationPath = new Path("/someProject/" + PATH_TO_XSD2); //$NON-NLS-1$
     }
@@ -102,12 +99,12 @@ public class TestBasicWsdlGenerator extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
     }
-    
+
     /**
      * Test suite, with one-time setup.
      */
     public static Test suite() {
-        TestSuite suite = new SmartTestSuite("com.metamatrix.modeler.webservice", "TestBasicWsdlGenerator"); //$NON-NLS-1$ //$NON-NLS-2$
+        TestSuite suite = new SmartTestSuite("org.teiid.designer.webservice", "TestBasicWsdlGenerator"); //$NON-NLS-1$ //$NON-NLS-2$
         suite.addTestSuite(TestBasicWsdlGenerator.class);
         // One-time setup and teardown
         return new TestSetup(suite) {
@@ -123,11 +120,11 @@ public class TestBasicWsdlGenerator extends TestCase {
     }
 
     // =========================================================================
-    //                      H E L P E R   M E T H O D S
+    // H E L P E R M E T H O D S
     // =========================================================================
 
     // =========================================================================
-    //                         T E S T     C A S E S
+    // T E S T C A S E S
     // =========================================================================
 
     public void testSetup() {
@@ -153,30 +150,30 @@ public class TestBasicWsdlGenerator extends TestCase {
     }
 
     public void testAddWebServiceModel() {
-        assertEquals(0,this.generator.getWebServiceModels().size());
+        assertEquals(0, this.generator.getWebServiceModels().size());
         this.generator.addWebServiceModel(webService1);
-        assertEquals(1,this.generator.getWebServiceModels().size());
+        assertEquals(1, this.generator.getWebServiceModels().size());
 
         this.generator.addWebServiceModel(webService1);
-        assertEquals(1,this.generator.getWebServiceModels().size());
+        assertEquals(1, this.generator.getWebServiceModels().size());
 
         this.generator.addWebServiceModel(webService2);
-        assertEquals(2,this.generator.getWebServiceModels().size());
+        assertEquals(2, this.generator.getWebServiceModels().size());
     }
 
     public void testAddXsdModel() {
-        assertEquals(0,this.generator.getXSDSchemas().size());
-        this.generator.addXsdModel(schema1,this.schema1LocationPath);
-        assertEquals(1,this.generator.getXSDSchemas().size());
-        assertEquals(this.schema1LocationPath,this.generator.getLocationPathForXsdModel(schema1));
+        assertEquals(0, this.generator.getXSDSchemas().size());
+        this.generator.addXsdModel(schema1, this.schema1LocationPath);
+        assertEquals(1, this.generator.getXSDSchemas().size());
+        assertEquals(this.schema1LocationPath, this.generator.getLocationPathForXsdModel(schema1));
 
-        this.generator.addXsdModel(schema1,this.schema1LocationPath);
-        assertEquals(1,this.generator.getXSDSchemas().size());
-        assertEquals(this.schema1LocationPath,this.generator.getLocationPathForXsdModel(schema1));
+        this.generator.addXsdModel(schema1, this.schema1LocationPath);
+        assertEquals(1, this.generator.getXSDSchemas().size());
+        assertEquals(this.schema1LocationPath, this.generator.getLocationPathForXsdModel(schema1));
 
-        this.generator.addXsdModel(schema2,this.schema2LocationPath);
-        assertEquals(2,this.generator.getXSDSchemas().size());
-        assertEquals(this.schema2LocationPath,this.generator.getLocationPathForXsdModel(schema2));
+        this.generator.addXsdModel(schema2, this.schema2LocationPath);
+        assertEquals(2, this.generator.getXSDSchemas().size());
+        assertEquals(this.schema2LocationPath, this.generator.getLocationPathForXsdModel(schema2));
     }
 
     public void testGetWebServiceModels() {
@@ -200,16 +197,16 @@ public class TestBasicWsdlGenerator extends TestCase {
     public void testClose() {
         this.generator.addWebServiceModel(webService1);
         this.generator.addWebServiceModel(webService2);
-        assertEquals(2,this.generator.getWebServiceModels().size());
+        assertEquals(2, this.generator.getWebServiceModels().size());
 
-        this.generator.addXsdModel(schema1,this.schema1LocationPath);
-        this.generator.addXsdModel(schema2,this.schema2LocationPath);
-        assertEquals(2,this.generator.getXSDSchemas().size());
-        
+        this.generator.addXsdModel(schema1, this.schema1LocationPath);
+        this.generator.addXsdModel(schema2, this.schema2LocationPath);
+        assertEquals(2, this.generator.getXSDSchemas().size());
+
         this.generator.close();
 
-        assertEquals(0,this.generator.getWebServiceModels().size());
-        assertEquals(0,this.generator.getXSDSchemas().size());
+        assertEquals(0, this.generator.getWebServiceModels().size());
+        assertEquals(0, this.generator.getXSDSchemas().size());
     }
 
 }

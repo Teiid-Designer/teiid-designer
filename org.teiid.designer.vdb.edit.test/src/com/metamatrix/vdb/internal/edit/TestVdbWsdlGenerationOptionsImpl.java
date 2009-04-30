@@ -52,7 +52,7 @@ public class TestVdbWsdlGenerationOptionsImpl extends TestCase {
      * Test suite, with one-time setup.
      */
     public static Test suite() {
-        TestSuite suite = new SmartTestSuite("com.metamatrix.vdb.edit", "TestVdbWsdlGenerationOptionsImpl"); //$NON-NLS-1$ //$NON-NLS-2$
+        TestSuite suite = new SmartTestSuite("org.teiid.designer.vdb.edit", "TestVdbWsdlGenerationOptionsImpl"); //$NON-NLS-1$ //$NON-NLS-2$
         suite.addTestSuite(TestVdbWsdlGenerationOptionsImpl.class);
         // One-time setup and teardown
         return new TestSetup(suite) {
