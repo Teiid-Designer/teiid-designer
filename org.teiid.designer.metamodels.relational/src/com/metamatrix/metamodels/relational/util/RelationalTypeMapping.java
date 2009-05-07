@@ -38,6 +38,7 @@ public interface RelationalTypeMapping {
         public static final String LONGVARBINARY    = "LONGVARBINARY";   //$NON-NLS-1$
         public static final String LONGVARCHAR      = "LONGVARCHAR";   //$NON-NLS-1$
         public static final String NCHAR            = "NCHAR";  //$NON-NLS-1$
+        public static final String NVARCHAR         = "NVARCHAR";  //$NON-NLS-1$
         public static final String NTEXT            = "NTEXT";  //$NON-NLS-1$
         public static final String NULL             = "NULL";   //$NON-NLS-1$
         public static final String NUMERIC          = "NUMERIC";   //$NON-NLS-1$

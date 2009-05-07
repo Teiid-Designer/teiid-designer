@@ -123,7 +123,8 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
         register(Types.FLOAT,         SQL_TYPE_NAMES.FLOAT,        internalFindDatatype(DatatypeConstants.BuiltInNames.FLOAT) );
         register(Types.LONGVARBINARY, SQL_TYPE_NAMES.LONGVARBINARY,internalFindDatatype(DatatypeConstants.BuiltInNames.OBJECT) );
         register(Types.LONGVARCHAR,   SQL_TYPE_NAMES.LONGVARCHAR,  internalFindDatatype(DatatypeConstants.BuiltInNames.STRING) );
-        register(NO_INT_TYPE,         SQL_TYPE_NAMES.NCHAR,        internalFindDatatype(DatatypeConstants.BuiltInNames.STRING) );
+        register(Types.NCHAR,         SQL_TYPE_NAMES.NCHAR,        internalFindDatatype(DatatypeConstants.BuiltInNames.STRING) );
+        register(Types.NVARCHAR,      SQL_TYPE_NAMES.NVARCHAR,     internalFindDatatype(DatatypeConstants.BuiltInNames.STRING) );
         register(NO_INT_TYPE,         SQL_TYPE_NAMES.NTEXT,        internalFindDatatype(DatatypeConstants.BuiltInNames.OBJECT) );
         //register(Types.NULL,          SQL_TYPE_NAMES.NULL,         internalFindDatatype(DatatypeConstants.BuiltInNames.) );
         register(Types.NUMERIC,       SQL_TYPE_NAMES.NUMERIC,      internalFindDatatype(DatatypeConstants.BuiltInNames.LONG) );
