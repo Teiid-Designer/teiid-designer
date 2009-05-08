@@ -1386,7 +1386,7 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
             String ID = com.metamatrix.modeler.ui.UiConstants.ExtensionPoints.ModelObjectActionContributor.ID;
             String CLASSNAME = com.metamatrix.modeler.ui.UiConstants.ExtensionPoints.ModelObjectActionContributor.CLASSNAME;
             // get the ModelObjectActionContributor extension point from the plugin class
-            IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(UiConstants.PLUGIN_ID, ID);
+            IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(com.metamatrix.modeler.ui.UiConstants.PLUGIN_ID, ID);
 
             // get the all extensions to the ModelObjectActionContributor extension point
             IExtension[] extensions = extensionPoint.getExtensions();
