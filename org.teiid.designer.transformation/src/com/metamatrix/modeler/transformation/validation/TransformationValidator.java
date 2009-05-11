@@ -603,6 +603,7 @@ public class TransformationValidator implements QueryValidator {
         IStatus status = null;
 
         ArgCheck.isNotNull(command);
+		String commandSQL = command.toString();
         // ------------------------------------------------------------
         // Resolve the Command
         // ------------------------------------------------------------
@@ -619,6 +620,10 @@ public class TransformationValidator implements QueryValidator {
             status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
         }
 
+		if(status!=null && status.getSeverity()==IStatus.ERROR) {
+			return new SqlTransformationResult(parseSQL(commandSQL).getCommand(), status);
+		}
+			
         SqlTransformationResult resolverResult = new SqlTransformationResult(command, status);
         // set the external metadata on the resolverResult
         resolverResult.setExternalMetadataMap(externalMetadata);
