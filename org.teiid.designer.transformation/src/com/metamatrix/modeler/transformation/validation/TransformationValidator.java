@@ -365,6 +365,7 @@ public class TransformationValidator implements QueryValidator {
             // look up external metadata
             externalMetadata = TransformationHelper.getExternalMetadataMap(command, mappingRoot, getQueryMetadata());
 
+            // check if the command is an update procedure
             if (command.getType() == Command.TYPE_UPDATE_PROCEDURE) {
                 CreateUpdateProcedureCommand procCommand = (CreateUpdateProcedureCommand)command;
 
