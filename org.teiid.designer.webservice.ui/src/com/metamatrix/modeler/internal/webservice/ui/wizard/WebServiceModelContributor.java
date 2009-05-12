@@ -133,7 +133,11 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
      * @since 4.2
      */
     public void doCancel() {
-        dispose();
+    	List newResources = this.builder.getAllNewResources();
+    	
+    	if( newResources != null && !newResources.isEmpty() ) {
+    		dispose();
+    	}
     }
 
     /**

@@ -83,6 +83,7 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
         this.resourceSet = new WebServiceResources();
         this.emfResourceUriByWebServiceResource = new HashMap();
         this.selectedWsdlOperations = new HashSet();
+        this.xsdWorkspaceResources = new ArrayList();
     }
 
     // =========================================================================
