@@ -17,9 +17,8 @@ import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException
 
 public class WSDLReaderTest extends TestCase {
 
-    public static final String XMETHODS_WSDL = "http://www.freewebs.com/jimmy_cheng/CurrencyExchangeService.wsdl"; //$NON-NLS-1$
-    // this is a bad version of brew.wsdl. I removed a few message tags
-    public static final String badWSDL = "http://bswxp02/axis/brew.wsdl"; //$NON-NLS-1$
+    public static final String CIS_WSDL = "./src/sources/CountryInfoService.wsdl"; //$NON-NLS-1$
+    public static final String badWSDL = "./src/sources/InvalidCountryInfoService.wsdl"; //$NON-NLS-1$
     private Logger logger;
 
     public WSDLReaderTest( String name ) {
@@ -51,16 +50,16 @@ public class WSDLReaderTest extends TestCase {
      */
     public void testWSDLReaderString() {
         WSDLReader reader = null;
-        reader = new WSDLReader(XMETHODS_WSDL, logger);
+        reader = new WSDLReader(CIS_WSDL, logger);
         assertNotNull(reader);
-        assertEquals(XMETHODS_WSDL, reader.getFileUri());
+        assertEquals(CIS_WSDL, reader.getFileUri());
     }
 
     /*
      * Test method for 'com.metamatrix.modeler.modelgenerator.wsdl.WSDLReader.getModel()'
      */
     public void testGetModel() throws ModelGenerationException {
-        WSDLReader reader = new WSDLReader(XMETHODS_WSDL, logger);
+        WSDLReader reader = new WSDLReader(CIS_WSDL, logger);
         Model model = reader.getModel();
         assertNotNull(model);
     }
@@ -70,19 +69,12 @@ public class WSDLReaderTest extends TestCase {
      */
     public void testGetSetFileUri() {
         WSDLReader reader = new WSDLReader(logger);
-        reader.setFileUri(XMETHODS_WSDL);
-        assertEquals(XMETHODS_WSDL, reader.getFileUri());
-    }
-
-    /*
-     * Test method for 'com.metamatrix.modeler.modelgenerator.wsdl.WSDLReader.validateWSDL()'
-     */
-    public void testValidateWSDL() {
-        validateWSDL(XMETHODS_WSDL, true);
+        reader.setFileUri(CIS_WSDL);
+        assertEquals(CIS_WSDL, reader.getFileUri());
     }
 
     public void testValidateWSDLNotThereUrl() {
-        final String garbageUri = XMETHODS_WSDL + "garbage"; //$NON-NLS-1$
+        final String garbageUri = CIS_WSDL + "garbage"; //$NON-NLS-1$
         validateWSDL(garbageUri, false);
     }
 

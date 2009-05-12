@@ -14,7 +14,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.WSDLReaderTest;
 
 public class ModelBuilderTest extends TestCase {
 
-    private final String badURI = WSDLReaderTest.XMETHODS_WSDL + "fdfdfd"; //$NON-NLS-1$
+    private final String badURI = WSDLReaderTest.CIS_WSDL + "fdfdfd"; //$NON-NLS-1$
     private final String notURI = "this is decidedly NOT a URI"; //$NON-NLS-1$
     private final String fileNotFound = "file:///../FileNotFound.wsdl"; //$NON-NLS-1$
     private Logger logger;
@@ -47,7 +47,7 @@ public class ModelBuilderTest extends TestCase {
      */
     public void testSetWSDLGood() {
         ModelBuilder builder = new ModelBuilder();
-        builder.setWSDL(WSDLReaderTest.XMETHODS_WSDL);
+        builder.setWSDL(WSDLReaderTest.CIS_WSDL);
     }
 
     public void testSetWSDLBad() {
@@ -70,11 +70,6 @@ public class ModelBuilderTest extends TestCase {
         builder.setWSDL(fileNotFound);
     }
 
-    public void testSetWSDLNull() {
-        ModelBuilder builder = new ModelBuilder();
-        builder.setWSDL(null);
-    }
-
     /*
      * Test method for 'com.metamatrix.modeler.modelgenerator.wsdl.model.internal.ModelBuilder.isWSDLParsed()'
      */
@@ -85,26 +80,13 @@ public class ModelBuilderTest extends TestCase {
 
     public void testIsWSDLParsedGood() {
         ModelBuilder builder = new ModelBuilder();
-        builder.setWSDL(WSDLReaderTest.XMETHODS_WSDL);
+        builder.setWSDL(WSDLReaderTest.CIS_WSDL);
         assertTrue(builder.isWSDLParsed());
     }
 
     public void testIsWSDLParsedBad() {
         ModelBuilder builder = new ModelBuilder();
         builder.setWSDL(badURI);
-        assertFalse(builder.isWSDLParsed());
-    }
-
-    public void testIsWSDLParsedBadWSDL() {
-        ModelBuilder builder = new ModelBuilder();
-        builder.setWSDL(WSDLReaderTest.badWSDL);
-        assertFalse(builder.isWSDLParsed());
-
-    }
-
-    public void testIsWSDLParsedNull() {
-        ModelBuilder builder = new ModelBuilder();
-        builder.setWSDL(null);
         assertFalse(builder.isWSDLParsed());
     }
 
@@ -130,7 +112,7 @@ public class ModelBuilderTest extends TestCase {
 
     public void testGetWSDLExceptionGood() {
         ModelBuilder builder = new ModelBuilder();
-        builder.setWSDL(WSDLReaderTest.XMETHODS_WSDL);
+        builder.setWSDL(WSDLReaderTest.CIS_WSDL);
         assertNull(builder.getWSDLException());
 
     }
@@ -138,18 +120,6 @@ public class ModelBuilderTest extends TestCase {
     public void testGetWSDLExceptionBad() {
         ModelBuilder builder = new ModelBuilder();
         builder.setWSDL(badURI);
-        assertNotNull(builder.getWSDLException());
-    }
-
-    public void testGetWSDLExceptionBadWSDL() {
-        ModelBuilder builder = new ModelBuilder();
-        builder.setWSDL(WSDLReaderTest.badWSDL);
-        assertNotNull(builder.getWSDLException());
-    }
-
-    public void testGetWSDLExceptionNull() {
-        ModelBuilder builder = new ModelBuilder();
-        builder.setWSDL(null);
         assertNotNull(builder.getWSDLException());
     }
 
@@ -175,25 +145,13 @@ public class ModelBuilderTest extends TestCase {
 
     public void testGetModelGood() throws Exception {
         ModelBuilder builder = new ModelBuilder();
-        builder.setWSDL(WSDLReaderTest.XMETHODS_WSDL);
+        builder.setWSDL(WSDLReaderTest.CIS_WSDL);
         assertNotNull(builder.getModel(logger));
     }
 
     public void testGetModelBad() throws Exception {
         ModelBuilder builder = new ModelBuilder();
         builder.setWSDL(badURI);
-        assertNull(builder.getModel(logger));
-    }
-
-    public void testGetModelBadWSDL() throws Exception {
-        ModelBuilder builder = new ModelBuilder();
-        builder.setWSDL(WSDLReaderTest.badWSDL);
-        assertNull(builder.getModel(logger));
-    }
-
-    public void testGetModelNull() throws Exception {
-        ModelBuilder builder = new ModelBuilder();
-        builder.setWSDL(null);
         assertNull(builder.getModel(logger));
     }
 
