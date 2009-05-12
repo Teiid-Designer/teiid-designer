@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/patches/teiid-479-patch.jar"/>
+	<classpathentry exported="true" kind="lib" path="teiid-558-client-patch.jar" sourcepath="teiid-558-client-patch.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/patches/teiid-558-patch.jar" sourcepath="lib/patches/teiid-558-patch.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/patches/teiid-479-patch.jar" sourcepath="lib/patches/teiid-479-patch.jar"/>
 	<classpathentry exported="true" kind="lib" path="teiid-479-client-patch.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/patches/teiid-481-patch.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jgroups-2.6.5.GA.jar"/>

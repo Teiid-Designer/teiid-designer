@@ -114,7 +114,8 @@ public class DqpPlugin extends Plugin {
             if (!configurationFile.exists()) {
                 File originalFile = DqpPath.getInstallConfigPath().append(ConfigFileManager.CONFIG_FILE_NAME).toFile();
                 if (!originalFile.exists()) {
-                    throw new Exception(Util.getString(I18nUtil.getPropertyPrefix(DqpPlugin.class) + "missingConfigFile")); //$NON-NLS-1$
+                    throw new Exception(Util.getString(I18nUtil.getPropertyPrefix(DqpPlugin.class) + "missingConfigFile", //$NON-NLS-1$
+                                                       originalFile.getAbsolutePath()));
                 }
                 FileUtils.copy(originalFile.getAbsolutePath(), configurationFile.getAbsolutePath());
             }

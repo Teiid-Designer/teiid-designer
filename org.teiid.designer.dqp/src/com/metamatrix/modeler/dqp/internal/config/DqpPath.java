@@ -10,12 +10,10 @@ package com.metamatrix.modeler.dqp.internal.config;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-
 import com.metamatrix.modeler.dqp.DqpPlugin;
 
 public final class DqpPath {
@@ -30,6 +28,7 @@ public final class DqpPath {
     public static final String CONFIGURATION_DIR = "config"; //$NON-NLS-1$
     private static final String EXTENSIONS_DIR = "extensions"; //$NON-NLS-1$
     private static final String CONNECTORS_DIR = "connectors"; //$NON-NLS-1$
+    private static final String UDFS_DIR = "functions"; //$NON-NLS-1$
     private static final String LIB_DIR = "lib"; //$NON-NLS-1$
     private static final String LOG_DIR = "log"; //$NON-NLS-1$
     private static final String VDB_EXEC_DIR = "vdb-execution"; //$NON-NLS-1$
@@ -52,6 +51,8 @@ public final class DqpPath {
     private static IPath runtimeConfigPath;
 
     private static IPath runtimeConnectorsPath;
+
+    private static IPath runtimeUdfsPath;
 
     private static IPath logPath;
 
@@ -205,6 +206,22 @@ public final class DqpPath {
         }
 
         return (IPath)runtimeConnectorsPath.clone();
+    }
+
+    /**
+     * If the UDFs directory does not exist it is created.
+     * 
+     * @return the UDFs directory under the <code>designer.dqp</code> plugin's runtime workspace path or the test runtime path
+     * @throws IOException if an error occurs obtaining the path
+     * @since 6.0.0
+     */
+    public static IPath getRuntimeUdfsPath() {
+        if (runtimeUdfsPath == null) {
+            runtimeUdfsPath = getRuntimePath().append(UDFS_DIR);
+            createDirectory(runtimeUdfsPath);
+        }
+
+        return (IPath)runtimeUdfsPath.clone();
     }
 
     /**

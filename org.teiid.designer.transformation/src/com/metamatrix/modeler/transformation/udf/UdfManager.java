@@ -49,7 +49,6 @@ import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.udf.UdfModelEvent.Type;
-import com.metamatrix.query.function.FunctionLibraryManager;
 import com.metamatrix.query.function.UDFSource;
 
 public final class UdfManager implements IResourceChangeListener {
@@ -388,34 +387,38 @@ public final class UdfManager implements IResourceChangeListener {
         UDFSource udfSource = this.functionModels.get(url);
         boolean remove = (udfSource != null);
         boolean add = !event.isDeleted();
-
+        
+        // code FunctionLibraryManager-related code that is commented out below will be needed later when the
+        // query code is forked from Teiid and becomes Designer responsibility. The FunctionLibraryManager (FLM) is the
+        // UDF registry and is used during model validation. Currently one FLM is being shared
+        // by Teiid and Designer and when Designer informs Teiid of UDF model changes Teiid informs the FLM.
         if (remove) {
             this.functionModels.remove(url);
-
-            final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
-
-            try {
-                FunctionLibraryManager.deregisterSource(udfSource);
-            } finally {
-                if (startedTxn) {
-                    ModelerCore.commitTxn();
-                }
-            }
+//
+//            final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
+//
+//            try {
+//                FunctionLibraryManager.deregisterSource(udfSource);
+//            } finally {
+//                if (startedTxn) {
+//                    ModelerCore.commitTxn();
+//                }
+//            }
         }
 
         if (add) {
-            final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
-
+//            final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
+//
             try {
                 udfSource = new UDFSource(url);
-                FunctionLibraryManager.registerSource(udfSource);
+//                FunctionLibraryManager.registerSource(udfSource);
                 this.functionModels.put(url, udfSource);
             } catch (Exception e) {
                 TransformationPlugin.Util.log(e);
-            } finally {
-                if (startedTxn) {
-                    ModelerCore.commitTxn();
-                }
+//            } finally {
+//                if (startedTxn) {
+//                    ModelerCore.commitTxn();
+//                }
             }
         }
     }

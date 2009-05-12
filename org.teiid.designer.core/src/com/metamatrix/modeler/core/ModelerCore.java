@@ -150,7 +150,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     private static final String USERFILES_FOLDERNAME = "user-files"; //$NON-NLS-1$
 
     public static final String UDF_MODEL_NAME = "FunctionDefinitions.xmi"; //$NON-NLS-1$
-    public static final String UDF_PROJECT_NAME = "com.metamatrix.udf"; //$NON-NLS-1$
+    public static final String UDF_PROJECT_NAME = "org.teiid.designer.udf"; //$NON-NLS-1$
 
     private static final String XML_EXTENSIONS_PROJECT_NAME = "XMLExtensionsProject"; //$NON-NLS-1$
 

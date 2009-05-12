@@ -4,7 +4,9 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: teiid_embedded_query;singleton:=true
 Bundle-Version: 6.0.0
 Bundle-Vendor: %providerName
-Bundle-ClassPath: teiid-479-client-patch.jar,
+Bundle-ClassPath: teiid-558-client-patch.jar,
+ lib/patches/teiid-558-patch.jar,
+ teiid-479-client-patch.jar,
  lib/patches/teiid-481-patch.jar,
  lib/patches/teiid-479-patch.jar,
  teiid-6.0.0-client.jar,
@@ -110,6 +112,7 @@ Export-Package: com.metamatrix.admin,
  com.metamatrix.dqp,
  com.metamatrix.dqp.client,
  com.metamatrix.dqp.client.impl,
+ com.metamatrix.dqp.embedded,
  com.metamatrix.dqp.embedded.services,
  com.metamatrix.dqp.exception,
  com.metamatrix.dqp.internal.datamgr,

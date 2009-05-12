@@ -33,8 +33,9 @@ import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ConnectorBindingType;
 import com.metamatrix.common.config.xml.XMLConfigurationImportExportUtility;
 import com.metamatrix.common.types.DataTypeManager;
-import com.metamatrix.core.util.FileUtil;
+import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.dqp.embedded.DQPEmbeddedProperties;
 import com.metamatrix.embeddedquery.workspace.WorkspaceInfo;
 import com.metamatrix.embeddedquery.workspace.WorkspaceInfoHolder;
 import com.metamatrix.jdbc.api.Connection;
@@ -44,6 +45,7 @@ import com.metamatrix.modeler.dqp.config.ConfigurationManager;
 import com.metamatrix.modeler.dqp.config.ExtensionModuleChangeEvent;
 import com.metamatrix.modeler.dqp.config.IConfigurationChangeListener;
 import com.metamatrix.modeler.dqp.config.IExtensionModuleChangeListener;
+import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.IResults;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.SqlResultsModel;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.XmlDocumentResultsModel;
@@ -132,7 +134,10 @@ public class WorkspaceExecutor extends QueryClient {
                 UDFListener udfListener = new UDFListener();
                 DqpPlugin.getInstance().getExtensionsHandler().addChangeListener(udfListener);
                 UdfManager.INSTANCE.addChangeListener(udfListener);
-            } catch (SQLException e) {
+                
+                // tell embedded to load initial UDF model. The UDF model at startup should always be a valid one.
+                reloadUdfModel();
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
             this.started = true;
@@ -363,6 +368,23 @@ public class WorkspaceExecutor extends QueryClient {
         return !this.workspaceInfo.getBinding(modelName).isEmpty();
     }
 
+    private String buildUDFClasspath() {
+        // Get UDF jar files from extension handler
+        List<File> udfJarFiles = DqpPlugin.getInstance().getExtensionsHandler().getUdfJarFiles();
+
+        StringBuffer udfClasspath = new StringBuffer();
+        for (File udfJar : udfJarFiles) {
+            udfClasspath.append("extensionjar:").append(udfJar.getName()).append(";"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        return udfClasspath.toString();
+    }
+    
+    void reloadUdfModel() throws Exception {
+        EmbeddedAdmin admin = (EmbeddedAdmin)adminConnection.getAdminAPI();
+        admin.setSystemProperty(DQPEmbeddedProperties.COMMON_EXTENSION_CLASPATH, buildUDFClasspath());
+        admin.reloadUDF(); // reloads the UDF from the extension modules
+    }
+
     final class UDFListener implements IExtensionModuleChangeListener, UdfModelListener {
         /**
          * @see com.metamatrix.modeler.dqp.config.IExtensionModuleChangeListener#extensionModulesChanged(com.metamatrix.modeler.dqp.config.ExtensionModuleChangeEvent)
@@ -381,43 +403,24 @@ public class WorkspaceExecutor extends QueryClient {
                 File file = udfModel.getLocation().toFile();
 
                 // should always have a udf model file
-                if (file == null) {
+                if ((file == null) || !file.exists()) {
                     String msg = UTIL.getString(PREFIX + "dqpErrorProcessingUdfChange"); //$NON-NLS-1$
                     IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, msg);
                     throw new CoreException(status);
                 }
                 
-                if (file.exists()) {
-                    EmbeddedAdmin admin = (EmbeddedAdmin)adminConnection.getAdminAPI();
-                    FileUtil f = new FileUtil(file);
-                    admin.addUDF(f.readBytes(), buildUDFClasspath());
-                    if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
-                        UTIL.debug(DEBUG_CONTEXT, "updated the FunctionDefinitions.xmi in dqp"); //$NON-NLS-1$
-                    }
-                } else {
-                    // delete
-                    EmbeddedAdmin admin = (EmbeddedAdmin)adminConnection.getAdminAPI();
-                    admin.deleteUDF();
-                    if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
-                        UTIL.debug(DEBUG_CONTEXT, "deleted the FunctionDefinitions.xmi in dqp"); //$NON-NLS-1$
-                    }
-                }
+                // copy file over to UDF runtime directory for embedded to pick up
+                FileUtils.copyFile(UdfManager.INSTANCE.getUdfModelPath().toFile().getAbsolutePath(),
+                                   DqpPath.getRuntimeUdfsPath().toFile().getAbsolutePath(),
+                                   UdfManager.UDF_MODEL_NAME);
+
+                // inform embedded
+                reloadUdfModel();
             } catch (Exception e) {
                 String msg = UTIL.getString(PREFIX + "dqpErrorProcessingUdfChange"); //$NON-NLS-1$
                 UTIL.log(IStatus.ERROR, e, msg);
                 WidgetUtil.showError(msg);
             }
-        }
-
-        private String buildUDFClasspath() {
-            // Get UDF jar files from extension hancler
-            List<File> udfJarFiles = DqpPlugin.getInstance().getExtensionsHandler().getUdfJarFiles();
-
-            StringBuffer udfClasspath = new StringBuffer();
-            for (File udfJar : udfJarFiles) {
-                udfClasspath.append("extensionjar:").append(udfJar.getName()).append(";"); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-            return udfClasspath.toString();
         }
 
         @Override
