@@ -334,8 +334,9 @@ public class WorkspaceResourceFinderUtil {
                         if (!StringUtil.isEmpty(path)) {
                             dependentIResource = findIResource(path);
                         } else if (!StringUtil.isEmpty(location)) {
-                            if (!isGlobalResource(location)) {
-                                dependentIResource = findIResource(location);
+                        	String depPath = iResource.getFullPath().removeLastSegments(1).append(location).toString();
+                            if (!isGlobalResource(depPath)) {
+                                dependentIResource = findIResource(depPath);
                                 if (dependentIResource == null) {
                                     String absolutePath = getAbsoluteLocation(iResourceFile, location);
                                     dependentIResource = findIResource(absolutePath);
