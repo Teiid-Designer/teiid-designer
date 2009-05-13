@@ -127,7 +127,7 @@ public class ModelObjectNotificationHelper {
                         // Check ignorable target
                         checkNonDiagramRelatedChange(targetEObject, false);
                     } else if (NotificationUtilities.isChanged(notification)) {
-                        changeTargets.add(targetEObject);
+                    	handleChanged(notification, targetEObject);
                         // Check ignorable target
                         checkNonDiagramRelatedChange(targetEObject, true);
                     }
@@ -146,7 +146,7 @@ public class ModelObjectNotificationHelper {
                         // Check ignorable target
                         checkNonDiagramRelatedChange(targetEObject, false);
                     } else if (NotificationUtilities.isChanged(notification)) {
-                        changeTargets.add(targetEObject);
+                        handleChanged(notification, targetEObject);
                         // Check ignorable target
                         checkNonDiagramRelatedChange(targetEObject, true);
                     }
@@ -172,13 +172,13 @@ public class ModelObjectNotificationHelper {
 
             if (NotificationUtilities.isAdded(primaryNotification) || NotificationUtilities.isRemoved(primaryNotification)) {
                 if (targetEObject != null) {
-                    addOrRemoveTargets.add(targetEObject);
+                	addOrRemoveTargets.add(targetEObject);
                     // Check ignorable target
                     checkNonDiagramRelatedChange(targetEObject, false);
                 }
             } else if (NotificationUtilities.isChanged(primaryNotification)) {
                 if (targetEObject != null) {
-                    changeTargets.add(targetEObject);
+                	changeTargets.add(targetEObject);
                     // Check ignorable target
                     checkNonDiagramRelatedChange(targetEObject, true);
                 }
@@ -220,6 +220,16 @@ public class ModelObjectNotificationHelper {
     protected void handleAddOrRemove( Notification notification,
                                       EObject targetEObject ) {
         if (targetEObject != null) addOrRemoveTargets.add(targetEObject);
+        else leftoverNotifications.add(notification);
+    }
+    
+    /**
+     * @param notification
+     * @param targetEObject
+     */
+    protected void handleChanged( Notification notification,
+                                      EObject targetEObject ) {
+        if (targetEObject != null) changeTargets.add(targetEObject);
         else leftoverNotifications.add(notification);
     }
 
