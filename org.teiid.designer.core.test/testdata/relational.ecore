@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="relational"
+    nsURI="http://www.metamatrix.com/metamodels/Relational" nsPrefix="relational">
+  <eClassifiers xsi:type="ecore:EClass" name="Table" eSuperTypes="#//RelationalEntity">
+    <eReferences name="columns" eType="#//Column" upperBound="-1" containment="true"
+        eOpposite="#//Column/table"/>
+    <eReferences name="primaryKey" eType="#//PrimaryKey" containment="true" eOpposite="#//PrimaryKey/table"/>
+    <eReferences name="foreignKeys" eType="#//ForeignKey" upperBound="-1" containment="true"
+        eOpposite="#//ForeignKey/table"/>
+    <eReferences name="schema" eType="#//Schema" transient="true" eOpposite="#//Schema/tables"/>
+    <eAttributes name="system" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Column" eSuperTypes="#//RelationalEntity">
+    <eReferences name="table" eType="#//Table" transient="true" eOpposite="#//Table/columns"/>
+    <eReferences name="keys" eType="#//Key" upperBound="-1" eOpposite="#//Key/columns"/>
+    <eAttributes name="type" eType="#//SqlDataType"/>
+    <eAttributes name="nullable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eAttributes name="length" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eAttributes name="scale" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eAttributes name="precision" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Schema" eSuperTypes="#//RelationalEntity">
+    <eReferences name="tables" eType="#//Table" upperBound="-1" containment="true"
+        eOpposite="#//Table/schema"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PrimaryKey" eSuperTypes="#//Key">
+    <eReferences name="table" eType="#//Table" transient="true" eOpposite="#//Table/primaryKey"/>
+    <eReferences name="foreignKeys" eType="#//ForeignKey" upperBound="-1" eOpposite="#//ForeignKey/primaryKey"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ForeignKey" eSuperTypes="#//Key">
+    <eReferences name="table" eType="#//Table" transient="true" eOpposite="#//Table/foreignKeys"/>
+    <eReferences name="primaryKey" eType="#//PrimaryKey" eOpposite="#//PrimaryKey/foreignKeys"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RelationalEntity" abstract="true">
+    <eAttributes name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Key" abstract="true" eSuperTypes="#//RelationalEntity">
+    <eReferences name="columns" eType="#//Column" upperBound="-1" eOpposite="#//Column/keys"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="SqlDataType">
+    <eLiterals name="VARCHAR"/>
+    <eLiterals name="CHAR" value="1"/>
+    <eLiterals name="INTEGER" value="2"/>
+    <eLiterals name="DATE" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="View" eSuperTypes="#//Table"/>
+</ecore:EPackage>

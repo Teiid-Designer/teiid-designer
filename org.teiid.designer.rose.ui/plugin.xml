@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+     <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            name="%roseImportWizard.name"
+            icon="icons/full/ctool16/importrose_wiz.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.rose.internal.ui.wizard.RoseImportWizard"
+            id="roseImportWizard">
+         <description>
+            %roseImportWizard.description
+         </description>
+      </wizard>
+   </extension>
+<!-- Action in the Metadata menu to reresolve references -->
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="%roseUiMetadataMenuActionSet.label"
+            visible="false"
+            id="roseUiMetadataMenuActionSet">
+         <menu
+               label="%metadata.menu"
+               path="additions"
+               id="metadataMenu">
+            <separator
+                  name="slot1">
+            </separator>
+            <separator
+                  name="slot2">
+            </separator>
+            <separator
+                  name="slot3">
+            </separator>
+            <separator
+                  name="slot4">
+            </separator>
+            <groupMarker
+                  name="com.metamatrix.modeler.ui.groupMarker1">
+            </groupMarker>
+         </menu>            
+         <action
+               label="%reresolveReferencesAction.label"
+               tooltip="%reresolveReferencesAction.tip"
+               class="com.metamatrix.rose.internal.ui.actions.ReresolveReferencesAction"
+               menubarPath="metadataMenu/slot2"
+               enablesFor="1"
+               id="ReresolveReferencesAction">
+         </action>
+      </actionSet>
+   </extension>
+<!--
+	Add the RoseUiMetadataMenuActionSet to the Modeler Perspective. In order to do this we must make
+	sure the MetaData Action Set has also been activated.
+-->
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="modelerPerspective">
+         <actionSet
+               id="roseUiMetadataMenuActionSet">
+         </actionSet>
+      </perspectiveExtension>
+   </extension>
+
+</plugin>

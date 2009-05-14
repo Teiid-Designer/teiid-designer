@@ -1,0 +1,1 @@
+This directory will contain the work area for reading a WAR file.

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+     <extension
+         id="modelextension.SOAPExtensionReplaceAction"
+		 name="%extensionReplaceAction.name"
+         point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+            label="%extensionReplaceAction.label"
+            name="com.metamatrix.modeler.modelgenerator.wsdl.modelextension.SOAPExtensionReplaceAction">
+      </resourceAction>
+   </extension>
+
+</plugin>

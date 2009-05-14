@@ -1,0 +1,4 @@
+jdbcImportTiming$description = \
+	Enables debugging for JDBC Import Time-related performance.
+jdbcImportTiming = false
+

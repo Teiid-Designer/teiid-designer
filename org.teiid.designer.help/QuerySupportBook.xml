@@ -1,0 +1,12 @@
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<toc label="SQL Support Guide">
+    <topic label="Query Language and Definitions">
+       <link toc="QuerySupportRef.xml"/>
+    </topic>
+</toc>

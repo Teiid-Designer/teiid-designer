@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Transformation="http://www.metamatrix.com/metamodels/Transformation" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:vxmldoc="http://www.metamatrix.com/metamodels/XmlDocument">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:76387200-11e9-102e-b308-f31bd9ce7bca" primaryMetamodelUri="http://www.metamatrix.com/metamodels/XmlDocument" modelType="VIRTUAL" ProducerName="Teiid Designer" ProducerVersion="5.0"/>
+  <mmcore:AnnotationContainer xmi:uuid="mmuuid:94f9fb00-11e9-102e-b308-f31bd9ce7bca"/>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:94f9fb01-11e9-102e-b308-f31bd9ce7bca">
+    <diagram xmi:uuid="mmuuid:f7ae8900-11e9-102e-b308-f31bd9ce7bca" type="packageDiagramType" target="mmuuid/76387200-11e9-102e-b308-f31bd9ce7bca">
+      <diagramEntity xmi:uuid="mmuuid:a6b52440-197e-102e-ac25-91458cb91bbf" modelObject="mmuuid/30ba31c0-11ec-102e-b308-f31bd9ce7bca" xPosition="10" yPosition="10"/>
+    </diagram>
+  </Diagram:DiagramContainer>
+  <Transformation:TransformationContainer xmi:uuid="mmuuid:94f9fb02-11e9-102e-b308-f31bd9ce7bca"/>
+  <Transformation:MappingClassSetContainer xmi:uuid="mmuuid:95dedcc0-11e9-102e-b308-f31bd9ce7bca"/>
+  <vxmldoc:XmlDocument xmi:uuid="mmuuid:30ba31c0-11ec-102e-b308-f31bd9ce7bca" name="NewXMLDocument">
+    <root xmi:uuid="mmuuid:31ae55c0-11ec-102e-b308-f31bd9ce7bca" name="Root_Element"/>
+  </vxmldoc:XmlDocument>
+</xmi:XMI>

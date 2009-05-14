@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConfigurationDocument>
+    <Header>
+        <ConfigurationVersion>4.2</ConfigurationVersion>
+        <ApplicationCreatedBy>MetaMatrix Console</ApplicationCreatedBy>
+        <ApplicationVersion>4.3:2199</ApplicationVersion>
+        <UserCreatedBy>MetaMatrixAdmin</UserCreatedBy>
+        <MetaMatrixSystemVersion>4.3</MetaMatrixSystemVersion>
+        <Time>2005-08-24T10:27:28.663-06:00</Time>
+    </Header>
+    <ComponentTypes>
+        <ComponentType Name="Test Connector" ComponentTypeCode="2" Deployable="true" Deprecated="false" Monitorable="false" SuperComponentType="Connector" ParentComponentType="Connectors" LastChangedBy="ConfigurationStartup" LastChangedDate="2005-08-24T09:35:05.933-06:00" CreatedBy="ConfigurationStartup" CreationDate="2005-08-24T09:35:05.933-06:00">
+            <ComponentTypeDefn Deprecated="false">
+                <PropertyDefinition Name="ConnectorClass" DisplayName="Connector Class" ShortDescription="" DefaultValue="com.metamatrix.connector.text.TextConnector" Multiplicity="1" IsExpert="true" />
+            </ComponentTypeDefn>
+            <ComponentTypeDefn Deprecated="false">
+                <PropertyDefinition Name="DateResultFormats" DisplayName="Date Result Formats" ShortDescription="" IsExpert="true" />
+            </ComponentTypeDefn>
+            <ComponentTypeDefn Deprecated="false">
+                <PropertyDefinition Name="DescriptorFile" DisplayName="Text File Descriptor" ShortDescription="" Multiplicity="1" IsExpert="true" IsPreferred="true" />
+            </ComponentTypeDefn>
+            <ComponentTypeDefn Deprecated="false">
+                <PropertyDefinition Name="DateResultFormatsDelimiter" DisplayName="Date Result Formats Delimiter" ShortDescription="" IsExpert="true" />
+            </ComponentTypeDefn>
+            <ComponentTypeDefn Deprecated="false">
+                <PropertyDefinition Name="ConnectorClassPath" DisplayName="Class Path" ShortDescription="" DefaultValue="extensionjar:textconn.jar" Multiplicity="1" />
+            </ComponentTypeDefn>
+        </ComponentType>
+    </ComponentTypes>
+</ConfigurationDocument>
+

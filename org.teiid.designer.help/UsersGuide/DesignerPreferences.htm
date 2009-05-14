@@ -1,0 +1,122 @@
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<style type="text/css">
+<!--
+.style4 {font-weight: bold}
+.style5 {
+	color: #330099;
+	font-weight: bold;
+}
+-->
+</style>
+<body>
+<p><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<hr>
+<p class="maintitle_b24">Customizing Your Designer </p>
+
+<blockquote>
+  <p><strong>Designer </strong> provides  options or preferences which enable customization of various modeling and UI behaviors. Preferences can be accessed via the <strong>Edit &gt; Preferences</strong> action on the Main toolbar. </p>
+</blockquote>
+ <table width="660" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="left" valign="top">
+      <ul>
+        <li><a href="#DesignerPrefs"><strong>Designer</strong></a>
+            <ul>
+              <li><a href="#DebugPrefs"><strong>Debug</strong></a></li>
+              <li><a href="#DiagramPrefs"><strong>Diagram</strong></a></li>
+              <li><a href="#DiagramPrintingPrefs"><span class="medium"><strong>Diagram Printing</strong></span></a></li>
+              <li><a href="#EditorPrefs"><span class="medium"><strong>Editor</strong></span></a></li>
+              <li><a href="#ValidationPrefs"><strong>Validation</strong></a></li>
+              <li><a href="#XmlSchemaAsRelModelPrefs"><strong>XML Schema as Relational Source Model</strong></a></li>
+            </ul>
+        </li>
+      </ul>
+	  <ul>
+	       <li><a href="#SqlExplorerPrefs"><strong>SQL Explorer</strong></a>
+               <ul>
+                  <li><a href="#SqlEditorPrefs"><strong>SQL Editor</strong></a></li>
+               </ul>
+           </li>
+	  </ul>
+    </td>
+    <td><img src="images/views/DesignerPreferencesTree.jpg" hspace="20" border="1"></td>
+  </tr>
+</table>
+
+<p class="style4"><span class="subtitle_b16"><a name="DesignerPrefs"></a>Designer Preferences </span></p>
+<p>General Designer preferences include.</p>
+<ul>
+  <li><span class="style5">Always open editor without prompting</span> - To change/edit a model, it must be opened for editing. Checking this box will automatically open the model in an editor if the user attempts to perform a change in a model. If unchecked, the user will be informed that an editor will be opened before the operation is completed.</li>
+  <li><span class="style5">Check and update imports during save</span> - occasionally editing a model may add or remove objects in one model that reference objects in another model. Model Imports keep track of these dependencies within each model. A validation error or warning may appear during a build. Checking this box will automatically check and update imports during the save process. This will result in any unneeded imports being removed from the model or any required imports added to the model. If unchecked, no updating of imports will be performed.</li>
+</ul>
+<p><img src="images/views/DesignerPreferences.jpg" hspace="20" border="1"></p>
+
+<p class="style4"><span class="subtitle_b16"><a name="DebugPrefs"></a>Debugging Preferences </span></p>
+<p><strong>Debugging Preferences</strong> &ndash; can be used when working with technical support.  When the appropriate preferences are enabled, informative messages are logged  which aid support personnel in problem resolution.</p>
+<p><img src="images/views/DebugPreferences.jpg" hspace="20" border="1"></p>
+
+<p class="style4"><span class="subtitle_b16"><a name="DiagramPrefs"></a>Diagram Preferences </span></p>
+<p>Several diagram preferences are available to  customize your diagrams. </p>
+<p><strong>Modeling</strong></p>
+<ul>
+  <li><span class="style5">Notations</span> - Standard diagram notation for Designer is based on UML notation. Future releases may include alternate notations.</li>
+  <li><span class="style5"><a href="DiagramLinkOptions.htm">Routers</a></span> - The relationship link type for Package and Custom diagrams  (Foreign Key - Primary Key relationships) can be customized. Available options include Orthogonal (default), Direct or Manual (user defined breakpoints). </li>
+  <li><span class="style5">Font Settings </span> - Select font type, style and size. </li>
+  <li><span class="style5">Background Color Settings </span> - Select a unique  background color for each diagram type to help differentiate between types. </li>
+  <li><span class="style5">Model Size </span> - Displaying very large diagram may take a considerably long time. This preference allows users to set an upper limit on the number of objects to display in a diagram. If this limit is exceeded, a warning is displayed to the user and the diagram is not constructed. </li>
+  <li><span class="style5">Relationship Options </span> - UML-type relationships can be customized in a couple of ways. Role Names and Multiplicity labels can be shown or hidden using the check-boxes labeled <strong>Show Role Names</strong> and <strong>Show Multiplicity</strong></li>
+</ul>
+<p><img src="images/views/DiagramPreferences.jpg" hspace="20" border="1"></p>
+
+<p class="style4"><span class="subtitle_b16"><a name="DiagramPrintingPrefs"></a>Diagram Printing Preferences </span></p>
+<p>Diagram print options are stored as preferences. These can be accessed through this preference page, by right-click on diagram <strong>Page Setup</strong> action <img src="images/icons/tb_page_setup.gif" width="16" height="16" hspace="5">, or via the <strong>Modify Diagram Printing Preferences</strong> action <img src="images/icons/tb_page_setup.gif" width="16" height="16" hspace="5"> located on the vertical diagram toolbar .</p>
+<p><img src="images/views/DiagramPrintingPreferences.jpg" hspace="20" border="1"></p>
+
+<p class="style4"><span class="subtitle_b16"><a name="EditorPrefs"></a>Editor Preferences  </span></p>
+<p><span class="style4"><a name="xmlDocPrefs"></a></span><strong>XML Document Mapping</strong> <strong>Preferences</strong>  provide ways to customize XML Mapping Diagram and  <a href="RecursionEditor.htm">Recursion Editor</a> behavior.</p>
+<p class="style4"><img src="images/views/EditorXMLDocPreferences.jpg"  hspace="20" border="1"></p>
+<p class="medium"><strong><span class="style4"><a name="tableEditorPrefs"></a></span>Table Editor Preferences</strong>  provide a way to customize the order and the information content for each model object type.</p>
+<p class="style4"><img src="images/views/EditorTablePreferences.jpg"  hspace="20" border="1" class="medium"></p>
+<p class="medium"><a name="transformationEditorPrefs"></a><strong>Transformation Editor Preferences</strong>  provide a way to customize SQL  formatting, diagram  layout, and default view entity properties.</p>
+<p>See <a href="TransformationEditor.htm"><strong>Editing Your Transformations</strong></a>... </p>
+<p><img src="images/views/EditorTransformationPreferences.jpg" hspace="20" border="1"></p>
+
+<p class="style4"><span class="subtitle_b16"><a name="SqlExplorerPrefs"></a>SQL Explorer Preferences </span></p>
+<p><strong>SQL Explorer Preferences</strong> provide a way to customize the result preview row count and the actual result row count. If a query plan should be generated each time a query is executed, keep the Generate query plans preference checked. Note: Changes to this preference do not affect existing connections. </p>
+<p><img src="images/views/SQLExplorerPreferences.jpg" hspace="20" border="1"></p>
+<p>&nbsp;</p>
+
+<p class="style4"><span class="subtitle_b16"><a name="SqlEditorPrefs"></a>SQL Editor Preferences </span></p>
+<p><strong>SQL Editor Preferences</strong> provide a way to customize the font properties of the editor and the separator character used when exporting results to the clipboard.</p>
+<p><img src="images/views/SQLEditorPreferences.jpg" hspace="20" border="1"></p>
+
+<p class="style4"><span class="subtitle_b16"><a name="ValidationPrefs"></a>Validation Preferences </span></p>
+<p><strong>Validation Preferences </strong> provide a way to customize the severity of some of the rules checked during validation. Note: Increasing the severity level to error will prevent you from testing your VDB or deploying a web service if violations of that preference are found during validation.</p>
+<p>Validation preference pages, shown below, include Core, Data Access, Relational Model, XML-related &amp; XML Schema (XSD) models. </p>
+<p><img src="images/views/ValidationDataAccessPreferences.jpg"  hspace="20" border="1"></p>
+<p><img src="images/views/ValidationRelationalPreferences.jpg"  hspace="20" border="1"></p>
+<p><img src="images/views/ValidationCorePreferences.jpg" hspace="20" border="1"></p>
+<p><img src="images/views/ValidationXMLPreferences.jpg" hspace="20" border="1"></p>
+<p><img src="images/views/ValidationXSDPreferences.jpg" hspace="20" border="1"></p>
+<p>&nbsp;</p>
+
+<p class="style4"><span class="subtitle_b16"><a name="XmlSchemaAsRelModelPrefs"></a>XML Schema as Relational Source Model Preferences </span></p>
+<p><strong>XML Schema as Relational Source Model Preferences </strong>provide a way to customize how the relational source model is generated from the schema.</p>
+<p><img src="images/views/XMLSchemaAsRelationalPreferences.jpg" hspace="20" border="1"></p>
+
+<p class="subtitle_b16">Related Topics</p>
+<ul>
+  <li><a href="DesignerPerspectives.htm">Designer Perspectives </a></li>
+  <li><a href="ModelEditors.htm">Model Editors </a></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr>
+<p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
+</body>

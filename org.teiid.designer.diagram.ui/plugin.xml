@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+     <extension-point id="diagramNotation" name="%diagramNotationExtensionPointName" schema="schema/diagramNotation.exsd"/>
+   <extension-point id="diagramType" name="%diagramTypeExtensionPointName" schema="schema/diagramType.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="%diagramEditorExtensionName"
+            icon="icons/full/cview16/Diagram.gif"
+            extensions="dgm"
+            class="com.metamatrix.modeler.diagram.ui.editor.DiagramEditor"
+            id="DiagramEditor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="%diagramPreferences"
+            category="modelerPreferencePage"
+            class="com.metamatrix.modeler.diagram.ui.preferences.DiagramPreferencePage"
+            id="diagramPreferencePage">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="%diagramPrintPreferences"
+            category="modelerPreferencePage"
+            class="com.metamatrix.modeler.diagram.ui.preferences.DiagramPrintPreferencePage"
+            id="diagramPrintPreferencePage">
+      </page>
+   </extension>
+<!-- Adding the diagram editor as a Model Editor Page -->
+   <extension
+         id="diagramEditorPage"
+         name="%diagramEditorName"
+         point="org.teiid.designer.ui.modelEditorPage">
+      <class
+            tabName="%diagramEditorName"
+            order="0"
+            name="com.metamatrix.modeler.diagram.ui.editor.DiagramEditor">
+      </class>
+   </extension>
+<!-- Adding the default Diagram Notation extension-->
+   <extension
+         id="umlDiagramNotation"
+         name="%umlDiagramNotation"
+         point="org.teiid.designer.diagram.ui.diagramNotation">
+      <editPartGenerator
+            class="com.metamatrix.modeler.diagram.ui.notation.uml.UmlPartGenerator">
+      </editPartGenerator>
+      <diagramModelGenerator
+            class="com.metamatrix.modeler.diagram.ui.notation.uml.UmlModelGenerator">
+      </diagramModelGenerator>
+      <figureGenerator
+            class="com.metamatrix.modeler.diagram.ui.notation.uml.UmlFigureGenerator">
+      </figureGenerator>
+      <notationPreferences
+            displayName="UML">
+      </notationPreferences>
+   </extension>
+<!-- Adding the Package Diagram Type extension-->
+   <extension
+         id="packageDiagramType"
+         name="%packageDiagramType"
+         point="org.teiid.designer.diagram.ui.diagramType">
+      <diagram
+            class="com.metamatrix.modeler.diagram.ui.pakkage.PackageDiagramType"
+            simpleDiagram="true">
+      </diagram>
+   </extension>
+<!-- Package Diagram Type Permanent Model Object Action Contributor -->
+   <extension
+         id="packageModelObjectActionContributor"
+         point="org.teiid.designer.ui.modelObjectActionContributor">
+      <class
+            name="com.metamatrix.modeler.diagram.ui.pakkage.actions.PackageDiagramPermanentActionContributor">
+      </class>
+   </extension>
+<!-- Package Diagram Content Provider -->
+   <extension
+         id="packageDiagramContentProvider"
+         name="%packageDiagramContentProvider"
+         point="org.teiid.designer.ui.diagramContentProvider">
+      <class
+            name="com.metamatrix.modeler.diagram.ui.pakkage.PackageDiagramContentProvider">
+      </class>
+      <diagramType
+            name="packageDiagramType">
+      </diagramType>
+   </extension>
+<!-- Package Diagram Label Provider -->
+   <extension
+         id="packageDiagramLabelProvider"
+         name="%packageDiagramLabelProvider"
+         point="org.teiid.designer.ui.diagramLabelProvider">
+      <class
+            name="com.metamatrix.modeler.diagram.ui.pakkage.PackageDiagramLabelProvider">
+      </class>
+      <diagramType
+            name="packageDiagramType">
+      </diagramType>
+   </extension>
+<!-- Adding the Custom Diagram Type extension-->
+   <extension
+         id="customDiagramType"
+         name="%customDiagramType"
+         point="org.teiid.designer.diagram.ui.diagramType">
+      <diagram
+            class="com.metamatrix.modeler.diagram.ui.custom.CustomDiagramType"
+            simpleDiagram="true">
+      </diagram>
+   </extension>
+<!-- Custom Diagram Type Permanent Model Object Action Contributor -->
+   <extension
+         id="customModelObjectActionContributor"
+         point="org.teiid.designer.ui.modelObjectActionContributor">
+      <class
+            name="com.metamatrix.modeler.diagram.ui.custom.actions.CustomDiagramPermanentActionContributor">
+      </class>
+   </extension>
+<!-- Custom Diagram Content Provider -->
+   <extension
+         id="customDiagramContentProvider"
+         name="%customDiagramContentProvider"
+         point="org.teiid.designer.ui.diagramContentProvider">
+      <class
+            name="com.metamatrix.modeler.diagram.ui.custom.CustomDiagramContentProvider">
+      </class>
+      <diagramType
+            name="customDiagramType">
+      </diagramType>
+   </extension>
+<!-- Custom Diagram Label Provider -->
+   <extension
+         id="customDiagramLabelProvider"
+         name="%customDiagramLabelProvider"
+         point="org.teiid.designer.ui.diagramLabelProvider">
+      <class
+            name="com.metamatrix.modeler.diagram.ui.custom.CustomDiagramLabelProvider">
+      </class>
+      <diagramType
+            name="customDiagramType">
+      </diagramType>
+   </extension>
+      <!-- Helper method to allow external edit for diagrams. i.e. Delete, Copy, etc.. -->
+   <extension
+         id="customDiagramHelper"
+         name="%customDiagramHelper"
+         point="org.teiid.designer.ui.diagramHelper">
+      <class
+         name="com.metamatrix.modeler.diagram.ui.custom.CustomDiagramHelper"
+         diagramType="customDiagramType">
+      </class>
+   </extension>
+   <!-- Helper method to allow external edit for objects. i.e. Delete, Copy, etc.. -->
+   <extension
+         id="relationalObjectEditHelper"
+         name="%relationalObjectEditHelper"
+         point="org.teiid.designer.ui.modelObjectEditHelper">
+      <class
+        name="com.metamatrix.modeler.diagram.ui.actions.RelationalObjectEditHelper">
+      </class>
+   </extension>
+<!-- Helper method to allow external edit for objects. i.e. Delete, Copy, etc.. -->
+   <extension
+         id="diagramUiNewModelObjectHelper"
+         name="%diagramUiNewModelObjectHelper"
+         point="org.teiid.designer.core.newModelObjectHelper">
+      <class
+        name="com.metamatrix.modeler.diagram.ui.util.DiagramUiNewModelObjectHelper">
+      </class>
+   </extension>
+
+</plugin>

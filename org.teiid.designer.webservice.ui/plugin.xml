@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+    
+<!-- Web Services New Model Wizard Contributor -->
+   <extension
+         id="webServiceModelWizard"
+         name="%webServiceModelWizard"
+         point="org.teiid.designer.ui.newModelWizardContributor">
+      <class
+            name="com.metamatrix.modeler.internal.webservice.ui.wizard.WebServiceModelContributor"
+            icon="platform:/plugin/org.teiid.designer.ui/icons/full/ctool16/newmodel_wiz.gif">
+      </class>
+      <metamodelDescriptorType
+            name="http://www.metamatrix.com/metamodels/WebService"
+            isPhysical="false"
+            isVirtual="true">
+      </metamodelDescriptorType>
+   </extension>
+<!-- Actions contributed to the object/model generation -->
+   <extension
+		id="GenerateWebServiceModelAction2"
+		name="%generateWebServiceModelAction2.name"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="com.metamatrix.modeler.webservice.ui.actions.GenerateWebServiceModelAction2"
+         label="%generateWebServiceModelAction2.label">
+      </specialAction>
+   </extension>
+
+<!-- Context Help Infopops -->
+	<extension point="org.eclipse.help.contexts">
+		<contexts file="helpContexts.xml"  />
+	</extension>
+<extension
+       point="org.eclipse.ui.views">
+    <category
+          id="webservice.ui.advisor"
+          name="%advisorViewCategory"/>
+ </extension>
+
+<!-- Special IMarker used to show VDB execution errors -->
+   <extension
+      id="vdbExecutionMarker" 
+      point="org.eclipse.core.resources.markers" 
+      name="%vdbExecutionMarker.name">
+      <super type="org.eclipse.core.resources.problemmarker"/>
+      <attribute name="ValidationCode" />
+      <attribute name="vdbPath" />
+      <persistent value="true"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            name="%wsdlFileSystemImportWizard.name"
+            icon="icons/full/ctool16/import_wsdl.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.internal.webservice.ui.wizard.WsdlFileSystemImportWizard"
+            id="wsdlFileSystemImportWizard">
+         <description>
+            %wsdlFileSystemImportWizard.description
+         </description>
+      </wizard>
+   </extension>
+
+   <extension
+         id="operationEditorPage"
+         point="org.teiid.designer.ui.modelEditorPage">
+      <class
+            name="com.metamatrix.modeler.webservice.ui.editor.OperationEditorPage"
+            order="5"
+            tabName="%operationEditor.tabName"/>
+   </extension>
+   <extension
+         id="operationObjectEditorPage"
+         point="org.teiid.designer.ui.modelObjectEditorPage">
+      <class
+            name="com.metamatrix.modeler.webservice.ui.editor.OperationObjectEditorPage">
+      </class>
+   </extension>
+   <!-- Helper method to allow external edit for objects. i.e. Delete, Copy, etc.. -->
+   <extension
+         id="webServiceObjectEditHelper"
+         name="%webServiceObjectEditHelper"
+         point="org.teiid.designer.ui.modelObjectEditHelper">
+      <class
+        name="com.metamatrix.modeler.webservice.ui.actions.WebServiceObjectEditHelper">
+      </class>
+   </extension>
+
+</plugin>
