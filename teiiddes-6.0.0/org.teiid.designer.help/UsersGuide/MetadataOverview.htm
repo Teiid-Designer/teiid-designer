@@ -1,0 +1,196 @@
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<style type="text/css">
+<!--
+.style1 {
+	color: #FF0000;
+	font-weight: bold;
+}
+-->
+</style>
+<body>
+<p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<hr>
+<p class="maintitle_b24">Metadata Overview </p>
+
+<ul class="small_toc_item">
+  <li><a href="#whatIsMetadata">What is Metadata ?</a></li>
+  <li><a href="#editingMetadata">Editing Metadata vs. Editing Data</a></li>
+  <li><a href="#metadataModels">Metadata Models </a></li>
+  <li><a href="#businessMetadata">Business and Technical Metadata</a></li>
+  <li><a href="#designtimeRuntimeMetadata">Design-Time and Runtime Metadata </a></li>
+  <li><a href="#sourceAndViewMetadata">Source and View Metadata </a>
+    <ul>
+      <li><a href="#modelingSourceMetadata">Modeling Your Source Metadata</a></li>
+      <li><a href="#modelingViewMetadata">Modeling Your View Metadata</a></li>
+      <li><a href="#modelingMetadataTransformations">Modeling Metadata Transformations</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p><span class="subtitle_b16"><a name="whatIsMetadata"></a>What is Metadata? </span></p>
+<p><strong>Metadata</strong> is <span class="style1">data about data</span>. A piece of metadata, called a <strong>meta object</strong> in the   <strong>Designer</strong>, contains information about a specific information structure, irrespective of whatever individual data fields that may comprise that structure.</p>
+<p>Let&rsquo;s use the example of a very basic database, an address book. Within your address book you certainly have a field or column for the ZIP code (or postal code number). Assuming that the address book services addresses within the United States, you can surmise the following about the column or field for the ZIP code:</p>
+<ul>
+  <li>Named ZIPCode</li>
+  <li>Numeric</li>
+  <li>A string</li>
+  <li>Nine characters long</li>
+  <li>Located in the StreetAddress table.</li>
+  <li>Comprised of two parts: The first five digits represent the five ZIP code numbers, the final four represent the ZIP Plus Four digits if available, or 0000 if not.</li>
+  <li>Formatted only in integer numeric characters. Errors will result if formatted as 631410.00 or 6314q0000.<br>
+  </li>
+</ul>
+<p>This definition represents metadata about the ZIP code data in the address book database. It abstracts information from the database itself and becomes useful to describe the content of your enterprise information systems and to determine how a column in one enterprise information source relates to another, and how those two columns could be used together for a new purpose.<br>
+  </p>
+<p>You can think of this metadata in several contexts:</p>
+<ul>
+  <li> What information does the metadata contain? (see<a href="#businessMetadata"><strong> Business and Technical Metadata</strong></a>)</li>
+  <li>What data does the metadata represent? (see <a href="#sourceAndViewMetadata"><strong>Source and View Metadata</strong></a>)</li>
+  <li>How will my organization use and manage this metadata? (see <a href="#designtimeRuntimeMetadata"><strong>Design-Time and Runtime Metadata</strong></a>)</li>
+</ul>
+
+<p><span class="subtitle_b16"><a name="editingMetadata"></a>Editing Metadata vs. Editing Data</span></p>
+<p>The  <strong>Designer</strong> helps you to create and describe an abstract graphic representation of your data structure of your data in the original data sources. It also describes whether those data sources are composed of Relational databases, text files, data streams, legacy database systems, or some other information type.</p>
+<p>The  <strong>Designer</strong> allows you to create, edit, and link these graphically-represented meta objects that are really a description of your data, and not the data itself. </p>
+<p>So when this documentation describes the process of creating, deleting, or editing these meta objects, <em><strong>remember</strong></em> that you are not, in fact, modifying the underlying data.</p>
+
+<p><span class="subtitle_b16"><a name="metadataModels"></a>Metadata Models </span><br>
+  <br>
+  A <strong>metadata model</strong> represents a collection of metadata information that describes a complete structure of data.</p>
+<p>In a <a href="MetadataOverview.htm">previous example</a> we described the field ZIPCode as a <strong>metadata object </strong>in an address book database.. This <strong>meta object</strong> represents a single distinct bit of metadata information. We alluded to its parent table, StreetAddress. These<strong> meta objects</strong>, and others that would describe the other tables and columns within the database, would all combine to form a <strong>Source Metadata </strong>model for whichever enterprise information system hosts all the objects.</p>
+<p>You can have <strong>Source Models</strong> within your collection of <strong>metadata models</strong>. These model physical data storage locations. You can also have<strong> View Models</strong>, which model the business view of the data. Each contains one type of metadata or another. For more information about difference between Source and View metadata, see &ldquo;<a href="#sourceAndViewMetadata"><strong>Source and View Metadata</strong></a>.&rdquo;<br>
+</p>
+<blockquote>
+  <p><span class="note">NOTE:	For more information about using models as you model your metadata, see <a href="ModelingYourData.htm">Modeling Your Metadata</a> and<a href="Models1001.htm"> Models 101 </a></span></p>
+</blockquote>
+
+<p><span class="subtitle_b16"><a name="businessMetadata"></a>Business and Technical Metadata </span></p>
+<p>Metadata can include different types of information about a piece of data.</p>
+<ul>
+  <li><strong>Technical metadata</strong> describes the information required to access the data, such as where the data resides or the structure of the data in its native environment.<br>
+  </li>
+  <li><strong>Business metadata</strong> details other information about the data, such as keywords related to the meta object or notes about the meta object.<br>
+  </li>
+</ul>
+<p>Note that the terms &ldquo;<strong>technical</strong>&rdquo; and &ldquo;<strong>business</strong>&rdquo; <strong>metadata</strong> refer to the content of the metadata, namely what type of information is contained in the metadata. Don&rsquo;t confuse these with the terms &ldquo;physical&rdquo; and &ldquo;view&rdquo; metadata that indicate what the metadata represents. For more information, see &ldquo;<a href="#sourceAndViewMetadata"><strong>Source and View Metadata</strong></a>.&rdquo;</p>
+<p class="subtitle_b14">Technical Metadata</p>
+<blockquote>
+  <p>Technical metadata represents information that describes how to access the data in its original native data storage. Technical metadata includes things such as datatype, the name of the data in the enterprise information system, and other information that describes the way the native enterprise information system identifies the meta object.</p>
+  <p>Using our example of an address book database, the following represent the technical metadata we know about the ZIP code column:</p>
+  <ul>
+    <li>Named ZIPCode.<br>
+    </li>
+    <li>Nine characters long.<br>
+    </li>
+    <li>A string.<br>
+    </li>
+    <li>Located in the StreetAddress table.<br>
+    </li>
+    <li>Uses SQL Query Language<br>
+    </li>
+  </ul>
+  <p>These bits of information describe the data and information required to access and process the data in the enterprise information system. </p>
+</blockquote>
+<p><span class="subtitle_b14">Business Metadata</span></p>
+<blockquote>
+  <p>Business metadata represents additional information about a piece of data, not necessarily related to its physical storage in the enterprise information system or data access requirements. It can also  represent descriptions, business rules, and other additional information about a piece of data.</p>
+  <p>Continuing with our example of the ZIP Code column in the address book database, the following represents business metadata we may know about the ZIP code:</p>
+  <ul>
+    <li>The first five characters represent the five ZIP code numbers, the final four represent the ZIP Plus Four digits if available, or 0000 if not.<br>
+    </li>
+    <li>The application used to populate this field in the database strictly enforces the integrity of the data format.<br>
+    </li>
+  </ul>
+  <p>Although the first might seem technical, it does not directly relate to the physical storage of the data. It represents a business rule applied to the contents of the column, not the contents themselves.</p>
+  <p>The second, of course, represents some business information about the way the column was populated. This information, although useful to associate with our definition of the column, does not reflect the physical storage of the data.</p>
+</blockquote>
+
+<p><span class="subtitle_b16"><a name="designtimeRuntimeMetadata"></a>Design-Time and Runtime Metadata </span></p>
+<p>Teiid software distinguishes between design-time metadata and run-time metadata. This distinction becomes important if you use the Teiid Server. Design-time data is laden with details and representations that help the user understand and efficiently organize metadata. Much of that detail is unnecessary to the underlying system that runs the Virtual Database that you will create. Any information that is not absolutely necessary to running the Virtual Database is stripped out of the run-time metadata to ensure maximum system performance.</p>
+<p><span class="subtitle_b14">Design-Time Metadata</span></p>
+<blockquote>
+  <p>Design-time metadata refers to data within the Teiid Designer or your local directory that you have created or have imported. You can model this metadata in the Designer, adding <strong>Source</strong> and <strong>View</strong> metadata.</p>
+</blockquote>
+<p class="body14"><strong><span class="subtitle_b14">Runtime Metadata</span></strong></p>
+<blockquote>
+  <p>Once you have adequately modeled your enterprise information systems, including the necessary technical metadata that describes the physical structure of your sources, you can use the metadata for data access.</p>
+  <p>To prepare the metadata for use in the Teiid Server, you take a snapshot of a metadata model for the Teiid Server to use when resolving queries from your client applications. This run-time metadata represents a static version of design-time metadata you created or imported. This snapshot is in the form of a <a href="VdbSummary.htm"><strong>Virtual Database</strong></a> definition, or <strong>VDB</strong>. </p>
+  <p>As you create this <strong>runtime metadata</strong>, the  Designer:</p>
+  <ul>
+    <li>derives the runtime metadata from a consistent set of metadata models.</li>
+    <li>creates a subset of design-time metadata, focusing on the technical metadata that describes the access to underlying enterprise information systems.</li>
+    <li>optimizes runtime metadata for data access performance.</li>
+  </ul>
+  <p>You can continue to work with the design-time metadata, but once you have created a runtime metadata model, it remains static.</p>
+</blockquote>
+
+<p><span class="subtitle_b16"><a name="sourceAndViewMetadata"></a>Source and View Metadata  </span></p>
+<p>In addition to the distinction between business and technical metadata, you should know the difference between <strong>Source Metadata</strong> and <strong>View Metadata</strong>. </p>
+<p><em><strong>Source and View metadata refer to what the metadata represents, not its content.</strong></em></p>
+<p><strong>Source Metadata</strong> directly represents metadata for an enterprise information system and captures exactly where and how the data is maintained. Source Metadata sounds similar to technical metadata, but Source Metadata can contain both technical and business metadata. When you model Source Metadata, you are modeling the data that your enterprise information systems contain.</p>
+<p><strong>View Metadata</strong>, on the other hand, represent tailored views that <strong>transform</strong> the <strong>Source Metadata</strong> into the terminology and domain of different applications. <strong>View Metadata</strong>, too, can contain both <a href="#businessMetadata">technical and business metadata</a>. When you model <strong>View Metadata</strong>, you&rsquo;re modeling the data as your applications (and your enterprise) ultimately use it.</p>
+
+<p><span class="subtitle_b16"><a name="modelingSourceMetadata"></a>Modeling Your Source Metadata</span></p>
+<p>When you model the <strong>Source Metadata</strong> within your enterprise information systems, you capture some detailed information, including:</p>
+<ul>
+  <li>Identification of datatypes</li>
+  <li>Storage formats</li>
+  <li>Constraints</li>
+  <li>Source-specific locations and names</li>
+</ul>
+<p>The <strong>Source Metadata</strong> captures this detailed technical metadata to provide a map of the data, the location of the data, and how you access it.</p>
+<p>This collection of <strong>Source Metadata</strong> comprises a direct mapping of the information sources within your enterprise. If you use the Teiid Server for information integration, this technical metadata plays an integral part in query resolution.</p>
+<p>For example, our ZIPCode column and its parent table StreetAddress map directly to fields within our hypothetical address book database.<br>
+  <br>
+  To extend our example, we might have a second source of information, a comma-separated text file provided by a marketing research vendor. This text file can supply additional demographic information based upon address or ZIP code. This text file would represent another EIS, and the meta objects in its Source Model would describe each comma-separated value.</p>
+
+<p><span class="subtitle_b16"><a name="modelingViewMetadata"></a>Modeling Your View Metadata</span></p>
+<p>When you create<strong> View Metadata</strong>, you are not describing the nature of your physical data storage. Instead, you describe the way your enterprise uses the information in its day-to-day operations.<br>
+  <strong>View Metadata</strong> derives its classes and attributes from other metadata. You can derive <strong>View Metadata </strong>from <strong>Source Metadata</strong> that describes the ultimate sources for the metadata or even from other <strong>View Metadata</strong>. However, when you model <strong>View Metadata</strong>, you create special &ldquo;views&rdquo; on your existing enterprise information systems that you can tailor to your business use or application expectations. This<strong> View Metadata </strong>offers many benefits:</p>
+<ul>
+  <li>You can expose only the information relevant to an application. The application uses this <strong>View Metadata</strong> to resolve its queries to the ultimate physical data storage.</li>
+  <li>You can add content to existing applications that require different views of the data by adding the <strong>View Metadata</strong> to the existing <strong>View Metadata </strong>that application uses. You save time and effort since you do not have to create new models nor modify your existing applications.</li>
+  <li>Your applications do not need to refer to specific physical enterprise information systems, offering flexibility and interchangeability. As you change sources for information, you do not have to change your end applications.</li>
+  <li>The <strong>View Metadata</strong> models document the various ways your enterprise uses the information and the different terminology that refers to that information. They do so in a central location.<br>
+  </li>
+</ul>
+<p>Our example enterprise information sources, the address book database, and the vendor-supplied comma-delimited text file, reside in two different native storage formats and therefore have two Source Metadata models. However, they can represent one business need: a pool of addresses for a mass mailing.</p>
+<p>By creating a<strong> View Metadata</strong> model, we could accurately show that this single View Table, the AddressPool, contains information from the two enterprise information systems. The <strong>View Metadata</strong> model not only shows from where it gets the information, but also the SQL operations it performs to select its information from its source models.</p>
+<p>This <strong>View Metadata</strong> can not only reflect and describe how your organization uses that information, but, if your enterprise uses the Teiid Server, your applications can use the <strong>View Metadata</strong> to resolve queries.</p>
+<p>To create this <strong>View Metadata</strong>, you create a view and define a <em><strong>transformation</strong></em> for that view, a special query that enables you to select information from the source (or even other view) metadata models. For more information, see &ldquo;<strong>Modeling Transformations.</strong>&rdquo;</p>
+
+<p><span class="subtitle_b16"><a name="modelingMetadataTransformations"></a>Modeling Metadata Transformations </span></p>
+<p class="subtitle_b14">Metadata Transformations </p>
+<blockquote>
+  <p>By modeling View Metadata, you can illustrate the business view of your enterprise information sources. View Metadata models not only describe that business view, but also illustrate how the meta objects within the View Metadata models derive their information from other metadata models.</p>
+  <p>Let&rsquo;s return to the example of our address book database and the vendor&rsquo;s comma-separated list. We want to generate the View Metadata model, Address Pool, from these enterprise information systems.<br>
+    <img src="images/views/AddressPoolTransformation.jpg" width="236" height="301" hspace="20" vspace="10"></p>
+  <p>The transformation that joins these metadata models to create the virtual Address Pool metadata model contains a SQL query, called a union, that determines what information to draw from the source metadata and what to do with it. </p>
+  <p>The resulting Address Pool contains not only the address information from our Address Book database, but also that from our vendor-supplied text file.</p>
+</blockquote>
+<p class="subtitle_b14">SQL in Transformations </p>
+<blockquote>
+  <p>Transformations contain SQL queries that SELECT the appropriate attributes from the information sources. </p>
+  <p>For example, from the sources the transformation could select relevant address columns, including first name, last name, street address, city, state, and ZIP code. Although the metadata models could contain other columns and tables, such as phone number, fax number, e-mail address, and Web URL, the transformation acts as a filter and populates the Address Pool metadata model with only the data essential to building our Address Pool. </p>
+  <p>You can add other SQL logic to the transformation query to transform the data information. For example, the address book database uses a nine-character string that represents the ZIP Plus Four. The transformation could perform any SQL-supported logic upon the ZIPCode column to substring this information into the format we want for the Address Pool View metadata model.</p>
+</blockquote>
+<p class="subtitle_b14">Mapping XML Transformations  </p>
+<blockquote>
+  <p>When you model View Metadata, you can create a View XML Document model. This View Document lets you select information from within your other data sources, just like a regular View Metadata model, but you can also map the results to tags within an XML document.</p>
+  <p><img src="images/views/AddressPoolXMLTransformation.jpg" width="304" height="301" hspace="20" vspace="10"></p>
+  <p>In this example, the Address Pool View Metadata model still selects its information from the Address Book Database and the Vendor Text File, but it also maps the resulting columns into tags in the Address XML document.</p>
+</blockquote>
+
+<p class="subtitle_b16">Related Topics</p>
+<ul><li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr>
+<p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
+</body>

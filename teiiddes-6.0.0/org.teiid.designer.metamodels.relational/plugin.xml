@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+    
+<!--
+   	Each extension below represents a single metamodel.  Each metmodel is
+   	registered using under the specified <uri> value which must be the same
+   	eNS_URI value defined in the EPackage class for that metamodel.
+   -->
+   <extension
+         id="relational"
+         name="%metamodelName"
+         point="org.teiid.designer.core.metamodel">
+      <uri>
+         http://www.metamatrix.com/metamodels/Relational
+      </uri>
+      <alternateUri>
+         mtkplugin:///com.metamatrix.metamodels.Relational
+      </alternateUri>
+      <rootEntityClass
+            name="com.metamatrix.metamodels.relational.Catalog">
+      </rootEntityClass>
+      <rootEntityClass
+            name="com.metamatrix.metamodels.relational.Schema">
+      </rootEntityClass>
+      <rootEntityClass
+            name="com.metamatrix.metamodels.relational.BaseTable">
+      </rootEntityClass>
+      <rootEntityClass
+            name="com.metamatrix.metamodels.relational.View">
+      </rootEntityClass>
+      <rootEntityClass
+            name="com.metamatrix.metamodels.relational.Index">
+      </rootEntityClass>
+      <rootEntityClass
+            name="com.metamatrix.metamodels.relational.Procedure">
+      </rootEntityClass>
+      <rootEntityClass
+            name="com.metamatrix.metamodels.relational.LogicalRelationship">
+      </rootEntityClass>
+      <properties
+            createAsPhysical="true"
+            requiresProxies="false"
+            participatoryOnly="false"
+            createAsVirtual="true"
+            supportsDiagrams="true"
+            supportsExtension="true">
+      </properties>
+      <allowableModelType>
+      	PHYSICAL
+      </allowableModelType>
+      <allowableModelType>
+      	VIRTUAL
+      </allowableModelType>
+      <packageClass
+            name="com.metamatrix.metamodels.relational.RelationalPackage">
+      </packageClass>
+      <adapterClass
+            name="com.metamatrix.metamodels.relational.provider.RelationalItemProviderAdapterFactory">
+      </adapterClass>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.metamatrix.com/metamodels/Relational"
+            class="com.metamatrix.metamodels.relational.RelationalPackage">
+      </package>
+   </extension>
+   
+   
+<!-- MetamodelAspect extensions -->
+   <extension
+         id="relationalUmlAspect"
+         point="org.teiid.designer.core.umlDiagramAspect">
+      <metamodelExtensionID>
+         relational
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.metamodels.relational.aspects.uml.RelationalUmlAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+   <extension
+         id="relationalValidationAspect"
+         point="org.teiid.designer.core.validationAspect">
+      <metamodelExtensionID>
+         relational
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.metamodels.relational.aspects.validation.RelationalValidationAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+   <extension
+         id="relationalSqlAspect"
+         point="org.teiid.designer.core.sqlAspect">
+      <metamodelExtensionID>
+         relational
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.metamodels.relational.aspects.sql.RelationalSqlAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+<!-- EObject Matcher extensions -->
+   <extension
+         id="relationalMatcherFactory"
+         point="org.teiid.designer.core.eobjectMatcherFactory">
+      <class
+            name="com.metamatrix.metamodels.relational.compare.RelationalMatcherFactory">
+      </class>
+   </extension>
+<!-- Assocation extensions -->
+   <extension
+         id="foreignKeyAssociationProvider"
+         point="org.teiid.designer.core.associationProvider">
+      <providerClass
+            name="com.metamatrix.metamodels.relational.provider.ForeignKeyAssociationProvider">
+      </providerClass>
+   </extension>
+<!-- This extension defines the Relational Modeling Preferences -->
+   <extension
+         id="relationalPreferences"
+         point="org.teiid.designer.core.modelValidation">
+      <preference
+            toolTip="Column length missing for string type attrutes ?"
+            name="missingColumnLength"
+            label="%missingColumnLength"
+            default="warning"
+            category="Relational">
+      </preference>
+      <preference
+            toolTip="Column precision missing for numeric type attrutes ?"
+            name="missingColumnPrecision"
+            label="%missingColumnPrecision"
+            default="warning"
+            category="Relational">
+      </preference>      
+      <preference
+            toolTip="Columns of the type integer ?"
+            name="integerDatatype"
+            label="%integerDatatype"
+            default="warning"
+            category="Relational">
+      </preference>
+      <preference
+            toolTip="Sibling nameInSource values the same ?"
+            name="siblingNameInSource"
+            label="%siblingNameInSource"
+            default="ignore"
+            category="Relational">
+      </preference>
+      <preference
+            toolTip="Indexes with columns from more than one table.  Many relational database management systems don't allow such indexes."
+            name="crossTableIndexes"
+            label="%crossTableIndexes"
+            default="warning"
+            category="Relational">
+      </preference>
+	  <preference
+            toolTip="Validate empty transformations ?"
+            name="emptyTransformations"
+            label="%emptyTransformations"
+            default="error"
+            category="Relational">
+      </preference>
+   </extension>
+
+</plugin>

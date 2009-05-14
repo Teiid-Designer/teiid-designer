@@ -1,0 +1,105 @@
+(object Petal
+    version    	43)
+
+
+(list Attribute_Set
+	    (object Attribute
+		tool       	"Ecore"
+		name       	"default__Category"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"packageName"
+			value      	"")
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"nsPrefix"
+			value      	"")
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"nsURI"
+			value      	"")
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"basePackage"
+			value      	"")
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"prefix"
+			value      	"")))
+	    (object Attribute
+		tool       	"Ecore"
+		name       	"default__Class"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"classifierName"
+			value      	"")))
+	    (object Attribute
+		tool       	"Ecore"
+		name       	"default__Operation"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"operationName"
+			value      	"")))
+	    (object Attribute
+		tool       	"Ecore"
+		name       	"default__Attribute"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"attributeName"
+			value      	"")
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isTransient"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isVolatile"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isChangeable"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isUnsettable"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isUnique"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isID"
+			value      	FALSE)))
+	    (object Attribute
+		tool       	"Ecore"
+		name       	"default__Role"
+		value      	(list Attribute_Set
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"referenceName"
+			value      	"")
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isTransient"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isVolatile"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isChangeable"
+			value      	TRUE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isUnsettable"
+			value      	FALSE)
+		    (object Attribute
+			tool       	"Ecore"
+			name       	"isResolveProxies"
+			value      	TRUE))))

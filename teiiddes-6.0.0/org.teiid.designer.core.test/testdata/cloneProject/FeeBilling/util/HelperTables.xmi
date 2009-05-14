@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:relational="http://www.metamatrix.com/metamodels/Relational" xmlns:transformation="http://www.metamatrix.com/metamodels/Transformation">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:bd18ddc0-6dac-1057-a12b-d5e6d76ba63c" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="VIRTUAL" ProducerName="Teiid Designer" ProducerVersion="5.0">
+    <modelImports xmi:uuid="mmuuid:fe68e880-6eb8-1057-a12b-d5e6d76ba63c" name="gpao" modelLocation="../../DCVirtualHub/resource/DCParticipantODS/view/gpao.xmi" uuid="mmuuid:dc9caec0-f5e6-1043-9020-c9bec7c69521" modelType="VIRTUAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>
+    <modelImports xmi:uuid="mmuuid:839b9ec0-6dbb-1057-a12b-d5e6d76ba63c" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
+  </mmcore:ModelAnnotation>
+  <diagram:DiagramContainer xmi:uuid="mmuuid:23426e40-6dad-1057-a12b-d5e6d76ba63c">
+    <diagram xmi:uuid="mmuuid:23426e41-6dad-1057-a12b-d5e6d76ba63c" type="packageDiagramType" target="mmuuid/bd18ddc0-6dac-1057-a12b-d5e6d76ba63c">
+      <diagramEntity xmi:uuid="mmuuid:ffe66e80-c6a1-1057-983c-d6b020ccc789" modelObject="mmuuid/620ac484-7ce2-1057-a12b-d5e6d76ba63c" xPosition="10" yPosition="10"/>
+    </diagram>
+    <diagram xmi:uuid="mmuuid:61d338c0-7ced-1057-a12b-d5e6d76ba63c" type="transformationDiagramType" target="mmuuid/620ac484-7ce2-1057-a12b-d5e6d76ba63c">
+      <diagramEntity xmi:uuid="mmuuid:626bcf40-7ced-1057-a12b-d5e6d76ba63c" name="ADV_PARTICIPANTS" modelObject="mmuuid/620ac484-7ce2-1057-a12b-d5e6d76ba63c" xPosition="30" yPosition="50"/>
+      <diagramEntity xmi:uuid="mmuuid:626bcf41-7ced-1057-a12b-d5e6d76ba63c" name="T" modelObject="mmuuid/4831f141-7ced-1057-a12b-d5e6d76ba63c" xPosition="253" yPosition="50"/>
+      <diagramEntity xmi:uuid="mmuuid:15257d40-7d78-1057-a12b-d5e6d76ba63c" xPosition="303" yPosition="50">
+        <modelObject href="../../DCVirtualHub/resource/DCParticipantODS/view/gpao.xmi#mmuuid/11a4a446-5550-1055-8b1e-ff20fd368e89"/>
+      </diagramEntity>
+      <diagramEntity xmi:uuid="mmuuid:15be13c0-7d78-1057-a12b-d5e6d76ba63c" xPosition="521" yPosition="50">
+        <modelObject href="../../DCVirtualHub/resource/DCParticipantODS/view/gpao.xmi#mmuuid/264f6ac6-081f-1055-bd0c-cb94db0a943a"/>
+      </diagramEntity>
+      <diagramEntity xmi:uuid="mmuuid:1656aa40-7d78-1057-a12b-d5e6d76ba63c" xPosition="750" yPosition="50">
+        <modelObject href="../../DCVirtualHub/resource/DCParticipantODS/view/gpao.xmi#mmuuid/78ca1686-0818-1055-bd0c-cb94db0a943a"/>
+      </diagramEntity>
+    </diagram>
+  </diagram:DiagramContainer>
+  <mmcore:AnnotationContainer xmi:uuid="mmuuid:ad304440-6daf-1057-a12b-d5e6d76ba63c"/>
+  <transformation:TransformationContainer xmi:uuid="mmuuid:ad304441-6daf-1057-a12b-d5e6d76ba63c">
+    <transformationMappings xsi:type="transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:4831f141-7ced-1057-a12b-d5e6d76ba63c" outputs="mmuuid/620ac484-7ce2-1057-a12b-d5e6d76ba63c" target="mmuuid/620ac484-7ce2-1057-a12b-d5e6d76ba63c">
+      <helper xsi:type="transformation:SqlTransformation" xmi:uuid="mmuuid:4831f142-7ced-1057-a12b-d5e6d76ba63c" selectSql="CREATE VIRTUAL PROCEDURE&#xa;BEGIN&#xa;DECLARE date VARIABLES.UNKNOWN_DATE;&#xa;VARIABLES.UNKNOWN_DATE = {d'9999-12-31'};&#xa;SELECT CASE WHEN sc.mmuuid:504afe82-1762-1057-a828-c975752fff21 = VARIABLES.UNKNOWN_DATE THEN (SELECT mmuuid:7f5cf080-7d5a-1057-a12b-d5e6d76ba63c) ELSE sc.mmuuid:504afe82-1762-1057-a828-c975752fff21 END AS endDate, sc.mmuuid:504afe80-1762-1057-a828-c975752fff21 AS startDate, sc.mmuuid:4fb26804-1762-1057-a828-c975752fff21 AS IA_ID INTO #PARTICIPANTS FROM mmuuid:11a4a446-5550-1055-8b1e-ff20fd368e89 AS p, mmuuid:264f6ac6-081f-1055-bd0c-cb94db0a943a AS sc, mmuuid:78ca1686-0818-1055-bd0c-cb94db0a943a AS pa WHERE (p.mmuuid:c64a6800-1758-1057-a828-c975752fff21 = pa.mmuuid:c145fbc4-21f4-1057-a609-cb6d1f57db14) AND (pa.mmuuid:c0ad6540-21f4-1057-a609-cb6d1f57db14 = sc.mmuuid:4fb26804-1762-1057-a828-c975752fff21) AND (sc.mmuuid:4fb26802-1762-1057-a828-c975752fff21 = 104941) AND (p.mmuuid:c6e2fe82-1758-1057-a828-c975752fff21 = mmuuid:34bdcd00-c59f-1057-983c-d6b020ccc789);&#xa;SELECT #PARTICIPANTS.startDate, #PARTICIPANTS.endDate, TIMESTAMPDIFF(SQL_TSI_DAY, #PARTICIPANTS.startDate, #PARTICIPANTS.endDate) AS daysServiceFeeUsed, convert(#PARTICIPANTS.IA_ID, INTEGER) AS agreementID INTO #PARTICIPANTS_AND_DURATION FROM #PARTICIPANTS;&#xa;SELECT #PARTICIPANTS_AND_DURATION.startDate, convert(#PARTICIPANTS_AND_DURATION.endDate, date) AS endDate, convert(#PARTICIPANTS_AND_DURATION.daysServiceFeeUsed, integer) AS daysServiceFeeUsed, convert(#PARTICIPANTS_AND_DURATION.agreementID, integer) AS agreementID FROM #PARTICIPANTS_AND_DURATION;&#xa;END">
+        <nested xsi:type="transformation:SqlTransformation" xmi:uuid="mmuuid:4831f143-7ced-1057-a12b-d5e6d76ba63c" selectSql="CREATE VIRTUAL PROCEDURE&#xa;BEGIN&#xa;DECLARE date VARIABLES.UNKNOWN_DATE;&#xa;VARIABLES.UNKNOWN_DATE = {d'9999-12-31'};&#xa;SELECT CASE WHEN sc.END_DT = VARIABLES.UNKNOWN_DATE THEN (SELECT HelperTables.ADV_PARTICIPANTS.MY_DATE) ELSE sc.END_DT END AS endDate, sc.START_DT AS startDate, sc.INDIVIDUAL_AGREEMENT_ID AS IA_ID INTO #PARTICIPANTS FROM gpao.PLAN AS p, gpao.SERVICE_COMPONENT AS sc, gpao.PARTICIPANT_AGREEMENT AS pa WHERE (p.GROUP_AGREEMENT_ID = pa.PLAN_GROUP_AGREEMENT_ID) AND (pa.INDIVIDUAL_AGREEMENT_ID = sc.INDIVIDUAL_AGREEMENT_ID) AND (sc.TYPE_ID = 104941) AND (p.PLAN_NBR = HelperTables.ADV_PARTICIPANTS.PLAN_NUMBER_IN);&#xa;SELECT #PARTICIPANTS.startDate, #PARTICIPANTS.endDate, TIMESTAMPDIFF(SQL_TSI_DAY, #PARTICIPANTS.startDate, #PARTICIPANTS.endDate) AS daysServiceFeeUsed, convert(#PARTICIPANTS.IA_ID, INTEGER) AS agreementID INTO #PARTICIPANTS_AND_DURATION FROM #PARTICIPANTS;&#xa;SELECT #PARTICIPANTS_AND_DURATION.startDate, convert(#PARTICIPANTS_AND_DURATION.endDate, date) AS endDate, convert(#PARTICIPANTS_AND_DURATION.daysServiceFeeUsed, integer) AS daysServiceFeeUsed, convert(#PARTICIPANTS_AND_DURATION.agreementID, integer) AS agreementID FROM #PARTICIPANTS_AND_DURATION;&#xa;END"/>
+        <aliases xmi:uuid="mmuuid:94d15100-7d77-1057-a12b-d5e6d76ba63c" alias="p">
+          <aliasedObject href="../../DCVirtualHub/resource/DCParticipantODS/view/gpao.xmi#mmuuid/11a4a446-5550-1055-8b1e-ff20fd368e89"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:94d15101-7d77-1057-a12b-d5e6d76ba63c" alias="sc">
+          <aliasedObject href="../../DCVirtualHub/resource/DCParticipantODS/view/gpao.xmi#mmuuid/264f6ac6-081f-1055-bd0c-cb94db0a943a"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:94d15102-7d77-1057-a12b-d5e6d76ba63c" alias="pa">
+          <aliasedObject href="../../DCVirtualHub/resource/DCParticipantODS/view/gpao.xmi#mmuuid/78ca1686-0818-1055-bd0c-cb94db0a943a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:85d6b703-7de8-1057-a12b-d5e6d76ba63c" outputs="mmuuid/85d6b700-7de8-1057-a12b-d5e6d76ba63c"/>
+      <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:85d6b704-7de8-1057-a12b-d5e6d76ba63c" outputs="mmuuid/85d6b701-7de8-1057-a12b-d5e6d76ba63c"/>
+      <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:85d6b705-7de8-1057-a12b-d5e6d76ba63c" outputs="mmuuid/85d6b702-7de8-1057-a12b-d5e6d76ba63c"/>
+      <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:69e44280-e10f-1057-8c36-e244211f6b38" outputs="mmuuid/616d0340-e10e-1057-8c36-e244211f6b38"/>
+      <inputs href="../../DCVirtualHub/resource/DCParticipantODS/view/gpao.xmi#mmuuid/11a4a446-5550-1055-8b1e-ff20fd368e89"/>
+      <inputs href="../../DCVirtualHub/resource/DCParticipantODS/view/gpao.xmi#mmuuid/264f6ac6-081f-1055-bd0c-cb94db0a943a"/>
+      <inputs href="../../DCVirtualHub/resource/DCParticipantODS/view/gpao.xmi#mmuuid/78ca1686-0818-1055-bd0c-cb94db0a943a"/>
+    </transformationMappings>
+  </transformation:TransformationContainer>
+  <relational:Procedure xmi:uuid="mmuuid:620ac484-7ce2-1057-a12b-d5e6d76ba63c" name="ADV_PARTICIPANTS">
+    <parameters xmi:uuid="mmuuid:7f5cf080-7d5a-1057-a12b-d5e6d76ba63c" name="END_DATE_IN">
+      <type href="http://www.w3.org/2001/XMLSchema#date"/>
+    </parameters>
+    <parameters xmi:uuid="mmuuid:34bdcd00-c59f-1057-983c-d6b020ccc789" name="PLAN_NUMBER_IN" length="100">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </parameters>
+    <result xmi:uuid="mmuuid:4831f145-7ced-1057-a12b-d5e6d76ba63c" name="NewProcedureResult">
+      <columns xmi:uuid="mmuuid:85d6b700-7de8-1057-a12b-d5e6d76ba63c" name="startDate">
+        <type href="http://www.w3.org/2001/XMLSchema#date"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:85d6b701-7de8-1057-a12b-d5e6d76ba63c" name="endDate">
+        <type href="http://www.w3.org/2001/XMLSchema#date"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:85d6b702-7de8-1057-a12b-d5e6d76ba63c" name="daysServiceFeeUsed" precision="10">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:616d0340-e10e-1057-8c36-e244211f6b38" name="agreementID" precision="10">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+    </result>
+  </relational:Procedure>
+</xmi:XMI>

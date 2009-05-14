@@ -1,0 +1,147 @@
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<body>
+<p><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<hr>
+<p class="maintitle_b24">Create Model Objects </p>
+
+<p class="medium">You can create new model objects directly in the <strong><a href="ModelExplorer.htm">Model Explorer</a></strong> view,<a href="DiagramEditor.htm"> <strong>Diagram Editor</strong> </a>or <strong><a href="TableEditor.htm">Table Editor</a></strong> using the following actions:</p>
+<ul>
+  <li><strong><a href="#newChildAction"> New Child Action</a>    </strong>
+    <ul>
+      <li><a href="#newChildInExplorer">Create in Model Explorer</a></li>
+      <li><a href="#newChildInDiagram">Create in Diagram Editor</a> </li>
+      <li><a href="#newChildInTable">Create in Table Editor </a></li>
+    </ul>
+  </li>
+  <li><strong><a href="#newSiblingAction">New Sibling Action</a>    </strong>
+    <ul>
+
+      <li><a href="#newSiblingInExplorer">Create in Model Explorer</a></li>
+      <li><a href="#newSiblingInDiagram">Create in Diagram Editor </a></li>
+      <li><a href="#newSiblingInTable">Create in Table Editor </a></li>
+    </ul>
+  </li>
+  <li><strong><a href="#newAssociationAction">New Association
+    Action</a>    </strong>
+    <ul>
+      <li><a href="#newAssociationInExplorer">Create in Model Explorer</a></li>
+      <li><a href="#newAssociationInDiagram">Create in Diagram Editor</a></li>
+      <li><a href="#newAssociationInTable">Create in Table Editor  </a></li>
+    </ul>
+  </li>
+</ul>
+<p class="medium"> <strong>Designer</strong> constrains the types of  objects you can create based upon   the  object you select and the type of model that contains that object. You cannot, for example,  create a <strong>column</strong> attribute in a <strong>stored procedure</strong>, nor can you create a <strong>mapping class column</strong> in a Web service operation's <strong>output message</strong>. </p>
+
+<p class="subtitle_b16"><a name="newChildAction"></a>New Child Action </p>
+<p class="subtitle_b14"><a name="newChildInExplorer"></a>To create new child model objects objects in the<a href="ModelExplorer.htm"> <strong>Model Explorer</strong></a>:</p>
+<blockquote>
+  <p><strong>Step 1:</strong> Select the parent  object to which you want to add a child. For example, you   can add a package to a package or an attribute to a class. </p>
+  <p><strong>Step 2:</strong> Right-click on a container object. From the pop-up menu, select <strong>New Child</strong>.   You can now select the child object you would like to add.</p>
+  <p><BR>
+    &nbsp;<img src="images/views/NewChildActionInExplorer.jpg" width="515" height="250" border="1"></p>
+  <p><strong>Step 3:</strong> The new model object displays on the <strong>VDB Explorer</strong> view and is highlighted for renaming.</p>
+  <p align="left"><img src="images/views/RenameInExplorer.jpg" width="330" height="234" border="1"></p>
+</blockquote>
+<p><BR>
+</p>
+<p class="subtitle_b14"><a name="newChildInDiagram"></a>To create new child  model objects objects in the<a href="DiagramEditor.htm"><strong> Diagram Editor</strong></a>:</p>
+<blockquote>
+  <p><strong>Step 1:</strong> Select the parent  object to which you want to add a child. For example, you   can add a package to a package or an attribute to a class. </p>
+  <p><strong>Step 2:</strong> Right-click on a container object. From the pop-up menu, select <strong>New Child</strong>.   You can now select the child object you would like to add.</p>
+  <p><BR>
+    &nbsp;<img src="images/views/AddChildInDiagramEditor.jpg" width="555" height="172" border="1"></p>
+  <p><strong>Step 3:</strong> The new model object displays in the diagram and is highlighted for renaming.</p>
+  <p align="left"><img src="images/views/RenameInDiagramEditor.jpg" width="273" height="218" border="1"></p>
+</blockquote>
+<p class="subtitle_b14"><a name="newChildInTable"></a>To create new child  model objects in <a href="TableEditor.htm">Table Editor</a>:</p>
+<blockquote>
+  <p><strong>Step 1:</strong> Select the row for the parent  object to which you want to add a child. For example to add a column, click the <strong>Base Table</strong> tab and select base table row. </p>
+  <p><strong>Step 2:</strong> Right-click on a table row. From the pop-up menu, select <strong>New Child</strong>.   You can now select the child object you would like to add.</p>
+  <p><BR>
+    &nbsp;<img src="images/views/AddChildInTableEditor.jpg" width="555" height="223" border="1"></p>
+  <p><strong>Step 3:</strong> The selected tab in the <a href="TableEditor.htm">Table Editor </a>changes to the tab for the child object type, the new model object row is displayed  and the row's name table cell is highlighted for renaming.</p>
+  <p align="left"><img src="images/views/RenameInTableEditor.jpg" width="289" height="257" border="1"></p>
+</blockquote>
+
+<p class="subtitle_b16"><a name="newSiblingAction" id="newSiblingAction"></a>New Sibling Action </p>
+<p class="subtitle_b14"><a name="newSiblingInExplorer"></a>To create new sibling model  objects in the<a href="ModelExplorer.htm"> <strong>Model Explorer</strong></a>:</p>
+<blockquote>
+  <p><strong>Step 1:</strong> Select the   object to which you want to add a sibling. For example, you   can add a column sibling to a column. </p>
+  <p><strong>Step 2:</strong> Right-click on a  object. From the pop-up menu, select <strong>New Sibling </strong>.   You can now select the child object you would like to add.</p>
+  <p><BR>
+    &nbsp;<img src="images/views/NewSiblingActionInExplorer.jpg" width="536" height="304" border="1"></p>
+  <p><strong>Step 3:</strong> The new model object displays on the <strong>VDB Explorer</strong> view and is highlighted for renaming.</p>
+  <p align="left"><img src="images/views/AddSiblingInTableEditor.jpg" width="570" height="297" border="1"></p>
+</blockquote>
+<p><BR>
+</p>
+<p class="subtitle_b14"><a name="newSiblingInDiagram"></a>To create new sibling model  objects in the<a href="DiagramEditor.htm"> <strong>Diagram Editor </strong></a>:</p>
+<blockquote>
+  <p><strong>Step 1:</strong> Select the   object to which you want to add a sibling. For example, you   can add a column sibling to a column. </p>
+  <p><strong>Step 2:</strong> Right-click on a  object. From the pop-up menu, select <strong>New Sibling </strong>.   You can now select the child object you would like to add.</p>
+  <p><BR>
+    &nbsp;<img src="images/views/NewSiblingInDiagramEditor.jpg" width="598" height="259" border="1"></p>
+  <p><strong>Step 3:</strong> The new model object displays in the diagram and is highlighted for renaming.</p>
+  <p align="left"><img src="images/views/RenameInDiagramEditor.jpg" width="273" height="218" border="1"></p>
+</blockquote>
+<p class="subtitle_b14"><a name="newSiblingInTable"></a>To create new sibling model objects in <a href="TableEditor.htm">Table Editor</a>:</p>
+<blockquote>
+  <p><strong>Step 1:</strong> Select the   row for the object to which you want to add a sibling. For example, you   can add a column sibling to a column. </p>
+  <p><strong>Step 2:</strong> Right-click on a  object. From the pop-up menu, select <strong>New Sibling </strong>.   You can now select the child object you would like to add.</p>
+  <p><BR>
+    &nbsp;<img src="images/views/AddSiblingInTableEditor.jpg" width="570" height="297" border="1"></p>
+  <p><strong>Step 3:</strong> The new model object row is displayed  and the row's name table cell is highlighted for renaming.</p>
+  <p align="left"><img src="images/views/RenameInTableEditor.jpg" width="289" height="257" border="1"></p>
+</blockquote>
+<p align="left">&nbsp;</p>
+
+<p class="subtitle_b16"><a name="newAssociationAction" id="newAssociationAction"></a>New Association Action </p>
+<p class="subtitle_b14"><a name="newAssociationInExplorer" id="newAssociationInExplorer"></a>To create new association in the<a href="ModelExplorer.htm"> <strong>Model Explorer</strong></a>:</p>
+<blockquote>
+  <p><strong>Step 1:</strong> Select two objects you wish to association. For example, select columns in different base tables. </p>
+  <p><strong>Step 2:</strong> Right-click. From the pop-up menu, select <strong>New Association &gt; Foreign Key Relationship</strong>.</p>
+  <p><img src="images/views/NewFKAssociationInExplorer.jpg"
+   border="1"></p>
+  <p><strong>Step 3:</strong> The new relationship link is displayed in the diagram. </p>
+  <p><img src="images/views/NewFKLinkedInDiagram.jpg" border="1" ></p>
+</blockquote>
+<p class="subtitle_b14"><a name="newAssociationInDiagram" id="newAssociationInDiagram"></a>To create new association in the<a href="DiagramEditor.htm"> <strong>Diagram Editor </strong></a>:</p>
+<blockquote>
+  <p><strong>Step 1:</strong> Select two objects you wish to association. For example, select columns in different base tables. </p>
+  <p><strong>Step 2:</strong> Right-click. From the pop-up menu, select <strong>New Association &gt; Foreign Key Relationship</strong>.</p>
+  <p><img src="images/views/NewFKAssociationInDiagram.jpg" border="1"></p>
+  <p><strong>Step 3:</strong> The new relationship link is displayed in the diagram. The Column, Foreign Key, Primary Key reference properties are properly set on the selected columns, new primary key and new foreign key.</p>
+  <p><img src="images/views/NewFKLinkedInDiagram.jpg" border="1" ></p>
+  <p>OR</p>
+  <p><strong>Step 1:</strong> Select a column in  table.</p>
+  <p><strong>Step 2:</strong> Drag the column to another table and drag over a column and drop onto this column. The target column should highlight in Yellow.</p>
+  <p><img src="images/views/NewFKAssociationViaDND.jpg" border="1" > </p>
+  <p><strong>Step 3:</strong> The new relationship link is displayed in the diagram. The Column, Foreign Key, Primary Key reference properties are properly set on the selected columns, new primary key and new foreign key.</p>
+  <p><img src="images/views/NewFKLinkedInDiagram.jpg" border="1" ></p>
+</blockquote>
+<p class="subtitle_b14"><a name="newAssociationInTable" id="newAssociationInTable"></a>To create new association in the<a href="TableEditor.htm"> <strong>Table Editor </strong></a>:</p>
+<blockquote>
+  <p><strong>Step 1:</strong> Select two objects you wish to association. For example, select columns in different base tables. </p>
+  <p><strong>Step 2:</strong> Right-click. From the pop-up menu, select <strong>New Association &gt; Foreign Key Relationship</strong>.</p>
+  <p><img src="images/views/NewFKAssociationInTable.jpg"  border="1"></p>
+  <p><strong>Step 2:</strong> New Foreign Key and Primary Key objects will be added to the contents of their respective tabs in the Table Editor. The Column, Foreign Key, Primary Key reference properties are properly set on the selected columns, new primary key and new foreign key. </p>
+</blockquote>
+
+  <p align="left">&nbsp;</p>
+  <p class="subtitle_b16">Related Topics</p>
+<ul>
+  <li><a href="ModelExplorer.htm" class="medium">Model Explorer</a></li>
+  <li><a href="DiagramEditor.htm">Diagram Editor</a></li>
+  <li><a href="TableEditor.htm">Table Editor  </a></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr>
+<p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
+</body>

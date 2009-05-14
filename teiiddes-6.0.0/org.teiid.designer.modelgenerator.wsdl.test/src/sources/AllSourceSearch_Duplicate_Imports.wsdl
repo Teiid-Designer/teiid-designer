@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+    targetNamespace="java:i3.intel.search.wsdl"
+    xmlns:import1="java:i3.intel.search"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:tns="java:i3.intel.search.wsdl"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    name="myquery">
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="java:i3.intel.search" schemaLocation="./AllSourceSearch.xsd"/>
+            <xsd:import namespace="java:i3.intel.model" schemaLocation="./Entity.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="nextResponse">
+        <wsdl:part element="import1:searchOutcome" name="searchOutcome"/>
+    </wsdl:message>
+    <wsdl:message name="nextRequest">
+        <wsdl:part element="import1:nextResults" name="nextResults"/>
+    </wsdl:message>
+    <wsdl:message name="searchResponse">
+        <wsdl:part element="import1:searchOutcome" name="searchOutcome"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveSiteCodesRequest">
+        <wsdl:part element="import1:siteCodeRequest" name="siteCodeRequest"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveSiteCodesResponse">
+        <wsdl:part element="import1:siteCodeCollection" name="siteCodeCollection"/>
+    </wsdl:message>
+    <wsdl:message name="searchRequest">
+        <wsdl:part element="import1:searchArguments" name="searchArguments"/>
+    </wsdl:message>
+    <wsdl:message name="lookupResponse">
+        <wsdl:part element="import1:lookupResults" name="lookupResults"/>
+    </wsdl:message>
+    <wsdl:message name="lookupRequest">
+        <wsdl:part element="import1:lookup" name="lookup"/>
+    </wsdl:message>
+    <wsdl:message name="cancelRequest">
+        <wsdl:part element="import1:cancel" name="cancel"/>
+    </wsdl:message>
+    <wsdl:message name="cancelResponse">
+        <wsdl:part element="import1:cancelResponse" name="cancel"/>
+    </wsdl:message>
+    <wsdl:portType name="AllSourceSearchPort">
+        <wsdl:operation name="search">
+            <wsdl:input message="tns:searchRequest"/>
+            <wsdl:output message="tns:searchResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="next">
+            <wsdl:input message="tns:nextRequest"/>
+            <wsdl:output message="tns:nextResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveSiteCodes">
+            <wsdl:input message="tns:retrieveSiteCodesRequest"/>
+            <wsdl:output message="tns:retrieveSiteCodesResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="lookup">
+            <wsdl:input message="tns:lookupRequest"/>
+            <wsdl:output message="tns:lookupResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="cancel">
+            <wsdl:input message="tns:cancelRequest"/>
+            <wsdl:output message="tns:cancelResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="AllSourceSearchBinding" type="tns:AllSourceSearchPort">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="search">
+            <soap:operation soapAction=""/>
+            <wsdl:input>
+                <soap:body namespace="java:i3.intel.search.wsdl" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body namespace="java:i3.intel.search.wsdl" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="next">
+            <soap:operation soapAction=""/>
+            <wsdl:input>
+                <soap:body namespace="java:i3.intel.search.wsdl" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body namespace="java:i3.intel.search.wsdl" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveSiteCodes">
+            <soap:operation soapAction=""/>
+            <wsdl:input>
+                <soap:body namespace="java:i3.intel.search.wsdl" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body namespace="java:i3.intel.search.wsdl" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="lookup">
+            <soap:operation soapAction=""/>
+            <wsdl:input>
+                <soap:body namespace="java:i3.intel.search.wsdl" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body namespace="java:i3.intel.search.wsdl" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="cancel">
+            <soap:operation soapAction=""/>
+            <wsdl:input>
+                <soap:body namespace="java:i3.intel.search.wsdl" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body namespace="java:i3.intel.search.wsdl" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="AllSourceSearchService">
+        <wsdl:port binding="tns:AllSourceSearchBinding" name="AllSourceSearchPort">
+            <soap:address
+                location="http://i3flash.jitcalaska.net/ishop/webservice/service/AllSourceSearch"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

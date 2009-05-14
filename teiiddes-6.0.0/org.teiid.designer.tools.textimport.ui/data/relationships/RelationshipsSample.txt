@@ -1,0 +1,5 @@
+Relationship_1, Generic, BAD_PROJECT/PhysicalModels/P1/T1, Project_1/PhysicalModels/P1/T2, "First Description"
+Relationship_2, Generic, Project_1/PhysicalModels/P1/T2, Project_1/PhysicalModels/P1/T3, "Second Description"
+Relationship_3, Generic, Project_1/PhysicalModels/P1/T3, Project_1/PhysicalModels/P1/T4, "Third Description"
+Relationship_4, Generalization, Project_1/PhysicalModels/P1/T4, Project_1/PhysicalModels/P1/T5, "Fourth Description"
+Relationship_5, Project_1/ExistingRelModel/ExistingTypes/MyOwnRelationshipType, Project_1/PhysicalModels/P1/T5, Project_1/PhysicalModels/P1/T5, "Fourth Description"

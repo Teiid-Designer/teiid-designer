@@ -1,0 +1,738 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:jdbc="http://www.metamatrix.com/metamodels/JDBC" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:c05592c0-ff37-1045-9227-f224bf590486" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL" maxSetSize="1000" ProducerName="Teiid Designer" ProducerVersion="5.0">
+    <modelImports xmi:uuid="mmuuid:29f5a500-ff3b-1045-9227-f224bf590486" name="SimpleDatatypes-instance" modelLocation="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
+    <modelImports xmi:uuid="mmuuid:29f5a501-ff3b-1045-9227-f224bf590486" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
+  </mmcore:ModelAnnotation>
+  <Relational:Schema xmi:uuid="mmuuid:c22e9880-ff37-1045-9227-f224bf590486" name="BQT2" nameInSource="BQT2">
+    <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:c22e9881-ff37-1045-9227-f224bf590486" name="HUGEA" nameInSource="HUGEA">
+      <columns xmi:uuid="mmuuid:c6e40a40-ff37-1045-9227-f224bf590486" name="INTKEY" nameInSource="INTKEY" nativeType="NUMBER" fixedLength="true" precision="22" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c6e40a41-ff37-1045-9227-f224bf590486" name="STRINGKEY" nameInSource="STRINGKEY" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c6e40a42-ff37-1045-9227-f224bf590486" name="INTNUM" nameInSource="INTNUM" nativeType="NUMBER" fixedLength="true" precision="22" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c6e40a43-ff37-1045-9227-f224bf590486" name="STRINGNUM" nameInSource="STRINGNUM" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c6e40a44-ff37-1045-9227-f224bf590486" name="FLOATNUM" nameInSource="FLOATNUM" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c7c8ec00-ff37-1045-9227-f224bf590486" name="LONGNUM" nameInSource="LONGNUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c7c8ec01-ff37-1045-9227-f224bf590486" name="DOUBLENUM" nameInSource="DOUBLENUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c7c8ec02-ff37-1045-9227-f224bf590486" name="BYTENUM" nameInSource="BYTENUM" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c7c8ec03-ff37-1045-9227-f224bf590486" name="DATEVALUE" nameInSource="DATEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c7c8ec04-ff37-1045-9227-f224bf590486" name="TIMEVALUE" nameInSource="TIMEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c7c8ec05-ff37-1045-9227-f224bf590486" name="TIMESTAMPVALUE" nameInSource="TIMESTAMPVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c7c8ec06-ff37-1045-9227-f224bf590486" name="BOOLEANVALUE" nameInSource="BOOLEANVALUE" nativeType="NUMBER" fixedLength="true" precision="1" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c7c8ec07-ff37-1045-9227-f224bf590486" name="CHARVALUE" nameInSource="CHARVALUE" nativeType="CHAR" length="1" fixedLength="true">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c7c8ec08-ff37-1045-9227-f224bf590486" name="SHORTVALUE" nameInSource="SHORTVALUE" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c7c8ec09-ff37-1045-9227-f224bf590486" name="BIGINTEGERVALUE" nameInSource="BIGINTEGERVALUE" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c8bd1000-ff37-1045-9227-f224bf590486" name="BIGDECIMALVALUE" nameInSource="BIGDECIMALVALUE" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:c8bd1001-ff37-1045-9227-f224bf590486" name="OBJECTVALUE" nameInSource="OBJECTVALUE" nativeType="VARCHAR2" length="2048">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+    </tables>
+    <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:00968c40-ff38-1045-9227-f224bf590486" name="HUGEB" nameInSource="HUGEB">
+      <columns xmi:uuid="mmuuid:0363b600-ff38-1045-9227-f224bf590486" name="INTKEY" nameInSource="INTKEY" nativeType="NUMBER" fixedLength="true" precision="22" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:0457da00-ff38-1045-9227-f224bf590486" name="STRINGKEY" nameInSource="STRINGKEY" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:0457da01-ff38-1045-9227-f224bf590486" name="INTNUM" nameInSource="INTNUM" nativeType="NUMBER" fixedLength="true" precision="22" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:0457da02-ff38-1045-9227-f224bf590486" name="STRINGNUM" nameInSource="STRINGNUM" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:0457da03-ff38-1045-9227-f224bf590486" name="FLOATNUM" nameInSource="FLOATNUM" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:0457da04-ff38-1045-9227-f224bf590486" name="LONGNUM" nameInSource="LONGNUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:0457da05-ff38-1045-9227-f224bf590486" name="DOUBLENUM" nameInSource="DOUBLENUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:0457da06-ff38-1045-9227-f224bf590486" name="BYTENUM" nameInSource="BYTENUM" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:0457da07-ff38-1045-9227-f224bf590486" name="DATEVALUE" nameInSource="DATEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:0457da08-ff38-1045-9227-f224bf590486" name="TIMEVALUE" nameInSource="TIMEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:0457da09-ff38-1045-9227-f224bf590486" name="TIMESTAMPVALUE" nameInSource="TIMESTAMPVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:0457da0a-ff38-1045-9227-f224bf590486" name="BOOLEANVALUE" nameInSource="BOOLEANVALUE" nativeType="NUMBER" fixedLength="true" precision="1" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:0457da0b-ff38-1045-9227-f224bf590486" name="CHARVALUE" nameInSource="CHARVALUE" nativeType="CHAR" length="1" fixedLength="true">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:053cbbc0-ff38-1045-9227-f224bf590486" name="SHORTVALUE" nameInSource="SHORTVALUE" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:053cbbc1-ff38-1045-9227-f224bf590486" name="BIGINTEGERVALUE" nameInSource="BIGINTEGERVALUE" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:053cbbc2-ff38-1045-9227-f224bf590486" name="BIGDECIMALVALUE" nameInSource="BIGDECIMALVALUE" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:053cbbc3-ff38-1045-9227-f224bf590486" name="OBJECTVALUE" nameInSource="OBJECTVALUE" nativeType="VARCHAR2" length="2048">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+    </tables>
+    <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:3efe8000-ff38-1045-9227-f224bf590486" name="KEN" nameInSource="KEN">
+      <columns xmi:uuid="mmuuid:41cba9c0-ff38-1045-9227-f224bf590486" name="INTKEY" nameInSource="INTKEY" nativeType="NUMBER" fixedLength="true" precision="22" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:41cba9c1-ff38-1045-9227-f224bf590486" name="STRINGKEY" nameInSource="STRINGKEY" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:41cba9c2-ff38-1045-9227-f224bf590486" name="INTNUM" nameInSource="INTNUM" nativeType="NUMBER" fixedLength="true" precision="22" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:41cba9c3-ff38-1045-9227-f224bf590486" name="STRINGNUM" nameInSource="STRINGNUM" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:41cba9c4-ff38-1045-9227-f224bf590486" name="FLOATNUM" nameInSource="FLOATNUM" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:42bfcdc0-ff38-1045-9227-f224bf590486" name="LONGNUM" nameInSource="LONGNUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:42bfcdc1-ff38-1045-9227-f224bf590486" name="DOUBLENUM" nameInSource="DOUBLENUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:42bfcdc2-ff38-1045-9227-f224bf590486" name="BYTENUM" nameInSource="BYTENUM" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:42bfcdc3-ff38-1045-9227-f224bf590486" name="DATEVALUE" nameInSource="DATEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:42bfcdc4-ff38-1045-9227-f224bf590486" name="TIMEVALUE" nameInSource="TIMEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:42bfcdc5-ff38-1045-9227-f224bf590486" name="TIMESTAMPVALUE" nameInSource="TIMESTAMPVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:42bfcdc6-ff38-1045-9227-f224bf590486" name="BOOLEANVALUE" nameInSource="BOOLEANVALUE" nativeType="NUMBER" fixedLength="true" precision="1" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:42bfcdc7-ff38-1045-9227-f224bf590486" name="CHARVALUE" nameInSource="CHARVALUE" nativeType="CHAR" length="1" fixedLength="true">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:42bfcdc8-ff38-1045-9227-f224bf590486" name="SHORTVALUE" nameInSource="SHORTVALUE" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:42bfcdc9-ff38-1045-9227-f224bf590486" name="BIGINTEGERVALUE" nameInSource="BIGINTEGERVALUE" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:42bfcdca-ff38-1045-9227-f224bf590486" name="BIGDECIMALVALUE" nameInSource="BIGDECIMALVALUE" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:42bfcdcb-ff38-1045-9227-f224bf590486" name="OBJECTVALUE" nameInSource="OBJECTVALUE" nativeType="VARCHAR2" length="2048">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:42bfcdcc-ff38-1045-9227-f224bf590486" name="CLOB" nameInSource="CLOB" nativeType="CLOB">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+    </tables>
+    <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:7a994a00-ff38-1045-9227-f224bf590486" name="LARGEA" nameInSource="LARGEA">
+      <columns xmi:uuid="mmuuid:7e5a97c0-ff38-1045-9227-f224bf590486" name="INTKEY" nameInSource="INTKEY" nativeType="NUMBER" fixedLength="true" precision="22" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7e5a97c1-ff38-1045-9227-f224bf590486" name="STRINGKEY" nameInSource="STRINGKEY" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7e5a97c2-ff38-1045-9227-f224bf590486" name="INTNUM" nameInSource="INTNUM" nativeType="NUMBER" fixedLength="true" precision="22" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7e5a97c3-ff38-1045-9227-f224bf590486" name="STRINGNUM" nameInSource="STRINGNUM" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7e5a97c4-ff38-1045-9227-f224bf590486" name="FLOATNUM" nameInSource="FLOATNUM" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7e5a97c5-ff38-1045-9227-f224bf590486" name="LONGNUM" nameInSource="LONGNUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7e5a97c6-ff38-1045-9227-f224bf590486" name="DOUBLENUM" nameInSource="DOUBLENUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7e5a97c7-ff38-1045-9227-f224bf590486" name="BYTENUM" nameInSource="BYTENUM" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7e5a97c8-ff38-1045-9227-f224bf590486" name="DATEVALUE" nameInSource="DATEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7f3f7980-ff38-1045-9227-f224bf590486" name="TIMEVALUE" nameInSource="TIMEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7f3f7981-ff38-1045-9227-f224bf590486" name="TIMESTAMPVALUE" nameInSource="TIMESTAMPVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7f3f7982-ff38-1045-9227-f224bf590486" name="BOOLEANVALUE" nameInSource="BOOLEANVALUE" nativeType="NUMBER" fixedLength="true" precision="1" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7f3f7983-ff38-1045-9227-f224bf590486" name="CHARVALUE" nameInSource="CHARVALUE" nativeType="CHAR" length="1" fixedLength="true">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7f3f7984-ff38-1045-9227-f224bf590486" name="SHORTVALUE" nameInSource="SHORTVALUE" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7f3f7985-ff38-1045-9227-f224bf590486" name="BIGINTEGERVALUE" nameInSource="BIGINTEGERVALUE" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7f3f7986-ff38-1045-9227-f224bf590486" name="BIGDECIMALVALUE" nameInSource="BIGDECIMALVALUE" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7f3f7987-ff38-1045-9227-f224bf590486" name="OBJECTVALUE" nameInSource="OBJECTVALUE" nativeType="VARCHAR2" length="2048">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+    </tables>
+    <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:b9013dc0-ff38-1045-9227-f224bf590486" name="LARGEB" nameInSource="LARGEB">
+      <columns xmi:uuid="mmuuid:bbce6780-ff38-1045-9227-f224bf590486" name="INTKEY" nameInSource="INTKEY" nativeType="NUMBER" fixedLength="true" precision="22" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bbce6781-ff38-1045-9227-f224bf590486" name="STRINGKEY" nameInSource="STRINGKEY" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bbce6782-ff38-1045-9227-f224bf590486" name="INTNUM" nameInSource="INTNUM" nativeType="NUMBER" fixedLength="true" precision="22" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bbce6783-ff38-1045-9227-f224bf590486" name="STRINGNUM" nameInSource="STRINGNUM" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bcc28b80-ff38-1045-9227-f224bf590486" name="FLOATNUM" nameInSource="FLOATNUM" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bcc28b81-ff38-1045-9227-f224bf590486" name="LONGNUM" nameInSource="LONGNUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bcc28b82-ff38-1045-9227-f224bf590486" name="DOUBLENUM" nameInSource="DOUBLENUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bcc28b83-ff38-1045-9227-f224bf590486" name="BYTENUM" nameInSource="BYTENUM" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bcc28b84-ff38-1045-9227-f224bf590486" name="DATEVALUE" nameInSource="DATEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bcc28b85-ff38-1045-9227-f224bf590486" name="TIMEVALUE" nameInSource="TIMEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bcc28b86-ff38-1045-9227-f224bf590486" name="TIMESTAMPVALUE" nameInSource="TIMESTAMPVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bcc28b87-ff38-1045-9227-f224bf590486" name="BOOLEANVALUE" nameInSource="BOOLEANVALUE" nativeType="NUMBER" fixedLength="true" precision="1" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bcc28b88-ff38-1045-9227-f224bf590486" name="CHARVALUE" nameInSource="CHARVALUE" nativeType="CHAR" length="1" fixedLength="true">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bcc28b89-ff38-1045-9227-f224bf590486" name="SHORTVALUE" nameInSource="SHORTVALUE" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bda76d40-ff38-1045-9227-f224bf590486" name="BIGINTEGERVALUE" nameInSource="BIGINTEGERVALUE" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bda76d41-ff38-1045-9227-f224bf590486" name="BIGDECIMALVALUE" nameInSource="BIGDECIMALVALUE" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:bda76d42-ff38-1045-9227-f224bf590486" name="OBJECTVALUE" nameInSource="OBJECTVALUE" nativeType="VARCHAR2" length="2048">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+    </tables>
+    <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:f1cede00-ff38-1045-9227-f224bf590486" name="MEDIUMA" nameInSource="MEDIUMA">
+      <columns xmi:uuid="mmuuid:f3b72600-ff38-1045-9227-f224bf590486" name="INTKEY" nameInSource="INTKEY" nativeType="NUMBER" fixedLength="true" precision="22" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE" uniqueKeys="mmuuid/2c84c640-ff39-1045-9227-f224bf590486">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f49c07c0-ff38-1045-9227-f224bf590486" name="STRINGKEY" nameInSource="STRINGKEY" nativeType="VARCHAR2" length="10" nullable="NO_NULLS" uniqueKeys="mmuuid/2c84c640-ff39-1045-9227-f224bf590486">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f49c07c1-ff38-1045-9227-f224bf590486" name="INTNUM" nameInSource="INTNUM" nativeType="NUMBER" fixedLength="true" precision="22" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f49c07c2-ff38-1045-9227-f224bf590486" name="STRINGNUM" nameInSource="STRINGNUM" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f49c07c3-ff38-1045-9227-f224bf590486" name="FLOATNUM" nameInSource="FLOATNUM" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f49c07c4-ff38-1045-9227-f224bf590486" name="LONGNUM" nameInSource="LONGNUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f49c07c5-ff38-1045-9227-f224bf590486" name="DOUBLENUM" nameInSource="DOUBLENUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f49c07c6-ff38-1045-9227-f224bf590486" name="BYTENUM" nameInSource="BYTENUM" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f49c07c7-ff38-1045-9227-f224bf590486" name="DATEVALUE" nameInSource="DATEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f49c07c8-ff38-1045-9227-f224bf590486" name="TIMEVALUE" nameInSource="TIMEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f49c07c9-ff38-1045-9227-f224bf590486" name="TIMESTAMPVALUE" nameInSource="TIMESTAMPVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f49c07ca-ff38-1045-9227-f224bf590486" name="BOOLEANVALUE" nameInSource="BOOLEANVALUE" nativeType="NUMBER" fixedLength="true" precision="1" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f49c07cb-ff38-1045-9227-f224bf590486" name="CHARVALUE" nameInSource="CHARVALUE" nativeType="CHAR" length="1" fixedLength="true">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f49c07cc-ff38-1045-9227-f224bf590486" name="SHORTVALUE" nameInSource="SHORTVALUE" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f49c07cd-ff38-1045-9227-f224bf590486" name="BIGINTEGERVALUE" nameInSource="BIGINTEGERVALUE" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f5902bc0-ff38-1045-9227-f224bf590486" name="BIGDECIMALVALUE" nameInSource="BIGDECIMALVALUE" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:f5902bc1-ff38-1045-9227-f224bf590486" name="OBJECTVALUE" nameInSource="OBJECTVALUE" nativeType="VARCHAR2" length="2048">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <primaryKey xmi:uuid="mmuuid:2c84c640-ff39-1045-9227-f224bf590486" name="PK_MEDA" nameInSource="PK_MEDA" columns="mmuuid/f3b72600-ff38-1045-9227-f224bf590486 mmuuid/f49c07c0-ff38-1045-9227-f224bf590486" foreignKeys="mmuuid/1a1ace80-ff3b-1045-9227-f224bf590486"/>
+    </tables>
+    <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:2c84c641-ff39-1045-9227-f224bf590486" name="MEDIUMB" nameInSource="MEDIUMB">
+      <columns xmi:uuid="mmuuid:312af5c0-ff39-1045-9227-f224bf590486" name="INTKEY" nameInSource="INTKEY" nativeType="NUMBER" fixedLength="true" precision="22" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE" foreignKeys="mmuuid/1a1ace80-ff3b-1045-9227-f224bf590486">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:312af5c1-ff39-1045-9227-f224bf590486" name="STRINGKEY" nameInSource="STRINGKEY" nativeType="VARCHAR2" length="10" foreignKeys="mmuuid/1a1ace80-ff3b-1045-9227-f224bf590486">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:312af5c2-ff39-1045-9227-f224bf590486" name="INTNUM" nameInSource="INTNUM" nativeType="NUMBER" fixedLength="true" precision="22" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:312af5c3-ff39-1045-9227-f224bf590486" name="STRINGNUM" nameInSource="STRINGNUM" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:312af5c4-ff39-1045-9227-f224bf590486" name="FLOATNUM" nameInSource="FLOATNUM" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:312af5c5-ff39-1045-9227-f224bf590486" name="LONGNUM" nameInSource="LONGNUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:312af5c6-ff39-1045-9227-f224bf590486" name="DOUBLENUM" nameInSource="DOUBLENUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:312af5c7-ff39-1045-9227-f224bf590486" name="BYTENUM" nameInSource="BYTENUM" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:312af5c8-ff39-1045-9227-f224bf590486" name="DATEVALUE" nameInSource="DATEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:320fd780-ff39-1045-9227-f224bf590486" name="TIMEVALUE" nameInSource="TIMEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:320fd781-ff39-1045-9227-f224bf590486" name="TIMESTAMPVALUE" nameInSource="TIMESTAMPVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:320fd782-ff39-1045-9227-f224bf590486" name="BOOLEANVALUE" nameInSource="BOOLEANVALUE" nativeType="NUMBER" fixedLength="true" precision="1" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:320fd783-ff39-1045-9227-f224bf590486" name="CHARVALUE" nameInSource="CHARVALUE" nativeType="CHAR" length="1" fixedLength="true">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:320fd784-ff39-1045-9227-f224bf590486" name="SHORTVALUE" nameInSource="SHORTVALUE" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:320fd785-ff39-1045-9227-f224bf590486" name="BIGINTEGERVALUE" nameInSource="BIGINTEGERVALUE" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:320fd786-ff39-1045-9227-f224bf590486" name="BIGDECIMALVALUE" nameInSource="BIGDECIMALVALUE" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:320fd787-ff39-1045-9227-f224bf590486" name="OBJECTVALUE" nameInSource="OBJECTVALUE" nativeType="VARCHAR2" length="2048">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <foreignKeys xmi:uuid="mmuuid:1a1ace80-ff3b-1045-9227-f224bf590486" name="FK_MEDB" nameInSource="FK_MEDB" foreignKeyMultiplicity="UNSPECIFIED" primaryKeyMultiplicity="UNSPECIFIED" columns="mmuuid/312af5c0-ff39-1045-9227-f224bf590486 mmuuid/312af5c1-ff39-1045-9227-f224bf590486" uniqueKey="mmuuid/2c84c640-ff39-1045-9227-f224bf590486"/>
+    </tables>
+    <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:6cc5bfc0-ff39-1045-9227-f224bf590486" name="PLAN_TABLE" nameInSource="PLAN_TABLE">
+      <columns xmi:uuid="mmuuid:6f92e980-ff39-1045-9227-f224bf590486" name="STATEMENT_ID" nameInSource="STATEMENT_ID" nativeType="VARCHAR2" length="30">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:6f92e981-ff39-1045-9227-f224bf590486" name="TIMESTAMP" nameInSource="TIMESTAMP" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:6f92e982-ff39-1045-9227-f224bf590486" name="REMARKS" nameInSource="REMARKS" nativeType="VARCHAR2" length="80">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:6f92e983-ff39-1045-9227-f224bf590486" name="OPERATION" nameInSource="OPERATION" nativeType="VARCHAR2" length="30">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:6f92e984-ff39-1045-9227-f224bf590486" name="OPTIONS" nameInSource="OPTIONS" nativeType="VARCHAR2" length="255">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:6f92e985-ff39-1045-9227-f224bf590486" name="OBJECT_NODE" nameInSource="OBJECT_NODE" nativeType="VARCHAR2" length="128">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:6f92e986-ff39-1045-9227-f224bf590486" name="OBJECT_OWNER" nameInSource="OBJECT_OWNER" nativeType="VARCHAR2" length="30">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:6f92e987-ff39-1045-9227-f224bf590486" name="OBJECT_NAME" nameInSource="OBJECT_NAME" nativeType="VARCHAR2" length="30">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:6f92e988-ff39-1045-9227-f224bf590486" name="OBJECT_INSTANCE" nameInSource="OBJECT_INSTANCE" nativeType="NUMBER" fixedLength="true" precision="38" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:6f92e989-ff39-1045-9227-f224bf590486" name="OBJECT_TYPE" nameInSource="OBJECT_TYPE" nativeType="VARCHAR2" length="30">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:6f92e98a-ff39-1045-9227-f224bf590486" name="OPTIMIZER" nameInSource="OPTIMIZER" nativeType="VARCHAR2" length="255">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7077cb40-ff39-1045-9227-f224bf590486" name="SEARCH_COLUMNS" nameInSource="SEARCH_COLUMNS" nativeType="NUMBER" fixedLength="true" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7077cb41-ff39-1045-9227-f224bf590486" name="ID" nameInSource="ID" nativeType="NUMBER" fixedLength="true" precision="38" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7077cb42-ff39-1045-9227-f224bf590486" name="PARENT_ID" nameInSource="PARENT_ID" nativeType="NUMBER" fixedLength="true" precision="38" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7077cb43-ff39-1045-9227-f224bf590486" name="POSITION" nameInSource="POSITION" nativeType="NUMBER" fixedLength="true" precision="38" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7077cb44-ff39-1045-9227-f224bf590486" name="COST" nameInSource="COST" nativeType="NUMBER" fixedLength="true" precision="38" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7077cb45-ff39-1045-9227-f224bf590486" name="CARDINALITY" nameInSource="CARDINALITY" nativeType="NUMBER" fixedLength="true" precision="38" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7077cb46-ff39-1045-9227-f224bf590486" name="BYTES" nameInSource="BYTES" nativeType="NUMBER" fixedLength="true" precision="38" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7077cb47-ff39-1045-9227-f224bf590486" name="OTHER_TAG" nameInSource="OTHER_TAG" nativeType="VARCHAR2" length="255">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7077cb48-ff39-1045-9227-f224bf590486" name="PARTITION_START" nameInSource="PARTITION_START" nativeType="VARCHAR2" length="255">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7077cb49-ff39-1045-9227-f224bf590486" name="PARTITION_STOP" nameInSource="PARTITION_STOP" nativeType="VARCHAR2" length="255">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7077cb4a-ff39-1045-9227-f224bf590486" name="PARTITION_ID" nameInSource="PARTITION_ID" nativeType="NUMBER" fixedLength="true" precision="38" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7077cb4b-ff39-1045-9227-f224bf590486" name="OTHER" nameInSource="OTHER" nativeType="LONG" length="2147483647">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7077cb4c-ff39-1045-9227-f224bf590486" name="DISTRIBUTION" nameInSource="DISTRIBUTION" nativeType="VARCHAR2" length="30">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:7077cb4d-ff39-1045-9227-f224bf590486" name="CPU_COST" nameInSource="CPU_COST" nativeType="NUMBER" fixedLength="true" precision="38" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:716bef40-ff39-1045-9227-f224bf590486" name="IO_COST" nameInSource="IO_COST" nativeType="NUMBER" fixedLength="true" precision="38" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:716bef41-ff39-1045-9227-f224bf590486" name="TEMP_SPACE" nameInSource="TEMP_SPACE" nativeType="NUMBER" fixedLength="true" precision="38" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:716bef42-ff39-1045-9227-f224bf590486" name="ACCESS_PREDICATES" nameInSource="ACCESS_PREDICATES" nativeType="VARCHAR2" length="4000">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:716bef43-ff39-1045-9227-f224bf590486" name="FILTER_PREDICATES" nameInSource="FILTER_PREDICATES" nativeType="VARCHAR2" length="4000">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+    </tables>
+    <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:aa398f80-ff39-1045-9227-f224bf590486" name="SCALARDATA" nameInSource="SCALARDATA">
+      <columns xmi:uuid="mmuuid:ad06b940-ff39-1045-9227-f224bf590486" name="INTKEY" nameInSource="INTKEY" nativeType="NUMBER" fixedLength="true" precision="10" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE" uniqueKeys="mmuuid/e3072fc0-ff39-1045-9227-f224bf590486">
+        <type href="http://www.w3.org/2001/XMLSchema#long"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:ad06b941-ff39-1045-9227-f224bf590486" name="STRINGKEY" nameInSource="STRINGKEY" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:ad06b942-ff39-1045-9227-f224bf590486" name="INTNUM" nameInSource="INTNUM" nativeType="NUMBER" fixedLength="true" precision="11" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#long"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:ad06b943-ff39-1045-9227-f224bf590486" name="STRINGNUM" nameInSource="STRINGNUM" nativeType="VARCHAR2" length="255">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:ad06b944-ff39-1045-9227-f224bf590486" name="FLOATNUM" nameInSource="FLOATNUM" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:ad06b945-ff39-1045-9227-f224bf590486" name="LONGNUM" nameInSource="LONGNUM" nativeType="NUMBER" fixedLength="true" precision="22" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:ad06b946-ff39-1045-9227-f224bf590486" name="DOUBLENUM" nameInSource="DOUBLENUM" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:ad06b947-ff39-1045-9227-f224bf590486" name="BYTENUM" nameInSource="BYTENUM" nativeType="NUMBER" fixedLength="true" precision="3" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:adfadd40-ff39-1045-9227-f224bf590486" name="DATEVALUE" nameInSource="DATEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:adfadd41-ff39-1045-9227-f224bf590486" name="TIMEVALUE" nameInSource="TIMEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:adfadd42-ff39-1045-9227-f224bf590486" name="TIMESTAMPVALUE" nameInSource="TIMESTAMPVALUE" nativeType="TIMESTAMP(6)" fixedLength="true" precision="11" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:adfadd43-ff39-1045-9227-f224bf590486" name="BOOLEANVALUE" nameInSource="BOOLEANVALUE" nativeType="NUMBER" fixedLength="true" precision="1" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:adfadd44-ff39-1045-9227-f224bf590486" name="CHARVALUE" nameInSource="CHARVALUE" nativeType="CHAR" length="1" fixedLength="true">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:adfadd45-ff39-1045-9227-f224bf590486" name="SHORTVALUE" nameInSource="SHORTVALUE" nativeType="NUMBER" fixedLength="true" precision="38" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:adfadd46-ff39-1045-9227-f224bf590486" name="BIGINTEGERVALUE" nameInSource="BIGINTEGERVALUE" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:adfadd47-ff39-1045-9227-f224bf590486" name="BIGDECIMALVALUE" nameInSource="BIGDECIMALVALUE" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:adfadd48-ff39-1045-9227-f224bf590486" name="OBJECTVALUE" nameInSource="OBJECTVALUE" nativeType="VARCHAR2" length="2048">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <primaryKey xmi:uuid="mmuuid:e3072fc0-ff39-1045-9227-f224bf590486" name="SYS_C005315" nameInSource="SYS_C005315" columns="mmuuid/ad06b940-ff39-1045-9227-f224bf590486"/>
+    </tables>
+    <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:e3072fc1-ff39-1045-9227-f224bf590486" name="SMALLA" nameInSource="SMALLA">
+      <columns xmi:uuid="mmuuid:e5d45980-ff39-1045-9227-f224bf590486" name="INTKEY" nameInSource="INTKEY" nativeType="NUMBER" fixedLength="true" precision="22" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE" uniqueKeys="mmuuid/1cc8f400-ff3a-1045-9227-f224bf590486">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e5d45981-ff39-1045-9227-f224bf590486" name="STRINGKEY" nameInSource="STRINGKEY" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e5d45982-ff39-1045-9227-f224bf590486" name="INTNUM" nameInSource="INTNUM" nativeType="NUMBER" fixedLength="true" precision="22" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e5d45983-ff39-1045-9227-f224bf590486" name="STRINGNUM" nameInSource="STRINGNUM" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e6c87d80-ff39-1045-9227-f224bf590486" name="FLOATNUM" nameInSource="FLOATNUM" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e6c87d81-ff39-1045-9227-f224bf590486" name="LONGNUM" nameInSource="LONGNUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e6c87d82-ff39-1045-9227-f224bf590486" name="DOUBLENUM" nameInSource="DOUBLENUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e6c87d83-ff39-1045-9227-f224bf590486" name="BYTENUM" nameInSource="BYTENUM" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e6c87d84-ff39-1045-9227-f224bf590486" name="DATEVALUE" nameInSource="DATEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e6c87d85-ff39-1045-9227-f224bf590486" name="TIMEVALUE" nameInSource="TIMEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e6c87d86-ff39-1045-9227-f224bf590486" name="TIMESTAMPVALUE" nameInSource="TIMESTAMPVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e6c87d87-ff39-1045-9227-f224bf590486" name="BOOLEANVALUE" nameInSource="BOOLEANVALUE" nativeType="NUMBER" fixedLength="true" precision="1" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e6c87d88-ff39-1045-9227-f224bf590486" name="CHARVALUE" nameInSource="CHARVALUE" nativeType="CHAR" length="1" fixedLength="true">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e6c87d89-ff39-1045-9227-f224bf590486" name="SHORTVALUE" nameInSource="SHORTVALUE" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e6c87d8a-ff39-1045-9227-f224bf590486" name="BIGINTEGERVALUE" nameInSource="BIGINTEGERVALUE" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e7ad5f40-ff39-1045-9227-f224bf590486" name="BIGDECIMALVALUE" nameInSource="BIGDECIMALVALUE" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:e7ad5f41-ff39-1045-9227-f224bf590486" name="OBJECTVALUE" nameInSource="OBJECTVALUE" nativeType="VARCHAR2" length="2048">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <primaryKey xmi:uuid="mmuuid:1cc8f400-ff3a-1045-9227-f224bf590486" name="PK_SMALLA" nameInSource="PK_SMALLA" columns="mmuuid/e5d45980-ff39-1045-9227-f224bf590486"/>
+    </tables>
+    <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:1cc8f401-ff3a-1045-9227-f224bf590486" name="SMALLB" nameInSource="SMALLB">
+      <columns xmi:uuid="mmuuid:1f961dc0-ff3a-1045-9227-f224bf590486" name="INTKEY" nameInSource="INTKEY" nativeType="NUMBER" fixedLength="true" precision="22" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE" uniqueKeys="mmuuid/5a3cc3c0-ff3a-1045-9227-f224bf590486">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:1f961dc1-ff3a-1045-9227-f224bf590486" name="STRINGKEY" nameInSource="STRINGKEY" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:1f961dc2-ff3a-1045-9227-f224bf590486" name="INTNUM" nameInSource="INTNUM" nativeType="NUMBER" fixedLength="true" precision="22" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:208a41c0-ff3a-1045-9227-f224bf590486" name="STRINGNUM" nameInSource="STRINGNUM" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:208a41c1-ff3a-1045-9227-f224bf590486" name="FLOATNUM" nameInSource="FLOATNUM" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:208a41c2-ff3a-1045-9227-f224bf590486" name="LONGNUM" nameInSource="LONGNUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:208a41c3-ff3a-1045-9227-f224bf590486" name="DOUBLENUM" nameInSource="DOUBLENUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:208a41c4-ff3a-1045-9227-f224bf590486" name="BYTENUM" nameInSource="BYTENUM" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:208a41c5-ff3a-1045-9227-f224bf590486" name="DATEVALUE" nameInSource="DATEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:208a41c6-ff3a-1045-9227-f224bf590486" name="TIMEVALUE" nameInSource="TIMEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:208a41c7-ff3a-1045-9227-f224bf590486" name="TIMESTAMPVALUE" nameInSource="TIMESTAMPVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:208a41c8-ff3a-1045-9227-f224bf590486" name="BOOLEANVALUE" nameInSource="BOOLEANVALUE" nativeType="NUMBER" fixedLength="true" precision="1" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:208a41c9-ff3a-1045-9227-f224bf590486" name="CHARVALUE" nameInSource="CHARVALUE" nativeType="CHAR" length="1" fixedLength="true">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:208a41ca-ff3a-1045-9227-f224bf590486" name="SHORTVALUE" nameInSource="SHORTVALUE" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:208a41cb-ff3a-1045-9227-f224bf590486" name="BIGINTEGERVALUE" nameInSource="BIGINTEGERVALUE" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:208a41cc-ff3a-1045-9227-f224bf590486" name="BIGDECIMALVALUE" nameInSource="BIGDECIMALVALUE" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:216f2380-ff3a-1045-9227-f224bf590486" name="OBJECTVALUE" nameInSource="OBJECTVALUE" nativeType="VARCHAR2" length="2048">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <primaryKey xmi:uuid="mmuuid:5a3cc3c0-ff3a-1045-9227-f224bf590486" name="PK_SMALLB" nameInSource="PK_SMALLB" columns="mmuuid/1f961dc0-ff3a-1045-9227-f224bf590486"/>
+    </tables>
+    <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:5a3cc3c1-ff3a-1045-9227-f224bf590486" name="SPLITPARTTXN1" nameInSource="SPLITPARTTXN1">
+      <columns xmi:uuid="mmuuid:5c250bc0-ff3a-1045-9227-f224bf590486" name="COLUMN1" nameInSource="COLUMN1" nativeType="NUMBER" fixedLength="true" precision="38" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:5d09ed80-ff3a-1045-9227-f224bf590486" name="JOINCOLUMN1" nameInSource="JOINCOLUMN1" nativeType="NUMBER" fixedLength="true" precision="38" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+    </tables>
+    <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:9a8cff80-ff3a-1045-9227-f224bf590486" name="SPLITPARTTXN2" nameInSource="SPLITPARTTXN2">
+      <columns xmi:uuid="mmuuid:9d4ae700-ff3a-1045-9227-f224bf590486" name="COLUMN2" nameInSource="COLUMN2" nativeType="NUMBER" fixedLength="true" precision="38" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:9d4ae701-ff3a-1045-9227-f224bf590486" name="JOINCOLUMN2" nameInSource="JOINCOLUMN2" nativeType="NUMBER" fixedLength="true" precision="38" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+    </tables>
+    <tables xsi:type="Relational:BaseTable" xmi:uuid="mmuuid:d35a9fc0-ff3a-1045-9227-f224bf590486" name="TINYA" nameInSource="TINYA">
+      <columns xmi:uuid="mmuuid:d627c980-ff3a-1045-9227-f224bf590486" name="INTKEY" nameInSource="INTKEY" nativeType="NUMBER" fixedLength="true" precision="22" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d627c981-ff3a-1045-9227-f224bf590486" name="STRINGKEY" nameInSource="STRINGKEY" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d627c982-ff3a-1045-9227-f224bf590486" name="INTNUM" nameInSource="INTNUM" nativeType="NUMBER" fixedLength="true" precision="22" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d627c983-ff3a-1045-9227-f224bf590486" name="STRINGNUM" nameInSource="STRINGNUM" nativeType="VARCHAR2" length="10">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d627c984-ff3a-1045-9227-f224bf590486" name="FLOATNUM" nameInSource="FLOATNUM" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d627c985-ff3a-1045-9227-f224bf590486" name="LONGNUM" nameInSource="LONGNUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d70cab40-ff3a-1045-9227-f224bf590486" name="DOUBLENUM" nameInSource="DOUBLENUM" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d70cab41-ff3a-1045-9227-f224bf590486" name="BYTENUM" nameInSource="BYTENUM" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d70cab42-ff3a-1045-9227-f224bf590486" name="DATEVALUE" nameInSource="DATEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d70cab43-ff3a-1045-9227-f224bf590486" name="TIMEVALUE" nameInSource="TIMEVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d70cab44-ff3a-1045-9227-f224bf590486" name="TIMESTAMPVALUE" nameInSource="TIMESTAMPVALUE" nativeType="DATE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d70cab45-ff3a-1045-9227-f224bf590486" name="BOOLEANVALUE" nameInSource="BOOLEANVALUE" nativeType="NUMBER" fixedLength="true" precision="1" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#short"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d70cab46-ff3a-1045-9227-f224bf590486" name="CHARVALUE" nameInSource="CHARVALUE" nativeType="CHAR" length="1" fixedLength="true">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d70cab47-ff3a-1045-9227-f224bf590486" name="SHORTVALUE" nameInSource="SHORTVALUE" nativeType="NUMBER" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#int"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d70cab48-ff3a-1045-9227-f224bf590486" name="BIGINTEGERVALUE" nameInSource="BIGINTEGERVALUE" nativeType="NUMBER" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d70cab49-ff3a-1045-9227-f224bf590486" name="BIGDECIMALVALUE" nameInSource="BIGDECIMALVALUE" nativeType="FLOAT" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+        <type href="http://www.w3.org/2001/XMLSchema#double"/>
+      </columns>
+      <columns xmi:uuid="mmuuid:d70cab4a-ff3a-1045-9227-f224bf590486" name="OBJECTVALUE" nameInSource="OBJECTVALUE" nativeType="VARCHAR2" length="2048">
+        <type href="http://www.w3.org/2001/XMLSchema#string"/>
+      </columns>
+    </tables>
+  </Relational:Schema>
+  <jdbc:JdbcSource xmi:uuid="mmuuid:8674ca40-ff36-1045-9227-f224bf590486" name="BQT Ora10" driverName="MetaMatrix Oracle" driverClass="com.metamatrix.jdbc.oracle.OracleDriver" username="bqt2" url="jdbc:mmx:oracle://slntds08:1521;Sid=ds08">
+    <importSettings xmi:uuid="mmuuid:8b1af9c0-ff36-1045-9227-f224bf590486" includeIndexes="false">
+      <includedTableTypes>TABLE</includedTableTypes>
+    </importSettings>
+  </jdbc:JdbcSource>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:55b59880-ff3b-1045-9227-f224bf590486">
+    <diagram xmi:uuid="mmuuid:55b59881-ff3b-1045-9227-f224bf590486" type="packageDiagramType" target="mmuuid/c05592c0-ff37-1045-9227-f224bf590486">
+      <diagramEntity xmi:uuid="mmuuid:55b59882-ff3b-1045-9227-f224bf590486" modelObject="mmuuid/c22e9880-ff37-1045-9227-f224bf590486" xPosition="10" yPosition="10"/>
+    </diagram>
+    <diagram xmi:uuid="mmuuid:68f8ae00-ff40-1045-9227-f224bf590486" type="packageDiagramType" target="mmuuid/c22e9880-ff37-1045-9227-f224bf590486">
+      <diagramEntity xmi:uuid="mmuuid:68f8ae01-ff40-1045-9227-f224bf590486" modelObject="mmuuid/c22e9881-ff37-1045-9227-f224bf590486" xPosition="978" yPosition="612"/>
+      <diagramEntity xmi:uuid="mmuuid:68f8ae02-ff40-1045-9227-f224bf590486" modelObject="mmuuid/00968c40-ff38-1045-9227-f224bf590486" xPosition="504" yPosition="837"/>
+      <diagramEntity xmi:uuid="mmuuid:68f8ae03-ff40-1045-9227-f224bf590486" modelObject="mmuuid/3efe8000-ff38-1045-9227-f224bf590486" xPosition="267" yPosition="837"/>
+      <diagramEntity xmi:uuid="mmuuid:68f8ae04-ff40-1045-9227-f224bf590486" modelObject="mmuuid/7a994a00-ff38-1045-9227-f224bf590486" xPosition="504" yPosition="502"/>
+      <diagramEntity xmi:uuid="mmuuid:68f8ae05-ff40-1045-9227-f224bf590486" modelObject="mmuuid/b9013dc0-ff38-1045-9227-f224bf590486" xPosition="267" yPosition="502"/>
+      <diagramEntity xmi:uuid="mmuuid:68f8ae06-ff40-1045-9227-f224bf590486" modelObject="mmuuid/f1cede00-ff38-1045-9227-f224bf590486" xPosition="320" yPosition="30"/>
+      <diagramEntity xmi:uuid="mmuuid:68f8ae07-ff40-1045-9227-f224bf590486" modelObject="mmuuid/2c84c641-ff39-1045-9227-f224bf590486" xPosition="30" yPosition="30"/>
+      <diagramEntity xmi:uuid="mmuuid:68f8ae08-ff40-1045-9227-f224bf590486" modelObject="mmuuid/6cc5bfc0-ff39-1045-9227-f224bf590486" xPosition="267" yPosition="1187"/>
+      <diagramEntity xmi:uuid="mmuuid:69dd8fc0-ff40-1045-9227-f224bf590486" modelObject="mmuuid/aa398f80-ff39-1045-9227-f224bf590486" xPosition="30" yPosition="864"/>
+      <diagramEntity xmi:uuid="mmuuid:69dd8fc1-ff40-1045-9227-f224bf590486" modelObject="mmuuid/e3072fc1-ff39-1045-9227-f224bf590486" xPosition="741" yPosition="612"/>
+      <diagramEntity xmi:uuid="mmuuid:69dd8fc2-ff40-1045-9227-f224bf590486" modelObject="mmuuid/1cc8f401-ff3a-1045-9227-f224bf590486" xPosition="30" yPosition="502"/>
+      <diagramEntity xmi:uuid="mmuuid:69dd8fc3-ff40-1045-9227-f224bf590486" modelObject="mmuuid/5a3cc3c1-ff3a-1045-9227-f224bf590486" xPosition="978" yPosition="502"/>
+      <diagramEntity xmi:uuid="mmuuid:69dd8fc4-ff40-1045-9227-f224bf590486" modelObject="mmuuid/9a8cff80-ff3a-1045-9227-f224bf590486" xPosition="741" yPosition="502"/>
+      <diagramEntity xmi:uuid="mmuuid:69dd8fc5-ff40-1045-9227-f224bf590486" modelObject="mmuuid/d35a9fc0-ff3a-1045-9227-f224bf590486" xPosition="978" yPosition="947"/>
+    </diagram>
+  </Diagram:DiagramContainer>
+</xmi:XMI>

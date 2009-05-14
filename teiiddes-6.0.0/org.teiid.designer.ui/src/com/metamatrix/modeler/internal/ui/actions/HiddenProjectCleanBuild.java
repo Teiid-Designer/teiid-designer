@@ -1,0 +1,72 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
+package com.metamatrix.modeler.internal.ui.actions;
+
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.actions.GlobalBuildAction;
+import org.eclipse.ui.internal.ide.actions.BuildUtilities;
+import com.metamatrix.modeler.ui.actions.ModelerUiActionsI18n;
+
+/**
+ * @since 4.3
+ */
+public final class HiddenProjectCleanBuild extends Action {
+
+    private IWorkbenchWindow window;
+
+    public HiddenProjectCleanBuild( IWorkbenchWindow theWindow ) {
+        this.window = theWindow;
+        setText(ModelerUiActionsI18n.ValidateAll);
+    }
+
+    IWorkbenchWindow accessWindow() {
+        return this.window;
+    }
+
+    /**
+     * @see org.eclipse.jface.action.Action#run()
+     * @since 4.4
+     */
+    @Override
+    public void run() {
+        // save all dirty editors
+        BuildUtilities.saveEditors(null);
+
+        // batching changes ensures that autobuild runs after cleaning
+        WorkspaceJob cleanJob = new WorkspaceJob(ModelerUiActionsI18n.ValidateAll) {
+            @Override
+            public boolean belongsTo( Object family ) {
+                return ResourcesPlugin.FAMILY_MANUAL_BUILD.equals(family);
+            }
+
+            @Override
+            public IStatus runInWorkspace( IProgressMonitor theMonitor ) throws CoreException {
+                // perform clean
+                ResourcesPlugin.getWorkspace().build(IncrementalProjectBuilder.CLEAN_BUILD, theMonitor);
+
+                // perform build
+                GlobalBuildAction build = new GlobalBuildAction(accessWindow(), IncrementalProjectBuilder.INCREMENTAL_BUILD);
+                build.doBuild();
+
+                return Status.OK_STATUS;
+            }
+        };
+
+        cleanJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
+        cleanJob.setUser(true);
+        cleanJob.schedule();
+    }
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/collapsedSharedChild" xmlns:tns="http://www.example.org/collapsedSharedChild" elementFormDefault="qualified">
+
+
+    <complexType name="CType">
+    	<sequence>
+    		<element name="D" type="string" minOccurs="1" maxOccurs="unbounded"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="AType">
+    	<sequence>
+    		<element name="C" type="tns:CType"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="BType">
+    	<sequence>
+    		<element name="C" type="tns:CType"></element>
+    	</sequence>
+    </complexType>
+
+    <element name="A" type="tns:AType"></element>
+
+    <element name="B" type="tns:BType"></element>
+</schema>

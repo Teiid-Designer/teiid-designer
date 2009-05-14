@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<schema targetNamespace="http://www.metamatrix.com/books/request"
+    xmlns="http://www.w3.org/2001/XMLSchema" xmlns:request="http://www.metamatrix.com/books/request">
+    <!-- The element and type defining the 'getAuthorsRequest' -->
+    <element name="getAuthorsRequest" type="request:getAuthorsRequestType"/>
+    <complexType name="getAuthorsRequestType">
+        <sequence>
+            <element minOccurs="0" name="firstName" type="string"/>
+            <element minOccurs="0" name="lastName" type="string"/>
+        </sequence>
+    </complexType>
+    <!-- The element and type defining the 'getPublishersRequest' -->
+    <element name="getPublishersRequest" type="request:getPublishersRequestType"/>
+    <complexType name="getPublishersRequestType">
+        <sequence>
+            <element name="name" type="string"/>
+        </sequence>
+    </complexType>
+    <!-- The element and type defining the 'getBooksByPublisherRequest' -->
+    <element name="getBooksByPublisherRequest" type="request:getBooksByPublisherRequestType"/>
+    <complexType name="getBooksByPublisherRequestType">
+        <sequence>
+            <element name="publisherName" type="string"/>
+        </sequence>
+    </complexType>
+</schema>

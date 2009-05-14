@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+     <extension
+         id="xmlVirtualDocumentBuilder"
+         name="%xmlVirtualDocumentBuilder"
+         point="org.teiid.designer.ui.newModelWizardContributor">
+      <class
+            name="com.metamatrix.modeler.internal.xml.ui.wizards.VirtualDocumentWizardContributor"
+            icon="icons/full/ctool16/newmodel_wiz.gif">
+      </class>
+      <metamodelDescriptorType
+            name="http://www.metamatrix.com/metamodels/XmlDocument"
+            isPhysical="false"
+            isVirtual="true">
+      </metamodelDescriptorType>
+   </extension>
+   <extension
+         id="XmlChoiceObjectEditorPage"
+         name="%xmlChoiceEditorName"
+         point="org.teiid.designer.ui.modelObjectEditorPage">
+      <class
+            name="com.metamatrix.modeler.xml.ui.editor.XmlChoiceObjectEditorPage">
+      </class>
+   </extension>
+   <extension
+         id="xmlDocumentWizard"
+         name="%xmlDocumentWizardName"
+         point="org.teiid.designer.ui.newModelObjectWizard">
+      <class
+            name="com.metamatrix.modeler.internal.xml.ui.wizards.XMLDocumentWizard">
+      </class>
+      <descriptorType
+            name="com.metamatrix.metamodels.xml.XmlDocument">
+      </descriptorType>
+   </extension>
+   <extension
+         id="newChildFromSchema"
+         name="%newChildFromSchema"
+         point="org.teiid.designer.ui.newChildAction">
+      <class
+            name="com.metamatrix.modeler.internal.xml.ui.actions.BuildFromSchemaAction">
+      </class>
+   </extension>
+<!-- Actions contributed to the object/model generation -->
+   <extension
+		id="CreateXmlViewFromXsdAction"
+		name="%createXmlViewFromXsdAction.name"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="com.metamatrix.modeler.internal.xml.ui.actions.CreateXmlViewFromXsdAction"
+         label="%createXmlViewFromXsdAction.label">
+      </specialAction>
+   </extension>
+<!-- Actions contributed to the object/model generation -->
+   <extension
+		id="ViewXmlMessageStructureAction"
+		name="%viewXmlMessageStructureAction.name"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="com.metamatrix.modeler.internal.xml.ui.actions.ViewXmlMessageStructureAction"
+         label="%viewXmlMessageStructureAction.label">
+      </specialAction>
+   </extension>
+
+</plugin>
