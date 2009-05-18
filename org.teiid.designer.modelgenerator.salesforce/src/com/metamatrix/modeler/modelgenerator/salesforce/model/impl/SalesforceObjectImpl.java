@@ -46,7 +46,7 @@ public class SalesforceObjectImpl implements SalesforceObject {
 	/* (non-Javadoc)
 	 * @see com.metamatrix.modeler.modelgenerator.salesforce.model.impl.SalesforceObject#getVisibleName()
 	 */
-	public String getVisibleName() {
+	public String getLabel() {
 		return objectMetadata.getLabel();
 	}
 

@@ -11,34 +11,34 @@ import java.util.List;
 
 public interface SalesforceObject {
 
-	public abstract boolean isQueryable();
+    public abstract boolean isQueryable();
 
-	public abstract String getVisibleName();
-	
-	public abstract String getName();
+    public abstract String getLabel();
 
-	public abstract int getFieldCount();
+    public abstract String getName();
 
-	public abstract SalesforceField[] getFields();
+    public abstract int getFieldCount();
 
-	public abstract void setSelected(boolean checked);
-	
-	public abstract boolean isSelected();
+    public abstract SalesforceField[] getFields();
 
-	public abstract List getSelectedRelationships();
+    public abstract void setSelected( boolean checked );
 
-	public abstract List getAllRelationships();
+    public abstract boolean isSelected();
 
-	public boolean isCreateable();
+    public abstract List getSelectedRelationships();
 
-	public boolean isUpdateable();
+    public abstract List getAllRelationships();
 
-	public boolean isDeleteable();
+    public boolean isCreateable();
 
-	public boolean isSearchable();
+    public boolean isUpdateable();
 
-	public boolean isReplicateable();
+    public boolean isDeleteable();
 
-	public boolean isRetrieveable();
+    public boolean isSearchable();
+
+    public boolean isReplicateable();
+
+    public boolean isRetrieveable();
 
 }

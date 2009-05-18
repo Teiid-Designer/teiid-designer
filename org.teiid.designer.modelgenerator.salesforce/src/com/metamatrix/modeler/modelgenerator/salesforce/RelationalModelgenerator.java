@@ -7,21 +7,28 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.eclipse.core.resources.IContainer;
+import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import com.metamatrix.metamodels.core.CoreFactory;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.metamodels.relational.Column;
+import com.metamatrix.metamodels.relational.DirectionKind;
 import com.metamatrix.metamodels.relational.ForeignKey;
 import com.metamatrix.metamodels.relational.PrimaryKey;
+import com.metamatrix.metamodels.relational.Procedure;
+import com.metamatrix.metamodels.relational.ProcedureParameter;
+import com.metamatrix.metamodels.relational.ProcedureResult;
 import com.metamatrix.metamodels.relational.RelationalFactory;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.relational.Schema;
@@ -30,8 +37,6 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.types.DatatypeManager;
-import com.metamatrix.modeler.modelgenerator.salesforce.connection.SalesforceConnection;
-import com.metamatrix.modeler.modelgenerator.salesforce.model.DataModel;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.Relationship;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.SalesforceField;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.SalesforceObject;
@@ -39,19 +44,14 @@ import com.metamatrix.modeler.modelgenerator.salesforce.modelextension.Extension
 import com.metamatrix.modeler.modelgenerator.salesforce.util.ModelBuildingException;
 import com.metamatrix.modeler.modelgenerator.salesforce.util.NameUtil;
 import com.sforce.soap.partner.QueryResult;
+import com.sforce.soap.partner.sobject.SObject;
 
 public class RelationalModelgenerator {
-
-    // The folder to create the relational model in
-    private IContainer targetModelLocation;
 
     private IProgressMonitor monitor;
 
     // The wrapper around the salesforce extension model
     private ExtensionManager exManager;
-
-    // The metadata from the salesforce instance
-    private DataModel salesforcemetadata;
 
     // The relationships to create between salesforce objects
     private List relationships;
@@ -59,33 +59,18 @@ public class RelationalModelgenerator {
     // used to look up tables in order to create the relationships
     private Map tablesByName;
 
-    // determines if we model the common attributes of all salesforce objects
-    private boolean supressAuditFields;
-
-    private SalesforceConnection connection;
+    private SalesforceImportWizardManager wizardManager;
 
     /**
-     * @param targetModelLocation the folder that contains the relational model
-     * @param monitor the progress monitor shown during model creation
-     * @param connection
-     * @param supressAuditFields determines if the audit fields are modeled
+     * @param salesforceImportWizardManager
+     * @param monitor2
      */
-    public RelationalModelgenerator( IContainer targetModelLocation,
-                                     IProgressMonitor monitor,
-                                     DataModel model,
-                                     SalesforceConnection connection,
-                                     boolean supressAuditFields ) {
-        if (null == targetModelLocation || null == monitor) {
-            throw new AssertionError(Messages.getString("RelationalModelgenerator.null.creation.param")); //$NON-NLS-1$
-        }
-        this.targetModelLocation = targetModelLocation;
+    public RelationalModelgenerator( SalesforceImportWizardManager wizardManager,
+                                     IProgressMonitor monitor ) {
+        this.wizardManager = wizardManager;
         this.monitor = monitor;
-        this.salesforcemetadata = model;
-        this.connection = connection;
-        this.supressAuditFields = supressAuditFields;
         relationships = new ArrayList();
         tablesByName = new HashMap();
-
     }
 
     /**
@@ -98,7 +83,7 @@ public class RelationalModelgenerator {
         // Get the salesforce extension model and create it in the target directory
         // if it is not already there.
         exManager = new ExtensionManager();
-        exManager.loadModelExtensions(targetModelLocation, monitor);
+        exManager.loadModelExtensions(wizardManager.getTargetModelLocation(), monitor);
 
         // Create the model annotation, the top level object in our of our models and
         // set some of its attributes
@@ -115,10 +100,10 @@ public class RelationalModelgenerator {
         resource.getContents().add(schema);
 
         // Loop over the salesforce metadata creating tables and columns
-        Object[] objects = salesforcemetadata.getSalesforceObjects();
+        Object[] objects = wizardManager.getDataModel().getSalesforceObjects();
         for (int i = 0; i < objects.length; i++) {
             SalesforceObject sfo = (SalesforceObject)objects[i];
-            if (sfo.isSelected()) {
+            if (sfo.isSelected() && !monitor.isCanceled()) {
                 monitor.subTask("Creating " + sfo.getName() + " table"); //$NON-NLS-1$ //$NON-NLS-2$
                 addTableToModel(sfo, schema);
                 monitor.worked(1);
@@ -128,7 +113,17 @@ public class RelationalModelgenerator {
         // Create the relations between the tables. This is done after all
         // the tables are built because you can't put a foreign key into a
         // table that might not have been created yet.
-        createRelationships();
+        if (!monitor.isCanceled()) {
+            createRelationships();
+        }
+
+        if (wizardManager.isGenerateUpdated() && !monitor.isCanceled()) {
+            generateGetUpdated(schema);
+        }
+
+        if (wizardManager.isGenerateDeleted() && !monitor.isCanceled()) {
+            generateGetDeleted(schema);
+        }
     }
 
     /**
@@ -145,10 +140,17 @@ public class RelationalModelgenerator {
         this.relationships.addAll(sfo.getSelectedRelationships());
         this.tablesByName.put(sfo.getName(), newTable);
         newTable.setSchema(schema);
-        newTable.setName(NameUtil.normalizeName(sfo.getName()));
+
+        if (!wizardManager.isSetNameAsNameInSource() && null != sfo.getLabel()) {
+            newTable.setName(NameUtil.normalizeName(sfo.getLabel()));
+        } else {
+            newTable.setName(NameUtil.normalizeName(sfo.getName()));
+        }
         newTable.setNameInSource(sfo.getName());
 
-        newTable.setCardinality(getCardinality(sfo));
+        if (wizardManager.getCollectCardinalities()) {
+            newTable.setCardinality(getCardinality(sfo));
+        }
 
         newTable.setSupportsUpdate(sfo.isUpdateable());
 
@@ -177,22 +179,21 @@ public class RelationalModelgenerator {
 
     private int getCardinality( SalesforceObject sfo ) {
         int result = 0;
-        if (sfo.isQueryable()) {
-            StringBuffer query = new StringBuffer();
-            query.append("SELECT COUNT() FROM "); //$NON-NLS-1$
-            query.append(sfo.getName());
-            QueryResult queryResult;
-            try {
-                queryResult = connection.getBinding().query(query.toString());
-                /*} catch (RemoteException e) {
-                	ModelBuildingException ce = new ModelBuildingException(e.getCause());
-                	throw ce;
-                */} catch (Exception e) {
-                // throw new ModelBuildingException(e);
-                result = -1;
-                return result;
+        try {
+            if (sfo.isQueryable()) {
+                StringBuffer query = new StringBuffer();
+                query.append("SELECT COUNT() FROM "); //$NON-NLS-1$
+                query.append(sfo.getName());
+                QueryResult queryResult;
+                queryResult = wizardManager.getConnection().getBinding().query(query.toString());
+                result = queryResult.getSize();
             }
-            result = queryResult.getSize();
+        } catch (Throwable t) {
+            // Failure here should not stop the model from being created.
+            String pattern = Messages.getString("RelationalModelgenerator.error.calculating.cardinalities"); //$NON-NLS-1$
+            String message = MessageFormat.format(pattern, new Object[] {sfo.getName()});
+            IStatus status = new org.eclipse.core.runtime.Status(IStatus.INFO, Activator.PLUGIN_ID, message);
+            Activator.getDefault().getLog().log(status);
         }
         return result;
     }
@@ -211,13 +212,17 @@ public class RelationalModelgenerator {
         for (int i = 0; i < fields.length; i++) {
             SalesforceField field = fields[i];
 
-            if (supressAuditFields && field.isAuditField()) {
+            if (wizardManager.isSupressAuditFields() && field.isAuditField()) {
                 continue;
             }
 
             Column column = RelationalFactory.eINSTANCE.createColumn();
             newTable.getColumns().add(column);
-            column.setName(NameUtil.normalizeName(field.getName()));
+            if (!wizardManager.isSetNameAsNameInSource() && null != field.getLabel()) {
+                column.setName(NameUtil.normalizeName(field.getLabel()));
+            } else {
+                column.setName(NameUtil.normalizeName(field.getName()));
+            }
             column.setNameInSource(field.getName());
             column.setLength(field.getLength());
             if (field.isUpdateable()) {
@@ -244,12 +249,58 @@ public class RelationalModelgenerator {
                 pKey.getColumns().add(column);
                 pKey.setName(NameUtil.normalizeName(field.getName()) + "_PK"); //$NON-NLS-1$
             }
+
+            if (sfo.isQueryable() && wizardManager.isCollectColumnDistinctValue()) {
+                int distinctValues = getDistinctValueCount(sfo.getName(), field.getName());
+                column.setDistinctValueCount(distinctValues);
+            }
         }
 
-        // A salesforceobject might support updates,
+        // A salesforceobject might say it supports updates,
         // but if none of the columns do, then it doesn't
         if (!hasUpdateableColumn) {
             newTable.setSupportsUpdate(false);
+        }
+    }
+
+    private int getDistinctValueCount( String objectName,
+                                       String columnName ) {
+        Set values = new HashSet();
+        try {
+            StringBuffer query = new StringBuffer();
+            query.append("SELECT "); //$NON-NLS-1$
+            query.append(columnName);
+            query.append(" FROM "); //$NON-NLS-1$
+            query.append(objectName);
+            QueryResult queryResult;
+            queryResult = wizardManager.getConnection().getBinding().query(query.toString());
+            getUniqueValues(queryResult, values);
+            while (!queryResult.isDone()) {
+                queryResult = wizardManager.getConnection().getBinding().queryMore(queryResult.getQueryLocator());
+                getUniqueValues(queryResult, values);
+            }
+        } catch (Throwable t) {
+            // Failure here should not stop the model from being created.
+            String pattern = Messages.getString("RelationalModelgenerator.error.calculating.column.distinct"); //$NON-NLS-1$
+            String message = MessageFormat.format(pattern, new Object[] {objectName, columnName});
+            IStatus status = new org.eclipse.core.runtime.Status(IStatus.INFO, Activator.PLUGIN_ID, message);
+            Activator.getDefault().getLog().log(status);
+        }
+        return values.size();
+    }
+
+    /**
+     * @param queryResult
+     * @param values
+     */
+    private void getUniqueValues( QueryResult queryResult,
+                                  Set values ) {
+        SObject[] results = queryResult.getRecords();
+        if (null != results) {
+            for (int i = 0; i < results.length; i++) {
+                SObject object = results[i];
+                values.add(object.get_any()[0].getValue());
+            }
         }
     }
 
@@ -355,9 +406,10 @@ public class RelationalModelgenerator {
      */
     private void createRelationships() {
         Iterator iter = relationships.iterator();
-        while (iter.hasNext()) {
+        while (iter.hasNext() && !monitor.isCanceled()) {
+            monitor.subTask(Messages.getString("RelationalModelgenerator.generating.relationships")); //$NON-NLS-1$
             Relationship relation = (Relationship)iter.next();
-            if (supressAuditFields && relation.relatesToAuditField()) {
+            if (wizardManager.isSupressAuditFields() && relation.relatesToAuditField()) {
                 continue;
             }
 
@@ -385,7 +437,7 @@ public class RelationalModelgenerator {
             Column col = null;
             while (colIter.hasNext()) {
                 Column c = (Column)colIter.next();
-                if (c.getName().equals(relation.getForeignKeyField())) {
+                if (c.getNameInSource().equals(relation.getForeignKeyField())) {
                     col = c;
                     break;
                 }
@@ -398,4 +450,108 @@ public class RelationalModelgenerator {
             fKey.getColumns().add(col);
         }
     }
+
+    private void generateGetUpdated( Schema schema ) throws ModelBuildingException {
+        try {
+            DatatypeManager dtMgr = ModelerCore.getBuiltInTypesManager();
+            Procedure getUpdatedProc = RelationalFactory.eINSTANCE.createProcedure();
+            getUpdatedProc.setSchema(schema);
+            getUpdatedProc.setName("GetUpdated"); //$NON-NLS-1$
+            getUpdatedProc.setNameInSource("GetUpdated"); //$NON-NLS-1$
+
+            addCommonProcParams(getUpdatedProc, dtMgr);
+
+            addLatestDateCoveredParam(getUpdatedProc, dtMgr);
+
+            addCommonResult(getUpdatedProc, dtMgr);
+
+        } catch (ModelerCoreException e) {
+            ModelBuildingException ex = new ModelBuildingException(e);
+            throw ex;
+        }
+    }
+
+    private void generateGetDeleted( Schema schema ) throws ModelBuildingException {
+        try {
+            DatatypeManager dtMgr = ModelerCore.getBuiltInTypesManager();
+            Procedure getUpdatedProc = RelationalFactory.eINSTANCE.createProcedure();
+            getUpdatedProc.setSchema(schema);
+            getUpdatedProc.setName("GetDeleted"); //$NON-NLS-1$
+            getUpdatedProc.setNameInSource("GetDeleted"); //$NON-NLS-1$
+
+            addCommonProcParams(getUpdatedProc, dtMgr);
+
+            ProcedureParameter earliestDateAvailable = RelationalFactory.eINSTANCE.createProcedureParameter();
+            getUpdatedProc.getParameters().add(earliestDateAvailable);
+            earliestDateAvailable.setName("EarliestDateAvailable"); //$NON-NLS-1$
+            earliestDateAvailable.setNameInSource("EarliestDateAvailable"); //$NON-NLS-1$
+            earliestDateAvailable.setDirection(DirectionKind.OUT_LITERAL);
+            earliestDateAvailable.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.DATE_TIME));
+
+            addLatestDateCoveredParam(getUpdatedProc, dtMgr);
+
+            ProcedureResult result = addCommonResult(getUpdatedProc, dtMgr);
+
+            Column deletedDate = RelationalFactory.eINSTANCE.createColumn();
+            deletedDate.setName("DeletedDate"); //$NON-NLS-1$
+            deletedDate.setNameInSource("DeletedDate"); //$NON-NLS-1$
+            deletedDate.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.DATE_TIME));
+            result.getColumns().add(deletedDate);
+
+        } catch (ModelerCoreException e) {
+            ModelBuildingException ex = new ModelBuildingException(e);
+            throw ex;
+        }
+    }
+
+    private void addCommonProcParams( Procedure proc,
+                                      DatatypeManager dtMgr ) throws ModelerCoreException {
+        ProcedureParameter objectName = RelationalFactory.eINSTANCE.createProcedureParameter();
+        proc.getParameters().add(objectName);
+        objectName.setName("ObjectName"); //$NON-NLS-1$
+        objectName.setNameInSource("ObjectName"); //$NON-NLS-1$
+        objectName.setDirection(DirectionKind.IN_LITERAL);
+        objectName.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.STRING));
+
+        ProcedureParameter startDate = RelationalFactory.eINSTANCE.createProcedureParameter();
+        proc.getParameters().add(startDate);
+        startDate.setName("StartDate"); //$NON-NLS-1$
+        startDate.setNameInSource("StartDate"); //$NON-NLS-1$
+        startDate.setDirection(DirectionKind.IN_LITERAL);
+        startDate.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.DATE_TIME));
+
+        ProcedureParameter endDate = RelationalFactory.eINSTANCE.createProcedureParameter();
+        proc.getParameters().add(endDate);
+        endDate.setName("EndDate"); //$NON-NLS-1$
+        endDate.setNameInSource("EndDate"); //$NON-NLS-1$
+        endDate.setDirection(DirectionKind.IN_LITERAL);
+        endDate.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.DATE_TIME));
+    }
+
+    private void addLatestDateCoveredParam( Procedure proc,
+                                            DatatypeManager dtMgr ) throws ModelerCoreException {
+        ProcedureParameter latestDateCovered = RelationalFactory.eINSTANCE.createProcedureParameter();
+        proc.getParameters().add(latestDateCovered);
+        latestDateCovered.setName("LatestDateCovered"); //$NON-NLS-1$
+        latestDateCovered.setNameInSource("LatestDateCovered"); //$NON-NLS-1$
+        latestDateCovered.setDirection(DirectionKind.OUT_LITERAL);
+        latestDateCovered.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.DATE_TIME));
+    }
+
+    private ProcedureResult addCommonResult( Procedure proc,
+                                             DatatypeManager dtMgr ) throws ModelerCoreException {
+        ProcedureResult result = RelationalFactory.eINSTANCE.createProcedureResult();
+        result.setProcedure(proc);
+        result.setName("Result"); //$NON-NLS-1$
+        result.setNameInSource("Result"); //$NON-NLS-1$
+
+        Column id = RelationalFactory.eINSTANCE.createColumn();
+        id.setName("ID"); //$NON-NLS-1$
+        id.setNameInSource("ID"); //$NON-NLS-1$
+        id.setLength(18);
+        id.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.STRING));
+        result.getColumns().add(id);
+        return result;
+    }
+
 }

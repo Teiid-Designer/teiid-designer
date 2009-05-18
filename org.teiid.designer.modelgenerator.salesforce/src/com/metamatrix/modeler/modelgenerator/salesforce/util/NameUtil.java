@@ -7,6 +7,8 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce.util;
 
+import net.sourceforge.sqlexplorer.dbviewer.JDBCReservedWords;
+
 public class NameUtil {
 
     public static String normalizeName( String nameIn ) {
@@ -15,8 +17,21 @@ public class NameUtil {
         normal = removeSpaces(normal);
         normal = removeIllegalChars(normal);
         normal = removeTrailingUnderscore(normal);
+        normal = removeLeadingUnderscore(normal);
+        normal = checkReservedWords(normal);
         return normal;
 
+    }
+
+    /**
+     * @param normal
+     * @return
+     */
+    private static String checkReservedWords( String normal ) {
+        if (JDBCReservedWords.isReservedWord(normal)) {
+            normal = normal + "_"; //$NON-NLS-1$
+        }
+        return normal;
     }
 
     private static String removeTrailingUnderscore( String normal ) {
@@ -37,6 +52,10 @@ public class NameUtil {
         edit = edit.replace('\'', '_');
         edit = edit.replace('-', '_');
         edit = edit.replace("%", "percentage");//$NON-NLS-1$ //$NON-NLS-2$
+        edit = edit.replace("#", "number");//$NON-NLS-1$ //$NON-NLS-2$
+        edit = edit.replace("$", "_");//$NON-NLS-1$ //$NON-NLS-2$
+        edit = edit.replace("{", "_");//$NON-NLS-1$ //$NON-NLS-2$
+        edit = edit.replace("}", "_");//$NON-NLS-1$ //$NON-NLS-2$
         return edit;
     }
 
@@ -51,4 +70,16 @@ public class NameUtil {
         if (firstPart.equals(secondPart) || secondPart.equals("null")) return firstPart; //$NON-NLS-1$
         return normal;
     }
+
+    /**
+     * @param normal
+     * @return
+     */
+    private static String removeLeadingUnderscore( String normal ) {
+        while (normal.indexOf('_') == 0) {
+            normal = normal.substring(1);
+        }
+        return normal;
+    }
+
 }

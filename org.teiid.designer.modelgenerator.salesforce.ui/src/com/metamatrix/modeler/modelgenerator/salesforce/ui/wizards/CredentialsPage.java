@@ -233,9 +233,4 @@ public class CredentialsPage extends AbstractWizardPage
             testComplete();
         }
     }
-
-    @Override
-    public void setErrorMessage( String message ) {
-        setErrorMessage(message);
-    }
 }

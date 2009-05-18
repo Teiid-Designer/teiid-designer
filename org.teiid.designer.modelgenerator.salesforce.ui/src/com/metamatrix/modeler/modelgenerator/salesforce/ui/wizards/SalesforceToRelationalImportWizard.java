@@ -132,7 +132,7 @@ public class SalesforceToRelationalImportWizard extends AbstractWizard
                 boolean succeeded = false;
                 try {
                     importManager.runFinish(monitor);
-                    succeeded = true;
+                    succeeded = !monitor.isCanceled();
                 } catch (ModelBuildingException mbe) {
                     mbe.printStackTrace(System.err);
                     throw new InvocationTargetException(mbe);

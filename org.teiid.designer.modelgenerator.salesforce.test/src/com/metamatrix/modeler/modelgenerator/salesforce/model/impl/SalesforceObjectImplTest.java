@@ -64,7 +64,7 @@ public class SalesforceObjectImplTest extends TestCase {
     }
 
     public void testGetVisibleName() {
-        assertEquals(LABEL, test.getVisibleName());
+        assertEquals(LABEL, test.getLabel());
     }
 
     public void testCreateable() {

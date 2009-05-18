@@ -82,8 +82,6 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
 
     protected DataModel salesforceMetadata;
 
-    private Button supressAuditFieldsCheck;
-
     boolean updateUI;
 
     public SelectSalesforceObjectsPage( SalesforceImportWizardManager importManager ) {
@@ -282,10 +280,6 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
 
         this.selectAllButton.addListener(SWT.Selection, this);
         this.deselectAllButton.addListener(SWT.Selection, this);
-
-        this.supressAuditFieldsCheck = WidgetFactory.createCheckBox(buttonComposite,
-                                                                    getString("supressAuditFields.text"), GridData.FILL_HORIZONTAL); //$NON-NLS-1$
-        this.supressAuditFieldsCheck.addListener(SWT.Selection, this);
     }
 
     /**
@@ -312,22 +306,8 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
                 setAllNodesSelected(false);
             }
 
-            if (event.widget == this.supressAuditFieldsCheck) {
-                handleAuditFieldsChecked(event);
-            }
-
             setPageStatus();
         }
-    }
-
-    private void handleAuditFieldsChecked( Event event ) {
-        importManager.setSupressAuditFields(supressAuditFieldsCheck.getSelection());
-        StructuredSelection selection = (StructuredSelection)ctv.getSelection();
-        if (selection.isEmpty()) {
-            selection = new StructuredSelection(ctv.getElementAt(0));
-            ctv.setSelection(selection);
-        }
-        tableViewer.setInput(selection.iterator().next());
     }
 
     /**
@@ -385,7 +365,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
         return UTIL.getString(new StringBuffer().append(PREFIX).append(theKey).toString());
     }
 
-    class ListContentProvider implements IStructuredContentProvider {
+    static class ListContentProvider implements IStructuredContentProvider {
 
         public void dispose() {
         }
@@ -403,7 +383,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
         }
     }
 
-    class ListLabelProvider extends LabelProvider {
+    static class ListLabelProvider extends LabelProvider {
 
         final WorkbenchLabelProvider workbenchProvider = new WorkbenchLabelProvider();
 
@@ -417,7 +397,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
             if (node instanceof DataModel) {
                 return "theModel"; //$NON-NLS-1$
             } else if (node instanceof SalesforceObject) {
-                return ((SalesforceObject)node).getVisibleName();
+                return ((SalesforceObject)node).getLabel();
             }
             return "unknownElement"; //$NON-NLS-1$
         }
@@ -457,7 +437,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
 
     }
 
-    class TableLabelProvider implements ITableLabelProvider {
+    static class TableLabelProvider implements ITableLabelProvider {
 
         public void dispose() {
         }

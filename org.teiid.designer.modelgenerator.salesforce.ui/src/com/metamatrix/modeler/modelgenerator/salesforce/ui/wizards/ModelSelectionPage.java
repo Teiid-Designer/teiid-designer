@@ -27,6 +27,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -69,7 +71,7 @@ public class ModelSelectionPage extends AbstractWizardPage
     /** Used as a prefix to properties file keys. */
     private static final String PREFIX = I18nUtil.getPropertyPrefix(ModelSelectionPage.class);
 
-    private SalesforceImportWizardManager importManager;
+    protected SalesforceImportWizardManager importManager;
 
     private Text textFieldTargetModelName;
 
@@ -85,6 +87,14 @@ public class ModelSelectionPage extends AbstractWizardPage
 
     private boolean updating = false;
 
+    private Button supressAuditFieldsCheck;
+
+    private Button namesAsNameInSouceCheckBox;
+
+    private Button generateUpdatedCheckBox;
+
+    private Button generateDeletedCheckBox;
+
     public ModelSelectionPage( SalesforceImportWizardManager importManager ) {
         super(ModelSelectionPage.class.getSimpleName(), getString("title")); //$NON-NLS-1$
         this.importManager = importManager;
@@ -97,9 +107,15 @@ public class ModelSelectionPage extends AbstractWizardPage
         pnl.setLayout(new GridLayout(COLUMNS, false));
         setControl(pnl);
 
-        // options group
+        createTargetModelControls(pnl);
+        createImportOptionsControls(pnl);
+        setPageStatus();
+    }
+
+    private void createTargetModelControls( Composite pnl ) {
+        // target model group
         Group optionsGroup = new Group(pnl, SWT.NONE);
-        optionsGroup.setText(getString("targetOptionsGroup.text")); //$NON-NLS-1$
+        optionsGroup.setText(getString("targetModelGroup.text")); //$NON-NLS-1$
 
         GridData gData = new GridData(GridData.FILL_HORIZONTAL);
         optionsGroup.setLayoutData(gData);
@@ -177,7 +193,7 @@ public class ModelSelectionPage extends AbstractWizardPage
             } catch (ModelWorkspaceException e) {
                 // if we end up here we're hosed
                 UTIL.log(e);
-                WizardUtil.setPageComplete(this, e.getLocalizedMessage(), IMessageProvider.ERROR); 
+                WizardUtil.setPageComplete(this, e.getLocalizedMessage(), IMessageProvider.ERROR);
             }
         }
 
@@ -193,7 +209,101 @@ public class ModelSelectionPage extends AbstractWizardPage
         // Add Listener to handle selection events
         // --------------------------------------------
         buttonSelectTargetModel.addListener(SWT.Selection, this);
-        setPageStatus();
+    }
+
+    private void createImportOptionsControls( Composite pnl ) {
+        // target model group
+        Group optionsGroup = new Group(pnl, SWT.VERTICAL);
+        optionsGroup.setText(getString("importOptionsGroup.text")); //$NON-NLS-1$
+
+        GridData gData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+        optionsGroup.setLayoutData(gData);
+
+        optionsGroup.setLayout(new GridLayout(1, false));
+
+        supressAuditFieldsCheck = WidgetFactory.createCheckBox(optionsGroup,
+                                                               getString("supressAuditFields.text"), GridData.FILL_HORIZONTAL); //$NON-NLS-1$
+        supressAuditFieldsCheck.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetDefaultSelected( SelectionEvent e ) {
+                importManager.setSupressAuditFields(((Button)e.getSource()).getSelection());
+            }
+
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+                importManager.setSupressAuditFields(((Button)e.getSource()).getSelection());
+            }
+        });
+
+        cardinalitiesCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("gatherCardianalitiesLabel.text")); //$NON-NLS-1$
+        cardinalitiesCheckBox.setSelection(true);
+        cardinalitiesCheckBox.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetDefaultSelected( SelectionEvent e ) {
+                importManager.setCollectCardinalities(((Button)e.getSource()).getSelection());
+            }
+
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+                importManager.setCollectCardinalities(((Button)e.getSource()).getSelection());
+            }
+        });
+
+        WidgetFactory.createLabel(optionsGroup, getString("gatherCardianalitiesWarning.text")); //$NON-NLS-1$
+
+        uniqueValueCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("gatherColumnDistinctValueLabel.text")); //$NON-NLS-1$
+        uniqueValueCheckBox.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetDefaultSelected( SelectionEvent e ) {
+                importManager.setCollectColumnDistinctValue(((Button)e.getSource()).getSelection());
+            }
+
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+                importManager.setCollectColumnDistinctValue(((Button)e.getSource()).getSelection());
+            }
+        });
+        WidgetFactory.createLabel(optionsGroup, getString("gatherColumnDistinctValueWarning.text")); //$NON-NLS-1$
+
+        namesAsNameInSouceCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("namesAsNameInSourceLabel.text")); //$NON-NLS-1$
+        namesAsNameInSouceCheckBox.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetDefaultSelected( SelectionEvent e ) {
+                importManager.setNameAsNameInSource(((Button)e.getSource()).getSelection());
+            }
+
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+                importManager.setNameAsNameInSource(((Button)e.getSource()).getSelection());
+            }
+        });
+        WidgetFactory.createLabel(optionsGroup, getString("namesAsNameInSourceWarning.text")); //$NON-NLS-1$
+
+        generateUpdatedCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("generateUpdatedLabel.text")); //$NON-NLS-1$
+        generateUpdatedCheckBox.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetDefaultSelected( SelectionEvent e ) {
+                importManager.setGenerateUpdated(((Button)e.getSource()).getSelection());
+            }
+
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+                importManager.setGenerateUpdated(((Button)e.getSource()).getSelection());
+            }
+        });
+
+        generateDeletedCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("generateDeletedLabel.text")); //$NON-NLS-1$
+        generateDeletedCheckBox.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetDefaultSelected( SelectionEvent e ) {
+                importManager.setGenerateDeleted(((Button)e.getSource()).getSelection());
+            }
+
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+                importManager.setGenerateDeleted(((Button)e.getSource()).getSelection());
+            }
+        });
     }
 
     /**
@@ -339,7 +449,7 @@ public class ModelSelectionPage extends AbstractWizardPage
             getContainer().updateButtons();
         } catch (final CoreException err) {
             UTIL.log(err);
-            WizardUtil.setPageComplete(this, err.getLocalizedMessage(), IMessageProvider.ERROR); 
+            WizardUtil.setPageComplete(this, err.getLocalizedMessage(), IMessageProvider.ERROR);
             return false;
         }
         WizardUtil.setPageComplete(this);
@@ -367,7 +477,7 @@ public class ModelSelectionPage extends AbstractWizardPage
             String problem = ModelUtilities.validateModelName(fileName, ModelerCore.MODEL_FILE_EXTENSION);
             if (problem != null) {
                 String msg = getString("invalidFileMessage") + '\n' + problem; //$NON-NLS-1$
-                WizardUtil.setPageComplete(this, msg, IMessageProvider.ERROR); 
+                WizardUtil.setPageComplete(this, msg, IMessageProvider.ERROR);
                 targetModelLocation = null;
             } else {
                 final String folderName = folderText.getText();
@@ -431,6 +541,10 @@ public class ModelSelectionPage extends AbstractWizardPage
         }
     };
 
+    private Button cardinalitiesCheckBox;
+
+    private Button uniqueValueCheckBox;
+
     /**
      * Sets the initial workspace selection.
      * 
@@ -460,7 +574,9 @@ public class ModelSelectionPage extends AbstractWizardPage
                             } catch (MalformedURLException err) {
                                 // exception will leave uri null
                             }
-                            this.importManager.setTargetModelName(uriStr.substring(uriStr.lastIndexOf('/') + 1));
+                            if (null != uriStr) {
+                                this.importManager.setTargetModelName(uriStr.substring(uriStr.lastIndexOf('/') + 1));
+                            }
                             break;
 
                         }

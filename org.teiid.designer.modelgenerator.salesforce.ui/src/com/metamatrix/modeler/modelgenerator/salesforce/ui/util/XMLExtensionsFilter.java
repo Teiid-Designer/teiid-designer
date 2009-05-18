@@ -12,25 +12,26 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.ui.views.navigator.ResourcePatternFilter;
 
 public class XMLExtensionsFilter extends ViewerFilter {
-	
-	private ResourcePatternFilter filter;
 
-	private static String[] patterns;
+    private ResourcePatternFilter filter;
 
-	static {
-		patterns = new String[] {
-		  new String("XML*Extensions.xmi"), //$NON-NLS-1$
-		  new String(".project") //$NON-NLS-1$
-		};
-	}
-	
-	public XMLExtensionsFilter() {
-		filter = new ResourcePatternFilter();
-		filter.setPatterns(patterns);
-	}
-	
-	@Override
-    public boolean select(Viewer arg0, Object arg1, Object arg2) {
-		return filter.select(arg0, arg1, arg2);
-	}
+    private static String[] patterns;
+
+    static {
+        patterns = new String[] {"XML*Extensions.xmi", //$NON-NLS-1$
+            ".project" //$NON-NLS-1$
+        };
+    }
+
+    public XMLExtensionsFilter() {
+        filter = new ResourcePatternFilter();
+        filter.setPatterns(patterns);
+    }
+
+    @Override
+    public boolean select( Viewer arg0,
+                           Object arg1,
+                           Object arg2 ) {
+        return filter.select(arg0, arg1, arg2);
+    }
 }
