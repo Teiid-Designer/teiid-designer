@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import com.metamatrix.core.MetaMatrixCoreException;
 import com.metamatrix.core.modeler.util.FileUtil;
+import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.core.util.FileSeparatorUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -844,7 +845,7 @@ public class ModelUtil {
                         }
                     } else deviceLocation = FileSeparatorUtil.FILE_SEPARATOR_LINUX;
                 } else {
-                    projectPath = projectPath.append(pathSegments[i]);
+                    projectPath = projectPath.append(FileUtils.normalizeFileName(pathSegments[i]));
                 }
                 if (pathSegments[i].equalsIgnoreCase(ResourceFinder.VDB_WORKING_FOLDER)) {
                     vdbFolderIndex = i;
