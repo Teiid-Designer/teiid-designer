@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.tools.textimport.ui;singleton:=true
-Bundle-Version: 6.0.0
+Bundle-Version: 6.1.0
 Bundle-ClassPath: modelerTextImportUi.jar
 Bundle-Activator: com.metamatrix.modeler.tools.textimport.ui.TextImportPlugin
 Bundle-Vendor: %providerName

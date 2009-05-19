@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: teiid_embedded_query;singleton:=true
-Bundle-Version: 6.0.0
+Bundle-Version: 6.1.0
 Bundle-Vendor: %providerName
 Bundle-ClassPath: teiid-558-client-patch.jar,
  lib/patches/teiid-558-patch.jar,

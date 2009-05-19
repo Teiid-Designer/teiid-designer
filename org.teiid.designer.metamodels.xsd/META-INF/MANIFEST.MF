@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.metamodels.xsd;singleton:=true
-Bundle-Version: 6.0.0
+Bundle-Version: 6.1.0
 Bundle-ClassPath: metamodelsXsd.jar
 Bundle-Activator: com.metamatrix.metamodels.xsd.XsdPlugin
 Bundle-Vendor: %providerName

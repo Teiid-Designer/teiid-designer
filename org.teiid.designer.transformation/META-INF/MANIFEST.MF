@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.transformation;singleton:=true
-Bundle-Version: 6.0.0
+Bundle-Version: 6.1.0
 Bundle-ClassPath: modelerTransformation.jar
 Bundle-Activator: com.metamatrix.modeler.transformation.TransformationPlugin
 Bundle-Vendor: %providerName
