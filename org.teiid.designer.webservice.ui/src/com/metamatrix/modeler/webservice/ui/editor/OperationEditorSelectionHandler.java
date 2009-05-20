@@ -10,15 +10,9 @@ package com.metamatrix.modeler.webservice.ui.editor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 
-import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.metamodels.webservice.Interface;
-import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.ui.internal.eventsupport.SelectionProvider;
-import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**
  * @since 5.0.2
@@ -76,12 +70,6 @@ public class OperationEditorSelectionHandler extends SelectionProvider implement
      */
     @Override
     public void setSelection(final ISelection selection) {
-        // Now we need to auto-select the Tree. The selection can only be an interface or operation, so let's go searching.
-        if (this.viewer != null && SelectionUtilities.isSingleSelection(selection) && SelectionUtilities.isAllEObjects(selection)) {
-            EObject eObj = SelectionUtilities.getSelectedEObject(selection);
-            if (eObj != null && ( eObj instanceof Operation || eObj instanceof Interface) ) {
-                this.viewer.setSelection(new StructuredSelection(eObj), true);
-            }
-        }
+    	// N/A
     }
 }

@@ -182,21 +182,21 @@ public class ModelExplorerRenameAction extends ResourceNavigatorRenameAction imp
      * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
      */
     public void addSelectionChangedListener(ISelectionChangedListener listener) {
-        throw new RuntimeException("ModelExplorerRenameAction.addSelectionChangedListener is not supported");   //$NON-NLS-1$
+        throw new RuntimeException("ModelExplorerRenameAction.addSelectionChangedListener is not supported");    //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
      */
     public void removeSelectionChangedListener(ISelectionChangedListener listener) { 
-        throw new RuntimeException("ModelExplorerRenameAction.removeSelectionChangedListener is not supported");   //$NON-NLS-1$
+        throw new RuntimeException("ModelExplorerRenameAction.removeSelectionChangedListener is not supported"); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
      */
     public void setSelection(ISelection selection) {
-        throw new RuntimeException("ModelExplorerRenameAction.setSelection is not supported");   //$NON-NLS-1$
+        throw new RuntimeException("ModelExplorerRenameAction.setSelection is not supported");    //$NON-NLS-1$
     }
 
 }

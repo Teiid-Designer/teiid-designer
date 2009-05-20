@@ -114,7 +114,7 @@ public class TreeViewerRenameAction extends RenameAction {
      */
     @Override
     public void doRun() {
-        if (preRun()) {
+//        if (preRun()) {
             final EObject currentObject = (EObject)getSelectedObject();
 
             cachedSelection = navigatorTree.getSelection();
@@ -134,7 +134,7 @@ public class TreeViewerRenameAction extends RenameAction {
                     }
                 });
             }
-        }
+//        }
     }
 
     /**
@@ -154,6 +154,8 @@ public class TreeViewerRenameAction extends RenameAction {
                     if (ModelerCore.getModelEditor().hasName(currentObject)) {
                         renameInline(currentObject);
                     }
+                    
+                    
                 } else {
                     // should never happen, log it jsut in case.
                     RuntimeException e = new RuntimeException();
@@ -164,7 +166,7 @@ public class TreeViewerRenameAction extends RenameAction {
     }
 
     void renameInline( final EObject eObject ) {
-
+   
         EObject editingEObject = eObject;
 
         // Defect 22944 - Make sure the renaming object is the current/cached selection
@@ -212,6 +214,7 @@ public class TreeViewerRenameAction extends RenameAction {
         textEditorParent.redraw();
         textEditor.selectAll();
         textEditor.setFocus();
+
     }
 
     private void createTextEditor( final EObject eObj ) {
@@ -356,6 +359,8 @@ public class TreeViewerRenameAction extends RenameAction {
             textEditor = null;
             treeEditor.setEditor(null, null);
         }
+        
+        insureOpenEditor();
     }
 
     /**
@@ -370,7 +375,9 @@ public class TreeViewerRenameAction extends RenameAction {
                 EObject eObject = (EObject)allSelectedEObjects.get(0);
                 ModelResource mr = ModelUtilities.getModelResourceForModelObject(eObject);
                 if (mr != null) {
-                    ModelEditorManager.open(eObject, true, UiConstants.ObjectEditor.REFRESH_EDITOR_IF_OPEN);
+                	if( !ModelEditorManager.isOpen(eObject) ) {
+                		ModelEditorManager.activate(mr, true);
+                	}
                 }
             }
         }
@@ -381,4 +388,19 @@ public class TreeViewerRenameAction extends RenameAction {
     protected boolean requiresEditorForRun() {
         return true;
     }
+
+	private void insureOpenEditor() {
+		
+        if (requiresEditorForRun()) {
+            List allSelectedEObjects = SelectionUtilities.getSelectedEObjects(getSelection());
+            if (allSelectedEObjects != null && !allSelectedEObjects.isEmpty()) {
+                EObject eObject = (EObject)allSelectedEObjects.get(0);
+                ModelResource mr = ModelUtilities.getModelResourceForModelObject(eObject);
+                if (mr != null) {
+                	ModelEditorManager.open(eObject, true, UiConstants.ObjectEditor.REFRESH_EDITOR_IF_OPEN);
+                }
+            }
+        }
+
+	}
 }
