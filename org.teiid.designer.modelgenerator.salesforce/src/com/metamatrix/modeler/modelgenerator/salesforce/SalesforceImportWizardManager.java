@@ -44,7 +44,7 @@ public class SalesforceImportWizardManager {
     private String username;
     private String password;
     private URL connectionURL;
-    private boolean supressAuditFields;
+    private boolean modelAuditFields;
     private boolean credentialsValid;
     private boolean hasCredentialChanges;
     private ModelResource updateModel;
@@ -52,7 +52,7 @@ public class SalesforceImportWizardManager {
     private DifferenceReport diffReport;
     private DifferenceProcessor diffProcessor;
     private ModelResource tempModel;
-    private boolean collectCardinalities;
+    private boolean supressCollectCardinalities;
     private boolean collectColumnDistinctValue;
     private SalesforceConnection connection;
     private boolean setNameAsNameInSource;
@@ -220,12 +220,12 @@ public class SalesforceImportWizardManager {
         return dataModel;
     }
 
-    public boolean isSupressAuditFields() {
-        return supressAuditFields;
+    public boolean isModelAuditFields() {
+        return modelAuditFields;
     }
 
-    public void setSupressAuditFields( boolean supressAuditFields ) {
-        this.supressAuditFields = supressAuditFields;
+    public void modelAuditFields( boolean supressAuditFields ) {
+        this.modelAuditFields = supressAuditFields;
     }
 
     public void setCredentialsValid( boolean valid ) {
@@ -266,23 +266,23 @@ public class SalesforceImportWizardManager {
         this.canFinish = canFinish;
     }
 
-    public void setCollectCardinalities( boolean selection ) {
-        this.collectCardinalities = selection;
+    public void supressCollectCardinalities( boolean selection ) {
+        this.supressCollectCardinalities = selection;
     }
 
-    boolean getCollectCardinalities() {
-        return this.collectCardinalities;
+    boolean getSupressCollectCardinalities() {
+        return this.supressCollectCardinalities;
     }
 
     public void setCollectColumnDistinctValue( boolean selection ) {
         this.collectColumnDistinctValue = selection;
     }
 
-    public void setNameAsNameInSource( boolean selection ) {
+    public void setNameAsLabel( boolean selection ) {
         this.setNameAsNameInSource = selection;
     }
 
-    public boolean isSetNameAsNameInSource() {
+    public boolean isSetNameAsLabel() {
         return setNameAsNameInSource;
     }
 

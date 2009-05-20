@@ -141,14 +141,14 @@ public class RelationalModelgenerator {
         this.tablesByName.put(sfo.getName(), newTable);
         newTable.setSchema(schema);
 
-        if (!wizardManager.isSetNameAsNameInSource() && null != sfo.getLabel()) {
+        if (wizardManager.isSetNameAsLabel() && null != sfo.getLabel()) {
             newTable.setName(NameUtil.normalizeName(sfo.getLabel()));
         } else {
             newTable.setName(NameUtil.normalizeName(sfo.getName()));
         }
         newTable.setNameInSource(sfo.getName());
 
-        if (wizardManager.getCollectCardinalities()) {
+        if (wizardManager.getSupressCollectCardinalities()) {
             newTable.setCardinality(getCardinality(sfo));
         }
 
@@ -212,13 +212,13 @@ public class RelationalModelgenerator {
         for (int i = 0; i < fields.length; i++) {
             SalesforceField field = fields[i];
 
-            if (wizardManager.isSupressAuditFields() && field.isAuditField()) {
+            if (!wizardManager.isModelAuditFields() && field.isAuditField()) {
                 continue;
             }
 
             Column column = RelationalFactory.eINSTANCE.createColumn();
             newTable.getColumns().add(column);
-            if (!wizardManager.isSetNameAsNameInSource() && null != field.getLabel()) {
+            if (wizardManager.isSetNameAsLabel() && null != field.getLabel()) {
                 column.setName(NameUtil.normalizeName(field.getLabel()));
             } else {
                 column.setName(NameUtil.normalizeName(field.getName()));
@@ -409,7 +409,7 @@ public class RelationalModelgenerator {
         while (iter.hasNext() && !monitor.isCanceled()) {
             monitor.subTask(Messages.getString("RelationalModelgenerator.generating.relationships")); //$NON-NLS-1$
             Relationship relation = (Relationship)iter.next();
-            if (wizardManager.isSupressAuditFields() && relation.relatesToAuditField()) {
+            if (!wizardManager.isModelAuditFields() && relation.relatesToAuditField()) {
                 continue;
             }
 

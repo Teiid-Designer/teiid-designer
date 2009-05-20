@@ -62,6 +62,7 @@ import com.metamatrix.ui.internal.dialog.FolderSelectionDialog;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.util.WizardUtil;
+import com.metamatrix.ui.internal.widget.Label;
 import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 
 public class ModelSelectionPage extends AbstractWizardPage
@@ -87,9 +88,9 @@ public class ModelSelectionPage extends AbstractWizardPage
 
     private boolean updating = false;
 
-    private Button supressAuditFieldsCheck;
+    private Button modelAuditFieldsCheck;
 
-    private Button namesAsNameInSouceCheckBox;
+    private Button namesAslabelCheckBox;
 
     private Button generateUpdatedCheckBox;
 
@@ -104,7 +105,8 @@ public class ModelSelectionPage extends AbstractWizardPage
         final int COLUMNS = 1;
 
         Composite pnl = WidgetFactory.createPanel(theParent, SWT.FILL, GridData.FILL_HORIZONTAL);
-        pnl.setLayout(new GridLayout(COLUMNS, false));
+        GridLayout layout = new GridLayout(COLUMNS, false);
+        pnl.setLayout(layout);
         setControl(pnl);
 
         createTargetModelControls(pnl);
@@ -114,7 +116,7 @@ public class ModelSelectionPage extends AbstractWizardPage
 
     private void createTargetModelControls( Composite pnl ) {
         // target model group
-        Group optionsGroup = new Group(pnl, SWT.NONE);
+        Group optionsGroup = WidgetFactory.createGroup(pnl, SWT.FILL);
         optionsGroup.setText(getString("targetModelGroup.text")); //$NON-NLS-1$
 
         GridData gData = new GridData(GridData.FILL_HORIZONTAL);
@@ -213,43 +215,44 @@ public class ModelSelectionPage extends AbstractWizardPage
 
     private void createImportOptionsControls( Composite pnl ) {
         // target model group
-        Group optionsGroup = new Group(pnl, SWT.VERTICAL);
+        final GridData labelData = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
+        Group optionsGroup = WidgetFactory.createGroup(pnl, SWT.WRAP);
         optionsGroup.setText(getString("importOptionsGroup.text")); //$NON-NLS-1$
 
-        GridData gData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+        GridData gData = new GridData(SWT.FILL, SWT.FILL, true, true);
         optionsGroup.setLayoutData(gData);
-
         optionsGroup.setLayout(new GridLayout(1, false));
-
-        supressAuditFieldsCheck = WidgetFactory.createCheckBox(optionsGroup,
-                                                               getString("supressAuditFields.text"), GridData.FILL_HORIZONTAL); //$NON-NLS-1$
-        supressAuditFieldsCheck.addSelectionListener(new SelectionListener() {
+        modelAuditFieldsCheck = WidgetFactory.createCheckBox(optionsGroup,
+                                                             getString("modelAuditFields.text"), GridData.FILL_HORIZONTAL); //$NON-NLS-1$
+        modelAuditFieldsCheck.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetDefaultSelected( SelectionEvent e ) {
-                importManager.setSupressAuditFields(((Button)e.getSource()).getSelection());
+                importManager.modelAuditFields(((Button)e.getSource()).getSelection());
             }
 
             @Override
             public void widgetSelected( SelectionEvent e ) {
-                importManager.setSupressAuditFields(((Button)e.getSource()).getSelection());
+                importManager.modelAuditFields(((Button)e.getSource()).getSelection());
             }
         });
+        Label label = WidgetFactory.createLabel(optionsGroup, getString("modelAuditFieldsWarning.text"), SWT.WRAP); //$NON-NLS-1$
+        label.setLayoutData(labelData);
 
         cardinalitiesCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("gatherCardianalitiesLabel.text")); //$NON-NLS-1$
-        cardinalitiesCheckBox.setSelection(true);
         cardinalitiesCheckBox.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetDefaultSelected( SelectionEvent e ) {
-                importManager.setCollectCardinalities(((Button)e.getSource()).getSelection());
+                importManager.supressCollectCardinalities(((Button)e.getSource()).getSelection());
             }
 
             @Override
             public void widgetSelected( SelectionEvent e ) {
-                importManager.setCollectCardinalities(((Button)e.getSource()).getSelection());
+                importManager.supressCollectCardinalities(((Button)e.getSource()).getSelection());
             }
         });
 
-        WidgetFactory.createLabel(optionsGroup, getString("gatherCardianalitiesWarning.text")); //$NON-NLS-1$
+        label = WidgetFactory.createLabel(optionsGroup, getString("gatherCardianalitiesWarning.text"), SWT.WRAP); //$NON-NLS-1$
+        label.setLayoutData(labelData);
 
         uniqueValueCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("gatherColumnDistinctValueLabel.text")); //$NON-NLS-1$
         uniqueValueCheckBox.addSelectionListener(new SelectionListener() {
@@ -263,21 +266,23 @@ public class ModelSelectionPage extends AbstractWizardPage
                 importManager.setCollectColumnDistinctValue(((Button)e.getSource()).getSelection());
             }
         });
-        WidgetFactory.createLabel(optionsGroup, getString("gatherColumnDistinctValueWarning.text")); //$NON-NLS-1$
+        label = WidgetFactory.createLabel(optionsGroup, getString("gatherColumnDistinctValueWarning.text"), SWT.WRAP); //$NON-NLS-1$
+        label.setLayoutData(labelData);
 
-        namesAsNameInSouceCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("namesAsNameInSourceLabel.text")); //$NON-NLS-1$
-        namesAsNameInSouceCheckBox.addSelectionListener(new SelectionListener() {
+        namesAslabelCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("namesAsNameInSourceLabel.text")); //$NON-NLS-1$
+        namesAslabelCheckBox.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetDefaultSelected( SelectionEvent e ) {
-                importManager.setNameAsNameInSource(((Button)e.getSource()).getSelection());
+                importManager.setNameAsLabel(((Button)e.getSource()).getSelection());
             }
 
             @Override
             public void widgetSelected( SelectionEvent e ) {
-                importManager.setNameAsNameInSource(((Button)e.getSource()).getSelection());
+                importManager.setNameAsLabel(((Button)e.getSource()).getSelection());
             }
         });
-        WidgetFactory.createLabel(optionsGroup, getString("namesAsNameInSourceWarning.text")); //$NON-NLS-1$
+        label = WidgetFactory.createLabel(optionsGroup, getString("namesAsNameInSourceWarning.text"), SWT.WRAP); //$NON-NLS-1$
+        label.setLayoutData(labelData);
 
         generateUpdatedCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("generateUpdatedLabel.text")); //$NON-NLS-1$
         generateUpdatedCheckBox.addSelectionListener(new SelectionListener() {
@@ -291,6 +296,8 @@ public class ModelSelectionPage extends AbstractWizardPage
                 importManager.setGenerateUpdated(((Button)e.getSource()).getSelection());
             }
         });
+        label = WidgetFactory.createLabel(optionsGroup, getString("generateUpdatedWarning.text"), SWT.WRAP); //$NON-NLS-1$
+        label.setLayoutData(labelData);
 
         generateDeletedCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("generateDeletedLabel.text")); //$NON-NLS-1$
         generateDeletedCheckBox.addSelectionListener(new SelectionListener() {
@@ -304,6 +311,8 @@ public class ModelSelectionPage extends AbstractWizardPage
                 importManager.setGenerateDeleted(((Button)e.getSource()).getSelection());
             }
         });
+        label = WidgetFactory.createLabel(optionsGroup, getString("generateDeletedWarning.text"), SWT.WRAP); //$NON-NLS-1$
+        label.setLayoutData(labelData);
     }
 
     /**

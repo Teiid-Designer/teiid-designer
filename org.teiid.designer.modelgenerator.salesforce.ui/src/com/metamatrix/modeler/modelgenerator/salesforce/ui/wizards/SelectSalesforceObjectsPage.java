@@ -409,7 +409,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
             Object[] result = null;
             if (inputElement instanceof SalesforceObject) {
                 SalesforceObject object = (SalesforceObject)inputElement;
-                if (importManager.isSupressAuditFields()) {
+                if (!importManager.isModelAuditFields()) {
                     ArrayList<SalesforceField> nonAuditFields = new ArrayList<SalesforceField>();
                     SalesforceField[] fields = object.getFields();
                     for (int i = 0; i < fields.length; i++) {
