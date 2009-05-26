@@ -31,6 +31,7 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.modelgenerator.wsdl.ModelBuildingException;
 import com.metamatrix.modeler.modelgenerator.wsdl.RelationalModelBuilder;
 import com.metamatrix.modeler.modelgenerator.wsdl.TableBuilder;
+import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiPlugin;
@@ -174,7 +175,7 @@ public class RelationalFromWSDLImportWizard extends AbstractWizard implements II
         return result;
     }
 
-    public void runFinish( IProgressMonitor theMonitor ) throws ModelBuildingException {
+    public void runFinish( IProgressMonitor theMonitor ) throws ModelBuildingException, ModelGenerationException {
         // Target Model Name
         String modelName = this.importManager.getTargetModelName();
 
@@ -189,7 +190,8 @@ public class RelationalFromWSDLImportWizard extends AbstractWizard implements II
         }
         TableBuilder tableBuilder = new TableBuilder();
         Collection tables = tableBuilder.createTables(opers, UTIL);
-        RelationalModelBuilder modelBuilder = new RelationalModelBuilder(tableBuilder.getNamespaces());
+        RelationalModelBuilder modelBuilder = new RelationalModelBuilder(tableBuilder.getNamespaces(),
+                                                                         importManager.getWSDLModel());
         modelBuilder.createModel(tables, modelName, container);
     }
 }

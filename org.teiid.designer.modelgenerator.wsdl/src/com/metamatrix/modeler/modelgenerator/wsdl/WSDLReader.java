@@ -20,8 +20,6 @@ import com.metamatrix.modeler.modelgenerator.wsdl.validation.internal.WSDLValida
 /**
  * This class is responsible for reading WSDL files from a URI or filesystem validating them and producing an OO representation of
  * the WSDL contents
- * 
- * @author JChoate
  */
 public class WSDLReader {
 

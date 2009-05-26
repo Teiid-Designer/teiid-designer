@@ -46,10 +46,12 @@ public class XMLHTTPExtensionManager extends XMLRequestResponseExtensionManagerI
         return PACKAGE_NS_URI;
     }
 
+    @Override
     public String getTableName() {
         return XML_HTTP_TABLE;
     }
 
+    @Override
     public String getColumnName() {
         return XML_HTTP_COLUMN;
     }

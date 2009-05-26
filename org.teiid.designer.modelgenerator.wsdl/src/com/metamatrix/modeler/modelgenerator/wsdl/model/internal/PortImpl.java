@@ -13,56 +13,66 @@ import com.metamatrix.modeler.modelgenerator.wsdl.model.Service;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.WSDLElement;
 
 public class PortImpl extends WSDLElementImpl implements Port {
-	
-	
-	private Service m_parent;
-	private Binding m_binding;
-	private String m_locationURI;
-	
-	public PortImpl(Service parent) {
-		m_parent = parent;
-	}
 
-	public Binding getBinding() {
-		//defensive copy of bindings
-		return (Binding) m_binding.copy();
-	}
-	
-	public void setBinding(Binding binding) {
-		m_binding = binding;
-	}
+    private Service m_parent;
+    private Binding m_binding;
+    private String m_locationURI;
+    private String namespaceURI;
 
-	public Service getService() {
-		return m_parent;
-	}
+    public PortImpl( Service parent ) {
+        m_parent = parent;
+    }
 
-	public void setLocationURI(String uri){
-		m_locationURI = uri;
-	}
-	
-	public String getLocationURI() {
-		return m_locationURI;
-	}
-	
-	public WSDLElement copy() {
-		PortImpl impl = new PortImpl(getService());
-		impl.setName(getName());
-		impl.setId(getId());
-		impl.setBinding(getBinding());
-		return impl;
-	}
-	
-	@Override
+    public Binding getBinding() {
+        // defensive copy of bindings
+        return (Binding)m_binding.copy();
+    }
+
+    public void setBinding( Binding binding ) {
+        m_binding = binding;
+    }
+
+    public Service getService() {
+        return m_parent;
+    }
+
+    public void setLocationURI( String uri ) {
+        m_locationURI = uri;
+    }
+
+    public String getLocationURI() {
+        return m_locationURI;
+    }
+
+    public WSDLElement copy() {
+        PortImpl impl = new PortImpl(getService());
+        impl.setName(getName());
+        impl.setId(getId());
+        impl.setBinding(getBinding());
+        impl.setNamespaceURI(getNamespaceURI());
+        return impl;
+    }
+
+    @Override
     public String toString() {
-		StringBuffer buff = new StringBuffer();
-		buff.append("<port name='");		 //$NON-NLS-1$
-		buff.append(getName());
-		buff.append("' id='"); //$NON-NLS-1$
-		buff.append(getId());
-		buff.append("'>"); //$NON-NLS-1$
-		buff.append(m_binding.toString());
-		buff.append("</port>"); //$NON-NLS-1$
-		return buff.toString();
-	}
+        StringBuffer buff = new StringBuffer();
+        buff.append("<port name='"); //$NON-NLS-1$
+        buff.append(getName());
+        buff.append("' id='"); //$NON-NLS-1$
+        buff.append(getId());
+        buff.append("'>"); //$NON-NLS-1$
+        buff.append(m_binding.toString());
+        buff.append("</port>"); //$NON-NLS-1$
+        return buff.toString();
+    }
+
+    @Override
+    public String getNamespaceURI() {
+        return namespaceURI;
+    }
+
+    public void setNamespaceURI( String namespaceURI ) {
+        this.namespaceURI = namespaceURI;
+    }
 
 }

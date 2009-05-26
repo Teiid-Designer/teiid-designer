@@ -8,28 +8,24 @@
 package com.metamatrix.modeler.modelgenerator.wsdl.model;
 
 /**
- * 
  * This class represents a services as defined by as WSDL
- * 
- * @author JChoate
- *
  */
 public interface Service extends WSDLElement {
-	
-	/**
-	 * 
-	 * @return an array of ports defined by the service
-	 */
-	public Port[] getPorts();
-	
-	/**
-	 * 
-	 * @param ports the ports that this service defines
-	 */
-	public void setPorts(Port[] ports);
 
-	public void setModel(Model theModel);
-	
-	public Model getModel();
-	
+    /**
+     * @return an array of ports defined by the service
+     */
+    public Port[] getPorts();
+
+    /**
+     * @param ports the ports that this service defines
+     */
+    public void setPorts( Port[] ports );
+
+    public void setModel( Model theModel );
+
+    public Model getModel();
+
+    public String getNamespaceURI();
+
 }

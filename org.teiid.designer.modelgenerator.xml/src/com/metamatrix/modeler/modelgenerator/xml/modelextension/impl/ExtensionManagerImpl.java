@@ -37,8 +37,10 @@ import com.metamatrix.modeler.modelgenerator.xml.modelextension.ExtensionManager
 public abstract class ExtensionManagerImpl implements ExtensionManager {
 
     private XPackage thePackage;
+    private XClass theCatalogXClass;
     protected XClass theTableXClass;
     protected XClass theColumnXClass;
+    protected XClass theSchemaXClass;
 
     public XPackage getPackage() {
         return thePackage;
@@ -96,17 +98,37 @@ public abstract class ExtensionManagerImpl implements ExtensionManager {
 
         createEnums(xFactory);
 
-        theTableXClass = xFactory.createXClass();
-        theTableXClass.setExtendedClass(RelationalPackage.eINSTANCE.getBaseTable());
-        theTableXClass.setName(getTableName());
-        thePackage.getEClassifiers().add(theTableXClass);
-        createTableExtensions(xFactory, theTableXClass);
+        if (null != getCatalogName() && "" != getCatalogName()) { //$NON-NLS-1$
+            theCatalogXClass = xFactory.createXClass();
+            theCatalogXClass.setExtendedClass(RelationalPackage.eINSTANCE.getCatalog());
+            theCatalogXClass.setName(getCatalogName());
+            thePackage.getEClassifiers().add(theCatalogXClass);
+            createCatalogExtensions(xFactory, theCatalogXClass);
+        }
 
-        theColumnXClass = xFactory.createXClass();
-        theColumnXClass.setExtendedClass(RelationalPackage.eINSTANCE.getColumn());
-        theColumnXClass.setName(getColumnName());
-        thePackage.getEClassifiers().add(theColumnXClass);
-        createColumnExtensions(xFactory, theColumnXClass);
+        if (null != getSchemaName() && "" != getSchemaName()) { //$NON-NLS-1$
+            theSchemaXClass = xFactory.createXClass();
+            theSchemaXClass.setExtendedClass(RelationalPackage.eINSTANCE.getSchema());
+            theSchemaXClass.setName(getSchemaName());
+            thePackage.getEClassifiers().add(theSchemaXClass);
+            createSchemaExtensions(xFactory, theSchemaXClass);
+        }
+
+        if (null != getTableName() && "" != getTableName()) { //$NON-NLS-1$
+            theTableXClass = xFactory.createXClass();
+            theTableXClass.setExtendedClass(RelationalPackage.eINSTANCE.getBaseTable());
+            theTableXClass.setName(getTableName());
+            thePackage.getEClassifiers().add(theTableXClass);
+            createTableExtensions(xFactory, theTableXClass);
+        }
+
+        if (null != getColumnName() && "" != getColumnName()) { //$NON-NLS-1$
+            theColumnXClass = xFactory.createXClass();
+            theColumnXClass.setExtendedClass(RelationalPackage.eINSTANCE.getColumn());
+            theColumnXClass.setName(getColumnName());
+            thePackage.getEClassifiers().add(theColumnXClass);
+            createColumnExtensions(xFactory, theColumnXClass);
+        }
 
         try {
             modelExtension.save(monitor, false);
@@ -194,5 +216,29 @@ public abstract class ExtensionManagerImpl implements ExtensionManager {
     public void createTableExtensions( ExtensionFactory factory,
                                        XClass table ) {
 
+    }
+
+    public void createCatalogExtensions( ExtensionFactory factory,
+                                         XClass catalog ) {
+    }
+
+    public void createSchemaExtensions( ExtensionFactory factory,
+                                        XClass schema ) {
+    }
+
+    public String getColumnName() {
+        return ""; //$NON-NLS-1$
+    }
+
+    public String getCatalogName() {
+        return ""; //$NON-NLS-1$
+    }
+
+    public String getSchemaName() {
+        return ""; //$NON-NLS-1$
+    }
+
+    public String getTableName() {
+        return ""; //$NON-NLS-1$
     }
 }

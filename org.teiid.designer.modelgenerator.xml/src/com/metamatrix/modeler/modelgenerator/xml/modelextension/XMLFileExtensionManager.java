@@ -42,7 +42,7 @@ public class XMLFileExtensionManager extends BaseXMLRelationalExtensionManagerIm
     @Override
     public void assignAttribute( XAttribute attribute ) {
         super.assignAttribute(attribute);
-    	if (attribute.getName().equals(getTableName())) {
+        if (attribute.getName().equals(getTableName())) {
             fileNameTableAttribute = attribute;
         }
     }
@@ -63,18 +63,8 @@ public class XMLFileExtensionManager extends BaseXMLRelationalExtensionManagerIm
         return PACKAGE_PREFIX;
     }
 
+    @Override
     public String getTableName() {
         return TABLE_NAME;
-    }
-
-    @Override
-    public void createColumnExtensions( ExtensionFactory factory,
-                                        XClass column ) {
-
-    }
-
-    public String getColumnName() {
-        // this may cause problems - want to see if it blows and how to then handle no column extensions (and no table as well)
-        return null;
     }
 }

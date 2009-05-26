@@ -13,6 +13,8 @@ import java.util.Map;
 import org.eclipse.xsd.XSDSchema;
 import org.jdom.Namespace;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
+import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
+import com.metamatrix.modeler.modelgenerator.wsdl.model.Port;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Service;
 
 public class ModelImpl implements Model {
@@ -20,7 +22,16 @@ public class ModelImpl implements Model {
     private Service[] m_services;
     private Map m_namespaces;
     private Map m_reverseNamespaceLookup;
+    private Map<String, Service> serviceNameToService;
+    private Map<String, Port> portNameToPort;
+    private Map<String, Operation> operationNameToOperation;
     private XSDSchema[] m_schemas;
+
+    public ModelImpl() {
+        serviceNameToService = new HashMap<String, Service>();
+        portNameToPort = new HashMap<String, Port>();
+        operationNameToOperation = new HashMap<String, Operation>();
+    }
 
     public Service[] getServices() {
         // defensive copy of Service array
@@ -33,6 +44,20 @@ public class ModelImpl implements Model {
 
     public void setServices( Service[] services ) {
         m_services = services;
+        for (int i = 0; i < services.length; i++) {
+            Service service = services[i];
+            serviceNameToService.put(service.getName(), service);
+            Port[] ports = service.getPorts();
+            for (int j = 0; j < ports.length; j++) {
+                Port port = ports[j];
+                portNameToPort.put(port.getName(), port);
+                Operation[] operations = port.getBinding().getOperations();
+                for (int k = 0; k < operations.length; k++) {
+                    Operation operation = operations[k];
+                    operationNameToOperation.put(operation.getName(), operation);
+                }
+            }
+        }
     }
 
     @Override
@@ -90,6 +115,36 @@ public class ModelImpl implements Model {
 
     public void addNamespaceToMap( String namespaceURI ) {
         addNamespaceToMap("mmn0", namespaceURI); //$NON-NLS-1$
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.modeler.modelgenerator.wsdl.model.Model#getService(java.lang.String)
+     */
+    @Override
+    public Service getService( String name ) {
+        return serviceNameToService.get(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.modeler.modelgenerator.wsdl.model.Model#getPort(java.lang.String)
+     */
+    @Override
+    public Port getPort( String name ) {
+        return portNameToPort.get(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.modeler.modelgenerator.wsdl.model.Model#getOperation(java.lang.String)
+     */
+    @Override
+    public Operation getOperation( String name ) {
+        return operationNameToOperation.get(name);
     }
 
 }

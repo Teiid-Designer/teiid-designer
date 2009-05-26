@@ -7,46 +7,36 @@
  */
 package com.metamatrix.modeler.modelgenerator.wsdl.model;
 
-
 /**
- * 
- * This class is an abstract representation of the elements
- * that appear in a WSDL
- * 
- * @author JChoate
- *
+ * This class is an abstract representation of the elements that appear in a WSDL
  */
 public interface WSDLElement {
-	
-	/**
-	 * 
-	 * @return the name of the element
-	 */
-	public String getName();
-	
-	/**
-	 * 
-	 * @param name the name of the element
-	 */
-	public void setName(String name);
-	
-	/**
-	 * 
-	 * @return the id of the element
-	 */
-	public String getId();
-	
-	/**
-	 * 
-	 * @param id the id of the element
-	 */
-	public void setId(String id);
-	
-	/**
-	 * This method is used for making defensive copies of WSDLElements
-	 * 
-	 * @return a copy of the element
-	 */
-	public WSDLElement copy();
-	
+
+    /**
+     * @return the name of the element
+     */
+    public String getName();
+
+    /**
+     * @param name the name of the element
+     */
+    public void setName( String name );
+
+    /**
+     * @return the id of the element
+     */
+    public String getId();
+
+    /**
+     * @param id the id of the element
+     */
+    public void setId( String id );
+
+    /**
+     * This method is used for making defensive copies of WSDLElements
+     * 
+     * @return a copy of the element
+     */
+    public WSDLElement copy();
+
 }

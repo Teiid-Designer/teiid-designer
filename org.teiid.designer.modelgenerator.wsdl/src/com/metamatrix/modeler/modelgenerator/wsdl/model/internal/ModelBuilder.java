@@ -48,12 +48,11 @@ import com.metamatrix.modeler.schema.tools.processing.SchemaProcessor;
 import com.metamatrix.modeler.schema.tools.processing.internal.SchemaProcessorImpl;
 
 /**
- * @author JChoate This class generates a lightweight model of the WSDL file leaving out a lot of the things from the javax.wsdl
- *         model and even more from the eclipse emf wsdl model It uses IBM's WSDL4J model to build our own model Its lightweight
- *         to avoid memory consumption problems that were seen in the schema importer The usage model is as follows: String myWSDL
- *         = "c:\temp\my.wsdl"; ModelBuilder builder = new ModelBuilder(); builder.setWSDL(myWSDL); if(!builder.isWSDLParsed()) {
- *         WSDLException myEx = builder.getWSDLException(); handleExceptionInSomeWay(myEx); } Model wsdlModel =
- *         builder.getModel();
+ * This class generates a lightweight model of the WSDL file leaving out a lot of the things from the javax.wsdl model and even
+ * more from the eclipse emf wsdl model It uses IBM's WSDL4J model to build our own model Its lightweight to avoid memory
+ * consumption problems that were seen in the schema importer The usage model is as follows: String myWSDL = "c:\temp\my.wsdl";
+ * ModelBuilder builder = new ModelBuilder(); builder.setWSDL(myWSDL); if(!builder.isWSDLParsed()) { WSDLException myEx =
+ * builder.getWSDLException(); handleExceptionInSomeWay(myEx); } Model wsdlModel = builder.getModel();
  */
 public class ModelBuilder {
 
@@ -167,6 +166,7 @@ public class ModelBuilder {
             javax.wsdl.Service svc = (javax.wsdl.Service)services.get(key);
             impl.setId(key.toString());
             impl.setName(key.getLocalPart());
+            impl.setNamespaceURI(key.getNamespaceURI());
             impl.setPorts(getPortsForService(impl, svc.getPorts()));
             retVal[arrayCtr++] = impl;
         }
@@ -184,7 +184,7 @@ public class ModelBuilder {
             javax.wsdl.Port pt = (javax.wsdl.Port)ports.get(name);
             port.setId(name);
             port.setName(name);
-
+            port.setNamespaceURI(service.getNamespaceURI());
             List port_extens_elements = pt.getExtensibilityElements();
             Iterator p_iter = port_extens_elements.iterator();
             while (p_iter.hasNext()) {
