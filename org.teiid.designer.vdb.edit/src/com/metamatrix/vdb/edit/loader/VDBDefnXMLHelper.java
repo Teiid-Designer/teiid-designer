@@ -21,16 +21,11 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.Configuration;
 import com.metamatrix.common.config.api.ConfigurationModelContainer;
 import com.metamatrix.common.config.api.ConfigurationObjectEditor;
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.model.BasicConfigurationObjectEditor;
-import com.metamatrix.common.config.util.ConfigUtil;
-import com.metamatrix.common.config.xml.XMLConfig_42_HelperImpl;
 import com.metamatrix.common.config.xml.XMLConfigurationImportExportUtility;
-import com.metamatrix.common.config.xml.XMLHelper;
-import com.metamatrix.common.config.xml.XMLHelperUtil;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.common.vdb.api.VDBDefn;
 import com.metamatrix.common.vdb.api.VDBStreamImpl;
@@ -39,8 +34,8 @@ import com.metamatrix.common.xml.XMLReaderWriterImpl;
 import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.DateUtil;
-import com.metamatrix.core.util.MetaMatrixProductVersion;
 import com.metamatrix.core.util.ObjectConverterUtil;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.vdb.edit.VdbEditPlugin;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 import com.metamatrix.vdb.internal.def.VDBDefPropertyNames;
@@ -51,8 +46,6 @@ import com.metamatrix.vdb.runtime.BasicVDBDefn;
 public class VDBDefnXMLHelper {
 
     private static final String DEFAULT_USER_CREATED_BY = "VDBWriter"; //$NON-NLS-1$
-
-    private XMLHelper cfgXMLHelper = null;
 
     protected Element getRoot( File f ) throws Exception {
         FileInputStream in = new FileInputStream(f);
@@ -300,15 +293,18 @@ public class VDBDefnXMLHelper {
         return defn;
     }
 
-    /**
-     * @param root
-     * @param vdbDefn
-     * @return
-     * @since 4.2
-     */
-    public VDBDefn addModelInfo42( Element root,
-                                   VDBDefn vdbDefn,
-                                   ConfigurationModelContainer cmc ) throws Exception {
+     public boolean containsModelInfo( Element root ) throws Exception {
+        Collection modelsElements = root.getChildren(VDBConstants.VDBElementNames.Model.ELEMENT);
+        if (modelsElements == null || modelsElements.size() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public VDBDefn addModelInfo( Element root,
+                                 VDBDefn vdbDefn,
+                                 ConfigurationModelContainer cmc ) throws Exception {
+        
         // retreive lists of actual configuration object representation elements
         // from each main category element.
         // Get connector binding to connector type mappings, if any.
@@ -333,7 +329,7 @@ public class VDBDefnXMLHelper {
         // being imported.
 
         Collection bindings = importUtil.importConnectorBindings(root, editor);
-        Collection types = importUtil.importComponentTypes(root, editor, true);
+        Collection types = importUtil.importComponentTypes(root, editor);
 
         BasicVDBDefn defn = (BasicVDBDefn)vdbDefn;
 
@@ -439,133 +435,6 @@ public class VDBDefnXMLHelper {
         return defn;
     }
 
-    public boolean containsModelInfo( Element root ) throws Exception {
-        Collection modelsElements = root.getChildren(VDBConstants.VDBElementNames.Model.ELEMENT);
-        if (modelsElements == null || modelsElements.size() == 0) {
-            return false;
-        }
-        return true;
-    }
-
-    public VDBDefn addModelInfo( Element root,
-                                 VDBDefn vdbDefn,
-                                 ConfigurationModelContainer cmc ) throws Exception {
-        // retreive lists of actual configuration object representation elements
-        // from each main category element.
-        Collection modelsElements = root.getChildren(VDBConstants.VDBElementNames.Model.ELEMENT);
-        Collection modelEntries = vdbDefn.getModels();
-        Map meMap = new HashMap(modelEntries.size());
-        for (Iterator it = modelEntries.iterator(); it.hasNext();) {
-            BasicVDBModelDefn e = (BasicVDBModelDefn)it.next();
-            meMap.put(e.getName(), e);
-        }
-
-        Map types = new HashMap();
-        Map bindings = new HashMap();
-        BasicVDBDefn defn = (BasicVDBDefn)vdbDefn;
-        // Collection models = new ArrayList();
-        Iterator iterator = modelsElements.iterator();
-        // Iterate over models
-        while (iterator.hasNext()) {
-            Element modelElement = (Element)iterator.next();
-            Properties props = getElementProperties(modelElement);
-            if (props == null || props.isEmpty()) {
-                throw new Exception(VdbEditPlugin.Util.getString("VDBDefnXMLHelper.No_properties_defined_to_create_defn", //$NON-NLS-1$
-                                                                 VDBConstants.VDBElementNames.Model.ELEMENT));
-            }
-            String name = props.getProperty(VDBConstants.VDBElementNames.Model.Properties.NAME);
-            if (name == null) {
-                throw new Exception(VdbEditPlugin.Util.getString("VDBDefnXMLHelper.No_name_defined",//$NON-NLS-1$
-                                                                 VDBConstants.VDBElementNames.Model.Properties.NAME));
-            }
-            BasicVDBModelDefn m = (BasicVDBModelDefn)meMap.get(name);
-            if (m == null) {
-                /** Defect 18465 - This method also gets invoked by the Modeler when a VDB is opened. However, we do not want to **/
-                /** see this message in the messages tab of the Modeler. **/
-                // VdbEditPlugin.Util.log(IStatus.WARNING,
-                //                               VdbEditPlugin.Util.getString("VDBDefnXMLHelper.No_model_found_in_VDB", name)); //$NON-NLS-1$
-                continue;
-            }
-            String visibility = props.getProperty(VDBConstants.VDBElementNames.Model.Properties.VISIBILITY);
-            if (visibility.equalsIgnoreCase(VDBConstants.Visibility.PUBLIC)) {
-                m.setIsVisible(true);
-            } else {
-                m.setIsVisible(false);
-            }
-
-            defn.addModelInfo(m);
-
-            // NOTE: The importing of bindings and types, there doesn't have to be a
-            // matching type to a binding (or visa-versa).
-            // That validation will be done when the VDBDefn
-            // is being processed to verify if the type already exist for the binding
-            // being imported.
-
-            Element typeElement = modelElement.getChild(VDBConstants.VDBElementNames.Model.ComponentType.ELEMENT);
-            Element bindingElement = modelElement.getChild(VDBConstants.VDBElementNames.Model.ConnectorBinding.ELEMENT);
-            // type and binding are optional to load because
-            // the installation for system models does not contain a binding
-            // but if one is there, so must the other
-            if (typeElement != null) {
-                ComponentType type = getConfigXMLHelper().createComponentType(typeElement, getEditor(), null, true);
-                // if the connector component type already exist in the configuration
-                // model passed in, use it, not the one in the defn file
-
-                if (cmc != null && cmc.getComponentType(type.getFullName()) != null) {
-                    type = cmc.getComponentType(type.getFullName());
-                }
-                if (!types.containsKey(type.getID())) {
-                    defn.addConnectorType(type);
-                    types.put(type.getID(), type);
-                }
-            }
-            String bindingName = null;
-            ConnectorBinding binding = null;
-            if (bindingElement != null) {
-                binding = getConfigXMLHelper().createConnectorBinding(Configuration.NEXT_STARTUP_ID,
-                                                                      bindingElement,
-                                                                      getEditor(),
-                                                                      null,
-                                                                      false);
-                // routingUUID = binding.getRoutingUUID();
-
-                // if the connector component type already exist in the configuration
-                // model passed in, use it, not the one in the defn file
-                if (cmc != null && cmc.getConfiguration().getConnectorBinding(binding.getFullName()) != null) {
-                    binding = cmc.getConfiguration().getConnectorBinding(binding.getFullName());
-                }
-                if (!bindings.containsKey(binding.getFullName())) {
-                    defn.addConnectorBinding(binding);
-                    bindings.put(binding.getFullName(), binding);
-                } else {
-                    binding = (ConnectorBinding)bindings.get(binding.getFullName());
-                    // routingUUID = binding.getRoutingUUID();
-                }
-
-                bindingName = binding.getFullName();
-                // System.out.println("BINDING PROPS " +
-                // PropertiesUtils.prettyPrint(mdefn.getConnectorBinding().getProperties()));
-            } else {
-                // this allows the setting of a binding name without loading the binding
-                // Example is a system model that binds to a service
-                bindingName = props.getProperty(VDBConstants.VDBElementNames.Model.Properties.CONNECTOR_BINDING_NAME);
-            }
-
-            if (bindingName != null && bindingName.length() > 0) {
-                m.addConnectorBindingByName(bindingName);
-            }
-
-            // if (routingUUID != null && routingUUID.length() > 0) {
-            // m.addConnectorBindingName(routingUUID);
-            // } else if (binding != null) {
-            // m.addConnectorBindingUUID(binding.getFullName());
-            // }
-            // models.add(m);
-        }
-        // defn.setModelInfos(models);
-        return defn;
-    }
-
     /**
      * getElementProperties is used to obtain the property name-value pairs from an element. One or more properties can be defined
      * and they are defined as follows: <Property Name="name" Value="value" /> <Property Name="name" Value="value" />
@@ -591,17 +460,6 @@ public class VDBDefnXMLHelper {
             }
         }
         return properties;
-    }
-
-    private ConfigurationObjectEditor getEditor() {
-        return ConfigUtil.getEditor();
-    }
-
-    private XMLHelper getConfigXMLHelper() {
-        if (cfgXMLHelper == null) {
-            cfgXMLHelper = new XMLConfig_42_HelperImpl();
-        }
-        return cfgXMLHelper;
     }
 
     /**
@@ -634,84 +492,6 @@ public class VDBDefnXMLHelper {
 
     }
 
-    public static boolean is41Compatible( Element root ) {
-        Element headerElement = root.getChild(VDBDefXMLElementNames.Header.ELEMENT);
-        if (headerElement == null) {
-            // If no header element found, assume it's pre vers 4.2
-            return false;
-        }
-
-        Properties props = new VDBDefnXMLHelper().getHeaderProperties(headerElement);
-
-        return is41Compatible(props);
-
-    }
-
-    public static boolean is41Compatible( Properties props ) {
-
-        String sVersion = props.getProperty(VDBDefPropertyNames.VDB_EXPORTER_VERSION);
-
-        if (sVersion == null) {
-            return is42ConfigurationCompatible(props);
-        }
-        try {
-
-            try {
-                double sv = Double.parseDouble(sVersion);
-                if (sv >= VDBDefPropertyNames.VDBEXPORTER_LATEST_VERSION_DBL) {
-                    return true;
-                }
-
-            } catch (Throwable t) {
-            }
-
-            // for compatibility reasons for previously created .DEF files, check
-            // the configuration version header property for compatibility
-            return is42ConfigurationCompatible(props);
-
-        } catch (Throwable t) {
-            return false;
-        }
-    }
-
-    public static final boolean is42ConfigurationCompatible( Properties props ) {
-
-        try {
-            return XMLHelperUtil.is42ConfigurationCompatible(props);
-
-        } catch (Throwable t) {
-            return false;
-        }
-
-    }
-
-    public final Properties getHeaderProperties( Element element ) {
-        Properties props = new Properties();
-
-        // this isnt the header element, the try to get the header element
-        if (!element.getName().equals(VDBDefXMLElementNames.Header.ELEMENT)) {
-            // String wrongElementName = element.getName();
-            element = element.getChild(VDBDefXMLElementNames.Header.ELEMENT);
-            if (element == null) {
-                // If no header element found, assume it's pre vers 4.2
-                return props; // this should cause the compatibility check to use the old version
-
-                //           
-                //               final String msg = VdbEditPlugin.Util.getString("VDBDefXMLHelper.Unexpected_header_element", wrongElementName); //$NON-NLS-1$
-                //
-                // throw new IOException(msg);
-            }
-        }
-
-        List elements = element.getChildren();
-        Iterator it = elements.iterator();
-        while (it.hasNext()) {
-            final Element e = (Element)it.next();
-            props.setProperty(e.getName(), e.getText());
-        }
-        return props;
-    }
-
     /**
      * <p>
      * This method is used to create a Header JDOM Element from a Properties object.
@@ -730,7 +510,7 @@ public class VDBDefnXMLHelper {
         String userNameContent = props.getProperty(VDBDefPropertyNames.USER_CREATED_BY);
 
         String vdbVersionContent = VDBDefPropertyNames.VDBEXPORTER_LATEST_VERSION;
-        String serverVersionContent = MetaMatrixProductVersion.VERSION_NUMBER;
+        String serverVersionContent = ModelerCore.ILicense.VERSION;
         String timeContent = DateUtil.getCurrentDateAsString();
 
         Element configurationVersion = new Element(VDBDefPropertyNames.VDB_EXPORTER_VERSION);

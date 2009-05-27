@@ -131,7 +131,7 @@ public class ConfigFileManager {
                                 
         FileInputStream in = new FileInputStream(connectorFile);
         XMLConfigurationImportExportUtility io = new XMLConfigurationImportExportUtility();
-        return io.importConnector(in, editor, null); 
+        return io.importComponentType(in, editor, null);
     }
         
     /**

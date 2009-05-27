@@ -12,16 +12,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import com.metamatrix.common.config.api.ComponentType;
 import com.metamatrix.common.config.api.ComponentTypeID;
 import com.metamatrix.common.config.api.Configuration;
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ConnectorBindingType;
-import com.metamatrix.common.config.api.ProductType;
 import com.metamatrix.common.config.model.BasicConfigurationObjectEditor;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.common.vdb.api.VDBDefn;
@@ -829,9 +826,12 @@ public class TestVDBDefn extends TestCase {
     
  
     private ConnectorBindingType creatConnectorType(String name) {
-        ConnectorBindingType ct = (ConnectorBindingType) editor.createComponentType(ComponentType.CONNECTOR_COMPONENT_TYPE_CODE, 
-                                                                                    name, 
-                                                                                    ConnectorBindingType.CONNECTOR_TYPE_ID, ProductType.PRODUCT_SUPER_TYPE_ID, true, false); 
+        ConnectorBindingType ct = (ConnectorBindingType)editor.createComponentType(ComponentType.CONNECTOR_COMPONENT_TYPE_CODE,
+                                                                                   name,
+                                                                                   ConnectorBindingType.CONNECTOR_TYPE_ID, // not really used since getting rid of Product
+                                                                                   ConnectorBindingType.CONNECTOR_TYPE_ID,
+                                                                                   true,
+                                                                                   false); 
         return ct;
     }
     

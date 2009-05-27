@@ -19,20 +19,13 @@ import com.metamatrix.common.config.api.ComponentTypeID;
 import com.metamatrix.common.config.api.Configuration;
 import com.metamatrix.common.config.api.ConfigurationID;
 import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.api.DeployedComponent;
 import com.metamatrix.common.config.api.Host;
 import com.metamatrix.common.config.api.HostID;
-import com.metamatrix.common.config.api.ProductServiceConfig;
-import com.metamatrix.common.config.api.ProductServiceConfigID;
-import com.metamatrix.common.config.api.ProductType;
-import com.metamatrix.common.config.api.ProductTypeID;
 import com.metamatrix.common.config.api.PropDefnAllowedValue;
 import com.metamatrix.common.config.api.ResourceDescriptor;
 import com.metamatrix.common.config.api.ServiceComponentDefn;
-import com.metamatrix.common.config.api.ServiceComponentDefnID;
 import com.metamatrix.common.config.api.SharedResource;
 import com.metamatrix.common.config.api.VMComponentDefn;
-import com.metamatrix.common.config.api.VMComponentDefnID;
 import com.metamatrix.common.config.model.BasicConfigurationObjectEditor;
 import com.metamatrix.common.log.LogConfiguration;
 import com.metamatrix.common.object.PropertyDefinition;
@@ -107,17 +100,6 @@ public class FakeConfigurationObjectEditor extends BasicConfigurationObjectEdito
     }
 
     /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#createConfiguration(com.metamatrix.common.config.api.Configuration,
-     *      java.lang.String)
-     * @since 4.3
-     */
-    @Override
-    public Configuration createConfiguration( Configuration original,
-                                              String newName ) {
-        return null;
-    }
-
-    /**
      * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#createComponentType(int, java.lang.String,
      *      com.metamatrix.common.config.api.ComponentTypeID, com.metamatrix.common.config.api.ComponentTypeID, boolean, boolean)
      * @since 4.3
@@ -140,30 +122,6 @@ public class FakeConfigurationObjectEditor extends BasicConfigurationObjectEdito
     @Override
     public ComponentType createComponentType( ComponentType componentType,
                                               String name ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#createProductType(java.lang.String, boolean, boolean)
-     * @since 4.3
-     */
-    @Override
-    public ProductType createProductType( String name,
-                                          boolean deployable,
-                                          boolean monitored ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#createProductType(java.lang.String, java.util.Collection,
-     *      boolean, boolean)
-     * @since 4.3
-     */
-    @Override
-    public ProductType createProductType( String name,
-                                          Collection serviceComponentTypes,
-                                          boolean deployable,
-                                          boolean monitored ) {
         return null;
     }
 
@@ -302,20 +260,6 @@ public class FakeConfigurationObjectEditor extends BasicConfigurationObjectEdito
     }
 
     /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#createServiceComponentDefn(com.metamatrix.common.config.api.Configuration,
-     *      com.metamatrix.common.config.api.ComponentTypeID, java.lang.String,
-     *      com.metamatrix.common.config.api.ProductServiceConfigID)
-     * @since 4.3
-     */
-    @Override
-    public ServiceComponentDefn createServiceComponentDefn( Configuration configuration,
-                                                            ComponentTypeID typeID,
-                                                            String componentName,
-                                                            ProductServiceConfigID pscID ) {
-        return null;
-    }
-
-    /**
      * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#createResourceDescriptor(com.metamatrix.common.config.api.ConfigurationID,
      *      com.metamatrix.common.config.api.ComponentTypeID, java.lang.String)
      * @since 4.3
@@ -351,103 +295,6 @@ public class FakeConfigurationObjectEditor extends BasicConfigurationObjectEdito
     }
 
     /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#createDeployedServiceComponent(java.lang.String,
-     *      com.metamatrix.common.config.api.ConfigurationID, com.metamatrix.common.config.api.HostID,
-     *      com.metamatrix.common.config.api.VMComponentDefnID, com.metamatrix.common.config.api.ServiceComponentDefnID,
-     *      com.metamatrix.common.config.api.ProductServiceConfigID, com.metamatrix.common.config.api.ComponentTypeID)
-     * @since 4.3
-     */
-    @Override
-    public DeployedComponent createDeployedServiceComponent( String instanceName,
-                                                             ConfigurationID configurationID,
-                                                             HostID hostId,
-                                                             VMComponentDefnID vmId,
-                                                             ServiceComponentDefnID serviceComponentDefnID,
-                                                             ProductServiceConfigID pscID,
-                                                             ComponentTypeID serviceComponentTypeID ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#createDeployedServiceComponent(java.lang.String,
-     *      com.metamatrix.common.config.api.Configuration, com.metamatrix.common.config.api.HostID,
-     *      com.metamatrix.common.config.api.VMComponentDefnID, com.metamatrix.common.config.api.ServiceComponentDefn,
-     *      com.metamatrix.common.config.api.ProductServiceConfigID)
-     * @since 4.3
-     */
-    @Override
-    public DeployedComponent createDeployedServiceComponent( String instanceName,
-                                                             Configuration configuration,
-                                                             HostID hostId,
-                                                             VMComponentDefnID vmId,
-                                                             ServiceComponentDefn serviceComponentDefn,
-                                                             ProductServiceConfigID pscID ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#createProductServiceConfig(com.metamatrix.common.config.api.Configuration,
-     *      com.metamatrix.common.config.api.ProductServiceConfig, java.lang.String)
-     * @since 4.3
-     */
-    @Override
-    public ProductServiceConfig createProductServiceConfig( Configuration configuration,
-                                                            ProductServiceConfig originalPSC,
-                                                            String newName ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#createProductServiceConfig(com.metamatrix.common.config.api.ConfigurationID,
-     *      com.metamatrix.common.config.api.ProductTypeID, java.lang.String)
-     * @since 4.3
-     */
-    @Override
-    public ProductServiceConfig createProductServiceConfig( ConfigurationID configurationID,
-                                                            ProductTypeID productTypeID,
-                                                            String componentName ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#createProductServiceConfig(com.metamatrix.common.config.api.Configuration,
-     *      com.metamatrix.common.config.api.ProductTypeID, java.lang.String)
-     * @since 4.3
-     */
-    @Override
-    public ProductServiceConfig createProductServiceConfig( Configuration configuration,
-                                                            ProductTypeID productTypeID,
-                                                            String componentName ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#deployProductServiceConfig(com.metamatrix.common.config.api.Configuration,
-     *      com.metamatrix.common.config.api.ProductServiceConfig, com.metamatrix.common.config.api.HostID,
-     *      com.metamatrix.common.config.api.VMComponentDefnID)
-     * @since 4.3
-     */
-    @Override
-    public Collection deployProductServiceConfig( Configuration configuration,
-                                                  ProductServiceConfig psc,
-                                                  HostID hostId,
-                                                  VMComponentDefnID vmId ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#deployServiceDefn(com.metamatrix.common.config.api.Configuration,
-     *      com.metamatrix.common.config.api.ServiceComponentDefn, com.metamatrix.common.config.api.ProductServiceConfigID)
-     * @since 4.3
-     */
-    @Override
-    public Collection deployServiceDefn( Configuration configuration,
-                                         ServiceComponentDefn serviceComponentDefn,
-                                         ProductServiceConfigID pscID ) {
-        return null;
-    }
-
-    /**
      * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#setRoutingUUID(com.metamatrix.common.config.api.ServiceComponentDefn,
      *      java.lang.String)
      * @since 4.3
@@ -458,106 +305,11 @@ public class FakeConfigurationObjectEditor extends BasicConfigurationObjectEdito
     }
 
     /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#setEnabled(com.metamatrix.common.config.api.Configuration,
-     *      com.metamatrix.common.config.api.ServiceComponentDefn, com.metamatrix.common.config.api.ProductServiceConfig, boolean,
-     *      boolean)
-     * @since 4.3
-     */
-    @Override
-    public Collection setEnabled( Configuration configuration,
-                                  ServiceComponentDefn serviceComponentDefn,
-                                  ProductServiceConfig psc,
-                                  boolean enabled,
-                                  boolean deleteDeployedComps ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#setEnabled(com.metamatrix.common.config.api.ServiceComponentDefnID,
-     *      com.metamatrix.common.config.api.ProductServiceConfig, boolean)
-     * @since 4.3
-     */
-    @Override
-    public ProductServiceConfig setEnabled( ServiceComponentDefnID serviceComponentDefnID,
-                                            ProductServiceConfig psc,
-                                            boolean enabled ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#updateProductServiceConfig(com.metamatrix.common.config.api.Configuration,
-     *      com.metamatrix.common.config.api.ProductServiceConfig, java.util.Collection)
-     * @since 4.3
-     */
-    @Override
-    public ProductServiceConfig updateProductServiceConfig( Configuration config,
-                                                            ProductServiceConfig psc,
-                                                            Collection newServiceIDList ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#addServiceComponentDefn(com.metamatrix.common.config.api.Configuration,
-     *      com.metamatrix.common.config.api.ProductServiceConfig, com.metamatrix.common.config.api.ServiceComponentDefnID)
-     * @since 4.3
-     */
-    @Override
-    public ProductServiceConfig addServiceComponentDefn( Configuration configuration,
-                                                         ProductServiceConfig psc,
-                                                         ServiceComponentDefnID serviceComponentDefnID ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#addServiceComponentDefn(com.metamatrix.common.config.api.ProductServiceConfig,
-     *      com.metamatrix.common.config.api.ServiceComponentDefnID)
-     * @since 4.3
-     */
-    @Override
-    public ProductServiceConfig addServiceComponentDefn( ProductServiceConfig psc,
-                                                         ServiceComponentDefnID serviceComponentDefnID ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#addServiceComponentType(com.metamatrix.common.config.api.ProductType,
-     *      com.metamatrix.common.config.api.ComponentType)
-     * @since 4.3
-     */
-    @Override
-    public ProductType addServiceComponentType( ProductType productType,
-                                                ComponentType serviceComponentType ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#removeServiceComponentType(com.metamatrix.common.config.api.ProductType,
-     *      com.metamatrix.common.config.api.ComponentType)
-     * @since 4.3
-     */
-    @Override
-    public ProductType removeServiceComponentType( ProductType productType,
-                                                   ComponentType serviceComponentType ) {
-        return null;
-    }
-
-    /**
      * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#getEditableProperties(com.metamatrix.common.config.api.ComponentObject)
      * @since 4.3
      */
     @Override
     public Properties getEditableProperties( ComponentObject t ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#renamePSC(com.metamatrix.common.config.api.ProductServiceConfig,
-     *      java.lang.String)
-     * @since 4.3
-     */
-    @Override
-    public ProductServiceConfig renamePSC( ProductServiceConfig psc,
-                                           String name ) {
         return null;
     }
 
@@ -805,22 +557,6 @@ public class FakeConfigurationObjectEditor extends BasicConfigurationObjectEdito
     }
 
     /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#setBootStrapConfiguration(com.metamatrix.common.config.api.ConfigurationID)
-     * @since 4.3
-     */
-    @Override
-    public void setBootStrapConfiguration( ConfigurationID configurationID ) {
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#setNextStartupConfiguration(com.metamatrix.common.config.api.ConfigurationID)
-     * @since 4.3
-     */
-    @Override
-    public void setNextStartupConfiguration( ConfigurationID configurationID ) {
-    }
-
-    /**
      * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#delete(com.metamatrix.common.config.api.ComponentType)
      * @since 4.3
      */
@@ -927,20 +663,6 @@ public class FakeConfigurationObjectEditor extends BasicConfigurationObjectEdito
                                                       ConnectorBinding original,
                                                       String newName,
                                                       String routingUUID ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#createConnectorComponent(com.metamatrix.common.config.api.Configuration,
-     *      com.metamatrix.common.config.api.ComponentTypeID, java.lang.String,
-     *      com.metamatrix.common.config.api.ProductServiceConfigID)
-     * @since 4.3
-     */
-    @Override
-    public ConnectorBinding createConnectorComponent( Configuration configuration,
-                                                      ComponentTypeID typeID,
-                                                      String componentName,
-                                                      ProductServiceConfigID pscID ) {
         return null;
     }
 

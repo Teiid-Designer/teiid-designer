@@ -386,34 +386,4 @@ public class FakeConfigurationManager implements ConfigurationManager {
      */
     public void removeConfigurationChangeListener( IConfigurationChangeListener theListener ) {
     }
-
-    /**
-     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#compatibilityOf(com.metamatrix.common.config.api.ComponentType,
-     *      com.metamatrix.common.config.api.ComponentType)
-     * @since 5.5.3
-     */
-    public Compatibility compatibilityOf( ComponentType type1,
-                                          ComponentType type2 ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#compatibilityOf(com.metamatrix.common.config.api.ConnectorBinding,
-     *      com.metamatrix.common.config.api.ConnectorBinding)
-     * @since 5.5.3
-     */
-    public Compatibility compatibilityOf( ConnectorBinding connector1,
-                                          ConnectorBinding connector2 ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#compatible(com.metamatrix.common.config.api.ConnectorBinding,
-     *      com.metamatrix.common.config.api.ComponentType)
-     * @since 5.5.3
-     */
-    public boolean compatible( ConnectorBinding connector,
-                               ComponentType type ) {
-        return false;
-    }
 }

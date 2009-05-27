@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -22,10 +21,9 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.dialogs.ListDialog;
-
+import org.teiid.connector.api.ConnectorPropertyNames;
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ConnectorBindingType;
-import com.metamatrix.common.config.api.ConnectorBindingType.Attributes;
 import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -194,7 +192,7 @@ public class ConnectorBindingImportPostProcessor implements
                 // found one or more matching bindings so just use the first one
                 binding = matchingBindings.iterator().next();
             }
-
+            
             // create source binding
             wsConfigMgr.createSourceBinding(infoProvider.getModelResource(), binding);
             
@@ -223,7 +221,7 @@ public class ConnectorBindingImportPostProcessor implements
         if (!classpathJarNames.isEmpty()) {
             try {
                 temp = ModelerDqpUtils.setPropertyValue(newBinding,
-                                                        Attributes.CONNECTOR_CLASSPATH,
+                                                        ConnectorPropertyNames.CONNECTOR_CLASSPATH,
                                                         ModelerDqpUtils.getConnectorClassPathPropertValue(classpathJarNames));
                 
                 // include any errors

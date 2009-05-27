@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import com.metamatrix.api.exception.query.QueryParserException;
 import com.metamatrix.query.sql.ProcedureReservedWords;
 import com.metamatrix.query.sql.lang.Command;
 import com.metamatrix.query.sql.symbol.ElementSymbol;
@@ -1203,52 +1201,6 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
     }
 
     /**
-    * Get the Error indices, given a List of DisplayNodes and a QueryParserException.
-    * The DisplayNode list is scanned, and if the QueryParserException can be determined
-    * to be within them, the start and end index of the displayNode range is returned.
-    * A two item List is always returned, the startIndex and the endIndex.  -1 values
-    * indicate that the index could not be matched to a display node.
-    * @param displayNodes the List of DisplayNodes to scan
-    * @param qpe the parser exception
-    * @return the List containing the errorStart and errorEnd indices
-    */
-    public static List getErrorIndices(List displayNodes, QueryParserException qpe) {
-		//-----------------------------------
-		// Reset the start and end Indices
-		//-----------------------------------
-        int errorStart = -1;
-        int errorEnd = -1;
-        List indexList = new ArrayList(2);
-        indexList.add(0,new Integer(errorStart));
-        indexList.add(1,new Integer(errorEnd));
-        if(qpe.isLocationKnown()) {
-            // Use the Line and Column to find the DisplayNode, then set start and end
-            int errorLine = qpe.getLine();
-            int errorColumn = qpe.getColumn();
-            int index = getIndexForLineColumn(getString(displayNodes),errorLine,errorColumn);
-            Iterator iter = displayNodes.iterator();
-            while( iter.hasNext() ) {
-                DisplayNode node = (DisplayNode)iter.next();
-                if(node.isAnywhereWithin(index)) {
-                    errorStart = node.getStartIndex();
-                    errorEnd = node.getEndIndex()+1;
-                    // Check the next node and set to its end (index may be on a border)
-                    if(iter.hasNext()) {
-                        node = (DisplayNode)iter.next();
-                        if(node.isAnywhereWithin(index)) {
-                            errorEnd = node.getEndIndex()+1;
-                        }
-                    }
-        			indexList.set(0,new Integer(errorStart));
-        			indexList.set(1,new Integer(errorEnd));
-                    return indexList;
-                }
-            }
-        }
-        return indexList;
-    }
-
-    /**
     * Get the Error indices, given a List of DisplayNodes and a match string.
     * The DisplayNode list is scanned, and if the match string can be determined
     * to be within them, the start and end index of the displayNode range is returned.
@@ -1294,25 +1246,6 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
         }
         return indexList;
     }
-
-	/**
-	* Get the overall string index, given the line and column indices from a parser exception.
-	* @param sqlString the sqlString to search
-	* @param line the line number
-	* @param column the column number within the provided line
-	* @return the index corresponding to the line and column number
-	*/
-	private static int getIndexForLineColumn(String sqlString,int line,int column) {
-		StringTokenizer st = new StringTokenizer(sqlString,CR);
-		int nLines = st.countTokens();
-		if(nLines<line) return -1;
-		int count = 0;
-		for(int i=0; i<line; i++) {
-			if(i+1==line) count+=column;
-			else count+=st.nextToken().length()+1;
-		}
-		return count-1;
-	}
 	
 	/**
 	* Get the line index for the given overall string index.

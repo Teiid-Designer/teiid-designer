@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -28,6 +27,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
@@ -46,15 +46,14 @@ import org.eclipse.xsd.XSDPlugin;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.aspects.DeclarativeTransactionManager;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.interceptor.InvocationFactoryHelper;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.util.ArgCheck;
-import com.metamatrix.core.util.MetaMatrixProductVersion;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.core.util.Stopwatch;
 import com.metamatrix.core.util.StringUtil;
@@ -104,6 +103,13 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     // Constants
 
     public static boolean HEADLESS = false;
+    
+    /**
+     * The bundle ID of the Designer feature.
+     * 
+     * @since 6.1.0
+     */
+    private static String FEATURE_ID = "org.teiid.designer"; //$NON-NLS-1$
 
     /**
      * Product license constants.
@@ -111,11 +117,40 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @since 4.1
      */
     public static interface ILicense {
-        String PRODUCT = MetaMatrixProductVersion.MODELER_PRODUCT_TYPE_NAME;
-        String PRODUCER_NAME = "Teiid Designer"; //$NON-NLS-1$
-        String VERSION = MetaMatrixProductVersion.VERSION_NUMBER;
+        String PRODUCER_NAME = getProducerName();
+        String VERSION = getVersion();
     }
+    
+    /**
+     * @return the feature version
+     * @since 6.1.0
+     */
+    static String getVersion() {
+        if (Platform.isRunning()) {
+            Bundle bundle = Platform.getBundle(FEATURE_ID);
+            Object version = bundle.getHeaders().get("Bundle-Version"); //$NON-NLS-1$
+            return version.toString();
+        }
 
+        // must be testing
+        return "6.1.0"; //$NON-NLS-1$
+    }
+    
+    /**
+     * @return the feature name
+     * @since 6.1.0
+     */
+    static String getProducerName() {
+        if (Platform.isRunning()) {
+            Bundle bundle = Platform.getBundle(FEATURE_ID);
+            Object name = bundle.getHeaders().get("Bundle-Name"); //$NON-NLS-1$
+            return name.toString();
+        }
+        
+        // must be testing
+        return "Teiid Designer"; //$NON-NLS-1$
+    }
+    
     private static final String MINIMUM_JAVA_VERSION = "1.6"; //$NON-NLS-1$
 
     /**

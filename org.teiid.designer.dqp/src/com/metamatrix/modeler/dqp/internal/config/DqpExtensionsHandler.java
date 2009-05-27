@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.teiid.connector.api.ConnectorPropertyNames;
 import com.metamatrix.common.config.api.ComponentType;
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ExtensionModule;
@@ -359,7 +360,7 @@ public class DqpExtensionsHandler {
 	 */
 	public String[] getConnectorTypeExtensionModules(ComponentType type) {
 		ArrayList<String> modules = new ArrayList<String>();
-		String classPath = type.getDefaultValue(Attributes.CONNECTOR_CLASSPATH);
+		String classPath = type.getDefaultValue(ConnectorPropertyNames.CONNECTOR_TYPE_CLASSPATH);
 		if (classPath != null) {
 			StringTokenizer st = new StringTokenizer(classPath, ";"); //$NON-NLS-1$
 			while (st.hasMoreTokens()) {
@@ -383,7 +384,7 @@ public class DqpExtensionsHandler {
 	 */
 	public String[] getConnectorBindingExtensionModules(ConnectorBinding binding) {
 		ArrayList<String> modules = new ArrayList<String>();
-		String classPath = binding.getProperty(Attributes.CONNECTOR_CLASSPATH);
+		String classPath = binding.getProperty(ConnectorPropertyNames.CONNECTOR_CLASSPATH);
 		if (classPath != null) {
 			StringTokenizer st = new StringTokenizer(classPath, ";"); //$NON-NLS-1$
 			while (st.hasMoreTokens()) {

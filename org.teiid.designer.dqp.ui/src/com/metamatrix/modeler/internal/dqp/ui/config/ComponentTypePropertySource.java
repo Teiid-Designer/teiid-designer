@@ -13,10 +13,10 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
+import org.teiid.connector.api.ConnectorPropertyNames;
 import com.metamatrix.common.config.api.ComponentType;
 import com.metamatrix.common.config.api.ComponentTypeDefn;
 import com.metamatrix.common.config.api.ConfigurationObjectEditor;
-import com.metamatrix.common.config.api.ConnectorBindingType;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 
 
@@ -62,9 +62,9 @@ public class ComponentTypePropertySource implements
             ComponentTypeDefn propertyDefn = (ComponentTypeDefn) iter.next();
 
             if (this.editable) {
-                result[index++] = new TextPropertyDescriptor(propertyDefn, propertyDefn.getName());
+                result[index++] = new TextPropertyDescriptor(propertyDefn, propertyDefn.getPropertyDefinition().getDisplayName());
             } else {
-                result[index++] = new PropertyDescriptor(propertyDefn, propertyDefn.getName());
+                result[index++] = new PropertyDescriptor(propertyDefn, propertyDefn.getPropertyDefinition().getDisplayName());
             }
         }
         return result;
@@ -81,7 +81,7 @@ public class ComponentTypePropertySource implements
 
         if ( defValue == null ) {
             defValue = EMPTY_STRING;
-        } else if (ConnectorBindingType.Attributes.CONNECTOR_CLASSPATH.equals(defID)) {
+        } else if (ConnectorPropertyNames.CONNECTOR_TYPE_CLASSPATH.equals(defID)) {
             defValue = ModelerDqpUtils.getConnectorClasspathDisplayValue(defValue);
         }
 

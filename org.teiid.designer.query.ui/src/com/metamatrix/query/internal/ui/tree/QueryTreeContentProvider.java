@@ -10,19 +10,20 @@ package com.metamatrix.query.internal.ui.tree;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-
+import java.util.List;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-
+import com.metamatrix.query.sql.lang.Command;
 import com.metamatrix.query.sql.lang.Criteria;
 import com.metamatrix.query.sql.lang.From;
 import com.metamatrix.query.sql.lang.FromClause;
 import com.metamatrix.query.sql.lang.JoinPredicate;
 import com.metamatrix.query.sql.lang.Query;
 import com.metamatrix.query.sql.lang.SetQuery;
+import com.metamatrix.query.sql.lang.SubqueryContainer;
 import com.metamatrix.query.sql.lang.SubqueryFromClause;
 import com.metamatrix.query.sql.lang.UnaryFromClause;
-import com.metamatrix.query.sql.visitor.CommandCollectorVisitor;
+import com.metamatrix.query.sql.visitor.ValueIteratorProviderCollectorVisitor;
 
 
 /** 
@@ -88,8 +89,16 @@ public class QueryTreeContentProvider implements ITreeContentProvider {
                 return new Object[] { };
             }            
         } else if ( obj instanceof Criteria ) {
-            return CommandCollectorVisitor.getCommands((Criteria) obj).toArray();
+            List<SubqueryContainer> containers = ValueIteratorProviderCollectorVisitor.getValueIteratorProviders((Criteria)obj);
+            List<Command> commands = new ArrayList<Command>();
+            
+            for (SubqueryContainer container : containers) {
+                commands.add(container.getCommand());
+            }
+            
+            return commands.toArray();
         }
+
         return null;
     }
 

@@ -340,41 +340,4 @@ public interface ConfigurationManager extends
     void addConfigurationChangeListener(IConfigurationChangeListener theListener);
 
     void removeConfigurationChangeListener(IConfigurationChangeListener theListener);
-
-    /**
-     * Returns a value indicating how compatible the first supplied connector type is with the second supplied connector type.
-     * 
-     * @param type1
-     * @param type2
-     * @return A Compatibility value indicating how compatible <code>type1</code> is with <code>type2</code>.
-     * @since 5.5.3
-     */
-    Compatibility compatibilityOf(ComponentType type1,
-                                  ComponentType type2);
-
-    /**
-     * Returns a value indicating how compatible the first supplied connector is with the second supplied connector.
-     * 
-     * @param connector1
-     * @param connector2
-     * @return A Compatibility value indicating how compatible <code>connector1</code> is with <code>connector2</code>.
-     * @since 5.5.3
-     */
-    Compatibility compatibilityOf(ConnectorBinding connector1,
-                                  ConnectorBinding connector2);
-
-    /**
-     * Returns whether the supplied type is compatible with the supplied connector.
-     * 
-     * @param type
-     * @param connector
-     * @return <code>true</code> if <code>type</code> is compatible with <code>connector</code>.
-     * @since 5.5.3
-     */
-    boolean compatible(ConnectorBinding connector,
-                       ComponentType type);
-
-    enum Compatibility {
-        EQUAL, COMPATIBLE, POSSIBLY_COMPATIBLE, INCOMPATIBLE
-    }
 }

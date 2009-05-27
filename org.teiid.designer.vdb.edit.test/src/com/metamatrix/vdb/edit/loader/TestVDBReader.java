@@ -11,12 +11,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Map;
-
+import java.util.Properties;
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import com.metamatrix.common.config.api.ComponentType;
 import com.metamatrix.common.config.api.ComponentTypeDefn;
 import com.metamatrix.common.config.api.ComponentTypeID;
@@ -24,7 +23,6 @@ import com.metamatrix.common.config.api.Configuration;
 import com.metamatrix.common.config.api.ConfigurationModelContainer;
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ConnectorBindingType;
-import com.metamatrix.common.config.api.ProductType;
 import com.metamatrix.common.config.model.BasicConfigurationObjectEditor;
 import com.metamatrix.common.config.model.ConfigurationModelContainerAdapter;
 import com.metamatrix.common.util.ByteArrayHelper;
@@ -103,9 +101,12 @@ public class TestVDBReader extends TestCase {
     }
     
     private ConnectorBindingType creatConnectorType(String name) {
-        ConnectorBindingType ct = (ConnectorBindingType) editor.createComponentType(ComponentType.CONNECTOR_COMPONENT_TYPE_CODE, 
-                                                                                    name, 
-                                                                                    ConnectorBindingType.CONNECTOR_TYPE_ID, ProductType.PRODUCT_SUPER_TYPE_ID, true, false); 
+        ConnectorBindingType ct = (ConnectorBindingType)editor.createComponentType(ComponentType.CONNECTOR_COMPONENT_TYPE_CODE,
+                                                                                   name,
+                                                                                   ConnectorBindingType.CONNECTOR_TYPE_ID, // not really used since getting rid of Product
+                                                                                   ConnectorBindingType.CONNECTOR_TYPE_ID,
+                                                                                   true,
+                                                                                   false); 
         return ct;
     }
     
@@ -731,7 +732,7 @@ public class TestVDBReader extends TestCase {
         } 
               
         
-        InputStream is = VDBReader.createVDBDefnInputStream(defn, null);
+        InputStream is = VDBReader.createVDBDefnInputStream(defn, new Properties());
         
         byte[] vdb = ByteArrayHelper.toByteArray(is);
         

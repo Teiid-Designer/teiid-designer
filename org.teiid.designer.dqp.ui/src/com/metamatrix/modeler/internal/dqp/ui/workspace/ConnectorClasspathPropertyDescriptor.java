@@ -13,8 +13,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.teiid.connector.api.ConnectorPropertyNames;
 import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.api.ConnectorBindingType;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -143,7 +143,7 @@ public class ConnectorClasspathPropertyDescriptor implements IPropertyDescriptor
      */
     @Override
     public Object getId() {
-        return ConnectorBindingType.Attributes.CONNECTOR_CLASSPATH;
+        return ConnectorPropertyNames.CONNECTOR_CLASSPATH;
     }
 
     /**
@@ -195,7 +195,7 @@ public class ConnectorClasspathPropertyDescriptor implements IPropertyDescriptor
             super(composite, new LabelProvider());
             this.connectorName = connector.getName();
 
-            String classPath = connector.getProperty(ConnectorBindingType.Attributes.CONNECTOR_CLASSPATH);
+            String classPath = connector.getProperty(ConnectorPropertyNames.CONNECTOR_CLASSPATH);
             this.originalClasspathJars = new ArrayList<String>(ModelerDqpUtils.getJarNames(classPath));
             this.allExtensionJars = allExtensionJars;
         }

@@ -319,7 +319,9 @@ public class VdbExecutionValidatorImpl implements com.metamatrix.modeler.dqp.exe
                                 else if( typeDefn.isRequired() ) {
                                     String id = typeDefn.getPropertyDefinition().getName();
                                     String value = binding.getProperty(id);
-                                    if( value == null || StringUtil.isEmpty(value)) {
+                                    
+                                    // look at type for default values as connectors inherit default values
+                                    if ((value == null || StringUtil.isEmpty(value)) && !typeDefn.getPropertyDefinition().hasDefaultValue()) {
                                         vdbStatus.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID,
                                                                  BINDING_PROPERTY_ERROR_CODE, getString("bindingPropertyError", //$NON-NLS-1$
                                                                          new Object[] { id, binding.getName() }), null));

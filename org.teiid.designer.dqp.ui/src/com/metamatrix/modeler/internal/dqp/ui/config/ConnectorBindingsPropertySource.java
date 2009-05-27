@@ -39,6 +39,7 @@ import com.metamatrix.common.object.PropertyDefinition;
 import com.metamatrix.common.util.crypto.CryptoException;
 import com.metamatrix.common.util.crypto.CryptoUtil;
 import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
 import com.metamatrix.modeler.dqp.config.ConfigurationManager;
@@ -52,8 +53,6 @@ import com.metamatrix.ui.internal.util.WidgetFactory;
  * @since 4.2
  */
 public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropertySource {
-
-    private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
     private ConnectorBinding binding;
     private ComponentType type;
@@ -136,28 +135,26 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
                     String id = propDefn.getName();
                     String displayName = propDefn.getDisplayName();
 
-                    // don't add if an expert property and expert properties are not being shown
-                    if (propDefn.isExpert() && !showExpertProps) {
+                    // don't add if an expert or readonly property and expert properties are not being shown
+                    if ((propDefn.isExpert() || !propDefn.isModifiable()) && !showExpertProps) {
                         continue;
                     }
 
                     // don't add hidden definitions or expert props if not showing
-                    if (!propDefn.isHidden()) {
-                        Object descriptor = null;
+                    Object descriptor = null;
 
-                        // make sure readonly definitions are not modifiable
-                        if (isEditable && propDefn.isModifiable()) {
-                            if (propDefn.isMasked()) {
-                                descriptor = new ConnectorBindingPasswordDescriptor(id, displayName);
-                            } else {
-                                descriptor = new TextPropertyDescriptor(id, displayName);
-                            }
+                    // make sure readonly definitions are not modifiable
+                    if (isEditable && propDefn.isModifiable()) {
+                        if (propDefn.isMasked()) {
+                            descriptor = new ConnectorBindingPasswordDescriptor(id, displayName);
                         } else {
-                            descriptor = new PropertyDescriptor(id, displayName);
+                            descriptor = new TextPropertyDescriptor(id, displayName);
                         }
-
-                        temp.add(descriptor);
+                    } else {
+                        descriptor = new PropertyDescriptor(id, displayName);
                     }
+
+                    temp.add(descriptor);
                 }
 
                 if (!temp.isEmpty()) {
@@ -211,9 +208,23 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
             }
         }
 
+        // if no value set see if the type has a default value
         if (result == null) {
-            result = EMPTY_STRING;
+            ComponentTypeDefn defn = type.getComponentTypeDefinition((String)id);
+
+            if ((defn != null) && defn.getPropertyDefinition().hasDefaultValue()) {
+                Object defaultValue = defn.getPropertyDefinition().getDefaultValue();
+                
+                if (defaultValue != null) {
+                    result = defaultValue.toString();
+                }
+            }
         }
+
+        if (result == null) {
+            result = StringUtil.Constants.EMPTY_STRING;
+        }
+
         return result;
     }
 

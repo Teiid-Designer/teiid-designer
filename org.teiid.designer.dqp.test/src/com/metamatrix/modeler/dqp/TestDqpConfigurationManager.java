@@ -469,9 +469,9 @@ public class TestDqpConfigurationManager extends TestCase {
         Collection filteredBindings = configMgr.getConnectorBindings(true);
         assertFalse("No filtered connector bindings found in the configuration", filteredBindings.isEmpty());  //$NON-NLS-1$
 
-        // size of collections should not be the same
+        // size of filtered collection should not be greater than unfiltered collection
         assertTrue("Size of all bindings is not greater than the size of the filtered bindings", //$NON-NLS-1$
-                                (allBindings.size() > filteredBindings.size()));
+                                (allBindings.size() >= filteredBindings.size()));
     }
 
     /**

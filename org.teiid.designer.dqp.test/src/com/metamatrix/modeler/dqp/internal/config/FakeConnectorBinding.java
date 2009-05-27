@@ -24,6 +24,8 @@ public class FakeConnectorBinding implements
                                  ConnectorBinding {
     
     Properties props = new Properties();
+    
+    private boolean xa;
 
     /** 
      * @see com.metamatrix.common.config.api.ServiceComponentDefn#isQueuedService()
@@ -202,6 +204,15 @@ public class FakeConnectorBinding implements
      */
     public boolean isEssential() {
         return false;
+    }
+
+    @Override
+    public boolean isXASupported() {
+        return this.xa;
+    }
+    
+    public void setXa(boolean xaFlag) {
+        this.xa = xaFlag;
     }
 
 }

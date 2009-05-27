@@ -35,7 +35,6 @@ import com.metamatrix.common.config.xml.XMLConfigurationImportExportUtility;
 import com.metamatrix.common.types.DataTypeManager;
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.dqp.embedded.DQPEmbeddedProperties;
 import com.metamatrix.embeddedquery.workspace.WorkspaceInfo;
 import com.metamatrix.embeddedquery.workspace.WorkspaceInfoHolder;
 import com.metamatrix.jdbc.api.Connection;
@@ -381,8 +380,8 @@ public class WorkspaceExecutor extends QueryClient {
     
     void reloadUdfModel() throws Exception {
         EmbeddedAdmin admin = (EmbeddedAdmin)adminConnection.getAdminAPI();
-        admin.setSystemProperty(DQPEmbeddedProperties.COMMON_EXTENSION_CLASPATH, buildUDFClasspath());
-        admin.reloadUDF(); // reloads the UDF from the extension modules
+        admin.setSystemProperty("dqp.extension.CommonClasspath", buildUDFClasspath()); //$NON-NLS-1$
+        admin.extensionModuleModified(null); // reloads the UDF from the extension modules
     }
 
     final class UDFListener implements IExtensionModuleChangeListener, UdfModelListener {

@@ -1123,25 +1123,7 @@ public class VDBReader {
                                                       Element root,
                                                       ConfigurationModelContainer configCntr ) throws Exception {
         VDBDefnXMLHelper helper = createVDBXMLHelper();
-
-        Properties headerProps = new VDBDefnXMLHelper().getHeaderProperties(root);
-
-        boolean is42 = VDBDefnXMLHelper.is42ConfigurationCompatible(headerProps);
-
-        // 4.2 .Def files have the new vdb version tag so this
-        // check ensures those versions are treated the same
-        if (is42) {
-            defn = helper.addModelInfo42(root, defn, configCntr);
-        } else {
-            // if 4.2.1 and past then this check will be valid
-            // for the new exported .DEF files
-
-            if (VDBDefnXMLHelper.is41Compatible(headerProps)) {
-                defn = helper.addModelInfo42(root, defn, configCntr);
-            } else {
-                defn = helper.addModelInfo(root, defn, configCntr);
-            }
-        }
+        defn = helper.addModelInfo(root, defn, configCntr);
 
         return defn;
 

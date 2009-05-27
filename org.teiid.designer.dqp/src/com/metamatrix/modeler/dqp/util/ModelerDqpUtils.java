@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.teiid.connector.api.ConnectorPropertyNames;
 import com.metamatrix.common.config.api.ComponentType;
 import com.metamatrix.common.config.api.ComponentTypeDefn;
 import com.metamatrix.common.config.api.ComponentTypeID;
@@ -381,7 +382,7 @@ public final class ModelerDqpUtils {
      * @since 6.0.0
      */
     public static Collection<String> getRequiredExtensionJarNames( ConnectorBinding conn ) {
-        return getJarNames(conn.getProperty(Attributes.CONNECTOR_CLASSPATH));
+        return getJarNames(conn.getProperty(ConnectorPropertyNames.CONNECTOR_CLASSPATH));
     }
 
     /**
@@ -392,7 +393,7 @@ public final class ModelerDqpUtils {
      * @since 6.0.0
      */
     public static Collection<String> getRequiredExtensionJarNames( ComponentType connectorBindingType ) {
-        return getJarNames(connectorBindingType.getDefaultValue(Attributes.CONNECTOR_CLASSPATH));
+        return getJarNames(connectorBindingType.getDefaultValue(ConnectorPropertyNames.CONNECTOR_TYPE_CLASSPATH));
     }
     
     /**
@@ -507,17 +508,7 @@ public final class ModelerDqpUtils {
      * @since 4.3
      */
     public static boolean isValidConnectorType( ConnectorBindingType theConnectorType ) {
-        boolean result = false;
-
-        // need to filter out:
-        // (1) not deployable types
-        // (2) types whose parents are not in the connector product type (this filters out DesignTimeCatalog)
-        if (theConnectorType.isDeployable()
-            && (theConnectorType.getParentComponentTypeID().getName().equals(ConnectorBindingType.CONNECTOR_PROD_TYPEID.getName()))) {
-            result = true;
-        }
-
-        return result;
+        return theConnectorType.isDeployable();
     }
 
     /**
@@ -601,7 +592,7 @@ public final class ModelerDqpUtils {
         } else {
             result = propType.isValidValue(value);
 
-            if (propDefn.hasAllowedValues() && propDefn.isConstrainedToAllowedValues()) {
+            if (propDefn.isConstrainedToAllowedValues()) {
                 List values = propDefn.getAllowedValues();
 
                 if (values != null && !values.isEmpty()) {
@@ -619,6 +610,11 @@ public final class ModelerDqpUtils {
                     DqpPlugin.Util.log(IStatus.WARNING,
                                        DqpPlugin.Util.getString(PREFIX + "noAllowedValuesWarning", msgArray)); //$NON-NLS-1$
                 }
+            }
+            
+            if (propDefn.hasDefaultValue() && propDefn.getDefaultValue().equals(value)) {
+                result = false;
+                // need to remove property from connector if connector has this property
             }
         }
         

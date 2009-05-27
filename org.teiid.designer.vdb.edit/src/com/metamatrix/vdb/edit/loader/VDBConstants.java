@@ -7,7 +7,7 @@
  */
 package com.metamatrix.vdb.edit.loader;
 
-import com.metamatrix.common.config.xml.XMLElementNames;
+import com.metamatrix.common.config.xml.XMLConfig_ElementNames;
 import com.metamatrix.core.vdb.VdbConstants;
 
 public interface VDBConstants {
@@ -91,34 +91,28 @@ public interface VDBConstants {
              
           }
           
-          /**
-           * New in 4.2, a physical model now has references to possibly many connector bindings. 
-           * @since 4.2
-           */
           public static class ConnectorBindings {
-              public static final String ELEMENT = XMLElementNames.ConnectorComponents.ELEMENT;
+              public static final String ELEMENT = XMLConfig_ElementNames.Configuration.ConnectorComponents.ELEMENT;
           }
           
           public static class ComponentTypes {
-                public static final String ELEMENT = XMLElementNames.ComponentTypes.ELEMENT; 
+                public static final String ELEMENT = XMLConfig_ElementNames.ComponentTypes.ELEMENT; 
             }
 
           /**
            * This is an element reference for processing.  The configuration helper
            * will manage the contents of the element.
-           * <br>Kept for backward compatibility with pre 4.2 VDB version imports.</br>
            */
           public static class ComponentType {
-          	public static final String ELEMENT = XMLElementNames.ComponentTypes.ComponentType.ELEMENT; 
+          	public static final String ELEMENT = XMLConfig_ElementNames.ComponentTypes.ComponentType.ELEMENT; 
           }
           
           /**
            * This is an element reference for processing.  The configuration helper
            * will manage the contents of the element.
-           * <br>Kept for backward compatibility with pre 4.2 VDB version imports.</br>
            */          
           public static class ConnectorBinding {
-          	public static final String ELEMENT = XMLElementNames.ConnectorComponents.ConnectorComponent.ELEMENT;           	
+          	public static final String ELEMENT = XMLConfig_ElementNames.Configuration.ConnectorComponents.ConnectorComponent.ELEMENT;           	
           	
           }   	
       }

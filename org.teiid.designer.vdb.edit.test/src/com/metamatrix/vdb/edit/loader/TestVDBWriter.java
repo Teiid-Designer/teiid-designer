@@ -46,7 +46,7 @@ public class TestVDBWriter extends TestCase {
 
         String testDataPath = SmartTestSuite.getGlobalTestDataPath();
 
-        VDBWriter.exportVDBDefn(vdbDefn, "VDBDefnFileName.DEF", "TestVDB.vdb", testDataPath, null);//$NON-NLS-1$ //$NON-NLS-2$
+        VDBWriter.exportVDBDefn(vdbDefn, "VDBDefnFileName.DEF", "TestVDB.vdb", testDataPath, new Properties());//$NON-NLS-1$ //$NON-NLS-2$
 
     }
 
@@ -89,7 +89,7 @@ public class TestVDBWriter extends TestCase {
             vdbDefn.setVersion("2");//$NON-NLS-1$
             vdbDefn.setFileName("TestFileName");//$NON-NLS-1$
 
-            VDBWriter.writeVDBDefn(outputStream, vdbDefn, null);
+            VDBWriter.writeVDBDefn(outputStream, vdbDefn, new Properties());
 
             outputStream.flush();
             System.out.println(outputStream.toString());

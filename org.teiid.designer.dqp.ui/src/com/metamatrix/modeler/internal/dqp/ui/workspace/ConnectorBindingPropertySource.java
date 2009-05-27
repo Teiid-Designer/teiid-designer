@@ -31,12 +31,12 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
+import org.teiid.connector.api.ConnectorPropertyNames;
 import com.metamatrix.common.config.api.ComponentType;
 import com.metamatrix.common.config.api.ComponentTypeDefn;
 import com.metamatrix.common.config.api.ComponentTypeID;
 import com.metamatrix.common.config.api.ConfigurationModelContainer;
 import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.api.ConnectorBindingType;
 import com.metamatrix.common.object.PropertyDefinition;
 import com.metamatrix.common.util.crypto.CryptoException;
 import com.metamatrix.common.util.crypto.CryptoUtil;
@@ -142,30 +142,28 @@ public class ConnectorBindingPropertySource implements IPropertySource {
                     String id = propDefn.getName();
                     String displayName = propDefn.getDisplayName();
 
-                    // don't add if an expert property and expert properties are not being shown
-                    if (propDefn.isExpert() && !showExpertProps) {
+                    // don't add if an expert or readonly property and expert properties are not being shown
+                    if ((propDefn.isExpert() || !propDefn.isModifiable()) && !showExpertProps) {
                         continue;
                     }
 
                     // don't add hidden definitions or expert props if not showing
-                    if (!propDefn.isHidden()) {
-                        Object descriptor = null;
+                    Object descriptor = null;
 
-                        // make sure readonly definitions are not modifiable
-                        if (isEditable && propDefn.isModifiable()) {
-                            if (propDefn.isMasked()) {
-                                descriptor = new ConnectorBindingPasswordDescriptor(id, displayName);
-                            } else if (ConnectorBindingType.Attributes.CONNECTOR_CLASSPATH.equals(id)) {
-                                descriptor = new ConnectorClasspathPropertyDescriptor(this.binding, displayName);
-                            } else {
-                                descriptor = new TextPropertyDescriptor(id, displayName);
-                            }
+                    // make sure readonly definitions are not modifiable
+                    if (isEditable && propDefn.isModifiable()) {
+                        if (propDefn.isMasked()) {
+                            descriptor = new ConnectorBindingPasswordDescriptor(id, displayName);
+                        } else if (ConnectorPropertyNames.CONNECTOR_CLASSPATH.equals(id)) {
+                            descriptor = new ConnectorClasspathPropertyDescriptor(this.binding, displayName);
                         } else {
-                            descriptor = new PropertyDescriptor(id, displayName);
+                            descriptor = new TextPropertyDescriptor(id, displayName);
                         }
-
-                        temp.add(descriptor);
+                    } else {
+                        descriptor = new PropertyDescriptor(id, displayName);
                     }
+
+                    temp.add(descriptor);
                 }
 
                 if (!temp.isEmpty()) {
@@ -216,14 +214,28 @@ public class ConnectorBindingPropertySource implements IPropertySource {
                         }
                     }
                 }
-            } else if (ConnectorBindingType.Attributes.CONNECTOR_CLASSPATH.equals(id)) {
+            } else if (ConnectorPropertyNames.CONNECTOR_CLASSPATH.equals(id)) {
                 result = ModelerDqpUtils.getConnectorClasspathDisplayValue(result);
+            }
+        }
+
+        // if no value set see if the type has a default value
+        if (result == null) {
+            ComponentTypeDefn defn = type.getComponentTypeDefinition((String)id);
+
+            if ((defn != null) && defn.getPropertyDefinition().hasDefaultValue()) {
+                Object defaultValue = defn.getPropertyDefinition().getDefaultValue();
+                
+                if (defaultValue != null) {
+                    result = defaultValue.toString();
+                }
             }
         }
 
         if (result == null) {
             result = StringUtil.Constants.EMPTY_STRING;
         }
+
         return result;
     }
 
@@ -249,7 +261,7 @@ public class ConnectorBindingPropertySource implements IPropertySource {
     public void setPropertyValue( Object id,
                                   Object value ) {
         try {
-            if (ConnectorBindingType.Attributes.CONNECTOR_CLASSPATH.equals(id)) {
+            if (ConnectorPropertyNames.CONNECTOR_CLASSPATH.equals(id)) {
                 processClasspathChange((String)value);
             } else {
                 ModelerDqpUtils.setPropertyValue(getConnectorBinding(), id, value);
@@ -274,7 +286,7 @@ public class ConnectorBindingPropertySource implements IPropertySource {
      */
     private void processClasspathChange( String newValue ) throws Exception {
         // get the old value before setting the new value
-        String oldValue = (String)getPropertyValue(ConnectorBindingType.Attributes.CONNECTOR_CLASSPATH);
+        String oldValue = (String)getPropertyValue(ConnectorPropertyNames.CONNECTOR_CLASSPATH);
 
         // a list of the new jars to put on the classpath
         List<String> classpathJars = null;
@@ -315,7 +327,7 @@ public class ConnectorBindingPropertySource implements IPropertySource {
 
         // set the new value
         Exception[] errors = ModelerDqpUtils.setPropertyValue(getConnectorBinding(),
-                                                              ConnectorBindingType.Attributes.CONNECTOR_CLASSPATH,
+                                                              ConnectorPropertyNames.CONNECTOR_CLASSPATH,
                                                               newValue);
 
         // log errors

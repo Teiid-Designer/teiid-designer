@@ -12,18 +12,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 import java.util.Random;
-import java.util.Set;
 import org.jdom.Document;
 import org.jdom.Element;
 import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.xml.XMLConfigurationImportExportUtility;
+import com.metamatrix.common.vdb.api.DEFReaderWriter;
 import com.metamatrix.common.vdb.api.VDBDefn;
 import com.metamatrix.common.vdb.api.VDBStream;
 import com.metamatrix.common.xml.XMLReaderWriterImpl;
@@ -35,7 +29,7 @@ import com.metamatrix.core.util.TempDirectory;
 import com.metamatrix.core.util.ZipFileUtil;
 import com.metamatrix.core.vdb.VdbConstants;
 import com.metamatrix.vdb.edit.VdbEditPlugin;
-import com.metamatrix.vdb.internal.runtime.model.BasicVDBModelDefn;
+import com.metamatrix.vdb.runtime.BasicVDBDefn;
 
 public class VDBWriter {
 
@@ -267,71 +261,13 @@ public class VDBWriter {
                                              VDBDefn vdbDefn,
                                              String archiveFileName,
                                              Properties headerProps ) throws IOException, Exception {
-        XMLConfigurationImportExportUtility exportUtil = new XMLConfigurationImportExportUtility();
-
-        VDBDefnXMLHelper vdbHelper = new VDBDefnXMLHelper();
-        Element root = vdbHelper.createRootDocumentElement();
-
-        // create a new Document with a root element
-        Document doc = new Document(root);
-
-        // Add header
-        vdbHelper.addHeaderElement(root, headerProps);
-
-        // Add VDBInfo
-        Element vdbDefnElement = vdbHelper.createVDBInfoElement(vdbDefn, archiveFileName);
-        root.addContent(vdbDefnElement);
-
-        // contains the unique set of binding uuids, even though a binding
-        // maybe referenced multiple times.
-        Set routingNames = new HashSet();
-
-        // Export models
-        for (Iterator it = vdbDefn.getModels().iterator(); it.hasNext();) {
-            BasicVDBModelDefn md = (BasicVDBModelDefn)it.next();
-
-            Element modelElement = vdbHelper.createVDBModelElement(md);
-
-            List connectorBindingNames = md.getConnectorBindingNames();
-
-            if (connectorBindingNames != null && connectorBindingNames.size() > 0) {
-                // List bindingNames = new ArrayList(connectorBindingUUIDs.size());
-                // for (Iterator bnit=connectorBindingUUIDs.iterator(); bnit.hasNext();) {
-                // String uuid = (String) bnit.next();
-                // ConnectorBinding cb = vdbDefn.getConnectorBinding(uuid);
-                // if (cb != null) {
-                // bindingNames.add(cb.getFullName());
-                // }
-                // }
-
-                vdbHelper.addConnectorRefs(connectorBindingNames, modelElement);
-                routingNames.addAll(connectorBindingNames);
-            }
-
-            root.addContent(modelElement);
+        if (!(vdbDefn instanceof BasicVDBDefn)) {
+            throw new Exception(VdbEditPlugin.Util.getString("VDBWriter.unexpectedVdbDefnClass", vdbDefn.getClass())); //$NON-NLS-1$
         }
 
-        ConnectorBinding[] connectorBindings = new ConnectorBinding[routingNames.size()];
-        ComponentType[] connectorTypes = new ComponentType[routingNames.size()];
-
-        // Export the unique set of connector bindings and connector types
-        Iterator it = routingNames.iterator();
-        for (int i = 0; it.hasNext(); ++i) {
-            String cbName = (String)it.next();
-            ConnectorBinding cb = vdbDefn.getConnectorBindingByName(cbName);
-            if (cb != null) {
-                connectorBindings[i] = cb;
-
-                ComponentType ctype = vdbDefn.getConnectorType(cb.getComponentTypeID().getName());
-                connectorTypes[i] = ctype;
-            }
-        }
-
-        exportUtil.exportConnectorBindings(connectorBindings, connectorTypes, root);
-
-        new XMLReaderWriterImpl().writeDocument(doc, outputStream);
+        DEFReaderWriter writer = new DEFReaderWriter();
+        writer.write(outputStream, (BasicVDBDefn)vdbDefn, headerProps);
         outputStream.close();
-
     }
 
     /**

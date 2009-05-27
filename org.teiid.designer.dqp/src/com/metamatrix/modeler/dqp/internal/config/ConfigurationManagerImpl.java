@@ -15,12 +15,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.runtime.IPath;
-
 import com.metamatrix.common.actions.ObjectEditor;
 import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ComponentTypeDefn;
 import com.metamatrix.common.config.api.ComponentTypeID;
 import com.metamatrix.common.config.api.Configuration;
 import com.metamatrix.common.config.api.ConfigurationObjectEditor;
@@ -572,10 +569,6 @@ public class ConfigurationManagerImpl implements ConfigurationManager, Configura
                                                                 theNewBindingName,
                                                                 null);
 
-        // set the properties on the binding
-        Properties bindingProps = DqpPlugin.getInstance().getConfigurationManager().getDefaultBindingProperties(binding.getComponentTypeID());
-        binding = (ConnectorBinding)coe.modifyProperties(binding, bindingProps, ObjectEditor.ADD);
-
         if (theAddToConfigurationFlag) {
             addBinding(binding);
         }
@@ -638,100 +631,5 @@ public class ConfigurationManagerImpl implements ConfigurationManager, Configura
         }
 
         return connectorProps;
-    }
-
-    /**
-     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#compatibilityOf(com.metamatrix.common.config.api.ComponentType,
-     *      com.metamatrix.common.config.api.ComponentType)
-     * @since 5.5.3
-     */
-    public Compatibility compatibilityOf( ComponentType type1,
-                                          ComponentType type2 ) {
-        return compatibilityOf(type1, type2, null);
-    }
-
-    /**
-     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#compatibilityOf(com.metamatrix.common.config.api.ConnectorBinding,
-     *      com.metamatrix.common.config.api.ConnectorBinding)
-     * @since 5.5.3
-     */
-    public Compatibility compatibilityOf( ConnectorBinding connector1,
-                                          ConnectorBinding connector2 ) {
-        if (connector1 == connector2) {
-            return Compatibility.EQUAL;
-        }
-        return compatibilityOf(getComponentType(connector1), getComponentType(connector2), connector1);
-    }
-
-    /**
-     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#compatible(com.metamatrix.common.config.api.ConnectorBinding,
-     *      com.metamatrix.common.config.api.ComponentType)
-     * @since 5.5.3
-     */
-    public boolean compatible( ConnectorBinding connector,
-                               ComponentType type ) {
-        return (compatibilityOf(getComponentType(connector), type, connector) != Compatibility.INCOMPATIBLE);
-    }
-
-    /*
-     * Note, if connector is not null, type1 represents its connector type.
-     */
-    private Compatibility compatibilityOf( ComponentType type1,
-                                           ComponentType type2,
-                                           ConnectorBinding connector ) {
-        if (type1 == type2) {
-            return Compatibility.EQUAL;
-        }
-
-        // First, check equality starting with each type's name
-        if (!type1.getName().equals(type2.getName())) {
-            return Compatibility.INCOMPATIBLE;
-        }
-        Compatibility compatibility = (connector == null ? Compatibility.EQUAL : Compatibility.COMPATIBLE);
-
-        // Ensure both types have the same code & product type, and that both are or both are not XA
-        if (type1.getComponentTypeCode() != type2.getComponentTypeCode()
-            || !type1.getParentComponentTypeID().equals(type2.getParentComponentTypeID())
-            || type1.isOfTypeXAConnector() != type2.isOfTypeXAConnector()) {
-            return Compatibility.INCOMPATIBLE;
-        }
-
-        // Check compatibility of property definitions.
-        // - To be compatible, all definitions in type1 must either exist in type2 or not be required.
-        // - If a connector is supplied, a definition existS in both types, the definitions have different default values, and the
-        // connector doesn't provide an explicit value, then the connector will possibly be compatible with the type.
-        // - If a definition eixsts in type2 but not in type1:
-        // --- If a connector is supplied, the types are compatible if the extra definition is not required or has a default
-        // value.
-        // --- If a connector is not supplied, the types are incompatible.
-        Collection type2Definitions = getAllComponentTypeDefinitions(type2);
-        for (Object obj : getAllComponentTypeDefinitions(type1)) {
-            ComponentTypeDefn type1Definition = (ComponentTypeDefn)obj;
-            if (type2Definitions.remove(type1Definition)) {
-                if (connector != null) {
-                    String name = type1Definition.getName();
-                    if (connector.getProperty(name) == null && !type1.getDefaultValue(name).equals(type2.getDefaultValue(name))) {
-                        compatibility = Compatibility.POSSIBLY_COMPATIBLE;
-                    }
-                }
-            } else {
-                if (type1Definition.isRequired() && type1.getDefaultValue(type1Definition.getName()) != null) {
-                    return Compatibility.INCOMPATIBLE;
-                }
-                compatibility = Compatibility.COMPATIBLE;
-            }
-        }
-        if (!type2Definitions.isEmpty()) {
-            if (connector == null) {
-                return Compatibility.INCOMPATIBLE;
-            }
-            for (Object obj : type2Definitions) {
-                ComponentTypeDefn type2Definition = (ComponentTypeDefn)obj;
-                if (type2Definition.isRequired() && type2.getDefaultValue(type2Definition.getName()) != null) {
-                    return Compatibility.INCOMPATIBLE;
-                }
-            }
-        }
-        return compatibility;
     }
 }
