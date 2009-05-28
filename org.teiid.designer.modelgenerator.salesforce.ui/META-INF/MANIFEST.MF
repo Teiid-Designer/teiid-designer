@@ -28,3 +28,4 @@ Bundle-ClassPath: modelerModelgeneratorSalesforceUi.jar
 Export-Package:  com.metamatrix.modeler.modelgenerator.salesforce.ui,
  com.metamatrix.modeler.modelgenerator.salesforce.ui.util,
  com.metamatrix.modeler.modelgenerator.salesforce.ui.wizards
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

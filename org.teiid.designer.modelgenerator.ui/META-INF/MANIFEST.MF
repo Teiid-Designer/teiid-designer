@@ -37,3 +37,4 @@ Require-Bundle: org.eclipse.ui.ide,
  org.teiid.designer.metamodels.core,
  org.jdom;bundle-version="1.0"
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

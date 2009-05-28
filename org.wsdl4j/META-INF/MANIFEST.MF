@@ -26,3 +26,4 @@ Export-Package: com.ibm.wsdl,
  javax.wsdl.extensions.soap12,
  javax.wsdl.factory,
  javax.wsdl.xml
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

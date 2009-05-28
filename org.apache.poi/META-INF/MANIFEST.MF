@@ -42,3 +42,4 @@ Export-Package: org.apache.poi.contrib.metrics,
  org.apache.poi.poifs.property,
  org.apache.poi.poifs.storage,
  org.apache.poi.util
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

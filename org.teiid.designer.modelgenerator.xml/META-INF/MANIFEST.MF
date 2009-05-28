@@ -38,3 +38,4 @@ Require-Bundle: org.teiid.designer.metamodels.relational,
  org.teiid.designer.metamodels.core,
  org.eclipse.emf.edit
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

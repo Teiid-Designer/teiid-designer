@@ -19,3 +19,4 @@ Require-Bundle: org.eclipse.emf.ecore,
  teiid_embedded_query,
  org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

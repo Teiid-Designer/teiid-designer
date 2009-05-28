@@ -94,3 +94,4 @@ Require-Bundle: org.eclipse.core.runtime,
  teiid_embedded_query,
  org.eclipse.core.expressions;bundle-version="3.4.0"
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

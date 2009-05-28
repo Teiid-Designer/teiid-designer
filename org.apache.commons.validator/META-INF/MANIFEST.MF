@@ -11,3 +11,4 @@ Export-Package: org.apache.commons.validator,
  org.apache.commons.validator.resources,
  org.apache.commons.validator.util
 Require-Bundle: org.apache.oro
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

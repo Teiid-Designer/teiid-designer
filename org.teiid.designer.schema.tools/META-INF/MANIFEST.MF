@@ -21,3 +21,4 @@ Require-Bundle: org.teiid.designer.core,
  org.eclipse.core.runtime,
  org.jdom;bundle-version="1.0"
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

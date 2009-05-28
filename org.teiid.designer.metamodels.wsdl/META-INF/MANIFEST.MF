@@ -31,3 +31,4 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.teiid.core.designer,
  org.jdom;bundle-version="1.0"
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

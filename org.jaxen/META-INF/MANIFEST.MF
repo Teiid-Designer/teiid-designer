@@ -20,3 +20,4 @@ Export-Package: com.werken.saxpath,
  org.saxpath,
  org.saxpath.conformance,
  org.saxpath.helpers
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

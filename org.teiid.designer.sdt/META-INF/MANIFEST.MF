@@ -18,3 +18,4 @@ Require-Bundle: org.teiid.designer.core,
 Bundle-ActivationPolicy: lazy
 Export-Package: com.metamatrix.modeler.internal.sdt.types,
  com.metamatrix.modeler.sdt
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
