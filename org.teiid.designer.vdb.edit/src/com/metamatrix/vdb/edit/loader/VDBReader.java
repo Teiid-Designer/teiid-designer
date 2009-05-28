@@ -1221,7 +1221,7 @@ public class VDBReader {
                 Enumeration entries = archive.entries();
                 while (entries.hasMoreElements()) {
                     ZipEntry entry = (ZipEntry)entries.nextElement();
-                    System.out.println(entry);
+
                     if (entry != null && entry.getName().equalsIgnoreCase(fileName)) {
                         is = archive.getInputStream(entry);
                         includedFile = new File(tempDirFolder, fileName);
