@@ -95,10 +95,12 @@ public class DqpPlugin extends Plugin {
     public void start( BundleContext context ) throws Exception {
         super.start(context);
         plugin = this;
-        initialize();
 
         // initialize logger
         ((PluginUtilImpl)Util).initializePlatformLogger(this);
+        
+        // this method may result in errors or messages that need to get logged, therefore, MUST be called AFTER "initializePlatformLogger()"
+        initialize();
     }
 
     private void initialize() throws Exception {

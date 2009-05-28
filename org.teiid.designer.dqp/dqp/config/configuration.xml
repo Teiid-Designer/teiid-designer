@@ -132,7 +132,7 @@
             <PropertyDefinition Name="supportsRowLimit" DisplayName="supportsRowLimit" ShortDescription=""   PropertyType="Boolean" IsExpert="true" />
             <PropertyDefinition Name="supportsRowOffset" DisplayName="supportsRowOffset" ShortDescription=""   PropertyType="Boolean" IsExpert="true" />
         </ComponentType>
-                <ComponentType Name="JDBC Connector" ComponentTypeCode="2" Deployable="true" Deprecated="false" Monitorable="false" SuperComponentType="Connector" ParentComponentType="Connectors" LastChangedBy="ConfigurationStartup" LastChangedDate="2008-10-31T10:26:19.952-06:00" CreatedBy="ConfigurationStartup" CreationDate="2008-10-31T10:26:19.952-06:00">
+        <ComponentType Name="JDBC Connector" ComponentTypeCode="2" Deployable="true" Deprecated="false" Monitorable="false" SuperComponentType="Connector" ParentComponentType="Connectors" LastChangedBy="ConfigurationStartup" LastChangedDate="2008-10-31T10:26:19.952-06:00" CreatedBy="ConfigurationStartup" CreationDate="2008-10-31T10:26:19.952-06:00">
             <PropertyDefinition Name="ConnectorTypeClassPath" DisplayName="Connector Type Class Path" ShortDescription="Connector Type classpath (defined by system, do not modify)" DefaultValue="extensionjar:connector_patch.jar;extensionjar:connector-jdbc-6.1.0-SNAPSHOT.jar;"  IsModifiable="false" />
 			<PropertyDefinition Name="UseBindVariables" DisplayName="Use prepared statements and bind variables" ShortDescription="" DefaultValue="false" PropertyType="Boolean" IsExpert="true" />
             <PropertyDefinition Name="ExtensionCapabilityClass" DisplayName="Extension Capability Class" ShortDescription="" IsExpert="true" />
@@ -150,6 +150,7 @@
             <PropertyDefinition Name="User" DisplayName="User Name" ShortDescription=""    />
             <PropertyDefinition Name="TrimStrings" DisplayName="Trim string flag" ShortDescription="Right Trim fixed character types returned as Strings" DefaultValue="false" PropertyType="Boolean" IsExpert="true" />
             <PropertyDefinition Name="UseCommentsInSourceQuery" DisplayName="Use informational comments in Source Queries" ShortDescription="This will embed /*comment*/ style comment with session/request id in source SQL query for informational purposes" DefaultValue="false" PropertyType="Boolean"  IsExpert="true"/>
+            <PropertyDefinition Name="URL" DisplayName="JDBC URL" ShortDescription="" DefaultValue="" Multiplicity="1" IsConstrainedToAllowedValues="false" IsPreferred="true" />
         </ComponentType>
         <ComponentType Name="Oracle Connector" ComponentTypeCode="2" Deployable="true" Deprecated="false" Monitorable="false" SuperComponentType="JDBC Connector" ParentComponentType="Connectors" LastChangedBy="ConfigurationStartup" CreatedBy="ConfigurationStartup">
             <PropertyDefinition Name="ConnectionSource" DisplayName="Connection Source Class" ShortDescription="Driver, DataSource, or XADataSource class name" DefaultValue="oracle.jdbc.driver.OracleDriver" IsRequired="true"   />

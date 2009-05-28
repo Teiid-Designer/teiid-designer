@@ -57,5 +57,11 @@ public class JDBCConnectionPropertyNames {
      * This is same as the property defined in {@link com.metamatrix.modeler.jdbc.relational.aspects.sql.addJdbcSourceProperties()} method.
      */    
     public static final String JDBC_IMPORT_USERNAME = "com.metamatrix.modeler.jdbc.JdbcSource.username"; //$NON-NLS-1$
+    
+    
+    /**
+     * This is the name of the default JDBC connector
+     */
+    public static final String DEFAULT_JDBC_CONNECTOR_NAME = "JDBC Connector"; //$NON-NLS-1$
 
 }

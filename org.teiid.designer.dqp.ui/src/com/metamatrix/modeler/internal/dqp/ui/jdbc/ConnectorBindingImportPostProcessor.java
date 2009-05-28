@@ -14,12 +14,15 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.teiid.connector.api.ConnectorPropertyNames;
 import com.metamatrix.common.config.api.ConnectorBinding;
@@ -45,6 +48,8 @@ import com.metamatrix.ui.internal.util.UiUtil;
 public class ConnectorBindingImportPostProcessor implements
                                                 DqpUiConstants,
                                                 IJdbcImportPostProcessor {
+	
+	boolean useDefaultConnectorType = false;
 
     // ===========================================================================================================================
     // Methods
@@ -62,7 +67,7 @@ public class ConnectorBindingImportPostProcessor implements
         ConnectorBindingType bindingType = null;
         WorkspaceConfigurationManager wsConfigMgr = DqpPlugin.getWorkspaceConfig();
         final String bindingName = wsConfigMgr.createConnectorBindingName(modelName);
-        final Collection<ConnectorBindingType> bindingTypeMatches = wsConfigMgr.findMatchingConnectorBindingTypes(jdbcSource);
+        final Collection<ConnectorBindingType> bindingTypeMatches = wsConfigMgr.findMatchingConnectorBindingTypes(jdbcSource, false);
         int numTypesFound = bindingTypeMatches.size();
 
         if (numTypesFound == 1) {
@@ -95,11 +100,35 @@ public class ConnectorBindingImportPostProcessor implements
             bindingType = chosenType[0];
         } else {
             // no type found
-            String key = I18nUtil.getPropertyPrefix(ConnectorBindingImportPostProcessor.class) + "missingConnectorBindingType"; //$NON-NLS-1$
-            String msg = UTIL.getString(key, new Object[] {modelName, jdbcSource.getDriverName()});
-            UTIL.log(IStatus.ERROR, msg);
+        	// Log as Warning
+            String key = I18nUtil.getPropertyPrefix(ConnectorBindingImportPostProcessor.class) + "missingConnectorBindingType.log.msg"; //$NON-NLS-1$
+            final String msg = UTIL.getString(key, new Object[] {modelName, jdbcSource.getDriverClass()});
+            UTIL.log(IStatus.WARNING, msg);
+            
+            // Present message in dialog to user because expected result is binding 
+            final String dialogMsg = UTIL.getString(I18nUtil.getPropertyPrefix(ConnectorBindingImportPostProcessor.class) 
+            		+ "missingConnectorBindingType.dialog.msg", new Object[] {jdbcSource.getDriverClass(), modelName}); //$NON-NLS-1$
+            final String dialogTitle = UTIL.getString(I18nUtil.getPropertyPrefix(ConnectorBindingImportPostProcessor.class) 
+            		+ "missingConnectorBindingType.dialog.title"); //$NON-NLS-1$
+            
+            UiUtil.runInSwtThread(new Runnable() {
+
+                @Override
+                public void run() {
+                	useDefaultConnectorType = MessageDialog.openQuestion(Display.getDefault().getActiveShell(), dialogTitle, dialogMsg);
+                }
+            }, false);
+            
         }
 
+        if( useDefaultConnectorType ) {
+        	Collection<ConnectorBindingType> matchedConnectorTypes = wsConfigMgr.findMatchingConnectorBindingTypes(jdbcSource, true);
+        	if( matchedConnectorTypes.size() == 1 ) {
+        		bindingType = matchedConnectorTypes.iterator().next();
+        	}
+        }
+        
+        
         // create the binding if we have a type
         if (bindingType != null) {
             return DqpPlugin.getInstance().getConfigurationManager().createConnectorBinding(bindingType, bindingName, false);
@@ -115,6 +144,7 @@ public class ConnectorBindingImportPostProcessor implements
      */
     public void postProcess( final IJdbcImportInfoProvider infoProvider ) throws Exception {
         ConnectorBinding binding = null;
+        
         final WorkspaceConfigurationManager wsConfigMgr = DqpPlugin.getWorkspaceConfig();
         String modelName = infoProvider.getModelName();
 
@@ -135,64 +165,70 @@ public class ConnectorBindingImportPostProcessor implements
             
             if (matchingBindings.isEmpty()) {
                 ConnectorBinding newBinding = createConnectorBinding(modelName, jdbcSource);
-    
+
+                // No binding, return
+                // This could happen if a driver class doesn't match any existing connector type driver classes
+                
+                if( newBinding == null ) {
+                	return;
+                }
+                
                 // If a new binding was created we need to set its classpath, URL, user, and password properties and create a
                 // source binding.
-                if (newBinding != null) {
-                    DqpExtensionsHandler extHandler = DqpPlugin.getInstance().getExtensionsHandler();
-    
-                    // need to set classpath to the jars needed by the JDBC driver
-                    List jarUris = jdbcSource.getJdbcDriver().getJarFileUris();
-                    List<String> classpathJarNames = new ArrayList<String>(jarUris.size());
-    
-                    for (Iterator itr = jarUris.iterator(); itr.hasNext();) {
-                        String uri = (String)itr.next();
-                        File jarFile;
-    
-                        // if the path has a colon we know the path is not relative to this bundle so it is a file system path
-                        jarFile = new File(new URI(uri));
-    
-                        final String jarName = jarFile.getName();
-    
-                        // add jar name to classpath
-                        classpathJarNames.add(jarName);
-    
-                        // copy to extension modules directory if unique name or if user wants to overwrite existing jar
-                        final boolean[] copy = new boolean[] {true};
-    
-                        // if jar exists ask for confirmation to overwrite
-                        if (extHandler.extensionModuleExists(jarName)) {
-                            // if user does not confirm overwrite do not copy
-                            UiUtil.runInSwtThread(new Runnable() {
-    
-                                @Override
-                                public void run() {
-                                    if (!ClasspathEditorDialog.showConfirmOverwriteDialog(jarName)) {
-                                        copy[0] = false;
-                                    }
+                
+                DqpExtensionsHandler extHandler = DqpPlugin.getInstance().getExtensionsHandler();
+
+                // need to set classpath to the jars needed by the JDBC driver
+                List jarUris = jdbcSource.getJdbcDriver().getJarFileUris();
+                List<String> classpathJarNames = new ArrayList<String>(jarUris.size());
+
+                for (Iterator itr = jarUris.iterator(); itr.hasNext();) {
+                    String uri = (String)itr.next();
+                    File jarFile;
+
+                    // if the path has a colon we know the path is not relative to this bundle so it is a file system path
+                    jarFile = new File(new URI(uri));
+
+                    final String jarName = jarFile.getName();
+
+                    // add jar name to classpath
+                    classpathJarNames.add(jarName);
+
+                    // copy to extension modules directory if unique name or if user wants to overwrite existing jar
+                    final boolean[] copy = new boolean[] {true};
+
+                    // if jar exists ask for confirmation to overwrite
+                    if (extHandler.extensionModuleExists(jarName)) {
+                        // if user does not confirm overwrite do not copy
+                        UiUtil.runInSwtThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                if (!ClasspathEditorDialog.showConfirmOverwriteDialog(jarName)) {
+                                    copy[0] = false;
                                 }
-                            }, false);
-                        }
-    
-                        // if required copy over jar
-                        if (copy[0] && !extHandler.addConnectorJar(this, jarFile)) {
-                            classpathJarNames.remove(jarName);
-                        }
+                            }
+                        }, false);
                     }
-    
-                    // set properties
-                    setConnectorProperties(newBinding, infoProvider, classpathJarNames);
-    
-                    // finally add binding to configuration since the classpath has been set and the jars copied over (now the binding
-                    // should start) and create a source binding so that preview will work
-                    DqpPlugin.getInstance().getConfigurationManager().addBinding(newBinding);
-                    binding = newBinding;
+
+                    // if required copy over jar
+                    if (copy[0] && !extHandler.addConnectorJar(this, jarFile)) {
+                        classpathJarNames.remove(jarName);
+                    }
                 }
+
+                // set properties
+                setConnectorProperties(newBinding, infoProvider, classpathJarNames);
+
+                // finally add binding to configuration since the classpath has been set and the jars copied over (now the binding
+                // should start) and create a source binding so that preview will work
+                DqpPlugin.getInstance().getConfigurationManager().addBinding(newBinding);
+                binding = newBinding;
             } else {
                 // found one or more matching bindings so just use the first one
                 binding = matchingBindings.iterator().next();
             }
-            
+
             // create source binding
             wsConfigMgr.createSourceBinding(infoProvider.getModelResource(), binding);
             

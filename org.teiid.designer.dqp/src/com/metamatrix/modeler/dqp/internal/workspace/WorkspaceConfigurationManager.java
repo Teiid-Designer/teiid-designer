@@ -495,7 +495,7 @@ public class WorkspaceConfigurationManager implements IChangeNotifier, IChangeLi
         return newBindingName.toString();
     }
 
-    public Collection<ConnectorBindingType> findMatchingConnectorBindingTypes(JdbcSource jdbcSource) {
+    public Collection<ConnectorBindingType> findMatchingConnectorBindingTypes(JdbcSource jdbcSource, boolean useDefaultConnectorType) {
         Collection<ConnectorBindingType> matches = new ArrayList<ConnectorBindingType>();
 
         for (Iterator itr = this.configMgr.getConnectorTypes().iterator(); itr.hasNext();) {
@@ -513,8 +513,28 @@ public class WorkspaceConfigurationManager implements IChangeNotifier, IChangeLi
 
             matches.add(bindingType);
         }
+        if( matches.isEmpty() && useDefaultConnectorType ) {
+        	ConnectorBindingType bindingType = getDefaultJdbcConnectorBindingType();
+        	if( bindingType != null ) {
+            	matches.add(bindingType);
+        	}
+
+		}
 
         return matches;
+    }
+    
+    private ConnectorBindingType getDefaultJdbcConnectorBindingType() {
+        for (Iterator itr = this.configMgr.getConnectorTypes().iterator(); itr.hasNext();) {
+            ConnectorBindingType bindingType = (ConnectorBindingType)itr.next();
+            Properties connectorTypeProps = bindingType.getDefaultPropertyValues();
+            String driverClassName = connectorTypeProps.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
+
+            if (StringUtil.isEmpty(driverClassName) && bindingType.getName().equalsIgnoreCase(JDBCConnectionPropertyNames.DEFAULT_JDBC_CONNECTOR_NAME)) {
+            	return bindingType;
+            }
+        }
+        return null;
     }
 
     public Collection<ConnectorBinding> findMatchingConnectorBindings(JdbcSource jdbcSource) {
