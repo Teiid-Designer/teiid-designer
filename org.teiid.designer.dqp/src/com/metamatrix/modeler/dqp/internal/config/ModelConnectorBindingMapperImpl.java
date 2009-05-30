@@ -18,6 +18,8 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 
+import com.metamatrix.common.config.api.ComponentType;
+import com.metamatrix.common.config.api.ComponentTypeDefn;
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ConnectorBindingType;
 import com.metamatrix.common.vdb.api.ModelInfo;
@@ -247,9 +249,55 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
         // for each binding get properties
         for(final Iterator iter1 = bindings.iterator(); iter1.hasNext();) {
             ConnectorBinding binding = (ConnectorBinding) iter1.next();
+            
+            ComponentType type = DqpPlugin.getInstance().getConfigurationManager().getConnectorType(binding.getComponentTypeID());
+            
             String driverClassName = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
+            
+            if( driverClassName == null ) {
+                // if no value set see if the type has a default value
+                ComponentTypeDefn defn = type.getComponentTypeDefinition(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
+
+                if ((defn != null) && defn.getPropertyDefinition().hasDefaultValue()) {
+                    Object defaultValue = defn.getPropertyDefinition().getDefaultValue();
+                    
+                    if (defaultValue != null) {
+                    	driverClassName = defaultValue.toString();
+                    }
+                }
+            }
+            
             String url = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
+            
+            if( url == null ) {
+                // if no value set see if the type has a default value
+                ComponentTypeDefn defn = type.getComponentTypeDefinition(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
+
+                if ((defn != null) && defn.getPropertyDefinition().hasDefaultValue()) {
+                    Object defaultValue = defn.getPropertyDefinition().getDefaultValue();
+                    
+                    if (defaultValue != null) {
+                    	url = defaultValue.toString();
+                    }
+                }
+            }
+            
             String user = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
+            
+            
+            if( user == null ) {
+                // if no value set see if the type has a default value
+                ComponentTypeDefn defn = type.getComponentTypeDefinition(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
+
+                if ((defn != null) && defn.getPropertyDefinition().hasDefaultValue()) {
+                    Object defaultValue = defn.getPropertyDefinition().getDefaultValue();
+                    
+                    if (defaultValue != null) {
+                    	user = defaultValue.toString();
+                    }
+                }
+            }
+            
             if(StringUtil.isEmpty(driverClassName) || StringUtil.isEmpty(url)) {
                 continue;
             }
