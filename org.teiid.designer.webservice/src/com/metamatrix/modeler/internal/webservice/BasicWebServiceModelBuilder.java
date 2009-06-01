@@ -77,6 +77,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
     private final Object xsdWorkspaceResourcesLock = new Object();
     private boolean saveAllBeforeFinish = false;
     private Map urlMap = new HashMap();
+    
+    private boolean processedXsdResources = false;
 
     public BasicWebServiceModelBuilder() {
         this.resources = new ArrayList();
@@ -84,6 +86,7 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
         this.emfResourceUriByWebServiceResource = new HashMap();
         this.selectedWsdlOperations = new HashSet();
         this.xsdWorkspaceResources = new ArrayList();
+        this.processedXsdResources = false;
     }
 
     // =========================================================================
@@ -202,7 +205,10 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
 
         // Add to the collection(s) ...
         wsResource = (AbstractWebServiceResource)addOrFind(wsResource);
-
+        
+        processedXsdResources = false;
+        xsdWorkspaceResources = new ArrayList();
+        
         return wsResource;
     }
 
@@ -241,7 +247,10 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
 
         // Add to the collection(s) ...
         wsResource = (AbstractWebServiceResource)addOrFind(wsResource);
-
+        
+        processedXsdResources = false;
+        xsdWorkspaceResources = new ArrayList();
+        
         return wsResource;
     }
 
@@ -358,6 +367,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
                 }
             }
         }
+        processedXsdResources = false;
+        xsdWorkspaceResources = new ArrayList();
 
     }
 
@@ -511,33 +522,32 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      */
     public Collection getXsdDestinations() {
         List xsdResources = this.xsdWorkspaceResources;
-        if (xsdResources == null) {
+        if (!processedXsdResources) {
             synchronized (xsdWorkspaceResourcesLock) {
-                if (this.xsdWorkspaceResources == null) {
-                    this.xsdWorkspaceResources = new ArrayList();
 
-                    // Discover all (directly and indirectly) referenced XSDs ...
-                    final List xsdWsrTuples = doDiscoverReferencedXsds();
+                // Discover all (directly and indirectly) referenced XSDs ...
+                final List xsdWsrTuples = doDiscoverReferencedXsds();
 
-                    // keep track of destination names so we dont reuse
-                    List usedNames = new ArrayList();
+                // keep track of destination names so we dont reuse
+                List usedNames = new ArrayList();
 
-                    // Iterate through all of the referenced XSDs, and create the IWebServiceXsdResource objects ...
-                    final Iterator iter = xsdWsrTuples.iterator();
-                    while (iter.hasNext()) {
-                        final XSDWebServiceResourceTuple tuple = (XSDWebServiceResourceTuple)iter.next();
-                        final XSDSchema schema = tuple.getSchema();
-                        final IWebServiceResource wsr = tuple.getResource();
-                        final boolean inWorkspaceAlready = wsr instanceof WorkspaceFileWebServiceResource;
-                        if (wsr.isWsdl() || (wsr.isXsd() && !inWorkspaceAlready)) {
-                            final IWebServiceXsdResource wsXsdResource = doCreateWebServiceXsdResource(schema, wsr, usedNames);
-                            if (wsXsdResource != null) {
-                                this.xsdWorkspaceResources.add(wsXsdResource);
-                            }
+                // Iterate through all of the referenced XSDs, and create the IWebServiceXsdResource objects ...
+                final Iterator iter = xsdWsrTuples.iterator();
+                while (iter.hasNext()) {
+                    final XSDWebServiceResourceTuple tuple = (XSDWebServiceResourceTuple)iter.next();
+                    final XSDSchema schema = tuple.getSchema();
+                    final IWebServiceResource wsr = tuple.getResource();
+                    final boolean inWorkspaceAlready = wsr instanceof WorkspaceFileWebServiceResource;
+                    if (wsr.isWsdl() || (wsr.isXsd() && !inWorkspaceAlready)) {
+                        final IWebServiceXsdResource wsXsdResource = doCreateWebServiceXsdResource(schema, wsr, usedNames);
+                        if (wsXsdResource != null) {
+                            this.xsdWorkspaceResources.add(wsXsdResource);
                         }
                     }
                 }
+                
                 xsdResources = this.xsdWorkspaceResources;
+                processedXsdResources = true;
             }
         }
         return xsdResources;

@@ -517,11 +517,14 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
             validationPage.clearValidationMessages();
             if (wsdlMessages.size() > 0) {
                 validationPage.setValidationMessages(wsdlMessages);
+                validationPage.setPageComplete(false);
             } else {
                 /*
                  * if there are no validation messages, we skip this page and move on
                  * to the next.  nothing to show.
                  */
+                // If page complete isn't set to 
+            	validationPage.setPageComplete(true);
                 nextPage = (IWizardPage)pgs.get(ndx + 2);
             }
         }
