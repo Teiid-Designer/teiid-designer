@@ -199,6 +199,5 @@ Import-Package: javax.sql,
  javax.sql.rowset.spi,
  javax.transaction.xa
 Require-Bundle: org.jdom;bundle-version="1.0.0",
- net.sf.saxon;bundle-version="8.7.3",
- org.apache.commons.logging;bundle-version="1.0.4"
+ net.sf.saxon;bundle-version="8.7.3"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
