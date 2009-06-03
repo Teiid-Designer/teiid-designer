@@ -542,7 +542,9 @@ public class WorkspaceConfigurationManager implements IChangeNotifier, IChangeLi
 
         for (Iterator itr = getConnectorBindings().iterator(); itr.hasNext();) {
             ConnectorBinding binding = (ConnectorBinding)itr.next();
-            String driverClassName = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
+            ConnectorBindingType bindingType = (ConnectorBindingType)this.configMgr.getComponentType(binding);
+            Properties connectorTypeProps = bindingType.getDefaultPropertyValues();
+            String driverClassName = connectorTypeProps.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
             String url = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
             String user = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
 
