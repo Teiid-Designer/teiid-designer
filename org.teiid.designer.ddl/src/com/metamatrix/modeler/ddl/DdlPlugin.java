@@ -9,6 +9,7 @@ package com.metamatrix.modeler.ddl;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -16,6 +17,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.core.xslt.Style;
@@ -61,6 +63,8 @@ public class DdlPlugin extends Plugin {
     }
 
 
+    static DdlPlugin INSTANCE = null;
+    
     public static boolean DEBUG = false;
 
     /** The style registry */
@@ -77,16 +81,26 @@ public class DdlPlugin extends Plugin {
 	public void start( BundleContext context ) throws Exception {
 		super.start(context);
         ((PluginUtilImpl)Util).initializePlatformLogger(this);   // This must be called to initialize the platform logger!
-
+        
+        INSTANCE = this;
+        
         // populate the style registry from the extensions
         loadStyleRegistryFromExtensions(STYLE_REGISTRY);
+    }
+    
+    /**
+     * @return DqpPlugin
+     * @since 4.3
+     */
+    public static DdlPlugin getInstance() {
+        return INSTANCE;
     }
 
     /**
      * Create a new DDL writer instance.
      * @return
      */
-    public static DdlWriter createDdlWriter() {
+    public DdlWriter createDdlWriter() {
         return new DdlWriterImpl();
     }
 

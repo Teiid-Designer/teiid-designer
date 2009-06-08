@@ -16,26 +16,45 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamSource;
 
+import org.eclipse.core.runtime.Plugin;
 import org.jdom.Document;
 import org.jdom.output.XMLOutputter;
+import org.osgi.framework.BundleContext;
 
-import com.metamatrix.core.BundleUtil;
 import com.metamatrix.core.MetaMatrixCoreException;
+import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.util.PluginUtilImpl;
 
 /**
  * CoreXsltPlugin
  */
-public class CoreXsltPlugin {
+public class CoreXsltPlugin extends Plugin {
 
     public static final String PLUGIN_ID = "org.teiid.designer.core.xslt" ; //$NON-NLS-1$
     
     public static final String PACKAGE_ID = CoreXsltPlugin.class.getPackage().getName();
-
-	public static final BundleUtil Util = new BundleUtil(PLUGIN_ID,
-			PACKAGE_ID + ".i18n", ResourceBundle.getBundle(PACKAGE_ID + ".i18n")); //$NON-NLS-1$ //$NON-NLS-2$
+    
+    /**
+     * Provides access to the plugin's log and to it's resources.
+     */
+	private static final String I18N_NAME = PACKAGE_ID + ".i18n"; //$NON-NLS-1$
+    public static PluginUtil Util = new PluginUtilImpl(PLUGIN_ID, I18N_NAME, ResourceBundle.getBundle(I18N_NAME));
 
     public CoreXsltPlugin() {
+    }
+    
+    /**
+	 * <p>
+	 * {@inheritDoc}
+	 * </p>
+	 *
+	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
+	 */
+    @Override
+	public void start( BundleContext context ) throws Exception {
+		super.start(context);
+        ((PluginUtilImpl)Util).initializePlatformLogger(this);   // This must be called to initialize the platform logger!
     }
 
     /**
