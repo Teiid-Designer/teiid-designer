@@ -217,7 +217,7 @@ public final class ExportDdlWizard extends AbstractWizard
         // make sure license authorizes using RDBMS export
 
         this.selection = selection;
-        this.writer = DdlPlugin.createDdlWriter();
+		this.writer = DdlPlugin.getInstance().createDdlWriter();
         this.selections = new ModelWorkspaceSelections();
         this.pg = new AbstractWizardPage(ExportDdlWizard.class.getSimpleName(), PAGE_TITLE) {
             public void createControl( final Composite parent ) {
