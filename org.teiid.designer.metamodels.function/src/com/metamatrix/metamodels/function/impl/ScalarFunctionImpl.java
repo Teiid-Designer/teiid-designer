@@ -111,7 +111,7 @@ public class ScalarFunctionImpl extends FunctionImpl implements ScalarFunction {
      * @generated
      * @ordered
      */
-    protected static final boolean DETERMINISTIC_EDEFAULT = false;
+    protected static final boolean DETERMINISTIC_EDEFAULT = true;
 
     /**
      * The cached value of the '{@link #isDeterministic() <em>Deterministic</em>}' attribute.
