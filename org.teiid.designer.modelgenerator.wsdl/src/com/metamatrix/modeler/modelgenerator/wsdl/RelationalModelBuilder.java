@@ -43,10 +43,6 @@ import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Port;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Service;
 import com.metamatrix.modeler.modelgenerator.wsdl.modelextension.XMLWSDLExtensionManager;
 import com.metamatrix.modeler.modelgenerator.wsdl.schema.extensions.SoapDataTypeImpl;
 import com.metamatrix.modeler.modelgenerator.wsdl.util.NameUtil;
@@ -62,7 +58,6 @@ public class RelationalModelBuilder {
     // private ArrayList m_exceptions;
     private XMLWSDLExtensionManager m_extPropManager = null;
     private Map m_namespaces;
-    private Model m_wsdlModel;
     private ArrayList m_foreignKeys;
     private HashMap m_tables;
     private HashMap m_bindings;
@@ -72,11 +67,9 @@ public class RelationalModelBuilder {
     // Map of CatalogNames:replacementCatalogNames used to resolve name conflicts in model updates
     private HashMap replacementCatalogNames = new HashMap();
 
-    public RelationalModelBuilder( Map namespaces,
-                                   Model model ) {
+    public RelationalModelBuilder( Map namespaces ) {
         // m_exceptions = new ArrayList();
         m_namespaces = namespaces;
-        m_wsdlModel = model;
         m_tables = new HashMap();
         m_foreignKeys = new ArrayList();
         m_bindings = new HashMap();
@@ -276,18 +269,9 @@ public class RelationalModelBuilder {
             Schema schema = (Schema)schemas.get(tab.getSchema());
             if (schema == null) {
                 schema = RelationalPackage.eINSTANCE.getRelationalFactory().createSchema();
-                String schemaName = tab.getSchema();
-                schema.setName(schemaName);
-                schema.setNameInSource(schemaName);
+                schema.setName(tab.getSchema());
                 schema.setCatalog(cat);
-                schemas.put(schemaName, schema);
-                Operation operation = m_wsdlModel.getOperation(schemaName);
-                Port port = operation.getBinding().getPort();
-                Service service = port.getService();
-                m_extPropManager.setServiceName(schema, service.getName());
-                m_extPropManager.setServiceNamespace(schema, service.getNamespaceURI());
-                m_extPropManager.setPortName(schema, port.getName());
-                m_extPropManager.setPortNamespace(schema, port.getNamespaceURI());
+                schemas.put(tab.getSchema(), schema);
             }
 
             // create the table
@@ -402,7 +386,10 @@ public class RelationalModelBuilder {
 
         if (null != column.getMultipleValues()) {
             m_extPropManager.setMultipleValue(relCol, column.getMultipleValues());
+        } else {
+            m_extPropManager.setMultipleValue(relCol, 0); // not multivalue
         }
+
         m_extPropManager.setColumnInputParamAttribute(relCol, column.isInputParameter());
         m_extPropManager.setAllowEmptyInputElement(relCol, isRequest);
         m_extPropManager.setColumnRoleAttribute(relCol, column.getRole());
