@@ -9,7 +9,7 @@
 <feature
       id="org.teiid.designer"
       label="%featureName"
-      version="6.0.0.v20090514"
+      version="6.1.0.v20090611"
       provider-name="%providerName"
       image="feature.gif">
 
