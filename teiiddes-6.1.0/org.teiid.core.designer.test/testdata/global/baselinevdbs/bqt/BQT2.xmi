@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:DataAccess="http://www.metamatrix.com/metamodels/DataAccess" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Sdt="http://www.metamatrix.com/metamodels/SimpleDatatypes" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:94e4c540-9470-1ee5-802b-d6b00c1deaf9" primaryMetamodelUri="http://www.metamatrix.com/metamodels/DataAccess" modelType="PHYSICAL">
+    <modelImports xmi:uuid="mmuuid:6b862080-3019-1e20-921b-eeee28353879" name="builtInDataTypes" path="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" uuid="mmuuid:6b862080-3019-1e20-921b-eeee28353879" modelType="TYPE" primaryMetamodelUri="http://www.metamatrix.com/metamodels/SimpleDatatypes"/>
+  </mmcore:ModelAnnotation>
+  <DataAccess:Group xmi:uuid="mmuuid:a1e32fc0-9470-1ee5-802b-d6b00c1deaf9" name="SmallA" cardinality="50">
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a1e32fc6-9470-1ee5-802b-d6b00c1deaf9" name="IntKey" nullable="NO_NULLS" uniqueKeys="mmuuid/a2d753c0-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a1e32fc2-9470-1ee5-802b-d6b00c1deaf9" name="StringKey" length="10" nullable="NO_NULLS" uniqueKeys="mmuuid/a2d753c2-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a1e32fc7-9470-1ee5-802b-d6b00c1deaf9" name="IntNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a2d753c5-9470-1ee5-802b-d6b00c1deaf9" name="StringNum" length="10">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a2d753c3-9470-1ee5-802b-d6b00c1deaf9" name="FloatNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:d86b0d00-c48a-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a1e32fc3-9470-1ee5-802b-d6b00c1deaf9" name="LongNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:8cdee840-b900-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a1e32fca-9470-1ee5-802b-d6b00c1deaf9" name="DoubleNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:1f18b140-c4a3-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a1e32fc4-9470-1ee5-802b-d6b00c1deaf9" name="ByteNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:26dc1cc0-b9c8-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a2d753c4-9470-1ee5-802b-d6b00c1deaf9" name="DateValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:65dcde00-c4ab-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a1e32fc8-9470-1ee5-802b-d6b00c1deaf9" name="TimeValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:3b892180-c4a7-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a1e32fcb-9470-1ee5-802b-d6b00c1deaf9" name="TimestampValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:6d9809c0-a07e-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a1e32fcc-9470-1ee5-802b-d6b00c1deaf9" name="BooleanValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:dc476100-c483-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a1e32fc1-9470-1ee5-802b-d6b00c1deaf9" name="CharValue" length="1">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:62472700-a064-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a1e32fc5-9470-1ee5-802b-d6b00c1deaf9" name="ShortValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:5bbcf140-b9ae-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a1e32fc9-9470-1ee5-802b-d6b00c1deaf9" name="BigIntegerValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:822b9a40-a066-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a1e32fcd-9470-1ee5-802b-d6b00c1deaf9" name="BigDecimalValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:f2249740-a078-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a2d753c1-9470-1ee5-802b-d6b00c1deaf9" name="ObjectValue" searchability="UNSEARCHABLE">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:051a0640-b4e8-1e26-9f33-b76fd9d5fa79"/>
+    </columns>
+    <primaryKey xsi:type="DataAccess:PrimaryKey" xmi:uuid="mmuuid:a2d753c0-9470-1ee5-802b-d6b00c1deaf9" name="PK_SmallA" columns="mmuuid/a1e32fc6-9470-1ee5-802b-d6b00c1deaf9"/>
+    <uniqueConstraints xsi:type="DataAccess:UniqueConstraint" xmi:uuid="mmuuid:a2d753c2-9470-1ee5-802b-d6b00c1deaf9" name="UK_SmallA" columns="mmuuid/a1e32fc2-9470-1ee5-802b-d6b00c1deaf9"/>
+  </DataAccess:Group>
+  <DataAccess:Group xmi:uuid="mmuuid:a4b05980-9470-1ee5-802b-d6b00c1deaf9" name="SmallB" cardinality="50">
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b05984-9470-1ee5-802b-d6b00c1deaf9" name="IntKey" nullable="NO_NULLS" uniqueKeys="mmuuid/a4b05981-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b05988-9470-1ee5-802b-d6b00c1deaf9" name="StringKey" length="10" nullable="NO_NULLS" uniqueKeys="mmuuid/a4b05982-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b0598e-9470-1ee5-802b-d6b00c1deaf9" name="IntNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b05992-9470-1ee5-802b-d6b00c1deaf9" name="StringNum" length="10">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b0598a-9470-1ee5-802b-d6b00c1deaf9" name="FloatNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:d86b0d00-c48a-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b05991-9470-1ee5-802b-d6b00c1deaf9" name="LongNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:8cdee840-b900-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b05993-9470-1ee5-802b-d6b00c1deaf9" name="DoubleNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:1f18b140-c4a3-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b0598b-9470-1ee5-802b-d6b00c1deaf9" name="ByteNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:26dc1cc0-b9c8-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b05990-9470-1ee5-802b-d6b00c1deaf9" name="DateValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:65dcde00-c4ab-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b05985-9470-1ee5-802b-d6b00c1deaf9" name="TimeValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:3b892180-c4a7-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b0598c-9470-1ee5-802b-d6b00c1deaf9" name="TimestampValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:6d9809c0-a07e-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b05989-9470-1ee5-802b-d6b00c1deaf9" name="BooleanValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:dc476100-c483-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b05983-9470-1ee5-802b-d6b00c1deaf9" name="CharValue" length="1">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:62472700-a064-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b05987-9470-1ee5-802b-d6b00c1deaf9" name="ShortValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:5bbcf140-b9ae-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b0598f-9470-1ee5-802b-d6b00c1deaf9" name="BigIntegerValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:822b9a40-a066-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b05986-9470-1ee5-802b-d6b00c1deaf9" name="BigDecimalValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:f2249740-a078-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a4b0598d-9470-1ee5-802b-d6b00c1deaf9" name="ObjectValue" searchability="UNSEARCHABLE">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:051a0640-b4e8-1e26-9f33-b76fd9d5fa79"/>
+    </columns>
+    <primaryKey xsi:type="DataAccess:PrimaryKey" xmi:uuid="mmuuid:a4b05981-9470-1ee5-802b-d6b00c1deaf9" name="PK_SmallB" columns="mmuuid/a4b05984-9470-1ee5-802b-d6b00c1deaf9"/>
+    <uniqueConstraints xsi:type="DataAccess:UniqueConstraint" xmi:uuid="mmuuid:a4b05982-9470-1ee5-802b-d6b00c1deaf9" name="UK_SmallB" columns="mmuuid/a4b05988-9470-1ee5-802b-d6b00c1deaf9"/>
+  </DataAccess:Group>
+  <DataAccess:Group xmi:uuid="mmuuid:a698a180-9470-1ee5-802b-d6b00c1deaf9" name="MediumA" cardinality="1000">
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a77d8342-9470-1ee5-802b-d6b00c1deaf9" name="IntKey" nullable="NO_NULLS" uniqueKeys="mmuuid/a698a18a-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a77d8345-9470-1ee5-802b-d6b00c1deaf9" name="StringKey" length="10" nullable="NO_NULLS" uniqueKeys="mmuuid/a77d8340-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a77d8343-9470-1ee5-802b-d6b00c1deaf9" name="IntNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a698a188-9470-1ee5-802b-d6b00c1deaf9" name="StringNum" length="10">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a77d8341-9470-1ee5-802b-d6b00c1deaf9" name="FloatNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:d86b0d00-c48a-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a698a186-9470-1ee5-802b-d6b00c1deaf9" name="LongNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:8cdee840-b900-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a698a18b-9470-1ee5-802b-d6b00c1deaf9" name="DoubleNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:1f18b140-c4a3-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a698a184-9470-1ee5-802b-d6b00c1deaf9" name="ByteNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:26dc1cc0-b9c8-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a77d8347-9470-1ee5-802b-d6b00c1deaf9" name="DateValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:65dcde00-c4ab-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a698a187-9470-1ee5-802b-d6b00c1deaf9" name="TimeValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:3b892180-c4a7-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a698a181-9470-1ee5-802b-d6b00c1deaf9" name="TimestampValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:6d9809c0-a07e-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a698a189-9470-1ee5-802b-d6b00c1deaf9" name="BooleanValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:dc476100-c483-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a77d8344-9470-1ee5-802b-d6b00c1deaf9" name="CharValue" length="1">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:62472700-a064-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a698a182-9470-1ee5-802b-d6b00c1deaf9" name="ShortValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:5bbcf140-b9ae-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a698a183-9470-1ee5-802b-d6b00c1deaf9" name="BigIntegerValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:822b9a40-a066-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a77d8346-9470-1ee5-802b-d6b00c1deaf9" name="BigDecimalValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:f2249740-a078-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a698a185-9470-1ee5-802b-d6b00c1deaf9" name="ObjectValue" searchability="UNSEARCHABLE">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:051a0640-b4e8-1e26-9f33-b76fd9d5fa79"/>
+    </columns>
+    <primaryKey xsi:type="DataAccess:PrimaryKey" xmi:uuid="mmuuid:a698a18a-9470-1ee5-802b-d6b00c1deaf9" name="PK_SmallA" columns="mmuuid/a77d8342-9470-1ee5-802b-d6b00c1deaf9"/>
+    <uniqueConstraints xsi:type="DataAccess:UniqueConstraint" xmi:uuid="mmuuid:a77d8340-9470-1ee5-802b-d6b00c1deaf9" name="UK_SmallA" columns="mmuuid/a77d8345-9470-1ee5-802b-d6b00c1deaf9"/>
+  </DataAccess:Group>
+  <DataAccess:Group xmi:uuid="mmuuid:a871a740-9470-1ee5-802b-d6b00c1deaf9" name="MediumB" cardinality="1000">
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a871a743-9470-1ee5-802b-d6b00c1deaf9" name="IntKey" nullable="NO_NULLS" uniqueKeys="mmuuid/a9568906-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a871a748-9470-1ee5-802b-d6b00c1deaf9" name="StringKey" length="10" nullable="NO_NULLS" uniqueKeys="mmuuid/a871a747-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a9568905-9470-1ee5-802b-d6b00c1deaf9" name="IntNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a871a74c-9470-1ee5-802b-d6b00c1deaf9" name="StringNum" length="10">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a871a749-9470-1ee5-802b-d6b00c1deaf9" name="FloatNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:d86b0d00-c48a-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a871a74a-9470-1ee5-802b-d6b00c1deaf9" name="LongNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:8cdee840-b900-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a871a744-9470-1ee5-802b-d6b00c1deaf9" name="DoubleNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:1f18b140-c4a3-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a871a741-9470-1ee5-802b-d6b00c1deaf9" name="ByteNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:26dc1cc0-b9c8-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a871a745-9470-1ee5-802b-d6b00c1deaf9" name="DateValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:65dcde00-c4ab-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a9568903-9470-1ee5-802b-d6b00c1deaf9" name="TimeValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:3b892180-c4a7-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a9568900-9470-1ee5-802b-d6b00c1deaf9" name="TimestampValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:6d9809c0-a07e-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a9568901-9470-1ee5-802b-d6b00c1deaf9" name="BooleanValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:dc476100-c483-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a9568902-9470-1ee5-802b-d6b00c1deaf9" name="CharValue" length="1">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:62472700-a064-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a871a746-9470-1ee5-802b-d6b00c1deaf9" name="ShortValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:5bbcf140-b9ae-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a871a742-9470-1ee5-802b-d6b00c1deaf9" name="BigIntegerValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:822b9a40-a066-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a871a74b-9470-1ee5-802b-d6b00c1deaf9" name="BigDecimalValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:f2249740-a078-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:a9568904-9470-1ee5-802b-d6b00c1deaf9" name="ObjectValue" searchability="UNSEARCHABLE">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:051a0640-b4e8-1e26-9f33-b76fd9d5fa79"/>
+    </columns>
+    <primaryKey xsi:type="DataAccess:PrimaryKey" xmi:uuid="mmuuid:a9568906-9470-1ee5-802b-d6b00c1deaf9" name="PK_SmallA" columns="mmuuid/a871a743-9470-1ee5-802b-d6b00c1deaf9"/>
+    <uniqueConstraints xsi:type="DataAccess:UniqueConstraint" xmi:uuid="mmuuid:a871a747-9470-1ee5-802b-d6b00c1deaf9" name="UK_SmallA" columns="mmuuid/a871a748-9470-1ee5-802b-d6b00c1deaf9"/>
+  </DataAccess:Group>
+  <DataAccess:Group xmi:uuid="mmuuid:ab3ed100-9470-1ee5-802b-d6b00c1deaf9" name="LargeA" cardinality="10000">
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed107-9470-1ee5-802b-d6b00c1deaf9" name="IntKey" nullable="NO_NULLS" uniqueKeys="mmuuid/ab3ed10d-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed112-9470-1ee5-802b-d6b00c1deaf9" name="StringKey" length="10" nullable="NO_NULLS" uniqueKeys="mmuuid/ab3ed111-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed108-9470-1ee5-802b-d6b00c1deaf9" name="IntNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed102-9470-1ee5-802b-d6b00c1deaf9" name="StringNum" length="10">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed105-9470-1ee5-802b-d6b00c1deaf9" name="FloatNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:d86b0d00-c48a-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed101-9470-1ee5-802b-d6b00c1deaf9" name="LongNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:8cdee840-b900-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed10c-9470-1ee5-802b-d6b00c1deaf9" name="DoubleNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:1f18b140-c4a3-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed110-9470-1ee5-802b-d6b00c1deaf9" name="ByteNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:26dc1cc0-b9c8-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed103-9470-1ee5-802b-d6b00c1deaf9" name="DateValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:65dcde00-c4ab-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed113-9470-1ee5-802b-d6b00c1deaf9" name="TimeValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:3b892180-c4a7-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed109-9470-1ee5-802b-d6b00c1deaf9" name="TimestampValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:6d9809c0-a07e-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed10f-9470-1ee5-802b-d6b00c1deaf9" name="BooleanValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:dc476100-c483-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed106-9470-1ee5-802b-d6b00c1deaf9" name="CharValue" length="1">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:62472700-a064-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed104-9470-1ee5-802b-d6b00c1deaf9" name="ShortValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:5bbcf140-b9ae-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed10b-9470-1ee5-802b-d6b00c1deaf9" name="BigIntegerValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:822b9a40-a066-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed10e-9470-1ee5-802b-d6b00c1deaf9" name="BigDecimalValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:f2249740-a078-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ab3ed10a-9470-1ee5-802b-d6b00c1deaf9" name="ObjectValue" searchability="UNSEARCHABLE">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:051a0640-b4e8-1e26-9f33-b76fd9d5fa79"/>
+    </columns>
+    <primaryKey xsi:type="DataAccess:PrimaryKey" xmi:uuid="mmuuid:ab3ed10d-9470-1ee5-802b-d6b00c1deaf9" name="PK_SmallA" columns="mmuuid/ab3ed107-9470-1ee5-802b-d6b00c1deaf9"/>
+    <uniqueConstraints xsi:type="DataAccess:UniqueConstraint" xmi:uuid="mmuuid:ab3ed111-9470-1ee5-802b-d6b00c1deaf9" name="UK_SmallA" columns="mmuuid/ab3ed112-9470-1ee5-802b-d6b00c1deaf9"/>
+  </DataAccess:Group>
+  <DataAccess:Group xmi:uuid="mmuuid:ad17d6c0-9470-1ee5-802b-d6b00c1deaf9" name="LargeB" cardinality="10000">
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6cb-9470-1ee5-802b-d6b00c1deaf9" name="IntKey" nullable="NO_NULLS" uniqueKeys="mmuuid/ad17d6ce-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6c7-9470-1ee5-802b-d6b00c1deaf9" name="StringKey" length="10" nullable="NO_NULLS" uniqueKeys="mmuuid/ad17d6c2-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6c6-9470-1ee5-802b-d6b00c1deaf9" name="IntNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6c8-9470-1ee5-802b-d6b00c1deaf9" name="StringNum" length="10">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6d2-9470-1ee5-802b-d6b00c1deaf9" name="FloatNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:d86b0d00-c48a-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6c1-9470-1ee5-802b-d6b00c1deaf9" name="LongNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:8cdee840-b900-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6d1-9470-1ee5-802b-d6b00c1deaf9" name="DoubleNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:1f18b140-c4a3-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6d3-9470-1ee5-802b-d6b00c1deaf9" name="ByteNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:26dc1cc0-b9c8-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6cd-9470-1ee5-802b-d6b00c1deaf9" name="DateValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:65dcde00-c4ab-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6ca-9470-1ee5-802b-d6b00c1deaf9" name="TimeValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:3b892180-c4a7-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6c3-9470-1ee5-802b-d6b00c1deaf9" name="TimestampValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:6d9809c0-a07e-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6c9-9470-1ee5-802b-d6b00c1deaf9" name="BooleanValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:dc476100-c483-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6cf-9470-1ee5-802b-d6b00c1deaf9" name="CharValue" length="1">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:62472700-a064-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6c4-9470-1ee5-802b-d6b00c1deaf9" name="ShortValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:5bbcf140-b9ae-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6c5-9470-1ee5-802b-d6b00c1deaf9" name="BigIntegerValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:822b9a40-a066-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6d0-9470-1ee5-802b-d6b00c1deaf9" name="BigDecimalValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:f2249740-a078-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:ad17d6cc-9470-1ee5-802b-d6b00c1deaf9" name="ObjectValue" searchability="UNSEARCHABLE">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:051a0640-b4e8-1e26-9f33-b76fd9d5fa79"/>
+    </columns>
+    <primaryKey xsi:type="DataAccess:PrimaryKey" xmi:uuid="mmuuid:ad17d6ce-9470-1ee5-802b-d6b00c1deaf9" name="PK_SmallA" columns="mmuuid/ad17d6cb-9470-1ee5-802b-d6b00c1deaf9"/>
+    <uniqueConstraints xsi:type="DataAccess:UniqueConstraint" xmi:uuid="mmuuid:ad17d6c2-9470-1ee5-802b-d6b00c1deaf9" name="UK_SmallA" columns="mmuuid/ad17d6c7-9470-1ee5-802b-d6b00c1deaf9"/>
+  </DataAccess:Group>
+  <DataAccess:Group xmi:uuid="mmuuid:aef0dc80-9470-1ee5-802b-d6b00c1deaf9" name="HugeA" cardinality="500000">
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:aef0dc82-9470-1ee5-802b-d6b00c1deaf9" name="IntKey" nullable="NO_NULLS" uniqueKeys="mmuuid/aef0dc83-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:afe5008d-9470-1ee5-802b-d6b00c1deaf9" name="StringKey" length="10" nullable="NO_NULLS" uniqueKeys="mmuuid/afe5008b-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:afe5008e-9470-1ee5-802b-d6b00c1deaf9" name="IntNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:afe50085-9470-1ee5-802b-d6b00c1deaf9" name="StringNum" length="10">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:afe50083-9470-1ee5-802b-d6b00c1deaf9" name="FloatNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:d86b0d00-c48a-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:afe50082-9470-1ee5-802b-d6b00c1deaf9" name="LongNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:8cdee840-b900-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:afe50086-9470-1ee5-802b-d6b00c1deaf9" name="DoubleNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:1f18b140-c4a3-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:afe50087-9470-1ee5-802b-d6b00c1deaf9" name="ByteNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:26dc1cc0-b9c8-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:afe50081-9470-1ee5-802b-d6b00c1deaf9" name="DateValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:65dcde00-c4ab-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:afe50080-9470-1ee5-802b-d6b00c1deaf9" name="TimeValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:3b892180-c4a7-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:afe50084-9470-1ee5-802b-d6b00c1deaf9" name="TimestampValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:6d9809c0-a07e-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:aef0dc81-9470-1ee5-802b-d6b00c1deaf9" name="BooleanValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:dc476100-c483-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:afe50089-9470-1ee5-802b-d6b00c1deaf9" name="CharValue" length="1">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:62472700-a064-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:afe5008c-9470-1ee5-802b-d6b00c1deaf9" name="ShortValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:5bbcf140-b9ae-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:afe50088-9470-1ee5-802b-d6b00c1deaf9" name="BigIntegerValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:822b9a40-a066-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:afe5008a-9470-1ee5-802b-d6b00c1deaf9" name="BigDecimalValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:f2249740-a078-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:afe5008f-9470-1ee5-802b-d6b00c1deaf9" name="ObjectValue" searchability="UNSEARCHABLE">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:051a0640-b4e8-1e26-9f33-b76fd9d5fa79"/>
+    </columns>
+    <primaryKey xsi:type="DataAccess:PrimaryKey" xmi:uuid="mmuuid:aef0dc83-9470-1ee5-802b-d6b00c1deaf9" name="PK_SmallA" columns="mmuuid/aef0dc82-9470-1ee5-802b-d6b00c1deaf9"/>
+    <uniqueConstraints xsi:type="DataAccess:UniqueConstraint" xmi:uuid="mmuuid:afe5008b-9470-1ee5-802b-d6b00c1deaf9" name="UK_SmallA" columns="mmuuid/afe5008d-9470-1ee5-802b-d6b00c1deaf9"/>
+  </DataAccess:Group>
+  <DataAccess:Group xmi:uuid="mmuuid:b1be0640-9470-1ee5-802b-d6b00c1deaf9" name="HugeB" cardinality="500000">
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be064c-9470-1ee5-802b-d6b00c1deaf9" name="IntKey" nullable="NO_NULLS" uniqueKeys="mmuuid/b1be0648-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be0649-9470-1ee5-802b-d6b00c1deaf9" name="StringKey" length="10" nullable="NO_NULLS" uniqueKeys="mmuuid/b1be0646-9470-1ee5-802b-d6b00c1deaf9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be064a-9470-1ee5-802b-d6b00c1deaf9" name="IntNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be0651-9470-1ee5-802b-d6b00c1deaf9" name="StringNum" length="10">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be0641-9470-1ee5-802b-d6b00c1deaf9" name="FloatNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:d86b0d00-c48a-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be0642-9470-1ee5-802b-d6b00c1deaf9" name="LongNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:8cdee840-b900-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be064d-9470-1ee5-802b-d6b00c1deaf9" name="DoubleNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:1f18b140-c4a3-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be0652-9470-1ee5-802b-d6b00c1deaf9" name="ByteNum">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:26dc1cc0-b9c8-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be064e-9470-1ee5-802b-d6b00c1deaf9" name="DateValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:65dcde00-c4ab-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be0644-9470-1ee5-802b-d6b00c1deaf9" name="TimeValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:3b892180-c4a7-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be064f-9470-1ee5-802b-d6b00c1deaf9" name="TimestampValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:6d9809c0-a07e-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be0643-9470-1ee5-802b-d6b00c1deaf9" name="BooleanValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:dc476100-c483-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be0645-9470-1ee5-802b-d6b00c1deaf9" name="CharValue" length="1">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:62472700-a064-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be064b-9470-1ee5-802b-d6b00c1deaf9" name="ShortValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:5bbcf140-b9ae-1e21-b812-969c8fc8b016"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be0653-9470-1ee5-802b-d6b00c1deaf9" name="BigIntegerValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:822b9a40-a066-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be0650-9470-1ee5-802b-d6b00c1deaf9" name="BigDecimalValue">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:f2249740-a078-1e26-9b08-d6079ebe1f0d"/>
+    </columns>
+    <columns xsi:type="DataAccess:Element" xmi:uuid="mmuuid:b1be0647-9470-1ee5-802b-d6b00c1deaf9" name="ObjectValue" searchability="UNSEARCHABLE">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:051a0640-b4e8-1e26-9f33-b76fd9d5fa79"/>
+    </columns>
+    <primaryKey xsi:type="DataAccess:PrimaryKey" xmi:uuid="mmuuid:b1be0648-9470-1ee5-802b-d6b00c1deaf9" name="PK_SmallA" columns="mmuuid/b1be064c-9470-1ee5-802b-d6b00c1deaf9"/>
+    <uniqueConstraints xsi:type="DataAccess:UniqueConstraint" xmi:uuid="mmuuid:b1be0646-9470-1ee5-802b-d6b00c1deaf9" name="UK_SmallA" columns="mmuuid/b1be0649-9470-1ee5-802b-d6b00c1deaf9"/>
+  </DataAccess:Group>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:1918c3c1-9471-1ee5-802b-d6b00c1deaf9">
+    <diagram xmi:uuid="mmuuid:1918c3c0-9471-1ee5-802b-d6b00c1deaf9" type="packageDiagramType" target="mmuuid/94e4c540-9470-1ee5-802b-d6b00c1deaf9">
+      <diagramEntity xmi:uuid="mmuuid:1a0ce7c0-9471-1ee5-802b-d6b00c1deaf9" xPosition="10" yPosition="10" height="354" width="178" modelObject="mmuuid/a1e32fc0-9470-1ee5-802b-d6b00c1deaf9"/>
+      <diagramEntity xmi:uuid="mmuuid:1b010bd0-9471-1ee5-802b-d6b00c1deaf9" xPosition="208" yPosition="10" height="354" width="178" modelObject="mmuuid/a4b05980-9470-1ee5-802b-d6b00c1deaf9"/>
+      <diagramEntity xmi:uuid="mmuuid:1be5ed8a-9471-1ee5-802b-d6b00c1deaf9" xPosition="406" yPosition="10" height="354" width="178" modelObject="mmuuid/a698a180-9470-1ee5-802b-d6b00c1deaf9"/>
+      <diagramEntity xmi:uuid="mmuuid:1cda1186-9471-1ee5-802b-d6b00c1deaf9" xPosition="604" yPosition="10" height="354" width="178" modelObject="mmuuid/a871a740-9470-1ee5-802b-d6b00c1deaf9"/>
+      <diagramEntity xmi:uuid="mmuuid:1dce358c-9471-1ee5-802b-d6b00c1deaf9" xPosition="802" yPosition="10" height="354" width="178" modelObject="mmuuid/ab3ed100-9470-1ee5-802b-d6b00c1deaf9"/>
+      <diagramEntity xmi:uuid="mmuuid:1eb31745-9471-1ee5-802b-d6b00c1deaf9" xPosition="10" yPosition="384" height="354" width="178" modelObject="mmuuid/ad17d6c0-9470-1ee5-802b-d6b00c1deaf9"/>
+      <diagramEntity xmi:uuid="mmuuid:1fa73b4a-9471-1ee5-802b-d6b00c1deaf9" xPosition="208" yPosition="384" height="354" width="178" modelObject="mmuuid/aef0dc80-9470-1ee5-802b-d6b00c1deaf9"/>
+      <diagramEntity xmi:uuid="mmuuid:208c1d0c-9471-1ee5-802b-d6b00c1deaf9" xPosition="406" yPosition="384" height="354" width="178" modelObject="mmuuid/b1be0640-9470-1ee5-802b-d6b00c1deaf9"/>
+    </diagram>
+  </Diagram:DiagramContainer>
+</xmi:XMI>

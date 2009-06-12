@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+     <extension-point id="modelMapper" name="%modelMapperName" schema="schema/modelMapper.exsd"/>
+   <extension-point id="choiceObjectHandler" name="%choiceObjectHandlerName" schema="schema/choiceObjectHandler.exsd"/>
+
+</plugin>

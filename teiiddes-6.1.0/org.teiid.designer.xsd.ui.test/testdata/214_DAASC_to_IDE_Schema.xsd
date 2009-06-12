@@ -1,0 +1,1270 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xs:schema elementFormDefault='qualified' attributeFormDefault='unqualified' xmlns:xs='http://www.w3.org/2001/XMLSchema' targetNamespace='http://www.ustranscom.mil/p3i/lm/214A' xmlns='http://www.ustranscom.mil/p3i/lm/214A'>
+
+	<xs:complexType name='EnvelopeType'>
+	  <xs:sequence>
+		<!-- IC Comment:  -->
+		<!-- Mapping Comment: Unique identifing filename; will discuss with DAASC -->
+		<xs:element name='Filname' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='100'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA01 -->
+		<!-- Mapping Comment: AUTHORIZATION QUALIFIER -->
+		<xs:element name='AuthQual' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA02 -->
+		<!-- Mapping Comment: AUTHORIZATION INFO -->
+		<xs:element name='AuthInfo' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='10'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA03 -->
+		<!-- Mapping Comment: SECURITY QUALIFIER -->
+		<xs:element name='SecQual' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA04 -->
+		<!-- Mapping Comment: SECURITY INFO -->
+		<xs:element name='SecInfo' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='15'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA05 -->
+		<!-- Mapping Comment: SENDER QUALIFIER -->
+		<xs:element name='SenderQual' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA06 -->
+		<!-- Mapping Comment: SENDER ID -->
+		<xs:element name='SenderId' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='15'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA07 -->
+		<!-- Mapping Comment: INTERCHANGE QUALIFIER -->
+		<xs:element name='IntQual' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA08 -->
+		<!-- Mapping Comment: RECEIVER ID -->
+		<xs:element name='ReceiverId' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='15'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA09 -->
+		<!-- Mapping Comment: INTERCHANGE DATE -->
+		<xs:element name='IntDate' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='6'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA10 -->
+		<!-- Mapping Comment: INTERCHANGE TIME -->
+		<xs:element name='IntTime' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='4'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA11 -->
+		<!-- Mapping Comment: STANDARDS ID -->
+		<xs:element name='StandardsId' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='1'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA12 -->
+		<!-- Mapping Comment: INTERCHANGE CONTROL VERSION ID -->
+		<xs:element name='IntContVersionId' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='5'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA13 -->
+		<!-- Mapping Comment: INTERCHANGE CONTROL NUMBER -->
+		<xs:element name='IsaIntContNum' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='9'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA14 -->
+		<!-- Mapping Comment: ACKNOWLEDGMENT REQUEST -->
+		<xs:element name='AckReq' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='1'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA15 -->
+		<!-- Mapping Comment: TEST INDICATOR -->
+		<xs:element name='TestIndicator' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='1'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: ISA16 -->
+		<!-- Mapping Comment: SUBELEMENT SEPARATOR -->
+		<xs:element name='SubelementSeparator' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: GS01 -->
+		<!-- Mapping Comment: FUNCTIONAL IDENTIFIER CODE -->
+		<xs:element name='FunctIdentCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: GS02 -->
+		<!-- Mapping Comment: APPLICATION SENDERS CODE -->
+		<xs:element name='AppSendersCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='15'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: GS03 -->
+		<!-- Mapping Comment: APPLICATION RECEIVERS CODE -->
+		<xs:element name='AppReceiversCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='15'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: GS04 -->
+		<!-- Mapping Comment: TRANSLATION DATE -->
+		<xs:element name='TranslationDate' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='8'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: GS05 -->
+		<!-- Mapping Comment: TRANSLATION TIME -->
+		<xs:element name='CarrierTranslationTime' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='4'/>
+		      <xs:maxLength value='8'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: GS06 -->
+		<!-- Mapping Comment: GROUP CONTROL NUMBER -->
+		<xs:element name='GsGroupContNum' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='9'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: GS07 -->
+		<!-- Mapping Comment: X12 AGENCY CODE -->
+		<xs:element name='X12AgencyCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: GS08 -->
+		<!-- Mapping Comment: VERSION/RELEASE/INDUSTRY INTENDTIFIER CODE -->
+		<xs:element name='EdiVersion' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='12'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: GE01 -->
+		<!-- Mapping Comment: NUMBER OF TRANSACTION SETS -->
+		<xs:element name='NumTransSets' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='8'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: GE02 -->
+		<!-- Mapping Comment: GROUP CONTROL NUMBER -->
+		<xs:element name='GeGroupContNum' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='9'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: IEA01 -->
+		<!-- Mapping Comment: Functional Group Count -->
+		<xs:element name='FunctGroupCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='5'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- IC Comment: IEA02 -->
+		<!-- Mapping Comment: Interchange Control Number -->
+		<xs:element name='IeaIntContNum' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='9'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<xs:element name='Header' maxOccurs='unbounded' type='HeaderType'/>
+	  </xs:sequence>
+	</xs:complexType> <!-- EnvelopeType -->
+
+	<xs:complexType name='HeaderType'>
+	  <xs:sequence>
+		<!-- EDI Indexes: 2 -->
+		<!-- IC Comment:  -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='TransactionSetIdentifierCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='3'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 3 -->
+		<!-- IC Comment: Identifying control number that must be unique within the transaction set functional group assigned by the originator for a transaction set. The application and structure of the control number must be agreed upon between trading partners. (For example, so -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='TransactionSetControlNumber' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='4'/>
+		      <xs:maxLength value='9'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 5 -->
+		<!-- IC Comment: SEGMENT CONDITION: Use of either B1001 or B1006 is MANDATORY. Only the carrier's PRO number will appear in B1001. Use B1006 if shipment is identified by air or rail waybill number. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='CarrierProNumber' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='30'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 6 -->
+		<!-- IC Comment: In this data element, enter the Shipment ID generated by the shipper. This must be either a bill of lading number or a TCN (Transportation Control Number). If you enter a TCN here, you must create a separate 214 for each TCN included on a single bill of l -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='LadingBillOrShipmentIdentifier' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='30'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 7 -->
+		<!-- IC Comment:  -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='MovementScac' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='4'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 8 -->
+		<!-- IC Comment: Required if B1006 is used. -->
+		<!-- IC Comment: AW - Air Waybill Number -->
+		<!-- IC Comment: WY - Waybill Number -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='WaybillQualifier' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='3'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 9 -->
+		<!-- IC Comment: CONDITION: Use of either B1001 or B1006 is MANDATORY. Only -->
+		<!-- IC Comment: the carrier's air or rail waybill number will appear in B1006. Use -->
+		<!-- IC Comment: B1001 if shipment is identified by a carrier's PRO number. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='WaybillIdentifier' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='30'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<xs:element name='ReferenceIdentifier' maxOccurs='unbounded' minOccurs='0' type='ReferenceIdentifierType'/>
+		<!-- EDI Indexes: 18, 19 -->
+		<!-- IC Comment:  -->
+		<!-- Mapping Comment: Concat multiple occur -->
+		<xs:element name='FreeFormText' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='250'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<xs:element name='Party' maxOccurs='unbounded' minOccurs='0' type='PartyType'/>
+		<xs:element name='InterlineRouting' maxOccurs='unbounded' minOccurs='0' type='InterlineRoutingType'/>
+		<xs:element name='StatusEvent' maxOccurs='unbounded' type='StatusEventType'/>
+		<!-- EDI Indexes: 111 -->
+		<!-- IC Comment: Total segments in this transaction set including the ST and SE segments. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='TotalSegmentQuantity' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='10'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 112 -->
+		<!-- IC Comment: This data element ends the transaction set and should match the number that appears in the ST02 that begins the transaction set. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='TrailerTransactionSetControlNumber' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='4'/>
+		      <xs:maxLength value='9'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+	  </xs:sequence>
+	</xs:complexType> <!-- HeaderType -->
+
+	<xs:complexType name='ReferenceIdentifierType'>
+	  <xs:sequence>
+		<!-- EDI Indexes: 12, 15, 54 -->
+		<!-- IC Comment: Code qualifying the Reference Identification -->
+		<!-- IC Comment: [012] Additional Shipment Identifier Qualifier (DG 10) -->
+		<!-- IC Comment: Use code value 'BM' for Commercial Bill of Lading as well as Government -->
+		<!-- IC Comment: Bill of Lading. -->
+		<!-- IC Comment: [015] Commodity Identification Qualifier (DG 10) -->
+		<!-- IC Comment: BL Government Bill of Lading [012] -->
+		<!-- IC Comment: BM Bill of Lading Number [012] -->
+		<!-- IC Comment: C7 Contract Line Item Number [012] -->
+		<!-- IC Comment: CH Customer catalog number [015] Customer catalog number -->
+		<!-- IC Comment: CT Contract Number [012] Contract Number -->
+		<!-- IC Comment: PG Product Group [015] Product Group -->
+		<!-- IC Comment: PO Purchase Order Number [012] -->
+		<!-- IC Comment: RQ Purchase Requisition Number [012] -->
+		<!-- IC Comment: STR Standard Transportation Commodity Code (STCC) Replacement Code [015] -->
+		<!-- IC Comment: TG Transportation Control Number (TCN)[012] -->
+		<!-- IC Comment: IT - Internal Customer Number -->
+		<!-- Mapping Comment: Store As-is -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='ReferenceQualifier' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='3'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 11, 14, 53 -->
+		<!-- IC Comment:  -->
+		<!-- IC Comment: Internal Customer Number -->
+		<!-- Mapping Comment: Store As-is -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='ReferenceIdentifier' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='30'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 16 -->
+		<!-- IC Comment:  -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='ReferenceText' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='80'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+	  </xs:sequence>
+	</xs:complexType> <!-- ReferenceIdentifierType -->
+
+	<xs:complexType name='PartyType'>
+	  <xs:sequence>
+		<!-- EDI Indexes: 21, 37, 56 -->
+		<!-- IC Comment: Code identifying an organizational entity, a physical location, property or an individual -->
+		<!-- IC Comment: [021] Consignee Identifier Code (DG 70) -->
+		<!-- IC Comment: [056] Party Who Signed Delivery Receipt Code (DG 71) -->
+		<!-- IC Comment: [037] Shipper Identifier Code (DG 71) -->
+		<!-- IC Comment: CN Consignee -->
+		<!-- IC Comment: [021] Consignee -->
+		<!-- IC Comment: N5 Party Who Signed the Delivery Receipt -->
+		<!-- IC Comment: [056] Party Who Signed the Delivery Receipt -->
+		<!-- IC Comment: SH Shipper -->
+		<!-- IC Comment: [037] Shipper -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='EntityTypeCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='3'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 22, 38, 57 -->
+		<!-- IC Comment: Free-form name -->
+		<!-- IC Comment: [022] Consignee Name (DG 70) -->
+		<!-- IC Comment: Carriers are encouraged to provide this data if it is available. It must be provided if an Identification Code is not provided at N103 and N104. -->
+		<!-- IC Comment: [038] Shipper Name (DG 71) -->
+		<!-- IC Comment: Carriers are encouraged to provide this data if it is available. It must be provided if an Identification Code is not provided at N103 and N104. -->
+		<!-- IC Comment: [057] Party Who Signed Delivery Receipt (DG 71) -->
+		<!-- IC Comment: Required to satisfy syntax. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='EntityName' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='60'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 23, 39 -->
+		<!-- IC Comment: Code designating the system/method of code structure used for Identification Code (67) -->
+		<!-- IC Comment: [023] Identification Code Qualifier (DG 70) -->
+		<!-- IC Comment: Required if N104 is used. -->
+		<!-- IC Comment: [039] Identification Code Qualifier (DG 71) -->
+		<!-- IC Comment: Required if N104 is used. -->
+		<!-- IC Comment: 1 D-U-N-S Number, Dun & Bradstreet -->
+		<!-- IC Comment: [023] D-U-N-S Number -->
+		<!-- IC Comment: [039] D-U-N-S Number -->
+		<!-- IC Comment: 9 D-U-N-S+4, D-U-N-S Number with Four Character -->
+		<!-- IC Comment: Suffix -->
+		<!-- IC Comment: [023] D-U-N-S+4 -->
+		<!-- IC Comment: [039] D-U-N-S+4 -->
+		<!-- IC Comment: 10 Department of Defense Activity Address Code -->
+		<!-- IC Comment: (DODAAC) -->
+		<!-- IC Comment: [023] Department of Defense Activity Address Code -->
+		<!-- IC Comment: (DODAAC) -->
+		<!-- IC Comment: [039] Department of Defense Activity Address Code -->
+		<!-- IC Comment: (DODAAC) -->
+		<!-- IC Comment: 27 Government Bill Of Lading Office Code (GBLOC) -->
+		<!-- IC Comment: [023] Government Bill Of Lading Office Code -->
+		<!-- IC Comment: (GBLOC) -->
+		<!-- IC Comment: [039] Government Bill Of Lading Office Code -->
+		<!-- IC Comment: (GBLOC) -->
+		<!-- IC Comment: 33 Commercial and Government Entity (CAGE) -->
+		<!-- IC Comment: [023] Commercial and Government Entity (CAGE) -->
+		<!-- IC Comment: [039] Commercial and Government Entity (CAGE) -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='IdentificationCodeQualifier' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 24, 40 -->
+		<!-- IC Comment: Code identifying a party or other code -->
+		<!-- IC Comment: [024] Consignee DODAAC/GBLOC/CAGE/D-U-N-S/D-U-N-S+4 -->
+		<!-- IC Comment: Carriers are encouraged to provide this data if it is available. It must be provided if identification is not provided at N102. -->
+		<!-- IC Comment: [040] Shipper DODAAC/GBLOC/CAGE/D-U-N-S/D-U-N-S+4 -->
+		<!-- IC Comment: Carriers are encouraged to provide this data if it is available. It must be provided if identification is not provided at N10 -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='IdentificationCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='80'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 26, 42 -->
+		<!-- IC Comment: Free-form name -->
+		<!-- IC Comment: [026] Consignee Additional Name -->
+		<!-- IC Comment: [042] Shipper Additional Name -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='PartyAdditionalName' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='60'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 28, 44 -->
+		<!-- IC Comment: Address information -->
+		<!-- IC Comment: [028] Consignee Address Information -->
+		<!-- IC Comment: [044] Shipper Address Information -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='AddressLineText' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='55'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 30, 46 -->
+		<!-- IC Comment: Free-form text for city name -->
+		<!-- IC Comment: [030] Consignee City Name -->
+		<!-- IC Comment: MANDATORY for all shipments to locations other than the U.S. and Canada. It is also MANDATORY for shipments within the U.S. and to Canada if SPLC is not provided in N405 and N406. -->
+		<!-- IC Comment: [046] Shipper City Name -->
+		<!-- IC Comment: MANDATORY for all shipments that originate outside the U.S. and Canada. It is also MANDATORY for shipments that originate within the U.S. and Canada if SPLC is not provided in N405 and N406. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='CityName' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='30'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 31, 47 -->
+		<!-- IC Comment: Code (Standard State/Province) as defined by appropriate government agency -->
+		<!-- IC Comment: [031] Consignee State or Province Code -->
+		<!-- IC Comment: MANDATORY for shipments to a U.S. or Canadian Province consignee if SPLC is not provided in N405 and N406. -->
+		<!-- IC Comment: [047] Shipper State or Province Code -->
+		<!-- IC Comment: MANDATORY for all shipments that originate within the U.S. or Canada if SPLC is not provided in N405 and N406. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='StateOrProvinceCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 32, 48 -->
+		<!-- IC Comment: Code defining international postal zone code excluding punctuation and blanks (zip code for United States) -->
+		<!-- IC Comment: [032] Consignee Zip/Postal Code -->
+		<!-- IC Comment: [048] Shipper Zip/Postal Code -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='PostalCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='3'/>
+		      <xs:maxLength value='15'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 33, 49 -->
+		<!-- IC Comment: Code identifying the country -->
+		<!-- IC Comment: [033] Consignee Country Code -->
+		<!-- IC Comment: MANDATORY for all shipments to a location outside the U.S. or Canada.  Valid country codes are found in Codes for Representation of Names of -->
+		<!-- IC Comment: Countries, ISO 3166- (Latest Release). The publication may be obtained from: -->
+		<!-- IC Comment: American National Standards Institute -->
+		<!-- IC Comment: 11 West 42nd Street, 13 Floor -->
+		<!-- IC Comment: New York, NY 10036. -->
+		<!-- IC Comment: [049] Shipper Country Code -->
+		<!-- IC Comment: MANDATORY for all shipments that originate at a location outside the U.S. or Canada. Valid country codes are found in Codes for Representation of Names of Countries, ISO 3166- (Latest Release). The publication may be obtained from: -->
+		<!-- IC Comment: American National Standards Institute -->
+		<!-- IC Comment: 11 West 42nd Street, 13 Floor -->
+		<!-- IC Comment: New York, NY 10036. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='CountryCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='3'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 34, 50 -->
+		<!-- IC Comment: Code identifying type of location -->
+		<!-- IC Comment: [034] Consignee SPLC Qualifier -->
+		<!-- IC Comment: Required if N406 is used. -->
+		<!-- IC Comment: [050] Shipper SPLC Qualifier -->
+		<!-- IC Comment: Required if N406 is used. -->
+		<!-- IC Comment: SL U.S. SPLC -->
+		<!-- IC Comment: [034] U.S. SPLC -->
+		<!-- IC Comment: [050] U.S. SPLC -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='LocationQualifier' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 35, 51 -->
+		<!-- IC Comment: Code which identifies a specific location -->
+		<!-- IC Comment: [035] Consignee SPLC -->
+		<!-- IC Comment: Carriers are encouraged to provide this data on shipments to locations within the U.S. and Canada. -->
+		<!-- IC Comment: [051] Shipper SPLC -->
+		<!-- IC Comment: Carriers are encouraged to provide this data on shipments that originate outside the U.S. or Canada. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='LocationIdentifier' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='30'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<xs:element name='ReferenceIdentifier' maxOccurs='unbounded' minOccurs='0' type='ReferenceIdentifierType'/>
+	  </xs:sequence>
+	</xs:complexType> <!-- PartyType -->
+
+	<xs:complexType name='InterlineRoutingType'>
+	  <xs:sequence>
+		<!-- EDI Indexes: 59 -->
+		<!-- IC Comment:  -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='RoutingScac' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='4'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 60 -->
+		<!-- IC Comment: 1 - 1st Carrier after Origin Carrier -->
+		<!-- IC Comment: 2 - 2nd Carrier after Origin Carrier -->
+		<!-- IC Comment: 3 - 3rd Carrier after Origin Carrier -->
+		<!-- IC Comment: B - Origin/Delivery Carrier (Any Mode) -->
+		<!-- IC Comment: O - Origin Carrier (Air, Motor, or Ocean) -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='RoutingSequenceCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='1'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 61 -->
+		<!-- IC Comment: Provide city name or rail head of interline transfer point where identified carrier receives shipment, if available. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='CityName' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='30'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 62 -->
+		<!-- IC Comment: Refer to X12 Standards, Version 4010, DE 91 for applicable code values. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='TransportationModeCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 63 -->
+		<!-- IC Comment: Provide this data if available. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='StateOrProvinceCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+	  </xs:sequence>
+	</xs:complexType> <!-- InterlineRoutingType -->
+
+	<xs:complexType name='StatusEventType'>
+	  <xs:sequence>
+		<!-- EDI Indexes: 65 -->
+		<!-- IC Comment: This is a sequential number starting with one and incrementing by one for every occurrence of the LX segment. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='AssignedSequenceIdentifier' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='6'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 67 -->
+		<!-- IC Comment: Use code value 'AF' for rail to indicate 'Pick Up'. -->
+		<!-- IC Comment: Use code value 'X1' for rail to indicate 'Delivery'. -->
+		<!-- IC Comment: Use the following migration code values: -->
+		<!-- IC Comment: 'AL' to indicate 'Shipment conveyance loaded to rail car' -->
+		<!-- IC Comment: 'BO' to indicate 'Shipment conveyance reporte -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='ShipmentStatusCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 68 -->
+		<!-- IC Comment: If generating a 'normal status' message, use code value 'NS'. Otherwise, use the appropriate status reason code from code list 1651. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='StatusReasonCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 69 -->
+		<!-- IC Comment: This is the date the status event occurred. Use format CCYYMMDD. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='StatusEventDate' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='8'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 70 -->
+		<!-- IC Comment: Time status is MANDATORY for actual events and recommended for all other. This is the time status event occurred. This is local unless identified with a specific time zone in AT707. Use HHMM format. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='StatusEventTime' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='4'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 71 -->
+		<!-- IC Comment: Required if AT706 is used. The carrier will report code LT (Local Time) unless it is capable of reporting the time code of the location where the event occurred. The time code should be Greenwich Mean Time (GMT) or the time zone where the event occurred. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='TimeCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 73 -->
+		<!-- IC Comment: For status events generated within CONUS and Canada, MS101 and MS102 are required. -->
+		<!-- IC Comment: For status events generated outside of CONUS, MS101 and MS103 are required. Provide MS102, if available. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='StatusCityName' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='30'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 74 -->
+		<!-- IC Comment: For status events generated within CONUS and Canada, MS101 and MS102 are required. -->
+		<!-- IC Comment: For status events generated outside of CONUS, MS101 and MS103 are required. Provide MS102, if available. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='StatusStateCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 75 -->
+		<!-- IC Comment: For status events generated within CONUS and Canada, MS101 and MS102 are required. -->
+		<!-- IC Comment: For status events generated outside of CONUS, MS101 and MS103 are required. Provide MS102, if available. -->
+		<!-- IC Comment: Valid country codes are found in Codes for Representation of Na -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='StatusCountryCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='3'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 76 -->
+		<!-- IC Comment: If the carrier has implemented this technology, it is encouraged to report this data for 24 hour periodic reporting. Qualify the longitude coordinates in the MS106. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='LogitudeCoordinate' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='7'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 77 -->
+		<!-- IC Comment: If the carrier has implemented this technology, it is encouraged to report this data for 24 hour periodic reporting. Qualify the latitude coordinates in the MS107. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='LatitudeCoordinate' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='7'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 78 -->
+		<!-- IC Comment: E - East -->
+		<!-- IC Comment: W - West -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='LongitudeDirectionCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='1'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 79 -->
+		<!-- IC Comment: N - North -->
+		<!-- IC Comment: S - South -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='LatitudeDirectionCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='1'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 81 -->
+		<!-- IC Comment:  -->
+		<!-- Mapping Comment: Store As-Is, This could be a SCAC or Ownership Code (don't validate). -->
+		<xs:element name='EquipmentInitialCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='4'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 82 -->
+		<!-- IC Comment:  -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='EquipmentNumber' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='10'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 83 -->
+		<!-- IC Comment: Refer to X12 Standards, Version 4010, DE 40 for applicable code values. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='EquipmentTypeCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 86, 89 -->
+		<!-- IC Comment: Code qualifying the Reference Identification -->
+		<!-- IC Comment: [086] Status Location Qualifier (DG 110) -->
+		<!-- IC Comment: Use code value 'LU' to indicate Postal ZIP Code. -->
+		<!-- IC Comment: [089] Stop-Off Sequence Number Qualifier (DG 110) -->
+		<!-- IC Comment: LU Location Number -->
+		<!-- IC Comment: [086] Location Number -->
+		<!-- IC Comment: QN Stop Sequence Number -->
+		<!-- IC Comment: [086] Stop Sequence Number -->
+		<!-- IC Comment: [089] Stop Sequence Number -->
+		<!-- IC Comment: SPL Standard Point Location Code (SPLC) -->
+		<!-- IC Comment: [086] Standard Point Location Code (SPLC) -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='ReferenceQualifier' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='3'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 85, 88 -->
+		<!-- IC Comment: Reference information as defined for a particular Transaction Set or as specified by the Reference Identification Qualifier -->
+		<!-- IC Comment: [085] SPLC or Postal Code (DG 110) -->
+		<!-- IC Comment: [088] Stop-Off Sequence Number (DG 110) -->
+		<!-- IC Comment: Enter stop-off sequence number. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='ReferenceIdentifier' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='30'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 90 -->
+		<!-- IC Comment: A free-form description to clarify the related data elements and their content -->
+		<!-- IC Comment: [090] SPLC (DG 110) -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='ReferenceText' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='80'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 85 -->
+		<!-- IC Comment:  -->
+		<!-- Mapping Comment: Store L1101|When L1102=LU -->
+		<xs:element name='PostalCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='30'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 85 -->
+		<!-- IC Comment:  -->
+		<!-- Mapping Comment: Store L1101 |When L1102 <> QN|Store L1103 |When L1102 = QN -->
+		<xs:element name='Splc' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:pattern value='[0-9]{6,9}'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 88 -->
+		<!-- IC Comment: Enter stop-off sequence number. -->
+		<!-- Mapping Comment: Store L1101|when L1102=QN -->
+		<xs:element name='StopSequenceNumber' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='30'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 92 -->
+		<!-- IC Comment: A - All Short -->
+		<!-- IC Comment: D - Damaged -->
+		<!-- IC Comment: E - Entire Shipment Refused -->
+		<!-- IC Comment: O - Overage -->
+		<!-- IC Comment: P - Partial Shipment -->
+		<!-- IC Comment: W - Wrong Product -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='LadingExceptionCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='1'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 93 -->
+		<!-- IC Comment: Carriers are encouraged to provide this data if available. Refer to X12 Standards, Version 4010, DE 211 for acceptable code values. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='PackagingFormCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='3'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 94 -->
+		<!-- IC Comment:  -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='LadingQuantity' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='7'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 96, 97 -->
+		<!-- IC Comment:  -->
+		<!-- Mapping Comment: Ask DAASC to map occurances to 1 field -->
+		<xs:element name='DetailFreeFormText' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='250'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 99 -->
+		<!-- IC Comment: Refer to X12 Standards, Version 4010, DE 152 for applicable code values. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='SpecialHandlingCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='3'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 101 -->
+		<!-- IC Comment:  -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='SpecialHandlingText' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='30'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 100 -->
+		<!-- IC Comment: Refer to X12 Standards, Version 4010, DE 560 for applicable code values. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='SpecialServicesCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='2'/>
+		      <xs:maxLength value='10'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 103 -->
+		<!-- IC Comment: Required if AT802 and AT803 are used.. Use migration code value 'WX' to indicate Net Explosive Weight. -->
+		<!-- IC Comment:  -->
+		<!-- IC Comment:  -->
+		<!-- IC Comment:  -->
+		<!-- IC Comment: CHANGE NOTE: X12 Data Maintenance will be submitted to add code value 'WX - Net Explosive Weight' to DE 187. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='WeightQualifier' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='2'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 104 -->
+		<!-- IC Comment: Required if AT801 and AT802 are used. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='WeightUnitCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='1'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 105 -->
+		<!-- IC Comment: Required if AT801 and AT802 are used. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='Weight' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='10'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 106 -->
+		<!-- IC Comment: AT804 is the quantity of handling units that are not unitized (for example a carton). When added to the quantity in AT805, it is the total quantity of handling units in the shipment. -->
+		<!-- IC Comment:  -->
+		<!-- IC Comment:  -->
+		<!-- IC Comment:  -->
+		<!-- IC Comment: CHANGE NOTE: User note added from X12 Standards for clarification. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='NotUnitizedLadingQuantity' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='7'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 107 -->
+		<!-- IC Comment: AT805 is the quantity of handling units that are unitized (for example on a pallet or slip sheet). When added to the quantity in AT804 it is the total quantity of handling units for the shipment. -->
+		<!-- IC Comment:  -->
+		<!-- IC Comment:  -->
+		<!-- IC Comment:  -->
+		<!-- IC Comment: CHANGE NOTE: User note added from X12 Standards for clar -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='UnitizedLadingQuantity' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='7'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 108 -->
+		<!-- IC Comment: Required if AT807 is used. Refer to X12 Standards, Version 4010, DE 184 for applicable code values. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='VolumeUnitCode' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:length value='1'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+		<!-- EDI Indexes: 109 -->
+		<!-- IC Comment: Required if AT806 is used. Refer to X12 Standards, Version 4010, DE 184 for applicable code values. -->
+		<!-- Mapping Comment: Store As-Is -->
+		<xs:element name='Volume' minOccurs='0'>
+		  <xs:simpleType>
+		    <xs:restriction base='xs:string'>
+		      <xs:minLength value='1'/>
+		      <xs:maxLength value='8'/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:element>
+
+	  </xs:sequence>
+	</xs:complexType> <!-- StatusEventType -->
+
+
+<!-- root element -->
+		<xs:element name='Envelope' type='EnvelopeType'/>
+</xs:schema>

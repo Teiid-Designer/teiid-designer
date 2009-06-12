@@ -1,0 +1,37 @@
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<body>
+<p><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<hr>
+<p class="maintitle_b24">Create Relational Source Model from WSDL </p>
+
+<p class="style4"> <span class="medium">In addition to creating relational source models by importing your metadata (<a href="ImportJdbc.htm"><strong>Import Relational Data</strong></a> ) you can also turn your WSDL into relational models. To create relational models using the steps below... </span></p>
+<blockquote>
+  <p class="medium"><strong>Step 1:</strong> Choose the <strong><a href="ModelingYourData.htm#importWizard">File &gt; Import</a></strong> action <img src="images/icons/import_wiz.gif" width="16" height="16" /> in the toolbar or select a project, folder or model in the tree and choose &quot;<strong>Import...</strong>&quot; action to launch the <strong><a href="ModelingYourData.htm">Import Wizard</a></strong>.</p>
+  <p class="medium"><strong>Step 2:</strong> Select option <strong>Web Service  as Relational Source Model </strong>option and click <strong>NEXT&gt;</strong>.</p>
+  <p class="medium"><img src="images/views/ImportWizardWSDLasRelational.jpg" hspace="20"></p>
+  <p class="medium"><strong>Step 3:</strong> On the next page provide a source WSDL file, either in your workspace, local on your file system or provide a valid URL.</p>
+  <p class="medium"><img src="images/views/CreateRelationalFromWSDL_Validate.jpg" hspace="20"></p>
+  <p class="medium"><strong>Step 4:</strong> When WSDL is defined, you'll be required to validate your WSDL via the &quot;<strong>Validate WSDL</strong>&quot; button (see above figure). </p>
+  <p class="medium"><strong>Step 5:</strong> Specify a unique target relational model name in the <strong>Model Name</strong> field, or select an existing relational model in your workspace via the <strong>Browse..</strong>. button. Click <strong>NEXT&gt;</strong> when model name is defined. </p>
+  <p class="medium"><strong>Step 6:</strong> Specify a unique target location in the <strong>Location</strong> field (i.e. project or folder) for the relational model  , or select an existing location in your workspace via the <strong>Browse..</strong>. button. Click <strong>NEXT&gt;</strong> when location is defined. </p>
+  <p class="medium"><strong>Step 7:</strong> The next page allows you to selected individual <strong>Web Service Operations</strong> from which to create relational tables. The default behavior of this page selects <strong>all</strong> available operations in the tree. For WSDLs backed with large schemas, there may be numerous operations which may result in a very large number of tables being generated. In this case, you may wish choose a limited number of operations at a time and repeat this process using the same target relational model. </p>
+  <p class="medium"><img src="images/views/CreateRelationalFromWsdl_SelectOps.jpg" hspace="20"></p>
+  <p class="medium"><strong>Step 8:</strong> Click <strong>Finish</strong>.&nbsp; After generation  the new model can be found in the specified location in your workspace.</p>
+  <p>&nbsp; </p>
+</blockquote>
+
+<p class="subtitle_b16">Related Topics</p>
+<ul>
+  <li><a href="ImportJdbc.htm" class="medium">Import Relational Data</a></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr>
+<p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
+</body>

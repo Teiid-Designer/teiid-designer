@@ -1,0 +1,123 @@
+import com.metamatrix.modeler.core.util.ModelContents;
+import com.metamatrix.modeler.internal.core.resource.EmfResource;
+import com.metamatrix.metamodels.transformation.MappingClass;
+import com.metamatrix.metamodels.transformation.MappingClassSet;
+import com.metamatrix.metamodels.transformation.TreeMappingRoot;
+import com.metamatrix.core.util.Assertion;
+import com.metamatrix.metamodels.transformation.MappingClassColumn;
+
+MappingClass mc = null;
+
+// Apply test only to mapping classes that are marked as recursive ...
+if (mc != null && mc.isRecursionAllowed() && mc.isRecursive() && mc.eResource() instanceof EmfResource) {
+    EmfResource eResource = (EmfResource)mc.eResource();
+    ModelContents contents = eResource.getModelContents();
+    if (contents != null) {
+        MappingClassSet mcset = (MappingClassSet)mc.eContainer();
+        
+        // Get a list of all TreeMappingRoots for the XmlDocument instance that contains this MappingClass
+        // MappingClassSet.getTarget() returns a reference to its XmlDocument container
+        // TreeMappingRoot.getTarget() returns a reference to its XmlDocument container
+        List treeMappingRoots = contents.getTransformations(mcset.getTarget());
+        
+        // Construct a map of XmlDocumentNode to MappingClass instances
+        Map xmlDocNodeToMappingClass = new HashMap();
+        for (Iterator iter = treeMappingRoots.iterator(); iter.hasNext();) {
+            Object obj = iter.next();
+            
+            if (obj instanceof TreeMappingRoot) {
+                TreeMappingRoot tmr = (TreeMappingRoot)obj;
+                // TreeMappingRoot.getInputs() returns a reference to its source MappingClass
+                Assertion.isEquals(1,tmr.getInputs().size());
+                // TreeMappingRoot.getOutputs() returns a reference to its target XmlDocumentNode
+                Assertion.isEquals(1,tmr.getOutputs().size());
+                xmlDocNodeToMappingClass.put(tmr.getOutputs().get(0), tmr.getInputs().get(0));
+        	}
+        }
+        
+        // For this MappingClass which is marked as recursive, try to find its recursion root.  
+        // If one is not found then this is an error
+        for (Iterator iter = treeMappingRoots.iterator(); iter.hasNext();) {
+            Object obj = iter.next();
+            
+            if (obj instanceof TreeMappingRoot) {
+                TreeMappingRoot tmr = (TreeMappingRoot)obj;
+                
+                // Perform the validation checks using the TreeMappingRoot that references this MappingClass
+                if (tmr.getInputs().get(0) == mc) {
+                    XmlElement element = (XmlElement)tmr.getOutputs().get(0);
+                    
+                    MappingClass rootMappingClass = getRecusionRootMappingClass(element, xmlDocNodeToMappingClass);
+                    if (rootMappingClass == null) {
+                        // validation error;
+                    }
+                    
+                    // If a recursion root is found, check that its structure against the complimentary child mapping class
+                    if (rootMappingClass != null) {
+                        if (mc.getColumns().size() != rootMappingClass.getColumns().size()) {
+                            // validation error;
+                        }
+                        List childColumns = mc.getColumns();
+                        List rootColumns  = rootMappingClass.getColumns();
+                        for (int i = 0, n = rootColumns.size(); i < n; i++) {
+                            MappingClassColumn rootCol  = (MappingClassColumn)rootColumns.get(i);
+                            MappingClassColumn childCol = (MappingClassColumn)childColumns.get(i);
+                            if (rootCol.getName().equals(childCol.getName())) {
+                                // validation error
+                            }
+                            if (rootCol.getType() != childCol.getType()) {
+                                // validation error
+                            }
+                        }
+                    }
+                }
+        	}
+        }
+        
+    }
+}
+
+
+public MappingClass getRecusionRootMappingClass( final XmlElement xmlElement, final Map xmlDocNodeToMappingClass) {
+    MappingClass mc = (MappingClass)xmlDocNodeToMappingClass.get(xmlElement);
+    
+    // The mapping class must be marked for recursion before proceeding
+    if (mc != null && mc.isRecursionAllowed() && mc.isRecursive()) {
+
+        // Get the XSD type of the Xml element
+        final XSDComponent xsdComponent = xmlElement.getXsdComponent();
+        XSDTypeDefinition type = XmlDocumentUtil.findXSDType(xsdComponent);
+
+        // The search logic currently works by matching XSD types
+        if (xsdComponent == null) {
+            return null;
+        }
+
+        // Perform an upward search on the XML document trying to match XSD types
+        EObject owner = xmlElement.eContainer();
+        while (owner != null) {
+            if (owner instanceof XmlElement) {
+                // The XML element must be bound to a mapping class ...
+                XSDComponent ownerXsdComponent = ((XmlElement)owner).getXsdComponent();
+                XSDTypeDefinition ownerType = XmlDocumentUtil.findXSDType(ownerXsdComponent);
+                
+                // If the types match then check if it is bound to a mapping class
+                if (type != null && type == ownerType) {
+                    mc = (MappingClass)xmlDocNodeToMappingClass.get(owner);
+                    if (mc != null) {
+                        return mc;
+                    }
+                    // Check if the mapping class is bound to the parent container node
+                    if (owner.eContainer() instanceof XmlContainerNode) {
+                        mc = (MappingClass)xmlDocNodeToMappingClass.get(owner.eContainer());
+                        if (mc != null) {
+                            return mc;
+                        }
+                    }
+                }
+            }
+            owner = owner.eContainer();
+        }
+    }
+    return null;
+}

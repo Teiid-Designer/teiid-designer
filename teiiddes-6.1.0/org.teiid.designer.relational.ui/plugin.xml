@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+     <!-- Text Importer Contribution -->
+      <extension
+         id="relationalUiTextImporter"
+         name="%relationalUiTextImporter"
+         point="org.teiid.designer.tools.textimport.ui.textImportContributor">
+      <class
+        name="com.metamatrix.modeler.internal.relational.ui.wizards.ImportRelationalTablesMainPage">
+      </class>
+   </extension>
+</plugin>

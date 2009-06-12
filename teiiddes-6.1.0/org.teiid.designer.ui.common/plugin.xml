@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+   <extension-point id="remoteObjectType" name="%remoteObjectType" schema="schema/remoteObjectType.exsd"/>
+   <extension-point id="editorPreferences" name="%extension-point.name.0" schema="schema/editorPreferences.exsd"/>
+   <extension-point id="dockBars" name="%dockBars.name" schema="schema/dockBars.exsd"/>
+   <extension-point id="productCustomizer" name="%productCustomizer" schema="schema/productCustomizer.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="%editorPreferences"
+            category="modelerPreferencePage"
+            class="com.metamatrix.ui.internal.preferences.EditorPreferencePage"
+            id="editorPreferencePage">
+      </page>   
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            name="%propertyPages.details.name"
+            class="com.metamatrix.ui.internal.logview.LogEntryPropertyPage"
+            id="StatusDetails">
+         <enabledWhen>
+            <adapt
+                  type="com.metamatrix.ui.internal.logview.LogEntry">
+            </adapt></enabledWhen>
+      </page>
+      <page
+            name="%propertyPages.session.name"
+            class="com.metamatrix.ui.internal.logview.LogSessionPropertyPage"
+            id="com.metamatrix.ui.StatusSession">
+         <enabledWhen>
+            <adapt
+                  type="com.metamatrix.ui.internal.logview.LogEntry">
+            </adapt></enabledWhen>
+      </page>
+   </extension>
+
+</plugin>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relationship="http://www.metamatrix.com/metamodels/Relationship" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:4a92d6c0-41cd-1f04-9a10-e53b219c8f76" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relationship" modelType="TYPE"/>
+  <mmcore:AnnotationContainer xmi:uuid="mmuuid:0657d3c1-7da4-1f05-be39-88e49dbabb01">
+    <annotations xmi:uuid="mmuuid:0657d3c0-7da4-1f05-be39-88e49dbabb01" description="A dependency exists between elements if changes to one (the 'supplier') may cause changes to the other (the 'client').  A dependency implies the semantics of the client is not complete without the supplier.&#xd;&#xa;&#xd;&#xa;There may also be many varieties (or subtypes) of dependency, each with particilar semantics.&#xd;&#xa;&#xd;&#xa;This is semantically equivalent to the UML2 concept of dependency." annotatedObject="mmuuid/844d8703-7c7a-1f05-be39-88e49dbabb01"/>
+    <annotations xmi:uuid="mmuuid:1c964480-8102-1f05-9512-c6a6367b875e" description="A Composition relationship captures that the whole is composed of the parts, and that the part is composed by a single whole.  &#xd;&#xa;&#xd;&#xa;This is semantically equivalent to the UML2 concept of composition." annotatedObject="mmuuid/7dec2483-7e9f-1f05-be39-88e49dbabb01"/>
+    <annotations xmi:uuid="mmuuid:5a040380-8133-1f05-9512-c6a6367b875e" description="A taxonomic relationship between a more general object and a more specific object. An important principal of generalization is substitutability -- in other words, the more specific should always be substituted where the more general is required.  Thus, the specific object has features of the more general.&#xd;&#xa;&#xd;&#xa;This is semantically equivalent to the UML2 concept of generalization and it's opposite, specialization." annotatedObject="mmuuid/ef4ed5c3-7c63-1f05-be39-88e49dbabb01"/>
+    <annotations xmi:uuid="mmuuid:820fa2c0-814d-1f05-9512-c6a6367b875e" description="A Classification relationship identifies an instance of a classifier.  &#xd;&#xa;&#xd;&#xa;Classification is distinct from Generalization, which identifies that an entity is a subtype of another entity.&#xd;&#xa;&#xd;&#xa;This is semantically equivalent to the UML2 concept of composition." annotatedObject="mmuuid/eaae8103-7c13-1f05-be39-88e49dbabb01"/>
+    <annotations xmi:uuid="mmuuid:4ef59340-8161-1f05-9512-c6a6367b875e" description="A Realization relationship identifies that an object is an implementation of a specification. " annotatedObject="mmuuid/68ba1d83-7fdd-1f05-be39-88e49dbabb01"/>
+    <annotations xmi:uuid="mmuuid:34d3f300-8173-1f05-9512-c6a6367b875e" description="A Usage relationship defines that the client requires the target for its implementation.  Usage is a specialization of the Dependency relationship type." annotatedObject="mmuuid/5b14f803-7df6-1f05-be39-88e49dbabb01"/>
+    <annotations xmi:uuid="mmuuid:23d26a40-8188-1f05-9512-c6a6367b875e" description="A Process relationship identifies that a set of inputs were used to produce a set of outputs." annotatedObject="mmuuid/f0ce4bc3-7f82-1f05-be39-88e49dbabb01"/>
+    <annotations xmi:uuid="mmuuid:07282580-81a9-1f05-9512-c6a6367b875e" description="A Transformation relationship identifies that a target is a transformation of a source." annotatedObject="mmuuid/7d346783-7e42-1f05-be39-88e49dbabb01"/>
+    <annotations xmi:uuid="mmuuid:114c8f00-81eb-1f05-9512-c6a6367b875e" description="A Causality relationship identfies simple cause and effect.  In other words, it captures that an object (or set of objects) were caused by another object (or set of objects)." annotatedObject="mmuuid/7fa4f1c1-7b62-1f05-be39-88e49dbabb01"/>
+    <annotations xmi:uuid="mmuuid:ac6b69c0-81fa-1f05-9512-c6a6367b875e" description="A Refinement relationship indicates a more detailed or complete specification.  Typically, refinements are between different semantic levels.  For example, the detailed may be a detailed design artifact and the abstract the logical artifact.&#xd;&#xa;&#xd;&#xa;This is semantically equivalent to the UML2 concept of refinement." annotatedObject="mmuuid/80e38c43-8044-1f05-be39-88e49dbabb01"/>
+    <annotations xmi:uuid="mmuuid:0fcb0800-d01f-1f05-a416-eec06e5d9e46" description="A Manifestation relationship identifies the logical constructs and the associated implementation (e.g., physical or virtual) constructs.  Manifestation is a specialization of Refinement where the more abstract object is specifically an object in a logical model and the detailed object is specifically an object that is the physical/virtual representation." annotatedObject="mmuuid/86db0343-ce09-1f05-a416-eec06e5d9e46"/>
+    <annotations xmi:uuid="mmuuid:6d0094c0-3bba-1f10-a71d-e519f3a2509f" description="A Consumption relationship identifies a consumer and a producer.  An example might be how a consuming application &quot;consumes&quot; information from one or more virtual Relational tables." annotatedObject="mmuuid/d41adec1-3b76-1f10-a71d-e519f3a2509f"/>
+    <annotations xmi:uuid="mmuuid:908a8600-3be0-1f10-a71d-e519f3a2509f" description="A Compliance relationship may be used to identify how a particular standard is implemented by or complied with one or more other entities." annotatedObject="mmuuid/05f81f83-3bc6-1f10-a71d-e519f3a2509f"/>
+  </mmcore:AnnotationContainer>
+  <Relationship:RelationshipType xmi:uuid="mmuuid:662ca801-41cf-1f04-9a10-e53b219c8f76" name="Generic" exclusive="false" label="related to" oppositeLabel="related to" superType="mmuuid/954c4b03-4200-1f04-9a10-e53b219c8f76">
+    <roles xmi:uuid="mmuuid:b33ec500-41d0-1f04-9a10-e53b219c8f76" name="sources" ordered="true"/>
+    <roles xmi:uuid="mmuuid:ca8cf4c0-41d0-1f04-9a10-e53b219c8f76" name="targets" ordered="true"/>
+  </Relationship:RelationshipType>
+  <Relationship:RelationshipType xmi:uuid="mmuuid:954c4b03-4200-1f04-9a10-e53b219c8f76" name="Any" exclusive="false" abstract="true" subType="mmuuid/662ca801-41cf-1f04-9a10-e53b219c8f76 mmuuid/7fa4f1c1-7b62-1f05-be39-88e49dbabb01 mmuuid/eaae8103-7c13-1f05-be39-88e49dbabb01 mmuuid/ef4ed5c3-7c63-1f05-be39-88e49dbabb01 mmuuid/844d8703-7c7a-1f05-be39-88e49dbabb01 mmuuid/7dec2483-7e9f-1f05-be39-88e49dbabb01">
+    <roles xmi:uuid="mmuuid:693149c0-4201-1f04-9a10-e53b219c8f76" name="sources" ordered="true"/>
+    <roles xmi:uuid="mmuuid:7e1d1f80-4201-1f04-9a10-e53b219c8f76" name="targets" ordered="true"/>
+  </Relationship:RelationshipType>
+  <Relationship:RelationshipType xmi:uuid="mmuuid:7fa4f1c1-7b62-1f05-be39-88e49dbabb01" name="Causality" label="causes" oppositeLabel="caused by" superType="mmuuid/954c4b03-4200-1f04-9a10-e53b219c8f76">
+    <roles xmi:uuid="mmuuid:304ffec0-7b63-1f05-be39-88e49dbabb01" name="cause"/>
+    <roles xmi:uuid="mmuuid:6ac8de00-7b63-1f05-be39-88e49dbabb01" name="effect"/>
+  </Relationship:RelationshipType>
+  <Relationship:RelationshipType xmi:uuid="mmuuid:eaae8103-7c13-1f05-be39-88e49dbabb01" name="Classification" label="is an instance of" oppositeLabel="is a classifier of" superType="mmuuid/954c4b03-4200-1f04-9a10-e53b219c8f76">
+    <roles xmi:uuid="mmuuid:aa4f82c0-7c14-1f05-be39-88e49dbabb01" name="object"/>
+    <roles xmi:uuid="mmuuid:e42fcb80-7c14-1f05-be39-88e49dbabb01" name="class"/>
+  </Relationship:RelationshipType>
+  <Relationship:RelationshipType xmi:uuid="mmuuid:ef4ed5c3-7c63-1f05-be39-88e49dbabb01" name="Generalization" label="generalizes" oppositeLabel="specializes" superType="mmuuid/954c4b03-4200-1f04-9a10-e53b219c8f76">
+    <roles xmi:uuid="mmuuid:717c8780-7c65-1f05-be39-88e49dbabb01" name="supertype"/>
+    <roles xmi:uuid="mmuuid:aa2ba340-7c65-1f05-be39-88e49dbabb01" name="subtype"/>
+  </Relationship:RelationshipType>
+  <Relationship:RelationshipType xmi:uuid="mmuuid:844d8703-7c7a-1f05-be39-88e49dbabb01" name="Dependency" label="is dependent upon" oppositeLabel="is required by" superType="mmuuid/954c4b03-4200-1f04-9a10-e53b219c8f76" subType="mmuuid/5b14f803-7df6-1f05-be39-88e49dbabb01 mmuuid/68ba1d83-7fdd-1f05-be39-88e49dbabb01 mmuuid/f0ce4bc3-7f82-1f05-be39-88e49dbabb01 mmuuid/05f81f83-3bc6-1f10-a71d-e519f3a2509f">
+    <roles xmi:uuid="mmuuid:29a56880-7c7b-1f05-be39-88e49dbabb01" name="client"/>
+    <roles xmi:uuid="mmuuid:62ed1ac0-7c7b-1f05-be39-88e49dbabb01" name="supplier"/>
+  </Relationship:RelationshipType>
+  <Relationship:RelationshipType xmi:uuid="mmuuid:5b14f803-7df6-1f05-be39-88e49dbabb01" name="Usage" label="uses" oppositeLabel="used by" superType="mmuuid/844d8703-7c7a-1f05-be39-88e49dbabb01" subType="mmuuid/d41adec1-3b76-1f10-a71d-e519f3a2509f">
+    <roles xmi:uuid="mmuuid:e58b22c0-7df6-1f05-be39-88e49dbabb01" name="client"/>
+    <roles xmi:uuid="mmuuid:1e4980c0-7df7-1f05-be39-88e49dbabb01" name="supplier"/>
+  </Relationship:RelationshipType>
+  <Relationship:RelationshipType xmi:uuid="mmuuid:7d346783-7e42-1f05-be39-88e49dbabb01" name="Transformation" label="transformed from" oppositeLabel="transformed into" superType="mmuuid/f0ce4bc3-7f82-1f05-be39-88e49dbabb01">
+    <roles xmi:uuid="mmuuid:06796540-7e43-1f05-be39-88e49dbabb01" name="target"/>
+    <roles xmi:uuid="mmuuid:4068f040-7e43-1f05-be39-88e49dbabb01" name="source"/>
+  </Relationship:RelationshipType>
+  <Relationship:RelationshipType xmi:uuid="mmuuid:7dec2483-7e9f-1f05-be39-88e49dbabb01" name="Composition" label="is composed of" oppositeLabel="is component of" superType="mmuuid/954c4b03-4200-1f04-9a10-e53b219c8f76">
+    <roles xmi:uuid="mmuuid:07d8fb00-7ea0-1f05-be39-88e49dbabb01" name="whole"/>
+    <roles xmi:uuid="mmuuid:4120ad40-7ea0-1f05-be39-88e49dbabb01" name="part"/>
+  </Relationship:RelationshipType>
+  <Relationship:RelationshipType xmi:uuid="mmuuid:f0ce4bc3-7f82-1f05-be39-88e49dbabb01" name="Process" label="produced from" oppositeLabel="is used to produce" superType="mmuuid/844d8703-7c7a-1f05-be39-88e49dbabb01" subType="mmuuid/80e38c43-8044-1f05-be39-88e49dbabb01 mmuuid/7d346783-7e42-1f05-be39-88e49dbabb01">
+    <roles xmi:uuid="mmuuid:8870a7c0-7f83-1f05-be39-88e49dbabb01" name="output"/>
+    <roles xmi:uuid="mmuuid:c250f080-7f83-1f05-be39-88e49dbabb01" name="input"/>
+  </Relationship:RelationshipType>
+  <Relationship:RelationshipType xmi:uuid="mmuuid:68ba1d83-7fdd-1f05-be39-88e49dbabb01" name="Realization" label="implements" oppositeLabel="specifies contract for" superType="mmuuid/844d8703-7c7a-1f05-be39-88e49dbabb01">
+    <roles xmi:uuid="mmuuid:a2aa2840-7fde-1f05-be39-88e49dbabb01" name="implementation"/>
+    <roles xmi:uuid="mmuuid:dc011cc0-7fde-1f05-be39-88e49dbabb01" name="specification"/>
+  </Relationship:RelationshipType>
+  <Relationship:RelationshipType xmi:uuid="mmuuid:80e38c43-8044-1f05-be39-88e49dbabb01" name="Refinement" label="is refinement of" oppositeLabel="is refined into" superType="mmuuid/f0ce4bc3-7f82-1f05-be39-88e49dbabb01" subType="mmuuid/86db0343-ce09-1f05-a416-eec06e5d9e46">
+    <roles xmi:uuid="mmuuid:509c6d80-8045-1f05-be39-88e49dbabb01" name="detailed"/>
+    <roles xmi:uuid="mmuuid:894b8940-8045-1f05-be39-88e49dbabb01" name="abstract"/>
+  </Relationship:RelationshipType>
+  <Relationship:RelationshipType xmi:uuid="mmuuid:86db0343-ce09-1f05-a416-eec06e5d9e46" name="Manifestation" label="is manifestation of" oppositeLabel="is manifested by" superType="mmuuid/80e38c43-8044-1f05-be39-88e49dbabb01">
+    <roles xmi:uuid="mmuuid:51cf3080-ce0a-1f05-a416-eec06e5d9e46" name="implementation"/>
+    <roles xmi:uuid="mmuuid:657a9700-ce0a-1f05-a416-eec06e5d9e46" name="logical" upperBound="1"/>
+  </Relationship:RelationshipType>
+  <Relationship:RelationshipType xmi:uuid="mmuuid:d41adec1-3b76-1f10-a71d-e519f3a2509f" name="Consumption" label="consumes from" oppositeLabel="produces for" superType="mmuuid/5b14f803-7df6-1f05-be39-88e49dbabb01">
+    <roles xmi:uuid="mmuuid:a5bc87c0-3b78-1f10-a71d-e519f3a2509f" name="consumer"/>
+    <roles xmi:uuid="mmuuid:d01d8780-3b78-1f10-a71d-e519f3a2509f" name="producer"/>
+  </Relationship:RelationshipType>
+  <Relationship:RelationshipType xmi:uuid="mmuuid:05f81f83-3bc6-1f10-a71d-e519f3a2509f" name="Compliance" label="complies with" oppositeLabel="is followed by" superType="mmuuid/844d8703-7c7a-1f05-be39-88e49dbabb01">
+    <roles xmi:uuid="mmuuid:2941d340-3bc7-1f10-a71d-e519f3a2509f" name="compliant"/>
+    <roles xmi:uuid="mmuuid:6298c7c0-3bc7-1f10-a71d-e519f3a2509f" name="standard"/>
+  </Relationship:RelationshipType>
+</xmi:XMI>

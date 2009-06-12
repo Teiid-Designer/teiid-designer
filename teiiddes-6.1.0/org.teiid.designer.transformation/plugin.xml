@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+     <extension-point id="userDefinedFunctionModel" name="%extension-point.name.0" schema="schema/userDefinedFunctionModel.exsd"/>
+
+<!-- MetamodelAspect extensions -->
+   <extension
+         id="transformationValidationAspect"
+         point="org.teiid.designer.core.validationAspect">
+      <metamodelExtensionID>
+         transformation
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.modeler.transformation.aspects.validation.TransformationValidationAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+   <extension
+         id="transformationUmlAspect"
+         point="org.teiid.designer.core.umlDiagramAspect">
+      <metamodelExtensionID>
+         transformation
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.modeler.transformation.aspects.uml.TransformationUmlAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+   <extension
+         id="transformationSqlAspect"
+         point="org.teiid.designer.core.sqlAspect">
+      <metamodelExtensionID>
+         transformation
+      </metamodelExtensionID>
+      <factoryClass
+            name="com.metamatrix.modeler.transformation.aspects.sql.TransformationSqlAspectFactoryImpl">
+      </factoryClass>
+   </extension>
+<!-- EObject Matcher extensions -->
+   <extension
+         id="transformationMatcherFactory"
+         point="org.teiid.designer.core.eobjectMatcherFactory">
+      <class
+            name="com.metamatrix.modeler.transformation.compare.TransformationMatcherFactory">
+      </class>
+   </extension>
+<!-- Other extensions -->
+   <extension
+         id="userDefinedFunctions"
+         name="%userDefinedFunctionModel"
+         point="org.teiid.designer.transformation.userDefinedFunctionModel">
+      <model
+            url="platform:/plugin/org.teiid.designer.transformation/UDFs_Project/FunctionDefinitions.xmi">
+      </model>
+   </extension>   
+   <extension
+         id="transformationReferenceUpdator"
+         point="org.teiid.designer.core.referenceUpdator">
+      <class
+            name="com.metamatrix.modeler.internal.transformation.util.TransformationReferenceUpdator">
+      </class>
+   </extension>
+         <!-- Helper method to allow external edit for objects. i.e. Delete, Copy, etc.. -->
+   <extension
+         id="transformationNewModelObjectHelper"
+         name="%transformationNewModelObjectHelper"
+         point="org.teiid.designer.core.newModelObjectHelper">
+      <class
+        name="com.metamatrix.modeler.internal.transformation.util.TransformationNewModelObjectHelper">
+      </class>
+   </extension>
+</plugin>

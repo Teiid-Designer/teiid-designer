@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="FooService"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.example.org/foo/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/foo/">
+
+	<wsdl:types>
+			<schema xmlns="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.example.org/foo/"
+			xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+			xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+
+			<import
+				namespace="http://schemas.xmlsoap.org/soap/encoding/"
+				schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />
+
+			<complexType name="ArrayOfServiceSummary">
+				<complexContent>
+					<restriction base="soapenc:Array">
+						<attribute ref="soapenc:arrayType"
+							wsdl:arrayType="tns:ServiceSummary[]" />
+					</restriction>
+				</complexContent>
+			</complexType>
+
+			<complexType name="ServiceSummary">
+				<sequence>
+					<element name="name" nillable="true" type="string" />
+					<element name="id" nillable="true" type="string" />
+					<element name="shortDescription" nillable="true"
+						type="string" />
+					<element name="wsdlURL" nillable="true"
+						type="string" />
+					<element name="publisherID" nillable="true"
+						type="string" />
+				</sequence>
+			</complexType>
+		</schema>
+	
+	</wsdl:types>
+
+	<wsdl:message name="NewOperationResponse">
+		<wsdl:part name="NewOperationResponse" type="tns:ArrayOfServiceSummary" />
+	</wsdl:message>
+	<wsdl:message name="NewOperationRequest">
+		<wsdl:part name="NewOperationRequest" type="xsd:string" />
+	</wsdl:message>
+	<wsdl:portType name="foo">
+		<wsdl:operation name="NewOperation">
+			<wsdl:input message="tns:NewOperationRequest" />
+			<wsdl:output message="tns:NewOperationResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="fooSOAP" type="tns:foo">
+		<soap:binding style="rpc"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="NewOperation">
+			<soap:operation
+				soapAction="http://www.example.org/foo/NewOperation" />
+			<wsdl:input>
+				<soap:body
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="http://www.example.org/foo/"
+					parts=" NewOperationRequest" use="encoded" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					namespace="http://www.example.org/foo/"
+					parts=" NewOperationResponse" use="encoded" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="foo">
+		<wsdl:port binding="tns:fooSOAP" name="fooSOAP">
+			<soap:address location="http://www.example.org/" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

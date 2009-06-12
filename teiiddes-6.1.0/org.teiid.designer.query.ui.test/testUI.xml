@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<project name="Query UI Automated Tests" default="run" basedir=".">
+
+	<!-- Properties passed to this script: -->
+	<!--   eclipse-home - Directory that Eclipse should run from -->
+	<!--   library-file - The library.xml file that defines the Eclipse test Ant targets -->
+	<!--   data-dir - The data directory to use when running Eclipse -->
+	<!--   plugin-name - The name of this plugin -->
+    <!--   test-data - The test data directory for this plugin -->
+
+	<!-- Declare any properties specific to this project -->
+    <property name="suite-name" value="com.metamatrix.query.internal.ui.AutomatedUITestSuite"/>
+
+	<!-- This target holds all initialization code that needs to be done for -->
+	<!-- all tests that are to be run. Initialization for individual tests -->
+	<!-- should be done within the body of the suite target. -->
+	<target name="init">
+		<tstamp/>
+	</target>
+
+	<!-- This target holds code to cleanup the testing environment after the tests -->
+	<!-- have been run. You can use this to delete temporary files that are created. -->
+	<target name="cleanup">
+		<delete dir="${data-dir}" quiet="true"/>
+	</target>
+
+	<!-- This target defines the tests that need to be run. -->
+	<target name="suite" depends="init,cleanup">
+		<ant target="ui-test" antfile="${library-file}" dir="${eclipse-home}">
+			<property name="data-dir" value="${data-dir}"/>
+			<property name="plugin-name" value="${plugin-name}"/>
+			<property name="classname" value="${suite-name}"/>
+			<property name="vmargs" value="-Dtest.data.root=${test-data}"/>
+		</ant>
+	</target>
+
+	<!-- This target runs the test suite. Any actions that need to happen after all -->
+	<!-- the tests have been run should go here. -->
+	<target name="run" depends="init,suite,cleanup">
+	</target>
+
+ </project>

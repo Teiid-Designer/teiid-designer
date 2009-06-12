@@ -1,0 +1,95 @@
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<link rel="stylesheet" href="designer_help.css" type="text/css" /><body>
+<p><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<hr>
+<p class="maintitle_b24">Teiid Designer Perspectives </p>
+
+<p><strong>Teiid Designer</strong> utilizes Eclipse's Workbench environment which controls visual layout via  perspectives. A <strong>perspective</strong> defines the initial set and layout of views and editors. Within the application window, each perspective shares the same set of <strong>editors</strong>. Each   perspective provides a set of functionality aimed at accomplishing a specific   set of tasks.&nbsp;</p>
+<p label="Type">Perspectives control what appears in certain menus   and toolbars. They define visible <em>action sets</em>, which you can change to   customize a perspective. You can save a perspective that you build in this   manner, making your own custom perspective that you can open again later.&nbsp;</p>
+<p label="Type"><strong>Teiid Designer</strong> perspectives include:</p>
+<ul>
+  <li><a href="#modelingPerspective">Designer </a>- Default perspective providing fundamental model editing and management capability.</li>
+  <li><a href="#sqlExplorerPerspective">SQL Explorer</a>- Provides views and actions to perform tests on your VDB by connecting to your data sources and executing your test queries.</li>
+</ul>
+<p>Each perspective utilizes <A href="DesignerMainMenus.htm">Designer's Main Menu/Toolbar.</A></p>
+
+<p><span class="subtitle_b16"><a name="modelingPerspective"></a>Designer Perspective </span></p>
+<p>The <strong>Designer</strong> perspective  includes 4 main UI components or groups of components as shown below. They include: </p>
+<ul>
+  <li><a href="ModelExplorer.htm">Model Explorer</a></li>
+  <li><a href="PropertiesView.htm">Properties View</a></li>
+  <li><a href="ModelEditors.htm">Model Editors</a></li>
+  <li><a href="DesignerViews.htm">Miscellaneous Views</a></li>
+</ul>
+<p><img src="images/views/EnterpriseDesignerPerspectiveLayout.jpg" width="934" height="819"></p>
+<p>&nbsp;</p>
+
+<p><span class="subtitle_b16"><a name="sqlExplorerPerspective"></a>SQL Explorer Perspective </span></p>
+<p>The <strong>SQL Explorer</strong> perspective includes 5 main UI components or groups of components. They include: </p>
+<ul>
+  <li><strong><a href="ExecuteVdbHelp.htm#databaseStructureView">Database Structure View</a> </strong>- provides an updated view of your modeled data as seen from the perspective of your VDB.</li>
+  <li><strong><a href="ExecuteVdbHelp.htm#sqlHistoryView">SQL History View</a></strong> - As you execute queries against your data, a history of executed SQL text is maintained in this view. </li>
+  <li><strong><a href="ExecuteVdbHelp.htm#connectionsView">Connections View</a></strong> - You can see any current connections to your VDBs. </li>
+  <li><strong><a href="ExecuteVdbHelp.htm#sqlEditorView">SQL Editor</a></strong> - Specify SQL and submit queries from this editor. </li>
+  <li><strong><a href="ExecuteVdbHelp.htm#sqlResultsView">SQL Results View</a></strong>  - shows your query results in table-row format for relational models and XML format for Web Service or XML document queries. </li>
+</ul>
+<p class="note">Note: The SQL Explorer perspective will be opened whenever you <a href="ExecuteVdbHelp.htm">Test your VDB</a>. </p>
+<p><img src="images/views/SqlExplorerPerspective.jpg" ></p>
+
+<H3><a name="openNewPerspective"></a><span class="subtitle_b16">Opening a New Perspective</span></H3>
+<p>There are a couple of ways to open a new perspective:</p>
+<ul>
+  <li>Using the Open Perspective button <IMG src="images/icons/selectPerspective.png" alt="Open Perspectives" width="23" height="23" border="0"> on the shortcut bar. </li>
+  <li>Choosing a perspective from the <strong>Window &gt; Open Perspective</strong> menu.&nbsp; </li>
+</ul>
+<p>To open a perspective by using the shortcut bar button:</p>
+<blockquote>
+  <p><strong>Step 1:</strong> Click on the Open Perspective button <IMG src="images/icons/selectPerspective.png" alt="Open Perspectives" width="23" height="23" border="0">.&nbsp;</p>
+  <p><strong>Step 2:</strong> A menu appears showing the same choices as shown on the <strong>Window   &gt; Open Perspective</strong> menu. Choose <strong>Other</strong> from the menu.</p>
+</blockquote>
+<OL>
+  <BLOCKQUOTE>
+    <p><img src="images/views/OpenPerspectiveMenu.jpg"  border="1"></p>
+  </BLOCKQUOTE>
+</OL>
+<blockquote>
+  <p><strong>Step 3:</strong> In the Select Perspective dialog choose <strong>Designer</strong> and click <strong>OK</strong>.</p>
+</blockquote>
+<OL>
+  <BLOCKQUOTE>
+    <p><IMG src="images/views/SelectPerspectiveDialog.jpg" alt="Select Perspective" ></p>
+  </BLOCKQUOTE>
+</OL>
+<blockquote>
+  <p>The <strong><a href="#modelingPerspective">Designer</a></strong> perspective is displayed.&nbsp;&nbsp;</p>
+  <p><strong>Step 4:</strong> There are several other interesting things to take note of.</p>
+</blockquote>
+<OL>
+  <blockquote>
+    <p>The title of the window now indicates that the <strong><a href="#modelingPerspective">Designer</a></strong> perspective   is in use.</p>
+    <p><img src="images/views/PerspectiveNamedHeader.jpg" alt="Debug Perspective" border="1" ></p>
+  </blockquote>
+</OL>
+<blockquote>
+  <p>The shortcut bar may contain multiple perspectives.&nbsp;The<strong> </strong>perspective button which is pressed in, indicates that it is the current   perspective.</p>
+  <p>To display the full name of the perspectives, right click the   perspective bar and select <STRONG>Show Text</STRONG>.</p>
+  <p>To change perspective,  select the desired <strong></strong> perspective button. Notice that the set   of views is different for each of the perspectives.</p>
+  <p><img src="images/views/PerspectiveButtonsWithText.jpg"  hspace="20" border="1"></p>
+</blockquote>
+
+<p class="subtitle_b16">Related Topics</p>
+<ul><li><a href="ModelExplorer.htm">Model Explorer</a></li>
+  <li><a href="ModelEditors.htm">Model Editors</a></li>
+  <li><a href="DesignerPreferences.htm">Setting Your Designer Preferences </a></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a></li>
+</ul>
+<hr>
+<p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
+</body>
+

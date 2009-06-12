@@ -1,0 +1,50 @@
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<style type="text/css">
+<!--
+.style4 {font-weight: bold}
+.style5 {
+	color: #003366;
+	font-weight: bold;
+}
+.style6 {
+	color: #0033CC;
+	font-weight: bold;
+}
+-->
+</style>
+<body>
+<p><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<hr>
+<p class="maintitle_b24">Editing Web Services </p>
+
+<p>Editing of <strong>Web Service</strong>  Operation transformations is simplified via the <strong>Operation Editor</strong>. When editing a<strong> Web Service</strong> model, an additional editor tab labeled &quot;<strong>Operation Editor</strong>&quot; is available. This editor, shown below is comprised of:</p>
+<ul>
+  <li><strong>Operations</strong> section showing a tree view of Interfaces and Operations contained within the Web Service model</li>
+  <li><strong>Input Variables</strong> section providing editing of desired Input Variable declarations</li>
+  <li><strong>Procedure</strong> section providing SQL editing of the procedure (See <a href="MappingWebServiceOperations.htm">Mapping  Web Service Operations</a>) </li>
+</ul>
+<p class="style4"><img src="images/views/OperationEditor.jpg" ></p>
+<p class="medium">The <strong>Operations</strong> section contains all interfaces and operations currently   defined in the model. </p>
+<p class="medium">Selecting an operation will display the variables related   to the input parameter's content in the <strong>Input Variables</strong> section and the   body of its procedure (minus the CREATE VIRTUAL PROCEDURE BEGIN - END keywords   and the input variable declarations and assignments) in the <strong>Procedure</strong> section. </p>
+<p class="medium">When pasting in SQL, do <strong><em>not</em></strong> include the <span class="style5">CREATE VIRTUAL   PROCEDURE BEGIN - END</span> keywords. Input variables will be automatically generated   when the "Content via Element" property is set on an operation's input   parameter. Input variables may be created, edited, or deleted using the <U>Edit</U> link in the <strong>Input Variables</strong> section, and may only represent   XPath values to single attributes and elements within the input contents; other   variable declarations and assignments must be typed directly into the <strong>Procedure</strong> section. Clicking the <U><span class="style6">Edit</span></U> link will display the   following dialog:</p>
+<p><img src="images/views/InputVariablesDialog.jpg" ></p>
+<p><strong>Input Variables</strong> can be deleted via right-click menu <strong>Delete</strong> action (see figure below) for selected variables or using <strong>Cntl-X,</strong> <strong>Delete</strong> keys. You can also rename an Input Variable using the right-click menu <strong>Rename</strong> action or the <strong>F2</strong> key. ( Note: Input variables names have to be named starting with the &quot;IN_&quot; characters. Renaming a variable will always insure its name is prepended with &quot;IN_&quot;). </p>
+<p><img src="images/views/InputVariablesActionMenu.jpg" ></p>
+<p>&nbsp;</p>
+
+<p class="subtitle_b16">Related Topics</p>
+<ul>
+  <li><a href="CreateWebServiceModels.htm">Create Web Service Models</a></li>
+  <li><a href="MappingWebServiceOperations.htm">Mapping  Web Service Operations</a></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr>
+<p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
+</body>
