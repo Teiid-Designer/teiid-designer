@@ -65,6 +65,7 @@ public class XMLWSDLExtensionManager extends XMLRequestResponseExtensionManagerI
         objectExtension.eDynamicSet(soapActionTableAttribute, soapAction);
     }
 
+    @Override
     public String getColumnName() {
         return XML_SOAP_COLUMN;
     }
@@ -85,6 +86,7 @@ public class XMLWSDLExtensionManager extends XMLRequestResponseExtensionManagerI
         return PACKAGE_PREFIX;
     }
 
+    @Override
     public String getTableName() {
         return XML_SOAP_TABLE;
     }
