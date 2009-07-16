@@ -5,7 +5,6 @@
 	<classpathentry exported="true" kind="lib" path="teiid-common-internal-6.1.0.jar" sourcepath="teiid-6.1.0-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="teiid-connector-api-6.1.0.jar" sourcepath="teiid-6.1.0-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="teiid-engine-6.1.0.jar" sourcepath="teiid-6.1.0-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="teiid-metadata-6.1.0.jar" sourcepath="teiid-6.1.0-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="guice-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="jta-1.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
