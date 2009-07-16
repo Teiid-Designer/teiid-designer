@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.api.exception.query.QueryMetadataException;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
 import com.metamatrix.core.index.IEntryResult;
@@ -182,13 +181,9 @@ public class ModelerMetadata extends TransformationMetadata {
         if (StringUtil.startsWithIgnoreCase(entityName, UUID.PROTOCOL)) {
             uuid = entityName.toLowerCase();
         } else {
-            try {
-                String shortName = super.getShortElementName(entityName);
-                if (StringUtil.startsWithIgnoreCase(shortName, UUID.PROTOCOL)) {
-                    uuid = shortName.toLowerCase();
-                }
-            } catch (QueryMetadataException e) {
-                throw new MetaMatrixComponentException(e);
+            String shortName = super.getShortElementName(entityName);
+            if (StringUtil.startsWithIgnoreCase(shortName, UUID.PROTOCOL)) {
+                uuid = shortName.toLowerCase();
             }
         }
         // if it the element is a UUID

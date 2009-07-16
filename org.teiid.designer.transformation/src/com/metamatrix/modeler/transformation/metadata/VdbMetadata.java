@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.api.exception.query.QueryMetadataException;
 import com.metamatrix.core.id.UUID;
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.util.ArgCheck;
@@ -67,13 +66,9 @@ public class VdbMetadata extends ModelerMetadata {
         if (StringUtil.startsWithIgnoreCase(entityName, UUID.PROTOCOL)) {
             uuid = entityName.toLowerCase();
         } else {
-            try {
-                String shortName = super.getShortElementName(entityName);
-                if (StringUtil.startsWithIgnoreCase(shortName, UUID.PROTOCOL)) {
-                    uuid = shortName.toLowerCase();
-                }
-            } catch (QueryMetadataException e) {
-                throw new MetaMatrixComponentException(e);
+            String shortName = super.getShortElementName(entityName);
+            if (StringUtil.startsWithIgnoreCase(shortName, UUID.PROTOCOL)) {
+                uuid = shortName.toLowerCase();
             }
         }
         // if it the element is a UUID
