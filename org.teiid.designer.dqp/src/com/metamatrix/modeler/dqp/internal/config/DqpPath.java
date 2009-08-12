@@ -31,10 +31,9 @@ public final class DqpPath {
     private static final String UDFS_DIR = "functions"; //$NON-NLS-1$
     private static final String LIB_DIR = "lib"; //$NON-NLS-1$
     private static final String LOG_DIR = "log"; //$NON-NLS-1$
-    private static final String VDB_EXEC_DIR = "vdb-execution"; //$NON-NLS-1$
     private static final String WORKSPACE_DEFN_DIR = "workspaceConfig"; //$NON-NLS-1$
-    
-    private static final String TEIID_EMBEDDED_BUNDLE_ID = "teiid_embedded_query";  //$NON-NLS-1$
+
+    private static final String TEIID_EMBEDDED_BUNDLE_ID = "teiid_embedded_query"; //$NON-NLS-1$
 
     // ===========================================================================================================================
     // Class Fields
@@ -63,20 +62,20 @@ public final class DqpPath {
     private static IPath vdbExecutionPath;
 
     private static IPath workspaceDefnPath;
-    
+
     /*   (Designer Installation Path)/eclipse/plugins/teiid_embedded_query/ */
     private static IPath embeddedInstallPath;
-    
+
     /*   (Designer Installation Path)/eclipse/plugins/teiid_embedded_query/lib */
     private static IPath installLibPath;
-    
+
     /*   (Designer Installation Path)/eclipse/plugins/teiid_embedded_query/extensions */
     private static IPath installExtensionsPath;
-    
+
     private static IPath embeddedExtensionsPath;
-    
+
     private static IPath embeddedLibsPath;
-    
+
     public static String testEmbeddedInstallDir;
 
     // ===========================================================================================================================
@@ -225,27 +224,10 @@ public final class DqpPath {
     }
 
     /**
-     * If the VDB execution directory does not exist it is created.
-     * 
-     * @return the VDB execution directory under the <code>designer.dqp</code> plugin's runtime workspace path or the test runtime
-     *         path
-     * @throws IOException if an error occurs obtaining the path
-     * @since 6.0.0
-     */
-    public static IPath getVdbExecutionPath() {
-        if (vdbExecutionPath == null) {
-            vdbExecutionPath = getRuntimePath().append(VDB_EXEC_DIR);
-            createDirectory(vdbExecutionPath);
-        }
-
-        return (IPath)vdbExecutionPath.clone();
-    }
-
-    /**
      * If the worspace DEFN directory does not exist it is created.
      * 
-     * @return the directory under the <code>designer.dqp</code> plugin's runtime workspace path or the test runtime path where the
-     *         workspace binding information is kept
+     * @return the directory under the <code>designer.dqp</code> plugin's runtime workspace path or the test runtime path where
+     *         the workspace binding information is kept
      * @throws IOException if an error occurs obtaining the path
      * @since 6.0.0
      */
@@ -257,7 +239,7 @@ public final class DqpPath {
 
         return (IPath)workspaceDefnPath.clone();
     }
-    
+
     /**
      * @return the <code>teiid_embedded_query</code> plugin install path or the test install path
      * @throws IOException if an error occurs obtaining the path
@@ -270,13 +252,13 @@ public final class DqpPath {
                 url = FileLocator.toFileURL(url);
                 embeddedInstallPath = new Path(url.getFile());
             } else {
-            	embeddedInstallPath = new Path(testEmbeddedInstallDir);
+                embeddedInstallPath = new Path(testEmbeddedInstallDir);
             }
         }
 
         return (IPath)embeddedInstallPath.clone();
     }
-    
+
     /**
      * @return the "lib" directory under the <code>teiid_embedded_query</code> plugin's install path or the test install path
      * @throws IOException if an error occurs obtaining the path
@@ -284,53 +266,54 @@ public final class DqpPath {
      */
     public static IPath getInstallLibPath() throws IOException {
         if (installLibPath == null) {
-        	installLibPath = getEmbeddedInstallPath().append(LIB_DIR);
+            installLibPath = getEmbeddedInstallPath().append(LIB_DIR);
         }
 
         return (IPath)installLibPath.clone();
     }
-    
+
     /**
-     * @return the "extensions" directory under the <code>teiid_embedded_query</code> plugin's install path or the test install path
+     * @return the "extensions" directory under the <code>teiid_embedded_query</code> plugin's install path or the test install
+     *         path
      * @throws IOException if an error occurs obtaining the path
      * @since 6.0.0
      */
     public static IPath getInstallExtensionsPath() throws IOException {
         if (installExtensionsPath == null) {
-        	installExtensionsPath = getEmbeddedInstallPath().append(EXTENSIONS_DIR);
+            installExtensionsPath = getEmbeddedInstallPath().append(EXTENSIONS_DIR);
         }
 
         return (IPath)installExtensionsPath.clone();
     }
-    
+
     /**
      * If the Embedded Teiid extensions directory does not exist it is created.
      * 
-     * @return the Embedded Teiid extensions directory under the <code>designer.dqp</code> plugin's runtime workspace path or the test runtime
-     *         path
+     * @return the Embedded Teiid extensions directory under the <code>designer.dqp</code> plugin's runtime workspace path or the
+     *         test runtime path
      * @throws IOException if an error occurs obtaining the path
      * @since 6.0.0
      */
     public static IPath getRuntimeExtensionsPath() {
         if (embeddedExtensionsPath == null) {
-        	embeddedExtensionsPath = getRuntimePath().append(EXTENSIONS_DIR);
+            embeddedExtensionsPath = getRuntimePath().append(EXTENSIONS_DIR);
             createDirectory(embeddedExtensionsPath);
         }
 
         return (IPath)embeddedExtensionsPath.clone();
     }
-    
+
     /**
      * If the Embedded Teiid extensions directory does not exist it is created.
      * 
-     * @return the Embedded Teiid extensions directory under the <code>designer.dqp</code> plugin's runtime workspace path or the test runtime
-     *         path
+     * @return the Embedded Teiid extensions directory under the <code>designer.dqp</code> plugin's runtime workspace path or the
+     *         test runtime path
      * @throws IOException if an error occurs obtaining the path
      * @since 6.0.0
      */
     public static IPath getRuntimeLibsPath() {
         if (embeddedLibsPath == null) {
-        	embeddedLibsPath = getRuntimePath().append(LIB_DIR);
+            embeddedLibsPath = getRuntimePath().append(LIB_DIR);
             createDirectory(embeddedLibsPath);
         }
 

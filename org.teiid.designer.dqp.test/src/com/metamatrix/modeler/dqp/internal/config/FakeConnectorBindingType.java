@@ -245,4 +245,14 @@ public class FakeConnectorBindingType implements
     public boolean isOfConnectorProductType() {
         return true;
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.common.config.api.ComponentType#getDefaultPropertyValues(java.util.Properties)
+     */
+    @Override
+    public Properties getDefaultPropertyValues( Properties arg0 ) {
+        return null;
+    }
 }

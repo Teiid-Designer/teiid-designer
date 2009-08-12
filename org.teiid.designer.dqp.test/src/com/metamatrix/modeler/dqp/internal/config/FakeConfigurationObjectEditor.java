@@ -27,7 +27,6 @@ import com.metamatrix.common.config.api.ServiceComponentDefn;
 import com.metamatrix.common.config.api.SharedResource;
 import com.metamatrix.common.config.api.VMComponentDefn;
 import com.metamatrix.common.config.model.BasicConfigurationObjectEditor;
-import com.metamatrix.common.log.LogConfiguration;
 import com.metamatrix.common.object.PropertyDefinition;
 
 /**
@@ -343,17 +342,6 @@ public class FakeConfigurationObjectEditor extends BasicConfigurationObjectEdito
     @Override
     public Configuration setIsDeployed( Configuration t,
                                         boolean newValue ) {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.common.config.api.ConfigurationObjectEditor#setLogConfiguration(com.metamatrix.common.config.api.Configuration,
-     *      com.metamatrix.common.log.LogConfiguration)
-     * @since 4.3
-     */
-    @Override
-    public Configuration setLogConfiguration( Configuration t,
-                                              LogConfiguration logConfiguration ) {
         return null;
     }
 

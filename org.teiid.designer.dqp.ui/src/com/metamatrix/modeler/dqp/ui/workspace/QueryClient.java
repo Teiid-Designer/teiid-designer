@@ -13,9 +13,8 @@ import java.util.Properties;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.admin.api.embedded.EmbeddedAdmin;
-import com.metamatrix.admin.api.embedded.EmbeddedLogger;
-import com.metamatrix.admin.api.exception.AdminException;
+import org.teiid.adminapi.AdminException;
+import org.teiid.adminapi.EmbeddedLogger;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.jdbc.EmbeddedDriver;
 import com.metamatrix.jdbc.api.Connection;
@@ -42,10 +41,13 @@ public class QueryClient {
 
                 Thread.currentThread().setContextClassLoader(driver.getClass().getClassLoader());
 
-                this.adminConnection = (com.metamatrix.jdbc.api.Connection)driver.connect(url, null);
+                Properties props = new Properties();
+                props.setProperty("user", "admin"); //$NON-NLS-1$ //$NON-NLS-2$
+                props.setProperty("password", "teiid"); //$NON-NLS-1$ //$NON-NLS-2$
+                this.adminConnection = (com.metamatrix.jdbc.api.Connection)driver.connect(url, props);
 
                 // wire the logging so that the messages are flown into designer
-                ((EmbeddedAdmin)this.adminConnection.getAdminAPI()).setLogListener(new DesignerLogger());
+                this.adminConnection.getAdminAPI().setLogListener(new DesignerLogger());
             } catch (AdminException e) {
                 throw new RuntimeException(e);
             } finally {

@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import com.metamatrix.common.util.ByteArrayHelper;
@@ -453,6 +454,16 @@ public class SourceModelInfo implements ModelInfo, Serializable {
         
         return sw.toString();
         
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.common.vdb.api.ModelInfo#getProperties()
+     */
+    @Override
+    public Properties getProperties() {
+        return null;
     }
 
 }

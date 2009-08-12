@@ -456,7 +456,7 @@ public class ConfigurationManagerImpl implements ConfigurationManager, Configura
      */
     protected Exception[] fireChangeEvent( ConfigurationChangeEvent event ) {
         Collection<Exception> errors = new ArrayList<Exception>();
-        
+
         if (listenerList != null && !listenerList.isEmpty()) {
             for (Iterator it = listenerList.iterator(); it.hasNext();) {
                 try {
@@ -481,10 +481,10 @@ public class ConfigurationManagerImpl implements ConfigurationManager, Configura
 
         return errors.toArray(new Exception[errors.size()]);
     }
-    
+
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#notifyConfigurationChanged(com.metamatrix.modeler.dqp.config.ConfigurationChangeEvent)
      */
     @Override
@@ -575,11 +575,12 @@ public class ConfigurationManagerImpl implements ConfigurationManager, Configura
 
         return binding;
     }
-    
+
     /**
      * {@inheritDoc}
-     *
-     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#setConnectorPropertyValue(com.metamatrix.common.config.api.ConnectorBinding, java.lang.String, java.lang.String)
+     * 
+     * @see com.metamatrix.modeler.dqp.config.ConfigurationManager#setConnectorPropertyValue(com.metamatrix.common.config.api.ConnectorBinding,
+     *      java.lang.String, java.lang.String)
      */
     @Override
     public Exception[] setConnectorPropertyValue( ConnectorBinding theBinding,
@@ -592,7 +593,7 @@ public class ConfigurationManagerImpl implements ConfigurationManager, Configura
         if (DqpPlugin.getInstance().getConfigurationManager().getBinding(theBinding.getFullName()) != null) {
             return saveConfigLocal(new ConfigurationChangeEvent(CHANGED_EVENT, CONNECTOR_BINDINGS_CHANGED, theBinding.getName()));
         }
-        
+
         return new Exception[0];
     }
 

@@ -339,10 +339,10 @@ public class FileUtils {
      * @throws Exception
      * @since 4.3
      */
-    private static void copyRecursively( File sourceDirectory,
-                                         File targetDirectory,
-                                         FilenameFilter filter,
-                                         boolean includeSourceRoot ) throws FileNotFoundException, Exception {
+    public static void copyRecursively( File sourceDirectory,
+                                        File targetDirectory,
+                                        FilenameFilter filter,
+                                        boolean includeSourceRoot ) throws FileNotFoundException, Exception {
         if (!sourceDirectory.exists()) {
             throw new FileNotFoundException(CoreModelerPlugin.Util.getString("FileUtils.File_does_not_exist._1", sourceDirectory)); //$NON-NLS-1$
         }

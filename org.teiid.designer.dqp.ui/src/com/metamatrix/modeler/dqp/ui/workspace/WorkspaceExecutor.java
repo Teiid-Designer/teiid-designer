@@ -25,10 +25,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.admin.api.embedded.EmbeddedAdmin;
-import com.metamatrix.admin.api.exception.AdminException;
-import com.metamatrix.admin.api.objects.AdminObject;
-import com.metamatrix.admin.api.objects.AdminOptions;
+import org.teiid.adminapi.Admin;
+import org.teiid.adminapi.AdminException;
+import org.teiid.adminapi.AdminObject;
+import org.teiid.adminapi.AdminOptions;
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ConnectorBindingType;
 import com.metamatrix.common.config.xml.XMLConfigurationImportExportUtility;
@@ -61,7 +61,7 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 public class WorkspaceExecutor extends QueryClient {
 
     static final String PREFIX = I18nUtil.getPropertyPrefix(WorkspaceExecutor.class);
-    
+
     static final String DEBUG_CONTEXT = WorkspaceExecutor.class.getSimpleName();
     // private static final String PREFIX = I18nUtil.getPropertyPrefix(WorkspaceExecutor.class);
     private static WorkspaceExecutor _INSTANCE = new WorkspaceExecutor();
@@ -133,7 +133,7 @@ public class WorkspaceExecutor extends QueryClient {
                 UDFListener udfListener = new UDFListener();
                 DqpPlugin.getInstance().getExtensionsHandler().addChangeListener(udfListener);
                 UdfManager.INSTANCE.addChangeListener(udfListener);
-                
+
                 // tell embedded to load initial UDF model. The UDF model at startup should always be a valid one.
                 reloadUdfModel();
             } catch (Exception e) {
@@ -250,8 +250,8 @@ public class WorkspaceExecutor extends QueryClient {
      * Start the given connector binding
      */
     private void startConnectorBinding( ConnectorBinding binding ) throws SQLException, AdminException {
-        EmbeddedAdmin admin = (EmbeddedAdmin)this.adminConnection.getAdminAPI();
-        com.metamatrix.admin.api.objects.ConnectorBinding existing = findDeployedBinding(admin, binding.getFullName());
+        Admin admin = this.adminConnection.getAdminAPI();
+        org.teiid.adminapi.ConnectorBinding existing = findDeployedBinding(admin, binding.getFullName());
 
         if (existing != null) {
             admin.startConnectorBinding(existing.getIdentifier());
@@ -262,12 +262,12 @@ public class WorkspaceExecutor extends QueryClient {
         }
     }
 
-    private com.metamatrix.admin.api.objects.ConnectorBinding findDeployedBinding( EmbeddedAdmin admin,
-                                                                                   String bindingName ) throws AdminException {
+    private org.teiid.adminapi.ConnectorBinding findDeployedBinding( Admin admin,
+                                                                     String bindingName ) throws AdminException {
         Collection deployedBindings = admin.getConnectorBindings(AdminObject.WILDCARD);
         if (deployedBindings != null && !deployedBindings.isEmpty()) {
             for (Iterator i = deployedBindings.iterator(); i.hasNext();) {
-                com.metamatrix.admin.api.objects.ConnectorBinding existing = (com.metamatrix.admin.api.objects.ConnectorBinding)i.next();
+                org.teiid.adminapi.ConnectorBinding existing = (org.teiid.adminapi.ConnectorBinding)i.next();
                 if (existing.getName().equals(bindingName)) {
                     return existing;
                 }
@@ -276,12 +276,12 @@ public class WorkspaceExecutor extends QueryClient {
         return null;
     }
 
-    private com.metamatrix.admin.api.objects.ConnectorType findDeployedConnectorType( EmbeddedAdmin admin,
-                                                                                      String typeName ) throws AdminException {
+    private org.teiid.adminapi.ConnectorType findDeployedConnectorType( Admin admin,
+                                                                        String typeName ) throws AdminException {
         Collection deployedTypes = admin.getConnectorTypes(AdminObject.WILDCARD);
         if (deployedTypes != null && !deployedTypes.isEmpty()) {
             for (Iterator i = deployedTypes.iterator(); i.hasNext();) {
-                com.metamatrix.admin.api.objects.ConnectorType existing = (com.metamatrix.admin.api.objects.ConnectorType)i.next();
+                org.teiid.adminapi.ConnectorType existing = (org.teiid.adminapi.ConnectorType)i.next();
                 if (existing.getName().equals(typeName)) {
                     return existing;
                 }
@@ -292,8 +292,8 @@ public class WorkspaceExecutor extends QueryClient {
 
     void removeConnectorBinding( String bindingName ) throws AdminException, SQLException {
         // if we already have this binding then remove it first.
-        EmbeddedAdmin admin = (EmbeddedAdmin)this.adminConnection.getAdminAPI();
-        com.metamatrix.admin.api.objects.ConnectorBinding existing = findDeployedBinding(admin, bindingName);
+        Admin admin = this.adminConnection.getAdminAPI();
+        org.teiid.adminapi.ConnectorBinding existing = findDeployedBinding(admin, bindingName);
         if (existing != null) {
             admin.stopConnectorBinding(existing.getIdentifier(), true);
             admin.deleteConnectorBinding(existing.getIdentifier());
@@ -305,8 +305,8 @@ public class WorkspaceExecutor extends QueryClient {
 
     void removeConnectorType( String typeName ) throws AdminException, SQLException {
         // if we already have this binding then remove it first.
-        EmbeddedAdmin admin = (EmbeddedAdmin)this.adminConnection.getAdminAPI();
-        com.metamatrix.admin.api.objects.ConnectorType existing = findDeployedConnectorType(admin, typeName);
+        Admin admin = this.adminConnection.getAdminAPI();
+        org.teiid.adminapi.ConnectorType existing = findDeployedConnectorType(admin, typeName);
         if (existing != null) {
             admin.deleteConnectorType(existing.getIdentifier());
             if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
@@ -319,7 +319,7 @@ public class WorkspaceExecutor extends QueryClient {
      * Look up and add and start the given connector binding
      */
     void addConnectorBinding( ConnectorBinding binding ) throws AdminException, SQLException {
-        EmbeddedAdmin admin = (EmbeddedAdmin)this.adminConnection.getAdminAPI();
+        Admin admin = this.adminConnection.getAdminAPI();
 
         // if we already have this binding then remove it first.
         removeConnectorBinding(binding.getFullName());
@@ -327,12 +327,12 @@ public class WorkspaceExecutor extends QueryClient {
         // if not started means that we did not find the binding in the configuration,
         // so let's add and then start it
         // add and start the new one.
-        com.metamatrix.admin.api.objects.ConnectorBinding added = admin.addConnectorBinding(binding.getFullName(),
-                                                                                            binding.getComponentTypeID().getName(),
-                                                                                            binding.getProperties(),
-                                                                                            new AdminOptions(
-                                                                                                             AdminOptions.OnConflict.OVERWRITE
-                                                                                                             | AdminOptions.BINDINGS_IGNORE_DECRYPT_ERROR));
+        org.teiid.adminapi.ConnectorBinding added = admin.addConnectorBinding(binding.getFullName(),
+                                                                              binding.getComponentTypeID().getName(),
+                                                                              binding.getProperties(),
+                                                                              new AdminOptions(
+                                                                                               AdminOptions.OnConflict.OVERWRITE
+                                                                                               | AdminOptions.BINDINGS_IGNORE_DECRYPT_ERROR));
         admin.startConnectorBinding(added.getIdentifier());
         if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
             UTIL.debug(DEBUG_CONTEXT, "Added and Started connector binding = " + added.getName()); //$NON-NLS-1$
@@ -343,7 +343,7 @@ public class WorkspaceExecutor extends QueryClient {
      * Look up and add and start the given connector binding
      */
     void addConnectorType( ConnectorBindingType type ) throws AdminException, SQLException, IOException {
-        EmbeddedAdmin admin = (EmbeddedAdmin)this.adminConnection.getAdminAPI();
+        Admin admin = this.adminConnection.getAdminAPI();
 
         // if we already have this binding then remove it first.
         removeConnectorType(type.getFullName());
@@ -377,9 +377,9 @@ public class WorkspaceExecutor extends QueryClient {
         }
         return udfClasspath.toString();
     }
-    
+
     void reloadUdfModel() throws Exception {
-        EmbeddedAdmin admin = (EmbeddedAdmin)adminConnection.getAdminAPI();
+        Admin admin = adminConnection.getAdminAPI();
         admin.setSystemProperty("dqp.extension.CommonClasspath", buildUDFClasspath()); //$NON-NLS-1$
         admin.extensionModuleModified(null); // reloads the UDF from the extension modules
     }
@@ -407,7 +407,7 @@ public class WorkspaceExecutor extends QueryClient {
                     IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, msg);
                     throw new CoreException(status);
                 }
-                
+
                 // copy file over to UDF runtime directory for embedded to pick up
                 FileUtils.copyFile(UdfManager.INSTANCE.getUdfModelPath().toFile().getAbsolutePath(),
                                    DqpPath.getRuntimeUdfsPath().toFile().getAbsolutePath(),
