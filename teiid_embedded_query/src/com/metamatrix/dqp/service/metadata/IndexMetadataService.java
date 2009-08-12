@@ -22,12 +22,15 @@
 
 package com.metamatrix.dqp.service.metadata;
 
+import java.util.Map;
 import java.util.Properties;
+import org.teiid.connector.metadata.runtime.DatatypeRecordImpl;
 import com.google.inject.Inject;
 import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.common.application.ApplicationEnvironment;
 import com.metamatrix.common.application.exception.ApplicationLifecycleException;
 import com.metamatrix.common.log.LogManager;
+import com.metamatrix.common.vdb.api.VDBArchive;
 import com.metamatrix.connector.metadata.IndexFile;
 import com.metamatrix.connector.metadata.MetadataConnectorConstants;
 import com.metamatrix.connector.metadata.MultiObjectSource;
@@ -122,9 +125,21 @@ public class IndexMetadataService implements MetadataService {
         if (qmi == null) {
             LogManager.logTrace(LogConstants.CTX_DQP, new Object[] {
                 "IndexMetadataService cache miss for VDB", vdbName, vdbVersion}); //$NON-NLS-1$
-            return this.metadataCache.lookupMetadata(vdbName, vdbVersion, this.vdbService.getVDBResource(vdbName, vdbVersion));
+            return this.metadataCache.lookupMetadata(vdbName,
+                                                     vdbVersion,
+                                                     VDBArchive.writeToByteArray(this.vdbService.getVDB(vdbName, vdbVersion)));
         }
         return qmi;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.dqp.service.MetadataService#getBuiltinDatatypes()
+     */
+    @Override
+    public Map<String, DatatypeRecordImpl> getBuiltinDatatypes() {
+        return null;
     }
 
 }

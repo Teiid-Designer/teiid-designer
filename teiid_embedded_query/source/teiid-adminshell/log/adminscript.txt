@@ -1,0 +1,90 @@
+exit();
+
+quit();
+
+connect();
+
+disconnect();
+
+connectAsAdmin();
+
+connectAsAdmin();
+
+exit();
+
+connectAsAdmin();
+
+exit();
+
+connectAsAdmin();
+
+print(getVDBs("*"));
+
+execute("select * from portfolio");
+
+exit();
+
+debug=true;
+
+connect();
+
+exit();
+
+connect("jdbc:teiid:portfolio@mm://localhost:31000;user=john;password=mm");
+
+execute("select * from customers");
+
+execute("select * from customer");
+
+printResults();
+
+print(interactive());
+
+exit();
+
+connect();
+
+execute("select * from customer");
+
+execute("select * from customers");
+
+disconnect();
+
+connect();
+
+exit();
+
+debug=true;
+
+connect();
+
+connect();
+
+exit();
+
+connect();
+
+execute("select * from customer");
+
+printResults();
+
+exit();
+
+connect();
+
+print(getConnectorBindings("*"));
+
+c = getConnectorBindings("*");
+
+print(c.size());
+
+for(b:c){ print(b.getName());
+
+} ;
+
+connect("jdbc:teiid:portfolio@mm://localhost:31000;user=admin;password=teiid");
+
+execute("select * from customer");
+
+printResults();
+

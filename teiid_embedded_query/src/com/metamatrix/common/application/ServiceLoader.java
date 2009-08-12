@@ -1,8 +1,9 @@
 package com.metamatrix.common.application;
 
-import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import org.teiid.connector.metadata.runtime.DatatypeRecordImpl;
 import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.common.application.exception.ApplicationInitializationException;
 import com.metamatrix.common.application.exception.ApplicationLifecycleException;
@@ -17,12 +18,12 @@ import com.metamatrix.embeddedquery.workspace.WorkspaceInfoHolder;
 import com.metamatrix.query.metadata.QueryMetadataInterface;
 
 public class ServiceLoader {
-    
+
     static String ADMIN = "admin"; //$NON-NLS-1$
 
     static class WorkspaceMetadataService implements MetadataService {
         private MetadataService service;
-        
+
         public WorkspaceMetadataService( MetadataService service ) {
             this.service = service;
         }
@@ -81,9 +82,19 @@ public class ServiceLoader {
         public void stop() throws ApplicationLifecycleException {
             service.stop();
         }
-        
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see com.metamatrix.dqp.service.MetadataService#getBuiltinDatatypes()
+         */
+        @Override
+        public Map<String, DatatypeRecordImpl> getBuiltinDatatypes() {
+            return null;
+        }
+
     }
-    
+
     static class WorkspaceVDBService implements VDBService {
         private VDBService vdbService;
 
@@ -120,13 +131,14 @@ public class ServiceLoader {
          * @param arg2
          * @return
          * @throws MetaMatrixComponentException
-         * @see com.metamatrix.dqp.service.VDBService#getConnectorBindingNames(java.lang.String, java.lang.String, java.lang.String)
+         * @see com.metamatrix.dqp.service.VDBService#getConnectorBindingNames(java.lang.String, java.lang.String,
+         *      java.lang.String)
          */
         public List getConnectorBindingNames( String vdbName,
                                               String arg1,
                                               String modelName ) throws MetaMatrixComponentException {
             WorkspaceInfo workspaceInfo = WorkspaceInfoHolder.getInfo();
-            if (vdbName.equalsIgnoreCase(ADMIN) && workspaceInfo != null) { 
+            if (vdbName.equalsIgnoreCase(ADMIN) && workspaceInfo != null) {
                 return workspaceInfo.getBinding(modelName);
             }
             return vdbService.getConnectorBindingNames(vdbName, arg1, modelName);
@@ -167,7 +179,7 @@ public class ServiceLoader {
         public int getModelVisibility( String vdbName,
                                        String arg1,
                                        String arg2 ) throws MetaMatrixComponentException {
-            if (vdbName.equalsIgnoreCase(ADMIN)) {         
+            if (vdbName.equalsIgnoreCase(ADMIN)) {
                 return ModelInfo.PUBLIC;
             }
             return vdbService.getModelVisibility(vdbName, arg1, arg2);
@@ -190,23 +202,11 @@ public class ServiceLoader {
          * @param arg1
          * @return
          * @throws MetaMatrixComponentException
-         * @see com.metamatrix.dqp.service.VDBService#getVDBResource(java.lang.String, java.lang.String)
-         */
-        public InputStream getVDBResource( String arg0,
-                                           String arg1 ) throws MetaMatrixComponentException {
-            return vdbService.getVDBResource(arg0, arg1);
-        }
-
-        /**
-         * @param arg0
-         * @param arg1
-         * @return
-         * @throws MetaMatrixComponentException
          * @see com.metamatrix.dqp.service.VDBService#getVDBStatus(java.lang.String, java.lang.String)
          */
         public int getVDBStatus( String arg0,
                                  String arg1 ) throws MetaMatrixComponentException {
-            return vdbService.getVDBStatus(arg0, arg1);
+            return vdbService.getVDB(arg0, arg1).getStatus();
         }
 
         /**
@@ -234,17 +234,39 @@ public class ServiceLoader {
         public void stop() throws ApplicationLifecycleException {
             vdbService.stop();
         }
-        
-        
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see com.metamatrix.dqp.service.VDBService#getActiveVDBVersion(java.lang.String, java.lang.String)
+         */
+        @Override
+        public String getActiveVDBVersion( String vdbName,
+                                           String vdbVersion ) {
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see com.metamatrix.dqp.service.VDBService#getVDB(java.lang.String, java.lang.String)
+         */
+        @Override
+        public VDBArchive getVDB( String vdbName,
+                                  String vdbVersion ) {
+            return null;
+        }
+
     }
-    
-    public ApplicationService loadService(String serviceType, ApplicationService service) {
+
+    public ApplicationService loadService( String serviceType,
+                                           ApplicationService service ) {
         if (serviceType.equals(DQPServiceNames.METADATA_SERVICE)) {
             return new WorkspaceMetadataService((MetadataService)service);
         } else if (serviceType.equals(DQPServiceNames.VDB_SERVICE)) {
             return new WorkspaceVDBService((VDBService)service);
-        } 
+        }
         return service;
     }
-    
+
 }

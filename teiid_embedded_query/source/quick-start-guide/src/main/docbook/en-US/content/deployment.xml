@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="deployment">
+  <title>Deployment</title>
+  <para> Having built the VDB, it must be deployed so it can be access through a JDBC connection.
+  Note there are two steps involved in this deployment:</para>
+  <orderedlist>
+    <listitem>
+      <para>Deploying Teiid</para>
+    </listitem>
+    <listitem>
+      <para>Deploying a VDB</para>
+    </listitem>
+  </orderedlist>
+  <para> Teiid is typically used in one of two manners:</para>
+  <itemizedlist>
+    <listitem>
+      <para>
+        As a
+        <link linkend="stand-alone-deployment">Stand-alone</link>
+        Java application
+      </para>
+    </listitem>
+    <listitem>
+      <para>In a JEE Application Server (Deploy and Create connection pool).</para>
+    </listitem>
+  </itemizedlist>
+  <para />
+  <para>This example deploys Teiid within a stand-alone Java application. The sample deployment is shown below.
+  You can find more details about deploying to application servers on the Teiid web-site</para>
+  <para />
+  <sect1 id="stand-alone-deployment">
+    <title>Stand-alone Application Deployment</title>
+    <orderedlist>
+      <listitem>
+        <para>Add the "${teiid.home}/client/teiid-${version}-client.jar" to your application classpath</para>
+      </listitem>
+      <listitem>
+        <para>Place your VDB in a the "${teiid.home}/deploy". 
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Now, go to the next section to learn how to
+          <link linkend="OpenConnection">connect to the VDB</link>
+        </para>
+      </listitem>
+    </orderedlist>
+  </sect1>
+</chapter>
