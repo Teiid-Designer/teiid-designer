@@ -59,7 +59,7 @@ public final class DqpPath {
 
     public static String testRuntimeDir;
 
-    private static IPath vdbExecutionPath;
+    //private static IPath vdbExecutionPath;
 
     private static IPath workspaceDefnPath;
 

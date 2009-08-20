@@ -15,6 +15,7 @@ import com.metamatrix.dqp.service.MetadataService;
 import com.metamatrix.dqp.service.VDBService;
 import com.metamatrix.embeddedquery.workspace.WorkspaceInfo;
 import com.metamatrix.embeddedquery.workspace.WorkspaceInfoHolder;
+import com.metamatrix.metadata.runtime.api.VirtualDatabaseException;
 import com.metamatrix.query.metadata.QueryMetadataInterface;
 
 public class ServiceLoader {
@@ -242,8 +243,8 @@ public class ServiceLoader {
          */
         @Override
         public String getActiveVDBVersion( String vdbName,
-                                           String vdbVersion ) {
-            return null;
+                                           String vdbVersion ) throws VirtualDatabaseException, MetaMatrixComponentException {
+            return vdbService.getActiveVDBVersion(vdbName, vdbVersion);
         }
 
         /**
@@ -253,8 +254,8 @@ public class ServiceLoader {
          */
         @Override
         public VDBArchive getVDB( String vdbName,
-                                  String vdbVersion ) {
-            return null;
+                                  String vdbVersion ) throws MetaMatrixComponentException{
+            return vdbService.getVDB(vdbName, vdbVersion);
         }
 
     }

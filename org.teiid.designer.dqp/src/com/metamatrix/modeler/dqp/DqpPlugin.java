@@ -27,6 +27,7 @@ import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.dqp.config.ConfigurationManager;
+import com.metamatrix.modeler.dqp.internal.config.ConfigFileManager;
 import com.metamatrix.modeler.dqp.internal.config.ConfigurationManagerImpl;
 import com.metamatrix.modeler.dqp.internal.config.DqpExtensionsHandler;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
@@ -49,7 +50,7 @@ public class DqpPlugin extends Plugin {
 
     public static final String WORKSPACE_DEFN_FILE_NAME = "WorkspaceBindings.def"; //$NON-NLS-1$
 
-    private static final String ADMIN_VDB = "Admin.vdb"; //$NON-NLS-1$
+    //private static final String ADMIN_VDB = "Admin.vdb"; //$NON-NLS-1$
     private static final String WORKSPACE_PROPERTIES = "workspace.properties"; //$NON-NLS-1$
 
     public static final String UDF_JAR_MAPPER_FILE_NAME = "udfJarMappings.properties"; //$NON-NLS-1$
@@ -108,17 +109,30 @@ public class DqpPlugin extends Plugin {
             IPath configLocation = DqpPath.getRuntimeConfigPath();
 
             // create required directories for running the DQP
-            DqpPath.getRuntimeConnectorsPath();
+            IPath configurationXmlFileLocation = DqpPath.getRuntimeConnectorsPath();
             DqpPath.getLogPath();
+            
+            // ensure that the configuration files have been loaded to the state location
+            File configurationFile = new File(configurationXmlFileLocation.toFile(), ConfigFileManager.CONFIG_FILE_NAME);
+            if (!configurationFile.exists()) {
+                File originalFile = DqpPath.getInstallConfigPath().append(ConfigFileManager.CONFIG_FILE_NAME).toFile();
+                if (!originalFile.exists()) {
+                    throw new Exception(Util.getString(I18nUtil.getPropertyPrefix(DqpPlugin.class) + "missingConfigFile", //$NON-NLS-1$
+                                                       originalFile.getAbsolutePath()));
+                }
+                FileUtils.copy(originalFile.getAbsolutePath(), configurationFile.getAbsolutePath());
+            }
 
             SvnFilenameFilter filter = new SvnFilenameFilter();
 
             File configFolder = configLocation.toFile();
-            if (configFolder.exists()) FileUtils.removeChildrenRecursively(configFolder);
+            if (configFolder.exists()) {
+            	FileUtils.removeChildrenRecursively(configFolder);
+            }
             FileUtils.copyRecursively(DqpPath.getInstallConfigPath().toFile(), configFolder, filter, false);
 
             // init configuration manager
-            manager = new ConfigurationManagerImpl(configLocation);
+            manager = new ConfigurationManagerImpl(configurationXmlFileLocation);
 
             // copy the workspace.properties each if time eclipse starts as we may
             // have modified the properties file
