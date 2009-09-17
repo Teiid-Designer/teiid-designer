@@ -220,6 +220,7 @@
             <PropertyDefinition Name="ConnectionSource" DisplayName="Connection Source Class" ShortDescription="Driver, DataSource, or XADataSource class name" DefaultValue="org.postgresql.Driver" IsRequired="true"   />        
             <PropertyDefinition Name="URL" DisplayName="JDBC URL" ShortDescription="" DefaultValue="jdbc:postgresql://&lt;host&gt;:5432/&lt;databaseName&gt;" IsRequired="true" PropertyType="String"    IsMasked="false"   />
             <PropertyDefinition Name="ExtensionTranslationClass" DisplayName="Extension SQL Translation Class" ShortDescription="" DefaultValue="org.teiid.connector.jdbc.postgresql.PostgreSQLTranslator"  PropertyType="String"   IsExpert="true"  IsMasked="false"   />
+            <PropertyDefinition Name="DatabaseVersion" DisplayName="Database Version" ShortDescription="PostgreSQL Version i.e. 8.3" DefaultValue="8.0" PropertyType="String" />
         </ComponentType>
         <ComponentType Name="PostgreSQL XA JDBC Connector" ComponentTypeCode="2" Deployable="true" Deprecated="false" Monitorable="false" SuperComponentType="JDBC Connector" ParentComponentType="Connectors" LastChangedBy="ConfigurationStartup" CreatedBy="ConfigurationStartup">
             <PropertyDefinition Name="ConnectionSource" DisplayName="Connection Source Class" ShortDescription="Driver, DataSource, or XADataSource class name" DefaultValue="org.postgresql.xa.PGXADataSource" IsRequired="true"   />        
@@ -228,17 +229,28 @@
             <PropertyDefinition Name="DatabaseName" DisplayName="Database Name" ShortDescription="" IsRequired="true" PropertyType="String"    IsMasked="false"   />
 			<PropertyDefinition Name="ExtensionTranslationClass" DisplayName="Extension SQL Translation Class" ShortDescription="" DefaultValue="org.teiid.connector.jdbc.postgresql.PostgreSQLTranslator"  PropertyType="String"   IsExpert="true"  IsMasked="false"   />            
             <PropertyDefinition Name="IsXA" DisplayName="Is XA" ShortDescription="Is XA" DefaultValue="true" IsRequired="true" PropertyType="Boolean"   />
+            <PropertyDefinition Name="DatabaseVersion" DisplayName="Database Version" ShortDescription="PostgreSQL Version i.e. 8.3" DefaultValue="8.0" PropertyType="String" />
         </ComponentType>
         <ComponentType Name="Apache Derby Embedded Connector" ComponentTypeCode="2" Deployable="true" Deprecated="false" Monitorable="false" SuperComponentType="JDBC Connector" ParentComponentType="Connectors" LastChangedBy="ConfigurationStartup" CreatedBy="ConfigurationStartup">
             <PropertyDefinition Name="ConnectionSource" DisplayName="Connection Source Class" ShortDescription="Driver, DataSource, or XADataSource class name" DefaultValue="org.apache.derby.jdbc.EmbeddedDriver" IsRequired="true"   />        
             <PropertyDefinition Name="URL" DisplayName="JDBC URL" ShortDescription="" DefaultValue="jdbc:derby:&lt;databaseName&gt;" IsRequired="true" PropertyType="String"    IsMasked="false"   />
             <PropertyDefinition Name="ExtensionTranslationClass" DisplayName="Extension SQL Translation Class" ShortDescription="" DefaultValue="org.teiid.connector.jdbc.derby.DerbySQLTranslator"  PropertyType="String"   IsExpert="true"  IsMasked="false"   />
+			<PropertyDefinition Name="DatabaseVersion" DisplayName="Database Version" ShortDescription="Derby Version i.e. 10.3" DefaultValue="10.1" PropertyType="String" />             
         </ComponentType>
         <ComponentType Name="Apache Derby Network Connector" ComponentTypeCode="2" Deployable="true" Deprecated="false" Monitorable="false" SuperComponentType="JDBC Connector" ParentComponentType="Connectors" LastChangedBy="ConfigurationStartup" CreatedBy="ConfigurationStartup">
             <PropertyDefinition Name="ConnectionSource" DisplayName="Connection Source Class" ShortDescription="Driver, DataSource, or XADataSource class name" DefaultValue="org.apache.derby.jdbc.ClientDriver" IsRequired="true"   />        
             <PropertyDefinition Name="URL" DisplayName="JDBC URL" ShortDescription="" DefaultValue="jdbc:derby://localhost:1527/&lt;path/to/db&gt;" IsRequired="true" PropertyType="String"    IsMasked="false"   />
             <PropertyDefinition Name="ExtensionTranslationClass" DisplayName="Extension SQL Translation Class" ShortDescription="" DefaultValue="org.teiid.connector.jdbc.derby.DerbySQLTranslator"  PropertyType="String"   IsExpert="true"  IsMasked="false"   />
+            <PropertyDefinition Name="DatabaseVersion" DisplayName="Database Version" ShortDescription="Derby Version i.e. 10.3" DefaultValue="10.1" PropertyType="String" />
         </ComponentType>
+        <ComponentType Name="Apache Derby XA Network Connector" ComponentTypeCode="2" Deployable="true" Deprecated="false" Monitorable="false" SuperComponentType="JDBC Connector" ParentComponentType="Connectors" LastChangedBy="ConfigurationStartup" CreatedBy="ConfigurationStartup">
+            <PropertyDefinition Name="ConnectionSource" DisplayName="Connection Source Class" ShortDescription="Driver, DataSource, or XADataSource class name" DefaultValue="org.apache.derby.jdbc.ClientXADataSource" IsRequired="true"   />        
+            <PropertyDefinition Name="PortNumber" DisplayName="Port Number" DefaultValue="1527" ShortDescription="" IsRequired="true" PropertyType="Integer"    IsMasked="false"   />
+			<PropertyDefinition Name="ServerName" DisplayName="Server Name" ShortDescription="" IsRequired="true" PropertyType="String"    IsMasked="false"   />
+            <PropertyDefinition Name="DatabaseName" DisplayName="Database Name" ShortDescription="" IsRequired="true" PropertyType="String"    IsMasked="false"   />
+			<PropertyDefinition Name="ExtensionTranslationClass" DisplayName="Extension SQL Translation Class" ShortDescription="" DefaultValue="org.teiid.connector.jdbc.derby.DerbySQLTranslator"  PropertyType="String"   IsExpert="true"  IsMasked="false"   />            
+            <PropertyDefinition Name="IsXA" DisplayName="Is XA" ShortDescription="Is XA" DefaultValue="true" IsRequired="true" PropertyType="Boolean"   />
+        </ComponentType>        
         <ComponentType Name="Teiid 6 JDBC Connector" ComponentTypeCode="2" Deployable="true" Deprecated="false" Monitorable="false" SuperComponentType="JDBC Connector" ParentComponentType="Connectors" LastChangedBy="ConfigurationStartup" CreatedBy="ConfigurationStartup">
             <PropertyDefinition Name="ConnectionSource" DisplayName="Connection Source Class" ShortDescription="Driver, DataSource, or XADataSource class name" DefaultValue="com.metamatrix.jdbc.MMDriver" IsRequired="true"   />
             <PropertyDefinition Name="URL" DisplayName="JDBC URL" ShortDescription="" DefaultValue="jdbc:metamatrix:&lt;vdbName&gt;@mm://&lt;host&gt;:&lt;port&gt;" IsRequired="true"   />            
@@ -325,6 +337,7 @@
             <PropertyDefinition Name="EnforceColumnCount" DisplayName="Enforce Column Count" ShortDescription="This forces the number of columns in text file to match what was modeled" DefaultValue="false" PropertyType="Boolean"  />
             <PropertyDefinition Name="DateResultFormatsDelimiter" DisplayName="Date Result Formats Delimiter" ShortDescription="" IsExpert="true" />
             <PropertyDefinition Name="DateResultFormats" DisplayName="Date Result Formats" ShortDescription="" IsExpert="true" />
+            <PropertyDefinition Name="Immutable" DisplayName="Is Immutable" ShortDescription="True if the source never changes." DefaultValue="true" IsRequired="true" PropertyType="Boolean" IsExpert="true" />
         </ComponentType>
                 <ComponentType Name="XML Connector" ComponentTypeCode="2" Deployable="true" Deprecated="false" Monitorable="false" SuperComponentType="Connector" ParentComponentType="Connectors" LastChangedDate="2008-10-31T10:26:19.917-06:00" CreationDate="2008-10-31T10:26:19.917-06:00">
             <PropertyDefinition Name="ConnectorTypeClassPath" DisplayName="Connector Type Class Path" ShortDescription="Connector Type classpath (defined by system, do not modify)" DefaultValue="extensionjar:connector_patch.jar;extensionjar:connector-xml-6.2.0-SNAPSHOT.jar;extensionjar:commons-codec-1.2.jar;extensionjar:commons-discovery-0.2.jar;extensionjar:commons-httpclient-3.0.1.jar;extensionjar:xmlsec-1.3.0.jar;extensionjar:axis-1.3.jar;extensionjar:axis-jaxrpc-1.3.jar;extensionjar:axis-saaj-1.2.jar;extensionjar:axis-schema-1.3.jar;extensionjar:commons-discovery-0.2.jar;extensionjar:jms-1.1.jar;extensionjar:jaxen-1.1.1.jar;extensionjar:nux-1.6.jar;extensionjar:opensaml-1.1b.jar;extensionjar:jetty-6.1.9.jar;extensionjar:jetty-util-6.1.9.jar;extensionjar:servlet-api-2.5-6.1.9.jar;extensionjar:wsdl4j-1.5.1.jar;extensionjar:wss4j-1.5.0.jar;extensionjar:xalan-2.7.0.jar;extensionjar:xom-1.2.jar" IsModifiable="false"/>
@@ -355,30 +368,22 @@
             <PropertyDefinition Name="TrustType" DisplayName="Trust Type:(DirectReference or IssuerSerial)" ShortDescription="Only required for Signature and Signed SAML; The issuer-serial method presumes that all trusted users of the service are known to the service and have pre-registered their certificate chains before using the service. The direct-reference method presumes that the service operator trusts all users with certificates issued by a trusted CA." DefaultValue="DirectReference" IsExpert="true"  />
         </ComponentType>
         <ComponentType Name="XML-Relational File Connector" ComponentTypeCode="2" Deployable="true" Deprecated="false" Monitorable="false" SuperComponentType="XML Connector" ParentComponentType="Connectors" LastChangedDate="2008-10-31T10:26:19.918-06:00" CreationDate="2008-10-31T10:26:19.918-06:00">
-            <PropertyDefinition Name="TextExtractionThreshold" DisplayName="Text Extraction Threshold (in kb)" ShortDescription="extract text sections larger than this size to a file where more efficient access as a CLOB can be effected." DefaultValue="128" PropertyType="Integer" IsExpert="true" />
             <PropertyDefinition Name="FilePath" DisplayName="File Path" ShortDescription="" IsRequired="true" />
             <PropertyDefinition Name="Standard" DisplayName="Standard Type" ShortDescription="Standard Built-in Connector Type" DefaultValue="true" PropertyType="Boolean" IsExpert="true" IsModifiable="false" />
-            <PropertyDefinition Name="FileCacheLocation" DisplayName="Location of the File Cache" ShortDescription="" DefaultValue="" />
-            <PropertyDefinition Name="CacheTimeout" DisplayName="Cache Timeout (in seconds)" ShortDescription="" DefaultValue="60" IsRequired="true" PropertyType="Integer" />
+            <PropertyDefinition Name="CacheEnabled" DisplayName="Enable Document Caching" ShortDescription="" DefaultValue="false" IsRequired="true" PropertyType="Boolean" />
             <PropertyDefinition Name="SaxFilterProviderClass" DisplayName="XML Filter Provider" ShortDescription="The class the provides extended XML Filters" DefaultValue="com.metamatrix.connector.xml.base.NoExtendedFilters"  IsExpert="true" />
             <PropertyDefinition Name="ConnectorClass" DisplayName="Connector Class" ShortDescription="" DefaultValue="com.metamatrix.connector.xml.base.XMLConnector" IsRequired="true" IsExpert="true" />
-            <PropertyDefinition Name="MaxFileCacheSize" DisplayName="Max Size of file cache (in kb)" ShortDescription="" DefaultValue="-1" IsRequired="true" PropertyType="Integer" />
             <PropertyDefinition Name="ConnectorStateClass" DisplayName="Connector State Class" ShortDescription="" DefaultValue="com.metamatrix.connector.xml.file.FileConnectorState" IsRequired="true" IsExpert="true" />
             <PropertyDefinition Name="LogRequestResponseDocs" DisplayName="Log XML Request and Response Documents" ShortDescription="Write the request and response documents to the log at Info level" DefaultValue="false" PropertyType="Boolean" IsExpert="true" />
             <PropertyDefinition Name="InputStreamFilterClass" DisplayName="Input Stream Filter Class" ShortDescription="The class to use to preprocess raw XML input stream" DefaultValue="com.metamatrix.connector.xml.base.PluggableInputStreamFilterImpl"  IsExpert="true" />
-            <PropertyDefinition Name="MaxMemoryCacheSize" DisplayName="Max Size of in-memory cache (in kb)" ShortDescription="" DefaultValue="16384" IsRequired="true" PropertyType="Integer" />
             <PropertyDefinition Name="FileName" DisplayName="File Name" ShortDescription="" DefaultValue="" />
             <PropertyDefinition Name="QueryPreprocessorClass" DisplayName="Query Preprocessor Class" ShortDescription="The class to use to preprocess the IQuery" DefaultValue="com.metamatrix.connector.xml.base.NoQueryPreprocessing"  IsExpert="true" />
             <PropertyDefinition Name="ConnectorCapabilities" DisplayName="Connector Capabilities Class" ShortDescription="The class to use to provide the Connector Capabilities" DefaultValue="com.metamatrix.connector.xml.base.XMLCapabilities"  IsExpert="true" />
         </ComponentType>
         <ComponentType Name="XML-Relational HTTP Connector" ComponentTypeCode="2" Deployable="true" Deprecated="false" Monitorable="false" SuperComponentType="XML Connector" ParentComponentType="Connectors" LastChangedDate="2008-10-31T10:26:19.920-06:00" CreationDate="2008-10-31T10:26:19.921-06:00">
-            <PropertyDefinition Name="TextExtractionThreshold" DisplayName="Text Extraction Threshold (in kb)" ShortDescription="Extract text sections larger than this size to a file where more efficient access as a CLOB can be effected." DefaultValue="128" PropertyType="Integer" IsExpert="true" />
-            <PropertyDefinition Name="FileCacheLocation" DisplayName="Location of the File Cache" ShortDescription="" DefaultValue="" />
-            <PropertyDefinition Name="CacheTimeout" DisplayName="Cache Timeout (in seconds)" ShortDescription="" DefaultValue="60" IsRequired="true" PropertyType="Integer" />
             <PropertyDefinition Name="SaxFilterProviderClass" DisplayName="XML Filter Provider" ShortDescription="The class the provides extended XML Filters" DefaultValue="com.metamatrix.connector.xml.base.NoExtendedFilters"  IsExpert="true" />
             <PropertyDefinition Name="XMLParmName" DisplayName="XML Parameter Name" ShortDescription="" />
             <PropertyDefinition Name="RequestTimeout" DisplayName="Request Timeout (in Milliseconds)" ShortDescription="" DefaultValue="10000" IsRequired="true" PropertyType="Integer" />
-            <PropertyDefinition Name="MaxFileCacheSize" DisplayName="Max Size of file cache (in kb)" ShortDescription="" DefaultValue="-1" IsRequired="true" PropertyType="Integer" />
             <PropertyDefinition Name="Authenticate" DisplayName="Authentication Required" ShortDescription="" DefaultValue="false" PropertyType="Boolean" IsModifiable="true" />
             <PropertyDefinition Name="ConnectorStateClass" DisplayName="Connector State Class" ShortDescription="" DefaultValue="com.metamatrix.connector.xml.http.HTTPConnectorState" IsRequired="true" IsExpert="true" />
             <PropertyDefinition Name="HttpBasicAuthPassword" DisplayName="HTTP Basic Authentication Password" ShortDescription="Password value for HTTP basic authentication" DefaultValue="" IsExpert="true" IsMasked="true" />
@@ -387,7 +392,6 @@
                 <AllowedValue>post</AllowedValue>
             </PropertyDefinition>
             <PropertyDefinition Name="ProxyUri" DisplayName="Proxy Server URI" ShortDescription="The URI of the proxy server" DefaultValue="" />
-            <PropertyDefinition Name="ExceptionOnIntraQueryCacheExpiration" DisplayName="Exception On Intra-Query Cache Expiration" ShortDescription="Throw an exception when a document expires from the cache between executing different parts of a single query (instead of requesting the document again)" DefaultValue="true" PropertyType="Boolean" IsExpert="true" />
             <PropertyDefinition Name="ConnectorCapabilities" DisplayName="Connector Capabilities Class" ShortDescription="The class to use to provide the Connector Capabilities" DefaultValue="com.metamatrix.connector.xml.base.XMLCapabilities"  IsExpert="true" />
             <PropertyDefinition Name="Standard" DisplayName="Standard Type" ShortDescription="Standard Built-in Connector Type" DefaultValue="true" PropertyType="Boolean" IsExpert="true" IsModifiable="false" />
             <PropertyDefinition Name="HttpBasicAuthUserName" DisplayName="HTTP Basic Authentication Name" ShortDescription="Name value for HTTP basic authentication" DefaultValue="" IsExpert="true" />
@@ -402,23 +406,18 @@
                 <AllowedValue>XMLRequest</AllowedValue>
                 <AllowedValue>XMLInQueryString</AllowedValue>
             </PropertyDefinition>
-            <PropertyDefinition Name="MaxMemoryCacheSize" DisplayName="Max Size of in-memory cache (in kb)" ShortDescription="" DefaultValue="16384" IsRequired="true" PropertyType="Integer" />
             <PropertyDefinition Name="InputStreamFilterClass" DisplayName="Input Stream Filter Class" ShortDescription="The class to use to preprocess raw XML input stream" DefaultValue="com.metamatrix.connector.xml.base.PluggableInputStreamFilterImpl"  IsExpert="true" />
             <PropertyDefinition Name="HostnameVerifier" DisplayName="Hostname Verifier" ShortDescription="Class implementing javax.net.ssl.HostnameVerifier.  Used to implement a hostname mismatch workaround."  IsExpert="true" />
             <PropertyDefinition Name="QueryPreprocessorClass" DisplayName="Query Preprocessor Class" ShortDescription="The class to use to preprocess the IQuery" DefaultValue="com.metamatrix.connector.xml.base.NoQueryPreprocessing"  IsExpert="true" />
         </ComponentType>
         <ComponentType Name="XML-Relational SOAP Connector" ComponentTypeCode="2" Deployable="true" Deprecated="false" Monitorable="false" SuperComponentType="XML Connector" ParentComponentType="Connectors" LastChangedDate="2008-10-31T10:26:19.919-06:00" CreationDate="2008-10-31T10:26:19.919-06:00">
-            <PropertyDefinition Name="TextExtractionThreshold" DisplayName="Text Extraction Threshold (in kb)" ShortDescription="Extract text sections larger than this size to a file where more efficient access as a CLOB can be effected." DefaultValue="128" PropertyType="Integer" IsExpert="true" />
             <PropertyDefinition Name="AuthPassword" DisplayName="Authentication User Password" ShortDescription="Password value for authentication" DefaultValue="" IsExpert="true" IsMasked="true"  />
-            <PropertyDefinition Name="FileCacheLocation" DisplayName="Location of the File Cache" ShortDescription="" DefaultValue="" />
             <PropertyDefinition Name="SaxFilterProviderClass" DisplayName="XML Filter Provider" ShortDescription="The class the provides extended XML Filters" DefaultValue="com.metamatrix.connector.xml.base.NoExtendedFilters"  IsExpert="true" />
             <PropertyDefinition Name="AuthUserName" DisplayName="Authentication User Name" ShortDescription="Name value for authentication" DefaultValue="" IsExpert="true"  />
-            <PropertyDefinition Name="CacheTimeout" DisplayName="Cache Timeout (in seconds)" ShortDescription="" DefaultValue="60" IsRequired="true" PropertyType="Integer" />
             <PropertyDefinition Name="WSSecurityType" DisplayName="WS-Security Type(UsernameToken, SAML..)" ShortDescription="Type of WS-Security to be used; Combinations of multiple security types can be used with a space in-between. Allowed types are: (UsernameToken, UsernameToken-Digest, SAMLTokenUnsigned, SAMLTokenSigned, Signature, Timestamp, Encrypt)" DefaultValue=""  />
             <PropertyDefinition Name="XMLParmName" DisplayName="XML Parameter Name" ShortDescription="" DefaultValue="" IsModifiable="false" />
             <PropertyDefinition Name="EncryptUserName" DisplayName="Encrypt UserName (only if Encrypt profile used)" ShortDescription="The username to be used in the encryption; if blank uses auth username" DefaultValue="" IsExpert="true"  />
             <PropertyDefinition Name="ExceptionOnSOAPFault" DisplayName="Exception on SOAP Fault" ShortDescription="Throw connector exception when SOAP fault is returned from source." DefaultValue="true" PropertyType="Boolean" IsExpert="true" />
-            <PropertyDefinition Name="MaxFileCacheSize" DisplayName="Max Size of file cache (in kb)" ShortDescription="" DefaultValue="-1" IsRequired="true" PropertyType="Integer" />
             <PropertyDefinition Name="RequestTimeout" DisplayName="Request Timeout (in Milliseconds)" ShortDescription="" DefaultValue="10000" IsRequired="true" PropertyType="Integer" />
             <PropertyDefinition Name="CryptoPropertyFile" DisplayName="User Crypto Property File (If SAML or Signature profile used)" ShortDescription="The file defines properties of cryptography;defines the certificates;(crypto.properties)" DefaultValue="" IsExpert="true"  />
             <PropertyDefinition Name="ConnectorStateClass" DisplayName="Connector State Class" ShortDescription="" DefaultValue="com.metamatrix.connector.xml.soap.SOAPConnectorState" IsRequired="true" IsExpert="true" />
@@ -429,7 +428,6 @@
             </PropertyDefinition>
             <PropertyDefinition Name="ProxyUri" DisplayName="Proxy Server URI" ShortDescription="The URI of the proxy server" DefaultValue="" />
             <PropertyDefinition Name="EncryptPropertyFile" DisplayName="Encrypt crypto property file (only if Encrypt profile used)" ShortDescription="The file defines properties of cryptography for encryption of the message;(crypto.properties)" DefaultValue="" IsExpert="true"  />
-            <PropertyDefinition Name="ExceptionOnIntraQueryCacheExpiration" DisplayName="Exception On Intra-Query Cache Expiration" ShortDescription="Throw an exception when a document expires from the cache between executing different parts of a single query (instead of requesting the document again)" DefaultValue="true" PropertyType="Boolean" IsExpert="true" />
             <PropertyDefinition Name="ConnectorCapabilities" DisplayName="Connector Capabilities Class" ShortDescription="The class to use to provide the Connector Capabilities" DefaultValue="com.metamatrix.connector.xml.base.XMLCapabilities"  IsExpert="true" />
             <PropertyDefinition Name="SAMLPropertyFile" DisplayName="SAML Property File (only required when SAML profile used)" ShortDescription="SAML Security property file (saml.properties)" DefaultValue="" IsExpert="true"  />
             <PropertyDefinition Name="Standard" DisplayName="Standard Type" ShortDescription="Standard Built-in Connector Type" DefaultValue="true" PropertyType="Boolean" IsExpert="true" IsModifiable="false" />
@@ -451,7 +449,6 @@
                 <AllowedValue>XMLInQueryString</AllowedValue>
             </PropertyDefinition>
             <PropertyDefinition Name="InputStreamFilterClass" DisplayName="Input Stream Filter Class" ShortDescription="The class to use to preprocess raw XML input stream" DefaultValue="com.metamatrix.connector.xml.base.PluggableInputStreamFilterImpl"  IsExpert="true" />
-            <PropertyDefinition Name="MaxMemoryCacheSize" DisplayName="Max Size of in-memory cache (in kb)" ShortDescription="" DefaultValue="16384" IsRequired="true" PropertyType="Integer" />
             <PropertyDefinition Name="HostnameVerifier" DisplayName="Hostname Verifier" ShortDescription="a class implmenting javax.net.ssl.HostnameVerifier.  Used to implement a hostname mismatch workaround."  IsExpert="true" />
             <PropertyDefinition Name="TrustType" DisplayName="Trust Type:(DirectReference or IssuerSerial)" ShortDescription="Only required for Signature and Signed SAML; The issuer-serial method presumes that all trusted users of the service are known to the service and have pre-registered their certificate chains before using the service. The direct-reference method presumes that the service operator trusts all users with certificates issued by a trusted CA." DefaultValue="DirectReference" IsExpert="true"  />
             <PropertyDefinition Name="QueryPreprocessorClass" DisplayName="Query Preprocessor Class" ShortDescription="The class to use to preprocess the IQuery" DefaultValue="com.metamatrix.connector.xml.base.NoQueryPreprocessing"  IsExpert="true" />

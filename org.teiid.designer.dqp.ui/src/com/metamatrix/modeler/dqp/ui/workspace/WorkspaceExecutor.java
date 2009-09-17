@@ -29,6 +29,8 @@ import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.AdminObject;
 import org.teiid.adminapi.AdminOptions;
+import org.teiid.adminapi.ProcessObject;
+
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ConnectorBindingType;
 import com.metamatrix.common.config.xml.XMLConfigurationImportExportUtility;
@@ -380,7 +382,9 @@ public class WorkspaceExecutor extends QueryClient {
 
     void reloadUdfModel() throws Exception {
         Admin admin = adminConnection.getAdminAPI();
-        admin.setSystemProperty("dqp.extension.CommonClasspath", buildUDFClasspath()); //$NON-NLS-1$
+        Collection processes = admin.getProcesses(null);
+        String processIdentifier = ((ProcessObject)processes.toArray()[0]).getIdentifier();
+        admin.setProcessProperty(processIdentifier, "dqp.extension.CommonClasspath", buildUDFClasspath()); //SystemProperty("dqp.extension.CommonClasspath", buildUDFClasspath()); //$NON-NLS-1$
         admin.extensionModuleModified(null); // reloads the UDF from the extension modules
     }
 

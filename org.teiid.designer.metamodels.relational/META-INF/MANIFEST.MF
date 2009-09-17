@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.metamodels.relational;singleton:=true
-Bundle-Version: 6.1.0
+Bundle-Version: 6.2.0
 Bundle-ClassPath: metamodelsRelational.jar
 Bundle-Activator: com.metamatrix.metamodels.relational.RelationalPlugin
 Bundle-Vendor: %providerName

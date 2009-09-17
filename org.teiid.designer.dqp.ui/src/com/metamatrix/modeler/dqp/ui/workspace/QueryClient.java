@@ -15,6 +15,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.EmbeddedLogger;
+import org.teiid.adminapi.LogConfiguration;
+
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.jdbc.EmbeddedDriver;
 import com.metamatrix.jdbc.api.Connection;
@@ -103,18 +105,18 @@ public class QueryClient {
                          String message,
                          Throwable throwable ) {
             switch (logLevel) {
-                case NONE:
+                case LogConfiguration.NONE:
                     break;
-                case CRITICAL:
-                case ERROR:
+                case LogConfiguration.CRITICAL:
+                case LogConfiguration.ERROR:
                     DqpUiConstants.UTIL.log(new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, IStatus.OK, message, throwable));
                     break;
-                case WARNING:
+                case LogConfiguration.WARNING:
                     DqpUiConstants.UTIL.log(new Status(IStatus.WARNING, DqpUiConstants.PLUGIN_ID, IStatus.OK, message, throwable));
                     break;
-                case INFO:
-                case DETAIL:
-                case TRACE:
+                case LogConfiguration.INFO:
+                case LogConfiguration.DETAIL:
+                case LogConfiguration.TRACE:
                     DqpUiConstants.UTIL.log(new Status(IStatus.INFO, DqpUiConstants.PLUGIN_ID, IStatus.OK, message, throwable));
                     break;
             }
