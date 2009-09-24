@@ -1,4 +1,0 @@
-final String path = "one";
-final java.util.StringTokenizer tokens = new java.util.StringTokenizer(path, "/");
-final String one = tokens.nextToken() + ".xmi";
-one

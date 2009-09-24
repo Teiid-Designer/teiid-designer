@@ -1,0 +1,190 @@
+/**
+ * This is connection helper to a MetaMatrix Server using JDBC
+ */
+
+source(getResource("/scripts/jdbc.bsh"));
+source(getResource("/scripts/adminapi.bsh"));
+
+
+import java.sql.*;
+import com.metamatrix.common.api.MMURL;
+import com.metamatrix.common.comm.platform.client.ServerAdminFactory;
+
+// These values are default values, a user can supply a property file called
+// "connection.properties" those values will replace one below 
+String auto_jdbc_url="jdbc:teiid:admin@mm://localhost:31000";
+String auto_user="admin";
+String auto_password="teiid";
+String auto_admin_url="mm://localhost:31000";
+
+String connection_prefix="conn";
+
+/**
+ * Connect to the server using the properties specified in the connection.properties file.
+ * use currentConnectionName() to get connection name
+ */
+Connection connect () {
+    return connect(auto_jdbc_url+";user="+auto_user+";password="+auto_password);
+}
+
+/**
+ * Connect to the Server with supplied URL, used TeiidDriver
+ * @param url - complete url for connection
+ */
+Connection connect (String url) {
+	return connectURL(url, "org.teiid.jdbc.TeiidDriver");
+}
+
+private Connection connectURL (String url, String driver) {
+    if (url.startsWith("jdbc:metamatrix:") || url.startsWith("jdbc:teiid:")) {
+        String contextName = genConnectionName();
+        newContext(contextName);        
+        url = url+";ApplicationName="+contextName;
+        try {
+        	com.metamatrix.jdbc.api.Connection mmConn = connectDriver(driver, url);
+            currentContext().internalPrompt = contextName+"["+extractVDBName(url)+"@"+extractHost(url)+"] $ ";
+            currentContext().internalAdmin = createExceptionHandlingProxy(mmConn.getAdminAPI());
+    		return mmConn;        	
+        } catch(e) {
+        	print("Failed to connect: "+e.getMessage());
+        }
+    }
+    else {
+        print("Wrong syntax for the URL.. connection failed");
+    }
+}
+
+/**
+ * Current Connection Name.
+ */
+String currentConnectionName() {
+    if ((getConnection() != null || currentContext().internalAdmin != null) && currentContext().name != void && currentContext().name != null) {
+        return currentContext().name;
+    }
+    throw new Exception("No Connection exists; or it is not a named connection");
+}
+
+void useConnection(name) {
+    useContext(name); 
+}
+
+/**
+* Get a ServerAdmin connection to the specified server.
+* 
+* @param username
+* @param password
+* @param url - URL in the format "mm://servername:port" or "jdbc:metamatrix:VDB@mm://servername:port".
+*/
+void connectAsAdmin(String username, String password, String url) {
+
+    if (MMURL.isValidServerURL(url)) {
+        String contextName = genConnectionName();
+        newContext(contextName);        
+
+        //url is in "server URL format": connect via ServerAdminFactory
+        currentContext().internalAdmin = createExceptionHandlingProxy(ServerAdminFactory.getInstance().createAdmin(username, password.toCharArray(), url));
+        currentContext().internalPrompt = currentConnectionName()+"["+url+"] $ ";
+        
+    } else {
+        String contextName = genConnectionName();
+        newContext(contextName);        
+        
+        //url is in "jdbc URL format": connect via MMServerConnection
+        currentContext().internalConnection = connectDriver("org.teiid.jdbc.TeiidDriver", url, username, password);
+        currentContext().internalAdmin = createExceptionHandlingProxy(currentContext().internalConnection.getAdminAPI());
+    }
+}
+
+/***
+ * Connect as Admin using the defaults from connection.properties
+ */
+void connectAsAdmin() {
+    connectAsAdmin(auto_user, auto_password, auto_admin_url);
+}
+
+/**
+ * Disconnect the connection from the server
+ */
+void disconnect() {
+    closeConnection();
+    
+    try {
+	    if (currentContext().internalAdmin != void && currentContext().internalAdmin != null) {
+	        currentContext().internalAdmin=null;
+	    }  
+    }catch(e) {
+    	//ignore..
+    }
+    currentContext().internalPrompt = null;
+}
+
+private loadConnectionProperties(String propsFile){
+    Properties p = new Properties();
+    
+    try {
+        p.load(new FileInputStream(propsFile));
+    }catch(e) {
+    }
+    
+    if (p.getProperty("jdbc.url") != null) {
+        auto_jdbc_url = p.getProperty("jdbc.url");
+    }
+
+    if (p.getProperty("admin.url") != null) {
+    	auto_admin_url = p.getProperty("admin.url");
+    }
+
+    if (p.getProperty("user") != null) {
+        auto_user = p.getProperty("user");
+    }
+
+    if (p.getProperty("password") != null) {
+        auto_password = p.getProperty("password");
+    }       
+}
+
+//help methods
+
+/**
+ * List all of the methods currently available.
+ */
+void help() {
+    java.util.List urls = new ArrayList();
+    urls.add(getResource("/scripts/adminapi.bsh"));
+    urls.add(getResource("/scripts/server.bsh"));
+    urls.add(getResource("/scripts/jdbc.bsh"));
+    help(urls);
+}
+
+/**
+ * List the javadoc for method(s) with the specified name.
+ * 
+ * @param methodName
+ *            Name of the method for which to specify javadoc.
+ */
+void help(String methodName) {
+    java.util.List urls = new ArrayList();
+    urls.add(getResource("/scripts/adminapi.bsh"));
+    urls.add(getResource("/scripts/server.bsh"));
+    urls.add(getResource("/scripts/jdbc.bsh"));
+    help(urls, methodName);
+}
+
+int connCount = 0;
+private synchronized String genConnectionName() {
+    connCount++;
+    return connection_prefix+"-"+connCount;
+}
+
+exit(){
+    for (This ctx:allContexts()) {
+        gotoContext(ctx);
+        disconnect();
+    }    
+    
+    if ( bsh.system.shutdownOnExit != false )
+        System.exit(0);        
+}
+
+// Load the properties
+loadConnectionProperties("connection.properties");

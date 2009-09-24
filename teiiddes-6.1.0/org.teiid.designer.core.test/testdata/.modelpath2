@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<modelpath>
-    <modelpathentry kind="prj" path="prj/"/>
-    <modelpathentry exported="true" kind="lib" path="E:/abc.jar"/>
-    <modelpathentry exported="false" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-</modelpath>
