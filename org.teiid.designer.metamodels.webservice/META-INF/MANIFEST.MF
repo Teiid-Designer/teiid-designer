@@ -29,6 +29,7 @@ Require-Bundle: org.eclipse.emf.ecore,
  teiid_embedded_query,
  org.eclipse.emf.mapping,
  org.eclipse.xsd,
- org.eclipse.emf.ecore.xmi
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.core.resources;bundle-version="3.5.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

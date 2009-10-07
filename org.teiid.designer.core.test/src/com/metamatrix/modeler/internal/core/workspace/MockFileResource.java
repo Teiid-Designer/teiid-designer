@@ -1472,6 +1472,26 @@ public class MockFileResource implements IFile {
          */
         public void setHidden( boolean isHidden ) {
         }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.core.resources.IResource#isHidden(int)
+         */
+        @Override
+        public boolean isHidden( int options ) {
+            return false;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.core.resources.IResource#isTeamPrivateMember(int)
+         */
+        @Override
+        public boolean isTeamPrivateMember( int options ) {
+            return false;
+        }
     }
 
     public String getCharset() {
@@ -1617,6 +1637,26 @@ public class MockFileResource implements IFile {
      * @see org.eclipse.core.resources.IResource#setHidden(boolean)
      */
     public void setHidden( boolean isHidden ) {
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IResource#isHidden(int)
+     */
+    @Override
+    public boolean isHidden( int options ) {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IResource#isTeamPrivateMember(int)
+     */
+    @Override
+    public boolean isTeamPrivateMember( int options ) {
+        return false;
     }
 
 }

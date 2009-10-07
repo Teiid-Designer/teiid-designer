@@ -599,4 +599,24 @@ public class FakeIResource implements IResource {
     public void setHidden( boolean isHidden ) {
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IResource#isHidden(int)
+     */
+    @Override
+    public boolean isHidden( int options ) {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IResource#isTeamPrivateMember(int)
+     */
+    @Override
+    public boolean isTeamPrivateMember( int options ) {
+        return false;
+    }
+
 }

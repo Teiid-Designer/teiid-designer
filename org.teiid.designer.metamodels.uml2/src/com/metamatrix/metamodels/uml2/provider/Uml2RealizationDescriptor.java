@@ -108,7 +108,7 @@ public class Uml2RealizationDescriptor extends Uml2DependencyDescriptor {
         r.getSuppliers().add(supplier);
 
         if (r instanceof ComponentRealization) {
-            ((ComponentRealization)r).setRealizingClassifier(supplier);
+            ((ComponentRealization)r).getRealizingClassifiers().add(supplier);
         }
 
         final Package pkg = client.getPackage();

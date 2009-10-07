@@ -7,5 +7,8 @@ Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.teiid.designer.webservice.ui;bundle-version="6.0.0",
  org.junit4;bundle-version="4.3.1",
- teiid_embedded_query;bundle-version="6.0.0"
+ teiid_embedded_query;bundle-version="6.0.0",
+ org.teiid.designer.ui;bundle-version="6.2.0",
+ org.teiid.designer.ui.common;bundle-version="6.2.0",
+ org.eclipse.jface;bundle-version="3.5.0"
 Bundle-Localization: plugin
