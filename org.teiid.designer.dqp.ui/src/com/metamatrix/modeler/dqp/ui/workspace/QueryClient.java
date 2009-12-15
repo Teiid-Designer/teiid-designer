@@ -23,6 +23,7 @@ import com.metamatrix.jdbc.api.Connection;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
+import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.vdb.edit.loader.VDBConstants;
 
 /**
@@ -31,6 +32,7 @@ import com.metamatrix.vdb.edit.loader.VDBConstants;
 public class QueryClient {
 
     private Connection adminConnection;
+    boolean showPlan = false;
 
     protected Connection getAdminConnection() throws SQLException {
         if (this.adminConnection == null) {
@@ -81,8 +83,18 @@ public class QueryClient {
         .append(";version=") //$NON-NLS-1$
         .append(theVersion).append(";XMLFormat=Tree;"); //$NON-NLS-1$
 
-        if (SQLExplorerPlugin.getDefault() != null && SQLExplorerPlugin.getDefault().shouldShowQueryPlan()) {
-            sb.append("sqlOptions").append("=").append("SHOWPLAN;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        if (SQLExplorerPlugin.getDefault() != null ) {
+        	showPlan = false;
+    		UiUtil.runInSwtThread(new Runnable() {
+    			@Override
+    			public void run() {
+    				showPlan = SQLExplorerPlugin.getDefault().shouldShowQueryPlan();
+    			}
+    		}, false);
+    		
+        	if( showPlan) {
+        		sb.append("sqlOptions").append("=").append("SHOWPLAN;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        	}
         }
 
         sb.append("EmbeddedContext").append("=").append("Designer;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
