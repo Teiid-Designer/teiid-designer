@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.vdb.edit;singleton:=true
-Bundle-Version: 6.2.0
+Bundle-Version: 6.3.0
 Bundle-ClassPath: vdbEdit.jar
 Bundle-Activator: com.metamatrix.vdb.edit.VdbEditPlugin
 Bundle-Vendor: %providerName

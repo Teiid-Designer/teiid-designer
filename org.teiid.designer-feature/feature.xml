@@ -9,7 +9,7 @@
 <feature
       id="org.teiid.designer"
       label="%featureName"
-      version="6.2.0.v20090922"
+      version="6.3.0.v20091215"
       provider-name="%providerName"
       image="feature.gif">
 
@@ -29,7 +29,7 @@
       <import feature="org.eclipse.emf" version="2.4.1"/>
       <import feature="org.eclipse.gef" version="3.4.0"/>
       <import feature="org.eclipse.platform" version="3.4.1"/>
-      <import feature="org.eclipse.uml2" version="2.2.0"/>
+      <import feature="org.eclipse.uml2" version="3.0.0"/>
       <import feature="org.eclipse.xsd" version="2.4.0"/>
    </requires>
 

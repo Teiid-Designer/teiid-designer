@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.modelgenerator
-Bundle-Version: 6.2.0
+Bundle-Version: 6.3.0
 Bundle-ClassPath: modelgenerator.jar
 Bundle-Activator: com.metamatrix.modeler.modelgenerator.ModelGeneratorPlugin
 Bundle-Vendor: %providerName
