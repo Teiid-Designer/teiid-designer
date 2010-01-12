@@ -255,7 +255,8 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      * @since 4.0
      */
     public boolean isDebugEnabled( final String context ) {
-        return this.debugger.isDebugEnabled(context);
+        return false;
+        // return this.debugger.isDebugEnabled(context);
     }
 
     /**
@@ -263,7 +264,8 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      * @since 4.0
      */
     public boolean isTraceEnabled( final String context ) {
-        return this.debugger.isTraceEnabled(context);
+        return false;
+        // return this.debugger.isTraceEnabled(context);
     }
 
     /**
@@ -271,7 +273,8 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      * @since 4.0
      */
     public boolean isTraceEnabled( final Class clazz ) {
-        return this.debugger.isTraceEnabled(clazz);
+        return false;
+        // return this.debugger.isTraceEnabled(clazz);
     }
 
     /**
@@ -279,7 +282,8 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      * @since 4.0
      */
     public boolean isTraceEnabled( final Object object ) {
-        return this.debugger.isTraceEnabled(object);
+        return false;
+        // return this.debugger.isTraceEnabled(object);
     }
 
     /**
@@ -632,16 +636,15 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
             SafeRunner.run(wrapper);
         }
     }
-    
+
     /**
-     * Convenience method that adds the specified parameter to a list before calling {@link #getString(String, Object[])}.
+     * Convenience method that adds the specified parameter to a list before calling {@link #getString(String, Object[])}. Insures
+     * proper casting before calling the generalized signature.
      * 
-     * Insures proper casting before calling the generalized signature.
-     *
      * @since 2.1
      */
-    public String getString(final String key,
-                            final Object parameter) {
+    public String getString( final String key,
+                             final Object parameter ) {
         if (parameter != null) {
             if (parameter.getClass().isArray()) {
                 return getString(key, (Object[])parameter);
