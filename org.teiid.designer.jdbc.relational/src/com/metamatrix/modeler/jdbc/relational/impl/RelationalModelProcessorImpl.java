@@ -544,7 +544,9 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         final IProgressMonitor monitor = context.getProgressMonitor();
         final EObject[] externalReferences = getDatatypeManager().getAllDatatypes();
         // Move objects from the source when "added" to the result ...
-        ModelEditorImpl.setContainer((ContainerImpl)context.getResource().getResourceSet());
+        EmfResource eResource = (EmfResource)context.getResource();
+        ContainerImpl ctnr = (ContainerImpl)eResource.getContainer();
+        ModelEditorImpl.setContainer(ctnr);
         final MergeProcessor mergeProc = ModelerComparePlugin.createMergeProcessor(diffProc,
                                                                                    externalReferences,
                                                                                    this.moveRatherThanCopyAdds);

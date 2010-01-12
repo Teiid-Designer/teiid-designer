@@ -40,6 +40,7 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
 import com.metamatrix.modeler.core.workspace.Openable;
 import com.metamatrix.modeler.internal.core.container.DefaultContainerResourceSetFinder;
+import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.resource.EmfResourceSet;
 import com.metamatrix.modeler.internal.core.util.OverflowingLRUCache;
 
@@ -123,8 +124,8 @@ public class ModelBufferManager implements ModelBufferFactory {
                 Container container = null;
                 if ( resourceSet instanceof EmfResourceSet ) {
                     container = ((EmfResourceSet)resourceSet).getContainer();
-                } else if ( resourceSet instanceof Container ) {
-                    container = (Container)resourceSet;
+                } else if ( resource instanceof EmfResource ) {
+                    container = ((EmfResource)resource).getContainer();
                 }
                 if ( container == null || container != ModelerCore.getModelContainer() ) {
                     // It isn't, so don't bother lookup up a ModelResource

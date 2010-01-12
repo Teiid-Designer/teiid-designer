@@ -968,8 +968,10 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
     public Container getContainer() {
         if (this.container == null) {
             final ResourceSet resourceSet = super.resourceSet;
-            // removed assertion that this.resourceSet could not be null. org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#ResourcesEList
-            // now overrides contains(Object) and it counts on a null being returned if container has not been set. See TEIIDDES-231
+            if (resourceSet == null) {
+                final String msg = ModelerCore.Util.getString("MtkXmiResourceImpl.The_ResourceSet_reference_may_not_be_null_4"); //$NON-NLS-1$
+                throw new AssertionError(msg);
+            }
             if (resourceSet instanceof EmfResourceSet) {
                 this.container = ((EmfResourceSet)resourceSet).getContainer();
                 if (this.container == null) {
@@ -1019,15 +1021,6 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
             }
 
         };
-    }
-
-    /**
-     * @see org.eclipse.emf.ecore.resource.Resource#getResourceSet()
-     * @since 4.2
-     */
-    @Override
-    public ResourceSet getResourceSet() {
-        return getContainer();
     }
 
     /**

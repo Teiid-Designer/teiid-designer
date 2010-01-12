@@ -26,11 +26,11 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.emf" version="2.4.1"/>
-      <import feature="org.eclipse.gef" version="3.4.0"/>
-      <import feature="org.eclipse.platform" version="3.4.1"/>
+      <import feature="org.eclipse.emf" version="2.5.0"/>
+      <import feature="org.eclipse.gef" version="3.5.1"/>
+      <import feature="org.eclipse.platform" version="3.5.0"/>
       <import feature="org.eclipse.uml2" version="3.0.0"/>
-      <import feature="org.eclipse.xsd" version="2.4.0"/>
+      <import feature="org.eclipse.xsd" version="2.5.0"/>
    </requires>
 
    <plugin
