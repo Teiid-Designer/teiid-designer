@@ -18,4 +18,5 @@ Require-Bundle: org.teiid.designer.jdbc.relational;bundle-version="6.0.0",
  teiid_embedded_query;bundle-version="6.0.0",
  org.teiid.core.designer;bundle-version="6.0.0",
  org.teiid.designer.metamodels.relational;bundle-version="6.0.0",
- org.eclipse.emf.ecore;bundle-version="2.4.1"
+ org.eclipse.emf.ecore;bundle-version="2.4.1",
+ org.junit4;bundle-version="4.5.0"

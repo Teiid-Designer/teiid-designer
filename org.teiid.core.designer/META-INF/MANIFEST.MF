@@ -19,7 +19,6 @@ Export-Package: com.metamatrix.core,
  com.metamatrix.core.util,
  com.metamatrix.modeler.core
 Require-Bundle: org.eclipse.core.runtime,
- teiid_embedded_query,
- org.junit4;visibility:=reexport
+ teiid_embedded_query
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -15,7 +15,8 @@ Require-Bundle: org.teiid.designer.dqp;bundle-version="6.0.0",
  org.eclipse.emf.ecore;bundle-version="2.4.1",
  org.teiid.designer.core;bundle-version="6.0.0",
  org.teiid.designer.jdbc;bundle-version="6.0.0",
- org.teiid.core.designer;bundle-version="6.0.0"
+ org.teiid.core.designer;bundle-version="6.0.0",
+ org.junit4;bundle-version="4.5.0"
 Export-Package: com.metamatrix.modeler.dqp,
  com.metamatrix.modeler.dqp.internal.config,
  com.metamatrix.modeler.dqp.internal.execution,
