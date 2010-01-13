@@ -26,7 +26,6 @@ import com.metamatrix.query.internal.ui.builder.model.CompositeLanguageObjectEdi
 import com.metamatrix.query.internal.ui.builder.model.CriteriaEditorModel;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
-import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
 import com.metamatrix.query.sql.lang.Criteria;
 import com.metamatrix.query.ui.builder.AbstractCompositeLanguageObjectEditor;
 import com.metamatrix.query.ui.builder.ILanguageObjectEditor;
@@ -69,10 +68,6 @@ public class CriteriaEditor extends AbstractCompositeLanguageObjectEditor {
                            CriteriaEditorModel theModel ) {
         super(theParent, Criteria.class, theModel);
 
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "constructor"); //$NON-NLS-1$
-        }
-
         model = theModel;
         controller = new ViewController();
         model.addModelListener(controller);
@@ -82,10 +77,6 @@ public class CriteriaEditor extends AbstractCompositeLanguageObjectEditor {
 
         // start the controller
         controller.initialize();
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "constructor"); //$NON-NLS-1$
-        }
     }
 
     /**
@@ -93,10 +84,6 @@ public class CriteriaEditor extends AbstractCompositeLanguageObjectEditor {
      */
     @Override
     protected List createEditors( Composite theParent ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "createEditors"); //$NON-NLS-1$
-        }
-
         typeEditorMap = new HashMap();
 
         leftControls = new HashMap();
@@ -162,18 +149,10 @@ public class CriteriaEditor extends AbstractCompositeLanguageObjectEditor {
             }
         }
 
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "createEditors"); //$NON-NLS-1$
-        }
-
         return Arrays.asList(criteriaEditors);
     }
 
     void displayModelChangeUi() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "displayCriteriaTypeUi"); //$NON-NLS-1$
-        }
-
         Class criteriaType = model.getCurrentModel().getModelType();
 
         // change left panel if necessary
@@ -193,23 +172,12 @@ public class CriteriaEditor extends AbstractCompositeLanguageObjectEditor {
         }
 
         setCurrentEditor((ILanguageObjectEditor)typeEditorMap.get(criteriaType));
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "displayCriteriaTypeUi"); //$NON-NLS-1$
-        }
     }
 
     void displayOperatorUi() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "displayOperatorUi"); //$NON-NLS-1$
-        }
 
         String operator = model.getOperator();
         cbxOperator.setText(operator);
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "displayOperatorUi:operator=" + operator); //$NON-NLS-1$
-        }
     }
 
     /**
@@ -237,16 +205,8 @@ public class CriteriaEditor extends AbstractCompositeLanguageObjectEditor {
     }
 
     void handleOperatorSelected() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "handleOperatorSelected()"); //$NON-NLS-1$
-        }
-
         model.setOperator(cbxOperator.getText());
         cbxOperator.setToolTipText(getCurrentEditor().getToolTipText());
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "handleOperatorSelected()"); //$NON-NLS-1$
-        }
     }
 
     @Override

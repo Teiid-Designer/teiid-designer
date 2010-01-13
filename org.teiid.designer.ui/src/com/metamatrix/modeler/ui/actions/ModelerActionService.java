@@ -180,19 +180,7 @@ public final class ModelerActionService extends AbstractActionService
      * @param listener the listener being added
      */
     public void addNotifyChangedListener( INotifyChangedListener theListener ) {
-        if (Util.isTraceEnabled(this)) {
-            Util.printEntered(this, new StringBuffer().append("addNotifyChangedListener(INotifyChangedListener):Listener=") //$NON-NLS-1$
-            .append(theListener).append(", listener identity=") //$NON-NLS-1$
-            .append(System.identityHashCode(theListener)).toString());
-        }
-
         ModelUtilities.addNotifyChangedListener(theListener);
-
-        if (Util.isTraceEnabled(this)) {
-            Util.printExited(this, new StringBuffer().append("addNotifyChangedListener(INotifyChangedListener):Listener=") //$NON-NLS-1$
-            .append(theListener).append(", listener identity=") //$NON-NLS-1$
-            .append(System.identityHashCode(theListener)).toString());
-        }
     }
 
     /**
@@ -240,14 +228,6 @@ public final class ModelerActionService extends AbstractActionService
     public void contributeToContextMenu( IMenuManager theMenuMgr,
                                          GlobalActionsMap theActionsMap,
                                          ISelection theSelection ) {
-        if (utils.isTraceEnabled(this)) {
-            utils.print(this,
-                        new StringBuffer().append("contributeToContextMenu(theMenuMgr, ModelerGlobalActionsMap, ISelection):") //$NON-NLS-1$
-                        .append("Menu id") //$NON-NLS-1$
-                        .append(theMenuMgr.getId()).append(", selected obj=") //$NON-NLS-1$
-                        .append(SelectionUtilities.getSelectedObject(theSelection)).toString());
-        }
-
         // if current page has global actions put them in here
         // if not, use default action
         GlobalActionsMap actionsMap = (theActionsMap == null) ? new ModelerGlobalActionsMap() : theActionsMap;
@@ -649,15 +629,6 @@ public final class ModelerActionService extends AbstractActionService
      */
     private boolean failedInsertChildPreconditions( ISelection theSelection ) {
         boolean result = (theSelection == null) || theSelection.isEmpty() || SelectionUtilities.isMultiSelection(theSelection);
-        if (utils.isTraceEnabled(this)) {
-            utils.print(this,
-                        new StringBuffer().append("failedInsertChildPreconditions(ISelection):Null selection=") //$NON-NLS-1$
-                        .append((theSelection == null)).append(", empty selection=") //$NON-NLS-1$
-                        .append(theSelection.isEmpty()).append(", multi-selection=") //$NON-NLS-1$
-                        .append(SelectionUtilities.isMultiSelection(theSelection)).append(", selected obj=" + SelectionUtilities.getSelectedObject(theSelection)) //$NON-NLS-1$
-                        .toString());
-        }
-
         if (!result) {
             Object obj = SelectionUtilities.getSelectedObject(theSelection);
 
@@ -665,20 +636,6 @@ public final class ModelerActionService extends AbstractActionService
             if (obj instanceof ItemProvider) {
                 obj = ((ItemProvider)obj).getParent();
             }
-
-            if (utils.isTraceEnabled(this)) {
-                StringBuffer msg = new StringBuffer().append("failedInsertChildPreconditions(ISelection):Is Resource=") //$NON-NLS-1$
-                .append((obj instanceof IResource)).append(", is EObject=") //$NON-NLS-1$
-                .append((obj instanceof EObject)).append(", is IResource=") //$NON-NLS-1$
-                .append((obj instanceof IResource)).append(", selected obj=") //$NON-NLS-1$
-                .append(obj);
-                if (obj instanceof IResource) {
-                    msg.append("is model=").append(ModelUtilities.isModelFile((IResource)obj)); //$NON-NLS-1$
-                }
-
-                utils.print(this, msg.toString());
-            }
-
             if ((obj instanceof IResource) && ModelUtilities.isModelFile((IResource)obj)) {
                 result = false;
             } else if (obj instanceof Diagram) {
@@ -711,14 +668,6 @@ public final class ModelerActionService extends AbstractActionService
      */
     private boolean failedInsertSiblingPreconditions( ISelection theSelection ) {
         boolean failed = false;
-        if (utils.isTraceEnabled(this)) {
-            utils.print(this,
-                        new StringBuffer().append("failedInsertSiblingPreconditions(ISelection):Null selection=") //$NON-NLS-1$
-                        .append((theSelection == null)).append(", empty selection=") //$NON-NLS-1$
-                        .append(theSelection.isEmpty()).append(", multi-selection=") //$NON-NLS-1$
-                        .append(SelectionUtilities.isMultiSelection(theSelection)).append(", selected EObj=" + SelectionUtilities.getSelectedEObject(theSelection)) //$NON-NLS-1$
-                        .toString());
-        }
         failed = ((theSelection == null) || theSelection.isEmpty() || SelectionUtilities.isMultiSelection(theSelection) || (SelectionUtilities.getSelectedEObject(theSelection) == null));
 
         if (!failed) {
@@ -757,34 +706,8 @@ public final class ModelerActionService extends AbstractActionService
      */
     private boolean failedCreateAssociationPreconditions( ISelection theSelection ) {
         boolean result = (theSelection == null) || theSelection.isEmpty() || SelectionUtilities.isSingleSelection(theSelection);
-        if (utils.isTraceEnabled(this)) {
-            utils.print(this, new StringBuffer().append("failedCreateAssociationPreconditions(ISelection):Null selection=") //$NON-NLS-1$
-            .append((theSelection == null)).append(", empty selection=") //$NON-NLS-1$
-            .append(theSelection.isEmpty()).append(", multi-selection=") //$NON-NLS-1$
-            .append(SelectionUtilities.isMultiSelection(theSelection)).toString());
-        }
-
         if (!result) {
             List objects = SelectionUtilities.getSelectedObjects(theSelection);
-
-            if (utils.isTraceEnabled(this)) {
-                StringBuffer msg = new StringBuffer();
-                for (Iterator iter = objects.iterator(); iter.hasNext();) {
-                    Object obj = iter.next();
-                    msg.append("failedCreateAssociationPreconditions(ISelection): selection = " + obj.toString()) //$NON-NLS-1$
-                    .append("Is Resource=") //$NON-NLS-1$
-                    .append((obj instanceof IResource)).append(", is EObject=") //$NON-NLS-1$
-                    .append((obj instanceof EObject)).append(", is IResource=") //$NON-NLS-1$
-                    .append((obj instanceof IResource)).append(", selected obj=") //$NON-NLS-1$
-                    .append(obj);
-                    if (obj instanceof IResource) {
-                        msg.append("is model=").append(ModelUtilities.isModelFile((IResource)obj)); //$NON-NLS-1$
-                    }
-                }
-
-                utils.print(this, msg.toString());
-            }
-
             for (Iterator iter = objects.iterator(); iter.hasNext();) {
                 Object obj = iter.next();
                 if ((obj instanceof IResource) && !ModelUtilities.isModelFile((IResource)obj)) {
@@ -821,32 +744,8 @@ public final class ModelerActionService extends AbstractActionService
 
         // fail if null, empty or multi
         boolean result = (theSelection == null) || theSelection.isEmpty() || SelectionUtilities.isMultiSelection(theSelection);
-
-        if (utils.isTraceEnabled(this)) {
-            utils.print(this,
-                        new StringBuffer().append("failedRefactorPreconditions(ISelection):Null selection=") //$NON-NLS-1$
-                        .append((theSelection == null)).append(", empty selection=") //$NON-NLS-1$
-                        .append(theSelection.isEmpty()).append(", multi-selection=") //$NON-NLS-1$
-                        .append(SelectionUtilities.isMultiSelection(theSelection)).append(", selected obj=" + SelectionUtilities.getSelectedObject(theSelection)) //$NON-NLS-1$
-                        .toString());
-        }
-
         if (!result) {
             Object obj = SelectionUtilities.getSelectedObject(theSelection);
-
-            if (utils.isTraceEnabled(this)) {
-                StringBuffer msg = new StringBuffer().append("failedRefactorPreconditions(ISelection):Is Resource=") //$NON-NLS-1$
-                .append((obj instanceof IResource)).append(", is EObject=") //$NON-NLS-1$
-                .append((obj instanceof EObject)).append(", is IResource=") //$NON-NLS-1$
-                .append((obj instanceof IResource)).append(", selected obj=") //$NON-NLS-1$
-                .append(obj);
-                if (obj instanceof IResource) {
-                    msg.append("is model=").append(ModelUtilities.isModelFile((IResource)obj)); //$NON-NLS-1$
-                }
-
-                utils.print(this, msg.toString());
-            }
-
             // fail if NOT an IResource
             if (!(obj instanceof IResource)) {
                 result = true;
@@ -861,12 +760,6 @@ public final class ModelerActionService extends AbstractActionService
      */
     @Override
     public IAction getAction( String theActionId ) throws CoreException {
-        if (utils.isTraceEnabled(this)) {
-            utils.print(this, new StringBuffer().append("getAction(String):Before action id=") //$NON-NLS-1$
-            .append(theActionId).append(", after action id=") //$NON-NLS-1$
-            .append(getActionId(theActionId)).toString());
-        }
-
         // registering actions to receive events is done by the getAction(Class) method
         return super.getAction(getActionId(theActionId));
     }
@@ -880,12 +773,6 @@ public final class ModelerActionService extends AbstractActionService
      * @return the action identifier used by the action service
      */
     public String getActionId( String theKey ) {
-        if (utils.isTraceEnabled(this)) {
-            utils.print(this, new StringBuffer().append("getActionId(String):Key=") //$NON-NLS-1$
-            .append(theKey).append(", is Eclipse action=") //$NON-NLS-1$
-            .append(GlobalActionsMap.isEclipseGlobalAction(theKey)).toString());
-        }
-
         String result = theKey;
 
         if (GlobalActionsMap.isEclipseGlobalAction(theKey)) {
@@ -1212,7 +1099,7 @@ public final class ModelerActionService extends AbstractActionService
      * @since 5.0
      */
     public MenuManager getModelingActionMenu( ISelection theSelection ) {
-        MenuManager menu = new MenuManager(MODELING_LABEL, ModelerActionBarIdManager.getModelingMenuId()); 
+        MenuManager menu = new MenuManager(MODELING_LABEL, ModelerActionBarIdManager.getModelingMenuId());
 
         MenuManager mosaMenu = ModelerSpecialActionManager.getModeObjectSpecialActionMenu(theSelection);
         if (mosaMenu != null && mosaMenu.getItems().length > 0) {
@@ -1428,10 +1315,6 @@ public final class ModelerActionService extends AbstractActionService
      * of the default eclipse actions.
      */
     public void initializeGlobalActions() {
-        if (Util.isTraceEnabled(this)) {
-            Util.printEntered(this, "initializeGlobalActions()"); //$NON-NLS-1$
-        }
-
         // need to put the real actions into the map as the new constructed map only
         // contains identifiers which stand for "use default" action
         defaultActionsMap = new ModelerGlobalActionsMap();
@@ -1446,13 +1329,6 @@ public final class ModelerActionService extends AbstractActionService
                 // also the call to getAction(String) registers the action to receive appropriate events
                 IAction action = getAction(actionId);
                 defaultActionsMap.put(actionId, action);
-
-                if (utils.isTraceEnabled(this)) {
-                    utils.print(this, new StringBuffer().append("initializeGlobalActions():Action id=") //$NON-NLS-1$
-                    .append(action.getId()).append(", action class=") //$NON-NLS-1$
-                    .append(action.getClass().getName()) 
-                    .toString());
-                }
             } catch (CoreException e) {
                 String message = UiConstants.Util.getString(PREFIX + "getActionErrorMessage", actionId); //$NON-NLS-1$
                 UiConstants.Util.log(IStatus.ERROR, e, message);
@@ -1461,11 +1337,6 @@ public final class ModelerActionService extends AbstractActionService
 
         // get global actions installed in edit menu
         contributeToEditMenu();
-
-        if (Util.isTraceEnabled(this)) {
-            Util.printExited(this, new StringBuffer().append("initializeGlobalActions():Global action count=") //$NON-NLS-1$
-            .append(defaultActionsMap.size()).toString());
-        }
     }
 
     /**
@@ -1473,23 +1344,12 @@ public final class ModelerActionService extends AbstractActionService
      */
     @Override
     protected void registerEventHandler( IAction theAction ) {
-        if (Util.isTraceEnabled(this)) {
-            Util.printEntered(this, new StringBuffer().append("registerEventHandler(IAction):Action id=") //$NON-NLS-1$
-            .append(theAction.getId()).append(", action identity=") //$NON-NLS-1$
-            .append(System.identityHashCode(theAction)).append(", is INotifyChangedListener=") //$NON-NLS-1$
-            .append(theAction instanceof INotifyChangedListener).toString());
-        }
-
         // first let super register
         super.registerEventHandler(theAction);
 
         // EObject notifier events
         if (theAction instanceof INotifyChangedListener) {
             addNotifyChangedListener((INotifyChangedListener)theAction);
-        }
-
-        if (Util.isTraceEnabled(this)) {
-            Util.printExited(this, "registerEventHandler(IAction)"); //$NON-NLS-1$
         }
     }
 
@@ -1514,19 +1374,7 @@ public final class ModelerActionService extends AbstractActionService
      * @param listener the listener being removed
      */
     public void removeNotifyChangedListener( INotifyChangedListener theListener ) {
-        if (Util.isTraceEnabled(this)) {
-            Util.printEntered(this, new StringBuffer().append("removeNotifyChangedListener(INotifyChangedListener):Listener=") //$NON-NLS-1$
-            .append(theListener).append(", listener identity=") //$NON-NLS-1$
-            .append(System.identityHashCode(theListener)).toString());
-        }
-
         ModelUtilities.removeNotifyChangedListener(theListener);
-
-        if (Util.isTraceEnabled(this)) {
-            Util.printExited(this, new StringBuffer().append("removeNotifyChangedListener(INotifyChangedListener):Listener=") //$NON-NLS-1$
-            .append(theListener).append(", listener identity=") //$NON-NLS-1$
-            .append(System.identityHashCode(theListener)).toString());
-        }
     }
 
     /**
@@ -1534,23 +1382,12 @@ public final class ModelerActionService extends AbstractActionService
      */
     @Override
     protected void unregisterEventHandler( IAction theAction ) {
-        if (Util.isTraceEnabled(this)) {
-            Util.printEntered(this, new StringBuffer().append("unregisterEventHandler(IAction):Action id=") //$NON-NLS-1$
-            .append(theAction.getId()).append(", action identity=") //$NON-NLS-1$
-            .append(System.identityHashCode(theAction)).append(", is INotifyChangedListener=") //$NON-NLS-1$
-            .append(theAction instanceof INotifyChangedListener).toString());
-        }
-
         // first let super unregister
         super.unregisterEventHandler(theAction);
 
         // unregister EObject notifier events
         if (theAction instanceof INotifyChangedListener) {
             removeNotifyChangedListener((INotifyChangedListener)theAction);
-        }
-
-        if (Util.isTraceEnabled(this)) {
-            Util.printExited(this, "unregisterEventHandler(IAction)"); //$NON-NLS-1$
         }
     }
 

@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.mapping.ui.part;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.gef.EditPart;
-
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.gef.EditPart;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
@@ -33,7 +31,6 @@ import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
 import com.metamatrix.modeler.diagram.ui.part.LabelEditPart;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
-import com.metamatrix.modeler.mapping.ui.DebugConstants;
 import com.metamatrix.modeler.mapping.ui.PluginConstants;
 import com.metamatrix.modeler.mapping.ui.UiConstants;
 import com.metamatrix.modeler.mapping.ui.connection.EnumeratedTypeLink;
@@ -60,150 +57,143 @@ public class MappingDiagramPartFactory extends AbstractDiagramEditPartFactory im
     private DrawingPartFactory drawingPartFactory;
     private DiagramFigureFactory figureFactory;
     private static final String diagramTypeId = PluginConstants.MAPPING_DIAGRAM_TYPE_ID;
+
     /**
      * @see org.eclipse.gef.EditPartFactory#createEditPart(EditPart, Object)
-    **/
+     **/
     @Override
-    public EditPart createEditPart(EditPart iContext, Object iModel) {
+    public EditPart createEditPart( EditPart iContext,
+                                    Object iModel ) {
         EditPart editPart = null;
 
-        if( drawingPartFactory == null )
-            drawingPartFactory = new DrawingPartFactory();
-            
-        if( figureFactory == null )
-            figureFactory = new MappingDiagramFigureFactory();
+        if (drawingPartFactory == null) drawingPartFactory = new DrawingPartFactory();
 
-        if( iModel instanceof DrawingModelNode ) {
+        if (figureFactory == null) figureFactory = new MappingDiagramFigureFactory();
+
+        if (iModel instanceof DrawingModelNode) {
             editPart = drawingPartFactory.createEditPart(iContext, iModel);
-        } else if( iModel instanceof MappingDiagramNode ) {
+        } else if (iModel instanceof MappingDiagramNode) {
             editPart = new MappingDiagramEditPart();
             ((AbstractDiagramEditPart)editPart).setFigureFactory(figureFactory);
             Object transform = getTransformation(iModel);
-            if( transform != null ) {
+            if (transform != null) {
                 ((MappingDiagramEditPart)editPart).setDropHelper(new MappingTransformationDropEditPartHelper(transform));
             }
-        } else if( iModel instanceof SummaryExtentNode ) {
+        } else if (iModel instanceof SummaryExtentNode) {
             editPart = new SummaryExtentEditPart(diagramTypeId);
             ((AbstractDiagramEditPart)editPart).setFigureFactory(figureFactory);
             ((DiagramEditPart)editPart).setResizable(false);
-        } else if( iModel instanceof MappingExtentNode || iModel instanceof StagingTableExtentNode) {
+        } else if (iModel instanceof MappingExtentNode || iModel instanceof StagingTableExtentNode) {
             editPart = new MappingExtentEditPart(diagramTypeId);
             ((AbstractDiagramEditPart)editPart).setFigureFactory(figureFactory);
             ((DiagramEditPart)editPart).setResizable(false);
-        } else if( iModel instanceof TransformationNode ) {
+        } else if (iModel instanceof TransformationNode) {
             editPart = new TransformationEditPart(diagramTypeId);
             ((AbstractDiagramEditPart)editPart).setFigureFactory(figureFactory);
             ((DiagramEditPart)editPart).setResizable(false);
             Object transform = getTransformation(iModel);
-            if( transform != null ) {
+            if (transform != null) {
                 ((TransformationEditPart)editPart).setDropHelper(new MappingTransformationDropEditPartHelper(transform));
             }
-        } else if( iModel instanceof LabelModelNode ) {
+        } else if (iModel instanceof LabelModelNode) {
             editPart = new LabelEditPart();
             ((DiagramEditPart)editPart).setResizable(false);
-        } else  if( iModel instanceof TransformationLink ) {
+        } else if (iModel instanceof TransformationLink) {
             editPart = getTransformationConnectionEditPart(iModel);
-        } else  if( iModel instanceof MappingLink ) {
+        } else if (iModel instanceof MappingLink) {
             editPart = getConnectionEditPart(iModel);
         } else if (iModel instanceof EnumeratedTypeLink) {
             editPart = new EnumeratedTypeLinkEditPart();
         } else {
             // Here's where we get the notation manager and tell it to create an EditPart
-            // for this modelObject.  So it'll come back in whatever "Notation" it desires.
+            // for this modelObject. So it'll come back in whatever "Notation" it desires.
             NotationPartGenerator generator = DiagramUiPlugin.getDiagramNotationManager().getEditPartGenerator(getNotationId());
-            if( generator != null ) {
+            if (generator != null) {
                 editPart = generator.createEditPart(iContext, iModel, diagramTypeId);
-                if( editPart instanceof UmlClassifierEditPart ) {
-                    if( editPart instanceof UmlClassifierEditPart ) {
+                if (editPart instanceof UmlClassifierEditPart) {
+                    if (editPart instanceof UmlClassifierEditPart) {
                         Object transform = getTransformation(iModel);
-                        if( transform != null ) {
+                        if (transform != null) {
                             ((UmlClassifierEditPart)editPart).setDropHelper(new MappingTransformationDropEditPartHelper(transform));
                         }
                     }
                     // Check to see if it's a Staging table, then set the hideLocation to TRUE
                     EObject eObj = ((DiagramModelNode)iModel).getModelObject();
-                    if( MappingDiagramUtil.isMappingSqlTable(eObj))
-                        ((DiagramModelNode)iModel).setHideLocation(true);
-                                        
+                    if (MappingDiagramUtil.isMappingSqlTable(eObj)) ((DiagramModelNode)iModel).setHideLocation(true);
+
                 }
             } else {
-                ModelerCore.Util.log( IStatus.ERROR, Util.getString(DiagramUiConstants.Errors.PART_GENERATOR_FAILURE));
+                ModelerCore.Util.log(IStatus.ERROR, Util.getString(DiagramUiConstants.Errors.PART_GENERATOR_FAILURE));
             }
         }
-        
+
         if (editPart != null) {
-            if( editPart instanceof NodeConnectionEditPart ) {
+            if (editPart instanceof NodeConnectionEditPart) {
                 editPart.setModel(iModel);
                 ((NodeConnectionEditPart)editPart).setSourceAndTarget(iContext);
-            } else if( editPart instanceof DiagramEditPart ){
+            } else if (editPart instanceof DiagramEditPart) {
                 editPart.setModel(iModel);
-                ((DiagramEditPart)editPart).setNotationId( getNotationId());
+                ((DiagramEditPart)editPart).setNotationId(getNotationId());
                 ((DiagramEditPart)editPart).setSelectionHandler(getSelectionHandler());
                 ((DiagramEditPart)editPart).setDiagramTypeId(diagramTypeId);
             }
-            
-            if( UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_EDIT_PARTS)) {  
-                String message = "Added Edit Part = " + editPart; //$NON-NLS-1$
-                UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_EDIT_PARTS, message);
-            }
         } else {
-            ModelerCore.Util.log( IStatus.ERROR, Util.getString(DiagramUiConstants.Errors.EDIT_PART_FAILURE));
+            ModelerCore.Util.log(IStatus.ERROR, Util.getString(DiagramUiConstants.Errors.EDIT_PART_FAILURE));
         }
-        
-        if( editPart instanceof DiagramEditPart ) {
+
+        if (editPart instanceof DiagramEditPart) {
             ((DiagramEditPart)editPart).setUnderConstruction(true);
         }
         return editPart;
     }
-    
+
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.part.DiagramEditPartFactory#getConnectionEditPart()
      */
-    public NodeConnectionEditPart getConnectionEditPart(Object iModel) {
+    public NodeConnectionEditPart getConnectionEditPart( Object iModel ) {
         return new MappingLinkEditPart();
     }
 
-    public NodeConnectionEditPart getTransformationConnectionEditPart(Object iModel) {
+    public NodeConnectionEditPart getTransformationConnectionEditPart( Object iModel ) {
         return new TransformationLinkEditPart();
     }
-    
+
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.part.DiagramEditPartFactory#getAnchorManager(com.metamatrix.modeler.diagram.ui.part.DiagramEditPart)
      */
-    public AnchorManager getAnchorManager(DiagramEditPart editPart) {
-        if( editPart instanceof UmlClassifierEditPart ) {
+    public AnchorManager getAnchorManager( DiagramEditPart editPart ) {
+        if (editPart instanceof UmlClassifierEditPart) {
             return new MappingClassAnchorManager(editPart);
-        } else if( editPart instanceof MappingExtentEditPart ) {
+        } else if (editPart instanceof MappingExtentEditPart) {
             return new MappingExtentAnchorManager(editPart);
-        } else if( editPart instanceof TransformationEditPart ) {
+        } else if (editPart instanceof TransformationEditPart) {
             return new ChopBoxAnchorManager(editPart);
         } else {
             return new TransformationAnchorManager(editPart);
         }
     }
-    private Object getTransformation(Object iModel) {
-        if( iModel instanceof MappingDiagramNode ) {
+
+    private Object getTransformation( Object iModel ) {
+        if (iModel instanceof MappingDiagramNode) {
             Diagram diagram = (Diagram)((MappingDiagramNode)iModel).getModelObject();
-            if( diagram != null )
-                return TransformationSourceManager.getTransformationFromDiagram(diagram);
-        } else if( iModel instanceof TransformationNode ) {
+            if (diagram != null) return TransformationSourceManager.getTransformationFromDiagram(diagram);
+        } else if (iModel instanceof TransformationNode) {
             return ((TransformationNode)iModel).getModelObject();
-        } else if( iModel instanceof UmlClassifierNode ) {
+        } else if (iModel instanceof UmlClassifierNode) {
             // check to see if it's the "Target"
             DiagramModelNode parentClassifierNode = DiagramUiUtilities.getClassifierParentNode((DiagramModelNode)iModel);
-            if( parentClassifierNode != null ) {
+            if (parentClassifierNode != null) {
                 Object thisTransform = null;
-                if(TransformationHelper.isValidSqlTransformationTarget(parentClassifierNode.getModelObject())) {
+                if (TransformationHelper.isValidSqlTransformationTarget(parentClassifierNode.getModelObject())) {
                     thisTransform = TransformationHelper.getTransformationMappingRoot(parentClassifierNode.getModelObject());
-                    if( thisTransform != null ) {
+                    if (thisTransform != null) {
                         // Now we get the parent (DiagramEditPart)
                         MappingDiagramNode tdep = (MappingDiagramNode)parentClassifierNode.getParent();
                         Diagram diagram = (Diagram)tdep.getModelObject();
-                        if( diagram != null ) {
+                        if (diagram != null) {
                             Object diagramTransform = TransformationSourceManager.getTransformationFromDiagram(diagram);
-                            if( diagramTransform != null && diagramTransform.equals(thisTransform))
-                                return thisTransform;
-}
+                            if (diagramTransform != null && diagramTransform.equals(thisTransform)) return thisTransform;
+                        }
                     }
                 }
                 // Now we check for is Virtual?

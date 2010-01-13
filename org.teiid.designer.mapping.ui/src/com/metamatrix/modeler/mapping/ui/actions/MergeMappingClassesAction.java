@@ -22,7 +22,6 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.undo.ModelerUndoManager;
-import com.metamatrix.modeler.mapping.ui.DebugConstants;
 import com.metamatrix.modeler.mapping.ui.UiConstants;
 import com.metamatrix.modeler.mapping.ui.UiPlugin;
 import com.metamatrix.modeler.mapping.ui.diagram.MappingDiagramUtil;
@@ -43,11 +42,8 @@ public class MergeMappingClassesAction extends MappingAction {
     @Override
     public void selectionChanged( IWorkbenchPart thePart,
                                   ISelection theSelection ) {
-        UiConstants.Util.start(ACTION_DESCRIPTION, DebugConstants.METRICS_MAPPING_ACTION_SELECTION);
         super.selectionChanged(thePart, theSelection);
-
         determineEnablement();
-        UiConstants.Util.stop(ACTION_DESCRIPTION, DebugConstants.METRICS_MAPPING_ACTION_SELECTION);
     }
 
     /**

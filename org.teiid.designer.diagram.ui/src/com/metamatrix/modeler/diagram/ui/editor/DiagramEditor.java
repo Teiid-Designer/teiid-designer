@@ -76,7 +76,6 @@ import org.eclipse.ui.ide.IGotoMarker;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.transaction.SourcedNotification;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
@@ -97,7 +96,6 @@ import com.metamatrix.modeler.diagram.ui.part.DiagramEditPartFactory;
 import com.metamatrix.modeler.diagram.ui.util.DiagramEntityManager;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.diagram.ui.DebugConstants;
 import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.internal.diagram.ui.editor.DiagramActionContributor;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
@@ -117,7 +115,6 @@ import com.metamatrix.modeler.ui.editors.ModelEditorPageOutline;
 import com.metamatrix.modeler.ui.editors.NavigationMarker;
 import com.metamatrix.modeler.ui.event.ModelResourceEvent;
 import com.metamatrix.ui.actions.AbstractActionService;
-import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -464,71 +461,44 @@ public class DiagramEditor extends GraphicalEditor
          *   retrieve it and then:
          *          getSelectionHandler().select( oSelectedObject );
          */
-        //        System.out.println("\n[DiagramEditor.gotoMarker] TOP, iMarker: " + iMarker ); //$NON-NLS-1$
-        if (UiConstants.Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NAVIGATION)) {
-            UiConstants.Util.print(com.metamatrix.modeler.internal.ui.DebugConstants.NAVIGATION,
-                                   THIS_CLASS + ".gotoMarker();  iMarker: " + iMarker); //$NON-NLS-1$
-        }
-
         String sMarkerType = iMarker.getAttribute(Navigation.MARKER_TYPE, Navigation.UNKNOWN);
 
-        try {
+        if (sMarkerType.equals(Navigation.NAVIGATION)) {
 
-            if (sMarkerType.equals(Navigation.NAVIGATION)) {
+            // close the createMarker feature during this operation:
+            bOkToCreateMarkers = false;
 
-                // close the createMarker feature during this operation:
-                bOkToCreateMarkers = false;
+            Object oInput = MarkerUtilities.getMarkerAttribute(iMarker, Navigation.CURRENT_INPUT); // iMarker.getAttribute(
+            if (oInput != null) {
+                if (canOpenContext(oInput)) {
+                    openContext(oInput);
 
-                Object oInput = MarkerUtilities.getMarkerAttribute(iMarker, Navigation.CURRENT_INPUT); // iMarker.getAttribute(
-                // Navigation.CURRENT_INPUT
-                // );
-                //                System.out.println("[DiagramEditor.gotoMarker] Input: " + oInput ); //$NON-NLS-1$
+                    // reset selection
+                    List lstSelection = (List)MarkerUtilities.getMarkerAttribute(iMarker, Navigation.CURRENT_SELECTION); // iMarker.getAttribute(
+                    // Navigation.CURRENT_SELECTION
+                    // );
 
-                if (UiConstants.Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NAVIGATION)) {
-                    UiConstants.Util.print(com.metamatrix.modeler.internal.ui.DebugConstants.NAVIGATION,
-                                           THIS_CLASS
-                                           + ".gotoMarker();  iMarker.getAttributes(): " + iMarker.getAttributes().keySet().toString()); //$NON-NLS-1$
-                    UiConstants.Util.print(com.metamatrix.modeler.internal.ui.DebugConstants.NAVIGATION,
-                                           THIS_CLASS + ".gotoMarker();  Input: " + oInput); //$NON-NLS-1$
-                }
+                    if (lstSelection != null) {
 
-                if (oInput != null) {
-                    if (canOpenContext(oInput)) {
-                        openContext(oInput);
+                        Iterator it = lstSelection.iterator();
 
-                        // reset selection
-                        List lstSelection = (List)MarkerUtilities.getMarkerAttribute(iMarker, Navigation.CURRENT_SELECTION); // iMarker.getAttribute(
-                        // Navigation.CURRENT_SELECTION
-                        // );
-
-                        if (lstSelection != null) {
-
-                            Iterator it = lstSelection.iterator();
-
-                            while (it.hasNext()) {
-                                EObject eoTemp = (EObject)it.next();
-                                getSelectionHandler().select(eoTemp);
-                            }
+                        while (it.hasNext()) {
+                            EObject eoTemp = (EObject)it.next();
+                            getSelectionHandler().select(eoTemp);
                         }
-
-                        // force the parent container to display us
-                        getParent().displayModelEditorPage(this);
                     }
+
+                    // force the parent container to display us
+                    getParent().displayModelEditorPage(this);
                 }
             }
-        } catch (CoreException ce) {
-            bOkToCreateMarkers = true;
-            String message = this.getClass().getName() + ":  gotoMarker() error  "; //$NON-NLS-1$
-            DiagramUiConstants.Util.log(IStatus.ERROR, ce, message);
+        }
+        // open up createMarker again:
+        bOkToCreateMarkers = true;
 
-        } finally {
-            // open up createMarker again:
-            bOkToCreateMarkers = true;
-
-            // quit now (skip the remainder of this method)
-            if (sMarkerType.equals(Navigation.NAVIGATION)) {
-                return;
-            }
+        // quit now (skip the remainder of this method)
+        if (sMarkerType.equals(Navigation.NAVIGATION)) {
+            return;
         }
 
         // if NOT a navigation marker, handle this way:
@@ -816,11 +786,6 @@ public class DiagramEditor extends GraphicalEditor
      */
     protected void setDiagram( Diagram diagram,
                                IProgressMonitor monitor ) {
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_EDITOR) && diagram != null && diagram.getType() != null) {
-            DiagramUiConstants.Util.print(DebugConstants.DIAGRAM_EDITOR, THIS_CLASS
-                                                                         + ".setDiagram() diagramType = " + diagram.getType()); //$NON-NLS-1$
-        }
-
         boolean requiredStart = false;
         boolean succeeded = false;
         try {
@@ -872,7 +837,6 @@ public class DiagramEditor extends GraphicalEditor
                         diagramEP.constructionCompleted(true);
                     }
                     if (monitor != null) monitor.worked(10);
-                    viewer.printContents();
                 }
             } else {
                 if ((currentModelResource != null) && currentModelResource.exists() && currentModelResource.isOpen()) {
@@ -959,10 +923,6 @@ public class DiagramEditor extends GraphicalEditor
         if (input instanceof Diagram) {
             autoSelect();
         }
-
-        if (DiagramUiConstants.Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TIMER)) DiagramUiConstants.Util.start("DiagramEditor.openContext()", com.metamatrix.modeler.internal.ui.DebugConstants.TIMER); //$NON-NLS-1$
-
-        // oLatestInput = input;
 
         initializeModelPackage = false;
 
@@ -1054,10 +1014,6 @@ public class DiagramEditor extends GraphicalEditor
             getDecoratorHandler().reset();
 
         }
-        if (DiagramUiConstants.Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TIMER)) DiagramUiConstants.Util.stop("DiagramEditor.openContext()", com.metamatrix.modeler.internal.ui.DebugConstants.TIMER); //$NON-NLS-1$
-
-        // System.out.println("  ------------ End openContext() ------------------" );
-        // System.out.println(" " );
         updateReadOnlyState();
 
         notifyInitializationComplete();
@@ -1334,21 +1290,7 @@ public class DiagramEditor extends GraphicalEditor
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
     public void notifyChanged( Notification notification ) {
-        // System.out.println("[DIagramEditor.notifyChanged] TOP");
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_EDITOR)) DiagramUiConstants.Util.start("DiagramEditor.notifyChanged()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
-
         boolean diagramStillValid = true;
-
-        if (DiagramUiConstants.Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS)) {
-            DiagramUiConstants.Util.print(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS,
-                                          " DiagramEditor.notifyChanged(): START PROCESSING NOTIFICATION ------------------------------"); //$NON-NLS-1$
-            if (notification instanceof SourcedNotification) {
-                Object source = ((SourcedNotification)notification).getSource();
-                DiagramUiConstants.Util.print(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS,
-                                              " DiagramEditor.notifyChanged(): got a notifyChanged( ) Source = " + source); //$NON-NLS-1$
-            } else DiagramUiConstants.Util.print(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS,
-                                                 " DiagramEditor.notifyChanged(): got a notifyChanged( ) " + notification); //$NON-NLS-1$
-        }
         // DiagramModelFactory inherently wraps
         if (getModelFactory() != null && getCurrentModel() != null) {
             diagramStillValid = getModelFactory().notifyModel(notification,
@@ -1358,15 +1300,8 @@ public class DiagramEditor extends GraphicalEditor
 
         if (diagramStillValid) {
             try {
-
                 if (getDiagramActionAdapter() != null) getDiagramActionAdapter().handleNotification(notification);
-
                 if (diagramController != null) diagramController.handleNotification(notification);
-
-                if (DiagramUiConstants.Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS)) {
-                    DiagramUiConstants.Util.print(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS,
-                                                  " DiagramEditor.notifyChanged(): END PROCESSING NOTIFICATION --------------------------------\n\n"); //$NON-NLS-1$
-                }
             } catch (Exception ex) {
                 DiagramUiConstants.Util.log(IStatus.ERROR, ex, ex.getClass().getName());
             }
@@ -1379,13 +1314,11 @@ public class DiagramEditor extends GraphicalEditor
                 } // endif
             }
         } else {
-            if (meParentEditor != null && meParentEditor.getModelFile() != null
-                && meParentEditor.getModelFile().exists()) {
+            if (meParentEditor != null && meParentEditor.getModelFile() != null && meParentEditor.getModelFile().exists()) {
                 // here's where we replace current diagram with bogus empty diagram by calling openContext(null)
                 openContext(null);
             }
         }
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_EDITOR)) DiagramUiConstants.Util.stop("DiagramEditor.notifyChanged()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
     }
 
     private void updateEditorTab( Diagram someDiagram ) {

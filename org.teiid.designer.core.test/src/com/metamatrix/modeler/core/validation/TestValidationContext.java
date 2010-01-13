@@ -11,33 +11,24 @@ import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.Preferences;
-
 import com.metamatrix.modeler.internal.core.validation.ValidationResultImpl;
 
 /**
  * @since 4.0
  */
 public final class TestValidationContext extends TestCase {
-    // =========================================================================
-    //                        F R A M E W O R K
-    // =========================================================================
     /**
      * Constructor for TestJDBCRepositoryWriter.
+     * 
      * @param name
      */
-    public TestValidationContext(String name) {
+    public TestValidationContext( String name ) {
         super(name);
     }
 
-    // =========================================================================
-    //                        T E S T   C O N T R O L
-    // =========================================================================
-
-    /** 
-     * Construct the test suite, which uses a one-time setup call
-     * and a one-time tear-down call.
+    /**
+     * Construct the test suite, which uses a one-time setup call and a one-time tear-down call.
      */
     public static Test suite() {
         final TestSuite suite = new TestSuite(TestValidationContext.class);
@@ -46,6 +37,7 @@ public final class TestValidationContext extends TestCase {
             protected void setUp() throws Exception {
                 oneTimeSetUp();
             }
+
             @Override
             protected void tearDown() throws Exception {
                 oneTimeTearDown();
@@ -60,17 +52,13 @@ public final class TestValidationContext extends TestCase {
         };
     }
 
-    // =========================================================================
-    //                                 M A I N
-    // =========================================================================
-
-    public static void main(String args[]) {
+    public static void main( String args[] ) {
         junit.textui.TestRunner.run(suite());
         System.exit(0);
     }
 
     // =========================================================================
-    //                 S E T   U P   A N D   T E A R   D O W N
+    // S E T U P A N D T E A R D O W N
     // =========================================================================
 
     @Override
@@ -90,15 +78,15 @@ public final class TestValidationContext extends TestCase {
     }
 
     // =========================================================================
-    //                         H E L P E R    M E T H O D S
+    // H E L P E R M E T H O D S
     // =========================================================================
 
-    private ValidationContext helpCreateValidationContext(final Preferences preferences){
+    private ValidationContext helpCreateValidationContext( final Preferences preferences ) {
         return new ValidationContext(preferences);
     }
 
     // =========================================================================
-    //                         T E S T   C A S E S
+    // T E S T C A S E S
     // =========================================================================
     /**
      * @since 4.0
@@ -106,63 +94,62 @@ public final class TestValidationContext extends TestCase {
     public void testConstruction() {
         final StringBuffer failures = new StringBuffer();
         ValidationContext context = null;
-        
-        //valid construction 1 (not null map)
+
+        // valid construction 1 (not null map)
         try {
             context = helpCreateValidationContext(new Preferences());
         } catch (Exception e) {
             failures.append("\nUnexpected exception during valid construction 1"); //$NON-NLS-1$
         }
 
-        //invalid construction 1 (null entries)
+        // invalid construction 1 (null entries)
         try {
             context = null;
-            context = helpCreateValidationContext(null);            
+            context = helpCreateValidationContext(null);
         } catch (Exception e) {
-            //expected;
+            // expected;
         }
-        
-        if(context != null){
+
+        if (context != null) {
             failures.append("\nExpected contruction failure, but did not get one for invalid construction 1"); //$NON-NLS-1$
         }
 
-
-        if(failures.length() > 0 ){
-            fail(failures.toString() );
+        if (failures.length() > 0) {
+            fail(failures.toString());
         }
     }
-    
-//    public void testgetPreferences(){
-//        final StringBuffer failures = new StringBuffer();
-//        final ValidationContext context = helpCreateValidationContext(new Preferences(), new ModelpathEntry[0]);
-//        
-//        if(context.getPreferences() == null){
-//            failures.append("Invalid controls initial state"); //$NON-NLS-1$
-//        }
-//        
-//        context.addControl("testing", this); //$NON-NLS-1$
-//        if(context.getControlValue("testing") != this ){ //$NON-NLS-1$
-//            failures.append("\nAdd control / get control value did not return correct value"); //$NON-NLS-1$
-//        }
-//
-//        if(failures.length() > 0 ){
-//            fail(failures.toString() );
-//        }
-//    }
-    
-    public void testAddNullResults(){
+
+    // public void testgetPreferences(){
+    // final StringBuffer failures = new StringBuffer();
+    // final ValidationContext context = helpCreateValidationContext(new Preferences(), new ModelpathEntry[0]);
+    //        
+    // if(context.getPreferences() == null){
+    //            failures.append("Invalid controls initial state"); //$NON-NLS-1$
+    // }
+    //        
+    //        context.addControl("testing", this); //$NON-NLS-1$
+    //        if(context.getControlValue("testing") != this ){ //$NON-NLS-1$
+    //            failures.append("\nAdd control / get control value did not return correct value"); //$NON-NLS-1$
+    // }
+    //
+    // if(failures.length() > 0 ){
+    // fail(failures.toString() );
+    // }
+    // }
+
+    public void testAddNullResults() {
         final ValidationContext context = helpCreateValidationContext(new Preferences());
         try {
             context.addResult(null);
         } catch (RuntimeException e) {
-            //expected
+            // expected
             return;
         }
-        
+
         fail("Was able to add null result object"); //$NON-NLS-1$
     }
 
-    public void testAddResults(){
+    public void testAddResults() {
         final StringBuffer failures = new StringBuffer();
         final ValidationContext context = helpCreateValidationContext(new Preferences());
         Object target = new String("target"); //$NON-NLS-1$
@@ -171,26 +158,26 @@ public final class TestValidationContext extends TestCase {
         // These results don't have problems, so they won't be 'added'
         try {
             context.addResult(result1);
-            if(context.hasResults()){
-                failures.append("Expected 0 result, but got " + context.getValidationResults().size() ); //$NON-NLS-1$
+            if (context.hasResults()) {
+                failures.append("Expected 0 result, but got " + context.getValidationResults().size()); //$NON-NLS-1$
             }
 
             context.addResult(result2);
-            
-            if(context.hasResults()){
-                failures.append("Expected 0 results, but got " + context.getValidationResults().size() ); //$NON-NLS-1$
+
+            if (context.hasResults()) {
+                failures.append("Expected 0 results, but got " + context.getValidationResults().size()); //$NON-NLS-1$
             }
-            
-            if(context.getLastResult() != null){
+
+            if (context.getLastResult() != null) {
                 failures.append("Get last result did not return expected object"); //$NON-NLS-1$
             }
-            
+
         } catch (Exception e) {
-            failures.append("Unexpected exception : " + e.getMessage() ); //$NON-NLS-1$
+            failures.append("Unexpected exception : " + e.getMessage()); //$NON-NLS-1$
         }
-        
-        if(failures.length() > 0 ){
-            fail(failures.toString() );
+
+        if (failures.length() > 0) {
+            fail(failures.toString());
         }
     }
 

@@ -70,7 +70,6 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, XResource {
 
     public static final char UUID_PROTOCOL_DELIMITER = '/';
-    public static final boolean CHECK_ANY_PROTOCOLS = true;
 
     /**
      * The map from {@link EObject} to {@link #getUuid UUID}. It is used to store UUIDs for objects that have been detached.
@@ -1159,8 +1158,7 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
             return null;
         }
         try {
-            return CHECK_ANY_PROTOCOLS ? IDGenerator.getInstance().stringToObject(uuidString) : IDGenerator.getInstance().stringToObject(uuidString,
-                                                                                                                                         UUID_PROTOCOL_DELIMITER);
+            return IDGenerator.getInstance().stringToObject(uuidString);
         } catch (InvalidIDException e) {
             // do nothing ...
         }

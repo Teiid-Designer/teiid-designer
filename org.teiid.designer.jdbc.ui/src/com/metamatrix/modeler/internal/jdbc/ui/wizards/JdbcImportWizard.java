@@ -59,8 +59,6 @@ import com.metamatrix.modeler.internal.core.workspace.ModelResourceImpl;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.jdbc.relational.JdbcImporter;
 import com.metamatrix.modeler.internal.jdbc.relational.util.JdbcRelationalUtil;
-import com.metamatrix.modeler.internal.jdbc.ui.DebugConstants;
-import com.metamatrix.modeler.internal.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 import com.metamatrix.modeler.internal.jdbc.ui.util.JdbcUiUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.jdbc.JdbcException;
@@ -116,7 +114,6 @@ public class JdbcImportWizard extends AbstractWizard
     private ShowDifferencesPage diffsPg;
     DifferenceReport drDifferenceReport;
     ProcessorPack ppProcessorPack;
-    private boolean debugTimingEnabled = false;
 
     boolean controlsHaveBeenCreated = false;
 
@@ -127,8 +124,6 @@ public class JdbcImportWizard extends AbstractWizard
      */
     public JdbcImportWizard() {
         super(UiPlugin.getDefault(), TITLE, IMAGE);
-
-        debugTimingEnabled = Util.isDebugEnabled(DebugConstants.JDBC_IMPORT_TIMING);
     }
 
     /**
@@ -644,7 +639,6 @@ public class JdbcImportWizard extends AbstractWizard
                 final JdbcSource src = getSource();
                 final RelationalModelProcessor processor = JdbcRelationalPlugin.createRelationalModelProcessor(src);
                 // Added for debug performance logging purposes
-                processor.setDebugLogTiming(debugTimingEnabled);
                 processor.setMoveRatherThanCopyAdds(!isUpdatedModel());
                 final IFile modelFile = getFolder().getFile(new Path(getModelName()));
                 final ModelResource resrc = ModelerCore.create(modelFile);
@@ -663,8 +657,6 @@ public class JdbcImportWizard extends AbstractWizard
                 // capture objects in the processorpack
                 ppProcessorPack = new ProcessorPack(processor, src, modelFile, resrc);
             } else {
-                // Added for debug performance logging purposes
-                ppProcessorPack.getProcessor().setDebugLogTiming(debugTimingEnabled);
                 /*
                  * handle the case where we have already created a processor, allowed the user to modify the Diff Report, etc.
                  * ppProcessorPack The processor has special code inside its 'performMerge' method that uses the existing
@@ -677,7 +669,6 @@ public class JdbcImportWizard extends AbstractWizard
                                                                                       monitor);
             }
             sWatch.stop();
-            if (debugTimingEnabled) Stopwatch.logTimedMessage(" JDBC Import Wizard:  Creating Model Processor - Delta ", sWatch.getTotalDuration(), InternalModelerJdbcUiPluginConstants.Util); //$NON-NLS-1$
 
             //
             // post processors
@@ -714,13 +705,11 @@ public class JdbcImportWizard extends AbstractWizard
                 objs.add(ppProcessorPack.getJdbcSource());
 
                 sWatch.stop();
-                if (debugTimingEnabled) Stopwatch.logTimedMessage(" JDBC Import Wizard:  Updating Model Contents - Delta ", sWatch.getTotalDuration(), InternalModelerJdbcUiPluginConstants.Util); //$NON-NLS-1$
                 sWatch.start(true);
 
                 // Auto save the model & refresh
                 ppProcessorPack.getModelResource().save(monitor, true);
                 sWatch.stop();
-                if (debugTimingEnabled) Stopwatch.logTimedMessage(" JDBC Import Wizard:  Saving Model - Delta ", sWatch.getTotalDuration(), InternalModelerJdbcUiPluginConstants.Util); //$NON-NLS-1$
 
                 sWatch.start(true);
                 final IResource resrc = this.folder.findMember(getModelName());
@@ -728,12 +717,10 @@ public class JdbcImportWizard extends AbstractWizard
                     resrc.refreshLocal(IResource.DEPTH_INFINITE, monitor);
                 }
                 sWatch.stop();
-                if (debugTimingEnabled) Stopwatch.logTimedMessage(" JDBC Import Wizard:  Refreshing Local File - Delta ", sWatch.getTotalDuration(), InternalModelerJdbcUiPluginConstants.Util); //$NON-NLS-1$
 
                 sWatch.start(true);
                 ModelEditorManager.activate(ppProcessorPack.getModelFile(), true);
                 sWatch.stop();
-                if (debugTimingEnabled) Stopwatch.logTimedMessage(" JDBC Import Wizard:  Opening Model In Editor - Delta ", sWatch.getTotalDuration(), InternalModelerJdbcUiPluginConstants.Util); //$NON-NLS-1$
 
             }
         } catch (final OperationCanceledException err) {
@@ -744,7 +731,6 @@ public class JdbcImportWizard extends AbstractWizard
             monitor.done();
             ppProcessorPack = null;
             totalWatch.stop();
-            if (debugTimingEnabled) Stopwatch.logTimedMessage(" JDBC Import Wizard: finish() - Total ", totalWatch.getTotalDuration(), InternalModelerJdbcUiPluginConstants.Util); //$NON-NLS-1$
         }
     }
 

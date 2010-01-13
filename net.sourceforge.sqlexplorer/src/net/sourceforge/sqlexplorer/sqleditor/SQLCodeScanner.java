@@ -57,14 +57,6 @@ public class SQLCodeScanner extends AbstractSQLScanner {
             fCurrentVersion = currentVersion;
         }
 
-        public void setCurrentVersion( String version ) {
-            fCurrentVersion = version;
-        }
-
-        protected String[] getTokenProperties() {
-            return fgTokenProperties;
-        }
-
         /*
          * @see IRule#evaluate
          */

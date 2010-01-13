@@ -81,7 +81,6 @@ import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.editors.MultiPageModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.transformation.ui.DebugConstants;
 import com.metamatrix.modeler.transformation.ui.PluginConstants;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
@@ -1555,13 +1554,6 @@ public class TransformationObjectEditorPage
                                                 Object txnSource,
                                                 boolean overwriteDirty ) {
 
-        // Debug message
-        if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-        // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-            Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-            String debugStr = THIS_CLASS + ".handleTransformationStatusChangeEvent()"; //$NON-NLS-1$
-            System.out.println(debugStr);
-        }
         if (txnSource != this) {
             if (this.validator != null) {
                 boolean didSetText = false;
@@ -1753,24 +1745,6 @@ public class TransformationObjectEditorPage
             }
         }
         return result;
-    }
-
-    /**
-     * Helper Method to get a "description" for the notification source
-     * 
-     * @param source the notification source
-     * @return the source description
-     */
-    private String getSourceDesc( Object source ) {
-        String sourceStr = "NULL"; //$NON-NLS-1$
-        if (source != null) {
-            sourceStr = source.getClass().getName();
-            int index = sourceStr.lastIndexOf('.');
-            if (index != -1) {
-                sourceStr = sourceStr.substring(index + 1);
-            }
-        }
-        return sourceStr;
     }
 
     /**
@@ -2675,14 +2649,6 @@ public class TransformationObjectEditorPage
     private void handleSqlEditorEvent( SqlEditorEvent sqlEvent ) {
         // Only respond if the event was initiated by the SqlEditorPanel
         Object eventSource = sqlEvent.getSource();
-
-        // Debug message
-        if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-        // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-            Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-            String debugStr = THIS_CLASS + ".handleSqlEditorEvent(), source = " + getSourceDesc(eventSource); //$NON-NLS-1$
-            System.out.println(debugStr);
-        }
         if (eventSource instanceof SqlEditorPanel) {
             int eventType = sqlEvent.getType();
             // ----------------------------------------------------------------
@@ -2721,27 +2687,6 @@ public class TransformationObjectEditorPage
     private void handleSqlEditorCommandEvent( final Command command,
                                               int eventType,
                                               Object eventSource ) {
-        // Debug message
-        if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-        // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-            Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-            StringBuffer buff = new StringBuffer(THIS_CLASS + ".handleSqlEditorCommandEvent()"); //$NON-NLS-1$
-            switch (eventType) {
-                case SqlEditorEvent.VALIDATABLE:
-                    buff.append(", valid command"); //$NON-NLS-1$
-                    break;
-                case SqlEditorEvent.RESOLVABLE:
-                    buff.append(", resolvable command"); //$NON-NLS-1$
-                    break;
-                case SqlEditorEvent.PARSABLE:
-                    buff.append(", parsable command"); //$NON-NLS-1$
-                    break;
-                default:
-                    break;
-            }
-            System.out.println(buff.toString() + " <set SQL and reconcile mappings>"); //$NON-NLS-1$
-        }
-
         Object selectedItem = getSelectedItem();
         int cmdType = getCommandTypeForItem(selectedItem);
 
@@ -2800,13 +2745,6 @@ public class TransformationObjectEditorPage
      */
     private void handleSqlEditorChanged( String sqlString,
                                          Object eventSource ) {
-        // Debug message
-        if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-        // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-            Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-            String debugStr = THIS_CLASS + ".handleSqlEditorChanged() <set SQL>"; //$NON-NLS-1$
-            System.out.println(debugStr);
-        }
         int cmdType = getCommandTypeForItem(getSelectedItem());
 
         // ------------------------------------------------------------------------------------
@@ -2847,13 +2785,6 @@ public class TransformationObjectEditorPage
      * handle the case when a changes pending notification is received from the editor panel
      */
     private void handleSqlEditorChangesPending() {
-        // Debug message
-        if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-        // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-            Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-            String debugStr = THIS_CLASS + ".handleSqlEditorChangesPending() <change editor message>"; //$NON-NLS-1$
-            System.out.println(debugStr);
-        }
         getSqlEditorPanelWrapper().setMessage(SQL_CHANGES_PENDING_MSG);
         getSqlEditorPanelWrapper().showMessageArea(true);
         setDirty(true);

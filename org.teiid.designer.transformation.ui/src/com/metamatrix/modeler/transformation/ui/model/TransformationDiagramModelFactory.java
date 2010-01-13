@@ -42,7 +42,6 @@ import com.metamatrix.modeler.diagram.ui.util.RelationalUmlEObjectHelper;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.transformation.ui.DebugConstants;
 import com.metamatrix.modeler.transformation.ui.PluginConstants;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
@@ -50,7 +49,6 @@ import com.metamatrix.modeler.transformation.ui.actions.TransformationSourceMana
 import com.metamatrix.modeler.transformation.ui.connection.TransformationLink;
 import com.metamatrix.modeler.transformation.ui.util.TransformationDiagramUtil;
 import com.metamatrix.modeler.transformation.ui.util.TransformationUmlEObjectHelper;
-import com.metamatrix.ui.internal.InternalUiConstants;
 
 /**
  * TransformModelFactory
@@ -60,7 +58,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
     private static final String THIS_CLASS = "TransformationDiagramModelFactory"; //$NON-NLS-1$
 
     private String sNotationId;
-    private String errorMessage;
     private NotationModelGenerator generator;
 
     private boolean hideLinksAlways = false;
@@ -147,24 +144,12 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
 
         EObject virtualGroupEObject = transformationDiagram.getTarget();
         DiagramModelNode targetModelNode = null;
-        errorMessage = null;
 
         if (getGenerator() != null) {
             targetModelNode = getGenerator().createModel(virtualGroupEObject, transformationDiagram);
             if (targetModelNode != null) {
 
                 diagramContents.add(targetModelNode);
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-                    String message = "Adding Target Node \n" + targetModelNode.toString(); //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-                }
-            } else {
-                if (UiConstants.Util.isDebugEnabled(com.metamatrix.modeler.internal.diagram.ui.DebugConstants.MODEL_FACTORY)) {
-                    String name = DiagramUiUtilities.getEObjectLabel(virtualGroupEObject);
-                    errorMessage = UiConstants.Util.getString(DiagramUiConstants.Errors.MODEL_NODE_FAILURE)
-                                   + " for object = " + name; //$NON-NLS-1$
-                    UiConstants.Util.print(com.metamatrix.modeler.internal.diagram.ui.DebugConstants.MODEL_FACTORY, THIS_CLASS + " " + errorMessage); //$NON-NLS-1$
-                }
             }
         } else {
             UiConstants.Util.log(IStatus.WARNING, UiConstants.Util.getString(DiagramUiConstants.Errors.MODEL_GENERATOR_FAILURE));
@@ -183,11 +168,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
             TransformationLink targetLink = getTargetConnectionModel(transformNode, targetModelNode);
             ((DiagramModelNode)targetLink.getSourceNode()).addSourceConnection(targetLink);
             ((DiagramModelNode)targetLink.getTargetNode()).addTargetConnection(targetLink);
-
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-                String message = "Adding Connection \n" + targetLink.toString(); //$NON-NLS-1$
-                UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-            }
 
             labelNodes = targetLink.getLabelNodes();
             if (labelNodes != null && !labelNodes.isEmpty()) {
@@ -208,14 +188,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
                 nextSourceNode = getGenerator().createModel(nextSourceEObject, transformationDiagram);
                 if (nextSourceNode != null) {
                     diagramContents.add(nextSourceNode);
-
-                } else {
-                    if (UiConstants.Util.isDebugEnabled(com.metamatrix.modeler.internal.diagram.ui.DebugConstants.MODEL_FACTORY)) {
-                        String name = DiagramUiUtilities.getEObjectLabel(nextSourceEObject);
-                        errorMessage = UiConstants.Util.getString(DiagramUiConstants.Errors.MODEL_NODE_FAILURE)
-                                       + " for object = " + name; //$NON-NLS-1$
-                        UiConstants.Util.print(com.metamatrix.modeler.internal.diagram.ui.DebugConstants.MODEL_FACTORY, THIS_CLASS + " " + errorMessage); //$NON-NLS-1$
-                    }
                 }
             } else {
                 UiConstants.Util.log(IStatus.WARNING,
@@ -227,11 +199,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
                     sourceLink = getSourceConnectionModel(nextSourceNode, transformNode);
                     ((DiagramModelNode)sourceLink.getSourceNode()).addSourceConnection(sourceLink);
                     ((DiagramModelNode)sourceLink.getTargetNode()).addTargetConnection(sourceLink);
-
-                    if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-                        String message = "Adding Connection \n" + sourceLink.toString(); //$NON-NLS-1$
-                        UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-                    }
                     labelNodes = sourceLink.getLabelNodes();
                     if (labelNodes != null && !labelNodes.isEmpty()) {
                         diagramContents.addAll(labelNodes);
@@ -328,8 +295,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
                                                                                                                      diagramModelNode);
 
             if (notificationHelper.shouldHandleNotification()) {
-                UiConstants.Util.start("TransformationDiagramModelFactory.notifyModel()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
-
                 // -------------------------------------------------
                 // Let's wrap this in a transaction!!! that way all constructed objects and layout properties
                 // will result in only one transaction?
@@ -362,8 +327,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
                     }
                     diagramModelNode.update(DiagramUiConstants.DiagramNodeProperties.LAYOUT);
                 }
-
-                UiConstants.Util.stop("TransformationDiagramModelFactory.notifyModel()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
             }
         }
 
@@ -524,10 +487,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
 
         // we know that the object is not a child of a model resource !!!!!
 
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-            UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, "targetObject = " + targetObject); //$NON-NLS-1$
-        }
-
         // Now we check to see if the target object is already in diagram
 
         DiagramModelNode targetNode = getPrimaryDiagramModelNode(transformationDiagramModelNode, targetObject);
@@ -584,10 +543,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
 
         // we know that the object is not a child of a model resource !!!!!
 
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-            UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, "targetObject = " + targetObject); //$NON-NLS-1$
-        }
-
         // ReconcileSource method should take care of adding/removing tables
         // All we need to do here is check to see if the target object for a remove is on the diagram
         // else we ignore.
@@ -611,10 +566,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
     protected void performChange( Notification notification,
                                   DiagramModelNode transformationDiagramModelNode ) {
         EObject targetObject = getEObjectTarget(notification);
-
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-            UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, "targetObject = " + targetObject); //$NON-NLS-1$
-        }
 
         DiagramModelNode targetNode = getModelNode(transformationDiagramModelNode, targetObject);
         if (targetNode != null) {
@@ -742,13 +693,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
                 }
 
                 if (!foundMatch) {
-                    if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-                        String message = "staleAssociation Source = " + //$NON-NLS-1$
-                                         ((DiagramModelNode)nextCurrentAssociation.getSourceNode()).getName() + " Target = " + //$NON-NLS-1$
-                                         ((DiagramModelNode)nextCurrentAssociation.getTargetNode()).getName();
-
-                        UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-                    }
                     staleAssociations.add(nextCurrentAssociation);
                 }
             }
@@ -845,11 +789,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
                 if (!updatedNodes.contains(nextAssociation.getTargetNode())) updatedNodes.add(nextAssociation.getTargetNode());
 
                 removeLinkLabels(diagramModelNode, nextAssociation);
-
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-                    String message = "Cleaned up Stale Association = \n" + nextAssociation.toString(); //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-                }
             }
         }
 
@@ -988,10 +927,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
                     if (labelNodes != null && !labelNodes.isEmpty()) {
                         transformationDiagramModelNode.addChildren(labelNodes);
                     }
-                    if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-                        String message = "Added New Association = \n" + nextAssociation.toString(); //$NON-NLS-1$
-                        UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-                    }
                 }
             }
 
@@ -1096,13 +1031,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
             if (newSourceNode != null) {
                 newSourceNode.setParent(transformationDiagramModelNode);
                 transformationDiagramModelNode.addChild(newSourceNode);
-            } else {
-                if (UiConstants.Util.isDebugEnabled(com.metamatrix.modeler.internal.diagram.ui.DebugConstants.MODEL_FACTORY)) {
-                    String name = DiagramUiUtilities.getEObjectLabel(sourceEObject);
-                    errorMessage = UiConstants.Util.getString(DiagramUiConstants.Errors.MODEL_NODE_FAILURE)
-                                   + " for object = " + name; //$NON-NLS-1$
-                    UiConstants.Util.print(com.metamatrix.modeler.internal.diagram.ui.DebugConstants.MODEL_FACTORY, THIS_CLASS + " " + errorMessage); //$NON-NLS-1$
-                }
             }
         } else {
             UiConstants.Util.log(IStatus.WARNING, UiConstants.Util.getString(DiagramUiConstants.Errors.MODEL_GENERATOR_FAILURE));
@@ -1116,10 +1044,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
                 ((DiagramModelNode)sourceLink.getSourceNode()).addSourceConnection(sourceLink);
                 ((DiagramModelNode)sourceLink.getTargetNode()).addTargetConnection(sourceLink);
 
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-                    String message = "Adding Connection \n" + sourceLink.toString(); //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-                }
                 List labelNodes = sourceLink.getLabelNodes();
                 if (labelNodes != null && !labelNodes.isEmpty()) {
                     transformationDiagramModelNode.addChildren(labelNodes);
@@ -1160,11 +1084,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
 
     protected void removeConnectionsForNode( DiagramModelNode transformationDiagramModelNode,
                                              DiagramModelNode removedNode ) {
-
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-            String message = "NODE = " + removedNode.getName(); //$NON-NLS-1$
-            UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-        }
         // We need transformation model node object
         DiagramModelNode transformNode = getTransformationNode(transformationDiagramModelNode);
 
@@ -1178,18 +1097,9 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
         Iterator sIter = sourceConnections.iterator();
         while (sIter.hasNext()) {
             nextAssociation = (TransformationLink)sIter.next();
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)
-                && UiConstants.Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-                String message = "Table SourceConnection \n" + nextAssociation.toString(); //$NON-NLS-1$
-                UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-            }
             if (associationsMatch(nextAssociation, tempAssociation)) {
                 sIter.remove();
                 removeLinkLabels(transformationDiagramModelNode, nextAssociation);
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-                    String message = "Removed Table SourceConnection \n" + nextAssociation.toString(); //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-                }
             }
         }
 
@@ -1198,17 +1108,9 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
         sIter = targetConnections.iterator();
         while (sIter.hasNext()) {
             nextAssociation = (TransformationLink)sIter.next();
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-                String message = "Table TargetConnection \n" + nextAssociation.toString(); //$NON-NLS-1$
-                UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-            }
             if (associationsMatch(nextAssociation, tempAssociation)) {
                 sIter.remove();
                 removeLinkLabels(transformationDiagramModelNode, nextAssociation);
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-                    String message = "Removed Table TargetConnection \n" + nextAssociation.toString(); //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-                }
             }
         }
 
@@ -1217,17 +1119,9 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
         sIter = targetConnections.iterator();
         while (sIter.hasNext()) {
             nextAssociation = (TransformationLink)sIter.next();
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-                String message = "Transform TargetConnection \n" + nextAssociation.toString(); //$NON-NLS-1$
-                UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-            }
             if (associationsMatch(nextAssociation, tempAssociation)) {
                 sIter.remove();
                 removeLinkLabels(transformationDiagramModelNode, nextAssociation);
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-                    String message = "Removed Transform TargetConnection \n" + nextAssociation.toString(); //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-                }
             }
         }
 
@@ -1268,7 +1162,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
         List virtualSources = new ArrayList();
 
         DiagramModelNode targetModelNode = null;
-        errorMessage = null;
 
         EObject transformationEObject = null;
         // Create Tranform Node here and add
@@ -1287,11 +1180,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
             TransformationLink targetLink = getTargetConnectionModel(transformNode, targetModelNode);
             ((DiagramModelNode)targetLink.getSourceNode()).addSourceConnection(targetLink);
             ((DiagramModelNode)targetLink.getTargetNode()).addTargetConnection(targetLink);
-
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-                String message = "Adding Connection \n" + targetLink.toString(); //$NON-NLS-1$
-                UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-            }
 
             List labelNodes = targetLink.getLabelNodes();
             if (labelNodes != null && !labelNodes.isEmpty()) {
@@ -1322,13 +1210,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
                                 virtualSources.add(nextSourceEObject);
                             } // endif
                         }
-                    } else {
-                        if (UiConstants.Util.isDebugEnabled(com.metamatrix.modeler.internal.diagram.ui.DebugConstants.MODEL_FACTORY)) {
-                            String name = DiagramUiUtilities.getEObjectLabel(nextSourceEObject);
-                            errorMessage = UiConstants.Util.getString(DiagramUiConstants.Errors.MODEL_NODE_FAILURE)
-                                           + " for object = " + name; //$NON-NLS-1$
-                            UiConstants.Util.print(com.metamatrix.modeler.internal.diagram.ui.DebugConstants.MODEL_FACTORY, THIS_CLASS + " " + errorMessage); //$NON-NLS-1$
-                        }
                     }
                 } else {
                     UiConstants.Util.log(IStatus.WARNING,
@@ -1340,10 +1221,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
                     ((DiagramModelNode)sourceLink.getSourceNode()).addSourceConnection(sourceLink);
                     ((DiagramModelNode)sourceLink.getTargetNode()).addTargetConnection(sourceLink);
 
-                    if (UiConstants.Util.isDebugEnabled(DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-                        String message = "Adding Connection \n" + sourceLink.toString(); //$NON-NLS-1$
-                        UiConstants.Util.print(DebugConstants.TX_DIAGRAM_MODEL_NODE, message);
-                    }
                     labelNodes = sourceLink.getLabelNodes();
                     if (labelNodes != null && !labelNodes.isEmpty()) {
                         diagramContents.addAll(labelNodes);

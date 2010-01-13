@@ -50,7 +50,6 @@ import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
 import com.metamatrix.modeler.internal.mapping.factory.ModelMapperFactory;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.mapping.ui.DebugConstants;
 import com.metamatrix.modeler.mapping.ui.PluginConstants;
 import com.metamatrix.modeler.mapping.ui.UiConstants;
 import com.metamatrix.modeler.mapping.ui.UiPlugin;
@@ -67,7 +66,6 @@ import com.metamatrix.modeler.transformation.ui.actions.TransformationSourceMana
 import com.metamatrix.modeler.transformation.ui.model.TransformationDiagramModelFactory;
 import com.metamatrix.modeler.transformation.ui.model.TransformationNode;
 import com.metamatrix.modeler.xsd.util.ModelerXsdUtils;
-import com.metamatrix.ui.internal.InternalUiConstants;
 
 /**
  * MappingDiagramModelFactory
@@ -236,7 +234,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
 
         if (currentDiagramOK && isValidDiagram(diagramModelNode) && sourceIsNotThis(notification)
             && shouldHandleNotification(notification, diagramModelNode)) {
-            UiConstants.Util.start("MappingDiagramModelFactory.notifyModel()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
 
             boolean requiredStart = false;
             boolean succeeded = false;
@@ -269,15 +266,8 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
                 if (handleConstruction) {
                     DiagramEditorUtil.setDiagramConstructionComplete(diagram, true);
                 }
-                // diagramModelNode.update(DiagramUiConstants.DiagramNodeProperties.LAYOUT);
             }
-            UiConstants.Util.stop("MappingDiagramModelFactory.notifyModel()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
         }
-        // else {
-        // if( !isValidDiagram(diagramModelNode)) {
-        // currentDiagramOK = false;
-        // }
-        // }
 
         return currentDiagramOK;
     }
@@ -380,11 +370,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
                                            Object source ) {
 
         if (!isDiagramNotifier(notification)) {
-            if (UiConstants.Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS)) {
-                UiConstants.Util.print(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS, THIS_CLASS + ".handleNotification(): NOTIFICATION = " //$NON-NLS-1$
-                                                                     + NotificationUtilities.paramString(notification));
-            }
-
             if (NotificationUtilities.isAdded(notification)) {
                 performAdd(notification, transformationDiagramModelNode, source);
             } else if (NotificationUtilities.isRemoved(notification)) {
@@ -392,9 +377,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
             } else if (NotificationUtilities.isChanged(notification)) {
                 performChange(notification, transformationDiagramModelNode);
             }
-
-        } else if (Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS)) {
-            Util.debug(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS, THIS_CLASS + ".handleSingleNotification( ) for DiagramEntity"); //$NON-NLS-1$
         }
     }
 
@@ -575,9 +557,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
         EObject targetObject = getEObjectTarget(notification);
 
         if (isValidTarget(targetObject)) {
-            if (UiConstants.Util.isDebugEnabled(com.metamatrix.modeler.transformation.ui.DebugConstants.TX_DIAGRAM_MODEL_NODE)) {
-                UiConstants.Util.print(com.metamatrix.modeler.transformation.ui.DebugConstants.TX_DIAGRAM_MODEL_NODE, "targetObject = " + targetObject); //$NON-NLS-1$
-            }
             DiagramModelNode targetNode = getModelNode(mappingDiagramModelNode, targetObject);
             if (targetNode != null) {
                 // If object's parent is in our current model
@@ -660,10 +639,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
     }
 
     private List getExistingMappingExtentNodes( DiagramModelNode mappingDiagramModelNode ) {
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-            String message = ""; //$NON-NLS-1$
-            UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-        }
         if (mappingDiagramModelNode == null) return Collections.EMPTY_LIST;
 
         Iterator iter = mappingDiagramModelNode.getChildren().iterator();
@@ -679,10 +654,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
     }
 
     private List getExistingMappingExtents( DiagramModelNode mappingDiagramModelNode ) {
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-            String message = ""; //$NON-NLS-1$
-            UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-        }
         if (mappingDiagramModelNode == null) return Collections.EMPTY_LIST;
 
         Iterator iter = mappingDiagramModelNode.getChildren().iterator();
@@ -710,28 +681,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
         return nExt;
     }
 
-    // private Collection getStagingTableExtents(DiagramModelNode mappingDiagramModelNode) {
-    // if( mappingDiagramModelNode == null )
-    // return Collections.EMPTY_LIST;
-    //            
-    // Iterator iter = mappingDiagramModelNode.getChildren().iterator();
-    // List existingStagingTableExtentNodes = new ArrayList(10);
-    // DiagramModelNode nextDMN = null;
-    // while( iter.hasNext()) {
-    // nextDMN = (DiagramModelNode)iter.next();
-    // if( nextDMN instanceof StagingTableExtentNode )
-    // existingStagingTableExtentNodes.add(nextDMN);
-    // }
-    //        
-    // if( existingStagingTableExtentNodes == null || existingStagingTableExtentNodes.isEmpty() )
-    // return Collections.EMPTY_LIST;
-    // return existingStagingTableExtentNodes;
-    // }
-    //    
-    // private DiagramModelNode getStagingTableExtentNode(MappingExtent mappingExtent) {
-    // return null;
-    // }
-
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelFactory#refresh(com.metamatrix.metamodels.diagram.Diagram)
      */
@@ -756,10 +705,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
             }
             if (diagram.getType().equals(PluginConstants.MAPPING_DIAGRAM_TYPE_ID)) {
                 // we have a coarse Mapping here
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DOCUMENT_REFRESH)) {
-                    String message = "Refreshing Coarse Mapping Diagram"; //$NON-NLS-1$
-                    UiConstants.Util.print(THIS_CLASS + ".refresh()", message); //$NON-NLS-1$
-                }
 
                 if (reconcileMappingClasses) {
                     if (showProgress) {
@@ -788,10 +733,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
             } else {
                 removeStaleSourceNodeEntities(diagramModelNode);
                 // DETAILED MAPPING HERE!!
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DOCUMENT_REFRESH)) {
-                    String message = "Refreshing Detailed Mapping Diagram"; //$NON-NLS-1$
-                    UiConstants.Util.print(THIS_CLASS + ".refresh()", message); //$NON-NLS-1$
-                }
                 if (showProgress) {
                     monitor.subTask("Reconciling Detailed Extents"); //$NON-NLS-1$
                     monitor.worked(35);
@@ -834,11 +775,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
                 if (!processedNodes.contains(source)) {
                     processedNodes.add(source);
                     source.updateAssociations();
-
-                    if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                        String message = "deleteAllEnumeratedTypeLinks:updateAssociations:link=" + source.toString(); //$NON-NLS-1$
-                        UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                    }
                 }
 
                 // delete target
@@ -848,11 +784,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
                 if (!processedNodes.contains(target)) {
                     processedNodes.add(target);
                     target.updateAssociations();
-
-                    if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                        String message = "deleteAllEnumeratedTypeLinks:updateAssociations:link=" + target.toString(); //$NON-NLS-1$
-                        UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                    }
                 }
             }
         }
@@ -1161,10 +1092,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
             nextNode = (DiagramModelNode)iter.next();
             if (!visibleMappingClasses.contains(nextNode.getModelObject())) {
                 removeNodeList.add(nextNode);
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DOCUMENT_REFRESH)) {
-                    String message = "Adding Node to REMOVE Node list = " + nextNode.getName(); //$NON-NLS-1$
-                    UiConstants.Util.print(THIS_CLASS + ".reconcileCoarseMappingClasses()", message); //$NON-NLS-1$
-                }
             }
         }
         diagramModelNode.removeChildren(removeNodeList, false);
@@ -1182,10 +1109,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
             if (!currentMappingClasses.contains(nextObj)) {
                 DiagramModelNode childModelNode = getGenerator().createModel(nextObj, diagram);
                 if (childModelNode != null) {
-                    if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DOCUMENT_REFRESH)) {
-                        String message = "Adding Node to ADD Node list = " + childModelNode.getName(); //$NON-NLS-1$
-                        UiConstants.Util.print(THIS_CLASS + ".reconcileCoarseMappingClasses()", message); //$NON-NLS-1$
-                    }
                     addedNodes.add(childModelNode);
                     addRecursionImage(childModelNode);
                     if (childModelNode instanceof UmlClassifierNode) {
@@ -1218,10 +1141,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
                                                      EObject mappingReferenceEObject,
                                                      EObject locationEObject ) {
 
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-            String message = "MappingClass = " + mappingReferenceEObject + "  location = " + locationEObject; //$NON-NLS-2$ //$NON-NLS-1$
-            UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-        }
         Iterator iter = getExistingMappingExtentNodes(diagramModelNode).iterator();
         MappingExtentNode nextNode = null;
 
@@ -1229,10 +1148,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
             nextNode = (MappingExtentNode)iter.next();
             if (nextNode.getModelObject().equals(locationEObject) && nextNode.getExtent().getMappingReference() != null
                 && nextNode.getExtent().getMappingReference().equals(mappingReferenceEObject)) {
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                    String message = "FOUND NODE = " + nextNode; //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                }
                 return nextNode;
             }
         }
@@ -1243,10 +1158,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
     private MappingExtentNode getExtentNode( DiagramModelNode diagramModelNode,
                                              EObject mappingClassEObject,
                                              EObject locationEObject ) {
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-            String message = "MappingClass = " + mappingClassEObject + "  location = " + locationEObject; //$NON-NLS-2$ //$NON-NLS-1$
-            UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-        }
         Iterator iter = getExistingMappingExtentNodes(diagramModelNode).iterator();
         MappingExtentNode nextNode = null;
 
@@ -1272,10 +1183,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
             }
 
             if (nextNode.getModelObject().equals(locationEObject) && nextNode.getMappingClass().equals(mappingClassEObject)) {
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                    String message = "FOUND NODE = " + nextNode; //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                }
                 return nextNode;
             }
         }
@@ -1286,12 +1193,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
     private MappingExtentNode getSummaryExtentNode( DiagramModelNode diagramModelNode,
                                                     EObject mappingClassEObject,
                                                     EObject locationEObject ) {
-
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-            String message = "MappingClass = " + mappingClassEObject + "  location = " + locationEObject; //$NON-NLS-2$ //$NON-NLS-1$
-            UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-        }
-
         Iterator iter = getExistingMappingExtentNodes(diagramModelNode).iterator();
         SummaryExtentNode seNode = null;
 
@@ -1303,12 +1204,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
 
                 if (seNode.getModelObject().equals(locationEObject)
                     && ((SummaryExtent)seNode.getExtent()).getMappingClasses().keySet().contains(mappingClassEObject)) {
-
-                    if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                        String message = "FOUND NODE = " + seNode; //$NON-NLS-1$
-                        UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                    }
-
                     return seNode;
                 }
             }
@@ -1320,11 +1215,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
     private MappingExtentNode getExtentNode( DiagramModelNode diagramModelNode,
                                              MappingExtent mappingExtent,
                                              List mappingExtentNodes ) {
-
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-            String message = "mappingExtent = " + mappingExtent; //$NON-NLS-1$
-            UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-        }
         Iterator iter = mappingExtentNodes.iterator();
         MappingExtentNode nextNode = null;
 
@@ -1339,10 +1229,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
     private void updateExtentNode( MappingExtentNode extentNode,
                                    MappingExtent currentExtent ) {
         double zoomFactor = DiagramEditorUtil.getCurrentZoomFactor();
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-            String message = "nodeExtent = " + extentNode.getExtent() + "  currentExtent = " + currentExtent; //$NON-NLS-2$ //$NON-NLS-1$
-            UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-        }
         extentNode.setExtent(currentExtent);
         extentNode.setExtentPosition(0);
         int newH = (int)(currentExtent.getHeight() / zoomFactor);
@@ -1377,45 +1263,18 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
 
                 mappingExtentNode.setMappingClass(mappingClassEObject);
                 mappingExtentNode.setParent(diagramModelNode);
-
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                    String message = "Adding Extent Node Node \n" + mappingExtentNode.toString(); //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                }
                 // Add link from MC to Extent
                 MappingLink targetLink = getMappingLinkConnectionModel(mappingClassNode, mappingExtentNode);
                 ((DiagramModelNode)targetLink.getSourceNode()).addSourceConnection(targetLink);
                 ((DiagramModelNode)targetLink.getTargetNode()).addTargetConnection(targetLink);
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                    String message = "Adding Mapping Connection \n" + targetLink.toString(); //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                }
 
                 mappingClassNode.updateAssociations();
                 mappingExtentNode.updateAssociations();
             } else {
-                // System.out.println("[MappingdiagramModelFactory.createExtentNode] Since this has no MC node, is must be unmapped: "
-                // + currentExtent );
                 mappingExtentNode = new MappingExtentNode(diagramModelNode, locationEObject, currentExtent, true);
 
                 // mappingExtentNode.setMappingClass(mappingClassEObject);
                 mappingExtentNode.setParent(diagramModelNode);
-
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                    String message = "Adding Extent Node Node \n" + mappingExtentNode.toString(); //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                }
-                // Add link from MC to Extent
-                // MappingLink targetLink = getMappingLinkConnectionModel(mappingClassNode, mappingExtentNode);
-                // ((DiagramModelNode)targetLink.getSourceNode()).addSourceConnection(targetLink);
-                // ((DiagramModelNode)targetLink.getTargetNode()).addTargetConnection(targetLink);
-                // if( UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                //                    String message = "Adding Mapping Connection \n" + targetLink.toString(); //$NON-NLS-1$
-                // UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                // }
-                //                
-                // mappingClassNode.updateAssociations();
-                // mappingExtentNode.updateAssociations();
             }
         } else {
             // DETAILED
@@ -1423,10 +1282,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
             EObject locationEObject = currentExtent.getDocumentNodeReference();
             EObject mappingClassReference = null;
             if (mappingReference != null) mappingClassReference = mappingReference.eContainer();
-            // else {
-            // // locationEObject is the mappingClass
-            // locationEObject = locationEObject // Temporary fix here????
-            // }
 
             // DiagramModelNode attributeNode = getModelNode(diagramModelNode, mappingReference);
             DiagramModelNode mappingClassNode = getModelNode(diagramModelNode, mappingClassReference);
@@ -1435,20 +1290,11 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
 
             mappingExtentNode.setParent(diagramModelNode);
 
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                String message = "Adding Extent Node Node \n" + mappingExtentNode.toString(); //$NON-NLS-1$
-                UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-            }
-
             if (mappingClassNode != null) {
                 // Add link from MC to Extent
                 MappingLink targetLink = getMappingLinkConnectionModel(mappingClassNode, mappingExtentNode);
                 ((DiagramModelNode)targetLink.getSourceNode()).addSourceConnection(targetLink);
                 ((DiagramModelNode)targetLink.getTargetNode()).addTargetConnection(targetLink);
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                    String message = "Adding Mapping Connection \n" + targetLink.toString(); //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                }
                 mappingClassNode.updateAssociations();
                 mappingExtentNode.updateAssociations();
             }
@@ -1488,10 +1334,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
             HashMap hmapMappingClasses = currentExtent.getMappingClasses();
 
             if (hmapMappingClasses == null) {
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                    String message = "hmapMappingClasses is null\n"; //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                }
                 return null;
             }
 
@@ -1500,11 +1342,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
 
             mappingExtentNode.setParent(diagramModelNode);
             mappingExtentNode.setMappingClasses(hmapMappingClasses);
-
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                String message = "Adding Extent Node Node \n" + mappingExtentNode.toString(); //$NON-NLS-1$
-                UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-            }
 
             Iterator itMCs = hmapMappingClasses.keySet().iterator();
 
@@ -1520,10 +1357,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
                     MappingLink targetLink = getMappingLinkConnectionModel(nextMappingClassNode, mappingExtentNode);
                     ((DiagramModelNode)targetLink.getSourceNode()).addSourceConnection(targetLink);
                     ((DiagramModelNode)targetLink.getTargetNode()).addTargetConnection(targetLink);
-                    if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                        String message = "Adding Mapping Connection \n" + targetLink.toString(); //$NON-NLS-1$
-                        UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                    }
 
                     nextMappingClassNode.updateAssociations();
                     mappingExtentNode.updateAssociations();
@@ -1645,10 +1478,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
         boolean showProgress = (monitor != null);
 
         List totalExtentList = new ArrayList();
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-            String message = "calling xmlFilter.getMappedClassifiers()"; //$NON-NLS-1$
-            UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-        }
         if (showProgress) {
             monitor.subTask("Getting mapping classes from XmlFilter"); //$NON-NLS-1$
         }
@@ -1694,10 +1523,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
 
         while (iter.hasNext()) {
             NodeConnectionModel nextAssociation = (NodeConnectionModel)iter.next();
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                String message = "Next Association = \n" + nextAssociation.toString(); //$NON-NLS-1$
-                UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-            }
             if (!mappingLinkExists(mappingDiagramModelNode, nextAssociation)) {
                 ((DiagramModelNode)nextAssociation.getSourceNode()).addSourceConnection(nextAssociation);
                 ((DiagramModelNode)nextAssociation.getTargetNode()).addTargetConnection(nextAssociation);
@@ -1710,10 +1535,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
                 List labelNodes = nextAssociation.getLabelNodes();
                 if (labelNodes != null && !labelNodes.isEmpty()) {
                     mappingDiagramModelNode.addChildren(labelNodes);
-                }
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                    String message = "Added New Association = \n" + nextAssociation.toString(); //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
                 }
             }
         }
@@ -1741,10 +1562,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
 
         while (iter.hasNext()) {
             NodeConnectionModel nextAssociation = (NodeConnectionModel)iter.next();
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                String message = "Next Association = \n" + nextAssociation.toString(); //$NON-NLS-1$
-                UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-            }
             if (!mappingLinkExists(mappingDiagramModelNode, nextAssociation)) {
                 ((DiagramModelNode)nextAssociation.getSourceNode()).addSourceConnection(nextAssociation);
                 ((DiagramModelNode)nextAssociation.getTargetNode()).addTargetConnection(nextAssociation);
@@ -1757,10 +1574,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
                 List labelNodes = nextAssociation.getLabelNodes();
                 if (labelNodes != null && !labelNodes.isEmpty()) {
                     mappingDiagramModelNode.addChildren(labelNodes);
-                }
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                    String message = "Added New Association = \n" + nextAssociation.toString(); //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
                 }
             }
         }
@@ -1928,13 +1741,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
             }
 
             if (!foundMatch) {
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                    String message = "staleMappingLink Source = " + //$NON-NLS-1$
-                                     ((DiagramModelNode)nextCurrentAssociation.getSourceNode()).getName() + " Target = " + //$NON-NLS-1$
-                                     ((DiagramModelNode)nextCurrentAssociation.getTargetNode()).getName();
-
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                }
                 staleAssociations.add(nextCurrentAssociation);
             }
         }
@@ -1983,11 +1789,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
 
                 if (!updatedNodes.contains(nextLink.getSourceNode())) updatedNodes.add(nextLink.getSourceNode());
                 if (!updatedNodes.contains(nextLink.getTargetNode())) updatedNodes.add(nextLink.getTargetNode());
-
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                    String message = "Cleaned up Stale Mapping Links = \n" + nextLink.toString(); //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                }
             }
 
         }
@@ -2080,18 +1881,10 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
             // use the filter to get the Visible Mapping classes and extents.
             if (diagram.getType().equals(PluginConstants.MAPPING_DIAGRAM_TYPE_ID)) {
                 // we have a coarse Mapping here
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                    String message = ""; //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                }
                 ((MappingDiagramNode)mappingDiagramModelNode).setCurrentYOrigin(newY);
                 resetExtents(mappingDiagramModelNode, newY);
             } else {
                 // DETAILED MAPPING HERE!!
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                    String message = ""; //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                }
                 ((MappingDiagramNode)mappingDiagramModelNode).setCurrentYOrigin(newY);
                 resetExtents(mappingDiagramModelNode, newY);
             }
@@ -2129,10 +1922,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
 
     private void resetExtents( DiagramModelNode mappingDiagramModelNode,
                                int newY ) {
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-            String messageA = ""; //$NON-NLS-1$
-            UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, messageA);
-        }
         Iterator iter = getExistingMappingExtentNodes(mappingDiagramModelNode).iterator();
 
         MappingExtentNode nextExtentNode = null;
@@ -2140,10 +1929,6 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
             nextExtentNode = (MappingExtentNode)iter.next();
             if (nextExtentNode != null) {
                 nextExtentNode.setExtentPosition(newY);
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                    String message = "New Position = " + nextExtentNode.getPosition(); //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-                }
             }
         }
 

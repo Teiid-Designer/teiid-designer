@@ -28,7 +28,6 @@ import com.metamatrix.metamodels.transformation.MappingClassColumn;
 import com.metamatrix.metamodels.transformation.MappingClassSet;
 import com.metamatrix.metamodels.transformation.StagingTable;
 import com.metamatrix.metamodels.transformation.TransformationFactory;
-import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.util.ModelContents;
@@ -36,7 +35,6 @@ import com.metamatrix.modeler.core.util.ModelResourceContainerFactory;
 import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
 import com.metamatrix.modeler.core.util.NewModelObjectHelperManager;
 import com.metamatrix.modeler.internal.core.ClearEObjectReferences;
-import com.metamatrix.modeler.mapping.DebugConstants;
 import com.metamatrix.modeler.mapping.ModelerMappingPlugin;
 import com.metamatrix.modeler.mapping.PluginConstants;
 import com.metamatrix.modeler.mapping.factory.IMappableTree;
@@ -48,8 +46,6 @@ import com.metamatrix.modeler.mapping.factory.MappingClassBuilderStrategy;
  * MappingClassFactory is a class for creating and editing mapping classes and attributes in a mappable tree.
  */
 public class MappingClassFactory {
-
-    private static final String CLASS = MappingClassFactory.class.getName();
 
     private static MappingClassBuilderStrategy defaultStrategy;
 
@@ -131,10 +127,6 @@ public class MappingClassFactory {
 
         Set result = new HashSet();
         Map mappingClassMap = strategy.buildMappingClassMap(node, this.tree, this.mapper);
-        if (PluginConstants.Util.isDebugEnabled(DebugConstants.MAPPING_CLASS_FACTORY)) {
-            PluginConstants.Util.printEntered(CLASS, printMap(mappingClassMap, "generateMappingClass")); //$NON-NLS-1$
-        }
-
         MappingClassGenerationVisitor visitor = new MappingClassGenerationVisitor(mapper, this, mappingClassMap,
                                                                                   autoPopulateAttributes, true, result);
 
@@ -1266,27 +1258,6 @@ public class MappingClassFactory {
 
         }
         return result;
-    }
-
-    // =========================================
-    // debug methods
-
-    /**
-     * diagnostic method
-     */
-    private String printMap( Map map,
-                             String header ) {
-        StringBuffer buf = new StringBuffer("<><><>MappingClassFactory results from " + header); //$NON-NLS-1$
-        ModelEditor editor = ModelerCore.getModelEditor();
-        for (Iterator keyIter = map.keySet().iterator(); keyIter.hasNext();) {
-            EObject location = (EObject)keyIter.next();
-            buf.append("\n    " + editor.getModelRelativePath(location) + " == Mapping Class location"); //$NON-NLS-1$  //$NON-NLS-2$
-            for (Iterator attIter = ((Collection)map.get(location)).iterator(); attIter.hasNext();) {
-                EObject node = (EObject)attIter.next();
-                buf.append("\n       " + editor.getModelRelativePath(node) + " == attribute"); //$NON-NLS-1$  //$NON-NLS-2$
-            }
-        }
-        return buf.toString();
     }
 
     /**

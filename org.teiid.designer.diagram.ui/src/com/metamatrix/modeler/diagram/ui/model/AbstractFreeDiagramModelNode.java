@@ -13,59 +13,51 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
-
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.diagram.DiagramEntity;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;
-import com.metamatrix.modeler.internal.diagram.ui.DebugConstants;
 
 /**
- * @author blafond
- * AbstractFreeDiagramModelNode
- * This class provides a base class for any DiagramModelNode that doesn't have any need for
- * an EObject or DiagramEntity.
- * First cut is for Label objects on Associations
+ * @author blafond AbstractFreeDiagramModelNode This class provides a base class for any DiagramModelNode that doesn't have any
+ *         need for an EObject or DiagramEntity. First cut is for Label objects on Associations
  */
 abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, DiagramUiConstants {
-    private String debugMessage = "EMPTY"; //$NON-NLS-1$
-    
     private int x;
     private int y;
     private int width;
     private int height;
     private String name;
-    
+
     private DiagramModelNode parent;
     private Image firstOverlayImage;
     private Image secondOverlayImage;
-    
+
     private boolean heightFixed = false;
-    private int fixedHeight = DEFAULT_FIXED_HEIGHT;  
-    
+    private int fixedHeight = DEFAULT_FIXED_HEIGHT;
+
     /**
      * Constructor
      */
-    public AbstractFreeDiagramModelNode(String name) {
+    public AbstractFreeDiagramModelNode( String name ) {
         setName(name);
     }
 
     /**
      * Set the Model Object
      */
-    public void setModelObject(EObject object) {
+    public void setModelObject( EObject object ) {
         // Does Nothing
     }
 
     /**
      * Set the Diagram Model Object
      */
-    public void setDiagramModelObject(DiagramEntity object) {
+    public void setDiagramModelObject( DiagramEntity object ) {
         // Does nothing
     }
 
@@ -87,7 +79,7 @@ abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, 
      *  (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#addChild(com.metamatrix.modeler.diagram.ui.model.DiagramModelNode)
      */
-    public void addChild(DiagramModelNode child) {
+    public void addChild( DiagramModelNode child ) {
         // Does Nothing;
     }
 
@@ -95,28 +87,31 @@ abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, 
      *  (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#removeChild(com.metamatrix.modeler.diagram.ui.model.DiagramModelNode)
      */
-    public void removeChild(DiagramModelNode child, boolean deleteDiagramEntity) {
+    public void removeChild( DiagramModelNode child,
+                             boolean deleteDiagramEntity ) {
         // Does Nothing;
         return;
     }
-    
+
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#addChildren(java.util.List)
      */
-    public void addChildren(List children) {
+    public void addChildren( List children ) {
 
     }
 
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#removeChildren(java.util.List)
      */
-    public void removeChildren(List children, boolean deleteDiagramEntities) {
+    public void removeChildren( List children,
+                                boolean deleteDiagramEntities ) {
 
     }
+
     /**
      * Set the List of Children
      */
-    public void setChildren(List childList) {
+    public void setChildren( List childList ) {
         // Does Nothing;
     }
 
@@ -127,11 +122,11 @@ abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, 
         // Does Nothing;
         return Collections.EMPTY_LIST;
     }
-    
-    public void updateForChild(boolean isMove) {
+
+    public void updateForChild( boolean isMove ) {
         fireStructureChange(DiagramUiConstants.DiagramNodeProperties.CHILDREN, "EMPTY"); //$NON-NLS-1$
     }
-    
+
     /**
      * Get the number of Children
      */
@@ -139,49 +134,46 @@ abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, 
         // Does Nothing;
         return 0;
     }
-    
-    public void setParent(DiagramModelNode parent) {
+
+    public void setParent( DiagramModelNode parent ) {
         this.parent = parent;
     }
-    
+
     public DiagramModelNode getParent() {
         return this.parent;
     }
-    
-    public void setPosition(Point position) {
-        if ( Util.isDebugEnabled(DebugConstants.DIAGRAM_MODEL_NODE) &&  Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-            debugMessage = ".setPosition():  New Position for " + getName() + " diagram node = " + position; //$NON-NLS-2$ //$NON-NLS-1$
-            Util.print(this.getClass(), debugMessage);
-        }
+
+    public void setPosition( Point position ) {
         this.x = position.x;
         this.y = position.y;
-        firePropertyChange(DiagramUiConstants.DiagramNodeProperties.LOCATION, null, position); 
+        firePropertyChange(DiagramUiConstants.DiagramNodeProperties.LOCATION, null, position);
     }
 
     /*
      *  (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#setCenterXY(int, int)
      */
-    public void setCenterXY(int newCenterX, int newCenterY) {
+    public void setCenterXY( int newCenterX,
+                             int newCenterY ) {
         int newX = newCenterX - this.getWidth() / 2;
         int newY = newCenterY - this.getHeight() / 2;
 
-        this.x = newX;           
+        this.x = newX;
         this.y = newY;
-        
-        firePropertyChange(DiagramNodeProperties.LOCATION,null, new Point(newX, newY));
+
+        firePropertyChange(DiagramNodeProperties.LOCATION, null, new Point(newX, newY));
     }
-    
-    public void setCenterX(int newCenterX) {
+
+    public void setCenterX( int newCenterX ) {
         int newX = newCenterX - this.getWidth() / 2;
         this.x = newX;
-        firePropertyChange(DiagramUiConstants.DiagramNodeProperties.LOCATION, null, new Point(newX, this.y)); 
+        firePropertyChange(DiagramUiConstants.DiagramNodeProperties.LOCATION, null, new Point(newX, this.y));
     }
 
-    public void setCenterY(int newCenterY) {
+    public void setCenterY( int newCenterY ) {
         int newY = newCenterY - this.getHeight() / 2;
         this.y = newY;
-        firePropertyChange(DiagramUiConstants.DiagramNodeProperties.LOCATION, null, new Point(this.x, newY)); 
+        firePropertyChange(DiagramUiConstants.DiagramNodeProperties.LOCATION, null, new Point(this.x, newY));
     }
 
     public Point getPosition() {
@@ -189,11 +181,7 @@ abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, 
         return posn;
     }
 
-    public void setSize(Dimension dimension) {
-        if ( Util.isDebugEnabled(DebugConstants.DIAGRAM_MODEL_NODE) &&  Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-            debugMessage = ".setPosition():  New dimension for " + getName() + " diagram node = " + dimension; //$NON-NLS-2$ //$NON-NLS-1$
-            Util.print(this.getClass(), debugMessage);
-        }
+    public void setSize( Dimension dimension ) {
         this.width = dimension.width;
         this.height = dimension.height;
         firePropertyChange(DiagramUiConstants.DiagramNodeProperties.SIZE, null, dimension);
@@ -206,17 +194,20 @@ abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, 
 
     transient protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 
-    public void addPropertyChangeListener(PropertyChangeListener l) {
+    public void addPropertyChangeListener( PropertyChangeListener l ) {
         listeners.addPropertyChangeListener(l);
     }
 
-    public void firePropertyChange(String prop, Object old, Object newValue) {
+    public void firePropertyChange( String prop,
+                                    Object old,
+                                    Object newValue ) {
         listeners.firePropertyChange(prop, old, newValue);
     }
 
     // Used to alert the Edit Part that the children have been modified
     // and a refreshChildren() is needed.
-    protected void fireStructureChange(String prop, Object child) {
+    protected void fireStructureChange( String prop,
+                                        Object child ) {
         listeners.firePropertyChange(prop, null, child);
     }
 
@@ -224,37 +215,31 @@ abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, 
         return this;
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener l) {
+    public void removePropertyChangeListener( PropertyChangeListener l ) {
         listeners.removePropertyChangeListener(l);
     }
 
     public void update() {
         firePropertyChange(DiagramUiConstants.DiagramNodeProperties.PROPERTIES, null, null);
     }
-    
-    public void update(String property) {
+
+    public void update( String property ) {
         firePropertyChange(property, null, null);
     }
-    
+
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#update(java.lang.String, java.lang.String, java.lang.String)
      */
-    public void update(String prop, String oldValue, String newValue) {
+    public void update( String prop,
+                        String oldValue,
+                        String newValue ) {
         firePropertyChange(prop, oldValue, newValue);
     }
 
-
-    public void setName(String name) {
-        if( this.name == null || ! this.name.equals(name)) {
+    public void setName( String name ) {
+        if (this.name == null || !this.name.equals(name)) {
             String oldName = this.name;
-            
             this.name = name;
-            
-            if ( Util.isDebugEnabled(DebugConstants.DIAGRAM_MODEL_NODE) &&  Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-                debugMessage = ".setName():  Just changed [" + oldName + "] name to: [" + name + "]"; //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
-                Util.print(this.getClass(), debugMessage);
-            }
-            
             firePropertyChange(DiagramUiConstants.DiagramNodeProperties.NAME, oldName, name);
         }
     }
@@ -262,15 +247,14 @@ abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, 
     public String getName() {
         return this.name;
     }
-    
 
     public String getDisplayString() {
         return getName();
     }
 
-    //    public void setPath(String newString) {
-    //        path = newString;
-    //    }
+    // public void setPath(String newString) {
+    // path = newString;
+    // }
 
     public String getPath() {
         return "Path"; //$NON-NLS-1$
@@ -335,25 +319,26 @@ abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, 
         return new Vector();
     }
 
-    public void addSourceConnection(NodeConnectionModel iConnection) {
+    public void addSourceConnection( NodeConnectionModel iConnection ) {
         // Do Nothing
     }
 
-    public void addTargetConnection(NodeConnectionModel iConnection) {
-        // Do Nothing
-    }
-    
-    public void removeSourceConnection(NodeConnectionModel iConnection) {
+    public void addTargetConnection( NodeConnectionModel iConnection ) {
         // Do Nothing
     }
 
-    public void removeTargetConnection(NodeConnectionModel iConnection) {
+    public void removeSourceConnection( NodeConnectionModel iConnection ) {
         // Do Nothing
     }
 
-    public List getAssociations(HashMap nodeMap) {
+    public void removeTargetConnection( NodeConnectionModel iConnection ) {
+        // Do Nothing
+    }
+
+    public List getAssociations( HashMap nodeMap ) {
         return Collections.EMPTY_LIST;
     }
+
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#updateAssociations()
      */
@@ -374,15 +359,15 @@ abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, 
     public boolean hasWarnings() {
         return false;
     }
-    
+
     /*
      *  (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#recoverObjectProperties()
      */
-    public void recoverObjectProperties(){
-        //Default Impl
+    public void recoverObjectProperties() {
+        // Default Impl
     }
-    
+
     /*
      *  (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#wasLayedOut()
@@ -390,14 +375,13 @@ abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, 
     public boolean wasLayedOut() {
         return false;
     }
-    
+
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#getDependencies()
      */
     public List getDependencies() {
         return Collections.EMPTY_LIST;
     }
-
 
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#getFirstOverlayImage()
@@ -409,11 +393,11 @@ abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, 
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#setFirstOverlayImage(org.eclipse.swt.graphics.Image)
      */
-    public void setFirstOverlayImage(Image image, String editorID) {
+    public void setFirstOverlayImage( Image image,
+                                      String editorID ) {
         this.firstOverlayImage = image;
     }
-    
-    
+
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#getSecondOverlayImage()
      */
@@ -424,9 +408,11 @@ abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, 
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#setSecondOverlayImage(org.eclipse.swt.graphics.Image)
      */
-    public void setSecondOverlayImage(Image image, int positionIndex) {
+    public void setSecondOverlayImage( Image image,
+                                       int positionIndex ) {
         this.secondOverlayImage = image;
     }
+
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#updateForErrorsAndWarnings()
      */
@@ -434,63 +420,60 @@ abstract public class AbstractFreeDiagramModelNode implements DiagramModelNode, 
 
     }
 
-	/* (non-Javadoc)
-	 * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#getDiagram()
-	 */
-	public Diagram getDiagram() {
-		// XXX Auto-generated method stub
-		return null;
-	}
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#getDiagram()
+     */
+    public Diagram getDiagram() {
+        // XXX Auto-generated method stub
+        return null;
+    }
 
-	/* (non-Javadoc)
-	 * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#isReadOnly()
-	 */
-	public boolean isReadOnly() {
-		return true;
-	}
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#isReadOnly()
+     */
+    public boolean isReadOnly() {
+        return true;
+    }
 
-	/* (non-Javadoc)
-	 * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#setReadOnly(boolean)
-	 */
-	public void setReadOnly(boolean readOnly) {
-		// XXX Auto-generated method stub
-	}
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#setReadOnly(boolean)
+     */
+    public void setReadOnly( boolean readOnly ) {
+        // XXX Auto-generated method stub
+    }
 
-    /** 
+    /**
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#hideLocation()
      * @since 4.2
      */
     public boolean hideLocation() {
         return false;
     }
-    /** 
+
+    /**
      * @see com.metamatrix.modeler.diagram.ui.model.DiagramModelNode#setHideLocation(boolean)
      * @since 4.2
      */
-    public void setHideLocation(boolean hideLocation) {
+    public void setHideLocation( boolean hideLocation ) {
     }
-    
+
     public String getEditorID() {
         return null;
     }
 
-    
     public int getFixedHeight() {
         return this.fixedHeight;
     }
 
-    
-    public void setFixedHeight(int theFixedHeight) {
+    public void setFixedHeight( int theFixedHeight ) {
         this.fixedHeight = theFixedHeight;
     }
 
-    
     public boolean isHeightFixed() {
         return this.heightFixed;
     }
 
-    
-    public void setHeightFixed(boolean theHeightFixed) {
+    public void setHeightFixed( boolean theHeightFixed ) {
         this.heightFixed = theHeightFixed;
     }
 }

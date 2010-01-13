@@ -28,8 +28,6 @@ import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.mapping.factory.IMappableTree;
-import com.metamatrix.modeler.mapping.ui.DebugConstants;
-import com.metamatrix.modeler.mapping.ui.UiConstants;
 
 /**
  * DocumentNotificationHandler
@@ -68,11 +66,6 @@ public class DocumentNotificationHandler {
     public void handleNotification( Notification notification ) {
         // logDebug = false;
         boolean somethingChanged = false;
-
-        if (UiConstants.Util.isDebugEnabled("modelEditorNotification")) { //$NON-NLS-1$
-        // logDebug = true;
-        }
-
         boolean ignoreNotification = (notification instanceof SourcedNotification)
                                      && ((SourcedNotification)notification).getSource() instanceof IgnorableNotificationSource;
 
@@ -142,14 +135,6 @@ public class DocumentNotificationHandler {
                 }
             }
         }
-
-        if (!isDiagramObject && UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DOCUMENT_REFRESH)) {
-            String message = "DocumentNotificationHandler.shouldHandleNotification() = " //$NON-NLS-1$
-                             + result + " for notification = " //$NON-NLS-1$
-                             + paramString2(notification);
-            UiConstants.Util.print(DebugConstants.MAPPING_DOCUMENT_REFRESH, message);
-        }
-
         return result;
     }
 

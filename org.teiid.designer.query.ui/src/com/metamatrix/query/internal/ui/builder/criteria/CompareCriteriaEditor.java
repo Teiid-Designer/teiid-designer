@@ -15,7 +15,6 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.model.CompareCriteriaEditorModel;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
-import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
 import com.metamatrix.query.sql.LanguageObject;
 import com.metamatrix.query.sql.lang.CompareCriteria;
 import com.metamatrix.query.sql.symbol.Expression;
@@ -37,9 +36,6 @@ public class CompareCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     public CompareCriteriaEditor( Composite parent,
                                   CompareCriteriaEditorModel model ) {
         super(parent, CompareCriteria.class, model);
-        if (BuilderUtils.isDebugLogging() || BuilderUtils.isTraceLogging()) {
-            Util.print(this, "constructor"); //$NON-NLS-1$
-        }
         this.theModel = model;
         viewController = new ViewController();
         model.addModelListener(viewController);
@@ -73,18 +69,12 @@ public class CompareCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     }
 
     public Control createLeftComponent( Composite parent ) {
-        if (BuilderUtils.isTraceLogging() || BuilderUtils.isDebugLogging()) {
-            Util.print(this, " in createLeftComponent()"); //$NON-NLS-1$
-        }
         leftEditor = new CriteriaExpressionEditor(parent, theModel.getLeftExpressionModel());
         leftComponent = leftEditor.getUi();
         return leftComponent;
     }
 
     public Control createRightComponent( Composite parent ) {
-        if (BuilderUtils.isTraceLogging() || BuilderUtils.isDebugLogging()) {
-            Util.print(this, " in createRightComponent()"); //$NON-NLS-1$
-        }
         rightEditor = new CriteriaExpressionEditor(parent, theModel.getRightExpressionModel());
         rightComponent = rightEditor.getUi();
         return rightComponent;
@@ -157,9 +147,6 @@ public class CompareCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
          */
         public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
             String type = theEvent.getType();
-            if (BuilderUtils.isEventLogging() || BuilderUtils.isTraceLogging()) {
-                Util.print(this, " CompareCriteriaEditor ViewController modelChanged(), event type of " + type); //$NON-NLS-1$
-            }
             if (type.equals(CompareCriteriaEditorModel.LEFT_EXPRESSION)) {
                 displayLeftExpression();
             } else if (type.equals(CompareCriteriaEditorModel.RIGHT_EXPRESSION)) {
@@ -168,14 +155,5 @@ public class CompareCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
                 displayLanguageObjectChange();
             }
         }
-    }
-
-    @Override
-    public boolean hasChanged() {
-        boolean changed = super.hasChanged();
-        if (BuilderUtils.isDebugLogging() || BuilderUtils.isTraceLogging()) {
-            Util.print(this, "hasChanged() returning " + changed); //$NON-NLS-1$
-        }
-        return changed;
     }
 }

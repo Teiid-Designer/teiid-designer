@@ -107,10 +107,6 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
 
     @Override
     public void create() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "create()"); //$NON-NLS-1$
-        }
-
         super.create();
 
         editor = createEditor(pnlEditorDetail);
@@ -160,10 +156,6 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
                 treeViewer.selectRoot();
             }
         });
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "create()"); //$NON-NLS-1$
-        }
     }
 
     /* (non-Javadoc)
@@ -171,9 +163,6 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
      */
     @Override
     protected Control createDialogArea( Composite theParent ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "createDialogArea()"); //$NON-NLS-1$
-        }
         originalLanguageObjLabel = WidgetFactory.createLabel(theParent, StringUtil.Constants.EMPTY_STRING);
         Composite pnlContents = (Composite)super.createDialogArea(theParent);
 
@@ -310,11 +299,6 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
         pnlEditorDetail = new Composite(pnlEditor, SWT.NONE);
         pnlEditorDetail.setLayoutData(new GridData(GridData.FILL_BOTH));
         pnlEditorDetail.setLayout(new GridLayout());
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "createDialogArea()"); //$NON-NLS-1$
-        }
-
         return pnlContents;
     }
 
@@ -326,20 +310,12 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
      * @param theParent the panel where the buttons are contained
      */
     protected void createTreeButtons( Composite theParent ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "createTreeButtons"); //$NON-NLS-1$
-        }
-
         Runnable deleteRunner = new Runnable() {
             public void run() {
                 handleDeleteSelected();
             }
         };
         deleteAction = new DeleteViewerObjectAction(theParent, deleteRunner);
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "createTreeButtons"); //$NON-NLS-1$
-        }
     }
 
     protected void fillContextMenu( IMenuManager theMenuMgr ) {
@@ -379,10 +355,6 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
     }
 
     protected void handleDeleteSelected() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "handleDeleteSelected()"); //$NON-NLS-1$
-        }
-
         editor.clear();
         treeViewer.deleteSelection();
 
@@ -390,17 +362,9 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
         setCurrentSql(treeViewer.getLanguageObject());
 
         editor.acceptFocus();
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "handleDeleteSelected()"); //$NON-NLS-1$
-        }
     }
 
     void handleModelChanged() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "handleModelChanged()"); //$NON-NLS-1$
-        }
-
         boolean isEnabled = false;
         boolean isComplete = false;
         boolean hasChanged = false;
@@ -412,14 +376,6 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
             hasChanged = editor.hasChanged();
         }
         boolean state = (isEnabled && isComplete && hasChanged);
-        if (BuilderUtils.isEventLogging()) {
-            Util.print(this, "handleModelChanged():editor=" + editor.getClass().getName() + //$NON-NLS-1$
-                             ", enabled=" + isEnabled + //$NON-NLS-1$
-                             ", complete=" + isComplete + //$NON-NLS-1$
-                             ", changed=" + hasChanged + //$NON-NLS-1$
-                             ", setting Apply button enabled state to " + state); //$NON-NLS-1$
-        }
-
         btnSet.setEnabled(state);
         btnReset.setEnabled(state);
 
@@ -427,32 +383,16 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
 
         // set enable/disable status of buttons
         setEnabledStatus();
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "handleModelChanged()"); //$NON-NLS-1$
-        }
     }
 
     protected void handleResetSelected() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "handleResetSelected()"); //$NON-NLS-1$
-        }
-
         editor.reset();
 
         // put focus back on editor from the reset button
         editor.acceptFocus();
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "handleResetSelected()"); //$NON-NLS-1$
-        }
     }
 
     protected void handleSetSelected() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "handleSetSelected()"); //$NON-NLS-1$
-        }
-
         editor.save();
 
         // need the editor's language object in order to update tree.
@@ -471,17 +411,9 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
 
         // put focus back on editor from the set button
         editor.acceptFocus();
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "handleSetSelected()"); //$NON-NLS-1$
-        }
     }
 
     protected void handleTreeSelection() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "handleTreeSelection()"); //$NON-NLS-1$
-        }
-
         IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
         Object selectedObj = selection.getFirstElement();
 
@@ -500,10 +432,6 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
 
         // set enable/disable status of buttons
         setEnabledStatus();
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "handleTreeSelection()"); //$NON-NLS-1$
-        }
     }
 
     protected boolean isTreeSelectionRoot() {
@@ -532,19 +460,11 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
     }
 
     protected void setEnabledStatus() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "setEnabledStatus()"); //$NON-NLS-1$
-        }
-
         //
         // set enabled status of delete button
         //
 
         boolean canDelete = treeViewer.canDeleteSelection();
-
-        if (BuilderUtils.isDebugLogging()) {
-            Util.print(this, "setEnabledStatus():canDelete=" + canDelete); //$NON-NLS-1$
-        }
 
         if (canDelete) {
             if (!deleteAction.isEnabled()) {
@@ -563,24 +483,12 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
         Button btnOk = getButton(OK);
         boolean enable = treeViewer.isComplete();
 
-        if (BuilderUtils.isDebugLogging()) {
-            Util.print(this, "setEnabledStatus():viewer complete=" + enable); //$NON-NLS-1$
-        }
-
         if (btnOk.isEnabled() != enable) {
             btnOk.setEnabled(enable);
-        }
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "setEnabledStatus"); //$NON-NLS-1$
         }
     }
 
     public void setLanguageObject( LanguageObject theLangObj ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "setLanguageObject():langObj=" + theLangObj); //$NON-NLS-1$
-        }
-
         // language object must be cloned here so that the original isn't modified.
         // this prevents the original from being modified even if the user cancels out of the builder.
         LanguageObject langObj = (theLangObj == null) ? null : (LanguageObject)theLangObj.clone();
@@ -614,22 +522,10 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
                 treeViewer.selectRoot();
             }
         });
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "setLanguageObject()"); //$NON-NLS-1$
-        }
     }
 
     protected void setOriginalSql( LanguageObject theLangObj ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "setOriginalSql():langObj=" + theLangObj); //$NON-NLS-1$
-        }
-
         originalSql.setText(SQLStringVisitor.getSQLString(theLangObj));
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "setOriginalSql()"); //$NON-NLS-1$
-        }
     }
 
 }

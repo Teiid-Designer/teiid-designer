@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.Button;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -31,7 +30,6 @@ import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
@@ -58,7 +56,6 @@ import com.metamatrix.modeler.diagram.ui.util.directedit.DirectEditPart;
 import com.metamatrix.modeler.diagram.ui.util.directedit.DirectEditPartEditPolicy;
 import com.metamatrix.modeler.diagram.ui.util.directedit.DirectEditPartManager;
 import com.metamatrix.modeler.diagram.ui.util.directedit.LabelCellEditorLocator;
-import com.metamatrix.modeler.internal.diagram.ui.DebugConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.modeler.ui.event.IRevealHideListener;
@@ -66,8 +63,7 @@ import com.metamatrix.modeler.ui.event.IRevealHideListener;
 /**
  * UmlClassifierEditPart
  */
-public class UmlClassifierEditPart extends AbstractNotationEditPart implements
-                                                                   DirectEditPart {
+public class UmlClassifierEditPart extends AbstractNotationEditPart implements DirectEditPart {
 
     // ===========================================================================================================================
     // Constants
@@ -89,7 +85,7 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
         super();
     }
 
-    public UmlClassifierEditPart(String diagramTypeId) {
+    public UmlClassifierEditPart( String diagramTypeId ) {
         super();
         setDiagramTypeId(diagramTypeId);
         init();
@@ -171,10 +167,8 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
             layout(true);
 
             // if in a MappingClassDiagram, synchronize with the tree
-            if (getRevealHideListener() != null 
-             && getRevealHideListener().isRevealHideBehaviorEnabled() 
-             && lstChildEObjects != null 
-             && lstChildEObjects != Collections.EMPTY_LIST) {
+            if (getRevealHideListener() != null && getRevealHideListener().isRevealHideBehaviorEnabled()
+                && lstChildEObjects != null && lstChildEObjects != Collections.EMPTY_LIST) {
                 // get the list of newly revealed EObjects
 
                 // announce them to the reveal listener
@@ -269,8 +263,7 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
             if (doubleClickedName()) {
                 if (getSelectionHandler().shouldRename(getModelObject())) {
                     if (ModelerCore.getModelEditor().hasName(getModelObject())
-                        && !ModelObjectUtilities.isReadOnly(getModelObject()))
-                        performDirectEdit();
+                        && !ModelObjectUtilities.isReadOnly(getModelObject())) performDirectEdit();
                 }
             } else {
                 // Let's delegate to the modelEditorManager here
@@ -289,8 +282,7 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
             ((DiagramModelNode)getModel()).setSize(newSize);
 
             // if in a MappingClassDiagram, synchronize with the tree
-            if ( getRevealHideListener() != null 
-              && getRevealHideListener().isRevealHideBehaviorEnabled() ) { 
+            if (getRevealHideListener() != null && getRevealHideListener().isRevealHideBehaviorEnabled()) {
 
                 // announce them to the reveal listener
                 getRevealHideListener().notifyElementsRevealed(this, getChildEObjects());
@@ -299,43 +291,42 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
     }
 
     @Override
-    public Object getAdapter(Class key) {
-        if (key == AccessibleAnchorProvider.class)
-            return new DefaultAccessibleAnchorProvider() {
+    public Object getAdapter( Class key ) {
+        if (key == AccessibleAnchorProvider.class) return new DefaultAccessibleAnchorProvider() {
 
-                @Override
-                public List getSourceAnchorLocations() {
-                    List list = new ArrayList();
-                    Dimension thisSize = getFigure().getSize();
+            @Override
+            public List getSourceAnchorLocations() {
+                List list = new ArrayList();
+                Dimension thisSize = getFigure().getSize();
 
-                    list.add(new Point(0, 0));
-                    list.add(new Point(thisSize.width / 2, 0));
-                    list.add(new Point(thisSize.width, 0));
-                    list.add(new Point(thisSize.width, thisSize.height / 2));
-                    list.add(new Point(thisSize.width, thisSize.height));
-                    list.add(new Point(thisSize.width / 2, thisSize.height));
-                    list.add(new Point(0, thisSize.height));
-                    list.add(new Point(0, thisSize.height / 2));
+                list.add(new Point(0, 0));
+                list.add(new Point(thisSize.width / 2, 0));
+                list.add(new Point(thisSize.width, 0));
+                list.add(new Point(thisSize.width, thisSize.height / 2));
+                list.add(new Point(thisSize.width, thisSize.height));
+                list.add(new Point(thisSize.width / 2, thisSize.height));
+                list.add(new Point(0, thisSize.height));
+                list.add(new Point(0, thisSize.height / 2));
 
-                    return list;
-                }
+                return list;
+            }
 
-                @Override
-                public List getTargetAnchorLocations() {
-                    List list = new ArrayList();
-                    Dimension thisSize = getFigure().getSize();
+            @Override
+            public List getTargetAnchorLocations() {
+                List list = new ArrayList();
+                Dimension thisSize = getFigure().getSize();
 
-                    list.add(new Point(0, 0));
-                    list.add(new Point(thisSize.width / 2, 0));
-                    list.add(new Point(thisSize.width, 0));
-                    list.add(new Point(thisSize.width, thisSize.height / 2));
-                    list.add(new Point(thisSize.width, thisSize.height));
-                    list.add(new Point(thisSize.width / 2, thisSize.height));
-                    list.add(new Point(0, thisSize.height));
-                    list.add(new Point(0, thisSize.height / 2));
-                    return list;
-                }
-            };
+                list.add(new Point(0, 0));
+                list.add(new Point(thisSize.width / 2, 0));
+                list.add(new Point(thisSize.width, 0));
+                list.add(new Point(thisSize.width, thisSize.height / 2));
+                list.add(new Point(thisSize.width, thisSize.height));
+                list.add(new Point(thisSize.width / 2, thisSize.height));
+                list.add(new Point(0, thisSize.height));
+                list.add(new Point(0, thisSize.height / 2));
+                return list;
+            }
+        };
         return super.getAdapter(key);
     }
 
@@ -371,7 +362,7 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
      * rectangle-selects several figures...
      */
     @Override
-    public DragTracker getDragTracker(Request req) {
+    public DragTracker getDragTracker( Request req ) {
         // Unlike in Logical Diagram Editor example, I use a singleton because this
         // method is Entered >> several time, so I prefer to save memory ; and it works!
         if (myDragTracker == null) {
@@ -400,19 +391,18 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
     }
 
     public IRevealHideListener getRevealHideListener() {
-        if ( revealHideListener == null ) {
+        if (revealHideListener == null) {
 
             DiagramController deController = ((DiagramViewer)getViewer()).getEditor().getDiagramController();
-            
-            if ( deController instanceof IRevealHideListener ) {
+
+            if (deController instanceof IRevealHideListener) {
                 revealHideListener = (IRevealHideListener)deController;
             }
         }
-        
+
         return revealHideListener;
     }
 
-    
     public String getText() {
         return ((DiagramModelNode)getModel()).getName();
     }
@@ -421,7 +411,7 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
      * @see com.metamatrix.modeler.diagram.ui.part.DiagramEditPart#hiliteBackground(org.eclipse.swt.graphics.Color)
      */
     @Override
-    public void hiliteBackground(Color hiliteColor) {
+    public void hiliteBackground( Color hiliteColor ) {
         getDiagramFigure().hiliteBackground(hiliteColor);
     }
 
@@ -435,7 +425,7 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
      * @see com.metamatrix.modeler.diagram.ui.part.DiagramEditPart#layout(boolean)
      */
     @Override
-    public void layout(boolean layoutChildren) {
+    public void layout( boolean layoutChildren ) {
         // Need to set the stack order of the containers....
         // Get the children of this edit part
         // If container edit parts, get the model nodes
@@ -444,24 +434,21 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
     }
 
     public void performDirectEdit() {
-        if (manager == null)
-            manager = new DirectEditPartManager(this, TextCellEditor.class, new LabelCellEditorLocator(getLabel()));
+        if (manager == null) manager = new DirectEditPartManager(this, TextCellEditor.class,
+                                                                 new LabelCellEditorLocator(getLabel()));
         manager.show();
     }
 
     @Override
-    public void performRequest(Request request) {
+    public void performRequest( Request request ) {
         if (request.getType() == RequestConstants.REQ_DIRECT_EDIT) {
             if (!(getSelectionHandler().handleDoubleClick(this.getModelObject()))) {
-                if (ModelerCore.getModelEditor().hasName(getModelObject()))
-                    performDirectEdit();
+                if (ModelerCore.getModelEditor().hasName(getModelObject())) performDirectEdit();
             }
         } else if (request.getType() == RequestConstants.REQ_SELECTION && canCollapse()) {
             if (clickedOnArrow()) {
-                if (((UmlClassifierNode)getModel()).isExpanded())
-                    ((UmlClassifierNode)getModel()).collapse();
-                else
-                    ((UmlClassifierNode)getModel()).expand();
+                if (((UmlClassifierNode)getModel()).isExpanded()) ((UmlClassifierNode)getModel()).collapse();
+                else ((UmlClassifierNode)getModel()).expand();
             }
         }
     }
@@ -470,8 +457,8 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
      * @see java.beans.PropertyChangeListener#propertyChange(PropertyChangeEvent)
      */
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        //boolean refresh = false;
+    public void propertyChange( PropertyChangeEvent evt ) {
+        // boolean refresh = false;
         // 
         String prop = evt.getPropertyName();
 
@@ -481,31 +468,26 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
         } else if (prop.equals(DiagramUiConstants.DiagramNodeProperties.SIZE)) {
             getChangeManager().refresh(PropertyChangeManager.RESIZE_CHILDREN, false);
             getChangeManager().refresh(PropertyChangeManager.GENERAL, false);
-            if( !((DiagramModelNode)getModel()).getSourceConnections().isEmpty() ||
-                            !((DiagramModelNode)getModel()).getTargetConnections().isEmpty()  ) {
-                            ((DiagramModelNode)getModel()).updateAssociations();
-                        }
-                        
+            if (!((DiagramModelNode)getModel()).getSourceConnections().isEmpty()
+                || !((DiagramModelNode)getModel()).getTargetConnections().isEmpty()) {
+                ((DiagramModelNode)getModel()).updateAssociations();
+            }
+
             getChangeManager().refresh(PropertyChangeManager.LABELS, false);
         } else if (prop.equals(DiagramUiConstants.DiagramNodeProperties.IMAGES)) {
             refreshImages();
         } else if (prop.equals(DiagramUiConstants.DiagramNodeProperties.CONNECTION)) {
-            if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_EDIT_PARTS)) {
-                DiagramUiConstants.Util.print(DebugConstants.DIAGRAM_EDIT_PARTS,
-                                              "Connection Changed for EditPart Model = " + ((DiagramModelNode)getModel()).getName()); //$NON-NLS-1$
-            }
-            
             getChangeManager().refresh(PropertyChangeManager.SOURCE_CONNECTIONS, false);
             getChangeManager().refresh(PropertyChangeManager.TARGET_CONNECTIONS, false);
             getChangeManager().refresh(PropertyChangeManager.ANCHORS, false);
             getChangeManager().refresh(PropertyChangeManager.GENERAL, false);
             getChangeManager().refresh(PropertyChangeManager.LABELS, false);
-        } else if (prop.equals(DiagramUiConstants.DiagramNodeProperties.LOCATION) ){
-            if( !((DiagramModelNode)getModel()).getSourceConnections().isEmpty() ||
-                !((DiagramModelNode)getModel()).getTargetConnections().isEmpty()  ) {
+        } else if (prop.equals(DiagramUiConstants.DiagramNodeProperties.LOCATION)) {
+            if (!((DiagramModelNode)getModel()).getSourceConnections().isEmpty()
+                || !((DiagramModelNode)getModel()).getTargetConnections().isEmpty()) {
                 ((DiagramModelNode)getModel()).updateAssociations();
             }
-            
+
             getChangeManager().refresh(PropertyChangeManager.LABELS, false);
         } else if (prop.equals(DiagramUiConstants.DiagramNodeProperties.IMAGES)) {
             refreshImages();
@@ -521,29 +503,29 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
             if (prop.equals(DiagramUiConstants.DiagramNodeProperties.COLLAPSE)) {
                 // Let's control construction refresh()
                 Diagram diagram = ((DiagramModelNode)this.getModel()).getDiagram();
-                boolean handleConstruction = ! DiagramEditorUtil.isDiagramUnderConstruction( diagram );
-                if( handleConstruction ) {
-                    DiagramEditorUtil.setDiagramUnderConstruction( diagram );
+                boolean handleConstruction = !DiagramEditorUtil.isDiagramUnderConstruction(diagram);
+                if (handleConstruction) {
+                    DiagramEditorUtil.setDiagramUnderConstruction(diagram);
                 }
                 collapse();
                 getChangeManager().refresh(PropertyChangeManager.VISUALS, false);
                 getChangeManager().refresh(PropertyChangeManager.ANCHORS, false);
-                if( handleConstruction ) {
-                    DiagramEditorUtil.setDiagramConstructionComplete( diagram, true );
+                if (handleConstruction) {
+                    DiagramEditorUtil.setDiagramConstructionComplete(diagram, true);
                 }
             }
 
             if (prop.equals(DiagramUiConstants.DiagramNodeProperties.EXPAND)) {
                 Diagram diagram = ((DiagramModelNode)this.getModel()).getDiagram();
-                boolean handleConstruction = ! DiagramEditorUtil.isDiagramUnderConstruction( diagram );
-                if( handleConstruction ) {
-                    DiagramEditorUtil.setDiagramUnderConstruction( diagram );
+                boolean handleConstruction = !DiagramEditorUtil.isDiagramUnderConstruction(diagram);
+                if (handleConstruction) {
+                    DiagramEditorUtil.setDiagramUnderConstruction(diagram);
                 }
                 expand();
                 getChangeManager().refresh(PropertyChangeManager.VISUALS, false);
                 getChangeManager().refresh(PropertyChangeManager.ANCHORS, false);
-                if( handleConstruction ) {
-                    DiagramEditorUtil.setDiagramConstructionComplete( diagram, true );
+                if (handleConstruction) {
+                    DiagramEditorUtil.setDiagramConstructionComplete(diagram, true);
                 }
             }
         }
@@ -602,10 +584,6 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
 
         ((GraphicalEditPart)getParent()).setLayoutConstraint(this, getFigure(), r);
         getFigure().repaint();
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_EDIT_PARTS)) {
-            String message = "SIZE = " + size; //$NON-NLS-1$
-            DiagramUiConstants.Util.print(DebugConstants.DIAGRAM_EDIT_PARTS, message);
-        }
     }
 
     private void resetContainerStackIndex() {
@@ -629,11 +607,11 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
         getDiagramFigure().updateForSize(((DiagramModelNode)getModel()).getSize());
     }
 
-    public void setRevealHideListener(IRevealHideListener listener) {
+    public void setRevealHideListener( IRevealHideListener listener ) {
         this.revealHideListener = listener;
     }
 
-    public void setText(String newName) {
+    public void setText( String newName ) {
         ((DiagramModelNode)getModel()).setName(newName);
     }
 
@@ -641,7 +619,7 @@ public class UmlClassifierEditPart extends AbstractNotationEditPart implements
      * @see com.metamatrix.modeler.diagram.ui.part.DiagramEditPart#shouldHiliteBackground()
      */
     @Override
-    public boolean shouldHiliteBackground(List sourceEditParts) {
+    public boolean shouldHiliteBackground( List sourceEditParts ) {
         // We'll start off by checking to see that list of sourceEditParts do not have the same parent as this.
         return true;
     }

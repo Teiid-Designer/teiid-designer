@@ -32,8 +32,6 @@ import com.metamatrix.modeler.internal.mapping.factory.ModelMapperFactory;
 import com.metamatrix.modeler.internal.mapping.factory.TreeMappingAdapter;
 import com.metamatrix.modeler.mapping.factory.IMappableTree;
 import com.metamatrix.modeler.mapping.factory.ITreeToRelationalMapper;
-import com.metamatrix.modeler.mapping.ui.DebugConstants;
-import com.metamatrix.modeler.mapping.ui.UiConstants;
 import com.metamatrix.modeler.mapping.ui.diagram.MappingDiagramUtil;
 import com.metamatrix.ui.tree.TreeExpansionMonitor;
 import com.metamatrix.ui.tree.TreeNodeMap;
@@ -137,10 +135,6 @@ public class MappingAdapterFilter {
         int rowHeight = this.getTreeViewer().getTree().getItemHeight();
 
         List totalExtentList = new ArrayList();
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-            String message = "calling xmlFilter.getMappedClassifiers()"; //$NON-NLS-1$
-            UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-        }
 
         if (showProgress) {
             monitor.subTask("Getting mapping classes from XmlFilter"); //$NON-NLS-1$
@@ -181,11 +175,6 @@ public class MappingAdapterFilter {
             }
 
             nextTreeItem = (TreeItem)iter.next();
-
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                String message = "xmlFilter.getAllCoarseExtents() Element = " + nextTreeItem; //$NON-NLS-1$
-                UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-            }
 
             // get EObject for this TreeItem, so we'll have both
             EObject eoNext = (EObject)nextTreeItem.getData();
@@ -427,10 +416,6 @@ public class MappingAdapterFilter {
         int rowHeight = this.getTreeViewer().getTree().getItemHeight();
 
         List totalExtentList = new ArrayList();
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-            String message = "calling xmlFilter.getMappedClassifiers()"; //$NON-NLS-1$
-            UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-        }
 
         if (showProgress) {
             monitor.subTask("Getting mapping classes from XmlFilter"); //$NON-NLS-1$
@@ -463,11 +448,6 @@ public class MappingAdapterFilter {
             }
 
             nextTreeItem = (TreeItem)iter.next();
-
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE)) {
-                String message = "xmlFilter.getAllCoarseExtents() Element = " + nextTreeItem; //$NON-NLS-1$
-                UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_MODEL_NODE, message);
-            }
 
             // get EObject for this TreeItem, so we'll have both
             EObject eoNext = (EObject)nextTreeItem.getData();

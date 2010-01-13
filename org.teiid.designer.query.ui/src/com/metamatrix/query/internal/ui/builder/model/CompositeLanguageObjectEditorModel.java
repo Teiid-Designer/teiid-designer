@@ -12,7 +12,6 @@ import java.util.List;
 import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
 import com.metamatrix.query.sql.LanguageObject;
 
 /**
@@ -98,22 +97,10 @@ public abstract class CompositeLanguageObjectEditorModel extends AbstractLanguag
      * @param theEvent the event being processed
      */
     protected void handleModelChanged( LanguageObjectEditorModelEvent theEvent ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "handleModelChanged():type=" + theEvent.getType()); //$NON-NLS-1$
-        }
-
-        if (BuilderUtils.isEventLogging()) {
-            Util.print(this, "fireModelChanged:type=" + theEvent.getType()); //$NON-NLS-1$
-        }
-
         Object source = theEvent.getSource();
 
         if (source == currentModel) {
             fireModelChanged(theEvent.getType());
-        }
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "handleModelChanged()"); //$NON-NLS-1$
         }
     }
 
@@ -132,9 +119,6 @@ public abstract class CompositeLanguageObjectEditorModel extends AbstractLanguag
             complete = false;
         } else {
             ILanguageObjectEditorModel model = getCurrentModel();
-            if (BuilderUtils.isDebugLogging()) {
-                Util.print(this, "isComplete(), calling isComplete() for current model, current model is " + model); //$NON-NLS-1$
-            }
             complete = model.isComplete();
         }
         return complete;
@@ -176,11 +160,6 @@ public abstract class CompositeLanguageObjectEditorModel extends AbstractLanguag
         if ((currentModel == null) || (currentModel != theModel)) {
 
             currentModel = theModel;
-
-            if (BuilderUtils.isEventLogging()) {
-                Util.print(this, "fireModelChanged:type=" + MODEL_CHANGE); //$NON-NLS-1$
-            }
-
             fireModelChanged(MODEL_CHANGE);
         }
     }

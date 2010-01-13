@@ -22,7 +22,6 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
 import com.metamatrix.query.internal.ui.builder.model.MatchCriteriaEditorModel;
-import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
 import com.metamatrix.query.sql.LanguageObject;
 import com.metamatrix.query.sql.lang.MatchCriteria;
 import com.metamatrix.query.sql.symbol.Expression;
@@ -151,18 +150,12 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
             char newChar = escCharText.getText().charAt(0);
             theModel.setEscapeChar(newChar);
         } else {
-            if (BuilderUtils.isDebugLogging()) {
-                Util.print(this, "escapeCharacterModified(), calling model setEscapseChar()"); //$NON-NLS-1$
-            }
             theModel.setEscapeChar(MatchCriteria.NULL_ESCAPE_CHAR);
         }
     }
 
     void displayEscapeChar() {
         char newChar = theModel.getEscapeChar();
-        if (BuilderUtils.isDebugLogging()) {
-            Util.print(this, "displayEscapeChar(), char is " + newChar); //$NON-NLS-1$
-        }
         String textStr = escCharText.getText();
         char oldChar;
         if ((textStr != null) && (textStr.length() > 0)) {
@@ -189,15 +182,6 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         displayLeftExpression();
         displayRightExpression();
         displayEscapeChar();
-    }
-
-    @Override
-    public boolean hasChanged() {
-        boolean changed = super.hasChanged();
-        if (BuilderUtils.isDebugLogging() || BuilderUtils.isTraceLogging()) {
-            Util.print(this, "hasChanged(), returning " + changed); //$NON-NLS-1$
-        }
-        return changed;
     }
 
     /**

@@ -40,7 +40,6 @@ import com.metamatrix.modeler.core.validation.ValidationContext;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspace;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.DebugConstants;
 import com.metamatrix.modeler.internal.core.index.ModelIndexer;
 import com.metamatrix.modeler.internal.core.index.ModelSearchIndexer;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
@@ -189,8 +188,6 @@ public class ModelBuildUtil {
         ArgCheck.isNotNull(validator);
         ArgCheck.isNotNull(context);
 
-        boolean debugTimingEnabled = ModelerCore.Util.isDebugEnabled(DebugConstants.MODEL_VALIDATION_TIMING);
-
         // create a monitor if needed
         final IProgressMonitor progresssMonitor = (monitor != null ? monitor : new NullProgressMonitor());
         if (monitor.isCanceled() || !validator.isValidatorForObject(eResource)) {
@@ -204,7 +201,6 @@ public class ModelBuildUtil {
             totalWatch.start();
             validator.validate(progresssMonitor, eResource, context);
             totalWatch.stop();
-            if (debugTimingEnabled) Stopwatch.logTimedMessage(" ModelBuildUtil.validateResource():  " + eResource, totalWatch.getTotalDuration(), ModelerCore.Util); //$NON-NLS-1$
         } catch (ModelerCoreException e) {
             ModelerCore.Util.log(e);
         } finally {
@@ -409,7 +405,6 @@ public class ModelBuildUtil {
                                                   final ResourceValidator validator,
                                                   final ValidationContext context,
                                                   final boolean clearMarkers ) {
-        boolean debugTimingEnabled = ModelerCore.Util.isDebugEnabled(DebugConstants.MODEL_VALIDATION_TIMING);
         // create a monitor if needed
         final IProgressMonitor progresssMonitor = (monitor != null ? monitor : new NullProgressMonitor());
 
@@ -417,7 +412,7 @@ public class ModelBuildUtil {
             return;
         }
 
-        // path to the resource in the workspcase
+        // path to the resource in the workspace
         progresssMonitor.setTaskName(MONITOR_RESOURCE_VALIDATION_MSG + iResource.getFullPath());
 
         // See if the model was marked as a duplicate ...
@@ -469,7 +464,6 @@ public class ModelBuildUtil {
                 totalWatch.start();
                 validator.validate(progresssMonitor, objToValidate, context);
                 totalWatch.stop();
-                if (debugTimingEnabled) Stopwatch.logTimedMessage(" ModelBuildUtil.validateResource():  " + objToValidate, totalWatch.getTotalDuration(), ModelerCore.Util); //$NON-NLS-1$
 
                 validator.addMarkers(context, iResource);
                 context.clearResults();
@@ -574,10 +568,6 @@ public class ModelBuildUtil {
                                       final IResource iResource,
                                       final ResourceIndexer indexer ) {
         // create a monitor if needed
-        // System.out.println("Indexing IResource "+iResource.getFullPath());
-
-        boolean debugTimingEnabled = ModelerCore.Util.isDebugEnabled(DebugConstants.MODEL_VALIDATION_TIMING);
-
         monitor = monitor != null ? monitor : new NullProgressMonitor();
         if (monitor.isCanceled()) {
             return;
@@ -590,7 +580,6 @@ public class ModelBuildUtil {
             totalWatch.start();
             indexer.indexResource(iResource, false, true);
             totalWatch.stop();
-            if (debugTimingEnabled) Stopwatch.logTimedMessage(" ModelBuildUtil.indexResource():  " + iResource, totalWatch.getTotalDuration(), ModelerCore.Util); //$NON-NLS-1$
         } catch (Throwable e) {
             ModelerCore.Util.log(IStatus.ERROR,
                                  e,

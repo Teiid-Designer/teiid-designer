@@ -50,23 +50,11 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
     }
 
     public void addUndefinedAndCriteria() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "addUndefinedAddCriteria()"); //$NON-NLS-1$
-        }
-
         addUndefinedCriteria((Criteria)getSelectedObject(), true);
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "addUndefinedAddCriteria()"); //$NON-NLS-1$
-        }
     }
 
     private void addUndefinedCriteria( Criteria theCriteria,
                                        boolean theAndFlag ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "addUndefinedCriteria()"); //$NON-NLS-1$
-        }
-
         Assertion.isNotNull(theCriteria); // should not be calling if null
 
         Object newSelection = StructuredSelection.EMPTY;
@@ -126,22 +114,10 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
                 setSelection(new StructuredSelection(selection));
             }
         });
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "addUndefinedCriteria()"); //$NON-NLS-1$
-        }
     }
 
     public void addUndefinedOrCriteria() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "addUndefinedOrCriteria()"); //$NON-NLS-1$
-        }
-
         addUndefinedCriteria((Criteria)getSelectedObject(), false);
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "addUndefinedOrCriteria()"); //$NON-NLS-1$
-        }
     }
 
     private boolean canDelete( Object theLangObj ) {
@@ -333,10 +309,6 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
 
         boolean result = ((root == null) || (isUndefined(root))) ? false : !hasUndefinedChild(root);
 
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(this, "isComplete():complete=" + result); //$NON-NLS-1$
-        }
-
         return result;
     }
 
@@ -447,10 +419,6 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
     }
 
     public void modifyNotCriteriaStatus() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "modifyNotCriteriaStatus()"); //$NON-NLS-1$
-        }
-
         Object selectedObj = getSelectedObject();
         Assertion.isNotNull(selectedObj); // should not be calling if no row selected
 
@@ -464,10 +432,6 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
         } else {
             Assertion.failed(Util.getString(PREFIX + "unexpectedType", //$NON-NLS-1$
                                             new Object[] {"modifyNotCriteriaStatus", selectedObj.getClass()})); //$NON-NLS-1$
-        }
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "modifyNotCriteriaStatus()"); //$NON-NLS-1$
         }
     }
 

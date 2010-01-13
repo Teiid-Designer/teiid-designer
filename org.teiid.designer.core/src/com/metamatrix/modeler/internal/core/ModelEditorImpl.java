@@ -865,13 +865,10 @@ public class ModelEditorImpl implements ModelEditor {
 
         final boolean ignoreXsdResources = !includesXsdObject(eObjects);
 
-        boolean debugTimingEnabled = ModelerCore.Util.isDebugEnabled(DebugConstants.MODEL_VALIDATION_TIMING);
-
         DebuggingStopwatch watch = new DebuggingStopwatch(
                                                           "ModelEditorImpl.createDeleteManyCommand(EObject) Ignore XSD's = " + ignoreXsdResources, 10, false); //$NON-NLS-1$
         watch.start();
         watch.startStats();
-        String message = null;
 
         // Build up the list of objects that should be deleted in addition to 'eObject' ...
         final LinkedList commands = new LinkedList();
@@ -881,12 +878,12 @@ public class ModelEditorImpl implements ModelEditor {
             final EObject eObject = (EObject)removedObjects.next();
             // owner of the object
             final Object owner = eObject.eContainer() == null ? (Object)eObject.eResource() : eObject.eContainer();
-            // containment featur of the object in the owner
+            // containment feature of the object in the owner
             final Object feature = eObject.eContainmentFeature();
             // collection of objects by owner or collection of objects by feature by owner
             Object existing = objectsByContainment.get(owner);
             if (existing == null) {
-                // no featue just object by owner
+                // no feature just object by owner
                 if (feature == null) {
                     existing = new HashSet();
                     // by feature by owner
@@ -908,14 +905,9 @@ public class ModelEditorImpl implements ModelEditor {
             }
         }
 
-        if (debugTimingEnabled) {
-            message = " called add container objects()  N Objects = " + eObjects.size(); //$NON-NLS-1$
-            watch.addStat(message);
-        }
-
         // defect 19592 - moved the following three statements out of the above loop,
         // so that the search for deleted objects can know about all things being deleted.
-        // Dennis and Pat suppose the real clencher is that findReferencesToObjectsBeingDeleted
+        // Dennis and Pat suppose the real clincher is that findReferencesToObjectsBeingDeleted
         // is the main beneficiary of this -- findOtherObjectsToBeDeleted is now gathering up
         // everything into one collection for everything instead of one collection per deleted object.
 
@@ -933,22 +925,12 @@ public class ModelEditorImpl implements ModelEditor {
         // -----------------------------------------
         final Collection allDeleted = findOtherObjectsToBeDeleted(eObjects, ed, commands, workspaceSearch, monitor);
 
-        if (debugTimingEnabled) {
-            message = " called findOtherObjectsToBeDeleted()  N All Deleted = " + allDeleted.size(); //$NON-NLS-1$
-            watch.addStat(message);
-        }
-
         monitor.worked(10);
 
         // -----------------------------------------
         // Find references to objects being deleted ...
         // -----------------------------------------
         findReferencesToObjectsBeingDeleted(allDeleted, ed, commands, workspaceSearch, monitor);
-
-        if (debugTimingEnabled) {
-            message = " called findReferencesToObjectsBeingDeleted()  N All Deleted = " + allDeleted.size(); //$NON-NLS-1$
-            watch.addStat(message);
-        }
 
         monitor.subTask(ModelerCore.Util.getString("ModelEditorImpl.preparingCommandMsg")); //$NON-NLS-1$
         monitor.worked(10);
@@ -1007,9 +989,6 @@ public class ModelEditorImpl implements ModelEditor {
 
         watch.stop();
         watch.stopStats();
-        if (debugTimingEnabled) {
-            watch.print();
-        }
         return cCommand;
     }
 
@@ -1062,8 +1041,6 @@ public class ModelEditorImpl implements ModelEditor {
         }
         final boolean ignoreXsdResources = !includesXsdObject(eObject);
 
-        final boolean debugTimingEnabled = ModelerCore.Util.isDebugEnabled(DebugConstants.MODEL_VALIDATION_TIMING);
-
         // Execute the command ...
         final boolean isSignificant = true;
         final ContainerImpl cntr = getContainer();
@@ -1077,10 +1054,6 @@ public class ModelEditorImpl implements ModelEditor {
 
                 final EditingDomain ed = cntr.getEditingDomain();
                 Command command = createDeleteCommand(ed, eObject);
-
-                if (debugTimingEnabled) {
-                    watch.addStat(" called createDeleteCommand()"); //$NON-NLS-1$
-                }
 
                 // some reason command cannot be created
                 if (command == null) {
@@ -1106,18 +1079,10 @@ public class ModelEditorImpl implements ModelEditor {
                                                                                   additionalCommands,
                                                                                   workspaceSearch);
 
-                        if (debugTimingEnabled) {
-                            watch.addStat(" called findOtherObjectsToBeDeleted()"); //$NON-NLS-1$
-                        }
-
                         // ------------------------------
                         // Find references to objects being deleted ...
                         // ------------------------------
                         findReferencesToObjectsBeingDeleted(allDeleted, ed, additionalCommands, workspaceSearch);
-
-                        if (debugTimingEnabled) {
-                            watch.addStat(" called findReferencesToObjectsBeingDeleted()"); //$NON-NLS-1$
-                        }
 
                         // ------------------------------
                         // Add any new commands to the compound command ...
@@ -1125,23 +1090,13 @@ public class ModelEditorImpl implements ModelEditor {
                         if (!additionalCommands.isEmpty()) {
                             additionalCommands.addFirst(command);
                             command = CompoundCommandFactory.create(eObject, additionalCommands);
-
-                            if (debugTimingEnabled) {
-                                watch.addStat(" creating a command()"); //$NON-NLS-1$
-                            }
                         }
                     }
                 }
 
                 executeCommandInTransaction(uow, eObject, command);
-                if (debugTimingEnabled) {
-                    watch.addStat(" called executeCommandInTransaction()"); //$NON-NLS-1$
-                }
                 watch.stop();
                 watch.stopStats();
-                if (debugTimingEnabled) {
-                    watch.print();
-                }
                 return null;
             }
 
@@ -4064,8 +4019,7 @@ public class ModelEditorImpl implements ModelEditor {
 
         // If the URI of the proxy resource is a logical URI of a built-in resource then use this value as the location
         if (uriString.startsWith("http") || //$NON-NLS-1$
-            uriString.startsWith(ResourceFinder.METAMODEL_PREFIX)
-            || uriString.startsWith(ResourceFinder.UML2_METAMODELS_PREFIX)) {
+            uriString.startsWith(ResourceFinder.METAMODEL_PREFIX) || uriString.startsWith(ResourceFinder.UML2_METAMODELS_PREFIX)) {
             newModelLocation = uriString;
             if (isVdbResource && newModelLocation.equalsIgnoreCase(DatatypeConstants.BUILTIN_DATATYPES_URI)) {
                 // Get the vdb's temp project path

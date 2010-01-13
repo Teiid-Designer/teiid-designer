@@ -104,13 +104,6 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
     private ILog logger;
 
     /**
-     * The Debugger for the plug-in that instantiated this class.
-     * 
-     * @since 4.0
-     */
-    private final Debugger debugger;
-
-    /**
      * Construct an instance of this class by specifying the plugin ID. The name of the resource bundle, which should be of the
      * form "<code>PLUGIN_ID</code> .i18n", and should manifest itself as a properties file named "i18n.properties" in the
      * PLUGIN_ID package. This is so that when run outside of the Eclipse Platform, the properties files for all plugins can be
@@ -140,7 +133,6 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
         // this class were to get the bundle, this plugin's class loader would be used to find
         // the bundles in other plugins, which of course does not work.
         super(pluginId, bundleName, bundle);
-        this.debugger = new DebuggerImpl(pluginId);
 
         // see if a product properties file exists which is used for overriding values
         if (!PluginUtilImpl.productPropsLoaded) {
@@ -226,67 +218,6 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
     }
 
     /**
-     * @see com.metamatrix.core.util.Debugger#debug(java.lang.String, java.lang.String)
-     * @since 4.0
-     */
-    public void debug( final String context,
-                       final String message ) {
-        this.debugger.debug(context, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#getDebugContextProperty(java.lang.String)
-     * @since 4.0
-     */
-    public String getDebugContextProperty( final String property ) {
-        return this.debugger.getDebugContextProperty(property);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#getTraceContextProperty(java.lang.String)
-     * @since 4.0
-     */
-    public String getTraceContextProperty( final String property ) {
-        return this.debugger.getTraceContextProperty(property);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#isDebugEnabled(java.lang.String)
-     * @since 4.0
-     */
-    public boolean isDebugEnabled( final String context ) {
-        return false;
-        // return this.debugger.isDebugEnabled(context);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#isTraceEnabled(java.lang.String)
-     * @since 4.0
-     */
-    public boolean isTraceEnabled( final String context ) {
-        return false;
-        // return this.debugger.isTraceEnabled(context);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#isTraceEnabled(java.lang.Class)
-     * @since 4.0
-     */
-    public boolean isTraceEnabled( final Class clazz ) {
-        return false;
-        // return this.debugger.isTraceEnabled(clazz);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#isTraceEnabled(java.lang.Object)
-     * @since 4.0
-     */
-    public boolean isTraceEnabled( final Object object ) {
-        return false;
-        // return this.debugger.isTraceEnabled(object);
-    }
-
-    /**
      * Logs the given status.
      * <p>
      * If this class is initialized by the Eclipse Platform, then this will forward the request to the
@@ -355,220 +286,10 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
     }
 
     /**
-     * @see com.metamatrix.core.util.Debugger#print(java.lang.String, java.lang.String)
-     * @since 4.0
-     */
-    public void print( final String context,
-                       final String message ) {
-        this.debugger.print(context, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#print(java.lang.Class, java.lang.String)
-     * @since 4.0
-     */
-    public void print( final Class clazz,
-                       final String message ) {
-        this.debugger.print(clazz, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#print(java.lang.Object, java.lang.String)
-     * @since 4.0
-     */
-    public void print( final Object object,
-                       final String message ) {
-        this.debugger.print(object, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#printEntered(java.lang.String, java.lang.String)
-     * @since 4.0
-     */
-    public void printEntered( final String context,
-                              final String message ) {
-        this.debugger.printEntered(context, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#printEntered(java.lang.Class, java.lang.String)
-     * @since 4.0
-     */
-    public void printEntered( final Class clazz,
-                              final String message ) {
-        this.debugger.printEntered(clazz, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#printEntered(java.lang.Object, java.lang.String)
-     * @since 4.0
-     */
-    public void printEntered( final Object object,
-                              final String message ) {
-        this.debugger.printEntered(object, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#printExited(java.lang.String, java.lang.String)
-     * @since 4.0
-     */
-    public void printExited( final String context,
-                             final String message ) {
-        this.debugger.printExited(context, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#printExited(java.lang.Class, java.lang.String)
-     * @since 4.0
-     */
-    public void printExited( final Class clazz,
-                             final String message ) {
-        this.debugger.printExited(clazz, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#printExited(java.lang.Object, java.lang.String)
-     * @since 4.0
-     */
-    public void printExited( final Object object,
-                             final String message ) {
-        this.debugger.printExited(object, message);
-    }
-
-    /**
      * @see com.metamatrix.core.PluginUtil#run(org.eclipse.core.runtime.ISafeRunnable)
      */
     public void run( ISafeRunnable runnable ) {
         this.runner.run(runnable);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#start(java.lang.String)
-     */
-    public void start( String theTimerId ) {
-        this.debugger.start(theTimerId);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#start(java.lang.String, java.lang.String)
-     */
-    public void start( String theTimerId,
-                       String theContextId ) {
-        this.debugger.start(theTimerId, theContextId);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#start(java.lang.String, java.lang.String, java.lang.Object[])
-     */
-    public void start( String theTimerId,
-                       String theContextId,
-                       Object[] theInfo ) {
-        this.debugger.start(theTimerId, theContextId, theInfo);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#stop(java.lang.String)
-     */
-    public void stop( String theTimerId ) {
-        this.debugger.stop(theTimerId);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#stop(java.lang.String, java.lang.String)
-     */
-    public void stop( String theTimerId,
-                      String theContextId ) {
-        this.debugger.stop(theTimerId, theContextId);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#stop(java.lang.String, java.lang.String, java.lang.Object[])
-     */
-    public void stop( String theTimerId,
-                      String theContextId,
-                      Object[] theInfo ) {
-        this.debugger.stop(theTimerId, theContextId, theInfo);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#trace(java.lang.String, java.lang.String)
-     * @since 4.0
-     */
-    public void trace( final String context,
-                       final String message ) {
-        this.debugger.trace(context, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#trace(java.lang.Class, java.lang.String)
-     * @since 4.0
-     */
-    public void trace( final Class clazz,
-                       final String message ) {
-        this.debugger.trace(clazz, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#trace(java.lang.Object, java.lang.String)
-     * @since 4.0
-     */
-    public void trace( final Object object,
-                       final String message ) {
-        this.debugger.trace(object, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#traceEntered(java.lang.String, java.lang.String)
-     * @since 4.0
-     */
-    public void traceEntered( final String context,
-                              final String message ) {
-        this.debugger.traceEntered(context, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#traceEntered(java.lang.Class, java.lang.String)
-     * @since 4.0
-     */
-    public void traceEntered( final Class clazz,
-                              final String message ) {
-        this.debugger.traceEntered(clazz, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#traceEntered(java.lang.Object, java.lang.String)
-     * @since 4.0
-     */
-    public void traceEntered( final Object object,
-                              final String message ) {
-        this.debugger.traceEntered(object, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#traceExited(java.lang.String, java.lang.String)
-     * @since 4.0
-     */
-    public void traceExited( final String context,
-                             final String message ) {
-        this.debugger.traceExited(context, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#traceExited(java.lang.Class, java.lang.String)
-     * @since 4.0
-     */
-    public void traceExited( final Class clazz,
-                             final String message ) {
-        this.debugger.traceExited(clazz, message);
-    }
-
-    /**
-     * @see com.metamatrix.core.util.Debugger#traceExited(java.lang.Object, java.lang.String)
-     * @since 4.0
-     */
-    public void traceExited( final Object object,
-                             final String message ) {
-        this.debugger.traceExited(object, message);
     }
 
     /**

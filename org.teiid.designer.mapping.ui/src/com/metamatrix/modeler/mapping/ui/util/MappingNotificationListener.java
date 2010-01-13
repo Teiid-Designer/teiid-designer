@@ -28,8 +28,6 @@ import com.metamatrix.modeler.internal.mapping.factory.ModelMapperFactory;
 import com.metamatrix.modeler.internal.mapping.factory.TreeMappingAdapter;
 import com.metamatrix.modeler.internal.ui.undo.ModelerUndoManager;
 import com.metamatrix.modeler.mapping.PluginConstants;
-import com.metamatrix.modeler.mapping.ui.UiConstants;
-import com.metamatrix.ui.internal.InternalUiConstants;
 
 /**
  * MappingNotificationListener The notification listener is instantiated upon initialization of the plugin, and registered as a
@@ -58,7 +56,6 @@ public class MappingNotificationListener implements INotifyChangedListener {
 
         if (notification instanceof SourcedNotification) {
             if (isValidSource((SourcedNotification)notification) && shouldHandleNotification(notification)) {
-                UiConstants.Util.start("MappingNotificationListener.notifyChanged()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
                 boolean requiredStart = false;
                 boolean succeeded = false;
                 try {
@@ -82,11 +79,9 @@ public class MappingNotificationListener implements INotifyChangedListener {
                         }
                     }
                 }
-                UiConstants.Util.stop("MappingNotificationListener.notifyChanged()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
             }
         } else {
             if (shouldHandleNotification(notification)) {
-                UiConstants.Util.start("MappingNotificationListener.notifyChanged()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
                 boolean requiredStart = false;
                 boolean succeeded = false;
                 try {
@@ -110,7 +105,6 @@ public class MappingNotificationListener implements INotifyChangedListener {
                         }
                     }
                 }
-                UiConstants.Util.stop("MappingNotificationListener.notifyChanged()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
             }
         }
 

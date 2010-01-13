@@ -15,7 +15,6 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import com.metamatrix.query.internal.ui.builder.model.IsNullCriteriaEditorModel;
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
-import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
 import com.metamatrix.query.sql.LanguageObject;
 import com.metamatrix.query.sql.lang.IsNullCriteria;
 import com.metamatrix.query.sql.symbol.Expression;
@@ -72,12 +71,8 @@ public class IsNullCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
 
     @Override
     public void setLanguageObject( LanguageObject obj ) {
-        Util.traceEntered(this, "setLanguageObject:value=" + obj); //$NON-NLS-1$
-
         ArgCheck.isInstanceOf(IsNullCriteria.class, obj);
         theModel.setLanguageObject(obj);
-
-        Util.traceExited(this, "setLanguageObject"); //$NON-NLS-1$
     }
 
     public String[] getOperators() {
@@ -133,14 +128,5 @@ public class IsNullCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
                 displayLanguageObjectChange();
             }
         }
-    }
-
-    @Override
-    public boolean hasChanged() {
-        boolean changed = super.hasChanged();
-        if (BuilderUtils.isDebugLogging() || BuilderUtils.isTraceLogging()) {
-            Util.print(this, "hasChanged() returning " + changed); //$NON-NLS-1$
-        }
-        return changed;
     }
 }

@@ -747,10 +747,6 @@ public class TxnNotificationFilter {
             return sn;
         }
 
-        public Collection getRemoveObjects() {
-            return this.removeObjects;
-        }
-
         public Collection getAddObjects() {
             return this.addObjects;
         }

@@ -313,7 +313,6 @@ public class MmTreeLayout extends DiagramLayout {
 
     private class TreeNode {
         int _level;
-        private int _gotIt;
         double _orderVar;
         double _width;
         double _height;
@@ -328,13 +327,9 @@ public class MmTreeLayout extends DiagramLayout {
         private TreeNode _downNeighbor;
         private boolean _upSibling;
         private boolean _downSibling;
-        Vector loops = null;
-        TreeNode removing;
-        int depth = 0;
 
         public TreeNode( DiagramModelNode modelNode ) {
             _level = -1;
-            _gotIt = 0;
             _orderVar = 0.0;
             _absolutePosition = 0.0;
             _absoluteSpaceLeft = 0.0;
@@ -543,38 +538,6 @@ public class MmTreeLayout extends DiagramLayout {
             for (int i_37_ = 0; i_37_ < i; i_37_++)
                 i_36_ = Math.max(i_36_, ((TreeNode)_children.get(i_37_)).setParent(this));
             return i_36_;
-        }
-
-        public void removeCycles( TreeNode treenode_38_ ) {
-            loops = new Vector();
-            removeCyclesStep1(treenode_38_);
-            int i = loops.size();
-            for (int i_39_ = 0; i_39_ < i; i_39_++) {
-                TreeNode treenode_40_ = (TreeNode)loops.get(i_39_);
-                removing = treenode_40_;
-                treenode_40_.removeCyclesStep2(treenode_40_);
-            }
-        }
-
-        public void removeCyclesStep2( TreeNode treenode_41_ ) {
-            int i = _children.size();
-            for (int i_42_ = 0; i_42_ < i; i_42_++) {
-                // TreeNode treenode_43_ = (TreeNode)_children.get(i_42_);
-            }
-        }
-
-        public void removeCyclesStep1( TreeNode treenode_44_ ) {
-            _gotIt++;
-            int i = _children.size();
-            for (int i_45_ = 0; i_45_ < i; i_45_++) {
-                TreeNode treenode_46_ = (TreeNode)_children.get(i_45_);
-                if (treenode_46_ != treenode_44_) {
-                    if (treenode_46_._gotIt > 0) {
-                        treenode_46_._gotIt++;
-                        loops.add(treenode_46_);
-                    } else treenode_46_.removeCyclesStep1(this);
-                }
-            }
         }
 
         private void shiftDown( double[] ds,

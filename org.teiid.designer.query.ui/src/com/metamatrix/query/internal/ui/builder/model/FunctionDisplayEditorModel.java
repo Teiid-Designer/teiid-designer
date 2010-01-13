@@ -16,31 +16,17 @@ import com.metamatrix.query.sql.symbol.Function;
  */
 public class FunctionDisplayEditorModel extends AbstractLanguageObjectEditorModel {
 
-    // /////////////////////////////////////////////////////////////////////////////////////////////
-    // FIELDS
-    // /////////////////////////////////////////////////////////////////////////////////////////////
-
     /**
      * The currently selected <code>Function</code>.
      */
     private Function selectedFunction;
-
-    // /////////////////////////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    // /////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Constructs an <code>FunctionDisplayEditorModel</code> with an incomplete state.
      */
     public FunctionDisplayEditorModel() {
         super(Function.class);
-
-        Util.trace(this, "exited constructor"); //$NON-NLS-1$
     }
-
-    // /////////////////////////////////////////////////////////////////////////////////////////////
-    // METHODS
-    // /////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Gets the current value.
@@ -66,7 +52,6 @@ public class FunctionDisplayEditorModel extends AbstractLanguageObjectEditorMode
      */
     @Override
     public boolean isComplete() {
-        Util.trace(this, "isComplete:selectedFunction=" + selectedFunction); //$NON-NLS-1$
         return (selectedFunction != null);
     }
 

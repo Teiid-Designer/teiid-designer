@@ -49,7 +49,6 @@ import com.metamatrix.modeler.relationship.ui.UiConstants;
 import com.metamatrix.modeler.relationship.ui.UiPlugin;
 import com.metamatrix.modeler.relationship.ui.connection.RelationshipLink;
 import com.metamatrix.modeler.relationship.ui.diagram.RelationshipDiagramUtil;
-import com.metamatrix.ui.internal.InternalUiConstants;
 
 /**
  * @author BLaFond To change the template for this generated type comment go to Window&gt;Preferences&gt;Java&gt;Code
@@ -232,8 +231,6 @@ public class RelationshipDiagramModelFactory extends DiagramModelFactoryImpl imp
 
         if (currentDiagramOK && isValidDiagram(diagramModelNode) && sourceIsNotThis(notification)
             && shouldHandleNotification(notification, diagramModelNode)) {
-            UiConstants.Util.start("RelationshipDiagramModelFactory.notifyModel()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
-
             boolean requiredStart = false;
             boolean succeeded = false;
             try {
@@ -258,7 +255,6 @@ public class RelationshipDiagramModelFactory extends DiagramModelFactoryImpl imp
                     }
                 }
             }
-            UiConstants.Util.stop("RelationshipDiagramModelFactory.notifyModel()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
         }
 
         return currentDiagramOK;

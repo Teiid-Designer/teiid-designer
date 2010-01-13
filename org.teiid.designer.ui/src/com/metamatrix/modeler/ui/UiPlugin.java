@@ -129,7 +129,6 @@ public final class UiPlugin extends AbstractUiPlugin
      */
     @Override
     public void start( BundleContext context ) throws Exception {
-        Util.debug(PLUGIN_ACTIVATION, "Plug-in " + getClass().getName() + " activated."); //$NON-NLS-1$ //$NON-NLS-2$
         super.start(context);
 
         // Initialize logging/i18n utility

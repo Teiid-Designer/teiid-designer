@@ -11,11 +11,11 @@ import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.FanRouter;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -24,9 +24,6 @@ import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Request;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.RGB;
-
-import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.xml.XmlDocumentNode;
@@ -44,9 +41,7 @@ import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
 import com.metamatrix.modeler.diagram.ui.part.ExpandableDiagram;
 import com.metamatrix.modeler.diagram.ui.util.DiagramXYLayoutEditPolicy;
 import com.metamatrix.modeler.diagram.ui.util.LassoDragTracker;
-import com.metamatrix.modeler.mapping.ui.DebugConstants;
 import com.metamatrix.modeler.mapping.ui.PluginConstants;
-import com.metamatrix.modeler.mapping.ui.UiConstants;
 import com.metamatrix.modeler.mapping.ui.editor.MappingDiagramController;
 import com.metamatrix.modeler.mapping.ui.model.MappingDiagramNode;
 import com.metamatrix.modeler.mapping.ui.model.MappingExtentNode;
@@ -58,9 +53,7 @@ import com.metamatrix.ui.graphics.GlobalUiColorManager;
  * TransformationDiagramEditPart
  */
 
-public class MappingDiagramEditPart extends AbstractDiagramEditPart 
-                                  implements ExpandableDiagram,
-                                              IDiagramTypeEditPart {
+public class MappingDiagramEditPart extends AbstractDiagramEditPart implements ExpandableDiagram, IDiagramTypeEditPart {
 
     // ===========================================================================================================================
     // Static Variables
@@ -85,15 +78,15 @@ public class MappingDiagramEditPart extends AbstractDiagramEditPart
      * @since 5.0
      */
     @Override
-    protected void addChildVisual(EditPart childEditPart,
-                                  int index) {
+    protected void addChildVisual( EditPart childEditPart,
+                                   int index ) {
         IFigure child = ((GraphicalEditPart)childEditPart).getFigure();
         Object obj = childEditPart.getModel();
         if (obj instanceof DiagramModelNode) {
             DiagramModelNode model = (DiagramModelNode)obj;
             obj = model.getModelObject();
             if (obj instanceof MappingClass && ((MappingClass)obj).isRecursive() && child instanceof UmlClassifierFigure) {
-                if( MappingUiUtil.getCurrentTreeMappingAdapter() != null ) {
+                if (MappingUiUtil.getCurrentTreeMappingAdapter() != null) {
                     obj = MappingUiUtil.getCurrentTreeMappingAdapter().getMappingClassLocation((MappingClass)obj);
                     if (obj instanceof XmlDocumentNode && ((XmlDocumentNode)obj).isExcludeFromDocument()) {
                         ((UmlClassifierFigure)child).getEditButton().setEnabled(false);
@@ -130,7 +123,7 @@ public class MappingDiagramEditPart extends AbstractDiagramEditPart
      * rectangle-selects several figures...
      */
     @Override
-    public DragTracker getDragTracker(Request req) {
+    public DragTracker getDragTracker( Request req ) {
         // Unlike in Logical Diagram Editor example, I use a singleton because this
         // method is Entered >> several time, so I prefer to save memory ; and it works!
         if (m_dragTracker == null) {
@@ -140,7 +133,7 @@ public class MappingDiagramEditPart extends AbstractDiagramEditPart
     }
 
     @Override
-    public void layout(boolean layoutChildren) {
+    public void layout( boolean layoutChildren ) {
 
         if (layoutChildren) {
             EditPart canvasEditPart = getViewer().getContents();
@@ -160,16 +153,8 @@ public class MappingDiagramEditPart extends AbstractDiagramEditPart
         // Check it's model node, if was layed out, don't re-layout!!
 
         if (!((DiagramModelNode)getModel()).wasLayedOut()) {
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_EDIT_PARTS)) {
-                String message = "calling layout()"; //$NON-NLS-1$
-                UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_EDIT_PARTS, message);
-            }
             layout();
         } else {
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_EDIT_PARTS)) {
-                String message = "calling recoverObjectProperties()"; //$NON-NLS-1$
-                UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_EDIT_PARTS, message);
-            }
             ((DiagramModelNode)getModel()).recoverObjectProperties();
         }
 
@@ -188,8 +173,7 @@ public class MappingDiagramEditPart extends AbstractDiagramEditPart
     }
 
     private boolean hasChildren() {
-        if (getViewer().getContents().getChildren().size() > 0)
-            return true;
+        if (getViewer().getContents().getChildren().size() > 0) return true;
         return false;
     }
 
@@ -212,9 +196,9 @@ public class MappingDiagramEditPart extends AbstractDiagramEditPart
 
         // if running in "Detailed" mode, we need find the lowest value "extent" y
         int yValue = getLowestYExtentValue();
-        if( !isCoarseMapping() ) {
+        if (!isCoarseMapping()) {
             MappingDiagramController controller = (MappingDiagramController)((DiagramViewer)getViewer()).getEditor().getDiagramController();
-            if( controller != null ) {
+            if (controller != null) {
                 yValue = yValue + controller.getScrollOffset();
             }
         }
@@ -253,18 +237,15 @@ public class MappingDiagramEditPart extends AbstractDiagramEditPart
             nextEditPart = (DiagramEditPart)iter.next();
             if (nextEditPart instanceof MappingExtentEditPart) {
                 partY = ((DiagramModelNode)nextEditPart.getModel()).getY();
-                if (yValue < 0)
-                    yValue = partY;
-                else
-                    yValue = Math.min(partY, yValue);
+                if (yValue < 0) yValue = partY;
+                else yValue = Math.min(partY, yValue);
             }
         }
-        if (yValue < minYValue)
-            yValue = minYValue;
+        if (yValue < minYValue) yValue = minYValue;
         return yValue;
     }
 
-    private boolean isClassifer(DiagramEditPart editPart) {
+    private boolean isClassifer( DiagramEditPart editPart ) {
         return editPart instanceof UmlClassifierEditPart;
     }
 
@@ -351,8 +332,7 @@ public class MappingDiagramEditPart extends AbstractDiagramEditPart
 
         while (iter.hasNext()) {
             nextEditPart = (DiagramEditPart)iter.next();
-            if (!nextEditPart.getSourceConnections().isEmpty() || !nextEditPart.getTargetConnections().isEmpty())
-                return true;
+            if (!nextEditPart.getSourceConnections().isEmpty() || !nextEditPart.getTargetConnections().isEmpty()) return true;
         }
         return false;
     }
@@ -361,7 +341,7 @@ public class MappingDiagramEditPart extends AbstractDiagramEditPart
      * Reset font from Font Managar and call layout on all diagram objects.
      */
     @Override
-    public void refreshFont(boolean refreshChildren) {
+    public void refreshFont( boolean refreshChildren ) {
         // Diagram needs to also do a layout here
         super.refreshFont(refreshChildren);
 
@@ -405,12 +385,11 @@ public class MappingDiagramEditPart extends AbstractDiagramEditPart
      * @param editPart
      * @return
      */
-    public boolean isPrimary(DiagramEditPart editPart) {
+    public boolean isPrimary( DiagramEditPart editPart ) {
         boolean primary = false;
 
         EObject diagramTarget = ((Diagram)getModelObject()).getTarget();
-        if (editPart.getModelObject() != null && editPart.getModelObject().equals(diagramTarget))
-            primary = true;
+        if (editPart.getModelObject() != null && editPart.getModelObject().equals(diagramTarget)) primary = true;
 
         return primary;
     }
@@ -465,17 +444,17 @@ public class MappingDiagramEditPart extends AbstractDiagramEditPart
     public void collapseAll() {
     }
 
-    public void collapse(Object child) {
+    public void collapse( Object child ) {
     }
 
     public void expandAll() {
     }
 
-    public void expand(Object child) {
+    public void expand( Object child ) {
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange( PropertyChangeEvent evt ) {
         String prop = evt.getPropertyName();
 
         super.propertyChange(evt);
@@ -485,17 +464,17 @@ public class MappingDiagramEditPart extends AbstractDiagramEditPart
         }
     }
 
-    /** 
+    /**
      * @see com.metamatrix.modeler.diagram.ui.part.AbstractDefaultEditPart#setUnderConstruction(boolean)
      * @since 5.0
      */
     @Override
-    public void setUnderConstruction(boolean theUnderConstruction) {
+    public void setUnderConstruction( boolean theUnderConstruction ) {
         List contents = this.getChildren();
-        
+
         Iterator iter = contents.iterator();
         Object nextObj = null;
-        while (iter.hasNext() ) {
+        while (iter.hasNext()) {
             nextObj = iter.next();
             if (nextObj instanceof DiagramEditPart) {
                 ((DiagramEditPart)nextObj).setUnderConstruction(theUnderConstruction);
@@ -503,7 +482,5 @@ public class MappingDiagramEditPart extends AbstractDiagramEditPart
         }
         super.setUnderConstruction(theUnderConstruction);
     }
-    
-    
 
 }

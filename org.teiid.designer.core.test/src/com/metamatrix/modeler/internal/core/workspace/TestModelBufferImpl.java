@@ -22,9 +22,10 @@ public class TestModelBufferImpl extends TestCase {
 
     /**
      * Constructor for TestModelBufferImpl.
+     * 
      * @param name
      */
-    public TestModelBufferImpl(String name) {
+    public TestModelBufferImpl( String name ) {
         super(name);
     }
 
@@ -55,49 +56,42 @@ public class TestModelBufferImpl extends TestCase {
             @Override
             public void setUp() {
             }
+
             @Override
             public void tearDown() {
             }
         };
     }
 
-    // =========================================================================
-    //                      H E L P E R   M E T H O D S
-    // =========================================================================
-
     public ModelBufferImpl helpCreateModelBufferImpl() {
         final IFile file = null;
         final Openable owner = null;
         final ResourceSet resourceSet = null;
         final boolean readOnly = true;
-        final ModelBufferImpl buffer = new ModelBufferImpl(file,owner,resourceSet,readOnly);
-        if ( buffer.getUnderlyingResource() != file ) {
+        final ModelBufferImpl buffer = new ModelBufferImpl(file, owner, resourceSet, readOnly);
+        if (buffer.getUnderlyingResource() != file) {
             fail("Underlying resource didn't match constructor argument"); //$NON-NLS-1$
         }
-        if ( buffer.getOwner() != owner ) {
+        if (buffer.getOwner() != owner) {
             fail("Owner didn't match constructor argument"); //$NON-NLS-1$
         }
-        if ( buffer.getEmfResourceSet() != resourceSet ) {
+        if (buffer.getEmfResourceSet() != resourceSet) {
             fail("ResourceSet didn't match constructor argument"); //$NON-NLS-1$
         }
-        if ( buffer.getEmfResource() != null ) {
+        if (buffer.getEmfResource() != null) {
             fail("Resource should be null"); //$NON-NLS-1$
         }
-        if ( !buffer.isClosed() ) {
+        if (!buffer.isClosed()) {
             fail("Should be closed"); //$NON-NLS-1$
         }
-        if ( buffer.isReadOnly() != readOnly) {
-            fail("Should " + (readOnly ? "not " : "") + "be readonly"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        if (buffer.isReadOnly() != readOnly) {
+            fail("Should not be readonly"); //$NON-NLS-1$
         }
-        if ( buffer.hasUnsavedChanges() ) {
+        if (buffer.hasUnsavedChanges()) {
             fail("Should not have unsaved changes"); //$NON-NLS-1$
         }
         return buffer;
     }
-
-    // =========================================================================
-    //                         T E S T     C A S E S
-    // =========================================================================
 
     public void testConstructor() {
         helpCreateModelBufferImpl();
@@ -105,16 +99,16 @@ public class TestModelBufferImpl extends TestCase {
 
     public void testOpenAndCloseCycle() {
         final ModelBufferImpl buffer = helpCreateModelBufferImpl();
-        for ( int i=0; i!=3; ++i ) {
+        for (int i = 0; i != 3; ++i) {
             buffer.close();
-            if ( !buffer.isClosed() ) {
+            if (!buffer.isClosed()) {
                 fail("Should be closed"); //$NON-NLS-1$
             }
             try {
                 buffer.open(null);
                 fail("Should be not able to open resource with null emfResource"); //$NON-NLS-1$
             } catch (RuntimeException e) {
-                //this is good continue;
+                // this is good continue;
             }
         }
 

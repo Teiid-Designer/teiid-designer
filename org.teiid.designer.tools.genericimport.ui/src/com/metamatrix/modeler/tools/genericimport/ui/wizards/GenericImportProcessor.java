@@ -25,8 +25,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.metamodels.builder.DebugConstants;
-import com.metamatrix.metamodels.builder.MetamodelBuilderPlugin;
 import com.metamatrix.metamodels.builder.MetamodelEntityBuilder;
 import com.metamatrix.metamodels.builder.ModelBuilder;
 import com.metamatrix.metamodels.builder.execution.MetamodelBuilderConstants;
@@ -53,7 +51,6 @@ public class GenericImportProcessor implements Processor {
     ResourceSet resourceSet;
     private MultiStatus status;
     private List allResources;
-    private boolean builderDebugEnabled = false;
 
     private static final String DELIM = "."; //$NON-NLS-1$
 
@@ -74,10 +71,6 @@ public class GenericImportProcessor implements Processor {
     private static String getString( final String id ) {
         return UiConstants.Util.getString(I18N_PREFIX + id);
     }
-
-    // ==================================================================================
-    // C O N S T R U C T O R S
-    // ==================================================================================
 
     /* 
      * Contructor
@@ -126,13 +119,6 @@ public class GenericImportProcessor implements Processor {
      * @see com.metamatrix.metamodels.builder.processor.Processor#process(org.eclipse.core.runtime.IProgressMonitor)
      */
     public IStatus process( IProgressMonitor monitor ) {
-        // Determine if debug is enabled
-        this.builderDebugEnabled = MetamodelBuilderPlugin.Util.isDebugEnabled(DebugConstants.METAMODEL_BUILDER);
-        if (this.builderDebugEnabled) {
-            String message = "STARTING PROCESSING >>>>   VDB ModelName: " + this.modelName; //$NON-NLS-1$
-            UiConstants.Util.log(IStatus.INFO, message);
-        }
-
         // Get the total number of records to process
         monitor.beginTask(getString("progressTitle"), 1); //$NON-NLS-1$
         monitor.subTask("Calculating total number of entities... "); //$NON-NLS-1$
@@ -164,12 +150,6 @@ public class GenericImportProcessor implements Processor {
             } catch (IOException e) {
             }
         }
-
-        if (this.builderDebugEnabled) {
-            String message = "FINISHED PROCESSING >>>>   VDB ModelName: " + this.modelName; //$NON-NLS-1$
-            UiConstants.Util.log(IStatus.INFO, message);
-        }
-
         return new Status(IStatus.OK, UiConstants.PLUGIN_ID, 1, "Import Complete", null); //$NON-NLS-1$
     }
 

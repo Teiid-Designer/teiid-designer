@@ -23,7 +23,6 @@ import com.metamatrix.modeler.diagram.ui.part.EditableEditPart;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
 import com.metamatrix.modeler.diagram.ui.util.directedit.DirectEditPart;
 import com.metamatrix.modeler.diagram.ui.util.directedit.DirectEditPartManager;
-import com.metamatrix.modeler.internal.diagram.ui.DebugConstants;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
 
@@ -47,41 +46,17 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
     }
 
     public void deselectAll() {
-        // System.out.println("[DiagramSelectionHandler.deselectAll] TOP");
-        // Thread.dumpStack();
-
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_SELECTION)) {
-            String debugMessage = "deselectAll():"; //$NON-NLS-1$
-            DiagramUiConstants.Util.print(this.getClass(), debugMessage);
-        }
         if (!getViewer().getSelectedEditParts().isEmpty()) {
             getViewer().deselectAll();
         }
-        // System.out.println("[DiagramSelectionHandler.deselectAll] BOT");
     }
 
     public void select( EObject selectedObject ) {
-        // System.out.println("[DiagramSelectionHandler.select 1] TOP");
-
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_SELECTION)) {
-            String debugMessage = "select(): Object = " + selectedObject; //$NON-NLS-1$
-            DiagramUiConstants.Util.print(this.getClass(), debugMessage);
-        }
         EditPart selectedPart = findEditPart(selectedObject, false);
         if (selectedPart != null) {
             deselectAll();
-            if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_SELECTION)) {
-                String debugMessage = "select(): Selecting Viewer's Edit Part = " + selectedPart; //$NON-NLS-1$
-                DiagramUiConstants.Util.print(this.getClass(), debugMessage);
-            }
-            // System.out.println("[DiagramSelectionHandler.select 1] About to call viewer.select() at end of select 1; selectedPart: "
-            // + selectedPart );
             getViewer().select(selectedPart);
         }
-        // else {
-        // System.out.println("[DiagramSelectionHandler.select 1] WILL NOT!! call viewer.select() at end of select 1");
-        // }
-        // System.out.println("[DiagramSelectionHandler.select 1] BOT");
     }
 
     public void select( List selectedEObjects ) {
@@ -156,8 +131,6 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
     }
 
     public void clearDependencyHilites() {
-        // System.out.println("[DiagramSelectionHandler.clearDependencyHilites] TOP");
-
         // get all parts and call clearHiliting();
         if (viewerContainsPart()) {
 
@@ -166,12 +139,6 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
             Iterator iter = contents.iterator();
 
             Object nextObj = null;
-
-            if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_SELECTION)) {
-                String debugMessage = "clearDependencyHilites(): CLEARING ALL HILITES"; //$NON-NLS-1$
-                DiagramUiConstants.Util.print(this.getClass(), debugMessage);
-            }
-
             while (iter.hasNext()) {
                 nextObj = iter.next();
                 if (nextObj instanceof DiagramEditPart) {
@@ -179,15 +146,9 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
                 }
             }
         }
-        // System.out.println("[DiagramSelectionHandler.clearDependencyHilites] BOT");
     }
 
     public void hiliteDependencies( Object selectedObject ) {
-        // System.out.println("[DiagramSelectionHandler.hiliteDependencies] TOP");
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_SELECTION)) {
-            String debugMessage = "hiliteDependencies(): Input  = " + selectedObject; //$NON-NLS-1$
-            DiagramUiConstants.Util.print(this.getClass(), debugMessage);
-        }
         clearDependencyHilites();
         if (selectedObject == null) clearConnectionHilites();
 
@@ -208,10 +169,6 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
                         nextEP = findEditPart(nextEObject, false);
                         if (nextEP != null && nextEP instanceof DiagramEditPart) {
                             ((DiagramEditPart)nextEP).hiliteBackground(DiagramUiConstants.Colors.DEPENDENCY);
-                            if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_SELECTION)) {
-                                String debugMessage = "hiliteDependencies():  Dependent object = " + nextEObject; //$NON-NLS-1$
-                                DiagramUiConstants.Util.print(this.getClass(), debugMessage);
-                            }
                         }
                     }
                 }
@@ -298,10 +255,6 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
             final EditPart selectedEP = findEditPart(selectedObject, false);
             if (selectedEP != null && selectedEP instanceof EditableEditPart) {
                 // Check to see if we want to direct edit
-                if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_SELECTION)) {
-                    String debugMessage = "handleDoubleClick():  Editing Selection = " + selectedObject; //$NON-NLS-1$
-                    DiagramUiConstants.Util.print(this.getClass(), debugMessage);
-                }
                 UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
                     public void run() {
                         ((EditableEditPart)selectedEP).edit();
@@ -417,10 +370,6 @@ public class DiagramSelectionHandler implements IDiagramSelectionHandler {
             final EditPart selectedEP = findEditPart(theSelectedEObject, false);
             if (selectedEP != null && selectedEP instanceof DirectEditPart) {
                 // Check to see if we want to direct edit
-                if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_SELECTION)) {
-                    String debugMessage = "renameInline():  Editing Selection = " + theSelectedEObject; //$NON-NLS-1$
-                    DiagramUiConstants.Util.print(this.getClass(), debugMessage);
-                }
                 UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
                     public void run() {
                         ((DirectEditPart)selectedEP).performDirectEdit();

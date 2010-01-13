@@ -254,14 +254,6 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      */
     protected IAction getAction( String theActionId,
                                  GlobalActionsMap theActionMap ) {
-        // -------------------- START DEBUG CODE --------------------------- //
-        if (Util.isTraceEnabled(this)) {
-            Util.print(this, new StringBuffer().append("getAction(String, GlobalActionsMap):Action id=") //$NON-NLS-1$
-            .append(theActionId).append(", is default action=") //$NON-NLS-1$
-            .append(theActionMap.isDefaultAction(theActionId)).toString());
-        }
-        // -------------------- END DEBUG CODE --------------------------- //
-
         IAction result = null;
 
         if (theActionMap.isUnsupportedAction(theActionId)) {

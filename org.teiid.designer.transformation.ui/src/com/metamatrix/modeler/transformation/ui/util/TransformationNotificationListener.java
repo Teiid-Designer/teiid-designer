@@ -58,7 +58,6 @@ import com.metamatrix.modeler.internal.ui.refactor.actions.RenameRefactorAction;
 import com.metamatrix.modeler.internal.ui.undo.ModelerUndoManager;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
-import com.metamatrix.modeler.transformation.ui.DebugConstants;
 import com.metamatrix.modeler.transformation.ui.PluginConstants;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
@@ -75,7 +74,6 @@ import com.metamatrix.query.sql.lang.Query;
 import com.metamatrix.query.sql.lang.QueryCommand;
 import com.metamatrix.query.sql.lang.Select;
 import com.metamatrix.query.ui.sqleditor.SqlEditorPanel;
-import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.dialog.RadioMessageDialog;
 import com.metamatrix.ui.internal.util.UiUtil;
 
@@ -88,8 +86,6 @@ import com.metamatrix.ui.internal.util.UiUtil;
  * changes to the Column (eg rename).
  */
 public class TransformationNotificationListener implements INotifyChangedListener, EventObjectListener, UiConstants {
-    private static final String THIS_CLASS = "TransformationNotificationListener"; //$NON-NLS-1$
-
     static final String ADD_SQL_ELEM_GRP_REFS_TITLE = UiConstants.Util.getString("TransformationNotificationListener.addSQLElemGrpAttrsTitle"); //$NON-NLS-1$
     static final String REMOVE_SQL_ELEM_GRP_REFS_TITLE = UiConstants.Util.getString("TransformationNotificationListener.removeSQLElemGrpRefsTitle"); //$NON-NLS-1$
     static final String REMOVE_SQL_ELEMS_TITLE = UiConstants.Util.getString("TransformationNotificationListener.removeSQLElemsTitle"); //$NON-NLS-1$
@@ -151,7 +147,6 @@ public class TransformationNotificationListener implements INotifyChangedListene
         if (notification instanceof SourcedNotification) {
             if (sourceIsNotThis((SourcedNotification)notification)
                 && sourceIsNotTransformationMappingHelper((SourcedNotification)notification)) {
-                UiConstants.Util.start("TransformationNotificationListener.notifyChanged()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
 
                 Object source = ((SourcedNotification)notification).getSource();
                 if (source == null) {
@@ -165,17 +160,11 @@ public class TransformationNotificationListener implements INotifyChangedListene
                     Collection notifications = ((SourcedNotification)notification).getNotifications();
                     handleNotifications(notifications, source);
                 }
-
-                UiConstants.Util.stop("TransformationNotificationListener.notifyChanged()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
             }
         } else { // handle single Notification
-            UiConstants.Util.start("TransformationNotificationListener.notifyChanged()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
-
             Collection notifications = new ArrayList(1);
             notifications.add(notification);
             handleNotifications(notifications, null);
-
-            UiConstants.Util.stop("TransformationNotificationListener.notifyChanged()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
         }
 
     }
@@ -356,32 +345,11 @@ public class TransformationNotificationListener implements INotifyChangedListene
                     || TransformationHelper.isSqlProcedureParameter(changedObj)
                     || TransformationHelper.isSqlColumnSet(changedObj)) {
                     goodNotifications.add(notification);
-                    if (Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS)) {
-                        Util.debug(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS,
-                                   THIS_CLASS + ".removeUnwantedNotifications( ) Added Notification = " //$NON-NLS-1$
-                                   + NotificationUtilities.paramString(notification));
-                    }
                 } else if (NotificationUtilities.isRemoved(notification)) {
                     Object removedObj = notification.getOldValue();
                     if (TransformationHelper.isSqlTable(removedObj)) {
                         goodNotifications.add(notification);
                     }
-                } else {
-
-                    if (Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS)) {
-                        Util.debug(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS,
-                                   THIS_CLASS + ".removeUnwantedNotifications( ) Removed Notification = " //$NON-NLS-1$
-                                   + NotificationUtilities.paramString(notification));
-                        Util.debug(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS,
-                                   "           ------ >>> ChangedObject = " //$NON-NLS-1$
-                                   + changedObj);
-                    }
-                }
-            } else {
-                if (Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS)) {
-                    Util.debug(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS,
-                               THIS_CLASS + ".removeUnwantedNotifications( ) Removed Notification = " //$NON-NLS-1$
-                               + NotificationUtilities.paramString(notification));
                 }
             }
         }
@@ -951,21 +919,6 @@ public class TransformationNotificationListener implements INotifyChangedListene
             EObject mappingRoot = getMappingRootFromSqlAliasNotifications(notifications);
 
             if (!addedAliases.isEmpty()) {
-                // Debug message
-                if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-                // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-                    Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-                    String debugStr = buildAddDebugStr(THIS_CLASS + ".handleSqlAliasesAdded()", //$NON-NLS-1$
-                                                       mappingRoot,
-                                                       addedAliases,
-                                                       txnSource);
-                    if (!(txnSource instanceof TransformationObjectEditorPage) && !(txnSource instanceof SqlEditorPanel)) {
-                        System.out.println(debugStr + " <update SQL and reconcile Target attrs>"); //$NON-NLS-1$
-                    } else {
-                        System.out.println(debugStr + " <reconcile Target attrs>"); //$NON-NLS-1$
-                    }
-                }
-
                 boolean undoableAdd = NOT_UNDOABLE;
                 if (ITransformationDiagramActionConstants.DiagramActions.UNDO_ADD_TRANSFORMATION_SOURCE) {
                     undoableAdd = IS_UNDOABLE;
@@ -1056,21 +1009,6 @@ public class TransformationNotificationListener implements INotifyChangedListene
             EObject mappingRoot = getMappingRootFromSqlAliasNotifications(notifications);
 
             if (!removedAliases.isEmpty()) {
-                // Debug message
-                if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-                // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-                    Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-                    String debugStr = buildRemoveDebugStr(THIS_CLASS + ".handleSqlAliasesRemoved()", //$NON-NLS-1$
-                                                          mappingRoot,
-                                                          removedAliases,
-                                                          txnSource);
-                    if (!(txnSource instanceof TransformationObjectEditorPage) && !(txnSource instanceof SqlEditorPanel)) {
-                        System.out.println(debugStr + " <update SQL and reconcile Target attrs>"); //$NON-NLS-1$
-                    } else {
-                        System.out.println(debugStr + " <reconcile Target attrs>"); //$NON-NLS-1$
-                    }
-                }
-
                 // Start txn
                 boolean requiredStart = ModelerCore.startTxn(NOT_SIGNIFICANT, IS_UNDOABLE, "Update for SqlAlias Remove", this); //$NON-NLS-1$
                 boolean succeeded = false;
@@ -1120,21 +1058,6 @@ public class TransformationNotificationListener implements INotifyChangedListene
             EObject mappingRoot = getMappingRootFromSqlAliasNotifications(notifications);
 
             if (!removedAliases.isEmpty()) {
-                // Debug message
-                if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-                // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-                    Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-                    EObject transEObj = TransformationHelper.getMappingHelper(mappingRoot);
-                    String debugStr = buildChangeDebugStr(THIS_CLASS + ".handleSqlAliasChanged()", //$NON-NLS-1$
-                                                          transEObj,
-                                                          txnSource);
-                    if (!(txnSource instanceof TransformationObjectEditorPage) && !(txnSource instanceof SqlEditorPanel)) {
-                        System.out.println(debugStr + " <update SQL and reconcile Target attrs>"); //$NON-NLS-1$
-                    } else {
-                        System.out.println(debugStr + " <reconcile Target attrs>"); //$NON-NLS-1$
-                    }
-                }
-
                 // Start txn
                 boolean requiredStart = ModelerCore.startTxn(NOT_SIGNIFICANT, IS_UNDOABLE, "Update for SqlAlias Change", this); //$NON-NLS-1$
                 boolean succeeded = false;
@@ -1180,17 +1103,6 @@ public class TransformationNotificationListener implements INotifyChangedListene
             if (!sourceIsSqlHelper && !(txnSource instanceof TransformationObjectEditorPage)) {
                 // Get mapping root for the SqlTransformation
                 EObject mappingRoot = getMappingRootFromSqlUIDStatementNotifications(notifications);
-                // Debug message
-                if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-                // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-                    Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-                    EObject transEObj = TransformationHelper.getMappingHelper(mappingRoot);
-                    String debugStr = buildChangeDebugStr(THIS_CLASS + ".handleSqlStatementChanged()", //$NON-NLS-1$
-                                                          transEObj,
-                                                          txnSource);
-                    // Util.print(DebugConstants.NOTIFICATIONS,debugStr);
-                    System.out.println(debugStr + " <reconcile mappings>"); //$NON-NLS-1$
-                }
                 // Start txn
                 boolean requiredStart = ModelerCore.startTxn(NOT_SIGNIFICANT, IS_UNDOABLE, "Update for Sql Statment Change", this); //$NON-NLS-1$
                 boolean succeeded = false;
@@ -1347,18 +1259,6 @@ public class TransformationNotificationListener implements INotifyChangedListene
         if (!notifications.isEmpty()) {
             // Get mapping root for the SqlTransformation
             EObject mappingRoot = getMappingRootFromVTableNotifications(notifications);
-
-            // Debug message
-            if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-            // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-                Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-                String debugStr = buildChangeDebugStr(THIS_CLASS + ".handleVTableChanged()", //$NON-NLS-1$
-                                                      mappingRoot,
-                                                      txnSource);
-                // Util.print(DebugConstants.NOTIFICATIONS,debugStr);
-                System.out.println(debugStr + " <invalidate sql cache>"); //$NON-NLS-1$
-            }
-
             // Handle changes to table 'supportsUpdate' state
             // Assumption is that it is always safe to change columns to not updateable, if the table 'supportsUpdate'
             // is set to false. This is default behavior, handled in TableImpl.
@@ -1462,19 +1362,6 @@ public class TransformationNotificationListener implements INotifyChangedListene
 
             // Get mapping root for the SqlTransformation
             EObject mappingRoot = getMappingRootFromVTableNotifications(notifications);
-
-            // Debug message
-            if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-            // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-                Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-                String debugStr = buildAddDebugStr(THIS_CLASS + ".handleVTableColumnsAdded()", //$NON-NLS-1$
-                                                   mappingRoot,
-                                                   addedColumns,
-                                                   txnSource);
-                // Util.print(DebugConstants.NOTIFICATIONS,debugStr);
-                System.out.println(debugStr + " <create attr mapping>"); //$NON-NLS-1$
-            }
-
             if (!addedColumns.isEmpty()) {
                 // Start txn
                 boolean requiredStart = ModelerCore.startTxn(NOT_SIGNIFICANT, IS_UNDOABLE, "Create atttr mappings", this); //$NON-NLS-1$
@@ -1522,19 +1409,6 @@ public class TransformationNotificationListener implements INotifyChangedListene
 
             // Get mapping root for the SqlTransformation
             EObject mappingRoot = getMappingRootFromVTableNotifications(notifications);
-
-            // Debug message
-            if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-            // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-                Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-                String debugStr = buildRemoveDebugStr(THIS_CLASS + ".handleVTableColumnsRemoved()", //$NON-NLS-1$
-                                                      mappingRoot,
-                                                      removedColumns,
-                                                      txnSource);
-                // Util.print(DebugConstants.NOTIFICATIONS,debugStr);
-                System.out.println(debugStr + " <remove attr mapping>"); //$NON-NLS-1$
-            }
-
             if (!removedColumns.isEmpty()) {
                 // Start txn
                 boolean requiredStart = ModelerCore.startTxn(NOT_SIGNIFICANT, IS_UNDOABLE, "Remove atttr mappings", this); //$NON-NLS-1$
@@ -1685,19 +1559,6 @@ public class TransformationNotificationListener implements INotifyChangedListene
 
             // Get mapping root for the SqlTransformation
             EObject mappingRoot = getMappingRootFromProcResultSetColumnNotifications(notifications);
-
-            // Debug message
-            if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-            // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-                Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-                String debugStr = buildAddDebugStr(THIS_CLASS + ".handleResultSetColumnsAdded()", //$NON-NLS-1$
-                                                   mappingRoot,
-                                                   addedColumns,
-                                                   txnSource);
-                // Util.print(DebugConstants.NOTIFICATIONS,debugStr);
-                System.out.println(debugStr + " <create attr mapping>"); //$NON-NLS-1$
-            }
-
             if (!addedColumns.isEmpty()) {
                 // Start txn
                 boolean requiredStart = ModelerCore.startTxn(NOT_SIGNIFICANT, IS_UNDOABLE, "Add atttr mappings", this); //$NON-NLS-1$
@@ -1740,19 +1601,6 @@ public class TransformationNotificationListener implements INotifyChangedListene
 
             // Get mapping root for the SqlTransformation
             EObject mappingRoot = getMappingRootFromProcResultSetColumnNotifications(notifications);
-
-            // Debug message
-            if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-            // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-                Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-                String debugStr = buildRemoveDebugStr(THIS_CLASS + ".handleResultSetColumnsRemoved()", //$NON-NLS-1$
-                                                      mappingRoot,
-                                                      removedColumns,
-                                                      txnSource);
-                // Util.print(DebugConstants.NOTIFICATIONS,debugStr);
-                System.out.println(debugStr + " <remove attr mapping>"); //$NON-NLS-1$
-            }
-
             if (!removedColumns.isEmpty()) {
                 // Start txn
                 boolean requiredStart = ModelerCore.startTxn(NOT_SIGNIFICANT, IS_UNDOABLE, "Remove atttr mappings", this); //$NON-NLS-1$
@@ -1793,14 +1641,6 @@ public class TransformationNotificationListener implements INotifyChangedListene
         if (!notifications.isEmpty()) {
             // Get mapping root for the SqlTransformation
             EObject mappingRoot = getMappingRootFromProcResultSetOrParamNotifications(notifications);
-
-            if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-            // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-                Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-                // Util.print(DebugConstants.NOTIFICATIONS,debugStr);
-                System.out.println(THIS_CLASS + ".handleResultSetAdded() <update attr mappings>"); //$NON-NLS-1$
-            }
-
             // start txn if not already in txn
             boolean requiredStart = ModelerCore.startTxn(NOT_SIGNIFICANT, IS_UNDOABLE, "Update attr mappings", this); //$NON-NLS-1$
             boolean succeeded = false;
@@ -1847,13 +1687,6 @@ public class TransformationNotificationListener implements INotifyChangedListene
                 // Get Target attributes
                 List targetAttrs = TransformationHelper.getTransformationTargetAttributes(mappingRoot);
                 if (targetAttrs != null && !targetAttrs.isEmpty()) {
-                    if (Util.isDebugEnabled(DebugConstants.TX_SQL_MODIFICATION) &&
-                    // Util.isDebugEnabled(DebugConstants.NOTIFICATIONS) &&
-                        Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-                        // Util.print(DebugConstants.NOTIFICATIONS,debugStr);
-                        System.out.println(THIS_CLASS + ".handleResultSetRemoved() <update attr mappings>"); //$NON-NLS-1$
-                    }
-
                     SqlMappingRootCache.invalidateSelectStatus(mappingRoot, true, txnSource);
                     AttributeMappingHelper.updateAttributeMappings(mappingRoot, txnSource);
                     succeeded = true;
@@ -2177,120 +2010,6 @@ public class TransformationNotificationListener implements INotifyChangedListene
     }
 
     /* 
-     * Helper Method to get a "description" for the supplied EObject for output
-     * @param eObj
-     * @return the EObject description
-     */
-    private String getEObjectDesc( EObject eObj ) {
-        String desc = ""; //$NON-NLS-1$
-        if (eObj != null) {
-            desc = eObj.toString();
-            if (eObj instanceof SqlTransformationMappingRoot) {
-                desc = "SqlTransMappingRoot "; //$NON-NLS-1$
-            } else if (eObj instanceof SqlTransformation) {
-                desc = "SqlTransformation "; //$NON-NLS-1$
-            } else if (eObj instanceof SqlAlias) {
-                SqlAlias sqlAlias = (SqlAlias)eObj;
-                String aliasedObjName = getEObjectDesc(sqlAlias.getAliasedObject());
-                String alias = sqlAlias.getAlias();
-                if (!alias.equalsIgnoreCase(aliasedObjName)) {
-                    desc = aliasedObjName + " AS " + alias; //$NON-NLS-1$
-                } else {
-                    desc = alias;
-                }
-            } else if (TransformationHelper.isSqlTable(eObj)) {
-                desc = TransformationHelper.getSqlEObjectName(eObj);
-            } else if (TransformationHelper.isSqlColumn(eObj)) {
-                desc = TransformationHelper.getSqlEObjectName(eObj);
-            }
-        }
-        return desc;
-    }
-
-    /* 
-     * Helper Method to get a "description" for the notification source
-     * @param source the notification source
-     * @return the source description
-     */
-    private String getSourceDesc( Object source ) {
-        String sourceStr = "NULL"; //$NON-NLS-1$
-        if (source != null) {
-            sourceStr = source.getClass().getName();
-            int index = sourceStr.lastIndexOf('.');
-            if (index != -1) {
-                sourceStr = sourceStr.substring(index + 1);
-            }
-        }
-        return sourceStr;
-    }
-
-    /* 
-     * Helper Method to get a "description" for the supplied EObject for output
-     * @param eObj
-     * @return the EObject description
-     */
-    private String getEObjectDescs( List eObjs ) {
-        StringBuffer sb = new StringBuffer();
-        if (eObjs != null) {
-            Iterator iter = eObjs.iterator();
-            while (iter.hasNext()) {
-                EObject eObj = (EObject)iter.next();
-                sb.append(getEObjectDesc(eObj));
-                if (iter.hasNext()) {
-                    sb.append(" ,"); //$NON-NLS-1$
-                }
-            }
-        }
-        return sb.toString();
-    }
-
-    /* 
-     * Helper Method to build a Debug string for an Add Notification
-     * @param eObj
-     * @return the EObject description
-     */
-    private String buildAddDebugStr( String prefixStr,
-                                     EObject changedEObj,
-                                     List addedEObjs,
-                                     Object source ) {
-        StringBuffer sb = new StringBuffer(prefixStr);
-        sb.append(", modifiedObject= " + getEObjectDesc(changedEObj)); //$NON-NLS-1$
-        sb.append(", added Children= " + getEObjectDescs(addedEObjs)); //$NON-NLS-1$
-        sb.append(", source= " + getSourceDesc(source)); //$NON-NLS-1$
-        return sb.toString();
-    }
-
-    /* 
-     * Helper Method to build a Debug string for Remove Notification
-     * @param eObj
-     * @return the EObject description
-     */
-    private String buildRemoveDebugStr( String prefixStr,
-                                        EObject changedEObj,
-                                        List addedEObjs,
-                                        Object source ) {
-        StringBuffer sb = new StringBuffer(prefixStr);
-        sb.append(", modifiedObject= " + getEObjectDesc(changedEObj)); //$NON-NLS-1$
-        sb.append(", removed Children= " + getEObjectDescs(addedEObjs)); //$NON-NLS-1$
-        sb.append(", source= " + getSourceDesc(source)); //$NON-NLS-1$
-        return sb.toString();
-    }
-
-    /* 
-     * Helper Method to build a Debug string for Change Notification
-     * @param eObj
-     * @return the EObject description
-     */
-    private String buildChangeDebugStr( String prefixStr,
-                                        EObject changedEObj,
-                                        Object source ) {
-        StringBuffer sb = new StringBuffer(prefixStr);
-        sb.append(", modifiedObject= " + getEObjectDesc(changedEObj)); //$NON-NLS-1$
-        sb.append(", source= " + getSourceDesc(source)); //$NON-NLS-1$
-        return sb.toString();
-    }
-
-    /* 
      * Method to determine whether the Notification source is the TransformationSqlHelper
      * @param source the source to test
      * @return 'true' if the source is the SqlTransformationHelper, 'false' if not.
@@ -2566,13 +2285,7 @@ public class TransformationNotificationListener implements INotifyChangedListene
         public void notifyClosing( ModelWorkspaceNotification notification ) {
         }
 
-        public void notifyClosed( ModelWorkspaceNotification notification ) {
-        }
-
         public void notifyChanged( Notification theNotification ) {
-        }
-
-        public void notifyChange( ModelWorkspaceNotification notification ) {
         }
 
         public void notifyReloaded( ModelWorkspaceNotification notification ) {

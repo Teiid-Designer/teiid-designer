@@ -79,7 +79,6 @@ import com.metamatrix.modeler.core.workspace.ModelResourceReloadVetoListener;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.search.ModelWorkspaceSearch;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.ui.DebugConstants;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerResourceNavigator;
 import com.metamatrix.modeler.internal.ui.outline.ModelOutlinePage;
@@ -101,7 +100,6 @@ import com.metamatrix.modeler.ui.editors.INavigationSupported;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.modeler.ui.editors.ModelEditorPage;
 import com.metamatrix.modeler.ui.editors.ModelObjectEditorPage;
-import com.metamatrix.modeler.ui.editors.NavigableEditor;
 import com.metamatrix.modeler.ui.editors.NavigationMarker;
 import com.metamatrix.modeler.ui.event.ModelResourceEvent;
 import com.metamatrix.modeler.ui.undo.IUndoManager;
@@ -129,7 +127,6 @@ public class ModelEditor extends MultiPageModelEditor
     /** Initial modification stamp value. */
     public static long INITIAL_STAMP = -1;
 
-    private static final String THIS_CLASS = "ModelEditor"; //$NON-NLS-1$
     private ModelOutlinePage contentOutlinePage;
     private ModelObjectPropertySourceProvider propertySourceProvider;
     private ModelEditorSelectionProvider selectionProvider;
@@ -159,11 +156,6 @@ public class ModelEditor extends MultiPageModelEditor
 
     /** The ModelResource listener for file system changes on models and projects */
     EventObjectListener modelResourceListener;
-
-    /** The currently open object */
-    // private Object openObject;
-    /** delegate used to make this class navigable * */
-    private NavigableEditor neNavigableEditor;
 
     private int iCurrentPage;
 
@@ -508,16 +500,6 @@ public class ModelEditor extends MultiPageModelEditor
      */
     @Override
     public void gotoMarker( IMarker marker ) {
-        // System.out.println("\n[ModelEditor.gotoMarker] TOP, marker: " + marker); //$NON-NLS-1$
-
-        // try {
-        // System.out.println(" ME.gotoMarker() Location = " + marker.getAttribute(IMarker.LOCATION) );
-        // System.out.println(" ME.gotoMarker() LocationUri = " + marker.getAttribute(ModelerCore.MARKER_URI_PROPERTY) );
-        // System.out.println(" ME.gotoMarker() TargetUri = " + marker.getAttribute(ModelerCore.TARGET_MARKER_URI_PROPERTY) );
-        // } catch (CoreException e) {
-        // e.printStackTrace();
-        // }
-
         String sMarkerType = marker.getAttribute(Navigation.MARKER_TYPE, Navigation.UNKNOWN);
 
         if (sMarkerType.equals(Navigation.NAVIGATION)) {
@@ -528,26 +510,13 @@ public class ModelEditor extends MultiPageModelEditor
 
             if (oDelegate != null && oDelegate instanceof IEditorPart && oDelegatesMarker != null
                 && oDelegatesMarker instanceof IMarker) {
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.NAVIGATION)) {
-                    UiConstants.Util.print(DebugConstants.NAVIGATION, THIS_CLASS + "\n\n.gotoMarker();  oDelegate: " + oDelegate); //$NON-NLS-1$
-                    UiConstants.Util.print(DebugConstants.NAVIGATION, THIS_CLASS
-                                                                      + ".gotoMarker();  oDelegatesMarker: " + oDelegatesMarker); //$NON-NLS-1$
-                }
-                // System.out.println("[ModelEditor.gotoMarker] oDelegate: " + oDelegate ); //$NON-NLS-1$
-                // System.out.println("[ModelEditor.gotoMarker] oDelegatesMarker: " + oDelegatesMarker ); //$NON-NLS-1$
-
                 IEditorPart iepDelegate = (IEditorPart)oDelegate;
                 IDE.gotoMarker(iepDelegate, (IMarker)oDelegatesMarker);
 
             } else {
 
                 // if no delegate, this is a routine tab index change:
-                // System.out.println("[ModelEditor.gotoMarker] Index: " + iIndex ); //$NON-NLS-1$
                 int iPage = marker.getAttribute(Navigation.TAB_INDEX, 0);
-                // System.out.println("[ModelEditor.gotoMarker] About to call setActivePage for page: " + iPage ); //$NON-NLS-1$
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.NAVIGATION)) {
-                    UiConstants.Util.print(DebugConstants.NAVIGATION, THIS_CLASS + "\n\n.gotoMarker();  iPage: " + iPage); //$NON-NLS-1$
-                }
                 setActivePage(iPage);
             }
 
@@ -694,9 +663,6 @@ public class ModelEditor extends MultiPageModelEditor
             public void windowClosed( IWorkbenchWindow theWindow ) {
             }
         });
-
-        // create the NavigableEditor
-        neNavigableEditor = new NavigableEditor(this);
 
         this.initialized = true;
     }
@@ -1099,13 +1065,6 @@ public class ModelEditor extends MultiPageModelEditor
 
         if (activeEditor != null) {
             // handle tabs right here in ModelEditor
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.NAVIGATION)) {
-                UiConstants.Util.print(DebugConstants.NAVIGATION, THIS_CLASS + ".pageChange();  About to markLocation( this )"); //$NON-NLS-1$
-                UiConstants.Util.print(DebugConstants.NAVIGATION,
-                                       THIS_CLASS
-                                       + ".pageChange();  nav history count: " + neNavigableEditor.getNavHistoryCount()); //$NON-NLS-1$
-            }
-
             IWorkbenchPage workbenchPage = UiUtil.getWorkbenchPage();
             if (workbenchPage != null) {
                 workbenchPage.getNavigationHistory().markLocation(this);
@@ -1315,31 +1274,7 @@ public class ModelEditor extends MultiPageModelEditor
      * @since 4.0
      */
     public INavigationLocation createNavigationLocation() {
-        // System.out.println("[ModelEditor.createNavigationLocation] TOP"); //$NON-NLS-1$
-
-        // Defect 22290 reflects memory (leaks) issues within designer. Our current implementation of this method is violating
-        // light-weight intention of the NavigationHistory framework. Our NavigatableEditor, used for the 'location', or
-        // INavigationLocationProvider, contains a reference to the IEditorPart. THIS IS DISCOURAGED by Eclipse community...
-        // SO Commenting out the creation of this object.
-        // IEditorPart iepActiveEditor = getActiveEditor();
-        //
-        // if (iepActiveEditor != null) {
-        // if (UiConstants.Util.isDebugEnabled(DebugConstants.NAVIGATION)) {
-        // UiConstants.Util.print(DebugConstants.NAVIGATION,
-        // THIS_CLASS
-        //                                                       + ".createNavigationLocation(); about to call neNavigableEditor.createNavigationLocation()   "); //$NON-NLS-1$
-        // }
-        // if (iepActiveEditor instanceof INavigationLocationProvider)
-        // return ((INavigationLocationProvider)iepActiveEditor).createNavigationLocation();
-        //
-        // return neNavigableEditor.createNavigationLocation();
-        // }
-
         // if no editor, return null (and no history entry will be created)
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.NAVIGATION)) {
-            UiConstants.Util.print(DebugConstants.NAVIGATION, THIS_CLASS
-                                                              + ".createNavigationLocation(); no editor, returning NULL "); //$NON-NLS-1$
-        }
         return null;
     }
 
@@ -1359,27 +1294,12 @@ public class ModelEditor extends MultiPageModelEditor
         if (iepActiveEditor != null) {
 
             if (iepActiveEditor instanceof INavigationLocationProvider && iepActiveEditor instanceof INavigationSupported) {
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.NAVIGATION)) {
-                    UiConstants.Util.print(DebugConstants.NAVIGATION,
-                                           THIS_CLASS + ".createMarker();  creating DELEGATE marker: " + iepActiveEditor); //$NON-NLS-1$
-                }
                 nmMarker.setAttribute(Navigation.DELEGATE, iepActiveEditor);
                 nmMarker.setAttribute(Navigation.DELEGATES_MARKER, ((INavigationSupported)iepActiveEditor).createMarker());
 
             } else {
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.NAVIGATION)) {
-                    UiConstants.Util.print(DebugConstants.NAVIGATION,
-                                           THIS_CLASS + ".createMarker();  creating TAB_INDEX marker: " + iCurrentPage); //$NON-NLS-1$
-                }
                 nmMarker.setAttribute(Navigation.TAB_INDEX, iCurrentPage);
             }
-        } else {
-            // no action if iepActiveEditor is null
-
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.NAVIGATION)) {
-                UiConstants.Util.print(DebugConstants.NAVIGATION, THIS_CLASS + ".createMarker();  activeEditor is null "); //$NON-NLS-1$
-            }
-
         }
 
         return nmMarker;

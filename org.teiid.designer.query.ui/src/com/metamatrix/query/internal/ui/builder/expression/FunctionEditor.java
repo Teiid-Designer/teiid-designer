@@ -81,10 +81,6 @@ public class FunctionEditor extends AbstractLanguageObjectEditor {
         super(theParent, Function.class, theModel);
         // Note: the call to super calls createUi
 
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "constructor"); //$NON-NLS-1$
-        }
-
         controller = new ViewController();
         model = theModel;
         model.addModelListener(controller);
@@ -94,10 +90,6 @@ public class FunctionEditor extends AbstractLanguageObjectEditor {
 
         // start the controller
         controller.initialize();
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "constructor"); //$NON-NLS-1$
-        }
     }
 
     /**

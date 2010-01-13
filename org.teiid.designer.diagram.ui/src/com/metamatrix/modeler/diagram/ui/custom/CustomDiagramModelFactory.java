@@ -35,7 +35,6 @@ import com.metamatrix.modeler.diagram.ui.model.LabelModelNode;
 import com.metamatrix.modeler.diagram.ui.notation.uml.model.UmlClassifierNode;
 import com.metamatrix.modeler.diagram.ui.pakkage.PackageDiagramModelFactory;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
-import com.metamatrix.modeler.internal.diagram.ui.DebugConstants;
 import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -523,10 +522,6 @@ public class CustomDiagramModelFactory extends PackageDiagramModelFactory {
             // we know that the object is not a child of a model resource !!!!!
             Object target = ModelerCore.getModelEditor().getChangedObject(notification);
 
-            if (Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS) && Util.isDebugEnabled(DebugConstants.DIAGRAM_MODEL_NODE)) {
-                Util.print(DebugConstants.DIAGRAM_MODEL_NODE, "targetObject = " + target); //$NON-NLS-1$
-            }
-
             if (!(target instanceof EObject) || target instanceof Diagram || target instanceof AbstractDiagramEntity) return;
 
             EObject targetObject = (EObject)target;
@@ -580,10 +575,6 @@ public class CustomDiagramModelFactory extends PackageDiagramModelFactory {
         if (NotificationUtilities.isEObjectNotifier(notification)) {
             // we know that the object is not a child of a model resource !!!!!
             Object target = ModelerCore.getModelEditor().getChangedObject(notification);
-
-            if (Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS) && Util.isDebugEnabled(DebugConstants.DIAGRAM_MODEL_NODE)) {
-                Util.debug(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS, THIS_CLASS + ".performRemove()  targetObject = " + target); //$NON-NLS-1$
-            }
 
             if (!(target instanceof EObject) || target instanceof Diagram || target instanceof AbstractDiagramEntity) return;
 

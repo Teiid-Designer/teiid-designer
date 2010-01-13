@@ -38,7 +38,6 @@ import com.metamatrix.modeler.diagram.ui.editor.DiagramEditorUtil;
 import com.metamatrix.modeler.diagram.ui.figure.DiagramFigure;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
-import com.metamatrix.modeler.internal.diagram.ui.DebugConstants;
 
 /**
  * AbstractDefaultEditPart
@@ -193,10 +192,6 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
         } else if (prop.equals(DiagramUiConstants.DiagramNodeProperties.SIZE)) {
             getChangeManager().refresh(PropertyChangeManager.VISUALS, false);
         } else if (prop.equals(DiagramUiConstants.DiagramNodeProperties.LOCATION)) {
-            if (DiagramUiConstants.Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.PROPERTIES)) {
-                String debugMessage = "Location Property Change on EP = " + ((DiagramModelNode)getModel()).getName() + " Position = " + ((DiagramModelNode)getModel()).getPosition(); //$NON-NLS-2$ //$NON-NLS-1$
-                DiagramUiConstants.Util.print(com.metamatrix.modeler.internal.ui.DebugConstants.PROPERTIES, debugMessage);
-            }
             getChangeManager().refresh(PropertyChangeManager.VISUALS, false);
         } else if (prop.equals(DiagramUiConstants.DiagramNodeProperties.PROPERTIES)) {
             getChangeManager().refresh(PropertyChangeManager.VISUALS, false);
@@ -449,45 +444,6 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
         return super.getAdapter(key);
     }
 
-    // =================================================================================================
-    /**
-     * Adds the specified source <code>ConnectionEditPart</code> at an index. This method is used to update the
-     * {@link #sourceConnections} List. This method is called from {@link #addSourceConnection(ConnectionEditPart, int)}.
-     * Subclasses should not call or override this method.
-     * 
-     * @param connection the ConnectionEditPart
-     * @param index the index of the add
-     */
-    @Override
-    protected void primAddSourceConnection( ConnectionEditPart connection,
-                                            int index ) {
-        if (shouldDebug()) {
-            String message = "EditPart Model = " //$NON-NLS-1$
-                             + ((DiagramModelNode)getModel()).getName() + " connection = " + connection; //$NON-NLS-1$
-            DiagramUiConstants.Util.print(getEnabledDebugContext(), message);
-        }
-        super.primAddSourceConnection(connection, index);
-    }
-
-    /**
-     * Adds the specified target <code>ConnectionEditPart</code> at an index. This method is used to update the
-     * {@link #targetConnections} List. This method is called from {@link #addTargetConnection(ConnectionEditPart, int)}.
-     * Subclasses should not call or override this method.
-     * 
-     * @param connection the ConnectionEditPart
-     * @param index the index of the add
-     */
-    @Override
-    protected void primAddTargetConnection( ConnectionEditPart connection,
-                                            int index ) {
-        if (shouldDebug()) {
-            String message = "EditPart Model = " //$NON-NLS-1$
-                             + ((DiagramModelNode)getModel()).getName() + " connection = " + connection; //$NON-NLS-1$
-            DiagramUiConstants.Util.print(getEnabledDebugContext(), message);
-        }
-        super.primAddTargetConnection(connection, index);
-    }
-
     /**
      * OVERRIDING method in AbstractGraphicalEditPart The changes to addTargetConnection() were removing the connection after it
      * was added and this didn't make sense for how we were implementing connections. This will have to be fixed in the future
@@ -513,10 +469,6 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
         fireSourceConnectionAdded(connection, index);
     }
 
-    // =================================================================================================
-    // =================================================================================================
-    // Connection Methods from NodeEditPart interface and Overriding AbstractGraphicalEditPart
-    // =================================================================================================
     /**
      * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelSourceConnections()
      **/
@@ -525,11 +477,6 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
         List sourceConnections;
 
         sourceConnections = ((DiagramModelNode)getModel()).getSourceConnections();
-        if (shouldDebug()) {
-            String message = "EditPart Model = " //$NON-NLS-1$
-                             + ((DiagramModelNode)getModel()).getName() + " Number = " + sourceConnections.size(); //$NON-NLS-1$
-            DiagramUiConstants.Util.print(getEnabledDebugContext(), message);
-        }
         return sourceConnections;
     }
 
@@ -538,26 +485,13 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      **/
     @Override
     protected List getModelTargetConnections() {
-        List targetConnections;
-
-        targetConnections = ((DiagramModelNode)getModel()).getTargetConnections();
-        if (shouldDebug()) {
-            String message = "EditPart Model = " //$NON-NLS-1$
-                             + ((DiagramModelNode)getModel()).getName() + " Number = " + targetConnections.size(); //$NON-NLS-1$
-            DiagramUiConstants.Util.print(getEnabledDebugContext(), message);
-        }
-        return targetConnections;
+        return ((DiagramModelNode)getModel()).getTargetConnections();
     }
 
     /**
      * @see org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(ConnectionEditPart)
      **/
     public ConnectionAnchor getSourceConnectionAnchor( ConnectionEditPart connection ) {
-        if (shouldDebug()) {
-            String message = "EditPart Model = " //$NON-NLS-1$
-                             + ((DiagramModelNode)getModel()).getName() + " connection = " + connection; //$NON-NLS-1$
-            DiagramUiConstants.Util.print(getEnabledDebugContext(), message);
-        }
         if (this.getAnchorManager() != null) return this.getAnchorManager().getSourceAnchor((NodeConnectionEditPart)connection);
 
         return null;
@@ -778,10 +712,6 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
     @Override
     public void setSelected( int value ) {
         super.setSelected(value);
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_SELECTION)) {
-            String debugMessage = "Set selected value to " + value + " for EP = " + this; //$NON-NLS-2$ //$NON-NLS-1$
-            DiagramUiConstants.Util.print(DebugConstants.DIAGRAM_SELECTION, debugMessage);
-        }
         if (value == SELECTED_NONE) showSelected(false);
         else showSelected(true);
     }
@@ -831,25 +761,6 @@ public abstract class AbstractDefaultEditPart extends AbstractGraphicalEditPart
      */
     public void setResizable( boolean canResize ) {
         this.canResize = canResize;
-    }
-
-    private boolean shouldDebug() {
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_CONNECTIONS)
-            || DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_EDIT_PARTS)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private String getEnabledDebugContext() {
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_CONNECTIONS)) {
-            return DebugConstants.DIAGRAM_CONNECTIONS;
-        }
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_EDIT_PARTS)) {
-            return DebugConstants.DIAGRAM_EDIT_PARTS;
-        }
-        return null;
     }
 
     /* (non-Javadoc)

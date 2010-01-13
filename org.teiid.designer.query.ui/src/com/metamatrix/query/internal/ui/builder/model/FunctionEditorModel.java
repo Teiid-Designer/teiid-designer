@@ -75,18 +75,10 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
      */
     @Override
     public void clear() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "clear()"); //$NON-NLS-1$
-        }
-
         argNames = null;
         argValues = null;
         selectedFunctionForm = null;
         super.clear();
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "clear()"); //$NON-NLS-1$
-        }
     }
 
     private FunctionForm findFunctionForm( String theFunctionName ) {
@@ -271,11 +263,6 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
                     functions = new String[1];
                     functions[0] = NONE;
                 }
-
-                if (BuilderUtils.isEventLogging()) {
-                    Util.print(this, "setCategory:fireModelChanged:type=" + CATEGORY); //$NON-NLS-1$
-                }
-
                 fireModelChanged(CATEGORY);
             }
         }
@@ -298,11 +285,6 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
         }
 
         notifyListeners = true;
-
-        if (BuilderUtils.isEventLogging()) {
-            Util.print(this, "setFunction:fireModelChanged:type=" + LanguageObjectEditorModelEvent.SAVED); //$NON-NLS-1$
-        }
-
         fireModelChanged(LanguageObjectEditorModelEvent.SAVED);
     }
 
@@ -361,11 +343,6 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
 
                 argValues.add(value);
             }
-
-            if (BuilderUtils.isEventLogging()) {
-                Util.print(this, "setFunctionName:fireModelChanged:type=" + SELECTED_FUNCTION); //$NON-NLS-1$
-            }
-
             fireModelChanged(SELECTED_FUNCTION);
         }
     }

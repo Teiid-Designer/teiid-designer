@@ -46,7 +46,6 @@ import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
-import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
 import com.metamatrix.modeler.core.search.runtime.ResourceImportRecord;
 import com.metamatrix.modeler.core.validation.rules.CoreValidationRulesUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -1736,41 +1735,14 @@ public abstract class ModelUtilities implements UiConstants, InternalUiConstants
         }
 
         /**
-         * Notifies all registerd listeners of the specified notification.
+         * Notifies all registered listeners of the specified notification.
          * 
          * @param theNotification the notification being processed
          */
         private void fireNotification( Notification theNotification ) {
-            boolean timerOn = Util.isDebugEnabled(NOTIFICATIONS);
-            String notificationType = null;
-            Object[] info = null;
-
-            if (timerOn) {
-                if (NotificationUtilities.isAdded(theNotification)) {
-                    notificationType = "ADDED"; //$NON-NLS-1$
-                } else if (NotificationUtilities.isRemoved(theNotification)) {
-                    notificationType = "REMOVED"; //$NON-NLS-1$
-                } else if (NotificationUtilities.isMoved(theNotification)) {
-                    notificationType = "MOVED"; //$NON-NLS-1$
-                } else if (NotificationUtilities.isChanged(theNotification)) {
-                    notificationType = "CHANGED"; //$NON-NLS-1$
-                }
-
-                EObject eObj = NotificationUtilities.getEObject(theNotification);
-
-                if (eObj == null) {
-                    info = new Object[2];
-                } else {
-                    info = new Object[3];
-                    info[2] = eObj;
-                }
-            }
-
             List tempListenerList = new ArrayList(listeners);
 
             for (int size = tempListenerList.size(), i = 0; i < size; i++) {
-                String timerId = "Notification Handler:"; //$NON-NLS-1$
-                String handlerNumber = null;
                 INotifyChangedListener l = (INotifyChangedListener)tempListenerList.get(i);
 
                 // We need to be sure that the listener is still around.
@@ -1778,21 +1750,7 @@ public abstract class ModelUtilities implements UiConstants, InternalUiConstants
                 // decrease the size of the listener list.
 
                 if (listeners.contains(l)) {
-                    if (timerOn) {
-                        timerId += l.getClass().getName();
-                        handlerNumber = new StringBuffer().append("Handler=").append(i).toString(); //$NON-NLS-1$
-
-                        info[0] = notificationType;
-                        info[1] = handlerNumber;
-
-                        Util.start(timerId, NOTIFICATIONS, info);
-                    }
-
                     l.notifyChanged(theNotification);
-
-                    if (timerOn) {
-                        Util.stop(timerId, NOTIFICATIONS, info);
-                    }
                 }
             }
         }

@@ -10,15 +10,12 @@ package com.metamatrix.modeler.internal.mapping.factory;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.mapping.DebugConstants;
@@ -26,60 +23,44 @@ import com.metamatrix.modeler.mapping.PluginConstants;
 import com.metamatrix.modeler.mapping.factory.IChoiceFactory;
 
 /**
- * ChoiceFactoryManager  :: point="com.metamatrix.modeler.mapping.choiceObjectHandler">
+ * ChoiceFactoryManager :: point="com.metamatrix.modeler.mapping.choiceObjectHandler">
  */
-public class ChoiceFactoryManager implements DebugConstants,
-                                             PluginConstants,
-                                             PluginConstants.ExtensionPoints.ChoiceObjectHandler {
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+public class ChoiceFactoryManager implements DebugConstants, PluginConstants, PluginConstants.ExtensionPoints.ChoiceObjectHandler {
+
+    // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTANTS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    
+    // /////////////////////////////////////////////////////////////////////////////////////////////
+
     /** Used in logging debug messages. */
     private static final Class CLASS = ChoiceFactoryManager.class;
-    
+
     /** Localization prefix found in properties file key words. */
     private static final String PREFIX = I18nUtil.getPropertyPrefix(CLASS);
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    // /////////////////////////////////////////////////////////////////////////////////////////////
     // INITIALIZER
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    
+    // /////////////////////////////////////////////////////////////////////////////////////////////
+
     static {
         buildChoiceHanderMaps();
     }
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    // /////////////////////////////////////////////////////////////////////////////////////////////
     // FIELDS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    
+    // /////////////////////////////////////////////////////////////////////////////////////////////
+
     /** Map used to create a new instance of a Choice Factory upon request. */
     private static Map choiceHandlerMap; // key=factory class (as string); value=factory class (as executable)
-    
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
 
     /** Don't allow construction. */
-    private ChoiceFactoryManager() {}
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // METHODS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    private ChoiceFactoryManager() {
+    }
 
     private static void buildChoiceHanderMaps() {
-//        System.out.println( "[ChoiceFactoryManager.buildChoiceHanderMaps] TOP" ); //$NON-NLS-1$  
-        if (Util.isDebugEnabled(MODEL_MAPPER)) {
-            Util.printEntered(CLASS, "buildMapperMap()"); //$NON-NLS-1$
-        }
-        
         choiceHandlerMap = new HashMap();
 
         // get the ModelObjectActionContributor extension point from the plugin class
-        IExtensionPoint extensionPoint 
-            = Platform.getExtensionRegistry().getExtensionPoint(PLUGIN_ID, ID);
+        IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(PLUGIN_ID, ID);
 
         // get the all extensions to the ModelObjectActionContributor extension point
         IExtension[] extensions = extensionPoint.getExtensions();
@@ -91,22 +72,14 @@ public class ChoiceFactoryManager implements DebugConstants,
                 Object extension = null;
                 String sFactoryClass = null;
 
-                if (Util.isDebugEnabled(MODEL_MAPPER)) {
-                    Util.print(CLASS, "buildChoiceHanderMaps():found " + elements.length + " choice handler extensions"); //$NON-NLS-1$ //$NON-NLS-2$
-                }
-
-                for ( int j = 0; j < elements.length; j++ ) {
+                for (int j = 0; j < elements.length; j++) {
                     try {
-                        if (Util.isDebugEnabled(MODEL_MAPPER)) {
-                            Util.print(CLASS, "buildChoiceHanderMaps():processing " + elements[j].getAttribute(CLASSNAME)); //$NON-NLS-1$
-                        }
 
-                        extension = elements[ j ].createExecutableExtension( FACTORY_CLASS );
+                        extension = elements[j].createExecutableExtension(FACTORY_CLASS);
 
                         if (extension instanceof IChoiceFactory) {
-                            
-//                            System.out.println( "[ChoiceFactoryManager.buildChoiceHanderMaps] About to 'put': " + sFactoryClass ); //$NON-NLS-1$  
-                            choiceHandlerMap.put( sFactoryClass, extension );
+
+                            choiceHandlerMap.put(sFactoryClass, extension);
 
                         } else {
                             Util.log(IStatus.ERROR, Util.getString(PREFIX + "invalidChoiceHandlerMapperClass", //$NON-NLS-1$
@@ -119,38 +92,32 @@ public class ChoiceFactoryManager implements DebugConstants,
                 }
             }
         }
-
-        if (Util.isDebugEnabled(MODEL_MAPPER)) {
-            Util.printExited(CLASS, "buildChoiceHanderMaps():choiceHandlerMap=" + choiceHandlerMap); //$NON-NLS-1$
-        }
     }
-    
+
     /**
      * Retrieves a choice factory for the given object, if there is one.
+     * 
      * @param theMetamodelUri the metamodel URI whose mapper is being requested
      * @return the appropriate choice factory
-     * 
      */
     public static IChoiceFactory getChoiceFactory( EObject eo ) {
-//        System.out.println( "[ChoiceFactoryManager.getChoiceFactory] TOP" ); //$NON-NLS-1$  
-//
-//        System.out.println( "[ChoiceFactoryManager.getChoiceFactory] choiceHandlerMap.size() is: " + choiceHandlerMap.size() ); //$NON-NLS-1$  
-        
+        //        System.out.println( "[ChoiceFactoryManager.getChoiceFactory] TOP" ); //$NON-NLS-1$  
+        //
+        //        System.out.println( "[ChoiceFactoryManager.getChoiceFactory] choiceHandlerMap.size() is: " + choiceHandlerMap.size() ); //$NON-NLS-1$  
+
         ArgCheck.isNotNull(eo);
-        
+
         Iterator it = choiceHandlerMap.values().iterator();
-        
-        while ( it.hasNext() ) {
+
+        while (it.hasNext()) {
             IChoiceFactory icf = (IChoiceFactory)it.next();
-            
-            if ( icf.supports( eo ) ) {
-                return icf;                
-            } 
+
+            if (icf.supports(eo)) {
+                return icf;
+            }
         }
 
         return null;
     }
-    
-
 
 }

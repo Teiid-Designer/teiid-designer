@@ -28,14 +28,12 @@ import org.eclipse.swt.printing.PrinterData;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.diagram.ui.IDiagramType;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.pakkage.PackageDiagramContentProvider;
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
 import com.metamatrix.modeler.diagram.ui.printing.DiagramPrintingAnalyzer;
-import com.metamatrix.modeler.internal.diagram.ui.DebugConstants;
 import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 
@@ -43,7 +41,6 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
  * DiagramViewer
  */
 public class DiagramViewer extends ScrollingGraphicalViewer {
-    private static final String THIS_CLASS = "DiagramViewer"; //$NON-NLS-1$
     private PackageDiagramContentProvider packageDiagramProvider;
     private DiagramEditor editor;
     private boolean inFocus = false;
@@ -82,10 +79,6 @@ public class DiagramViewer extends ScrollingGraphicalViewer {
         // Let's interecept the selection in the viewer and get the "ModelObjects"
         if (getSelectedEditParts().isEmpty() && getContents() != null) {
             Object standinObject = null;
-            if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_SELECTION)) {
-                String debugMessage = "getSelection(1):  Selection = " + super.getSelection(); //$NON-NLS-1$
-                DiagramUiConstants.Util.print(this.getClass(), debugMessage);
-            }
             Diagram currentDiagram = editor.getDiagram();
             // Let's ask the DiagramType for it's selection stand-in
             if (currentDiagram != null) {
@@ -97,14 +90,7 @@ public class DiagramViewer extends ScrollingGraphicalViewer {
 
             return super.getSelection();
         }
-
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_SELECTION)) {
-            String debugMessage = "getSelection(2):  Selection = " + getSelectedModelObjects(); //$NON-NLS-1$
-            DiagramUiConstants.Util.print(this.getClass(), debugMessage);
-        }
         return new StructuredSelection(getSelectedModelObjects());
-
-        // return super.getSelection();
     }
 
     private List getSelectedModelObjects() {
@@ -187,45 +173,12 @@ public class DiagramViewer extends ScrollingGraphicalViewer {
         }
     }
 
-    // /**
-    // * @see EditPartViewer#deselectAll()
-    // */
-    // public void deselectAll() {
-    // super.deselectAll();
-    // String debugMessage = " +++----- >>>  DiagramViewer.deselectAll() Diagram = " + getEditor().getDiagram();
-    // System.out.println(debugMessage);
-    // }
-
-    public void printContents() {
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_EDITOR)) {
-
-            EditPart contents = getContents();
-
-            String message = "  CURRENT CONTENTS of Diagram  = " + contents; //$NON-NLS-1$
-            DiagramUiConstants.Util.debug(DebugConstants.DIAGRAM_EDITOR, THIS_CLASS + message);
-            Iterator iter = contents.getChildren().iterator();
-            EditPart nextEP = null;
-
-            while (iter.hasNext()) {
-                nextEP = (EditPart)iter.next();
-                message = "  --- Next Child = " + nextEP; //$NON-NLS-1$
-                DiagramUiConstants.Util.debug(DebugConstants.DIAGRAM_EDITOR, message);
-            }
-        }
-
-    }
-
     /* (non-Javadoc)
      * @see org.eclipse.gef.EditPartViewer#select(org.eclipse.gef.EditPart)
      */
     @Override
     public void select( EditPart editpart ) {
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_SELECTION)) {
-            String debugMessage = "select(editPart):  EditPart = " + editpart; //$NON-NLS-1$
-            DiagramUiConstants.Util.print(this.getClass(), debugMessage);
-        }
         super.select(editpart);
-
         reveal(editpart);
     }
 

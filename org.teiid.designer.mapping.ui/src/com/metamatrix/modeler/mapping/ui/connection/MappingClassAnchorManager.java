@@ -20,8 +20,6 @@ import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.notation.uml.model.UmlClassifierNode;
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
-import com.metamatrix.modeler.mapping.ui.DebugConstants;
-import com.metamatrix.modeler.mapping.ui.UiConstants;
 import com.metamatrix.modeler.mapping.ui.model.MappingExtentNode;
 import com.metamatrix.modeler.mapping.ui.part.MappingDiagramEditPart;
 import com.metamatrix.modeler.mapping.ui.part.MappingExtentEditPart;
@@ -399,10 +397,6 @@ public class MappingClassAnchorManager implements AnchorManager {
             List attributes = classifierNode.getAttributes();
             if (id < attributes.size()) {
                 yPosition = ((DiagramModelNode)attributes.get(id)).getCenterY() + containerY;
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_CONNECTIONS)) {
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_CONNECTIONS,
-                                           "Found Y for Attribute ID = " + id + "  Y = " + yPosition); //$NON-NLS-2$ //$NON-NLS-1$
-                }
             }
         }
         return yPosition;
@@ -419,10 +413,6 @@ public class MappingClassAnchorManager implements AnchorManager {
 
             if (attributeNode != null) {
                 yPosition = attributeNode.getCenterY() + containerY;
-                if (UiConstants.Util.isDebugEnabled(DebugConstants.MAPPING_DIAGRAM_CONNECTIONS)) {
-                    UiConstants.Util.print(DebugConstants.MAPPING_DIAGRAM_CONNECTIONS,
-                                           "Found Y for Attribute = " + attributeNode + "  Y = " + yPosition); //$NON-NLS-2$ //$NON-NLS-1$
-                }
             }
         }
 

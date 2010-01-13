@@ -19,40 +19,19 @@ import com.metamatrix.modeler.mapping.ui.UiConstants;
 /**
  * @since 5.0.2
  */
-public class EnumeratedTypeLinkEditPart extends NodeConnectionEditPart
-                                        implements UiConstants{
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-    public EnumeratedTypeLinkEditPart() {
-        if (Util.isDebugEnabled(com.metamatrix.modeler.transformation.ui.DebugConstants.TX_DIAGRAM_CONNECTIONS) && Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-            String msg = getClass().getSimpleName() + ".constructor:model=" + getModel(); //$NON-NLS-1$
-            Util.debug(com.metamatrix.modeler.transformation.ui.DebugConstants.TX_DIAGRAM_CONNECTIONS, msg);
-        }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // METHODS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+public class EnumeratedTypeLinkEditPart extends NodeConnectionEditPart implements UiConstants {
 
     /**
      * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
      * @since 5.0.2
-    **/
+     **/
     @Override
     protected IFigure createFigure() {
-		DiagramPolylineConnection connectionFigure = new DiagramPolylineConnection();
-		List toolTips = ((NodeConnectionModel)getModel()).getToolTipStrings();
+        DiagramPolylineConnection connectionFigure = new DiagramPolylineConnection();
+        List toolTips = ((NodeConnectionModel)getModel()).getToolTipStrings();
 
         if (toolTips != null && !toolTips.isEmpty()) {
             connectionFigure.setToolTip(connectionFigure.createToolTip(toolTips));
-        }
-
-        if (Util.isDebugEnabled(com.metamatrix.modeler.transformation.ui.DebugConstants.TX_DIAGRAM_CONNECTIONS) &&  Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.TRACE)) {
-            String msg = getClass().getSimpleName() + ".createFigure():model=" + getModel(); //$NON-NLS-1$
-            Util.debug(com.metamatrix.modeler.transformation.ui.DebugConstants.TX_DIAGRAM_CONNECTIONS, msg);
         }
 
         connectionFigure.setLineStyle(Graphics.LINE_SOLID);

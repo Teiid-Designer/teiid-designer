@@ -10,7 +10,6 @@ package com.metamatrix.modeler.diagram.ui.notation.uml.figure;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.ActionEvent;
 import org.eclipse.draw2d.ActionListener;
 import org.eclipse.draw2d.Button;
@@ -26,12 +25,10 @@ import org.eclipse.draw2d.Triangle;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.diagram.ui.figure.AbstractDiagramFigure;
@@ -40,16 +37,13 @@ import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.notation.uml.model.UmlClassifierNode;
 import com.metamatrix.modeler.diagram.ui.util.colors.ColorPalette;
 import com.metamatrix.modeler.diagram.ui.util.directedit.DirectEditFigure;
-import com.metamatrix.modeler.internal.diagram.ui.DebugConstants;
 import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 
 /**
  * UmlClassifierFigure
  */
-public class UmlClassifierFigure extends AbstractDiagramFigure implements
-                                                              DirectEditFigure,
-                                                              ExpandableFigure {
+public class UmlClassifierFigure extends AbstractDiagramFigure implements DirectEditFigure, ExpandableFigure {
 
     // ===========================================================================================================================
     // Constants
@@ -82,11 +76,11 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
     /**
      * Construct an instance of UmlClassifierFigure.
      */
-    public UmlClassifierFigure(String stereotype,
-                               String name,
-                               String location,
-                               Image icon,
-                               ColorPalette colorPalette) {
+    public UmlClassifierFigure( String stereotype,
+                                String name,
+                                String location,
+                                Image icon,
+                                ColorPalette colorPalette ) {
         super(colorPalette);
 
         init(stereotype, name, location, icon);
@@ -94,12 +88,12 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
         createComponent();
     }
 
-    public UmlClassifierFigure(DiagramModelNode diagramNode,
-                               String stereotype,
-                               String name,
-                               String location,
-                               Image icon,
-                               ColorPalette colorPalette) {
+    public UmlClassifierFigure( DiagramModelNode diagramNode,
+                                String stereotype,
+                                String name,
+                                String location,
+                                Image icon,
+                                ColorPalette colorPalette ) {
         super(diagramNode, colorPalette);
 
         init(stereotype, name, location, icon);
@@ -111,31 +105,27 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
     // Methods
 
     @Override
-    public void addEditButton(Image image) {
+    public void addEditButton( Image image ) {
         if (image != null) {
-            if (editButton != null)
-                this.remove(editButton);
+            if (editButton != null) this.remove(editButton);
 
             editButton = new Button(image);
             editButton.setSize(new Dimension(image.getImageData().width + 6, image.getImageData().height + 4));
             editButton.addActionListener(new ActionListener() {
 
-                public void actionPerformed(ActionEvent event) {
+                public void actionPerformed( ActionEvent event ) {
                     // We need to call some generic edit event here
                     // swj: yes we do! I don't like that this button knows about recursion.
                     if (getDiagramModelNode() != null) {
                         final Object modelObject = getDiagramModelNode().getModelObject();
                         final String editorID = getDiagramModelNode().getEditorID();
-                        if (modelObject != null
-                            && modelObject instanceof EObject
+                        if (modelObject != null && modelObject instanceof EObject
                             && ModelEditorManager.canEdit((EObject)modelObject)) {
                             Display.getCurrent().asyncExec(new Runnable() {
 
                                 public void run() {
-                                    if (editorID != null)
-                                        ModelEditorManager.edit((EObject)modelObject, editorID);
-                                    else
-                                        ModelEditorManager.edit((EObject)modelObject);
+                                    if (editorID != null) ModelEditorManager.edit((EObject)modelObject, editorID);
+                                    else ModelEditorManager.edit((EObject)modelObject);
                                 }
                             });
                         }
@@ -182,11 +172,10 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
     }
 
     @Override
-    public void addImage(Image image,
-                         int position) {
+    public void addImage( Image image,
+                          int position ) {
         if (image != null) {
-            if (extraImage != null)
-                this.remove(extraImage);
+            if (extraImage != null) this.remove(extraImage);
 
             extraImage = new ImageFigure(image);
             this.add(extraImage);
@@ -194,8 +183,7 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
             extraImagePosition = position;
             setExtraImageLocation();
         } else {
-            if (extraImage != null)
-                this.remove(extraImage);
+            if (extraImage != null) this.remove(extraImage);
             extraImage = null;
         }
     }
@@ -211,11 +199,10 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
         this.repaint();
     }
 
-    private double containerHeightRatio(UmlClassifierContainerFigure someContainer) {
+    private double containerHeightRatio( UmlClassifierContainerFigure someContainer ) {
         // Num objects in this container
         int nObjects = someContainer.getContentsPane().getChildren().size();
-        if (nObjects == 0)
-            nObjects = 1;
+        if (nObjects == 0) nObjects = 1;
         int totalObjects = 0;
 
         List childFigures = getChildren();
@@ -228,8 +215,7 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
                 totalObjects += ((UmlClassifierContainerFigure)nextObject).getContentsPane().getChildren().size();
             }
         }
-        if (totalObjects == 0)
-            totalObjects = 1;
+        if (totalObjects == 0) totalObjects = 1;
 
         double returnRatio = (double)nObjects / (double)totalObjects;
 
@@ -261,15 +247,14 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
         this.repaint();
     }
 
-    private IFigure getContainerFigure(int type) {
+    private IFigure getContainerFigure( int type ) {
         Iterator iter = getChildren().iterator();
         Object nextObject = null;
         while (iter.hasNext()) {
             nextObject = iter.next();
             if (nextObject instanceof UmlClassifierContainerFigure) {
                 int contType = ((UmlClassifierContainerFigure)nextObject).getStackOrderValue();
-                if (contType == type)
-                    return (IFigure)nextObject;
+                if (contType == type) return (IFigure)nextObject;
             }
         }
         return null;
@@ -299,7 +284,7 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
             nextObject = iter.next();
             if (nextObject instanceof UmlClassifierContainerFigure) {
                 UmlClassifierContainerFigure fig = (UmlClassifierContainerFigure)nextObject;
-                if( fig.getDiagramModelNode().isHeightFixed() ) {
+                if (fig.getDiagramModelNode().isHeightFixed()) {
                     totalHeight += fig.getDiagramModelNode().getFixedHeight();
                 } else {
                     totalHeight += ((UmlClassifierContainerFigure)nextObject).getMinimumHeight();
@@ -335,14 +320,14 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
      * @see com.metamatrix.modeler.diagram.ui.figure.DiagramFigure#hiliteBackground(org.eclipse.swt.graphics.Color)
      */
     @Override
-    public void hiliteBackground(Color hiliteColor) {
+    public void hiliteBackground( Color hiliteColor ) {
         header.hiliteBackground(hiliteColor);
     }
 
-    private void init(String stereotype,
-                      String name,
-                      String location,
-                      Image icon) {
+    private void init( String stereotype,
+                       String name,
+                       String location,
+                       Image icon ) {
         header = new UmlClassifierHeader(stereotype, name, location, icon, getColor(ColorPalette.SECONDARY_BKGD_COLOR_ID));
         this.add(header);
         footer = new UmlClassifierFooter();
@@ -415,15 +400,10 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
         resetIconLocations();
 
         this.setSize(minWidth, currentY);
-
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_FIGURES)) {
-            String message = "new SIZE = " + this.getSize(); //$NON-NLS-1$
-            DiagramUiConstants.Util.print(DebugConstants.DIAGRAM_FIGURES, message);
-        }
     }
 
     @Override
-    public void paint(Graphics graphics) {
+    public void paint( Graphics graphics ) {
         graphics.pushState();
         graphics.setForegroundColor(getLocalBackgroundColor());
         graphics.setBackgroundColor(getLocalForegroundColor());
@@ -434,7 +414,7 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
         graphics.restoreState();
     }
 
-    private void paintSeparators(Graphics graphics) {
+    private void paintSeparators( Graphics graphics ) {
         int orgX = this.getBounds().x;
         int orgY = this.getBounds().y;
         int width = this.getBounds().width;
@@ -482,7 +462,7 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
 
     }
 
-    public void setExpandable(boolean expandable) {
+    public void setExpandable( boolean expandable ) {
         this.expandable = expandable;
         topLeftArrow.setVisible(expandable);
         // jh Lyra enh / defect 20421: Now that expanded state is controlled by a user preferece
@@ -563,17 +543,15 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
         }
     }
 
-    public void setNameFontStyle(int style) {
+    public void setNameFontStyle( int style ) {
         header.setNameFontStyle(style);
         header.refreshFont();
     }
 
     @Override
-    public void showSelected(boolean selected) {
-        if (selected)
-            this.setForegroundColor(getColor(ColorPalette.SELECTION_COLOR_ID));
-        else
-            this.setForegroundColor(getColor(ColorPalette.SECONDARY_BKGD_COLOR_ID));
+    public void showSelected( boolean selected ) {
+        if (selected) this.setForegroundColor(getColor(ColorPalette.SELECTION_COLOR_ID));
+        else this.setForegroundColor(getColor(ColorPalette.SECONDARY_BKGD_COLOR_ID));
     }
 
     private void stackFigure() {
@@ -595,7 +573,7 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
     }
 
     @Override
-    public void updateForError(boolean hasErrors) {
+    public void updateForError( boolean hasErrors ) {
         if (hasErrors) {
             if (errorIcon == null) {
                 errorIcon = new ImageFigure(DiagramUiPlugin.getDefault().getImage(PluginConstants.Images.ERROR_ICON));
@@ -612,16 +590,16 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
     }
 
     @Override
-    public void updateForName(String newName) {
+    public void updateForName( String newName ) {
         header.refreshName(newName);
     }
 
-    public void updateForPath(String newPath) {
+    public void updateForPath( String newPath ) {
         header.refreshPath(newPath);
     }
 
     @Override
-    public void updateForSize(Dimension newSize) {
+    public void updateForSize( Dimension newSize ) {
         int leftoverHeight = newSize.height;
 
         header.setSize(newSize.width, header.getSize().height);
@@ -630,8 +608,7 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
 
         boolean scrollingNeeded = true;
         int minimumContainerHeight = getMinimumContainersHeight();
-        if (minimumContainerHeight < leftoverHeight)
-            scrollingNeeded = false;
+        if (minimumContainerHeight < leftoverHeight) scrollingNeeded = false;
 
         int newWidth = newSize.width;
 
@@ -657,7 +634,7 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
                 if (nextObject instanceof UmlClassifierContainerFigure) {
                     nextFigure = (UmlClassifierContainerFigure)nextObject;
                     int newH = nextFigure.getMinimumHeight();
-                    if( nextFigure.getDiagramModelNode().isHeightFixed() ) {
+                    if (nextFigure.getDiagramModelNode().isHeightFixed()) {
                         newH = nextFigure.getDiagramModelNode().getFixedHeight();
                     }
                     nextFigure.setSize(newWidth, newH);
@@ -666,19 +643,14 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
             }
         }
 
-        if (leftoverHeight < 10)
-            leftoverHeight = 10;
+        if (leftoverHeight < 10) leftoverHeight = 10;
         footer.setSize(newWidth, leftoverHeight);
         stackFigure();
         resetIconLocations();
-        if (DiagramUiConstants.Util.isDebugEnabled(DebugConstants.DIAGRAM_FIGURES)) {
-            String message = "new SIZE = " + this.getSize(); //$NON-NLS-1$
-            DiagramUiConstants.Util.print(DebugConstants.DIAGRAM_FIGURES, message);
-        }
     }
 
     @Override
-    public void updateForWarning(boolean hasWarnings) {
+    public void updateForWarning( boolean hasWarnings ) {
         if (hasWarnings) {
             if (warningIcon == null) {
                 warningIcon = new ImageFigure(DiagramUiPlugin.getDefault().getImage(PluginConstants.Images.WARNING_ICON));
@@ -693,14 +665,10 @@ public class UmlClassifierFigure extends AbstractDiagramFigure implements
         }
         resetIconLocations();
     }
-    
-    /** 
+
+    /**
      * @see org.eclipse.draw2d.Figure#paintFigure(org.eclipse.draw2d.Graphics)
-     * @since 5.0
-    protected void paintFigure(Graphics theGraphics) {
-        super.paintFigure(theGraphics);
-        this.getParent().repaint();
-    }
-    */
+     * @since 5.0 protected void paintFigure(Graphics theGraphics) { super.paintFigure(theGraphics); this.getParent().repaint(); }
+     */
 
 }

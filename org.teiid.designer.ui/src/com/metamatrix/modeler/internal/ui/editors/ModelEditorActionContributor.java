@@ -14,7 +14,6 @@ import java.util.Map;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.commands.ActionHandler;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
@@ -44,9 +43,6 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
     /** Map of default global actions. */
     private static ModelerGlobalActionsMap defaultActionsMap;
 
-    /** This contributor's editor. */
-    private IEditorPart activeEditor;
-
     /** StatusBar field for Read Only/Writable state of the model file. */
     private StatusLineContributionItem fileStateItem;
 
@@ -61,11 +57,11 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
 
     /** Listener to clean up the partContributorMap. */
     private IPartListener partListener;
-    
+
     /**
-     * Keep track of the global action handlers. When we activate them through the IHandlerService, if their is already a
-     * handler for that action, Eclipse logs a warning message but the activation still works. This map is being used so
-     * that we can deactivate existing handlers before activating the new one (which gets rid of the warning message).
+     * Keep track of the global action handlers. When we activate them through the IHandlerService, if their is already a handler
+     * for that action, Eclipse logs a warning message but the activation still works. This map is being used so that we can
+     * deactivate existing handlers before activating the new one (which gets rid of the warning message).
      */
     private Map<String, IHandlerActivation> actionHandlerMap;
 
@@ -74,23 +70,11 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
     }
 
     public ModelEditorActionContributor() {
-        super();
-        Util.trace(this, new StringBuffer().append("exiting constructor:identity=") //$NON-NLS-1$
-        .append(System.identityHashCode(this)).toString());
-        
         this.actionHandlerMap = new HashMap<String, IHandlerActivation>(ModelerGlobalActionsMap.ALL_GLOBAL_ACTIONS.length);
     }
 
     public void addContributor( IEditorPart thePart,
                                 IEditorActionBarContributor theContributor ) {
-        if (Util.isTraceEnabled(this)) {
-            Util.printEntered(this, new StringBuffer().append("addContributor(IEditorPart, IEditorActionBarContributor):part=") //$NON-NLS-1$
-            .append(thePart).append(", part identity=") //$NON-NLS-1$
-            .append(System.identityHashCode(thePart)).append(", contributor=") //$NON-NLS-1$
-            .append(theContributor).append(", contributor identity=") //$NON-NLS-1$
-            .append(System.identityHashCode(theContributor)).toString());
-        }
-
         if (partContributorMap == null) {
             partContributorMap = new HashMap();
         }
@@ -104,12 +88,6 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
         }
 
         theContributor.init(getActionBars(), getPage());
-
-        if (Util.isTraceEnabled(this)) {
-            Util.printExited(this, new StringBuffer().append("addContributor(IEditorPart, IEditorActionBarContributor):part=") //$NON-NLS-1$
-            .append(thePart).append(", num contributors=") //$NON-NLS-1$
-            .append(partContributorMap.size()).toString());
-        }
     }
 
     /**
@@ -143,27 +121,12 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
      * @return the contributor or <code>null</code> if not found
      */
     private AbstractModelEditorPageActionBarContributor getActionContributor( IEditorPart thePart ) {
-        if (Util.isTraceEnabled(this)) {
-            Util.printEntered(this, new StringBuffer().append("getActionContributor(IEditorPart):part=") //$NON-NLS-1$
-            .append(thePart).append(", part identity=") //$NON-NLS-1$
-            .append(System.identityHashCode(thePart)).append(", found=") //$NON-NLS-1$
-            .append((partContributorMap == null) ? false : partContributorMap.containsKey(thePart)).toString());
-        }
-
         // get the contributor from the map
         AbstractModelEditorPageActionBarContributor result = null;
 
         if (partContributorMap != null) {
             result = (AbstractModelEditorPageActionBarContributor)partContributorMap.get(thePart);
         }
-
-        if (Util.isTraceEnabled(this)) {
-            Util.printExited(this, new StringBuffer().append("getActionContributor(IEditorPart):contributor=") //$NON-NLS-1$
-            .append(result).append(", contributor identity=") //$NON-NLS-1$
-            .append((result == null) ? null : ("" + System.identityHashCode(result))) //$NON-NLS-1$
-            .toString());
-        }
-
         return result;
     }
 
@@ -186,34 +149,11 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
     }
 
     /**
-     * @see org.eclipse.ui.IEditorActionBarContributor#init(org.eclipse.ui.IActionBars)
-     */
-    @Override
-    public void init( IActionBars theActionBars ) {
-        // Note: This method gets called by super.init(IActionBars, IWorkbenchPage) which is called by framework
-        // Note: super.init(IActionBars) calls contributeToMenu, contributeToToolBar, contributeToStatusLine
-        super.init(theActionBars);
-
-        Util.trace(this, new StringBuffer().append("exiting init(IActionBars):action bars=") //$NON-NLS-1$
-        .append(theActionBars).append(", action bars identity") //$NON-NLS-1$
-        .append(System.identityHashCode(theActionBars)).toString());
-    }
-
-    /**
      * @see org.eclipse.ui.IEditorActionBarContributor#setActiveEditor(org.eclipse.ui.IEditorPart)
      */
     @Override
     public void setActiveEditor( IEditorPart thePart ) {
-        if (Util.isTraceEnabled(this)) {
-            Util.printEntered(this, new StringBuffer().append("setActiveEditor(IEditorPart):part=") //$NON-NLS-1$
-            .append(thePart).toString());
-        }
-
         setActivePage(thePart);
-
-        if (Util.isTraceEnabled(this)) {
-            Util.printExited(this, "setActiveEditor(IEditorPart)"); //$NON-NLS-1$
-        }
     }
 
     /* (non-JavaDoc)
@@ -221,12 +161,6 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
      */
     @Override
     public void setActivePage( IEditorPart thePart ) {
-        if (Util.isTraceEnabled(this)) {
-            Util.printEntered(this, new StringBuffer().append("setActivePage(IEditorPart):part=") //$NON-NLS-1$
-            .append(thePart).append(", current page=") //$NON-NLS-1$
-            .append(activeEditor).toString());
-        }
-
         // redirect to the pages contributor
         AbstractModelEditorPageActionBarContributor contributor = null;
         IEditorPart part = thePart;
@@ -305,12 +239,6 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
 
         // must call this if action bars have been changed
         getActionBars().updateActionBars();
-
-        activeEditor = part;
-
-        if (Util.isTraceEnabled(this)) {
-            Util.printExited(this, "setActivePage(IEditorPart)"); //$NON-NLS-1$
-        }
     }
 
     /**

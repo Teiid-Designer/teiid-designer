@@ -30,7 +30,6 @@ import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.AdminObject;
 import org.teiid.adminapi.AdminOptions;
 import org.teiid.adminapi.ProcessObject;
-
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ConnectorBindingType;
 import com.metamatrix.common.config.xml.XMLConfigurationImportExportUtility;
@@ -180,10 +179,6 @@ public class WorkspaceExecutor extends QueryClient {
         ResultSet resultset = null;
 
         try {
-            if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
-                UTIL.debug(DEBUG_CONTEXT, "executing the query = " + sql); //$NON-NLS-1$
-            }
-
             // inject the metadata into the current dqp instance
             this.workspaceInfo.setMetadata(qmi);
 
@@ -257,10 +252,6 @@ public class WorkspaceExecutor extends QueryClient {
 
         if (existing != null) {
             admin.startConnectorBinding(existing.getIdentifier());
-
-            if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
-                UTIL.debug(DEBUG_CONTEXT, "Started the connector binding = " + existing.getName()); //$NON-NLS-1$
-            }
         }
     }
 
@@ -299,9 +290,6 @@ public class WorkspaceExecutor extends QueryClient {
         if (existing != null) {
             admin.stopConnectorBinding(existing.getIdentifier(), true);
             admin.deleteConnectorBinding(existing.getIdentifier());
-            if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
-                UTIL.debug(DEBUG_CONTEXT, "stoped and removed connector binding = " + bindingName); //$NON-NLS-1$
-            }
         }
     }
 
@@ -311,9 +299,6 @@ public class WorkspaceExecutor extends QueryClient {
         org.teiid.adminapi.ConnectorType existing = findDeployedConnectorType(admin, typeName);
         if (existing != null) {
             admin.deleteConnectorType(existing.getIdentifier());
-            if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
-                UTIL.debug(DEBUG_CONTEXT, "stoped and removed connector type = " + typeName); //$NON-NLS-1$
-            }
         }
     }
 
@@ -336,9 +321,6 @@ public class WorkspaceExecutor extends QueryClient {
                                                                                                AdminOptions.OnConflict.OVERWRITE
                                                                                                | AdminOptions.BINDINGS_IGNORE_DECRYPT_ERROR));
         admin.startConnectorBinding(added.getIdentifier());
-        if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
-            UTIL.debug(DEBUG_CONTEXT, "Added and Started connector binding = " + added.getName()); //$NON-NLS-1$
-        }
     }
 
     /**
@@ -360,9 +342,6 @@ public class WorkspaceExecutor extends QueryClient {
         // so let's add and then start it
         // add and start the new one.
         admin.addConnectorType(type.getFullName(), typeContents);
-        if (UTIL.isDebugEnabled(DEBUG_CONTEXT)) {
-            UTIL.debug(DEBUG_CONTEXT, "Added connector type = " + type.getFullName()); //$NON-NLS-1$
-        }
     }
 
     public boolean modelHasConnectorBinding( String modelName ) {

@@ -10,11 +10,9 @@ package com.metamatrix.modeler.mapping.ui.actions;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.undo.ModelerUndoManager;
-import com.metamatrix.modeler.mapping.ui.DebugConstants;
 import com.metamatrix.modeler.mapping.ui.UiConstants;
 import com.metamatrix.modeler.mapping.ui.UiPlugin;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -24,30 +22,20 @@ import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
  */
 public class NewMappingClassAction extends MappingAction {
     private static final String ACTION_DESCRIPTION = "New Mapping Class"; //$NON-NLS-1$
-        
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
 
     public NewMappingClassAction() {
         super();
         setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(UiConstants.Images.NEW_MAPPING_CLASS));
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // METHODS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
     /* (non-Javadoc)
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(IWorkbenchPart, ISelection)
      */
     @Override
-    public void selectionChanged(IWorkbenchPart thePart, ISelection theSelection) {
-		UiConstants.Util.start(ACTION_DESCRIPTION, DebugConstants.METRICS_MAPPING_ACTION_SELECTION );
+    public void selectionChanged( IWorkbenchPart thePart,
+                                  ISelection theSelection ) {
         super.selectionChanged(thePart, theSelection);
-        
         determineEnablement();
-		UiConstants.Util.stop(ACTION_DESCRIPTION, DebugConstants.METRICS_MAPPING_ACTION_SELECTION );
     }
 
     /* (non-Javadoc)
@@ -55,52 +43,49 @@ public class NewMappingClassAction extends MappingAction {
      */
     @Override
     protected void doRun() {
-        if( getMappingClassFactory() != null ) {
+        if (getMappingClassFactory() != null) {
             Object o = SelectionUtilities.getSelectedObject(getSelection());
-            if( o instanceof EObject ) {
+            if (o instanceof EObject) {
                 EObject eObject = (EObject)o;
                 boolean canUndo = IMappingDiagramActionConstants.DiagramActions.UNDO_NEW_MAPPING_CLASS;
-                //start txn
+                // start txn
                 boolean requiredStart = ModelerCore.startTxn(true, canUndo, ACTION_DESCRIPTION, this);
                 boolean succeeded = false;
                 try {
                     getMappingClassFactory().createMappingClass(eObject, true, false);
                     succeeded = true;
                 } finally {
-                    if(requiredStart){
-                        if ( succeeded ) {
-                            ModelerCore.commitTxn( );
-                            if( !canUndo)
-                                ModelerUndoManager.getInstance().clearAllEdits();
+                    if (requiredStart) {
+                        if (succeeded) {
+                            ModelerCore.commitTxn();
+                            if (!canUndo) ModelerUndoManager.getInstance().clearAllEdits();
                         } else {
-                            ModelerCore.rollbackTxn( );
+                            ModelerCore.rollbackTxn();
                         }
                     }
                 }
-                
+
             } else {
                 // LOG AN ERROR HERE!!
             }
         }
-        
+
         setEnabled(false);
     }
-    
+
     private void determineEnablement() {
         // This is an action that requires two things...
         // 1) Single Selection
         // 2) Selected object can allow mapping class
         boolean enable = false;
 
-        if ( this.getPart() instanceof ModelEditor && SelectionUtilities.isSingleSelection(getSelection())) {
+        if (this.getPart() instanceof ModelEditor && SelectionUtilities.isSingleSelection(getSelection())) {
             EObject eObject = SelectionUtilities.getSelectedEObject(getSelection());
-            if( eObject != null && isWritable() && getMappingClassFactory() != null ) {
-                if( getMappingClassFactory().canCreateMappingClass(eObject))
-                    enable = true;
+            if (eObject != null && isWritable() && getMappingClassFactory() != null) {
+                if (getMappingClassFactory().canCreateMappingClass(eObject)) enable = true;
             }
         }
-        
+
         setEnabled(enable);
     }
 }
-

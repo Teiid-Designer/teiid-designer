@@ -60,18 +60,10 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      */
     @Override
     public void clear() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "clear()"); //$NON-NLS-1$
-        }
-
         setDefaults();
         type = DEFAULT_TYPE;
         conversionType = false;
         super.clear();
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "clear()"); //$NON-NLS-1$
-        }
     }
 
     /**
@@ -81,10 +73,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      * @throws com.metamatrix.core.util.AssertionError if type is not boolean #see BuilderUtils#BOOLEAN_TYPES
      */
     public boolean getBoolean() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(this, "getBoolean():value=" + booleanValue); //$NON-NLS-1$
-        }
-
         if (!isBoolean()) {
             Assertion.assertTrue(isBoolean(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
                                                              new Object[] {"getBoolean()", type})); //$NON-NLS-1$
@@ -100,10 +88,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      * @throws IllegalStateException if the current value is not complete
      */
     public Constant getConstant() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(this, "getConstant()"); //$NON-NLS-1$
-        }
-
         return (Constant)getLanguageObject();
     }
 
@@ -112,10 +96,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      */
     @Override
     public LanguageObject getLanguageObject() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "getLanguageObject()"); //$NON-NLS-1$
-        }
-
         // return null if not complete or valid
         if (!isComplete() || !isValid()) {
             return null;
@@ -162,11 +142,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
                 value = booleanValue;
             }
         }
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "getLanguageObject():value=" + value); //$NON-NLS-1$
-        }
-
         return new Constant(value);
     }
 
@@ -177,10 +152,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      * @throws com.metamatrix.core.util.AssertionError if type is not date #see BuilderUtils#DATE_TYPES
      */
     public Date getDate() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(this, "getDate():value=" + dateValue); //$NON-NLS-1$
-        }
-
         if (!isDate()) {
             Assertion.assertTrue(isDate(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
                                                           new Object[] {"getDate()", type})); //$NON-NLS-1$
@@ -189,10 +160,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
     }
 
     public static String getDefaultType() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(ConstantEditorModel.class, "getDefaultType():value=" + DEFAULT_TYPE); //$NON-NLS-1$
-        }
-
         return DEFAULT_TYPE;
     }
 
@@ -203,10 +170,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      * @throws com.metamatrix.core.util.AssertionError if type is not String #see BuilderUtils#STRING_TYPES
      */
     public String getText() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(this, "getText():value=" + textValue); //$NON-NLS-1$
-        }
-
         if (!isText()) {
             Assertion.assertTrue(isText(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
                                                           new Object[] {"getText()", type})); //$NON-NLS-1$
@@ -215,10 +178,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
     }
 
     public static int getTextLimit( String theTextType ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(ConstantEditorModel.class, "getTextLimit():type=" + theTextType); //$NON-NLS-1$
-        }
-
         return BuilderUtils.getTextLimit(theTextType);
     }
 
@@ -229,10 +188,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      * @throws com.metamatrix.core.util.AssertionError if type is not time #see BuilderUtils#DATE_TYPES
      */
     public Time getTime() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(this, "getTime():value=" + timeValue); //$NON-NLS-1$
-        }
-
         Assertion.assertTrue(isTime(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
                                                       new Object[] {"getTime()", type})); //$NON-NLS-1$
 
@@ -255,10 +210,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      * @throws com.metamatrix.core.util.AssertionError if type is not timestamp #see BuilderUtils#DATE_TYPES
      */
     public Timestamp getTimestamp() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(this, "getTimestamp():value=" + timestampValue); //$NON-NLS-1$
-        }
-
         if (!isTimestamp()) {
             Assertion.assertTrue(isTimestamp(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
                                                                new Object[] {"getTimestamp()", type})); //$NON-NLS-1$
@@ -277,18 +228,10 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
     }
 
     public String getType() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(this, "getType():value=" + type); //$NON-NLS-1$
-        }
-
         return type;
     }
 
     public boolean isBoolean() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(this, "isBoolean():type=" + type); //$NON-NLS-1$
-        }
-
         return !isConversionType() && BuilderUtils.isBooleanType(type);
     }
 
@@ -297,10 +240,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      */
     @Override
     public boolean isComplete() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "isComplete()"); //$NON-NLS-1$
-        }
-
         boolean result = false;
 
         if (conversionType) {
@@ -320,59 +259,30 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
                 result = true;
             }
         }
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "isComplete():result=" + result); //$NON-NLS-1$
-        }
-
         return result;
     }
 
     public boolean isConversionType() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(this, "isConversionType():value=" + conversionType); //$NON-NLS-1$
-        }
-
         return conversionType;
     }
 
     public boolean isDate() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(this, "isDate():type=" + type); //$NON-NLS-1$
-        }
-
         return !isConversionType() && BuilderUtils.isDateType(type);
     }
 
     public boolean isNull() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(this, "isNull():type=" + type); //$NON-NLS-1$
-        }
-
         return !isConversionType() && BuilderUtils.isNullType(type);
     }
 
     public boolean isText() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(this, "isText():type=" + type); //$NON-NLS-1$
-        }
-
         return !isConversionType() && BuilderUtils.isStringType(type);
     }
 
     public boolean isTime() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(this, "isTime():type=" + type); //$NON-NLS-1$
-        }
-
         return !isConversionType() && BuilderUtils.isTimeType(type);
     }
 
     public boolean isTimestamp() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.print(this, "isTimestamp():type=" + type); //$NON-NLS-1$
-        }
-
         return !isConversionType() && BuilderUtils.isTimestampType(type);
     }
 
@@ -381,10 +291,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
     }
 
     public boolean isValidValue( String theString ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "isValidValue():theString=" + theString); //$NON-NLS-1$
-        }
-
         boolean result = true;
 
         // could only not be valid if text type or number type
@@ -411,10 +317,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
                 }
             }
         }
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "isValidValue():result=" + result); //$NON-NLS-1$
-        }
         return result;
     }
 
@@ -430,10 +332,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
     }
 
     public void setBoolean( boolean theFlag ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "setBoolean():flag=" + theFlag); //$NON-NLS-1$
-        }
-
         if (!isBoolean()) {
             Assertion.assertTrue(isBoolean(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
                                                              new Object[] {"setBoolean()", type})); //$NON-NLS-1$
@@ -441,24 +339,11 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
 
         if ((booleanValue == null) || (getBoolean() != theFlag)) {
             booleanValue = new Boolean(theFlag);
-
-            if (BuilderUtils.isEventLogging()) {
-                Util.print(this, "setBoolean:fireModelChanged:type=" + BOOLEAN); //$NON-NLS-1$
-            }
-
             fireModelChanged(BOOLEAN);
-        }
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "setBoolean():value=" + booleanValue); //$NON-NLS-1$
         }
     }
 
     private void setConstant( Constant theConstant ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "setConstant():value=" + theConstant); //$NON-NLS-1$
-        }
-
         // return if current value is the same
         if (((theConstant == null) && (getConstant() == null))
             || ((theConstant != null) && (getConstant() != null) && theConstant.equals(getConstant()))) {
@@ -501,23 +386,10 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
         }
 
         notifyListeners = true;
-
-        if (BuilderUtils.isEventLogging()) {
-            Util.print(this, "setConstant:fireModelChanged:type=" + LanguageObjectEditorModelEvent.SAVED); //$NON-NLS-1$
-        }
-
         fireModelChanged(LanguageObjectEditorModelEvent.SAVED);
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "setConstant()"); //$NON-NLS-1$
-        }
     }
 
     public void setDate( Date theDate ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "setDate()value=" + theDate); //$NON-NLS-1$
-        }
-
         if (!isDate()) {
             Assertion.assertTrue(isDate(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
                                                           new Object[] {"setDate()", type})); //$NON-NLS-1$
@@ -525,33 +397,16 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
 
         if ((dateValue == null) || !dateValue.equals(theDate)) {
             dateValue = theDate;
-
-            if (BuilderUtils.isEventLogging()) {
-                Util.print(this, "setDate:fireModelChanged:type=" + DATE); //$NON-NLS-1$
-            }
-
             fireModelChanged(DATE);
-        }
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "setDate()"); //$NON-NLS-1$
         }
     }
 
     private void setDefaults() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "setDefaults()"); //$NON-NLS-1$
-        }
-
         booleanValue = new Boolean(true);
         dateValue = new Date(Calendar.getInstance().getTime().getTime());
         textValue = ""; //$NON-NLS-1$
         timeValue = new Time(Calendar.getInstance().getTime().getTime());
         timestampValue = new Timestamp(Calendar.getInstance().getTime().getTime());
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "setDefaults()"); //$NON-NLS-1$
-        }
     }
 
     /* (non-Javadoc)
@@ -559,40 +414,20 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      */
     @Override
     public void setLanguageObject( LanguageObject theLangObj ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "setLanguageObject():value=" + theLangObj); //$NON-NLS-1$
-        }
-
         super.setLanguageObject(theLangObj);
         setConstant((Constant)theLangObj);
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "setLanguageObject()"); //$NON-NLS-1$
-        }
     }
 
     public void setNull() {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "setNull()"); //$NON-NLS-1$
-        }
-
         if (!isNull()) {
             Assertion.assertTrue(isNull(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
                                                           new Object[] {"setNull()", type})); //$NON-NLS-1$
         }
 
         // does nothing since only the type we care about
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "setNull()"); //$NON-NLS-1$
-        }
     }
 
     public void setText( String theText ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "setText():value=" + theText); //$NON-NLS-1$
-        }
-
         if (!isText()) {
             Assertion.assertTrue(isText(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
                                                           new Object[] {"setText()", type})); //$NON-NLS-1$
@@ -600,24 +435,11 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
 
         if ((textValue == null) || !getText().equals(theText)) {
             textValue = theText;
-
-            if (BuilderUtils.isEventLogging()) {
-                Util.print(this, "setText:fireModelChanged:type=" + TEXT); //$NON-NLS-1$
-            }
-
             fireModelChanged(TEXT);
-        }
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "setText()"); //$NON-NLS-1$
         }
     }
 
     public void setTime( Time theTime ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "setTime():value=" + theTime); //$NON-NLS-1$
-        }
-
         if (!isTime()) {
             Assertion.assertTrue(isTime(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
                                                           new Object[] {"setTime()", type})); //$NON-NLS-1$
@@ -625,24 +447,11 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
 
         if ((timeValue == null) || !timeValue.equals(theTime)) {
             timeValue = theTime;
-
-            if (BuilderUtils.isEventLogging()) {
-                Util.print(this, "setTime:fireModelChanged:type=" + TIME); //$NON-NLS-1$
-            }
-
             fireModelChanged(TIME);
-        }
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "setTime()"); //$NON-NLS-1$
         }
     }
 
     public void setTimestamp( Timestamp theTimestamp ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "setTimestamp():value=" + theTimestamp); //$NON-NLS-1$
-        }
-
         if (!isTimestamp()) {
             Assertion.assertTrue(isTimestamp(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
                                                                new Object[] {"setTimestamp()", type})); //$NON-NLS-1$
@@ -650,24 +459,11 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
 
         if ((timestampValue == null) || !timestampValue.equals(theTimestamp)) {
             timestampValue = theTimestamp;
-
-            if (BuilderUtils.isEventLogging()) {
-                Util.print(this, "setTimestamp:fireModelChanged:type=" + TIMESTAMP); //$NON-NLS-1$
-            }
-
             fireModelChanged(TIMESTAMP);
-        }
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "setTimestamp()"); //$NON-NLS-1$
         }
     }
 
     public void setType( String theType ) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "setType():value=" + theType); //$NON-NLS-1$
-        }
-
         boolean changed = false;
 
         if (BuilderUtils.isValidType(theType)) {
@@ -682,16 +478,7 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
 
         if (changed) {
             setDefaults();
-
-            if (BuilderUtils.isEventLogging()) {
-                Util.print(this, "setType:fireModelChanged:type=" + TYPE); //$NON-NLS-1$
-            }
-
             fireModelChanged(TYPE);
-        }
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "setType()"); //$NON-NLS-1$
         }
     }
 }

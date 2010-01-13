@@ -18,8 +18,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.builder.BuilderConstants;
-import com.metamatrix.metamodels.builder.DebugConstants;
-import com.metamatrix.metamodels.builder.MetamodelBuilderPlugin;
 import com.metamatrix.metamodels.builder.MetamodelEntityRecord;
 import com.metamatrix.metamodels.builder.ModelRecord;
 import com.metamatrix.metamodels.internal.builder.util.BuilderUtil;
@@ -52,10 +50,6 @@ public class RecordGenerator implements BuilderConstants {
         return UTIL.getString(I18N_PREFIX + id, param1, param2);
     }
 
-    // ==================================================================================
-    // S T A T I C M E T H O D S
-    // ==================================================================================
-
     /**
      * Generates ModelRecords from the supplied resultSet.
      * 
@@ -69,8 +63,6 @@ public class RecordGenerator implements BuilderConstants {
                                              String locationPathStr,
                                              MultiStatus status,
                                              IProgressMonitor monitor ) throws SQLException {
-        boolean builderDebugEnabled = MetamodelBuilderPlugin.Util.isDebugEnabled(DebugConstants.METAMODEL_BUILDER);
-
         List mapList = ResultSetTranslator.translate(resultSet);
         List recordList = new ArrayList(mapList.size());
 
@@ -88,18 +80,12 @@ public class RecordGenerator implements BuilderConstants {
             if (modelType == null || name == null) {
                 final String msg = getString("unableToCreateModelRecord"); //$NON-NLS-1$
                 BuilderUtil.addStatus(status, IStatus.WARNING, msg);
-                if (builderDebugEnabled) {
-                    MetamodelBuilderPlugin.Util.log(IStatus.WARNING, msg);
-                }
             } else {
                 try {
                     record = new ModelRecord(modelType, subType, name, nameInSource, desc, extPackage);
                 } catch (IllegalArgumentException ex) {
                     final String msg = getString("unableToCreateModelRecord"); //$NON-NLS-1$
                     BuilderUtil.addStatus(status, IStatus.WARNING, msg, ex);
-                    if (builderDebugEnabled) {
-                        MetamodelBuilderPlugin.Util.log(IStatus.WARNING, msg);
-                    }
                 }
             }
             if (record != null) {
@@ -125,8 +111,6 @@ public class RecordGenerator implements BuilderConstants {
     public static List generateEntityRecords( ResultSet resultSet,
                                               MultiStatus status,
                                               IProgressMonitor monitor ) throws SQLException {
-        boolean builderDebugEnabled = MetamodelBuilderPlugin.Util.isDebugEnabled(DebugConstants.METAMODEL_BUILDER);
-
         List mapList = ResultSetTranslator.translate(resultSet);
         List recordList = new ArrayList(mapList.size());
 
@@ -149,9 +133,6 @@ public class RecordGenerator implements BuilderConstants {
                 // Log warning message
                 final String msg = getString("unableToCreateEntityRecord", metaClass, name); //$NON-NLS-1$
                 BuilderUtil.addStatus(status, IStatus.WARNING, msg);
-                if (builderDebugEnabled) {
-                    MetamodelBuilderPlugin.Util.log(IStatus.WARNING, msg);
-                }
                 // Create the record
             } else {
                 try {
@@ -161,9 +142,6 @@ public class RecordGenerator implements BuilderConstants {
                     metaClass = MetaClassUriHelper.getEClassName(metaClassUri);
                     final String msg = getString("unableToCreateEntityRecord", metaClass, name); //$NON-NLS-1$
                     BuilderUtil.addStatus(status, IStatus.WARNING, msg, ex);
-                    if (builderDebugEnabled) {
-                        MetamodelBuilderPlugin.Util.log(IStatus.WARNING, msg);
-                    }
                 }
             }
             if (record != null) {

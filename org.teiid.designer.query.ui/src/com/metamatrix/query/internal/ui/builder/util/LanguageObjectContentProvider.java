@@ -9,7 +9,6 @@ package com.metamatrix.query.internal.ui.builder.util;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.query.internal.ui.builder.ILanguageObjectInputProvider;
 import com.metamatrix.query.sql.LanguageObject;
@@ -24,53 +23,52 @@ import com.metamatrix.query.ui.UiConstants;
 /**
  * LanguageObjectContentProvider
  */
-public class LanguageObjectContentProvider implements ITreeContentProvider,
-                                                      UiConstants {
+public class LanguageObjectContentProvider implements ITreeContentProvider, UiConstants {
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTANTS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////////////////////
 
     /** Properties key prefix. */
-//    private static final String PREFIX = I18nUtil.getPropertyPrefix(LanguageObjectContentProvider.class);
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // private static final String PREFIX = I18nUtil.getPropertyPrefix(LanguageObjectContentProvider.class);
+
+    // /////////////////////////////////////////////////////////////////////////////////////////////
     // FIELDS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    
+    // /////////////////////////////////////////////////////////////////////////////////////////////
+
     private LanguageObject langObj;
-    
+
     private Object[] roots = new Object[0];
-    
-//    private Viewer viewer;
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    // private Viewer viewer;
+
+    // /////////////////////////////////////////////////////////////////////////////////////////////
     // METHODS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    
+    // /////////////////////////////////////////////////////////////////////////////////////////////
+
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
     public void dispose() {
     }
-    
-    public Object getChildAt(int theIndex,
-                             Object theParent) {
+
+    public Object getChildAt( int theIndex,
+                              Object theParent ) {
         Object[] kids = getChildren(theParent);
         return kids[theIndex];
     }
-    
-    public int getChildCount(Object theParent) {
+
+    public int getChildCount( Object theParent ) {
         return getChildren(theParent).length;
     }
-    
-    public int getChildIndex(Object theChild) {
+
+    public int getChildIndex( Object theChild ) {
         int result = -1;
         Object parent = getParent(theChild);
-        
+
         if (parent != null) {
             Object[] kids = getChildren(parent);
-            
+
             for (int i = 0; i < kids.length; i++) {
                 if (kids[i] == theChild) {
                     result = i;
@@ -78,11 +76,11 @@ public class LanguageObjectContentProvider implements ITreeContentProvider,
                 }
             }
         }
-        
+
         return result;
     }
-    
-    private Object[] getChildren(Criteria theCriteria) {
+
+    private Object[] getChildren( Criteria theCriteria ) {
         Object[] result = null;
 
         if (theCriteria instanceof NotCriteria) {
@@ -100,36 +98,32 @@ public class LanguageObjectContentProvider implements ITreeContentProvider,
 
                 for (int i = 0; i < size; i++) {
                     Criteria criteria = compoundCrit.getCriteria(i);
-                    result[i] = (criteria == null) ? BuilderUtils.UNDEFINED
-                                                   : (Object)criteria;
+                    result[i] = (criteria == null) ? BuilderUtils.UNDEFINED : (Object)criteria;
                 }
             }
         }
 
-        return (result == null) ? new Object[0] 
-                                : result;
+        return (result == null) ? new Object[0] : result;
     }
 
-    private Object[] getChildren(Expression theExpression) {
+    private Object[] getChildren( Expression theExpression ) {
         Object[] result = null;
 
         if (theExpression instanceof Function) {
             result = getChildren((Function)theExpression);
         }
 
-        return (result == null) ? new Object[0] 
-                                : result;
+        return (result == null) ? new Object[0] : result;
     }
 
-    private Object[] getChildren(Function theFunction) {
+    private Object[] getChildren( Function theFunction ) {
         Object[] result = null;
 
         if (theFunction.isImplicit()) {
             // according to Alex, all implicit functions are conversions and
             // the first argument is what is being converted (which could be a function or expression)
             Expression arg = theFunction.getArgs()[0];
-            result = (arg instanceof Function) ? getChildren((Function)arg)
-                                               : getChildren(arg);
+            result = (arg instanceof Function) ? getChildren((Function)arg) : getChildren(arg);
         } else {
             Expression[] args = theFunction.getArgs();
 
@@ -138,8 +132,7 @@ public class LanguageObjectContentProvider implements ITreeContentProvider,
 
                 for (int i = 0; i < args.length; i++) {
                     // if arg is null need to return the undefined string
-                    result[i] = (args[i] == null) ? BuilderUtils.UNDEFINED
-                                                  : (Object)args[i];
+                    result[i] = (args[i] == null) ? BuilderUtils.UNDEFINED : (Object)args[i];
                 }
             }
         }
@@ -150,11 +143,7 @@ public class LanguageObjectContentProvider implements ITreeContentProvider,
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      */
-    public Object[] getChildren(Object theParent) {
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printEntered(this, "getChildren():langObj=" + langObj+", parent="+theParent); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-
+    public Object[] getChildren( Object theParent ) {
         Object[] result = null;
 
         if (theParent != null) {
@@ -164,74 +153,68 @@ public class LanguageObjectContentProvider implements ITreeContentProvider,
                 result = getChildren((Expression)theParent);
             }
         }
-
-        if (BuilderUtils.isTraceLogging()) {
-            Util.printExited(this, "getChildren()"); //$NON-NLS-1$
-        }
-
-        return (result == null) ? new Object[0] 
-                                : result;
+        return (result == null) ? new Object[0] : result;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    public Object[] getElements(Object theInputElement) {
+    public Object[] getElements( Object theInputElement ) {
         return roots;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
-    public Object getParent(Object theElement) {
+    public Object getParent( Object theElement ) {
         return getParent(langObj, theElement);
     }
 
-    public Object getParent(Object theRoot,
-                            Object theChild) {
+    public Object getParent( Object theRoot,
+                             Object theChild ) {
         Object result = null;
-        
+
         if (theRoot != theChild) {
             Object[] kids = getChildren(theRoot);
-            
+
             for (int i = 0; i < kids.length; i++) {
                 if (theChild == kids[i]) {
                     result = theRoot;
                     break;
                 }
                 result = getParent(kids[i], theChild);
-                
+
                 if (result != null) {
                     break;
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Gets the root <code>LanguageObject</code> or a string representing an undefined element.
+     * 
      * @return the root element
      */
     public Object getRoot() {
-        return (roots.length > 0) ? roots[0]
-                                  : null;
+        return (roots.length > 0) ? roots[0] : null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      */
-    public boolean hasChildren(Object theElement) {
+    public boolean hasChildren( Object theElement ) {
         return getChildren(theElement).length > 0;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
-    public void inputChanged(Viewer theViewer,
-                             Object theOldInput,
-                             Object theNewInput) {
+    public void inputChanged( Viewer theViewer,
+                              Object theOldInput,
+                              Object theNewInput ) {
         // theNewInput is null when disposing of the view
         if (theNewInput != null) {
             /*
@@ -239,10 +222,9 @@ public class LanguageObjectContentProvider implements ITreeContentProvider,
              */
             Assertion.isInstanceOf(theNewInput, ILanguageObjectInputProvider.class, ILanguageObjectInputProvider.class.getName());
 
-//            viewer = theViewer;
+            // viewer = theViewer;
             langObj = ((ILanguageObjectInputProvider)theNewInput).getLanguageObject();
-            Object root = (langObj == null) ? BuilderUtils.UNDEFINED 
-                                            : (Object)langObj;
+            Object root = (langObj == null) ? BuilderUtils.UNDEFINED : (Object)langObj;
             roots = new Object[] {root};
         }
     }

@@ -41,11 +41,9 @@ import com.metamatrix.modeler.diagram.ui.notation.NotationModelGenerator;
 import com.metamatrix.modeler.diagram.ui.notation.uml.model.UmlClassifierNode;
 import com.metamatrix.modeler.diagram.ui.util.DiagramEntityManager;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
-import com.metamatrix.modeler.internal.diagram.ui.DebugConstants;
 import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.jdbc.JdbcSource;
-import com.metamatrix.ui.internal.InternalUiConstants;
 
 /**
  * PackageDiagramModelFactory
@@ -63,7 +61,6 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
     private static final String KEY_PACKAGE_DIAGRAM_NAME = "DiagramNames.packageDiagram"; //$NON-NLS-1$
     private static final String THIS_CLASS = "PackageDiagramModelFactory"; //$NON-NLS-1$
 
-    private String errorMessage;
     private NotationModelGenerator generator;
 
     private HashMap reconcileClassifierNodes;
@@ -169,7 +166,6 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
             if (getGenerator() != null) {
                 while (iter.hasNext()) {
                     // Get current EObject
-                    errorMessage = null;
                     EObject eObj = (EObject)iter.next();
                     // Check to see that it isn't a non-drawable object like "JdbcSource" (i.e. connection) object.
 
@@ -196,13 +192,6 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
                                     iStage++;
                                     iCount = 0;
                                 }
-                            }
-                        } else {
-                            if (Util.isDebugEnabled(DebugConstants.MODEL_FACTORY)) {
-                                String name = DiagramUiUtilities.getEObjectLabel(eObj);
-                                errorMessage = Util.getString(DiagramUiConstants.Errors.MODEL_NODE_FAILURE)
-                                               + " for object = " + name; //$NON-NLS-1$
-                                Util.print(DebugConstants.MODEL_FACTORY, THIS_CLASS + " " + errorMessage); //$NON-NLS-1$
                             }
                         }
                     }
@@ -330,7 +319,6 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
 
         if (currentDiagramOK && isValidDiagram(diagramModelNode) && sourceIsNotThis(notification)
             && shouldHandleNotification(notification, diagramModelNode)) {
-            DiagramUiConstants.Util.start("PakkageDiagramModelFactory.notifyModel()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
 
             boolean requiredStart = false;
             boolean succeeded = false;
@@ -369,7 +357,6 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
                     DiagramEditorUtil.setDiagramConstructionComplete(diagram, true);
                 }
             }
-            DiagramUiConstants.Util.stop("PakkageDiagramModelFactory.notifyModel()", InternalUiConstants.Debug.Metrics.NOTIFICATIONS); //$NON-NLS-1$
         }
 
         return currentDiagramOK;
@@ -500,12 +487,6 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
 
     private void handleSingleNotification( Notification notification,
                                            DiagramModelNode packageDiagramModelNode ) {
-
-        if (Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS)) {
-            Util.debug(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS, THIS_CLASS + ".handleSingleNotification( ) Notification = " //$NON-NLS-1$
-                                                     + NotificationUtilities.paramString(notification));
-        }
-
         if (NotificationUtilities.isAdded(notification)) {
             performAdd(notification, packageDiagramModelNode);
         } else if (NotificationUtilities.isRemoved(notification)) {
@@ -513,7 +494,6 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
         } else if (NotificationUtilities.isChanged(notification)) {
             performChange(notification, packageDiagramModelNode);
         }
-
     }
 
     private void performAdd( Notification notification,
@@ -523,10 +503,6 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
         if (NotificationUtilities.isEObjectNotifier(notification)) {
             // we know that the object is not a child of a model resource !!!!!
             EObject targetObject = NotificationUtilities.getEObject(notification);
-
-            if (Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS)) {
-                Util.debug(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS, THIS_CLASS + ".performAdd()  targetObject = " + targetObject); //$NON-NLS-1$
-            }
 
             // We know that we have an object that is not a child of a model resource, therefore,
             // it is safe to assume that it would exist on a normal package diagram.
@@ -642,25 +618,13 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
                 if (performedChange && hasAssociations) updateAssociations(packageDiagramModelNode, packageDiagramModelNode);
             }
         }
-
-        if (performedChange) {
-            if (Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS)) {
-                Util.debug(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS, THIS_CLASS + ".performAdd()  ADD resulted in NEW CHILDREN"); //$NON-NLS-1$
-            }
-        }
     }
 
     private void performRemove( Notification notification,
                                 DiagramModelNode packageDiagramModelNode ) {
-        boolean performedChange = false;
-
         if (NotificationUtilities.isEObjectNotifier(notification)) {
             // we know that the object is not a child of a model resource !!!!!
             EObject targetObject = NotificationUtilities.getEObject(notification);
-
-            if (Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS)) {
-                Util.debug(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS, THIS_CLASS + ".performRemove()  targetObject = " + targetObject); //$NON-NLS-1$
-            }
 
             DiagramModelNode parentNode = getModelNode(packageDiagramModelNode, targetObject);
 
@@ -715,23 +679,11 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
                 }
             }
         }
-        if (performedChange) {
-            // updateAssociations(packageDiagramModelNode);
-            if (Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS)) {
-                Util.debug(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS, THIS_CLASS + ".performRemove()  REMOVE resulted in REMOVED CHILDREN"); //$NON-NLS-1$
-            }
-        }
     }
 
     protected void performChange( Notification notification,
                                   DiagramModelNode packageDiagramModelNode ) {
-        boolean performedChange = false;
-
         EObject targetObject = NotificationUtilities.getEObject(notification);
-
-        if (Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS)) {
-            Util.debug(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS, THIS_CLASS + ".performChange()  targetObject = " + targetObject); //$NON-NLS-1$
-        }
         if (notification.getEventType() == Notification.MOVE) {
             DiagramModelNode targetNode = getModelNode(packageDiagramModelNode, targetObject);
             if (targetNode != null) {
@@ -761,17 +713,11 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
                     DiagramUiUtilities.hiliteCurrentSelectionDependencies();
                 } else {
                     if (notification.getEventType() == Notification.REMOVE || notification.getEventType() == Notification.ADD) {
-                        // Assume that supertype/supertype is changed??? so
+                        // Assume that supertype is changed??? so
                         DiagramModelNode topClassNode = DiagramUiUtilities.getTopClassifierParentNode(targetNode);
                         if (topClassNode != null) updateAssociations(topClassNode, packageDiagramModelNode);
                     }
                 }
-            }
-        }
-
-        if (performedChange) {
-            if (Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS)) {
-                Util.debug(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS, THIS_CLASS + ".performChange()  SET resulted in CHANGED CHILDREN"); //$NON-NLS-1$
             }
         }
     }
@@ -844,13 +790,6 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
             }
 
             if (!foundMatch) {
-                if (Util.isDebugEnabled(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS)) {
-                    String message = THIS_CLASS + ".getStaleAssociations() staleAssociation Source = " + //$NON-NLS-1$
-                                     ((DiagramModelNode)nextCurrentAssociation.getSourceNode()).getName() + " Target = " + //$NON-NLS-1$
-                                     ((DiagramModelNode)nextCurrentAssociation.getTargetNode()).getName();
-
-                    Util.debug(com.metamatrix.modeler.internal.ui.DebugConstants.NOTIFICATIONS, message);
-                }
                 staleAssociations.add(nextCurrentAssociation);
             }
         }

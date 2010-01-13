@@ -1111,7 +1111,7 @@ public final class MetadataSearchPage extends DialogPage implements ISearchPage,
             initButtonSelected(this.btnNotContain);
         } else {
             // first time using search page
-            initButtonSelected((MetadataSearch.DEFAULT_CONTAINS_PATTERN) ? this.btnContains : this.btnNotContain);
+            initButtonSelected(this.btnContains);
         }
 
         // initialize exact match checkbox based on dialog settings

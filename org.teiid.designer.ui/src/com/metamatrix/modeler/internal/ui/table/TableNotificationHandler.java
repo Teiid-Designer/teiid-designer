@@ -187,10 +187,6 @@ public class TableNotificationHandler implements INotifyChangedListener, UiConst
      * @param notification
      */
     private void handleSingleNotification( final Notification notification ) {
-        if (Util.isDebugEnabled("tableEditorNotification")) { //$NON-NLS-1$
-            Util.debug("tableEditorNotification", //$NON-NLS-1$
-                       "TableNotificationHandler got a notifyChanged( ) " + NotificationUtilities.paramString(notification)); //$NON-NLS-1$
-        }
         if (NotificationUtilities.isEObjectNotifier(notification)) {
             handleSingleEObjectNotification(notification);
         } else {
@@ -204,11 +200,6 @@ public class TableNotificationHandler implements INotifyChangedListener, UiConst
      * @param notification
      */
     private void handleSingleEObjectNotification( final Notification notification ) {
-        if (Util.isDebugEnabled("tableEditorNotification")) { //$NON-NLS-1$
-            Util.debug("tableEditorNotification", //$NON-NLS-1$
-                       "TableNotificationHandler got a notifyChanged( ) " + NotificationUtilities.paramString(notification)); //$NON-NLS-1$
-        }
-
         EObject target = NotificationUtilities.getEObject(notification);
 
         if (target instanceof EStringToStringMapEntryImpl) {
@@ -412,12 +403,6 @@ public class TableNotificationHandler implements INotifyChangedListener, UiConst
      * @param notification
      */
     private void handleSingleResourceNotification( final Notification notification ) {
-
-        if (Util.isDebugEnabled("tableEditorNotification")) { //$NON-NLS-1$
-            Util.debug("tableEditorNotification", //$NON-NLS-1$
-                       "TableNotificationHandler got a notifyChanged( ) " + NotificationUtilities.paramString(notification)); //$NON-NLS-1$
-        }
-
         if (NotificationUtilities.isAdded(notification)) {
             EObject[] addedChildren = NotificationUtilities.getAddedChildren(notification);
 

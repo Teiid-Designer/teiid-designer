@@ -47,7 +47,6 @@ import com.metamatrix.query.internal.ui.builder.actions.EditSetCriteriaItemActio
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
 import com.metamatrix.query.internal.ui.builder.model.SetCriteriaEditorModel;
-import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
 import com.metamatrix.query.sql.LanguageObject;
 import com.metamatrix.query.sql.lang.AbstractSetCriteria;
@@ -196,15 +195,9 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         buttonsPanel.setLayoutData(buttonsPanelGridData);
         Runnable addRunnable = new Runnable() {
             public void run() {
-                if (BuilderUtils.isDebugLogging()) {
-                    Util.print(this, "run(), calling addButtonPressed()"); //$NON-NLS-1$
-                }
                 addButtonPressed();
             }
         };
-        if (BuilderUtils.isDebugLogging()) {
-            Util.print(this, "createRightComponent(), creating Add, Edit, and Delete actions"); //$NON-NLS-1$
-        }
         addAction = new AddSetCriteriaItemAction(buttonsPanel, addRunnable);
         addAction.setEnabled(true);
         Runnable editRunnable = new Runnable() {
@@ -221,9 +214,6 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         };
         deleteAction = new DeleteSetCriteriaItemAction(buttonsPanel, deleteRunnable);
         deleteAction.setEnabled(false);
-        if (BuilderUtils.isDebugLogging()) {
-            Util.print(this, "createRightComponent(), done creating Add, Edit, and Delete actions"); //$NON-NLS-1$
-        }
 
         listButtonMenuManager = new MenuManager();
         listButtonMenuManager.setRemoveAllWhenShown(true);
@@ -233,13 +223,7 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
             }
         });
 
-        if (BuilderUtils.isDebugLogging()) {
-            Util.print(this, "createRightComponent(), setting menu for listButton"); //$NON-NLS-1$
-        }
         listButton.setMenu(listButtonMenuManager.createContextMenu(listButton));
-        if (BuilderUtils.isDebugLogging()) {
-            Util.print(this, "createRightComponent(), done setting menu for listButton"); //$NON-NLS-1$
-        }
 
         subquerySQLText = new Text(subquerySashForm, SWT.MULTI | SWT.WRAP | SWT.BORDER);
         GridData sqlTextData = new GridData(GridData.FILL_HORIZONTAL);
@@ -313,9 +297,6 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
         // Edit button enabled iff. exactly one item selected
         // Delete button enabled iff. one or more items selected
         int selectionCount = curItemsList.getSelectionCount();
-        if (BuilderUtils.isDebugLogging() || BuilderUtils.isTraceLogging() || BuilderUtils.isEventLogging()) {
-            Util.print(this, "curItemsListChanged(), new selection count is " + selectionCount); //$NON-NLS-1$
-        }
         editAction.setEnabled((selectionCount == 1));
         deleteAction.setEnabled((selectionCount > 0));
     }
@@ -323,20 +304,11 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     void addButtonPressed() {
         Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
         ExpressionBuilder expBld = new ExpressionBuilder(shell);
-        if (BuilderUtils.isDebugLogging()) {
-            Util.print(this, "addButtonPressed()"); //$NON-NLS-1$
-        }
         int returnCode = expBld.open();
-        if (BuilderUtils.isDebugLogging()) {
-            Util.print(this, "addButtonPressed(), return code from ExpressionBuilder is " + returnCode); //$NON-NLS-1$
-        }
         if (returnCode == Window.OK) {
             // Do not need to change either curItemsList or listItemToLangObjMap. We will do this when
             // we receive an event telling us that the values have been changed.
             LanguageObject langObj = expBld.getLanguageObject();
-            if (BuilderUtils.isDebugLogging()) {
-                Util.print(this, "addButtonPressed(), getLanguageObject() from ExpressionBuilder is " + langObj); //$NON-NLS-1$
-            }
             objectsToSelect = new LanguageObject[] {langObj};
             theModel.addValue(langObj);
         }
@@ -351,23 +323,10 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
 
         // Not certain why a create() call is necessary here but it seems to be. BWP 08/26/03
         expBld.create();
-
-        if (BuilderUtils.isDebugLogging()) {
-            Util.print(this, "editButtonPressed(), setting ExpressionBuilder language object to " + obj); //$NON-NLS-1$
-        }
         expBld.setLanguageObject(obj);
-        if (BuilderUtils.isDebugLogging()) {
-            Util.print(this, "editButtonPressed(), launching ExpressionBuilder"); //$NON-NLS-1$
-        }
         int returnCode = expBld.open();
-        if (BuilderUtils.isDebugLogging()) {
-            Util.print(this, "editButtonPressed(), return code from ExpressionBuilder is " + returnCode); //$NON-NLS-1$
-        }
         if (returnCode == Window.OK) {
             LanguageObject newObj = expBld.getLanguageObject();
-            if (BuilderUtils.isDebugLogging()) {
-                Util.print(this, "editButtonPressed(), ExpressionBuilder returned language object of " + newObj); //$NON-NLS-1$
-            }
             if (!obj.equals(newObj)) {
                 // Do not need to change either curItemsList or
                 // listItemToLangObjMap. We will do this when we receive an event
@@ -455,13 +414,7 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     }
 
     void displayValues() {
-        if (BuilderUtils.isDebugLogging()) {
-            Util.print(this, "displayValues(), curType is " + curType); //$NON-NLS-1$
-        }
         if (curType == SetCriteriaEditorModel.LIST) {
-            if (BuilderUtils.isDebugLogging()) {
-                Util.print(this, "displayValues(), removing all items, clearing map"); //$NON-NLS-1$
-            }
             curItemsList.removeAll();
             listItemToLangObjMap.clear();
             SetCriteria setCriteria = (SetCriteria)theModel.getLanguageObject();
@@ -471,9 +424,6 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
             while (it.hasNext()) {
                 LanguageObject langObj = (LanguageObject)it.next();
                 String itemName = langObj.toString();
-                if (BuilderUtils.isDebugLogging()) {
-                    Util.print(this, "displayValues(), adding item: " + itemName); //$NON-NLS-1$
-                }
                 curItemsList.add(itemName);
                 listItemToLangObjMap.put(itemName, langObj);
             }
@@ -570,14 +520,5 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
                 displayLanguageObjectChange();
             }
         }
-    }
-
-    @Override
-    public boolean hasChanged() {
-        boolean changed = super.hasChanged();
-        if (BuilderUtils.isDebugLogging() || BuilderUtils.isTraceLogging()) {
-            Util.print(this, "hasChanged() returning " + changed); //$NON-NLS-1$
-        }
-        return changed;
     }
 }// end SetCriteriaEditor

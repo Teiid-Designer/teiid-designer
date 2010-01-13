@@ -20,9 +20,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.EditorPart;
-import com.metamatrix.modeler.internal.ui.DebugConstants;
 import com.metamatrix.modeler.internal.ui.editors.DefaultModelEditorNavigationLocation;
-import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.ui.internal.util.UiUtil;
 
 /**
@@ -30,7 +28,6 @@ import com.metamatrix.ui.internal.util.UiUtil;
  */
 public class NavigableEditor extends EditorPart implements INavigationLocationProvider, IGotoMarker {
 
-    private static final String THIS_CLASS = "NavigableEditor"; //$NON-NLS-1$
     private IEditorPart iepEditor;
 
     /**
@@ -126,10 +123,6 @@ public class NavigableEditor extends EditorPart implements INavigationLocationPr
      * @see org.eclipse.ui.INavigationLocationProvider#createEmptyNavigationLocation()
      */
     public INavigationLocation createEmptyNavigationLocation() {
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.NAVIGATION)) {
-            UiConstants.Util.print(DebugConstants.NAVIGATION, THIS_CLASS + ".createEmptyNavigationLocation() "); //$NON-NLS-1$ 
-        }
-        //        System.out.println("[NavigableEditor.createEmptyNavigationLocation] TOP"); //$NON-NLS-1$
         return null;
     }
 
@@ -137,38 +130,14 @@ public class NavigableEditor extends EditorPart implements INavigationLocationPr
      * @see org.eclipse.ui.INavigationLocationProvider#createNavigationLocation()
      */
     public INavigationLocation createNavigationLocation() {
-        //        System.out.println("[NavigableEditor.createNavigationLocation] TOP"); //$NON-NLS-1$
-        if (UiConstants.Util.isDebugEnabled(DebugConstants.NAVIGATION)) {
-            UiConstants.Util.print(DebugConstants.NAVIGATION, THIS_CLASS + ".createNavigationLocation() entering... "); //$NON-NLS-1$ 
-        }
         if (iepEditor != null && iepEditor instanceof INavigationSupported) {
 
             IMarker imMarker = ((INavigationSupported)iepEditor).createMarker();
-            //            System.out.println("\n[NavigableEditor.createNavigationLocation] HAS editor case, class / input: " + iepEditor.getClass().getName() + " / " + iepEditor.getEditorInput().getName() ); //$NON-NLS-1$
-            //            System.out.println("[NavigableEditor.gotoMarker] iMarker: " + imMarker ); //$NON-NLS-1$
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.NAVIGATION)) {
-                UiConstants.Util.print(DebugConstants.NAVIGATION,
-                                       THIS_CLASS + ".createNavigationLocation();  HAS editor case, class / input: " //$NON-NLS-1$ 
-                                       + iepEditor.getClass().getName() + " / " //$NON-NLS-1$
-                                       + iepEditor.getEditorInput().getName());
-                UiConstants.Util.print(DebugConstants.NAVIGATION, THIS_CLASS
-                                                                  + ".createNavigationLocation();  iMarker: " + imMarker); //$NON-NLS-1$ 
-            }
-
             return new DefaultModelEditorNavigationLocation(iepEditor, imMarker);
         }
         if (this instanceof INavigationSupported) {
 
             IMarker imMarker = ((INavigationSupported)this).createMarker();
-
-            if (UiConstants.Util.isDebugEnabled(DebugConstants.NAVIGATION)) {
-                UiConstants.Util.print(DebugConstants.NAVIGATION,
-                                       THIS_CLASS + ".createNavigationLocation();  IS editor case, class / input: " //$NON-NLS-1$ 
-                                       + getClass().getName() + " / " //$NON-NLS-1$
-                                       + getEditorInput().getName());
-                UiConstants.Util.print(DebugConstants.NAVIGATION, THIS_CLASS
-                                                                  + ".createNavigationLocation();  iMarker: " + imMarker); //$NON-NLS-1$ 
-            }
             return new DefaultModelEditorNavigationLocation(this, imMarker);
         }
         return null;

@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -52,7 +51,6 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
-
 import com.metamatrix.core.util.ClassUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
@@ -251,7 +249,7 @@ public final class JdbcDriverWizard extends AbstractWizard
             final List urls = this.driver.getJarFileUris();
             final int count = urls.size();
             for (int ndx = 0; ndx < archives.length; ++ndx) {
-                //final String url = ((IFile)archives[ndx]).getLocation().toString();
+                // final String url = ((IFile)archives[ndx]).getLocation().toString();
                 final String url = new File(((IFile)archives[ndx]).getLocation().toString()).toURI().toString();
                 selectedUrls[ndx] = url;
                 if (!urls.contains(url)) {
@@ -383,13 +381,13 @@ public final class JdbcDriverWizard extends AbstractWizard
                                           GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_VERTICAL);
         ((GridData)this.libraryPanel.getLayoutData()).horizontalSpan = COLUMN_COUNT;
         // Add extra buttons to list edit panel (in reverse order that they should appear in wizard)
-//        this.libraryPanel.addButton(ADD_EXTERNAL_FOLDER_BUTTON).addSelectionListener(new SelectionAdapter() {
-//
-//            @Override
-//            public void widgetSelected( final SelectionEvent event ) {
-//                addExternalFolder();
-//            }
-//        });
+        // this.libraryPanel.addButton(ADD_EXTERNAL_FOLDER_BUTTON).addSelectionListener(new SelectionAdapter() {
+        //
+        // @Override
+        // public void widgetSelected( final SelectionEvent event ) {
+        // addExternalFolder();
+        // }
+        // });
         this.libraryPanel.addButton(ADD_EXTERNAL_BUTTON).addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -397,13 +395,13 @@ public final class JdbcDriverWizard extends AbstractWizard
                 addExternalLibraries();
             }
         });
-//        this.libraryPanel.addButton(ADD_FOLDER_BUTTON).addSelectionListener(new SelectionAdapter() {
-//
-//            @Override
-//            public void widgetSelected( final SelectionEvent event ) {
-//                addFolder();
-//            }
-//        });
+        // this.libraryPanel.addButton(ADD_FOLDER_BUTTON).addSelectionListener(new SelectionAdapter() {
+        //
+        // @Override
+        // public void widgetSelected( final SelectionEvent event ) {
+        // addFolder();
+        // }
+        // });
         WidgetFactory.createLabel(this.editPanel, CLASS_NAME_LABEL);
         this.classNameCombo = WidgetFactory.createCombo(this.editPanel, SWT.READ_ONLY, GridData.FILL_HORIZONTAL);
         this.classNameCombo.addModifyListener(new ModifyListener() {
@@ -531,18 +529,18 @@ public final class JdbcDriverWizard extends AbstractWizard
     @Override
     public boolean performCancel() {
         final List connections = new ArrayList(this.mgr.getJdbcSources());
-        
+
         // Because of a change in EMF (maybe a bug) the reload() method will turn the jdbcSources in this list
         // to EProxy objects. Need to clear the list BEFORE reloading model. This cleanly breaks these objects
         // away from their container preventing the conversion to EProxy's
         this.mgr.getJdbcSources().clear();
-        
+
         JdbcUiUtil.reload();
-        
+
         final List loadedConnections = this.mgr.getJdbcSources();
         loadedConnections.clear();
         loadedConnections.addAll(connections);
-        
+
         return super.performCancel();
     }
 
@@ -708,14 +706,11 @@ public final class JdbcDriverWizard extends AbstractWizard
      * @since 4.0
      */
     private void validateDriver() {
-        IStatus currentDriverStatus = null;
+        IStatus status = null;
         if (this.driver != null) {
             // Validate the driver
-            final IStatus status = this.mgr.isValid(driver);
-            if (driver == this.driver) {
-                // This is the current driver, so save the status ...
-                currentDriverStatus = status;
-            }
+            status = this.mgr.isValid(driver);
+            // This is the current driver, so save the status ...
             if (!status.isOK()) {
                 if (status.getSeverity() == IStatus.ERROR) {
                     // Found an error!
@@ -726,17 +721,17 @@ public final class JdbcDriverWizard extends AbstractWizard
         }
 
         // We've found no errors so far
-        if (currentDriverStatus == null) {
+        if (status == null) {
             // There are no drivers ...
             this.pg.setMessage(VALID_DIALOG_MESSAGE);
         } else {
-            if (currentDriverStatus.isOK()) {
+            if (status.isOK()) {
                 // Override the "valid" message ...
                 this.pg.setMessage(VALID_DIALOG_MESSAGE);
             } else {
                 // Post the message for the current driver ...
-                final int severity = (currentDriverStatus.getSeverity() == IStatus.WARNING ? IMessageProvider.WARNING : IMessageProvider.INFORMATION);
-                this.pg.setMessage(currentDriverStatus.getMessage(), severity);
+                final int severity = (status.getSeverity() == IStatus.WARNING ? IMessageProvider.WARNING : IMessageProvider.INFORMATION);
+                this.pg.setMessage(status.getMessage(), severity);
             }
         }
         this.pg.setPageComplete(true);

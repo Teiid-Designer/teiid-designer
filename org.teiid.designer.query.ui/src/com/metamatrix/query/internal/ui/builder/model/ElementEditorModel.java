@@ -7,7 +7,6 @@
  */
 package com.metamatrix.query.internal.ui.builder.model;
 
-import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
 import com.metamatrix.query.sql.LanguageObject;
 import com.metamatrix.query.sql.symbol.ElementSymbol;
 
@@ -92,11 +91,6 @@ public class ElementEditorModel extends AbstractLanguageObjectEditorModel {
 
         if (changed) {
             selectedElement = theElement;
-
-            if (BuilderUtils.isEventLogging()) {
-                Util.print(this, "selectElementSymbol:fireModelChanged:type=" + LanguageObjectEditorModelEvent.STATE_CHANGE); //$NON-NLS-1$
-            }
-
             fireModelChanged(LanguageObjectEditorModelEvent.STATE_CHANGE);
         }
 

@@ -499,7 +499,6 @@ public class MappingDiagramController
                     // diagramEditor.getDiagramViewer().getSelectionHandler().select(mappingClassEObject);
                     // }
                     MappingDiagramUtil.hiliteUnconnectedExtents(diagramEditor.getCurrentModel());
-                    diagramEditor.getDiagramViewer().printContents();
                     succeeded = true;
                 } finally {
                     if (requiredStart) {

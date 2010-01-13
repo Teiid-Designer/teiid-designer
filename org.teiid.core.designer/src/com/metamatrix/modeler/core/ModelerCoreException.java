@@ -222,10 +222,6 @@ public class ModelerCoreException extends CoreException implements Externalizabl
         private static final long serialVersionUID = 1L;
         private IStatus status = null;
 
-        /** No-arg constructor to fulfill the Serializable contract */
-        public StatusHolder() {
-        }
-
         StatusHolder( IStatus status ) {
             setStatus(status);
         }

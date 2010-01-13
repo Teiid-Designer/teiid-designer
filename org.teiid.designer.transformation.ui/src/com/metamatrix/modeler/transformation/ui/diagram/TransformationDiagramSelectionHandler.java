@@ -94,10 +94,6 @@ public class TransformationDiagramSelectionHandler extends DiagramSelectionHandl
                     nextEP = findEditPart(nextEObject, false);
                     if (nextEP != null && nextEP instanceof DiagramEditPart) {
                         ((DiagramEditPart)nextEP).hiliteBackground(UiConstants.Colors.DEPENDENCY);
-                        if (UiConstants.Util.isDebugEnabled(com.metamatrix.modeler.internal.diagram.ui.DebugConstants.DIAGRAM_SELECTION)) {
-                            String debugMessage = "hiliteDependencies():  Dependent object = " + nextEObject; //$NON-NLS-1$
-                            UiConstants.Util.print(this.getClass(), debugMessage);
-                        }
                     }
                 }
             }
