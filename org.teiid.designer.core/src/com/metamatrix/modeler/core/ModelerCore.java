@@ -103,7 +103,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     // Constants
 
     public static boolean HEADLESS = false;
-    
+
     /**
      * The bundle ID of the Designer feature.
      * 
@@ -120,7 +120,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         String PRODUCER_NAME = getProducerName();
         String VERSION = getVersion();
     }
-    
+
     /**
      * @return the feature version
      * @since 6.1.0
@@ -135,7 +135,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         // must be testing
         return "6.1.0"; //$NON-NLS-1$
     }
-    
+
     /**
      * @return the feature name
      * @since 6.1.0
@@ -146,18 +146,18 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
             Object name = bundle.getHeaders().get("Bundle-Name"); //$NON-NLS-1$
             return name.toString();
         }
-        
+
         // must be testing
         return "Teiid Designer"; //$NON-NLS-1$
     }
-    
+
     private static final String MINIMUM_JAVA_VERSION = "1.6"; //$NON-NLS-1$
 
     /**
      * The plug-in identifier of the Modeler Resources support (value <code>"com.metamatrix.modeler.core"</code>).
      */
     public static final String PLUGIN_ID = "org.teiid.designer.core"; //$NON-NLS-1$
-    
+
     public static final String PACKAGE_ID = ModelerCore.class.getPackage().getName();
 
     /**
@@ -257,7 +257,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
             // then fall back on hardcoded base URL
             XML_SCHEMA_ECLIPSE_PLATFORM_URI_PREFIX = XSDPlugin.INSTANCE.getBaseURL().toString();
         } catch (Exception e) {
-            // do nothin
+            // do nothing
         }
     }
     public static final String XML_SCHEMA_ECLIPSE_PLATFORM_URI = XML_SCHEMA_ECLIPSE_PLATFORM_URI_PREFIX
