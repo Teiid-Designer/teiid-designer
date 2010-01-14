@@ -26,6 +26,7 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.impl.BasicEObjectImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -1064,8 +1065,8 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
             Object object = iter.next();
             ((MtkContentsEList)this.contents).attachToResource(object);
 
-            if (object instanceof EObjectImpl) {
-                ((EObjectImpl)object).eSetResource(this, null);
+            if (object instanceof BasicEObjectImpl) {
+                ((BasicEObjectImpl)object).eSetResource(this, null);
             }
         }
 

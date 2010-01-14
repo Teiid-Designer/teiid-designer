@@ -14,7 +14,7 @@
          name="%metamodelName"
          point="org.teiid.designer.core.metamodel">
       <uri>
-         http://www.eclipse.org/uml2/2.1.0/UML
+         http://www.eclipse.org/uml2/3.0.0/UML
       </uri>
       <alternateUri>
          http:///org/eclipse/uml2.ecore
@@ -35,16 +35,16 @@
       	LOGICAL
       </allowableModelType>
       <packageClass
-            name="org.eclipse.uml2.UML2Package">
+            name="org.eclipse.uml2.uml.UMLPackage">
       </packageClass>
       <adapterClass
             name="org.eclipse.uml2.uml.edit.providers.UMLItemProviderAdapterFactory">
       </adapterClass>
       <rootEntityClass
-            name="org.eclipse.uml2.Model">
+            name="org.eclipse.uml2.uml.Model">
       </rootEntityClass>
       <rootEntityClass
-            name="org.eclipse.uml2.Package">
+            name="org.eclipse.uml2.uml.Package">
       </rootEntityClass>
    </extension>
    

@@ -6,8 +6,8 @@
 
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:uml2="http://www.eclipse.org/uml2/2.1.0/UML">
-  <mmcore:ModelAnnotation xmi:uuid="mmuuid:826e7300-35f2-1efb-970b-fc1a6045b79b" primaryMetamodelUri="http://www.eclipse.org/uml2/2.1.0/UML" modelType="PHYSICAL"/>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:uml2="http://www.eclipse.org/uml2/3.0.0/UML">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:826e7300-35f2-1efb-970b-fc1a6045b79b" primaryMetamodelUri="http://www.eclipse.org/uml2/3.0.0/UML" modelType="PHYSICAL"/>
   <uml2:Package xmi:uuid="mmuuid:061b1c41-35f7-1efb-970b-fc1a6045b79b" name="Core">
     <packagedElement xsi:type="uml2:Package" xmi:uuid="mmuuid:61988b42-36ea-1efb-8f0b-81da3fe7dab7" name="PrimitiveTypes">
       <packagedElement xsi:type="uml2:PrimitiveType" xmi:uuid="mmuuid:0af241d2-36f2-1efb-8f0b-81da3fe7dab7" name="Integer"/>
