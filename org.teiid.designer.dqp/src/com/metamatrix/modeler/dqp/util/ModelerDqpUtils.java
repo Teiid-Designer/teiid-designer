@@ -613,8 +613,7 @@ public final class ModelerDqpUtils {
             }
             
             if (propDefn.hasDefaultValue() && propDefn.getDefaultValue().equals(value)) {
-                result = false;
-                // need to remove property from connector if connector has this property
+            	return new Exception[0];
             }
         }
         
