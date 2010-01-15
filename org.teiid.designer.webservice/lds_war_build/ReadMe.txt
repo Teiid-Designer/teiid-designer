@@ -1,1 +1,0 @@
-This directory is where the WAR file will be created.

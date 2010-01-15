@@ -497,7 +497,6 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
      * @return
      * @throws JdbcException
      */
-    @SuppressWarnings( "unused" )
     protected Request[] createRequests() throws JdbcException {
         return new Request[] {};
     }

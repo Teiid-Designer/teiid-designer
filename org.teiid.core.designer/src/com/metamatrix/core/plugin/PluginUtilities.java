@@ -16,9 +16,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -26,8 +24,6 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.osgi.framework.Bundle;
-
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.util.ArgCheck;
 
@@ -353,155 +349,4 @@ public abstract class PluginUtilities {
             PluginUtilities.bootLoader = bootLoader;
         }
 	}
-
-    /**
-     * Returns the physical location of a plugin project.  This method will not attempt to remove an
-     * ending file separator.
-     *
-     * @param pluginProjectId
-     * @return
-     * @throws Exception
-     * @since 4.4
-     */
-    public static String getPluginProjectLocation(String pluginProjectId) throws Exception {
-
-        return getPluginProjectLocation(pluginProjectId, false);
-    }
-
-    /**
-     * Returns the physical location of a plugin project.
-     *
-     * @param pluginProjectId
-     * @param removeEndingSeparator
-     * @return
-     * @throws Exception
-     * @since 4.4
-     */
-    public static String getPluginProjectLocation(String pluginProjectId, boolean removeEndingSeparator) throws Exception {
-
-        final String filePrefix = "file:"; //$NON-NLS-1$
-        final URL pluginURL = Platform.getBundle(pluginProjectId).getEntry("/"); //$NON-NLS-1$
-        final URL resolvedPluginUrl = FileLocator.resolve(pluginURL);
-        String pluginPath = resolvedPluginUrl.toExternalForm(); // has delim on end
-
-        if (pluginPath != null) {
-
-            // Lop off the "file:" on the front of the location, as that screws up the File constructor
-            if (pluginPath.startsWith(filePrefix)) {
-
-                pluginPath = pluginPath.substring(filePrefix.length());
-
-                // Remove leading slash if it precedes a drive letter
-                if (pluginPath.indexOf(':') > 0 && pluginPath.charAt(0) == '/') {
-
-                    pluginPath = pluginPath.substring(1);
-                }
-            }
-
-            if (removeEndingSeparator) {
-
-                // If path ends with a file separator, then remove it.
-                if (pluginPath.endsWith("/") || pluginPath.endsWith("\\")) { //$NON-NLS-1$ //$NON-NLS-2$
-
-                    pluginPath = pluginPath.substring(0, pluginPath.length() - 1);
-                }
-            }
-        }
-
-        return pluginPath;
-    }
-
-    /**
-     * Returns the physical location of a plugin project.
-     * @param pluginProjectId
-     * @param version the version of the plugin project to be returned
-     * @return
-     * @throws Exception
-     * @since 5.0
-     */
-    public static String getPluginProjectLocation(String pluginProjectId, String version) throws Exception {
-
-        final String filePrefix = "file:"; //$NON-NLS-1$
-        final Bundle[] bundles = Platform.getBundles(pluginProjectId, version);
-        String result = null;
-
-        for ( int i=0 ; i<bundles.length ; ++i ) {
-            final URL pluginURL = bundles[i].getEntry("/"); //$NON-NLS-1$
-            final URL resolvedPluginUrl = FileLocator.resolve(pluginURL);
-            String pluginPath = resolvedPluginUrl.toExternalForm(); // has delim on end
-
-            //SWJ 2/28/06 - under testing, proved that Platform.getBundles(pluginProjectId, version)
-            //              actually returns many versions, so we need to test
-            if (pluginPath != null) {
-
-                // Lop off the "file:" on the front of the location, as that screws up the File constructor
-                if (pluginPath.startsWith(filePrefix)) {
-
-                    pluginPath = pluginPath.substring(filePrefix.length());
-
-                    // Remove leading slash if it precedes a drive letter
-                    if (pluginPath.indexOf(':') > 0 && pluginPath.charAt(0) == '/') {
-
-                        pluginPath = pluginPath.substring(1);
-                    }
-                }
-
-                // store the result to return if running in the IDE, which does not have version numbers in the path
-                result = pluginPath;
-                if (pluginPath.indexOf(version) > 0) {
-                    return pluginPath;
-                }
-
-            }
-
-        }
-        return result;
-    }
-
-    /**
-     * Returns the physical location of the plugins directory.  This is based on the com.metamatrix.core
-     * plugin project.
-     *
-     * @param pluginProjectId
-     * @param removeEndingSeparator
-     * @return
-     * @throws Exception
-     * @since 4.4
-     */
-    public static String getPluginsLocation(boolean removeEndingSeparator) throws Exception {
-
-        String pluginPath = getPluginProjectLocation(CoreModelerPlugin.PLUGIN_ID, false); 
-
-        if (pluginPath != null) {
-
-            // Backup and parse out the plugins directory from the path.
-            int pluginsIndex = pluginPath.indexOf(PLUGINS_FOLDER);
-            pluginPath = pluginPath.substring(0, pluginsIndex + PLUGINS_FOLDER.length());
-
-            if (removeEndingSeparator) {
-
-                // If path ends with a file separator, then remove it.
-                if (pluginPath.endsWith("/") || pluginPath.endsWith("\\")) { //$NON-NLS-1$ //$NON-NLS-2$
-
-                    pluginPath = pluginPath.substring(0, pluginPath.length() - 1);
-                }
-            }
-        }
-
-        return pluginPath;
-    }
-
-    /**
-     * Returns the physical location of the plugins directory.  This is based on the com.metamatrix.core
-     * plugin project.  This method will not attempt to remove an ending file separator.
-     *
-     * @param pluginProjectId
-     * @return
-     * @throws Exception
-     * @since 4.4
-     */
-    public static String getPluginsLocation() throws Exception {
-
-        return getPluginsLocation(false);
-    }
 }

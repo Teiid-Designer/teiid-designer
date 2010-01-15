@@ -24,54 +24,11 @@ import com.metamatrix.vdb.edit.manifest.NonModelReference;
  */
 public interface VdbContextEditor extends VdbContext, IChangeNotifier {
 
-//    /**
-//     * Convenience method to remove and re-add to this VDB the supplied model.  If the specified model
-//     * does not already exist in this VDB then it will be added.  
-//     * @param monitor the progress monitor; may be null
-//     * @param pathInArchive the workspace-relative path to the model that is to be added to the VDB.
-//     * @return the reference to the added model; never null
-//     * @throws VdbEditException if the model specified by the supplied path cannot be found 
-//     * in the workspace or there are errors removing or re-adding the model.
-//     */
-//    ModelReference refreshModel(IProgressMonitor monitor, ModelReference theReference) throws VdbEditException;
-//
-//    /**
-//     * Convenience method to remove and re-add to this VDB the supplied non-model.  If the specified non-model
-//     * does not already exist in this VDB then it will be added.
-//     * @param monitor the progress monitor; may be null
-//     * @param nonModel the file to be refreshed
-//     * @param pathInArchive the relative path to the non-model within the VDB archive; may not be null
-//     * @return the non-model reference; never null
-//     * @throws VdbEditException if the file specified by the supplied file does not exist or there are errors
-//     * removing or re-adding the non-model
-//     */
-//    NonModelReference refreshNonModel(IProgressMonitor monitor, NonModelReference theReference) throws VdbEditException;
-
     /**
      * Return the {@link org.eclipse.emf.ecore.resource.ResourceSet} instance associated
      * with this editor.
      */
     ResourceSet getVdbResourceSet();
-    
-//    /**
-//     * Add a problem marker to the specified VirtualDatabase
-//     * @param markerCntr the problem container; may not be null
-//     * @param severity the IStatus severity of the problem; 
-//     * @param msg the problem message; may be null
-//     * @param e the exception; may be null
-//     * @since 5.0
-//     */
-//    void addProblemMarker(VirtualDatabase markerCntr, int severity, String msg, Throwable e);
-//    
-//    /**
-//     * Add a problem marker to the specified ModelReference
-//     * @param markerCntr the problem container; may not be null
-//     * @param severity the IStatus severity of the problem; 
-//     * @param msg the problem message; may be null
-//     * @param e the exception; may be null
-//     * @since 5.0
-//     */
-//    void addProblemMarker(ModelReference markerCntr, int severity, String msg, Throwable e);
     
     /**
      * Set the description on this VDB.
@@ -165,16 +122,6 @@ public interface VdbContextEditor extends VdbContext, IChangeNotifier {
      * @return the status of the save operation
      */
     IStatus save(IProgressMonitor theMonitor) throws VdbEditException;
-
-    /**
-     * Save the current state of the VDB to the specified file.  If a file
-     * with that name already exists at that location then it will be overwritten.
-     * @param theMonitor the progress monitor; may be null
-     * @param newVdbFile the new file to which the contents of the VDB will be written
-     * @throws VdbEditException if there is an error saving the resource
-     * @return the status of the save operation
-     */
-    IStatus saveAs(IProgressMonitor theMonitor, File newVdbFile) throws VdbEditException;
     
     /**
      * Adds the given listener to this notifier. Has no effect if an identical listener is already registered.

@@ -11,7 +11,6 @@ Export-Package: com.metamatrix.modeler.internal.webservice,
  com.metamatrix.modeler.internal.webservice.gen,
  com.metamatrix.modeler.internal.webservice.procedure,
  com.metamatrix.modeler.webservice,
- com.metamatrix.modeler.webservice.lds,
  com.metamatrix.modeler.webservice.procedure,
  com.metamatrix.modeler.webservice.util
 Require-Bundle: org.teiid.designer.metamodels.webservice,

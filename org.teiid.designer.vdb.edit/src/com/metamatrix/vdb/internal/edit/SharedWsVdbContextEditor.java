@@ -37,7 +37,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsd.XSDPackage;
-import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.jdom.Document;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
@@ -55,16 +54,12 @@ import com.metamatrix.internal.core.xml.xmi.XMIHeaderReader;
 import com.metamatrix.internal.core.xml.xsd.XsdHeader;
 import com.metamatrix.internal.core.xml.xsd.XsdHeaderReader;
 import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.metamodels.xsd.XsdResourceFactory;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlModelSourceAspect;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
-import com.metamatrix.modeler.internal.core.resource.EResourceFactory;
-import com.metamatrix.modeler.internal.core.resource.EResourceSetImpl;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.sdt.ModelerSdtPlugin;
 import com.metamatrix.vdb.edit.VdbArtifactGenerator;
 import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbContextValidator;
@@ -759,96 +754,6 @@ public class SharedWsVdbContextEditor extends VdbContextImpl implements VdbConte
     }
 
     /**
-     * @see com.metamatrix.vdb.edit.VdbContextEditor#saveAs(org.eclipse.core.runtime.IProgressMonitor, java.io.File)
-     * @since 5.0
-     */
-    public synchronized IStatus saveAs( final IProgressMonitor monitor,
-                                        final File newVdbFile ) throws VdbEditException {
-        ArgCheck.isNotNull(newVdbFile);
-        assertContextIsOpen();
-
-        // If saving to the same VDB file then perform a normal save operation
-        if (newVdbFile.equals(getVdbFile())) {
-            return save(monitor);
-        }
-        // If the target VDB file already exists, then remove it before creating the new instance
-        if (newVdbFile.exists()) {
-            newVdbFile.delete();
-        }
-
-        // Create a temporary SharedWsVdbContextEditor instance to use during the save
-        final File vdbWorkingFolder = getVdbWorkingFolder();
-        SharedWsVdbContextEditor editor = new SharedWsVdbContextEditor(newVdbFile, vdbWorkingFolder, createSaveAsResourceSet());
-        editor.setVdbContextValidator(new SharedWsVdbContextValidator());
-        editor.addArtifactGenerator(new WsdlArtifactGenerator());
-        editor.addArtifactGenerator(new RuntimeIndexArtifactGenerator());
-
-        // Open the temporary editor
-        try {
-            editor.open(monitor);
-        } catch (IOException e) {
-            throw new VdbEditException(e);
-        }
-
-        // Get a list of all files within the source temp directory
-        final TempDirectory sourceTempDir = getTempDirectory();
-        final File sourceDirectory = new File(sourceTempDir.getPath());
-        final File[] sourceFiles = sourceDirectory.listFiles();
-
-        // Get the target locations for the temporary editor
-        final TempDirectory targetTempDir = editor.getTempDirectory();
-        final File targetDirectory = new File(targetTempDir.getPath());
-
-        // If the archive paths in the original VBD are of the form "/<vdbName>/<modelName>" then
-        // we need to change the paths to be consistent with the new VDB name. Search for a folder
-        // under the TempDirectory with the same name as the VDB. If one is found, copy its contents
-        // to a folder with the new VDB name and remove the old folder. Copy all other files/folders
-        // from the original temp directory to the new temp directory
-        final String origVdbName = FileUtils.getFilenameWithoutExtension(getVdbFile().getName());
-        for (int i = 0; i < sourceFiles.length; i++) {
-            try {
-                if (sourceFiles[i].isDirectory() && origVdbName.equalsIgnoreCase(sourceFiles[i].getName())) {
-                    String newVdbName = FileUtils.getFilenameWithoutExtension(newVdbFile.getName());
-                    File targetFolder = new File(targetDirectory, newVdbName);
-                    FileUtils.copyDirectoryContentsRecursively(sourceFiles[i], targetFolder);
-                } else if (sourceFiles[i].isDirectory()) {
-                    File targetFolder = new File(targetDirectory, sourceFiles[i].getName());
-                    FileUtils.copyDirectoryContentsRecursively(sourceFiles[i], targetFolder);
-                } else {
-                    File sourceFile = new File(sourceDirectory, sourceFiles[i].getName());
-                    File targetFile = new File(targetDirectory, sourceFiles[i].getName());
-                    FileUtils.copy(sourceFile.getCanonicalPath(), targetFile.getCanonicalPath(), true);
-                }
-            } catch (Throwable e) {
-                final Object[] params = new Object[] {sourceFiles[i], newVdbFile.getName()};
-                final String msg = VdbEditPlugin.Util.getString("SharedWsVdbContextEditor.Error_copying_contents_before_saving", params); //$NON-NLS-1$
-                throw new VdbEditException(e, SAVEAS_COPY_CONTENTS_ERROR_CODE, msg);
-            }
-        }
-
-        // Copy the WsdlOptions from the source to the target
-        editor.getVirtualDatabase().setWsdlOptions(getVirtualDatabase().getWsdlOptions());
-
-        // Save the temporary editor
-        IStatus status = null;
-        try {
-            status = editor.save(monitor);
-        } catch (Throwable e) {
-            final String msg = VdbEditPlugin.Util.getString("SharedWsVdbContextEditor.Error_saving_temp_context", newVdbFile.getName()); //$NON-NLS-1$
-            throw new VdbEditException(e, SAVEAS_SAVE_CONTEXT_ERROR_CODE, msg);
-        } finally {
-            try {
-                editor.close(monitor, false, false);
-            } catch (Throwable e) {
-                final String msg = VdbEditPlugin.Util.getString("SharedWsVdbContextEditor.Error_closing_temp_context", newVdbFile.getName()); //$NON-NLS-1$
-                throw new VdbEditException(e, SAVEAS_CLOSE_CONTEXT_ERROR_CODE, msg);
-            }
-            editor.dispose();
-        }
-        return status;
-    }
-
-    /**
      * @see com.metamatrix.vdb.edit.VdbContextEditor#setVdbContextValidator(com.metamatrix.vdb.edit.VdbContextValidator)
      * @since 5.0
      */
@@ -1012,26 +917,6 @@ public class SharedWsVdbContextEditor extends VdbContextImpl implements VdbConte
             }
         }
         return (File[])result.toArray(new File[result.size()]);
-    }
-
-    protected ResourceSet createSaveAsResourceSet() {
-        EResourceSetImpl rs = new EResourceSetImpl();
-        Map map = rs.getResourceFactoryRegistry().getExtensionToFactoryMap();
-        if (!map.containsKey(ModelUtil.EXTENSION_XMI)) {
-            map.put(ModelUtil.EXTENSION_XMI, new EResourceFactory());
-        }
-
-        if (!map.containsKey(ModelUtil.EXTENSION_XSD)) {
-            map.put(ModelUtil.EXTENSION_XSD, new XsdResourceFactory());
-        }
-
-        // Add the XSD global resources set as an external resource set
-        rs.addExternalResourceSet(XSDSchemaImpl.getGlobalResourceSet());
-
-        // Add the built-in datatypes global resource set as an external resource set
-        rs.addExternalResourceSet(ModelerSdtPlugin.getGlobalResourceSet());
-
-        return rs;
     }
 
     protected void addProblemMarker( final ModelReference markerCntr,

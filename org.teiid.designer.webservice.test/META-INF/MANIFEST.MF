@@ -9,7 +9,6 @@ Export-Package: com.metamatrix.modeler.internal.webservice,
  com.metamatrix.modeler.internal.webservice.gen,
  com.metamatrix.modeler.internal.webservice.procedure,
  com.metamatrix.modeler.webservice,
- com.metamatrix.modeler.webservice.lds,
  com.metamatrix.modeler.webservice.procedure
 Bundle-Localization: plugin
 Require-Bundle: org.teiid.designer.webservice;bundle-version="6.0.0",
