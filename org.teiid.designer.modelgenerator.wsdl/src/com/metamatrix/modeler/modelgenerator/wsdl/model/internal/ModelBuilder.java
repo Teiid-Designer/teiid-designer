@@ -109,31 +109,37 @@ public class ModelBuilder {
         theModel.setNamespaces(namespaceMap);
         extractor.findSchema(m_wsdlURI);
 
-        // Get the embedded schema from imported WSDLs
-        Map imports = m_wsdlDef.getImports();
-        if (!imports.isEmpty()) {
-            Set keys = imports.keySet();
-            for (Iterator iter = keys.iterator(); iter.hasNext();) {
-                String namespace = (String)iter.next();
-                List importImpls = (List)imports.get(namespace);
-                for (Iterator itera = importImpls.iterator(); itera.hasNext();) {
-                    ImportImpl impImpl = (ImportImpl)itera.next();
-                    Definition def = impImpl.getDefinition();
-                    URI baseURI = new URI(def.getDocumentBaseURI());
-                    URL baseURL = baseURI.toURL();
-                    extractor.findSchema(baseURL.toString());
-                }
+		
+		//Get the embedded schema from imported WSDLs
+		extractImportedWSDL(m_wsdlDef);
 
-            }
-        }
-        // end
         m_schemas = extractor.getSchemas();
-        setSchemaModel(logger);
-        theModel.setSchemas(m_schemas);
-        Service[] svcs = createServices(getServices(), theModel);
-        theModel.setServices(svcs);
-        return theModel;
-    }
+		setSchemaModel(logger);
+		theModel.setSchemas(m_schemas);
+		Service[] svcs = createServices(getServices(), theModel);
+		theModel.setServices(svcs);	
+		return theModel;
+	}
+    
+	private void extractImportedWSDL(Definition def) throws Exception {
+		Map imports = def.getImports();
+		if(!imports.isEmpty()) {
+			Set keys = imports.keySet();
+			for(Iterator iter = keys.iterator(); iter.hasNext(); ) {
+				String namespace = (String)iter.next();
+				List importImpls = (List)imports.get(namespace);
+				for(Iterator itera = importImpls.iterator(); itera.hasNext(); ) {
+					ImportImpl impImpl = (ImportImpl)itera.next();
+					Definition imported = impImpl.getDefinition();
+					URI baseURI = new URI(imported.getDocumentBaseURI());
+					URL baseURL = baseURI.toURL();
+					extractor.findSchema(baseURL.toString());
+					extractImportedWSDL(imported);
+				}
+				
+			}
+		}
+	}
 
     private Map getServices() {
         Map services = m_wsdlDef.getServices();
