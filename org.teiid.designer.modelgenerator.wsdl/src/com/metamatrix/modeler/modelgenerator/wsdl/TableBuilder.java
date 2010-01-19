@@ -444,7 +444,7 @@ public class TableBuilder {
 
     private static Namespace[] extractNamespaces( String namespaceDeclaration ) {
         String temp = namespaceDeclaration;
-        String[] decls = temp.split("xmlns:"); //$NON-NLS-1$
+        String[] decls = temp.split("xmlns"); //$NON-NLS-1$
         Namespace[] retVal = new Namespace[decls.length - 1];
         for (int i = 1; i < decls.length; i++) {
             if (decls[i].startsWith("=")) { //$NON-NLS-1$
