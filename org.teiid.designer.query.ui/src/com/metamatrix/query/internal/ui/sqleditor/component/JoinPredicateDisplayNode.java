@@ -9,7 +9,6 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import com.metamatrix.query.sql.ReservedWords;
 import com.metamatrix.query.sql.lang.FromClause;
 import com.metamatrix.query.sql.lang.JoinPredicate;
@@ -20,50 +19,52 @@ import com.metamatrix.query.sql.lang.JoinType;
  */
 public class JoinPredicateDisplayNode extends FromClauseDisplayNode {
 
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
 
     /**
-     *   JoinPredicateDisplayNode constructor
-     *  @param parentNode the parent DisplayNode of this.
-     *  @param predicate the query language object used to construct this display node.
+     * JoinPredicateDisplayNode constructor
+     * 
+     * @param parentNode the parent DisplayNode of this.
+     * @param predicate the query language object used to construct this display node.
      */
-    public JoinPredicateDisplayNode(DisplayNode parentNode, JoinPredicate predicate) {
+    public JoinPredicateDisplayNode( DisplayNode parentNode,
+                                     JoinPredicate predicate ) {
         this.parentNode = parentNode;
         this.languageObject = predicate;
         createChildNodes();
     }
 
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
     // METHODS
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
 
     /**
-     *   Create the child nodes for this type of DisplayNode.
+     * Create the child nodes for this type of DisplayNode.
      */
     private void createChildNodes() {
         childNodeList = new ArrayList();
-//        int indent = this.getIndentLevel();
+        // int indent = this.getIndentLevel();
 
         JoinPredicate joinPredicate = (JoinPredicate)this.getLanguageObject();
         FromClause clause = joinPredicate.getLeftClause();
-        if(clause==null) {
-            childNodeList.add(DisplayNodeFactory.createDisplayNode(this,ERROR));
+        if (clause == null) {
+            childNodeList.add(DisplayNodeFactory.createDisplayNode(this, ERROR));
         } else {
-            childNodeList.add(DisplayNodeFactory.createDisplayNode(this,clause));
+            childNodeList.add(DisplayNodeFactory.createDisplayNode(this, clause));
         }
 
         clause = joinPredicate.getRightClause();
-        if(clause==null) {
-            childNodeList.add(DisplayNodeFactory.createDisplayNode(this,ERROR));
+        if (clause == null) {
+            childNodeList.add(DisplayNodeFactory.createDisplayNode(this, ERROR));
         } else {
-            childNodeList.add(DisplayNodeFactory.createDisplayNode(this,clause));
+            childNodeList.add(DisplayNodeFactory.createDisplayNode(this, clause));
         }
 
         Iterator iter = joinPredicate.getJoinCriteria().iterator();
-        while( iter.hasNext() ) {
-            childNodeList.add(DisplayNodeFactory.createDisplayNode(this,iter.next()));
+        while (iter.hasNext()) {
+            childNodeList.add(DisplayNodeFactory.createDisplayNode(this, iter.next()));
         }
 
         // Build the Display Node List
@@ -71,103 +72,112 @@ public class JoinPredicateDisplayNode extends FromClauseDisplayNode {
     }
 
     /**
-     *   Create the DisplayNode list for this type of DisplayNode.  This is a list of
-     *  all the lowest level nodes for this DisplayNode.
+     * Create the DisplayNode list for this type of DisplayNode. This is a list of all the lowest level nodes for this
+     * DisplayNode.
      */
     private void createDisplayNodeList() {
         displayNodeList = new ArrayList();
-        //int indent = this.getIndentLevel();
-        
+        // int indent = this.getIndentLevel();
+
         JoinPredicate joinPredicate = (JoinPredicate)this.getLanguageObject();
-        if(joinPredicate.isOptional()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,OPTIONAL_COMMENTS));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
+        if (joinPredicate.isOptional()) {
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, OPTIONAL_COMMENTS));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
         }
-        
+
         if (joinPredicate.hasHint()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, LTPAREN));
         }
 
         // Left FromClause
         DisplayNode child = (DisplayNode)childNodeList.get(0);
-        //indent = child.getIndentLevel();
-        if( child instanceof JoinPredicateDisplayNode && !joinPredicate.getLeftClause().hasHint()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
-            if( child.hasDisplayNodes() ) {
-                    displayNodeList.addAll(child.getDisplayNodeList());
+        // indent = child.getIndentLevel();
+        if (child instanceof JoinPredicateDisplayNode && !joinPredicate.getLeftClause().hasHint()) {
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, LTPAREN));
+            if (child.hasDisplayNodes()) {
+                displayNodeList.addAll(child.getDisplayNodeList());
             } else {
-                    displayNodeList.add(child);
+                displayNodeList.add(child);
             }
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,RTPAREN));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, RTPAREN));
         } else {
-            if( child.hasDisplayNodes() ) {
-                    displayNodeList.addAll(child.getDisplayNodeList());
+            if (child.hasDisplayNodes()) {
+                displayNodeList.addAll(child.getDisplayNodeList());
             } else {
-                    displayNodeList.add(child);
+                displayNodeList.add(child);
             }
         }
 
         JoinType joinType = joinPredicate.getJoinType();
-		if(joinType == null) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ERROR));
-		} else {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,joinType.toString()));
-		}
+        if (joinType == null) {
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ERROR));
+        } else {
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, joinType.toString()));
+        }
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
 
         // Right FromClause
         child = (DisplayNode)childNodeList.get(1);
-        //indent = child.getIndentLevel();
-        if( child instanceof JoinPredicateDisplayNode && !joinPredicate.getRightClause().hasHint()) {
+        // indent = child.getIndentLevel();
+        if (child instanceof JoinPredicateDisplayNode && !joinPredicate.getRightClause().hasHint()) {
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, LTPAREN));
-            if( child.hasDisplayNodes() ) {
-                    displayNodeList.addAll(child.getDisplayNodeList());
+            if (child.hasDisplayNodes()) {
+                displayNodeList.addAll(child.getDisplayNodeList());
             } else {
-                    displayNodeList.add(child);
+                displayNodeList.add(child);
             }
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,RTPAREN));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, RTPAREN));
         } else {
-            if( child.hasDisplayNodes() ) {
-                    displayNodeList.addAll(child.getDisplayNodeList());
+            if (child.hasDisplayNodes()) {
+                displayNodeList.addAll(child.getDisplayNodeList());
             } else {
-                    displayNodeList.add(child);
+                displayNodeList.add(child);
             }
         }
 
-        if(childNodeList.size()>2) {
+        if (childNodeList.size() > 2) {
             Iterator iter = childNodeList.iterator();
-            if(iter.hasNext()) iter.next();
-            if(iter.hasNext()) iter.next();
+            if (iter.hasNext()) iter.next();
+            if (iter.hasNext()) iter.next();
 
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.ON));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-            while(iter.hasNext()) {
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.ON));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
+            while (iter.hasNext()) {
                 child = (DisplayNode)iter.next();
-                //indent = child.getIndentLevel();
-                if( child.hasDisplayNodes() ) {
+                if (child instanceof PredicateCriteriaDisplayNode) {
+                    // indent = child.getIndentLevel();
+                    if (child.hasDisplayNodes()) {
                         displayNodeList.addAll(child.getDisplayNodeList());
-                } else {
+                    } else {
                         displayNodeList.add(child);
+                    }
+                } else {
+                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, LTPAREN));
+                    if (child.hasDisplayNodes()) {
+                        displayNodeList.addAll(child.getDisplayNodeList());
+                    } else {
+                        displayNodeList.add(child);
+                    }
+                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, RTPAREN));
                 }
-                if(iter.hasNext()) {
-                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.AND));
-                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
+                if (iter.hasNext()) {
+                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
+                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.AND));
+                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
                 }
             }
         }
-        
-        if(joinPredicate.hasHint()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,RTPAREN));
+
+        if (joinPredicate.hasHint()) {
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, RTPAREN));
         }
-        
+
         addFromClauseDepOptions(joinPredicate);
-        
+
     }
 
 }
-
