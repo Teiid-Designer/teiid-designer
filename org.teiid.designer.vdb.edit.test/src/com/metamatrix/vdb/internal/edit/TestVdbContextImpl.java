@@ -55,7 +55,6 @@ public class TestVdbContextImpl extends TestCase {
         SmartTestSuite.getTestDataFile("projects/Parts Project/PartSupplier_Oracle.xmi"), //$NON-NLS-1$
         SmartTestSuite.getTestDataFile("projects/Parts Project/PartsSupplier_VDB.vdb"), //$NON-NLS-1$
         SmartTestSuite.getTestDataFile("projects/Northwind/Northwind.xmi"), //$NON-NLS-1$
-        SmartTestSuite.getTestDataFile("projects/System/SystemPhysical.xmi"), //$NON-NLS-1$
         SmartTestSuite.getTestDataFile("projects/BQT/BQT_SQLServer_Output.xsd"), //$NON-NLS-1$
         SmartTestSuite.getTestDataFile("projects/BQT/TestBQT.vdb"), //$NON-NLS-1$
         SmartTestSuite.getTestDataFile("BooksWebService_VDB_040303.vdb")}; //$NON-NLS-1$

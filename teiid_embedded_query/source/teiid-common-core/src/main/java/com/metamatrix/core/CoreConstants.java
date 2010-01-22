@@ -53,8 +53,6 @@ public interface CoreConstants {
     
     public static final String SYSTEM_VDB = "System.vdb"; //$NON-NLS-1$
 
-    public static final String SYSTEM_PHYSICAL_MODEL_NAME = "SystemPhysical"; //$NON-NLS-1$
-
     public static final String SYSTEM_ADMIN_MODEL_NAME = "SystemAdmin"; //$NON-NLS-1$
 
     public static final String SYSTEM_ADMIN_PHYSICAL_MODEL_NAME = "SystemAdminPhysical"; //$NON-NLS-1$

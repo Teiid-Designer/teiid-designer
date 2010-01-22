@@ -380,20 +380,6 @@ public class RuntimeMetadataAdminAPIImpl implements RuntimeMetadataAdminAPI {
         // Any administrator may call this read-only method - no need to validate role
 
         ArrayList models = new ArrayList(RuntimeMetadataCatalog.getInstance().getModels(vdbID));
-
-        // Remove "SystemPhysical" model
-        int sysModelIndex = -1;
-        for (int i = 0; i < models.size(); i++) {
-
-            Model model = (Model) models.get(i);
-            if (model.getName().equals(SystemVdbUtility.PHYSICAL_MODEL_NAME)) {
-                sysModelIndex = i;
-                break;
-            } 
-        }
-        if (sysModelIndex >= 0) {
-            models.remove(sysModelIndex);
-        }
    
         // Remove the SystemAdmin model
         int sysAdminModelIndex = -1;        

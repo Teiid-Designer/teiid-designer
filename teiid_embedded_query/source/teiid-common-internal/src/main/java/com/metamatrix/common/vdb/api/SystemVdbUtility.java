@@ -28,12 +28,10 @@ public class SystemVdbUtility {
 
 	public static final String VDB_NAME = ResourceNameUtil.SYSTEM_NAME;;
 	public static final String VIRTUAL_MODEL_NAME = ResourceNameUtil.SYSTEM_NAME; 
-	public static final String PHYSICAL_MODEL_NAME = ResourceNameUtil.SYSTEMPHYSICAL_NAME;
 	public static final String ADMIN_PHYSICAL_MODEL_NAME = ResourceNameUtil.SYSTEMADMINPHYSICAL_NAME;
 	
     public final static String[] SYSTEM_MODEL_NAMES = {
 		ResourceNameUtil.SYSTEM_NAME, 
-		ResourceNameUtil.SYSTEMPHYSICAL_NAME,
 		ResourceNameUtil.SYSTEMADMIN_NAME,
 		ResourceNameUtil.SYSTEMADMINPHYSICAL_NAME,
 		ResourceNameUtil.SYSTEMSCHEMA_NAME, 

@@ -352,8 +352,7 @@ public class DefaultResourceFinder implements ResourceFinder {
 
             // Check if the string form of the URI matches one of the expected names
             String uriString = URI.decode(theUri.toString());
-            if (uriString.startsWith(SYSTEM_PHYSICAL_INTERNAL_URI) || uriString.startsWith(SYSTEM_VIRTUAL_INTERNAL_URI)
-                || uriString.endsWith(SYSTEM_PHYSICAL_MODEL_FILE_NAME) || uriString.endsWith(SYSTEM_VIRTUAL_MODEL_FILE_NAME)) {
+            if (uriString.startsWith(SYSTEM_VIRTUAL_INTERNAL_URI) || uriString.endsWith(SYSTEM_VIRTUAL_MODEL_FILE_NAME)) {
 
                 return true;
             }

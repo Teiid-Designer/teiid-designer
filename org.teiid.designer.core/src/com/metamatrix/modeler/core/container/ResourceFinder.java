@@ -75,13 +75,6 @@ public interface ResourceFinder {
     public static final String RELATIONSHIP_PRIMITIVE_TYPES_INTERNAL_URI = "http://www.metamatrix.com/relationships/BuiltInRelationshipTypes-instance"; //$NON-NLS-1$    
 
     /**
-     * Defines the expected name of the built-in system physical model and its internal URI. The values must be consistent with
-     * the values found in the com.metamatrix.modeler.core plugin.xml
-     */
-    public static final String SYSTEM_PHYSICAL_MODEL_FILE_NAME = "SystemPhysical.xmi"; //$NON-NLS-1$    
-    public static final String SYSTEM_PHYSICAL_INTERNAL_URI = "http://www.metamatrix.com/models/SystemPhysical.xmi"; //$NON-NLS-1$    
-
-    /**
      * Defines the expected name of the built-in system virtual model and its internal URI. The values must be consistent with the
      * value found in the com.metamatrix.modeler.core plugin.xml
      */
@@ -261,7 +254,6 @@ public interface ResourceFinder {
      * <li>"http://www.w3.org/2001/MagicXMLSchema"</li>
      * <li>"http://www.w3.org/2001/XMLSchema-instance"</li>
      * <li>"http://www.metamatrix.com/models/System.xmi"</li>
-     * <li>"http://www.metamatrix.com/models/SystemPhysical.xmi"</li>
      * </p>
      * otherwise false is returned.
      * 
@@ -275,7 +267,6 @@ public interface ResourceFinder {
      * the external resource sets. Those resources are identified are
      * <p>
      * <li>"http://www.metamatrix.com/models/System.xmi"</li>
-     * <li>"http://www.metamatrix.com/models/SystemPhysical.xmi"</li>
      * </p>
      * otherwise false is returned.
      * 
@@ -289,7 +280,6 @@ public interface ResourceFinder {
      * the external resource sets. Those resources are identified are
      * <p>
      * <li>"http://www.metamatrix.com/models/System.xmi"</li>
-     * <li>"http://www.metamatrix.com/models/SystemPhysical.xmi"</li>
      * </p>
      * otherwise false is returned.
      * 

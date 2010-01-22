@@ -77,7 +77,6 @@ public abstract class ResourceNameUtil {
     public static final String SYSTEM_NAME                      = "System"; //$NON-NLS-1$    
     public static final String SYSTEMADMIN_NAME                 = CoreConstants.SYSTEM_ADMIN_MODEL_NAME;
     public static final String SYSTEMADMINPHYSICAL_NAME         = CoreConstants.SYSTEM_ADMIN_PHYSICAL_MODEL_NAME;
-    public static final String SYSTEMPHYSICAL_NAME              = CoreConstants.SYSTEM_PHYSICAL_MODEL_NAME;
     public static final String SYSTEMSCHEMA_NAME                = "SystemSchema"; //$NON-NLS-1$
     public static final String SYSTEMVIRTUALDATABASE_NAME       = "SystemVirtualDatabase"; //$NON-NLS-1$
     public static final String SYSTEMODBCMODEL                  = "System.ODBC"; //$NON-NLS-1$
@@ -125,7 +124,6 @@ public abstract class ResourceNameUtil {
         SYSTEM_NAME,
         SYSTEMADMIN_NAME,
         SYSTEMADMINPHYSICAL_NAME,
-        SYSTEMPHYSICAL_NAME,
         TRANSFORMATION_NAME,
         UML2_NAME,
         WEBSERVICE_NAME,

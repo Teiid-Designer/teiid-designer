@@ -41,8 +41,7 @@ public class TestVdbFileWriter extends TestCase {
         SmartTestSuite.getTestDataFile("projects/Parts Project/PartsSupplier_SQLServer.xmi"), //$NON-NLS-1$
         SmartTestSuite.getTestDataFile("projects/Parts Project/PartSupplier_Oracle.xmi"), //$NON-NLS-1$
         SmartTestSuite.getTestDataFile("projects/Parts Project/PartsSupplier_VDB.vdb"), //$NON-NLS-1$
-        SmartTestSuite.getTestDataFile("projects/Northwind/Northwind.xmi"), //$NON-NLS-1$
-        SmartTestSuite.getTestDataFile("projects/System/SystemPhysical.xmi")}; //$NON-NLS-1$
+        SmartTestSuite.getTestDataFile("projects/Northwind/Northwind.xmi")}; //$NON-NLS-1$
 
     /**
      * Constructor for TestVdbFileWriter.

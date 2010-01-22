@@ -10,21 +10,6 @@
 <plugin>
    <!-- ExternalResource extension -->
    <extension
-         id="systemPhysicalResource"
-         name="systemPhysicalResource"
-         point="org.teiid.designer.core.externalResource">
-      <resourceName>
-         /System/SystemPhysical.xmi
-      </resourceName>
-      <resourceUrl>
-         System.vdb
-      </resourceUrl>
-      <internalUri>
-         http://www.metamatrix.com/models/SystemPhysical.xmi
-      </internalUri>
-      <priority> 2 </priority>
-   </extension>
-   <extension
          id="systemVirtualResource"
          name="systemVirtualResource"
          point="org.teiid.designer.core.externalResource">

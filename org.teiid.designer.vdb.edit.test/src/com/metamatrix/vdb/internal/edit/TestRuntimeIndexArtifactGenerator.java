@@ -42,8 +42,7 @@ public class TestRuntimeIndexArtifactGenerator extends TestCase {
         SmartTestSuite.getTestDataFile("projects/Parts Project/PartsSupplier_VDB.vdb"), //$NON-NLS-1$
         SmartTestSuite.getTestDataFile("projects/BQT/BQT_SQLServer_Output.xsd"), //$NON-NLS-1$
         SmartTestSuite.getTestDataFile("projects/BQT/TestBQT.vdb"), //$NON-NLS-1$
-        SmartTestSuite.getTestDataFile("projects/Northwind/Northwind.xmi"), //$NON-NLS-1$
-        SmartTestSuite.getTestDataFile("projects/System/SystemPhysical.xmi")}; //$NON-NLS-1$
+        SmartTestSuite.getTestDataFile("projects/Northwind/Northwind.xmi")}; //$NON-NLS-1$
 
     /**
      * Constructor for TestRuntimeIndexArtifactGenerator.
