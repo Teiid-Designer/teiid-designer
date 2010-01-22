@@ -465,14 +465,14 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.jdbc.metadata.JdbcTable#getNamesOfResults()
      */
-    public String[] getNamesOfResults() throws JdbcException {
+    public String[] getNamesOfResults() {
         return getRequestContainer().getNamesOfResults();
     }
 
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.jdbc.metadata.JdbcTable#getResults(java.lang.String)
      */
-    public Request getRequest( String name ) throws JdbcException {
+    public Request getRequest( String name ) {
         return getRequestContainer().getRequest(name);
     }
 
@@ -480,11 +480,11 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
      * @see com.metamatrix.modeler.jdbc.metadata.JdbcTable#getResults(java.lang.String)
      */
     public Request getRequest( String name,
-                               final boolean includeMetadata ) throws JdbcException {
+                               final boolean includeMetadata ) {
         return getRequestContainer().getRequest(name, includeMetadata);
     }
 
-    protected synchronized RequestContainer getRequestContainer() throws JdbcException {
+    protected synchronized RequestContainer getRequestContainer() {
         if (requests == null) {
             requests = new RequestContainer(createRequests());
         }
@@ -497,7 +497,7 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
      * @return
      * @throws JdbcException
      */
-    protected Request[] createRequests() throws JdbcException {
+    protected Request[] createRequests() {
         return new Request[] {};
     }
 

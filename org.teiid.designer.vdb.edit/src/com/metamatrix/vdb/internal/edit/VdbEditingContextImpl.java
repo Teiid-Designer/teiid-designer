@@ -39,7 +39,6 @@ import java.util.Random;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -62,18 +61,17 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import org.jdom.Document;
-
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
 import com.metamatrix.core.index.IIndex;
 import com.metamatrix.core.index.IIndexer;
+import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.ChecksumUtil;
 import com.metamatrix.core.util.DateUtil;
-import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.core.util.TempDirectory;
 import com.metamatrix.core.util.UriUtil;

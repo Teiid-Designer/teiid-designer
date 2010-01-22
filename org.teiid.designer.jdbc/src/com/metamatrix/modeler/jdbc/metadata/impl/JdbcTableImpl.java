@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.modeler.jdbc.JdbcException;
+import com.metamatrix.modeler.jdbc.JdbcPlugin;
 import com.metamatrix.modeler.jdbc.data.MetadataRequest;
 import com.metamatrix.modeler.jdbc.data.Request;
 import com.metamatrix.modeler.jdbc.metadata.JdbcCatalog;
@@ -179,8 +180,17 @@ public class JdbcTableImpl extends JdbcNodeImpl implements JdbcTable {
     }
 
     @Override
-    protected Request[] createRequests() throws JdbcException {
-        final DatabaseMetaData metadata = this.getJdbcDatabase().getDatabaseMetaData();
+    protected Request[] createRequests() {
+
+        DatabaseMetaData metadata = null;
+
+        try {
+            metadata = this.getJdbcDatabase().getDatabaseMetaData();
+        } catch (JdbcException e) {
+            JdbcPlugin.Util.log(e);
+        }
+
+        final DatabaseMetaData finalMetadata = metadata;
         final String catalogNamePattern = JdbcNodeImpl.getCatalogPattern(this);
         final String schemaNamePattern = JdbcNodeImpl.getSchemaPattern(this);
         final String tableNamePattern = this.getName();
@@ -189,22 +199,23 @@ public class JdbcTableImpl extends JdbcNodeImpl implements JdbcTable {
         final Request[] requests = new Request[7]; // 6 requests!
 
         // 1. Create the "Columns" request
-        requests[0] = new GetColumnsRequest(metadata, catalogNamePattern, schemaNamePattern, tableNamePattern, columnNamePattern);
+        requests[0] = new GetColumnsRequest(finalMetadata, catalogNamePattern, schemaNamePattern, tableNamePattern,
+                                            columnNamePattern);
 
         // 2. Create the "Indexes" request
         final boolean uniqueOnly = getJdbcDatabase().getIncludes().getUniqueIndexesOnly();
         final boolean approxAllowed = getJdbcDatabase().getIncludes().getApproximateIndexes();
-        requests[1] = new GetIndexesRequest(metadata, catalogNamePattern, schemaNamePattern, tableNamePattern, uniqueOnly,
+        requests[1] = new GetIndexesRequest(finalMetadata, catalogNamePattern, schemaNamePattern, tableNamePattern, uniqueOnly,
                                             approxAllowed);
 
         // 3. Create the "Primary Key" request
-        requests[2] = new GetPrimaryKeyRequest(metadata, catalogNamePattern, schemaNamePattern, tableNamePattern);
+        requests[2] = new GetPrimaryKeyRequest(finalMetadata, catalogNamePattern, schemaNamePattern, tableNamePattern);
 
         // 4. Create the "Imported Foreign Key" request
-        requests[3] = new GetImportedForeignKeysRequest(metadata, catalogNamePattern, schemaNamePattern, tableNamePattern);
+        requests[3] = new GetImportedForeignKeysRequest(finalMetadata, catalogNamePattern, schemaNamePattern, tableNamePattern);
 
         // 5. Create the "Exported Foreign Key" request
-        requests[4] = new GetExportedForeignKeysRequest(metadata, catalogNamePattern, schemaNamePattern, tableNamePattern);
+        requests[4] = new GetExportedForeignKeysRequest(finalMetadata, catalogNamePattern, schemaNamePattern, tableNamePattern);
 
         // 6. Create the "Description" request
         requests[5] = new GetDescriptionRequest(this, "getRemarks"); //$NON-NLS-1$

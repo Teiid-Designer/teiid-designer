@@ -184,8 +184,15 @@ public class JdbcProcedureImpl extends JdbcNodeImpl implements JdbcProcedure {
     }
 
     @Override
-    protected Request[] createRequests() throws JdbcException {
-        final DatabaseMetaData metadata = this.getJdbcDatabase().getDatabaseMetaData();
+    protected Request[] createRequests() {
+        DatabaseMetaData metadata = null;
+
+        try {
+            metadata = this.getJdbcDatabase().getDatabaseMetaData();
+        } catch (JdbcException e) {
+            JdbcPlugin.Util.log(e);
+        }
+        final DatabaseMetaData finalMetadata = metadata;
         final String catalogNamePattern = JdbcNodeImpl.getCatalogPattern(this);
         final String schemaNamePattern = JdbcNodeImpl.getSchemaPattern(this);
         final String procedureNamePattern = this.getName();
@@ -194,8 +201,8 @@ public class JdbcProcedureImpl extends JdbcNodeImpl implements JdbcProcedure {
         final Request[] requests = new Request[2]; // 2 requests!
 
         // 1. Create the "Columns" request
-        requests[0] = new GetProcedureParametersRequest(metadata, catalogNamePattern, schemaNamePattern, procedureNamePattern,
-                                                        procedureColumnNamePattern);
+        requests[0] = new GetProcedureParametersRequest(finalMetadata, catalogNamePattern, schemaNamePattern,
+                                                        procedureNamePattern, procedureColumnNamePattern);
 
         // 2. Create the "Description" request
         requests[1] = new GetDescriptionRequest(this, "getRemarks"); //$NON-NLS-1$

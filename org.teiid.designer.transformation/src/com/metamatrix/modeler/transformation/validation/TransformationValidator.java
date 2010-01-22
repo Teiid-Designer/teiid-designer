@@ -51,14 +51,11 @@ import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFact
 import com.metamatrix.modeler.transformation.metadata.VdbMetadata;
 import com.metamatrix.query.analysis.AnalysisRecord;
 import com.metamatrix.query.metadata.QueryMetadataInterface;
-import com.metamatrix.query.metadata.StoredProcedureInfo;
 import com.metamatrix.query.parser.QueryParser;
 import com.metamatrix.query.report.ReportItem;
 import com.metamatrix.query.resolver.QueryResolver;
 import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.SPParameter;
 import com.metamatrix.query.sql.proc.CreateUpdateProcedureCommand;
-import com.metamatrix.query.sql.symbol.GroupSymbol;
 import com.metamatrix.query.sql.visitor.ReferenceCollectorVisitor;
 import com.metamatrix.query.validator.Validator;
 import com.metamatrix.query.validator.ValidatorReport;
@@ -362,39 +359,8 @@ public class TransformationValidator implements QueryValidator {
 
         Map externalMetadata = Collections.EMPTY_MAP;
         try {
-            // look up external metadata
+            // look up external meta data
             externalMetadata = TransformationHelper.getExternalMetadataMap(command, mappingRoot, getQueryMetadata());
-
-            // check if the command is an update procedure
-            if (command.getType() == Command.TYPE_UPDATE_PROCEDURE) {
-                CreateUpdateProcedureCommand procCommand = (CreateUpdateProcedureCommand)command;
-
-                if (!procCommand.isUpdateProcedure() && targetGroup instanceof Procedure) {
-                    List parentProjectColumns = new ArrayList();
-                    procCommand.setParentProjectSymbols(parentProjectColumns);
-
-                    String targetProcFullName = TransformationHelper.getSqlEObjectFullName(targetGroup);
-                    GroupSymbol gSymbol = new GroupSymbol(targetProcFullName);
-                    StoredProcedureInfo info = metadata.getStoredProcedureInfoForProcedure(gSymbol.getName());
-                    if (info != null) {
-                        gSymbol.setMetadataID(info.getProcedureID());
-
-                        // List of ElementSymbols - Map Values
-                        List paramList = info.getParameters();
-                        Iterator iter = paramList.iterator();
-                        // Create Symbol List from parameter list
-                        while (iter.hasNext()) {
-                            SPParameter param = (SPParameter)iter.next();
-                            if (param.getParameterType() == SPParameter.OUT || param.getParameterType() == SPParameter.INOUT
-                                || param.getParameterType() == SPParameter.RETURN_VALUE) {
-                                parentProjectColumns.add(param.getParameterSymbol());
-                            } else if (param.getParameterType() == SPParameter.RESULT_SET) {
-                                parentProjectColumns.addAll(param.getResultSetColumns());
-                            }
-                        }
-                    }
-                }
-            }
         } catch (QueryMetadataException e) {
             IStatus errorStatus = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
             return new SqlTransformationResult(command, errorStatus);
@@ -604,14 +570,14 @@ public class TransformationValidator implements QueryValidator {
         IStatus status = null;
 
         ArgCheck.isNotNull(command);
-		String commandSQL = command.toString();
+        String commandSQL = command.toString();
         // ------------------------------------------------------------
         // Resolve the Command
         // ------------------------------------------------------------
         try {
             // Attempt to resolve the command
             final QueryMetadataInterface metadata = getQueryMetadata();
-            QueryResolver.resolveCommand(command, externalMetadata, false, metadata, AnalysisRecord.createNonRecordingRecord());
+            QueryResolver.resolveCommand(command, externalMetadata, metadata, AnalysisRecord.createNonRecordingRecord());
             // If unsuccessful, an exception is thrown
         } catch (MetaMatrixComponentException e) {
             // create status
@@ -621,10 +587,10 @@ public class TransformationValidator implements QueryValidator {
             status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
         }
 
-		if(status!=null && status.getSeverity()==IStatus.ERROR) {
-			return new SqlTransformationResult(parseSQL(commandSQL).getCommand(), status);
-		}
-			
+        if (status != null && status.getSeverity() == IStatus.ERROR) {
+            return new SqlTransformationResult(parseSQL(commandSQL).getCommand(), status);
+        }
+
         SqlTransformationResult resolverResult = new SqlTransformationResult(command, status);
         // set the external metadata on the resolverResult
         resolverResult.setExternalMetadataMap(externalMetadata);

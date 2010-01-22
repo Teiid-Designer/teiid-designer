@@ -52,9 +52,9 @@ import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.InvalidIDException;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
+import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.core.util.DateUtil;
-import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.ObjectConverterUtil;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.core.util.TempDirectory;
@@ -1179,8 +1179,7 @@ public class VdbContextImpl implements VdbContext {
     }
 
     /**
-     * Encode any xs:import or xs:include "schemaLocation" values such that the path can be used as a URL within a Teiid
-     * server.
+     * Encode any xs:import or xs:include "schemaLocation" values such that the path can be used as a URL within a Teiid server.
      * 
      * @param doc the JDOM Document instance for the XSD file being processed
      * @param pathInArchive the archive path for the XSD file being processed
