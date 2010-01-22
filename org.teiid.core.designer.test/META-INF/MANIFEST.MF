@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.teiid.core.designer.test
-Bundle-Version: 6.3.0
+Bundle-Version: 7.0.0
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.core,
