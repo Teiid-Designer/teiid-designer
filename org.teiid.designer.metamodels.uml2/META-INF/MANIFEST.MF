@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.metamodels.uml2;singleton:=true
-Bundle-Version: 6.3.0
+Bundle-Version: 7.0.0
 Bundle-ClassPath: metamodelsUml2.jar
 Bundle-Activator: com.metamatrix.metamodels.uml2.Uml2Plugin
 Bundle-Vendor: %providerName
