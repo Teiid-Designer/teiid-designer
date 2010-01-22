@@ -3,19 +3,18 @@ package com.metamatrix.common.application;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import org.teiid.connector.metadata.runtime.DatatypeRecordImpl;
+import org.teiid.connector.metadata.runtime.Datatype;
+import org.teiid.metadata.CompositeMetadataStore;
 import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.common.application.exception.ApplicationInitializationException;
 import com.metamatrix.common.application.exception.ApplicationLifecycleException;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.common.vdb.api.VDBArchive;
-import com.metamatrix.connector.metadata.internal.IObjectSource;
 import com.metamatrix.dqp.service.DQPServiceNames;
 import com.metamatrix.dqp.service.MetadataService;
 import com.metamatrix.dqp.service.VDBService;
 import com.metamatrix.embeddedquery.workspace.WorkspaceInfo;
 import com.metamatrix.embeddedquery.workspace.WorkspaceInfoHolder;
-import com.metamatrix.metadata.runtime.api.VirtualDatabaseException;
 import com.metamatrix.query.metadata.QueryMetadataInterface;
 
 public class ServiceLoader {
@@ -36,8 +35,8 @@ public class ServiceLoader {
          * @throws MetaMatrixComponentException
          * @see com.metamatrix.dqp.service.MetadataService#getMetadataObjectSource(java.lang.String, java.lang.String)
          */
-        public IObjectSource getMetadataObjectSource( String arg0,
-                                                      String arg1 ) throws MetaMatrixComponentException {
+        public CompositeMetadataStore getMetadataObjectSource( String arg0,
+                                                               String arg1 ) throws MetaMatrixComponentException {
             return service.getMetadataObjectSource(arg0, arg1);
         }
 
@@ -90,7 +89,7 @@ public class ServiceLoader {
          * @see com.metamatrix.dqp.service.MetadataService#getBuiltinDatatypes()
          */
         @Override
-        public Map<String, DatatypeRecordImpl> getBuiltinDatatypes() {
+        public Map<String, Datatype> getBuiltinDatatypes() {
             return null;
         }
 
@@ -239,22 +238,11 @@ public class ServiceLoader {
         /**
          * {@inheritDoc}
          * 
-         * @see com.metamatrix.dqp.service.VDBService#getActiveVDBVersion(java.lang.String, java.lang.String)
-         */
-        @Override
-        public String getActiveVDBVersion( String vdbName,
-                                           String vdbVersion ) throws VirtualDatabaseException, MetaMatrixComponentException {
-            return vdbService.getActiveVDBVersion(vdbName, vdbVersion);
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
          * @see com.metamatrix.dqp.service.VDBService#getVDB(java.lang.String, java.lang.String)
          */
         @Override
         public VDBArchive getVDB( String vdbName,
-                                  String vdbVersion ) throws MetaMatrixComponentException{
+                                  String vdbVersion ) throws MetaMatrixComponentException {
             return vdbService.getVDB(vdbName, vdbVersion);
         }
 
