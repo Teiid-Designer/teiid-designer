@@ -160,7 +160,13 @@ public class SalesforceImportWizardManager {
     public SalesforceConnection getConnection() throws Exception {
         if (null == connection) {
             connection = new Connection();
-            connection.login(username, password, connectionURL);
+            try {
+				connection.login(username, password, connectionURL);
+			} catch (Exception e) {
+				connection = null;
+				throw e;
+			}
+            
         }
         return connection;
     }
