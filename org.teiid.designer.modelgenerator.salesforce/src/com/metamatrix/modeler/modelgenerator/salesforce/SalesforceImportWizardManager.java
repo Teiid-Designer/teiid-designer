@@ -191,7 +191,7 @@ public class SalesforceImportWizardManager {
                     throw mbe;
                 }
                 monitor.subTask(Messages.getString("SalesforceImportWizardManager.binding")); //$NON-NLS-1$
-                BindingGenerator.createConnectorBinding(this);
+                BindingGenerator.createConnectorBinding(this, modelResource);
             }
         }
     }

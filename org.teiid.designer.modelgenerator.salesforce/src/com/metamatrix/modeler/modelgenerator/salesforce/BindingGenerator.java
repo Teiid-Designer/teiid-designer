@@ -10,6 +10,7 @@ package com.metamatrix.modeler.modelgenerator.salesforce;
 import java.util.Collection;
 import java.util.Iterator;
 import com.metamatrix.common.config.api.ComponentType;
+import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.config.ConfigurationManager;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
@@ -21,7 +22,7 @@ public class BindingGenerator {
 	private static final String BINDING_PASSWORD = "password"; //$NON-NLS-1$
 	private static final String BINDING_CONNECTION_URL = "URL"; //$NON-NLS-1$
 	
-	public static void createConnectorBinding(SalesforceImportWizardManager wizMan) {		
+	public static void createConnectorBinding(SalesforceImportWizardManager wizMan, ModelResource modelResource) {		
 		final String suffix = ".xmi"; //$NON-NLS-1$
 		String modelName = wizMan.getTargetModelName();
 		if(modelName.endsWith(suffix)) {
@@ -64,6 +65,8 @@ public class BindingGenerator {
 			    }
 			}
 			configMan.addBinding(bind);
+			DqpPlugin.getWorkspaceConfig().createSourceBinding(modelResource, bind);
+			
 		} catch(Exception e) {
 			// Don't throw this exception.  It will stop the importer from completing.  it is already logged.
 		}
