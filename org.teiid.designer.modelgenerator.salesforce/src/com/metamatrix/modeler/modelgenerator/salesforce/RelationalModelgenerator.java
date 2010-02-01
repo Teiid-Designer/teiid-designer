@@ -341,7 +341,6 @@ public class RelationalModelgenerator {
             } else if (fieldType.equals(SalesforceField.BASE64_TYPE)) {
                 column.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.BASE64_BINARY));
                 column.setNativeType(SalesforceField.BASE64_TYPE);
-                // field.getByteLength();
             } else if (fieldType.equals(SalesforceField.BOOLEAN_TYPE)) {
                 column.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.BOOLEAN));
                 column.setNativeType(SalesforceField.BOOLEAN_TYPE);
