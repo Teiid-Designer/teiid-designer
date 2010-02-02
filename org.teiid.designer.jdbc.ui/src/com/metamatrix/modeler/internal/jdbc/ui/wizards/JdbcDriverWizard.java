@@ -300,6 +300,8 @@ public final class JdbcDriverWizard extends AbstractWizard
             }
         };
         this.driverPanel = new ListPanel(pg, DRIVERS_GROUP, ctrlr, SWT.MULTI);
+        ((GridData)this.driverPanel.getLayoutData()).minimumHeight = 150;
+        ((GridData)this.driverPanel.getLayoutData()).widthHint = 580;
         final TableViewer viewer = this.driverPanel.getTableViewer();
         viewer.setLabelProvider(new LabelProvider() {
 
@@ -380,6 +382,8 @@ public final class JdbcDriverWizard extends AbstractWizard
         this.libraryPanel = new ListPanel(this.editPanel, LIBRARIES_GROUP, ctrlr, SWT.MULTI, ITEMS_ORDERED,
                                           GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_VERTICAL);
         ((GridData)this.libraryPanel.getLayoutData()).horizontalSpan = COLUMN_COUNT;
+        ((GridData)this.libraryPanel.getLayoutData()).minimumHeight = 180;
+        ((GridData)this.libraryPanel.getLayoutData()).widthHint = 580;
         // Add extra buttons to list edit panel (in reverse order that they should appear in wizard)
         // this.libraryPanel.addButton(ADD_EXTERNAL_FOLDER_BUTTON).addSelectionListener(new SelectionAdapter() {
         //
@@ -427,6 +431,7 @@ public final class JdbcDriverWizard extends AbstractWizard
         }
         // Initialize widgets
         viewer.setSelection(new StructuredSelection(new Object[] {this.driver}));
+
         return pg;
     }
 

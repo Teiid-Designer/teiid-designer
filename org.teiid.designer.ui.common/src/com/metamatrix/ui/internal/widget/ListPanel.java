@@ -34,7 +34,6 @@ import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.ui.internal.InternalUiConstants.Widgets;
 import com.metamatrix.ui.internal.util.UiUtil;
-import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
@@ -56,7 +55,6 @@ public class ListPanel extends AbstractVerticalButtonPanel implements StringUtil
 
     private IListPanelController ctrlr;
     Button addButton, editButton, removeButton, upButton, downButton, selectAllButton, deselectAllButton;
-    private WrappingLabel messageLabel;
     private boolean enabled;
     private ListenerList checkStateListeners;
 
@@ -318,9 +316,6 @@ public class ListPanel extends AbstractVerticalButtonPanel implements StringUtil
     protected Viewer createViewer( final Composite parent,
                                    final int style ) {
 
-        messageLabel = WidgetFactory.createWrappingLabel(parent, GridData.BEGINNING, 2);
-        messageLabel.setVisible(false);
-
         // Add single-column table (i.e, a list w/ icons)
         if (WidgetUtil.hasState(style, SWT.CHECK)) {
             final CheckListPanelViewer viewer = new CheckListPanelViewer(parent, style);
@@ -440,17 +435,6 @@ public class ListPanel extends AbstractVerticalButtonPanel implements StringUtil
         if (!theEnableFlag) {
             getTableViewer().setCellEditors(null);
         }
-    }
-
-    /**
-     * Set the message label for this table
-     * 
-     * @param message
-     * @since 4.2
-     */
-    public void setMessage( final String message ) {
-        messageLabel.setText(message);
-        messageLabel.setVisible(true);
     }
 
     /**

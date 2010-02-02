@@ -219,6 +219,8 @@ public class JdbcSourceWizard extends AbstractWizard
         };
 
         this.srcPanel = new ListPanel(pg, SOURCES_GROUP, ctrlr, SWT.MULTI, ListPanel.Constants.NONE, sourceList);
+        ((GridData)this.srcPanel.getLayoutData()).minimumHeight = 200;
+        ((GridData)this.srcPanel.getLayoutData()).widthHint = 580;
         final TableViewer viewer = srcPanel.getTableViewer();
         viewer.setLabelProvider(new LabelProvider() {
 
@@ -475,21 +477,21 @@ public class JdbcSourceWizard extends AbstractWizard
             // Update drivers combo, preserving any previous selection but first unregister all modify listeners because the call
             // to WidgetUtil.setComboItems sends a lot of events (it removes all items first and then adds all back in). THis was
             // causing the URL to be set back to the template version.
-            
+
             // unregister all listeners
             Listener[] listeners = this.driverCombo.getListeners(SWT.Modify);
             for (Listener listener : listeners) {
                 this.driverCombo.removeListener(SWT.Modify, listener);
             }
-            
+
             // populate driver combo
             WidgetUtil.setComboItems(this.driverCombo, this.mgr.getJdbcDrivers(), this.driverLabelProvider, true);
-            
+
             // re-register all listeners
             for (Listener listener : listeners) {
                 this.driverCombo.addListener(SWT.Modify, listener);
             }
-            
+
             // now notify all listeners
             Event e = new Event();
             e.type = SWT.Modify;
