@@ -22,7 +22,6 @@
 
 package com.metamatrix.connector.metadata.index;
 
-import com.metamatrix.dqp.service.VDBService;
 import com.metamatrix.modeler.core.index.IndexSelector;
 import com.metamatrix.modeler.transformation.metadata.QueryMetadataContext;
 
@@ -35,7 +34,6 @@ public class VdbMetadataContext extends QueryMetadataContext {
 
     private String vdbName;
     private String vdbVersion;
-    private VDBService vdbService;
 
     /** 
      * VdbMetadataContext
@@ -70,20 +68,6 @@ public class VdbMetadataContext extends QueryMetadataContext {
     public void setVdbName(String vdbName) {
         this.vdbName = vdbName;
     }
-
-    public VDBService getVdbService() {
-        return this.vdbService;
-    }
-
-    
-    /** 
-     * @param vdbService The vdbService to set.
-     * @since 4.3
-     */
-    public void setVdbService(VDBService vdbService) {
-        this.vdbService = vdbService;
-    }
-
     
     /** 
      * @return Returns the vdbVersion.

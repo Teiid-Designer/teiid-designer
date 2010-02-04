@@ -7,7 +7,6 @@
  */
 package com.metamatrix.vdb.edit.loader;
 
-import com.metamatrix.common.config.xml.XMLConfig_ElementNames;
 import com.metamatrix.core.vdb.VdbConstants;
 
 public interface VDBConstants {
@@ -90,31 +89,6 @@ public interface VDBConstants {
               public static final String MULTI_SOURCE_ENABLED = "MultiSourceEnabled"; //$NON-NLS-1$
              
           }
-          
-          public static class ConnectorBindings {
-              public static final String ELEMENT = XMLConfig_ElementNames.Configuration.ConnectorComponents.ELEMENT;
-          }
-          
-          public static class ComponentTypes {
-                public static final String ELEMENT = XMLConfig_ElementNames.ComponentTypes.ELEMENT; 
-            }
-
-          /**
-           * This is an element reference for processing.  The configuration helper
-           * will manage the contents of the element.
-           */
-          public static class ComponentType {
-          	public static final String ELEMENT = XMLConfig_ElementNames.ComponentTypes.ComponentType.ELEMENT; 
-          }
-          
-          /**
-           * This is an element reference for processing.  The configuration helper
-           * will manage the contents of the element.
-           */          
-          public static class ConnectorBinding {
-          	public static final String ELEMENT = XMLConfig_ElementNames.Configuration.ConnectorComponents.ConnectorComponent.ELEMENT;           	
-          	
-          }   	
       }
       
       

@@ -14,12 +14,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.teiid.designer.core,
  org.teiid.core.designer,
  teiid_embedded_query,
- org.teiid.designer.dqp,
  org.teiid.designer.vdb.edit,
  org.teiid.designer.schema.tools,
  org.teiid.designer.compare,
- org.apache.commons.logging;bundle-version="1.0.4",
- net.sourceforge.sqlexplorer;bundle-version="2.2.4"
+ org.apache.commons.logging;bundle-version="1.0.4"
 Bundle-ActivationPolicy: lazy
 Export-Package: com.metamatrix.modeler.modelgenerator.salesforce;uses:="junit.framework",
  com.metamatrix.modeler.modelgenerator.salesforce.connection,

@@ -7,7 +7,8 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce.util;
 
-import net.sourceforge.sqlexplorer.dbviewer.JDBCReservedWords;
+import com.metamatrix.query.sql.ProcedureReservedWords;
+import com.metamatrix.query.sql.ReservedWords;
 
 public class NameUtil {
 
@@ -28,7 +29,7 @@ public class NameUtil {
      * @return
      */
     private static String checkReservedWords( String normal ) {
-        if (JDBCReservedWords.isReservedWord(normal)) {
+        if (ReservedWords.isReservedWord(normal) || ProcedureReservedWords.isProcedureReservedWord(normal)) {
             normal = normal + "_"; //$NON-NLS-1$
         }
         return normal;
