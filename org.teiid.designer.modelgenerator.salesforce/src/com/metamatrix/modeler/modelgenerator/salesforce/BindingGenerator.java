@@ -9,11 +9,11 @@ package com.metamatrix.modeler.modelgenerator.salesforce;
 
 import java.util.Collection;
 import java.util.Iterator;
-import com.metamatrix.common.config.api.ComponentType;
+//import com.metamatrix.common.config.api.ComponentType;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.config.ConfigurationManager;
-import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
+//import com.metamatrix.modeler.dqp.DqpPlugin;
+//import com.metamatrix.modeler.dqp.config.ConfigurationManager;
+//import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 
 public class BindingGenerator {
 	
@@ -23,7 +23,9 @@ public class BindingGenerator {
 	private static final String BINDING_CONNECTION_URL = "URL"; //$NON-NLS-1$
 	
 	public static void createConnectorBinding(SalesforceImportWizardManager wizMan, ModelResource modelResource) {		
+		/*
 		final String suffix = ".xmi"; //$NON-NLS-1$
+		
 		String modelName = wizMan.getTargetModelName();
 		if(modelName.endsWith(suffix)) {
 			modelName = modelName.substring(0, modelName.length() - suffix.length());
@@ -70,14 +72,20 @@ public class BindingGenerator {
 		} catch(Exception e) {
 			// Don't throw this exception.  It will stop the importer from completing.  it is already logged.
 		}
+		 */
 	}
 	
+	/*
 	private static String generateUniqueName(String candidate) {
+		
 		String workingName = candidate;
+		
 		int num = 1;
 		while(!ModelerDqpUtils.isUniqueBindingName(candidate)) {
 			candidate = workingName + "_" + num++; //$NON-NLS-1$
 		}
 		return candidate;
+		 
 	}
+	*/
 }
