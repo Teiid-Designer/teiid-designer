@@ -9,7 +9,6 @@ package com.metamatrix.modeler.diagram.ui;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.diagram.ui.editor.CanOpenContextException;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramController;
@@ -21,7 +20,6 @@ import com.metamatrix.modeler.diagram.ui.figure.DiagramFigureFactory;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelFactory;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.notation.uml.model.IClassifierContentAdapter;
-//import com.metamatrix.modeler.diagram.ui.pakkage.IPackageDiagramManager;
 import com.metamatrix.modeler.diagram.ui.pakkage.IPackageDiagramProvider;
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPartFactory;
 import com.metamatrix.modeler.diagram.ui.preferences.DiagramColorObject;

@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.modelgenerator.ui.wizards;
 
 import java.util.Map;
-
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceSelections;
 import com.metamatrix.modeler.modelgenerator.ui.ModelGeneratorUiConstants;

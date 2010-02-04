@@ -10,7 +10,6 @@ package com.metamatrix.modeler.core.resource.active;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 

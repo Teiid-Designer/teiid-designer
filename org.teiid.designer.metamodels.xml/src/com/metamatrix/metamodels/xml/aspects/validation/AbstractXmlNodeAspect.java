@@ -8,8 +8,7 @@
 package com.metamatrix.metamodels.xml.aspects.validation;
 
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metamodels.xml.XmlContainerNode;
 import com.metamatrix.metamodels.xml.XmlDocumentNode;

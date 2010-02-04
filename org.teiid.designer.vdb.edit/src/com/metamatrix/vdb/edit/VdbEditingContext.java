@@ -13,11 +13,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.common.util.WSDLServletUtil;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.modeler.core.container.Container;

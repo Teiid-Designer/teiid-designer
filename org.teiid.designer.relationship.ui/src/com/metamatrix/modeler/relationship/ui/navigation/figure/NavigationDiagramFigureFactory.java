@@ -10,7 +10,6 @@ package com.metamatrix.modeler.relationship.ui.navigation.figure;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.modeler.diagram.ui.figure.AbstractDiagramFigureFactory;
 import com.metamatrix.modeler.relationship.NavigationContext;
 import com.metamatrix.modeler.relationship.NavigationContextException;

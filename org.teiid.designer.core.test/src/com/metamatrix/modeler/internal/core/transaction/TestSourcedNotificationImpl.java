@@ -7,15 +7,12 @@
  */
 package com.metamatrix.modeler.internal.core.transaction;
 import java.util.Collection;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.NotificationImpl;
-
 import com.metamatrix.modeler.core.transaction.SourcedNotification;
 
 /**

@@ -9,10 +9,8 @@ package com.metamatrix.ui.internal.widget.accumulator;
 
 import java.util.Collection;
 import java.util.Collections;
-
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ILabelProvider;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;

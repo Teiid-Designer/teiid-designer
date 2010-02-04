@@ -8,7 +8,6 @@
 package com.metamatrix.ui.internal.viewsupport;
 
 import java.io.File;
-
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;

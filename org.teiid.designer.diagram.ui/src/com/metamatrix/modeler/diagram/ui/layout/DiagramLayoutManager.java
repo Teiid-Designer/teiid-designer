@@ -15,13 +15,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-//import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.geometry.Point;
-
-//import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
-import com.metamatrix.modeler.diagram.ui.layout.spring.*;
+import com.metamatrix.modeler.diagram.ui.layout.spring.SpringLayout;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 
 

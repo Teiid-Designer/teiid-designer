@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.types;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
 import com.metamatrix.modeler.core.ModelerCoreException;
 
 

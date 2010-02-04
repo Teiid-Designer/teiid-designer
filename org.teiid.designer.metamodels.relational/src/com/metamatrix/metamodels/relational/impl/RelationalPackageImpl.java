@@ -15,7 +15,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.emf.ecore.impl.EcorePackageImpl;
-
 import com.metamatrix.metamodels.core.extension.impl.ExtensionPackageImpl;
 import com.metamatrix.metamodels.core.impl.CorePackageImpl;
 import com.metamatrix.metamodels.relational.AccessPattern;

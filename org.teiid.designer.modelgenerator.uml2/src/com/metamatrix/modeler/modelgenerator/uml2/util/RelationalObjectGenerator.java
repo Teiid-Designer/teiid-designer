@@ -9,7 +9,6 @@ package com.metamatrix.modeler.modelgenerator.uml2.util;
 
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Classifier;
 

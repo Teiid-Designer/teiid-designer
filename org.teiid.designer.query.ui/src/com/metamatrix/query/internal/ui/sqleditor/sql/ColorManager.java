@@ -9,7 +9,6 @@ package com.metamatrix.query.internal.ui.sqleditor.sql;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-
 import com.metamatrix.ui.graphics.GlobalUiColorManager;
 
 /**

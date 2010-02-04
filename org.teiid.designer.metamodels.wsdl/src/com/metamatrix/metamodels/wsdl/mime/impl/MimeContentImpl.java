@@ -7,23 +7,18 @@
  */
 package com.metamatrix.metamodels.wsdl.mime.impl;
 
-import com.metamatrix.metamodels.wsdl.MessagePart;
-
-import com.metamatrix.metamodels.wsdl.mime.MimeContent;
-import com.metamatrix.metamodels.wsdl.mime.MimeElementOwner;
-import com.metamatrix.metamodels.wsdl.mime.MimePackage;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import com.metamatrix.metamodels.wsdl.MessagePart;
+import com.metamatrix.metamodels.wsdl.mime.MimeContent;
+import com.metamatrix.metamodels.wsdl.mime.MimeElementOwner;
+import com.metamatrix.metamodels.wsdl.mime.MimePackage;
 
 /**
  * <!-- begin-user-doc -->

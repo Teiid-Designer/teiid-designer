@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -47,8 +46,7 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.util.XSDResourceImpl;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.internal.core.xml.xmi.XMIHeader;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.xsd.XsdUtil;

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.core.workspace;
 
 import java.util.Map;
-
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.core.workspace.Openable;
 import com.metamatrix.modeler.internal.core.util.OverflowingLRUCache;

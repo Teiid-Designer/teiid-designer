@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.transformation.util;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.transformation.aspects.sql.InputParameterSqlAspect;
 import com.metamatrix.modeler.transformation.aspects.sql.InputSetSqlAspect;

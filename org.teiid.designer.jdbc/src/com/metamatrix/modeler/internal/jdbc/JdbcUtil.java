@@ -10,13 +10,10 @@ package com.metamatrix.modeler.internal.jdbc;
 import java.sql.SQLWarning;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 

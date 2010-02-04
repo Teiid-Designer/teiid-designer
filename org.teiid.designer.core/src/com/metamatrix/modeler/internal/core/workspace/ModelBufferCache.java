@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.core.workspace;
 
 import java.util.Map.Entry;
-
 import com.metamatrix.modeler.core.workspace.ModelBuffer;
 import com.metamatrix.modeler.internal.core.util.OverflowingLRUCache;
 

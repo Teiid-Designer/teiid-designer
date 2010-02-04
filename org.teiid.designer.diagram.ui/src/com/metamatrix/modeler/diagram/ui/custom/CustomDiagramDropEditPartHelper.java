@@ -10,11 +10,8 @@ package com.metamatrix.modeler.diagram.ui.custom;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.geometry.Point;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramEditor;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramEditorUtil;

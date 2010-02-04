@@ -9,9 +9,7 @@ package com.metamatrix.modeler.internal.xml.ui.wizards;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.resources.IResource;
-
 import com.metamatrix.internal.core.xml.xmi.XMIHeader;
 import com.metamatrix.metamodels.xml.XmlDocument;
 import com.metamatrix.metamodels.xml.XmlDocumentPackage;

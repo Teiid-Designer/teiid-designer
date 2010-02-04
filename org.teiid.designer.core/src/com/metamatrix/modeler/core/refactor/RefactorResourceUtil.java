@@ -10,12 +10,10 @@ package com.metamatrix.modeler.core.refactor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-
 import com.metamatrix.modeler.core.ModelerCore;
 
 

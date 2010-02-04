@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.xsd.ui.editor;
 
 import org.eclipse.swt.widgets.Control;
-
 import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
 import com.metamatrix.modeler.ui.editors.AbstractModelEditorPageActionBarContributor;
 import com.metamatrix.modeler.ui.editors.ModelEditorPage;

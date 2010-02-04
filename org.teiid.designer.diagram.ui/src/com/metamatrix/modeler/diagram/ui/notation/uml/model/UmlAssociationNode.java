@@ -10,9 +10,7 @@ package com.metamatrix.modeler.diagram.ui.notation.uml.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlAssociation;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 

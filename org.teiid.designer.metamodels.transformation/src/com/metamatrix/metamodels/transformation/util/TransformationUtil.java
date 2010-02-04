@@ -8,12 +8,10 @@
 package com.metamatrix.metamodels.transformation.util;
 
 import java.util.Iterator;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 
 /**
  * RelationalUtil

@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.xmlservice.aspects.validation;
 
 import org.eclipse.emf.ecore.EClassifier;
-
 import com.metamatrix.metamodels.xmlservice.XmlServicePackage;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspectFactory;

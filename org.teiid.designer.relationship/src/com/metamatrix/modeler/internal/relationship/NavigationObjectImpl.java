@@ -8,8 +8,7 @@
 package com.metamatrix.modeler.internal.relationship;
 
 import org.eclipse.emf.common.util.URI;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.relationship.NavigationObject;
 
 /**

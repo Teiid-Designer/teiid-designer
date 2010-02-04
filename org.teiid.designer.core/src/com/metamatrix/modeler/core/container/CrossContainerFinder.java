@@ -8,12 +8,10 @@
 package com.metamatrix.modeler.core.container;
 
 import java.io.IOException;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;

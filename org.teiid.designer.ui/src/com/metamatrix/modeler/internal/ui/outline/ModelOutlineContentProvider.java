@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.ui.outline;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.ui.IFileEditorInput;
-
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
 
 /**

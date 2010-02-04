@@ -12,7 +12,6 @@ package com.metamatrix.modeler.mapping.ui.choice;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IRule;
@@ -23,7 +22,6 @@ import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.SWT;
-
 import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
 import com.metamatrix.query.internal.ui.sqleditor.sql.SqlWhiteSpaceDetector;
 import com.metamatrix.query.internal.ui.sqleditor.sql.SqlWordDetector;

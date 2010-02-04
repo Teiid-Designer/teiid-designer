@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.jdbc.ui;
 
 import java.util.ResourceBundle;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.ui.UiConstants;

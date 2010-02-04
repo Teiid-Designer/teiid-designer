@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.wsdl.io;
 
 import org.eclipse.xsd.util.XSDConstants;
-
 import com.metamatrix.metamodels.wsdl.WsdlPackage;
 import com.metamatrix.metamodels.wsdl.http.HttpPackage;
 import com.metamatrix.metamodels.wsdl.mime.MimePackage;

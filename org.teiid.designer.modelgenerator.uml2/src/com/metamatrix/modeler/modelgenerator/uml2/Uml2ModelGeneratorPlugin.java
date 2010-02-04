@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.modelgenerator.uml2;
 
 import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.modelgenerator.uml2.processor.Uml2RelationalGeneratorImpl;

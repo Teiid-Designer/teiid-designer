@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.vdb.ui.properties;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 

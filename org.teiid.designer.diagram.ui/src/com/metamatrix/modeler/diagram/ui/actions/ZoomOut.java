@@ -14,7 +14,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
-
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 /**
  * ZoomOut

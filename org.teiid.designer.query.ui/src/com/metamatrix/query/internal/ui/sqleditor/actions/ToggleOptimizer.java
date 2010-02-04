@@ -8,9 +8,7 @@
 package com.metamatrix.query.internal.ui.sqleditor.actions;
 
 import java.util.EventObject;
-
 import org.eclipse.swt.SWT;
-
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.query.internal.ui.sqleditor.SqlEditorInternalEvent;
 import com.metamatrix.query.ui.UiConstants;

@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.ui.actions;
 
 
 import org.eclipse.ui.ISharedImages;
-
 import com.metamatrix.modeler.internal.ui.actions.workers.CopyWorker;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;

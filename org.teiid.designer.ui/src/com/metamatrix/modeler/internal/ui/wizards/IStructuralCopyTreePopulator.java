@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.internal.ui.wizards;
 
 import java.util.Map;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.TreeViewer;
-
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.ui.internal.widget.InheritanceCheckboxTreeViewer;

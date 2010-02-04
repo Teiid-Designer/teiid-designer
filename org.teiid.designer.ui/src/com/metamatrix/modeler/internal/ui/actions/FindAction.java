@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.ui.actions;
 
 //import org.eclipse.core.runtime.IStatus;
 import java.util.ResourceBundle;
-
 import org.eclipse.jface.text.IFindReplaceTarget;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.events.FocusEvent;
@@ -21,7 +20,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.FindReplaceAction;
 import org.eclipse.ui.texteditor.IAbstractTextEditorHelpContextIds;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
-
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.editors.ModelObjectEditorPanel;

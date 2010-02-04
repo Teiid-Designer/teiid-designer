@@ -9,11 +9,9 @@ package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
-
 import com.metamatrix.core.log.Logger;
 import com.metamatrix.modeler.modelgenerator.wsdl.WSDLReader;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;

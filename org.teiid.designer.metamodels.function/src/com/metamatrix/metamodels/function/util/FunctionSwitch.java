@@ -9,10 +9,8 @@ package com.metamatrix.metamodels.function.util;
 
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.function.Function;
 import com.metamatrix.metamodels.function.FunctionPackage;
 import com.metamatrix.metamodels.function.FunctionParameter;

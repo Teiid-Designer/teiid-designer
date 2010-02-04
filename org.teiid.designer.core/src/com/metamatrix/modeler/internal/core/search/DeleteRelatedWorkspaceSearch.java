@@ -10,11 +10,9 @@ package com.metamatrix.modeler.internal.core.search;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.index.IndexSelector;
 import com.metamatrix.modeler.core.workspace.ModelResource;

@@ -10,8 +10,7 @@ package com.metamatrix.modeler.internal.webservice.procedure;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.webservice.procedure.ProcedureCriteriaMapping;
 import com.metamatrix.query.sql.LanguageVisitor;
 import com.metamatrix.query.sql.lang.AbstractCompareCriteria;

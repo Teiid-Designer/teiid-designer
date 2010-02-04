@@ -8,12 +8,9 @@
 package com.metamatrix.modeler.webservice.procedure;
 
 import java.util.Collection;
-
 import org.eclipse.core.runtime.IPath;
-
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.modeler.core.ModelerCore;

@@ -14,7 +14,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import com.metamatrix.metamodels.relational.LogicalRelationship;
 import com.metamatrix.metamodels.relational.LogicalRelationshipEnd;
 import com.metamatrix.metamodels.relational.MultiplicityKind;

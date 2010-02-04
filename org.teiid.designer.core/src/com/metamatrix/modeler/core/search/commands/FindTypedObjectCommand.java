@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.core.search.commands;
 
 import java.util.Collection;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.index.IndexSelector;
 
 /**

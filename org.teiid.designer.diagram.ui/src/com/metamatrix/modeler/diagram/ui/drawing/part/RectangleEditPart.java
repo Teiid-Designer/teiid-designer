@@ -10,7 +10,6 @@ package com.metamatrix.modeler.diagram.ui.drawing.part;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
-
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 
 /**

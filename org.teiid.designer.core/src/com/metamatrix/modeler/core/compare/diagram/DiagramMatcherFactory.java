@@ -10,11 +10,9 @@ package com.metamatrix.modeler.core.compare.diagram;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.diagram.DiagramContainer;
 import com.metamatrix.metamodels.diagram.DiagramPackage;

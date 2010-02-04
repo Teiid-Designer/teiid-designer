@@ -18,7 +18,6 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
 import com.metamatrix.ui.graphics.GlobalUiColorManager;
 
 /**

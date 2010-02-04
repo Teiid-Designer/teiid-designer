@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.relationship.ui.navigation.actions;
 
 import org.eclipse.jface.action.Action;
-
 import com.metamatrix.modeler.relationship.NavigationContextInfo;
 import com.metamatrix.modeler.relationship.ui.navigation.NavigationView;
 

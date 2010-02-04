@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.webservice;
 
 import java.util.Iterator;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -21,8 +20,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.xsd.XSDDiagnosticSeverity;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.impl.XSDDiagnosticImpl;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.webservice.IWebServiceModelBuilder;
 import com.metamatrix.modeler.webservice.IWebServiceXsdResource;
 import com.metamatrix.modeler.webservice.WebServicePlugin;

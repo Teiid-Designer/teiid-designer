@@ -9,7 +9,6 @@ package com.metamatrix.modeler.mapping.factory;
 
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**

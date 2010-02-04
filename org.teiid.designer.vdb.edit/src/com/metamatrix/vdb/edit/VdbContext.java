@@ -12,9 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.util.TempDirectory;

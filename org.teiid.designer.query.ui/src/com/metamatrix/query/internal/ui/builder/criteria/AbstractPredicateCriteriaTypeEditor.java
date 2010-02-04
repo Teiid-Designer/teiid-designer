@@ -10,7 +10,6 @@ package com.metamatrix.query.internal.ui.builder.criteria;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-
 import com.metamatrix.query.internal.ui.builder.AbstractLanguageObjectEditor;
 import com.metamatrix.query.internal.ui.builder.model.AbstractPredicateCriteriaTypeEditorModel;
 

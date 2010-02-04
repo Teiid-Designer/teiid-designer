@@ -39,7 +39,7 @@ import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
 import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.xml.BuildStatus;
 import com.metamatrix.metamodels.xml.ValueType;
 import com.metamatrix.metamodels.xml.XmlAll;

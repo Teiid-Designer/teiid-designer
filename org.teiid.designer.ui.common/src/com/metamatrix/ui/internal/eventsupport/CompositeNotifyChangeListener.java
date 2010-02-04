@@ -9,7 +9,6 @@ package com.metamatrix.ui.internal.eventsupport;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 

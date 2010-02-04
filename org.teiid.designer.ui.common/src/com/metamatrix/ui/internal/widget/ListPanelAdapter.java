@@ -8,7 +8,6 @@
 package com.metamatrix.ui.internal.widget;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-
 import com.metamatrix.core.util.StringUtil;
 
 /**

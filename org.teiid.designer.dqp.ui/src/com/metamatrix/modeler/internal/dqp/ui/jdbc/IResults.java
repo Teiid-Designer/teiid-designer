@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.dqp.ui.jdbc;
 
 import java.sql.Statement;
-
 import org.eclipse.core.runtime.IStatus;
 
 

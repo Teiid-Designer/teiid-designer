@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.relationship.ui.navigation.model;
 
 import org.eclipse.draw2d.geometry.Dimension;
-
 import com.metamatrix.modeler.relationship.NavigationNode;
 
 

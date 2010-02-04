@@ -15,14 +15,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.Path;
-
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.internal.core.index.EntryResult;
@@ -52,7 +49,6 @@ import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAsp
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlUniqueKeyAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlVdbAspect;
-import com.metamatrix.modeler.internal.core.metadata.runtime.RuntimeAdapter;
 
 /**
  * TestRuntimeAdapter

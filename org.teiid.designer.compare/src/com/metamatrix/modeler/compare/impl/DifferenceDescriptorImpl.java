@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.compare.impl;
 
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -23,7 +22,6 @@ import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.emf.mapping.MappingPackage;
 import org.eclipse.emf.mapping.impl.MappingHelperImpl;
-
 import com.metamatrix.modeler.compare.ComparePackage;
 import com.metamatrix.modeler.compare.DifferenceDescriptor;
 import com.metamatrix.modeler.compare.DifferenceType;

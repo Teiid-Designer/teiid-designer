@@ -8,7 +8,6 @@
 package com.metamatrix.ui.tree;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
-
 import com.metamatrix.ui.internal.widget.DefaultContentProvider;
 
 /**

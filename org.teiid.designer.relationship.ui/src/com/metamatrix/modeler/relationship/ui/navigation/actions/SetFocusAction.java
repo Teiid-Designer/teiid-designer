@@ -11,7 +11,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
-
 import com.metamatrix.modeler.relationship.NavigationNode;
 import com.metamatrix.modeler.relationship.ui.UiConstants;
 import com.metamatrix.modeler.relationship.ui.UiPlugin;

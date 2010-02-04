@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.relationship.ui.layout;
 
 import java.util.List;
-
 import com.metamatrix.modeler.diagram.ui.layout.DiagramLayout;
 
 /**

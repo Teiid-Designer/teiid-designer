@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.widget.Dialog;
 import com.metamatrix.ui.text.ScaledFontManager;

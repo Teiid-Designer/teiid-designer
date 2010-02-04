@@ -9,12 +9,9 @@ package com.metamatrix.vdb.edit;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IPath;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 
 
 /** 

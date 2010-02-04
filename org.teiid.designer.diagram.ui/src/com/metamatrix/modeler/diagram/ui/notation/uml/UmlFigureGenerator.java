@@ -9,7 +9,6 @@ package com.metamatrix.modeler.diagram.ui.notation.uml;
 
 import org.eclipse.draw2d.Figure;
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.diagram.ui.IDiagramType;

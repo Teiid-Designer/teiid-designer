@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.relational.compare;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.relational.RelationalEntity;
 import com.metamatrix.modeler.core.compare.AbstractEObjectNameMatcher;
 

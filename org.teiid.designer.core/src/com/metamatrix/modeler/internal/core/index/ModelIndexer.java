@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import com.metamatrix.core.index.IDocument;
 import com.metamatrix.core.index.IIndex;
 import com.metamatrix.core.index.IIndexerOutput;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.internal.core.index.WordEntry;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;

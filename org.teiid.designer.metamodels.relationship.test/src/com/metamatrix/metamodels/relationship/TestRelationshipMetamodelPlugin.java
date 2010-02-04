@@ -9,16 +9,13 @@ package com.metamatrix.metamodels.relationship;
 
 import java.io.File;
 import java.util.List;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
 import com.metamatrix.metamodels.core.impl.CorePackageImpl;
 import com.metamatrix.metamodels.relationship.impl.RelationshipPackageImpl;
 

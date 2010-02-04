@@ -13,9 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.ui.wizards.datatransfer.IImportStructureProvider;
-
 import com.metamatrix.modeler.internal.xsd.ui.PluginConstants;
 
 

@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.ui.internal.preferences.IEditorPreferencesValidationListener;
 import com.metamatrix.ui.internal.util.WidgetFactory;

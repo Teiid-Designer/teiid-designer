@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.ui.explorer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -20,7 +19,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.ui.views.navigator.NavigatorDragAdapter;
-
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.util.EObjectTransfer;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;

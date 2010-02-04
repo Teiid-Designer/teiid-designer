@@ -8,14 +8,10 @@
 package com.metamatrix.metamodels.xml.aspects.validation.rules;
 
 import java.util.Iterator;
-
-import org.jdom.Verifier;
-
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import org.jdom.Verifier;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.xml.XmlDocumentPlugin;
 import com.metamatrix.metamodels.xml.XmlElement;
 import com.metamatrix.metamodels.xml.XmlNamespace;

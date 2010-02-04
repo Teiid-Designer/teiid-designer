@@ -9,7 +9,6 @@ package com.metamatrix.modeler.core.metamodel.aspect;
 
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 
 /**

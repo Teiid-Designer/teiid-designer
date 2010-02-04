@@ -9,7 +9,7 @@ package com.metamatrix.modeler.mapping.ui.util;
 
 import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.core.util.INewModelObjectHelper;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;

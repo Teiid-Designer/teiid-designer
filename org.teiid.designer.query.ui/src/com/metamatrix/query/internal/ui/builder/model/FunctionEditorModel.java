@@ -10,7 +10,7 @@ package com.metamatrix.query.internal.ui.builder.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.function.FunctionForm;
 import com.metamatrix.query.function.FunctionLibrary;

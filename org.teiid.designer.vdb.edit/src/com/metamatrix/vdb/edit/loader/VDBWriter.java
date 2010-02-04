@@ -22,7 +22,7 @@ import com.metamatrix.common.vdb.api.VDBDefn;
 import com.metamatrix.common.vdb.api.VDBStream;
 import com.metamatrix.common.xml.XMLReaderWriterImpl;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.FileUtil;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.TempDirectory;

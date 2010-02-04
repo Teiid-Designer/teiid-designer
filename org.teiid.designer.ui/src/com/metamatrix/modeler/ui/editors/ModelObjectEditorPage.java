@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPropertyListener;
-
 import com.metamatrix.modeler.internal.ui.editors.MultiPageModelEditor;
 
 /**

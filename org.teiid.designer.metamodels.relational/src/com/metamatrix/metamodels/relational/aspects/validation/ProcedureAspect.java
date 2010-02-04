@@ -8,9 +8,7 @@
 package com.metamatrix.metamodels.relational.aspects.validation;
 
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;

@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.transformation.ui.util;
 
 import org.eclipse.core.resources.IResource;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;

@@ -9,12 +9,10 @@ package com.metamatrix.modeler.core.compare.diagram;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingFactory;
-
 import com.metamatrix.metamodels.diagram.DiagramContainer;
 import com.metamatrix.modeler.core.compare.AbstractEObjectMatcher;
 

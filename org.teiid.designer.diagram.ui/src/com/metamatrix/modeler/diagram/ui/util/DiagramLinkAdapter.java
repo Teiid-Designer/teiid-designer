@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.draw2d.geometry.Point;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.diagram.DiagramLink;
 import com.metamatrix.metamodels.diagram.DiagramLinkType;
 import com.metamatrix.metamodels.diagram.DiagramPosition;

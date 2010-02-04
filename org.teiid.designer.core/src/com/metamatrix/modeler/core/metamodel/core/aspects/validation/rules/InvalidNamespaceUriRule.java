@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.core.metamodel.core.aspects.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.util.UriValidator;
 import com.metamatrix.modeler.core.validation.ObjectValidationRule;

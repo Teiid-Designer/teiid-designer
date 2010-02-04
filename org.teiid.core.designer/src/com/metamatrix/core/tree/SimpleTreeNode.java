@@ -10,7 +10,6 @@ package com.metamatrix.core.tree;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import com.metamatrix.core.util.StringUtil;
 
 /**

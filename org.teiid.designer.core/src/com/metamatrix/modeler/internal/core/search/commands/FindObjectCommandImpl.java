@@ -13,14 +13,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.ModelerCore;

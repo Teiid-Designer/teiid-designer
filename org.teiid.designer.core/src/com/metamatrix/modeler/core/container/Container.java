@@ -8,12 +8,10 @@
 package com.metamatrix.modeler.core.container;
 
 import java.util.Map;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
-
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.metamodel.MetamodelRegistry;
 import com.metamatrix.modeler.core.transaction.UndoableListener;

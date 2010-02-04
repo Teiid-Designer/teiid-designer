@@ -9,11 +9,9 @@ package com.metamatrix.metamodels.xmlservice.aspects.uml;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
-
 import com.metamatrix.core.MetaMatrixRuntimeException;
 import com.metamatrix.metamodels.xmlservice.XmlServiceComponent;
 import com.metamatrix.metamodels.xmlservice.XmlServiceMetamodelPlugin;

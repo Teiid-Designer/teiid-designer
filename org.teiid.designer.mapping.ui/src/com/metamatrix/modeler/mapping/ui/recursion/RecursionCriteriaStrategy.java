@@ -9,7 +9,6 @@ package com.metamatrix.modeler.mapping.ui.recursion;
 
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.transformation.MappingClassColumn;
 import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;

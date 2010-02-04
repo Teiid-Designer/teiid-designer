@@ -8,11 +8,8 @@
 package com.metamatrix.vdb.internal.edit;
 
 import java.io.InputStream;
-
 import org.eclipse.core.runtime.IPath;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.vdb.edit.VdbEditException;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 

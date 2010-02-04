@@ -16,8 +16,6 @@ import com.metamatrix.modeler.relationship.NavigationContextBuilder;
 import com.metamatrix.modeler.relationship.NavigationContextBuilderException;
 import com.metamatrix.modeler.relationship.NavigationContextException;
 import com.metamatrix.modeler.relationship.NavigationContextInfo;
-//import com.metamatrix.modeler.relationship.NavigationNode;
-//import com.metamatrix.modeler.relationship.RelationshipPlugin;
 
 /**
  * NavigationContextCache

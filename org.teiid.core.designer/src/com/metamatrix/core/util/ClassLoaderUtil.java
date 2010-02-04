@@ -19,11 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-
 import com.metamatrix.core.modeler.CoreModelerPlugin;
+import com.metamatrix.core.modeler.util.ArgCheck;
 
 /**
  * This ClassLoaderUtil class attempts to find classes that are accessible via

@@ -11,9 +11,7 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.XMLResource.XMLInfo;
 import org.eclipse.emf.ecore.xmi.XMLResource.XMLMap;
 import org.eclipse.emf.ecore.xmi.impl.XMLInfoImpl;
-
 import org.eclipse.uml2.uml.UMLPackage;
-
 import com.metamatrix.modeler.core.metamodel.ResourceLoadOptionContributor;
 
 

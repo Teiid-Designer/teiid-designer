@@ -8,11 +8,9 @@
 package com.metamatrix.modeler.relationship.ui.navigation.part;
 
 import java.util.List;
-
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.events.MouseEvent;
-
 import com.metamatrix.modeler.relationship.NavigationNode;
 import com.metamatrix.modeler.relationship.ui.navigation.figure.FocusNodeFigure;
 import com.metamatrix.modeler.relationship.ui.navigation.figure.NavigationDiagramFigureFactory;

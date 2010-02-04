@@ -11,7 +11,6 @@ import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import com.metamatrix.modeler.core.validation.ValidationResult;
 import com.metamatrix.modeler.internal.core.validation.ValidationResultImpl;
 

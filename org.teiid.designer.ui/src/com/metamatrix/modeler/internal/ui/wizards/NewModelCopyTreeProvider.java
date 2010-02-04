@@ -16,7 +16,6 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectContentProvider;
 import com.metamatrix.modeler.ui.UiConstants;
 

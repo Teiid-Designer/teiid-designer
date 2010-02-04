@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.connection.commands;
 
 import org.eclipse.draw2d.geometry.Point;
-
 import com.metamatrix.modeler.diagram.ui.connection.LinkBendpoint;
 
 /**

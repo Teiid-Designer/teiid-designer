@@ -11,10 +11,8 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;

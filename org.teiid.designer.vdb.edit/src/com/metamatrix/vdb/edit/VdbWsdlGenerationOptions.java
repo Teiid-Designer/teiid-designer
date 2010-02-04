@@ -10,9 +10,7 @@ package com.metamatrix.vdb.edit;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 
 

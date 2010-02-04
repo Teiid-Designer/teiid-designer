@@ -9,10 +9,8 @@ package com.metamatrix.metamodels.webservice.aspects.sql;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;

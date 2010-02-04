@@ -9,7 +9,6 @@ package com.metamatrix.modeler.webservice.util;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.xsd.XSDElementDeclaration;
-
 import com.metamatrix.metamodels.xml.XmlDocument;
 import com.metamatrix.modeler.core.workspace.ModelProject;
 

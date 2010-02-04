@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.jdbc.relational.impl.custom;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.relational.RelationalFactory;
 import com.metamatrix.metamodels.relational.util.RelationalTypeMapping;
 import com.metamatrix.modeler.core.types.DatatypeConstants;

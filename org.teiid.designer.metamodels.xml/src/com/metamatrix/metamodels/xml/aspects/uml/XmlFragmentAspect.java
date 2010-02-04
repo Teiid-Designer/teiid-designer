@@ -9,12 +9,10 @@ package com.metamatrix.metamodels.xml.aspects.uml;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
-
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.xml.XmlDocumentPlugin;
 import com.metamatrix.metamodels.xml.XmlFragment;
 import com.metamatrix.modeler.core.ModelerCore;

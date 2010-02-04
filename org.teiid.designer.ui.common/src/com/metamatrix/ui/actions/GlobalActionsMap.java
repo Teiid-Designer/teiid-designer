@@ -13,9 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.jface.action.IAction;
-
 import com.metamatrix.ui.UiConstants;
 import com.metamatrix.ui.UiPlugin;
 

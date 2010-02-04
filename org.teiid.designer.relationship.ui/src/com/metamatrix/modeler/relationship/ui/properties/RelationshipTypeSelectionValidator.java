@@ -9,7 +9,6 @@ package com.metamatrix.modeler.relationship.ui.properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-
 import com.metamatrix.metamodels.relationship.RelationshipType;
 import com.metamatrix.modeler.relationship.RelationshipPlugin;
 import com.metamatrix.modeler.relationship.RelationshipTypeEditor;

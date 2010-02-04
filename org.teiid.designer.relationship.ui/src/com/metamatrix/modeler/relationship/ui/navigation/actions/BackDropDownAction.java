@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.relationship.ui.navigation.actions;
 
 import java.util.List;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
@@ -16,7 +15,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-
 import com.metamatrix.modeler.relationship.NavigationContext;
 import com.metamatrix.modeler.relationship.NavigationContextInfo;
 import com.metamatrix.modeler.relationship.NavigationHistory;

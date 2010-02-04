@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.compare;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 

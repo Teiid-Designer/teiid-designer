@@ -13,7 +13,6 @@ import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.modeler.diagram.ui.figure.AbstractDiagramFigure;
 import com.metamatrix.modeler.diagram.ui.util.colors.ColorPalette;
 

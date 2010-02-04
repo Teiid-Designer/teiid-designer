@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.core;
 
 import org.eclipse.core.runtime.Preferences;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.TransformationPreferences;
 

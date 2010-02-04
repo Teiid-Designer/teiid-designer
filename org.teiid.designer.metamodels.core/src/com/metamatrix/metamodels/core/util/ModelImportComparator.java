@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.core.util;
 
 import java.util.Comparator;
-
 import com.metamatrix.metamodels.core.ModelImport;
 
 /**

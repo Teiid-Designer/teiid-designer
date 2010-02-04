@@ -8,15 +8,13 @@
 package com.metamatrix.modeler.transformation.aspects.validation.rules;
 
 import java.util.Iterator;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.mapping.Mapping;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metamodels.transformation.TransformationMapping;
 import com.metamatrix.modeler.core.ModelEditor;

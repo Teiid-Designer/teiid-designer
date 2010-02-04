@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.relationship.NavigationLink;
 import com.metamatrix.modeler.relationship.NavigationNode;

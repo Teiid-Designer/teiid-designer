@@ -9,7 +9,6 @@ package com.metamatrix.modeler.modelgenerator.salesforce.model;
 
 
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import com.metamatrix.modeler.modelgenerator.salesforce.connection.SalesforceConnection;
 
 /**

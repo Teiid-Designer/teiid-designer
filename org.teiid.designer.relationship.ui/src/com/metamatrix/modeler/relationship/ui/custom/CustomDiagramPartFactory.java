@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.relationship.ui.custom;
 
 import org.eclipse.gef.EditPart;
-
 import com.metamatrix.modeler.diagram.ui.connection.AnchorManager;
 import com.metamatrix.modeler.diagram.ui.connection.BlockAnchorManager;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionEditPart;

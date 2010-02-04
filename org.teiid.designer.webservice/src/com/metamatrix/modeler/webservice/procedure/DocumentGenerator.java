@@ -11,13 +11,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDConstraint;
 import org.eclipse.xsd.XSDFeature;
 import org.eclipse.xsd.XSDModelGroup;
-
 import com.metamatrix.core.util.StringUtil;
 
 /**

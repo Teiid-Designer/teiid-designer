@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.metamodels.webservice.SampleMessages;

@@ -26,7 +26,7 @@ import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
 import com.metamatrix.core.index.IEntryResult;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metadata.runtime.impl.RecordFactory;
 import com.metamatrix.metamodels.core.Annotation;

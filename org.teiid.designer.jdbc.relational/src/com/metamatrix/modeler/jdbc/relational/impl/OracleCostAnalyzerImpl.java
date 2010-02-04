@@ -10,9 +10,7 @@ package com.metamatrix.modeler.jdbc.relational.impl;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import com.metamatrix.modeler.internal.jdbc.relational.util.JdbcRelationalUtil;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 

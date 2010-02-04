@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.modelgenerator.ui.wizards;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -16,7 +15,6 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
-
 import com.metamatrix.modeler.compare.PropertyDifference;
 import com.metamatrix.modeler.compare.ui.tree.DifferenceReportsPanel;
 import com.metamatrix.modeler.core.workspace.ModelResource;

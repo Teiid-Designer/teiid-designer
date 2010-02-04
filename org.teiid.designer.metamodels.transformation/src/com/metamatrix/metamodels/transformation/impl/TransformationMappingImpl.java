@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.transformation.impl;
 
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -18,7 +17,6 @@ import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.emf.mapping.MappingPackage;
 import org.eclipse.emf.mapping.impl.MappingImpl;
-
 import com.metamatrix.metamodels.transformation.TransformationMapping;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 

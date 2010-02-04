@@ -10,7 +10,6 @@ package com.metamatrix.modeler.diagram.ui.figure;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.draw2d.AnchorListener;
 import org.eclipse.draw2d.ArrowLocator;
 import org.eclipse.draw2d.ColorConstants;
@@ -25,7 +24,6 @@ import org.eclipse.draw2d.RotatableDecoration;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
-
 import com.metamatrix.modeler.diagram.ui.util.ToolTipUtil;
 
 /**

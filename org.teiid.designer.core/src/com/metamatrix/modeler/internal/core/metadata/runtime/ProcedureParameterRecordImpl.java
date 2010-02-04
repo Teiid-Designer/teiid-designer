@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.core.metadata.runtime;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAspect;
 

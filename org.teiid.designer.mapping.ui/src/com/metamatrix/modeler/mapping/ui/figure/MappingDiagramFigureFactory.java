@@ -12,12 +12,10 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
-
-import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.StagingTable;
 import com.metamatrix.modeler.core.ModelerCore;

@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.relationship.impl;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -20,7 +19,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.emf.ecore.impl.EcorePackageImpl;
-
 import com.metamatrix.metamodels.relationship.FileReference;
 import com.metamatrix.metamodels.relationship.PlaceholderReference;
 import com.metamatrix.metamodels.relationship.PlaceholderReferenceContainer;

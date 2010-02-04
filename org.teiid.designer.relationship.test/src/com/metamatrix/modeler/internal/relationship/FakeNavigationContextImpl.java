@@ -10,9 +10,7 @@ package com.metamatrix.modeler.internal.relationship;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.modeler.relationship.NavigationContext;
 import com.metamatrix.modeler.relationship.NavigationContextInfo;

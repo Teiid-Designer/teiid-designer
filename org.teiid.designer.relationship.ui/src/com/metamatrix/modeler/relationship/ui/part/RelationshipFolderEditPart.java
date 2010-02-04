@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.relationship.ui.part;
 
 import java.beans.PropertyChangeEvent;
-
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -24,7 +23,6 @@ import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.widgets.Display;
-
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramViewer;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;

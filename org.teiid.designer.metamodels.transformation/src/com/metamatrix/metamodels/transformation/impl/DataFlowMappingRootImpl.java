@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -25,7 +24,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.emf.mapping.MappingPackage;
-
 import com.metamatrix.metamodels.transformation.DataFlowLink;
 import com.metamatrix.metamodels.transformation.DataFlowMappingRoot;
 import com.metamatrix.metamodels.transformation.DataFlowNode;

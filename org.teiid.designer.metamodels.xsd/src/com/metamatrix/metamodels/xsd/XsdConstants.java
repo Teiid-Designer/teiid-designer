@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.xsd;
 
 import org.eclipse.xsd.util.XSDConstants;
-
 import com.metamatrix.modeler.core.types.DatatypeConstants;
 
 

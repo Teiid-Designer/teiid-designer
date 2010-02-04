@@ -9,8 +9,7 @@ package com.metamatrix.modeler.mapping.ui.connection;
 
 import java.util.Collections;
 import java.util.List;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.connection.AbstractNodeConnectionModel;

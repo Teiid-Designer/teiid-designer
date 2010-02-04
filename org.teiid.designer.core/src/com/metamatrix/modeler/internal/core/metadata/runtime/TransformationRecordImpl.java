@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.internal.core.metadata.runtime;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTransformationAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTransformationInfo;
 

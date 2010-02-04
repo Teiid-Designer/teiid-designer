@@ -8,13 +8,11 @@
 package com.metamatrix.metamodels.webservice.impl;
 
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import com.metamatrix.metamodels.webservice.WebServiceComponent;
 import com.metamatrix.metamodels.webservice.WebServicePackage;
 import com.metamatrix.metamodels.webservice.aspects.validation.WebServiceComponentAspect;

@@ -9,7 +9,6 @@ package com.metamatrix.modeler.diagram.ui.layout;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 
 /**

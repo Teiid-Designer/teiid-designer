@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
@@ -22,7 +21,6 @@ import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-
 import com.metamatrix.modeler.diagram.ui.figure.AbstractDiagramFigure;
 import com.metamatrix.modeler.diagram.ui.figure.ContainerFigure;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;

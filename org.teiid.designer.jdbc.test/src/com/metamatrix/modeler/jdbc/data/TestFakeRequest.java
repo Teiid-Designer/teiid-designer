@@ -8,14 +8,11 @@
 package com.metamatrix.modeler.jdbc.data;
 
 import java.sql.Connection;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.modeler.jdbc.FakeConnection;
 
 /**

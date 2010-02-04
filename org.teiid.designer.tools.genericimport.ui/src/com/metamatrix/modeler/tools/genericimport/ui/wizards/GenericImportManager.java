@@ -15,11 +15,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metamodels.builder.translator.ResultSetTranslator;
 import com.metamatrix.metamodels.relational.RelationalPackage;

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.compare.selector;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.core.Annotation;
 
 /**

@@ -7,16 +7,26 @@
  */
 package com.metamatrix.modeler.diagram.ui.util;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Cursors;
+import org.eclipse.draw2d.FigureUtilities;
+import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.draw2d.Shape;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartViewer;
+import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Color;
-
-import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.geometry.*;
-
-import org.eclipse.gef.*;
-import org.eclipse.gef.tools.AbstractTool;
 
 /**
  * This tool implements the selection of multiple objects in rectangular area.

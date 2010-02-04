@@ -9,9 +9,7 @@ package com.metamatrix.modeler.internal.transformation.util;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord;
 import com.metamatrix.query.metadata.QueryMetadataInterface;

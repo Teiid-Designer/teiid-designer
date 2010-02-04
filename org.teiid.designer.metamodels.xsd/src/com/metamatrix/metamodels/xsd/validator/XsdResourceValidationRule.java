@@ -12,15 +12,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.util.XSDResourceImpl;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-
-import com.metamatrix.core.util.ArgCheck;
+import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.util.XSDResourceImpl;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.internal.core.xml.xsd.XsdHeader;
 import com.metamatrix.internal.core.xml.xsd.XsdHeaderReader;

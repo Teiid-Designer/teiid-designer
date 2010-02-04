@@ -8,14 +8,12 @@
 package com.metamatrix.modeler.internal.ui.viewsupport;
 
 import java.util.HashMap;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.actions.IDiagramHelper;

@@ -9,13 +9,11 @@ package com.metamatrix.metamodels.xsd.aspects.validation.rules;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
-
 import com.metamatrix.metamodels.xsd.XsdPlugin;
 import com.metamatrix.modeler.core.validation.StructuralFeatureValidationRule;
 import com.metamatrix.modeler.core.validation.ValidationContext;

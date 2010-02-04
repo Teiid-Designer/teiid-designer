@@ -53,7 +53,7 @@ import com.metamatrix.core.aspects.DeclarativeTransactionManager;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.interceptor.InvocationFactoryHelper;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.core.util.Stopwatch;
 import com.metamatrix.core.util.StringUtil;

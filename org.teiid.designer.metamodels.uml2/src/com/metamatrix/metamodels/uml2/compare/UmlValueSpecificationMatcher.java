@@ -9,7 +9,6 @@ package com.metamatrix.metamodels.uml2.compare;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -21,7 +20,6 @@ import org.eclipse.uml2.uml.LiteralNull;
 import org.eclipse.uml2.uml.LiteralString;
 import org.eclipse.uml2.uml.LiteralUnlimitedNatural;
 import org.eclipse.uml2.uml.ValueSpecification;
-
 import com.metamatrix.modeler.core.compare.AbstractEObjectMatcher;
 
 /**

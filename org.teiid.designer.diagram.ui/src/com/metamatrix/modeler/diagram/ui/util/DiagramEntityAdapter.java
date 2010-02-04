@@ -10,8 +10,7 @@ package com.metamatrix.modeler.diagram.ui.util;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.diagram.DiagramEntity;
 import com.metamatrix.modeler.core.ModelerCore;
 

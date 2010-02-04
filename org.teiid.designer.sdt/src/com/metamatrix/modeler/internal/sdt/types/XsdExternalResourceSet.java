@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.sdt.types;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
-
 import com.metamatrix.modeler.core.ExternalResourceSet;
 import com.metamatrix.modeler.core.ModelerCore;
 

@@ -21,7 +21,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.actions.ActionDelegate;
-
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.xsd.ui.wizards.CreateVirtualModelFromSchemaWizard;
 import com.metamatrix.modeler.xsd.ui.ModelerXsdUiConstants;

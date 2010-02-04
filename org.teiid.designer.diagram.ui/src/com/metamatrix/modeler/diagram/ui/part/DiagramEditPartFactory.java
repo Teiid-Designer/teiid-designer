@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.part;
 
 import org.eclipse.gef.EditPartFactory;
-
 import com.metamatrix.modeler.diagram.ui.connection.AnchorManager;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionEditPart;
 import com.metamatrix.modeler.diagram.ui.editor.IDiagramSelectionHandler;

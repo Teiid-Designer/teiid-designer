@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.notation.uml.model;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlDiagramAspect;
 import com.metamatrix.modeler.diagram.ui.model.AbstractDiagramModelNode;

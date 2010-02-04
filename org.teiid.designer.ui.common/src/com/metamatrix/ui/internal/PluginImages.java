@@ -11,9 +11,6 @@ package com.metamatrix.ui.internal;
 
 //import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-//import org.eclipse.jface.resource.ImageRegistry;
-//import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.ui.UiPlugin;
 
 

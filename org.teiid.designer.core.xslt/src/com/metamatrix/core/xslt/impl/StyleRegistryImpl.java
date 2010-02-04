@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import com.metamatrix.core.xslt.Style;
 import com.metamatrix.core.xslt.StyleRegistry;
 

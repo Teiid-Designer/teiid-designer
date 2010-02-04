@@ -9,14 +9,11 @@ package com.metamatrix.modeler.dqp.internal.execution;
 
 import java.io.File;
 import java.util.Collection;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.common.vdb.api.VDBDefn;
 import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.metamodels.core.ModelType;

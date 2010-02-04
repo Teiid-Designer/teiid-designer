@@ -7,6 +7,11 @@
  */
 package com.metamatrix.metamodels.history.impl;
 
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
 import com.metamatrix.metamodels.history.Branch;
 import com.metamatrix.metamodels.history.HistoryCriteria;
 import com.metamatrix.metamodels.history.HistoryFactory;
@@ -16,15 +21,7 @@ import com.metamatrix.metamodels.history.HistoryPackage;
 import com.metamatrix.metamodels.history.Label;
 import com.metamatrix.metamodels.history.LabelLog;
 import com.metamatrix.metamodels.history.Revision;
-
 import com.metamatrix.metamodels.history.RevisionLog;
-
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
-import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc -->

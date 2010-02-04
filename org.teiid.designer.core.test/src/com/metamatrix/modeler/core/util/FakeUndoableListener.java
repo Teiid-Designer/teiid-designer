@@ -9,7 +9,6 @@ package com.metamatrix.modeler.core.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import com.metamatrix.modeler.core.transaction.Undoable;
 import com.metamatrix.modeler.core.transaction.UndoableListener;
 

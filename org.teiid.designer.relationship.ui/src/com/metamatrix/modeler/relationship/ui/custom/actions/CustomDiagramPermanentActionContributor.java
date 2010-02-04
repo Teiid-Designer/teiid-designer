@@ -9,15 +9,12 @@ package com.metamatrix.modeler.relationship.ui.custom.actions;
 
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
-
-import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.relationship.RelationshipFolder;
 import com.metamatrix.modeler.core.workspace.ModelResource;

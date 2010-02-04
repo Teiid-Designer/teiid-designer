@@ -9,7 +9,8 @@ package com.metamatrix.modeler.diagram.ui.pakkage.actions;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -19,10 +20,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
-
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.diagram.ui.actions.DiagramGlobalActionsMap;
 import com.metamatrix.modeler.diagram.ui.actions.DiagramPageSetupAction;
 import com.metamatrix.modeler.diagram.ui.actions.RouterTypeMenuManager;

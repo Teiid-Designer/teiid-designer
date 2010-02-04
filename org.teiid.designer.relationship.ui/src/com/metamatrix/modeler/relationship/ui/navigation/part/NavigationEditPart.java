@@ -10,11 +10,9 @@ package com.metamatrix.modeler.relationship.ui.navigation.part;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
-
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-
 import com.metamatrix.modeler.relationship.ui.UiConstants;
 import com.metamatrix.modeler.relationship.ui.navigation.figure.NavigationDiagramFigureFactory;
 import com.metamatrix.modeler.relationship.ui.navigation.figure.NavigationNodeFigure;

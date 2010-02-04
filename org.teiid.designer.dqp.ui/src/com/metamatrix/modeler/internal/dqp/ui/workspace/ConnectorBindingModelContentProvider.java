@@ -9,12 +9,9 @@ package com.metamatrix.modeler.internal.dqp.ui.workspace;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-
-import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.DqpPlugin;

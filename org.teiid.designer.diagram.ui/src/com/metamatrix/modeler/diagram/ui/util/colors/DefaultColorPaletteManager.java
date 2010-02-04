@@ -9,7 +9,6 @@ package com.metamatrix.modeler.diagram.ui.util.colors;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 

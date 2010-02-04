@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.xml;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import com.metamatrix.metamodels.xml.XmlFragment;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 

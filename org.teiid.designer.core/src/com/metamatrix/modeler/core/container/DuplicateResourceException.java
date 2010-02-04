@@ -9,7 +9,6 @@ package com.metamatrix.modeler.core.container;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.modeler.core.ModelerCoreRuntimeException;
 
 

@@ -9,7 +9,6 @@ package com.metamatrix.rose.internal.ui.util;
 
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -18,7 +17,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.rose.internal.ui.IRoseUiConstants;
 

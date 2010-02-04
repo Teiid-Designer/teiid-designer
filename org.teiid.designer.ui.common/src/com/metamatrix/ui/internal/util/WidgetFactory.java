@@ -58,7 +58,7 @@ import org.eclipse.ui.forms.HyperlinkSettings;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.widget.DefaultTreeViewerController;
 import com.metamatrix.ui.internal.widget.IListPanelController;

@@ -14,7 +14,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
-
 import com.metamatrix.modeler.internal.ui.actions.help.HelpProjectAction;
 import com.metamatrix.modeler.internal.vdb.ui.wizards.NewVdbWizard;
 import com.metamatrix.modeler.ui.UiPlugin;

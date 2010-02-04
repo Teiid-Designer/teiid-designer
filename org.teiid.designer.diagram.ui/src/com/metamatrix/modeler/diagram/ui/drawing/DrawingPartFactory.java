@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.drawing;
 
 import org.eclipse.gef.EditPart;
-
 import com.metamatrix.modeler.diagram.ui.drawing.model.EllipseModelNode;
 import com.metamatrix.modeler.diagram.ui.drawing.model.NoteModelNode;
 import com.metamatrix.modeler.diagram.ui.drawing.model.RectangleModelNode;

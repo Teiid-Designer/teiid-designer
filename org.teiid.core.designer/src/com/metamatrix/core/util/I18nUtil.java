@@ -7,6 +7,8 @@
  */
 package com.metamatrix.core.util;
 
+import com.metamatrix.core.modeler.util.ArgCheck;
+
 /**
  * @since 4.0
  */

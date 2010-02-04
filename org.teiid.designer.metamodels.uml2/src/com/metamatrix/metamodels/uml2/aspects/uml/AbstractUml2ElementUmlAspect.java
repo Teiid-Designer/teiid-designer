@@ -11,8 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Stereotype;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 

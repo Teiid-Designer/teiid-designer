@@ -9,11 +9,8 @@ package com.metamatrix.modeler.mapping.ui.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.eclipse.xsd.XSDSimpleTypeDefinition;
-
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlClassifier;
 import com.metamatrix.modeler.diagram.ui.notation.uml.model.UmlClassifierNode;

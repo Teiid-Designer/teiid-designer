@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.core.id.UUID;
 import com.metamatrix.core.index.IEntryResult;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.modeler.core.container.Container;

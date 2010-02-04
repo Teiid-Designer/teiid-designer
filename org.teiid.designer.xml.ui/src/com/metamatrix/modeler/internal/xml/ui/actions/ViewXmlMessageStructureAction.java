@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.xml.ui.actions;
 
 import java.io.File;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -22,7 +21,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.eclipse.xsd.XSDElementDeclaration;
-
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.xml.XmlDocumentPackage;
 import com.metamatrix.modeler.core.ModelerCore;

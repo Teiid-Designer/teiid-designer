@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.transformation.ui;
 
 import java.util.ResourceBundle;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.swt.graphics.Color;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;

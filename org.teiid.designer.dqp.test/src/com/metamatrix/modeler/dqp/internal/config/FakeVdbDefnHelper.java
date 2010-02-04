@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.dqp.internal.config;
 
 import java.util.Collection;
-
 import com.metamatrix.common.config.api.ComponentType;
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.vdb.api.ModelInfo;

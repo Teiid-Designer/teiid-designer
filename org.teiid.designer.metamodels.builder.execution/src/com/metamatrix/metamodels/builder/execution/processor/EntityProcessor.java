@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.builder.MetamodelEntityBuilder;
 import com.metamatrix.metamodels.builder.MetamodelEntityRecord;
 import com.metamatrix.metamodels.builder.execution.MetamodelBuilderConstants;

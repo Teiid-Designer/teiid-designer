@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.core.invocation;
 
 import java.lang.reflect.Method;
-
 import com.metamatrix.core.interceptor.InvocationFactoryHelper;
 
 /**

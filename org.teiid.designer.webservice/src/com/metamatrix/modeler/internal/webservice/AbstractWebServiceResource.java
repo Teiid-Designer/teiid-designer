@@ -14,10 +14,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-
 import com.metamatrix.core.util.HashCodeUtil;
 import com.metamatrix.modeler.webservice.IWebServiceResource;
 import com.metamatrix.modeler.webservice.WebServicePlugin;

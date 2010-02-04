@@ -10,7 +10,6 @@ package com.metamatrix.modeler.relationship.ui.part;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
-
 import com.metamatrix.metamodels.relationship.Relationship;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;

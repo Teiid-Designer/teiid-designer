@@ -10,7 +10,6 @@ package com.metamatrix.modeler.relationship.ui.editor;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
-
 import com.metamatrix.metamodels.relationship.provider.RelationshipAssociationDescriptor;
 import com.metamatrix.modeler.core.association.AssociationDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelResource;

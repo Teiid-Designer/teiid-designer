@@ -7,10 +7,8 @@
  */
 package com.metamatrix.modeler.xsd;
 
-import org.osgi.framework.BundleContext;
-
 import org.eclipse.core.runtime.Plugin;
-
+import org.osgi.framework.BundleContext;
 import com.metamatrix.core.util.PluginUtilImpl;
 
 public class ModelerXsdPlugin extends Plugin implements PluginConstants {

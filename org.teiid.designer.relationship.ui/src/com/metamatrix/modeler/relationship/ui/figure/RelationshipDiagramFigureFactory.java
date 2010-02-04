@@ -13,7 +13,6 @@ import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.diagram.ui.drawing.model.DrawingModelNode;

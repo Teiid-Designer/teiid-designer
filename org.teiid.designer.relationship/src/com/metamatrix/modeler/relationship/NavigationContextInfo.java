@@ -9,7 +9,7 @@ package com.metamatrix.modeler.relationship;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 
 /**
  * The NavigationContextInfo represents a serializable and durable unique reference to a navigation context focused on a

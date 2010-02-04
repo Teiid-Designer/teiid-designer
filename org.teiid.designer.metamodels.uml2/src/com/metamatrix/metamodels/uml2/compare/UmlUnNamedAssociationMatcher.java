@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -19,7 +18,6 @@ import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingFactory;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Property;
-
 import com.metamatrix.modeler.core.compare.AbstractEObjectMatcher;
 
 /**

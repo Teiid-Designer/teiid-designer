@@ -7,11 +7,10 @@
  */
 package com.metamatrix.modeler.relational.ui;
 
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.ui.AbstractUiPlugin;

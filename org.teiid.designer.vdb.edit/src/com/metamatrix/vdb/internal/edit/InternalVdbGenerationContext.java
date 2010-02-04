@@ -8,9 +8,7 @@
 package com.metamatrix.vdb.internal.edit;
 
 import java.util.Map;
-
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
 import com.metamatrix.vdb.edit.VdbGenerationContext;
 
 

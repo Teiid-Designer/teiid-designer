@@ -9,7 +9,6 @@ package com.metamatrix.modeler.diagram.ui.figure;
 
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.modeler.diagram.ui.util.colors.ColorPalette;
 
 /**

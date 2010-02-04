@@ -7,8 +7,10 @@
  */
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import com.metamatrix.query.sql.ReservedWords;
 import com.metamatrix.query.sql.lang.Option;
 

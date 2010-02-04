@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.xml.aspects.sql;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.xml.XmlDocumentPlugin;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 

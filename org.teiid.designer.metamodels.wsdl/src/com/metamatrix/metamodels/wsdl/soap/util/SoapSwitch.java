@@ -8,10 +8,8 @@
 package com.metamatrix.metamodels.wsdl.soap.util;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.wsdl.soap.SoapAddress;
 import com.metamatrix.metamodels.wsdl.soap.SoapBinding;
 import com.metamatrix.metamodels.wsdl.soap.SoapBody;

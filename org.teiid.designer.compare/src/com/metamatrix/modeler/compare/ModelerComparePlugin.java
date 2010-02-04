@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.compare.impl.ComparePackageImpl;
 import com.metamatrix.modeler.compare.processor.DifferenceProcessorImpl;

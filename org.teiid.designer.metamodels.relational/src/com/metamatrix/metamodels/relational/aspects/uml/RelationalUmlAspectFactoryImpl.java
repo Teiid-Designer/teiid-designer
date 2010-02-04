@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.relational.aspects.uml;
 
 import org.eclipse.emf.ecore.EClassifier;
-
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;

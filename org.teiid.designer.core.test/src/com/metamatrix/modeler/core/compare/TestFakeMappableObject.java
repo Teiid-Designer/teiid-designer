@@ -10,7 +10,6 @@ package com.metamatrix.modeler.core.compare;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;

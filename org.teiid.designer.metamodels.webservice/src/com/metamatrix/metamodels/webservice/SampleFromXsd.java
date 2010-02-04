@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.webservice;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.xml.XmlElement;
 
 /**

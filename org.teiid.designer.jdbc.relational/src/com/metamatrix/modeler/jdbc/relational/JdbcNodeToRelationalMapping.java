@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.jdbc.relational;
 
 import org.eclipse.emf.ecore.EClass;
-
 import com.metamatrix.modeler.jdbc.metadata.JdbcNode;
 
 /**

@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-
 import com.metamatrix.metamodels.webservice.Message;
 import com.metamatrix.metamodels.webservice.SampleFromXsd;
 import com.metamatrix.metamodels.webservice.SampleMessages;

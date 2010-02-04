@@ -7,33 +7,24 @@
  */
 package com.metamatrix.metamodels.wsdl.http.impl;
 
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
+import org.eclipse.emf.ecore.impl.EcorePackageImpl;
+import org.eclipse.xsd.impl.XSDPackageImpl;
 import com.metamatrix.metamodels.wsdl.WsdlPackage;
-
 import com.metamatrix.metamodels.wsdl.http.HttpAddress;
 import com.metamatrix.metamodels.wsdl.http.HttpBinding;
 import com.metamatrix.metamodels.wsdl.http.HttpFactory;
 import com.metamatrix.metamodels.wsdl.http.HttpOperation;
 import com.metamatrix.metamodels.wsdl.http.HttpPackage;
-
 import com.metamatrix.metamodels.wsdl.impl.WsdlPackageImpl;
-
 import com.metamatrix.metamodels.wsdl.mime.MimePackage;
-
 import com.metamatrix.metamodels.wsdl.mime.impl.MimePackageImpl;
-
 import com.metamatrix.metamodels.wsdl.soap.SoapPackage;
-
 import com.metamatrix.metamodels.wsdl.soap.impl.SoapPackageImpl;
-
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
-import org.eclipse.emf.ecore.impl.EPackageImpl;
-import org.eclipse.emf.ecore.impl.EcorePackageImpl;
-
-import org.eclipse.xsd.impl.XSDPackageImpl;
 
 /**
  * <!-- begin-user-doc -->

@@ -8,7 +8,6 @@
 package com.metamatrix.vdb.edit.compare;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.compare.AbstractEObjectNameMatcher;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 

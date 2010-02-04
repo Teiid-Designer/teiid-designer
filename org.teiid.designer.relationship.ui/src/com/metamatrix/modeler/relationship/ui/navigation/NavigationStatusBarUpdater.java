@@ -12,7 +12,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-
 import com.metamatrix.modeler.relationship.NavigationLink;
 import com.metamatrix.modeler.relationship.NavigationNode;
 import com.metamatrix.modeler.relationship.ui.UiConstants;

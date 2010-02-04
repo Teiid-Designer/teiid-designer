@@ -10,7 +10,6 @@ package com.metamatrix.modeler.mapping.ui.actions;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.IWorkbenchPart;
-
 import com.metamatrix.modeler.diagram.ui.editor.DiagramEditor;
 import com.metamatrix.modeler.mapping.ui.UiConstants;
 import com.metamatrix.modeler.mapping.ui.UiPlugin;

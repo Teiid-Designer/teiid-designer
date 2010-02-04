@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.ui.explorer;
 
 import java.util.List;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -18,7 +17,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.views.navigator.ResourceNavigatorMoveAction;
-
 import com.metamatrix.modeler.internal.ui.refactor.actions.MoveRefactorAction;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;

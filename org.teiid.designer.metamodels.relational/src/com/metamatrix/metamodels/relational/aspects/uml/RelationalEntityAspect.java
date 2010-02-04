@@ -9,7 +9,6 @@ package com.metamatrix.metamodels.relational.aspects.uml;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
-
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AbstractMetamodelAspect;

@@ -8,7 +8,7 @@
 package com.metamatrix.metamodels.relationship.aspects.relationship;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.relationship.RelationshipEntity;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 

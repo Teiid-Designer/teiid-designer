@@ -9,7 +9,6 @@ package com.metamatrix.modeler.jdbc.relational;
 
 import java.io.PrintStream;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /** 

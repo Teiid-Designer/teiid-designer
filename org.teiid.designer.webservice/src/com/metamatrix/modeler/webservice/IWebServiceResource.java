@@ -10,7 +10,6 @@ package com.metamatrix.modeler.webservice;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
-
 import org.eclipse.core.runtime.IStatus;
 
 

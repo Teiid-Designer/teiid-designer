@@ -8,7 +8,6 @@
 package com.metamatrix.vdb.internal.edit;
 
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.vdb.edit.manifest.ManifestFactory;
 import com.metamatrix.vdb.edit.manifest.ModelReference;

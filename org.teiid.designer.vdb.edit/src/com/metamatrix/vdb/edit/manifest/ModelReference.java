@@ -8,9 +8,7 @@
 package com.metamatrix.vdb.edit.manifest;
 
 import java.util.Date;
-
 import org.eclipse.emf.common.util.EList;
-
 import com.metamatrix.metamodels.core.ModelImport;
 
 /**

@@ -14,13 +14,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.selection.TreeSelection;
-import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 
 /**

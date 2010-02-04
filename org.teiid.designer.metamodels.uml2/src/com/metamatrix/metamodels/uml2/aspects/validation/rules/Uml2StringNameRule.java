@@ -10,16 +10,12 @@ package com.metamatrix.metamodels.uml2.aspects.validation.rules;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.UMLPackage;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.StructuralFeatureValidationRule;
 import com.metamatrix.modeler.core.validation.ValidationContext;

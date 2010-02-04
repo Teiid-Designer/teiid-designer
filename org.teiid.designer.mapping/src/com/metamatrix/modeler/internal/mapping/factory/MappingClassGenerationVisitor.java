@@ -10,9 +10,7 @@ package com.metamatrix.modeler.internal.mapping.factory;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.mapping.factory.ITreeToRelationalMapper;
 
 /**

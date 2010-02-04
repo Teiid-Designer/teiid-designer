@@ -8,11 +8,9 @@
 package com.metamatrix.modeler.compare.util;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.MappingHelper;
-
 import com.metamatrix.modeler.compare.ComparePackage;
 import com.metamatrix.modeler.compare.DifferenceDescriptor;
 import com.metamatrix.modeler.compare.DifferenceReport;

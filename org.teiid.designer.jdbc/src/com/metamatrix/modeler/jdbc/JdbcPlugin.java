@@ -15,7 +15,6 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
@@ -25,9 +24,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.osgi.framework.BundleContext;
-
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.internal.jdbc.JdbcManagerImpl;
 import com.metamatrix.modeler.jdbc.metadata.Includes;

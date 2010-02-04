@@ -10,10 +10,8 @@ package com.metamatrix.modeler.relationship.ui.navigation.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.viewers.ILabelProvider;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.relationship.NavigationContext;

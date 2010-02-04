@@ -12,10 +12,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.ModelerCore;

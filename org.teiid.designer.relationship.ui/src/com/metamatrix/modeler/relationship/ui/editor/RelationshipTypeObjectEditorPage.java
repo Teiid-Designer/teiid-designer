@@ -9,7 +9,6 @@ package com.metamatrix.modeler.relationship.ui.editor;
 
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -25,7 +24,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPropertyListener;
-
 import com.metamatrix.metamodels.relationship.RelationshipType;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.modeler.core.workspace.ModelResource;

@@ -8,7 +8,6 @@
 package com.metamatrix.core.modeler.util;
 
 import java.io.File;
-
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.core.util.FileUtils.Constants;
 

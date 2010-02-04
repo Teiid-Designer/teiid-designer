@@ -7,16 +7,14 @@
  */
 package com.metamatrix.metamodels.relationship.impl;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import com.metamatrix.metamodels.relationship.RelationshipEntity;
 import com.metamatrix.metamodels.relationship.RelationshipPackage;
-
-import org.eclipse.core.runtime.IStatus;
 
 /**
  * <!-- begin-user-doc -->

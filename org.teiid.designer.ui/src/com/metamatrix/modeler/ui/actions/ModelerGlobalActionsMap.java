@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.ui.actions;
 
 import java.util.Arrays;
-
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.ui.actions.GlobalActionsMap;
 

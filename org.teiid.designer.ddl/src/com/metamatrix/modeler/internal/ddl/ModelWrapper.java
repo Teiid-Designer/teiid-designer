@@ -9,8 +9,7 @@ package com.metamatrix.modeler.internal.ddl;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceSelections;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;

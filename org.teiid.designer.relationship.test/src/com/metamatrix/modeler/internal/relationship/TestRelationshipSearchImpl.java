@@ -11,15 +11,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-
 import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.metamodels.relationship.RelationshipFactory;
 import com.metamatrix.metamodels.relationship.RelationshipType;

@@ -8,10 +8,8 @@
 package com.metamatrix.vdb.internal.edit;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.vdb.edit.VdbContextValidator;
 import com.metamatrix.vdb.edit.VdbContextValidatorResult;
 

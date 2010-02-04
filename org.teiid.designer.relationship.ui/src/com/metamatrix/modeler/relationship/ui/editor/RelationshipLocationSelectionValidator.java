@@ -12,7 +12,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-
 import com.metamatrix.metamodels.relationship.RelationshipContainer;
 import com.metamatrix.metamodels.relationship.RelationshipPackage;
 import com.metamatrix.modeler.core.ModelerCore;

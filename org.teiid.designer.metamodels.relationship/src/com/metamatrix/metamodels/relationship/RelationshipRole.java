@@ -8,10 +8,8 @@
 package com.metamatrix.metamodels.relationship;
 
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClassifier;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**

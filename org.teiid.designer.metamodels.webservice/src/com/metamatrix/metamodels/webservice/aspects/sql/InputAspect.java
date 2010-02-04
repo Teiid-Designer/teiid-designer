@@ -10,8 +10,7 @@ package com.metamatrix.metamodels.webservice.aspects.sql;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.metamodels.webservice.WebServiceMetamodelPlugin;
 import com.metamatrix.metamodels.webservice.WebServicePackage;

@@ -11,11 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.common.types.DataTypeManager;
 import com.metamatrix.core.id.UUID;
 import com.metamatrix.metamodels.transformation.MappingClass;

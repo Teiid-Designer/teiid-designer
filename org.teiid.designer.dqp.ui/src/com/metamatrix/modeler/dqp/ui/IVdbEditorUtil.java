@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.dqp.ui;
 
 import org.eclipse.ui.PartInitException;
-
 import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 

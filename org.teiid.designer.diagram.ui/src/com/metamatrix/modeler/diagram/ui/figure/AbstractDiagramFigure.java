@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.figure;
 
 import java.util.List;
-
 import org.eclipse.draw2d.ActionEvent;
 import org.eclipse.draw2d.ActionListener;
 import org.eclipse.draw2d.Button;
@@ -21,7 +20,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.util.ToolTipUtil;
 import com.metamatrix.modeler.diagram.ui.util.colors.ColorPalette;

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.schema.tools.model.schema.impl;
 
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-
 import com.metamatrix.modeler.schema.tools.model.jdbc.DataType;
 import com.metamatrix.modeler.schema.tools.model.jdbc.internal.DataTypeImpl;
 import com.metamatrix.modeler.schema.tools.model.schema.Column;

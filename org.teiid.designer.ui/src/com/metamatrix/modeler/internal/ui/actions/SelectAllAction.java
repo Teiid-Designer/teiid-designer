@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.ui.actions;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
-
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.ui.actions.AbstractAction;
 

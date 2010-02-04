@@ -9,7 +9,6 @@ package com.metamatrix.modeler.transformation.aspects.sql;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.transformation.MappingClassSet;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;

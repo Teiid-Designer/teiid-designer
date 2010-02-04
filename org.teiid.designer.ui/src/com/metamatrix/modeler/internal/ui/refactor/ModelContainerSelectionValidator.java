@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.ui.refactor;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-
 import com.metamatrix.modeler.core.refactor.ResourceMoveCommand;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.ui.internal.viewsupport.StatusInfo;

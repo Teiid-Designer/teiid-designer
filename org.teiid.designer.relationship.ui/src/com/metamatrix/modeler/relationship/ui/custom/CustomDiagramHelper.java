@@ -9,12 +9,8 @@ package com.metamatrix.modeler.relationship.ui.custom;
 
 //import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.relationship.RelationshipFolder;
-//import com.metamatrix.modeler.core.ModelerCore;
-//import com.metamatrix.modeler.core.ModelerCoreException;
-//import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.DiagramHelper;
 import com.metamatrix.modeler.relationship.ui.PluginConstants;
 

@@ -10,7 +10,7 @@ package com.metamatrix.modeler.core.metamodel.core.aspects.validation.rules;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.metamodels.core.ModelImport;
 import com.metamatrix.modeler.core.ModelerCore;

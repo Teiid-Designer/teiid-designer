@@ -11,7 +11,6 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.wsdl.Attribute;
 import com.metamatrix.metamodels.wsdl.AttributeOwner;
 import com.metamatrix.metamodels.wsdl.Binding;

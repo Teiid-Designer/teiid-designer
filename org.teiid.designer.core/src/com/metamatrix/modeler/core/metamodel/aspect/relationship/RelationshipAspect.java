@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.metamodel.aspect.relationship;
 
 import java.util.Collection;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 

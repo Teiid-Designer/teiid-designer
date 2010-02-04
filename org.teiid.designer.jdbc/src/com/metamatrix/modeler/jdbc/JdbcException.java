@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.jdbc;
 
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.modeler.core.ModelerCoreException;
 
 

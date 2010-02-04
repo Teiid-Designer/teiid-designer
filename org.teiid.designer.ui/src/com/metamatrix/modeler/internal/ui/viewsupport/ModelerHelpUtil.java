@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.ui.viewsupport;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.swt.graphics.Point;
@@ -17,7 +16,6 @@ import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
-
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;

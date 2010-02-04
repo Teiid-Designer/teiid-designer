@@ -7,14 +7,14 @@
  */
 package com.metamatrix.metamodels.wsdl.http.util;
 
-import com.metamatrix.metamodels.wsdl.http.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+import com.metamatrix.metamodels.wsdl.http.HttpAddress;
+import com.metamatrix.metamodels.wsdl.http.HttpBinding;
+import com.metamatrix.metamodels.wsdl.http.HttpOperation;
+import com.metamatrix.metamodels.wsdl.http.HttpPackage;
 
 /**
  * <!-- begin-user-doc -->

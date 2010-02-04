@@ -12,9 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
 import com.metamatrix.core.id.LongIDFactory;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.modeler.core.ModelerCore;

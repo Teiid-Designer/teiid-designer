@@ -10,7 +10,7 @@ package com.metamatrix.modeler.internal.core.index;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.core.util.ModelVisitor;
 import com.metamatrix.modeler.internal.core.search.runtime.SearchRuntimeAdapter;
 

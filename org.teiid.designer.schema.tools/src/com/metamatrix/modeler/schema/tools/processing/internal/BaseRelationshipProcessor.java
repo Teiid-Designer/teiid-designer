@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import com.metamatrix.modeler.schema.tools.model.schema.Column;
 import com.metamatrix.modeler.schema.tools.model.schema.Relationship;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaModel;

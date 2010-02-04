@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.net.URL;
 import javax.xml.transform.stream.StreamSource;
 import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 
 /**
  * StyleFromResource

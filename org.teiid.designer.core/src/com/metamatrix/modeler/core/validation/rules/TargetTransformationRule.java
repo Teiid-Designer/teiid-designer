@@ -9,14 +9,11 @@ package com.metamatrix.modeler.core.validation.rules;
 
 import java.util.Iterator;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ValidationPreferences;

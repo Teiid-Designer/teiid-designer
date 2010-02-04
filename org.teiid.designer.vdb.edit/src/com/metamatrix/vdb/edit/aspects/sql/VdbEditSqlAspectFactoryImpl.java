@@ -8,7 +8,6 @@
 package com.metamatrix.vdb.edit.aspects.sql;
 
 import org.eclipse.emf.ecore.EClassifier;
-
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspectFactory;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;

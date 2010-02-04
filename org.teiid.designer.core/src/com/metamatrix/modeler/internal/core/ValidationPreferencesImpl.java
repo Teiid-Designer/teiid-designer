@@ -13,10 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
-
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ValidationDescriptor;

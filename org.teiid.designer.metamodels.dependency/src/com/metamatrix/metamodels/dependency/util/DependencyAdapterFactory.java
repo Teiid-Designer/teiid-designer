@@ -7,14 +7,12 @@
  */
 package com.metamatrix.metamodels.dependency.util;
 
-import com.metamatrix.metamodels.dependency.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+import com.metamatrix.metamodels.dependency.DependencyInfo;
+import com.metamatrix.metamodels.dependency.DependencyPackage;
 
 /**
  * <!-- begin-user-doc -->

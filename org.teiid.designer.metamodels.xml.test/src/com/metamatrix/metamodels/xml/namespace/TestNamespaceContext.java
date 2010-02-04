@@ -9,13 +9,11 @@ package com.metamatrix.metamodels.xml.namespace;
 
 import java.util.Iterator;
 import java.util.List;
-
 import junit.extensions.TestSetup;
 import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import com.metamatrix.metamodels.xml.XmlDocument;
 import com.metamatrix.metamodels.xml.XmlDocumentFactory;
 import com.metamatrix.metamodels.xml.XmlElement;

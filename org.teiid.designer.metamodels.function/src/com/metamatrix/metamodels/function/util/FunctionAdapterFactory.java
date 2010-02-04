@@ -12,7 +12,6 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.function.Function;
 import com.metamatrix.metamodels.function.FunctionPackage;
 import com.metamatrix.metamodels.function.FunctionParameter;

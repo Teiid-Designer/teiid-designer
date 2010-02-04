@@ -7,14 +7,12 @@
  */
 package com.metamatrix.modeler.relationship.ui.actions;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
-
-import org.eclipse.emf.common.notify.Notification;
-
 import com.metamatrix.modeler.diagram.ui.actions.DiagramGlobalActionsMap;
 import com.metamatrix.modeler.diagram.ui.actions.SaveDiagramAction;
 import com.metamatrix.modeler.diagram.ui.drawing.actions.RefreshAction;

@@ -9,7 +9,6 @@ package com.metamatrix.modeler.relationship.ui.navigation.figure;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.modeler.diagram.ui.util.ToolTipUtil;
 import com.metamatrix.modeler.relationship.ui.UiConstants;
 import com.metamatrix.modeler.relationship.ui.navigation.model.NavigationModelNode;

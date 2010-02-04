@@ -7,16 +7,12 @@
  */
 package com.metamatrix.metamodels.xml.impl;
 
-import com.metamatrix.metamodels.xml.BuildStatus;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.eclipse.xsd.XSDComponent;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
@@ -24,7 +20,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.InternalEList;
-
+import org.eclipse.xsd.XSDComponent;
+import com.metamatrix.metamodels.xml.BuildStatus;
 import com.metamatrix.metamodels.xml.ChoiceErrorMode;
 import com.metamatrix.metamodels.xml.ChoiceOption;
 import com.metamatrix.metamodels.xml.XmlChoice;

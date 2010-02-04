@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.mapping.factory;
 
 import java.util.HashMap;
 import java.util.Iterator;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;

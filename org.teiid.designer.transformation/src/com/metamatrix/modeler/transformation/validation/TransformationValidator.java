@@ -22,7 +22,7 @@ import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.api.exception.query.QueryMetadataException;
 import com.metamatrix.api.exception.query.QueryResolverException;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Procedure;
@@ -359,7 +359,7 @@ public class TransformationValidator implements QueryValidator {
 
         Map externalMetadata = Collections.EMPTY_MAP;
         try {
-            // look up external meta data
+            // look up external metadata
             externalMetadata = TransformationHelper.getExternalMetadataMap(command, mappingRoot, getQueryMetadata());
         } catch (QueryMetadataException e) {
             IStatus errorStatus = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
@@ -570,7 +570,7 @@ public class TransformationValidator implements QueryValidator {
         IStatus status = null;
 
         ArgCheck.isNotNull(command);
-        String commandSQL = command.toString();
+		String commandSQL = command.toString();
         // ------------------------------------------------------------
         // Resolve the Command
         // ------------------------------------------------------------
@@ -587,10 +587,10 @@ public class TransformationValidator implements QueryValidator {
             status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
         }
 
-        if (status != null && status.getSeverity() == IStatus.ERROR) {
-            return new SqlTransformationResult(parseSQL(commandSQL).getCommand(), status);
-        }
-
+		if(status!=null && status.getSeverity()==IStatus.ERROR) {
+			return new SqlTransformationResult(parseSQL(commandSQL).getCommand(), status);
+		}
+			
         SqlTransformationResult resolverResult = new SqlTransformationResult(command, status);
         // set the external metadata on the resolverResult
         resolverResult.setExternalMetadataMap(externalMetadata);

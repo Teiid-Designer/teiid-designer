@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.mapping.choice;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**

@@ -10,7 +10,6 @@ package com.metamatrix.modeler.diagram.ui.drawing;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.diagram.DiagramEntity;
 import com.metamatrix.modeler.diagram.ui.drawing.model.EllipseModelNode;

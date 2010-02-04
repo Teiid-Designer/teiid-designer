@@ -10,12 +10,10 @@ package com.metamatrix.modeler.core.validation.rules;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import com.metamatrix.metamodels.core.CoreFactory;
 import com.metamatrix.metamodels.core.CorePackage;
 import com.metamatrix.metamodels.core.ModelAnnotation;

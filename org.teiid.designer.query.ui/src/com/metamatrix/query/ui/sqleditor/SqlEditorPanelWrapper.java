@@ -10,10 +10,8 @@ package com.metamatrix.query.ui.sqleditor;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.widgets.Composite;
-
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.query.internal.ui.sqleditor.SqlEditorInternalEvent;

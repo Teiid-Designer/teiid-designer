@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.wsdl;
 
 import com.metamatrix.metamodels.wsdl.mime.MimeElementOwner;
-
 import com.metamatrix.metamodels.wsdl.soap.SoapBody;
 import com.metamatrix.metamodels.wsdl.soap.SoapHeader;
 

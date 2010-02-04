@@ -10,11 +10,9 @@ package com.metamatrix.modeler.jdbc.relational.compare;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import com.metamatrix.modeler.core.compare.EObjectMatcherFactory;
 import com.metamatrix.modeler.jdbc.JdbcPackage;
 

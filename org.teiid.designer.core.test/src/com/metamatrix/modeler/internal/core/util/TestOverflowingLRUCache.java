@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.core.util;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import junit.framework.TestCase;
 
 /**

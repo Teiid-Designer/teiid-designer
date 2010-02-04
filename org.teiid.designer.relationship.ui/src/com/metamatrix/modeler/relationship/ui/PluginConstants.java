@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.relationship.ui;
 
 import org.eclipse.swt.graphics.RGB;
-
 import com.metamatrix.ui.PreferenceKeyAndDefaultValue;
 /**
  * @author BLaFond

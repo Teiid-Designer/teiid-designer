@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.ui.actions.workers;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
-
 import com.metamatrix.modeler.internal.ui.wizards.ExportWizard;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 

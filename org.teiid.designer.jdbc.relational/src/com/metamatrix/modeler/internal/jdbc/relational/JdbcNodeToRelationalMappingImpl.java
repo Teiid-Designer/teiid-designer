@@ -10,11 +10,9 @@ package com.metamatrix.modeler.internal.jdbc.relational;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.jdbc.metadata.JdbcCatalog;
 import com.metamatrix.modeler.jdbc.metadata.JdbcNode;

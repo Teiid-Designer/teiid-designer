@@ -9,12 +9,9 @@ package com.metamatrix.vdb.edit;
 
 import java.beans.VetoableChangeListener;
 import java.io.File;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 import com.metamatrix.vdb.edit.manifest.NonModelReference;
@@ -122,7 +119,7 @@ public interface VdbContextEditor extends VdbContext, IChangeNotifier {
      * @return the status of the save operation
      */
     IStatus save(IProgressMonitor theMonitor) throws VdbEditException;
-    
+
     /**
      * Adds the given listener to this notifier. Has no effect if an identical listener is already registered.
      * @param theListener the listener being registered

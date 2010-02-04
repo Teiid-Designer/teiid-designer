@@ -10,11 +10,9 @@ package com.metamatrix.modeler.relationship.ui.navigation.model;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Vector;
-
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;
 /**
  * @author blafond

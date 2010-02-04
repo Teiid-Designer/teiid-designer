@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.transformation.ui.util;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.diagram.ui.util.RelationalUmlEObjectHelper;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 

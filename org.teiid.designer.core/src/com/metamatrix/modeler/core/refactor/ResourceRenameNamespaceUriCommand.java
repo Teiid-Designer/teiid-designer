@@ -8,12 +8,10 @@
 package com.metamatrix.modeler.core.refactor;
 
 import java.util.Map;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.CorePackage;
 import com.metamatrix.metamodels.core.ModelAnnotation;

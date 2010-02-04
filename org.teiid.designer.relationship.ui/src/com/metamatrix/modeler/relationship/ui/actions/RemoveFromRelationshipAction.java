@@ -9,11 +9,9 @@ package com.metamatrix.modeler.relationship.ui.actions;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
-
 import com.metamatrix.metamodels.relationship.Relationship;
 import com.metamatrix.metamodels.relationship.RelationshipType;
 import com.metamatrix.modeler.core.ModelerCore;

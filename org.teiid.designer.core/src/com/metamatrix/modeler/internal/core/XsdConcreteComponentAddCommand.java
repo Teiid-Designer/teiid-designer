@@ -11,15 +11,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import org.w3c.dom.Element;
-
-import org.eclipse.xsd.XSDConcreteComponent;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.xsd.XSDConcreteComponent;
+import org.w3c.dom.Element;
 
 /** 
  * @since 4.3

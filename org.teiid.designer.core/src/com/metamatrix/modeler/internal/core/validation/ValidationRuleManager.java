@@ -8,13 +8,11 @@
 package com.metamatrix.modeler.internal.core.validation;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.xsd.util.XSDResourceImpl;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
-import com.metamatrix.core.util.ArgCheck;
+import org.eclipse.xsd.util.XSDResourceImpl;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.LRUCache;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;

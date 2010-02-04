@@ -7,20 +7,17 @@
  */
 package com.metamatrix.metamodels.xsd.aspects.imports;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.xsd.XSDPackage;
-import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.XSDSchemaDirective;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-
-import com.metamatrix.core.util.ArgCheck;
+import org.eclipse.xsd.XSDPackage;
+import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDSchemaDirective;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.xsd.XsdPlugin;

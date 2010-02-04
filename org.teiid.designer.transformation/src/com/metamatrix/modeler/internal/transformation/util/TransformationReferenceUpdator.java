@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.internal.transformation.util;
 
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.modeler.core.refactor.ReferenceUpdator;
 import com.metamatrix.modeler.transformation.validation.SqlTransformationResult;

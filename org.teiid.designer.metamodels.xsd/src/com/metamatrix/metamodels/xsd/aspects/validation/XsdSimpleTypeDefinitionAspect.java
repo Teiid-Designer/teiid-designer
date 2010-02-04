@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.xsd.aspects.validation;
 
 import org.eclipse.xsd.XSDPackage;
-
 import com.metamatrix.metamodels.xsd.aspects.validation.rules.BaseTypeRule;
 import com.metamatrix.metamodels.xsd.aspects.validation.rules.ItemTypeRule;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;

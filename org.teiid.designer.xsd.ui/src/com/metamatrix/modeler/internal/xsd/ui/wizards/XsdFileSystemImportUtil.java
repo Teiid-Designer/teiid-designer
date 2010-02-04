@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -42,7 +41,6 @@ import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.eclipse.xsd.XSDImport;
 import org.eclipse.xsd.XSDSchema;
-
 import com.metamatrix.common.protocol.URLHelper;
 import com.metamatrix.core.MetaMatrixCoreException;
 import com.metamatrix.internal.core.xml.xsd.XsdHeader;

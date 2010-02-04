@@ -8,7 +8,6 @@
 package com.metamatrix.ui.internal.widget.accumulator;
 
 import java.util.Collection;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;

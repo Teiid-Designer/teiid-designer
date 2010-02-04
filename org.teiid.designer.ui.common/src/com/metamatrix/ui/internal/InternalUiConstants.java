@@ -8,9 +8,7 @@
 package com.metamatrix.ui.internal;
 
 import java.util.ResourceBundle;
-
 import org.eclipse.jface.dialogs.IDialogConstants;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.PluginUtilImpl;

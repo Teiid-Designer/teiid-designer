@@ -12,7 +12,6 @@ import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import com.metamatrix.metamodels.xml.ProcessingInstruction;
 import com.metamatrix.metamodels.xml.XmlAttribute;
 import com.metamatrix.metamodels.xml.XmlComment;

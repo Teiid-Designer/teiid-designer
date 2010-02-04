@@ -12,12 +12,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.gef.EditPart;
-
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.gef.EditPart;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.InputSet;
 import com.metamatrix.metamodels.transformation.MappingClass;

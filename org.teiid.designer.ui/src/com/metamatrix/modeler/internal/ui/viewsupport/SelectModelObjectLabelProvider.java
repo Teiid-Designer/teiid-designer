@@ -7,11 +7,9 @@
  */
 package com.metamatrix.modeler.internal.ui.viewsupport;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-
-import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.ModelerCore;
 
 

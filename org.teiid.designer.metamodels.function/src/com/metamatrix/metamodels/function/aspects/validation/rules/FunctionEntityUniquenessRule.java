@@ -13,11 +13,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.metamodels.function.FunctionPlugin;
 import com.metamatrix.metamodels.function.ScalarFunction;
 import com.metamatrix.modeler.core.validation.ObjectValidationRule;

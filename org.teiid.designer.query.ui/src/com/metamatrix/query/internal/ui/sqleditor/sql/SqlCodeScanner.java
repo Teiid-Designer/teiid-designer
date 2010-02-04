@@ -11,7 +11,6 @@ package com.metamatrix.query.internal.ui.sqleditor.sql;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IRule;

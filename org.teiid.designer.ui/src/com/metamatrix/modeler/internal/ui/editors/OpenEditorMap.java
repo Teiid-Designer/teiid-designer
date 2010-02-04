@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.internal.ui.editors;
 
 import java.util.HashMap;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 

@@ -11,7 +11,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-
 import com.metamatrix.modeler.compare.DifferenceReport;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 

@@ -9,7 +9,6 @@ package com.metamatrix.modeler.core.association;
 
 import java.util.Collection;
 import java.util.List;
-
 import com.metamatrix.modeler.core.ModelerCoreException;
 
 /**

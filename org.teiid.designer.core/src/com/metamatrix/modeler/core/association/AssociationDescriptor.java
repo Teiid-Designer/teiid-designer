@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.association;
 
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**

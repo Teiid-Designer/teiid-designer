@@ -13,9 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.modeler.mapping.factory.ITreeToRelationalMapper;
 

@@ -7,21 +7,17 @@
  */
 package com.metamatrix.metamodels.history.impl;
 
-import com.metamatrix.metamodels.history.HistoryCriteria;
-import com.metamatrix.metamodels.history.HistoryLog;
-import com.metamatrix.metamodels.history.HistoryPackage;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import com.metamatrix.metamodels.history.HistoryCriteria;
+import com.metamatrix.metamodels.history.HistoryLog;
+import com.metamatrix.metamodels.history.HistoryPackage;
 
 /**
  * <!-- begin-user-doc -->

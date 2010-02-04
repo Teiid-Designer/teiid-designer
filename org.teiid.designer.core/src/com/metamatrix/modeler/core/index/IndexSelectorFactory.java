@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.index;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 
 

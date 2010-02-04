@@ -8,10 +8,8 @@
 package com.metamatrix.metamodels.wsdl.http.util;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.wsdl.http.HttpAddress;
 import com.metamatrix.metamodels.wsdl.http.HttpBinding;
 import com.metamatrix.metamodels.wsdl.http.HttpOperation;

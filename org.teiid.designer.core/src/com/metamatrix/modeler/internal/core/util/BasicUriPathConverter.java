@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.internal.core.util;
 
 import java.util.Arrays;
-
 import org.eclipse.emf.common.util.URI;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.core.util.UriPathConverter;
 
 /**

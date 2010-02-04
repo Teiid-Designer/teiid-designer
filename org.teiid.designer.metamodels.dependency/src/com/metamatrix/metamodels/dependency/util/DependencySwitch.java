@@ -7,12 +7,11 @@
  */
 package com.metamatrix.metamodels.dependency.util;
 
-import com.metamatrix.metamodels.dependency.*;
-
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import com.metamatrix.metamodels.dependency.DependencyInfo;
+import com.metamatrix.metamodels.dependency.DependencyPackage;
 
 /**
  * <!-- begin-user-doc -->

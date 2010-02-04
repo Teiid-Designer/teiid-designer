@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.layout;
 
 import java.util.List;
-
 import org.eclipse.draw2d.geometry.Point;
 
 

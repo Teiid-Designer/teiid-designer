@@ -9,7 +9,6 @@ package com.metamatrix.modeler.diagram.ui.util;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
@@ -18,7 +17,6 @@ import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.tools.DragEditPartsTracker;
-
 import com.metamatrix.modeler.diagram.ui.notation.uml.part.SetAssociationCommand;
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
 

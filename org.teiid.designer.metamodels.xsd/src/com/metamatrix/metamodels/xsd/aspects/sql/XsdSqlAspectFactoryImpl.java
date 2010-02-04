@@ -7,10 +7,8 @@
  */
 package com.metamatrix.metamodels.xsd.aspects.sql;
 
-import org.eclipse.xsd.XSDPackage;
-
 import org.eclipse.emf.ecore.EClassifier;
-
+import org.eclipse.xsd.XSDPackage;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspectFactory;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;

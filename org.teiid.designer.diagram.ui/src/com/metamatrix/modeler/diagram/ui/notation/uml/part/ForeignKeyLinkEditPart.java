@@ -7,16 +7,12 @@
  */
 package com.metamatrix.modeler.diagram.ui.notation.uml.part;
 
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PolygonDecoration;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionEditPart;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;
 import com.metamatrix.modeler.diagram.ui.connection.decorator.DecoratorFactory;
-
-import org.eclipse.draw2d.ColorConstants;
-
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.PolygonDecoration;
-
-
 import com.metamatrix.modeler.diagram.ui.figure.DiagramPolylineConnection;
 
 /**

@@ -8,11 +8,8 @@
 package com.metamatrix.modeler.internal.dqp.ui.connection;
 
 import java.util.Collections;
-
 import net.sourceforge.sqlexplorer.ext.IRequestDocumentGenerator;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.metamodels.webservice.Operation;

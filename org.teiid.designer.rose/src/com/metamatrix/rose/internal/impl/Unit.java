@@ -11,13 +11,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.importer.rose.parser.RoseNode;
-
 import com.metamatrix.core.util.UriUtil;
 import com.metamatrix.rose.internal.IRoseConstants;
 import com.metamatrix.rose.internal.IUnit;

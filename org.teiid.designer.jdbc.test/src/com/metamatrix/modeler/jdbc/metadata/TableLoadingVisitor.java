@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.jdbc.metadata;
 
 import java.io.PrintStream;
-
 import junit.framework.Assert;
-
 import com.metamatrix.core.util.Stopwatch;
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.data.Request;

@@ -8,17 +8,14 @@
 package com.metamatrix.modeler.dqp;
 
 import java.io.File;
-
 import junit.framework.Assert;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-
 import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.modeler.dqp.config.ConfigurationManager;
 import com.metamatrix.modeler.dqp.internal.config.ConfigurationManagerImpl;
-import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.dqp.internal.config.DqpExtensionsHandler;
+import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 
 
 /** 

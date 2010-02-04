@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.modelgenerator.ui.wizards;
 
 import java.util.Map;
-
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
-
 import com.metamatrix.modeler.modelgenerator.ui.ModelGeneratorUiConstants;
 import com.metamatrix.ui.internal.util.WizardUtil;
 

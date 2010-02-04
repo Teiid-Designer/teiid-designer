@@ -9,7 +9,6 @@ package com.metamatrix.metamodels.xsd;
 
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
@@ -17,10 +16,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDResourceImpl;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.core.ModelInitializer;
-import com.metamatrix.metamodels.xsd.XsdPlugin;
 
 /**
  * AbstractXsdInitializer

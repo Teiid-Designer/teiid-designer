@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.core.util;
 
 import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.metamodels.core.util.UriValidator;
 
 

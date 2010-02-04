@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.mapping.ui.editor;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.core.util.HashCodeUtil;
 
 /**

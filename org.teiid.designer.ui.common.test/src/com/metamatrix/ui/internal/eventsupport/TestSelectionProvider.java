@@ -8,9 +8,7 @@
 package com.metamatrix.ui.internal.eventsupport;
 
 import java.util.ArrayList;
-
 import junit.framework.TestCase;
-
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;

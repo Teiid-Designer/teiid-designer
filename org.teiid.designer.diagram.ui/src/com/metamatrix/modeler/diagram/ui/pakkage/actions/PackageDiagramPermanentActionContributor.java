@@ -9,12 +9,9 @@ package com.metamatrix.modeler.diagram.ui.pakkage.actions;
 
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
-
-//import com.metamatrix.modeler.diagram.ui.actions.DiagramAction;
 import com.metamatrix.modeler.ui.actions.IModelObjectActionContributor;
 
 /**

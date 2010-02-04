@@ -20,7 +20,6 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-
 import com.metamatrix.modeler.internal.ui.forms.ComponentCategory;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 import com.metamatrix.modeler.xsd.ui.ModelerXsdUiPlugin;

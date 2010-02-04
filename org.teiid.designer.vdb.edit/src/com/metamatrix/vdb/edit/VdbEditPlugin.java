@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IExtension;
@@ -33,12 +32,11 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.plugin.PluginUtilities;
-import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;

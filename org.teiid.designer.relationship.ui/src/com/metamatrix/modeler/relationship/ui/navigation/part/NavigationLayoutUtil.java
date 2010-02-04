@@ -10,7 +10,6 @@ package com.metamatrix.modeler.relationship.ui.navigation.part;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import com.metamatrix.modeler.relationship.ui.navigation.NavigationGraphicalViewer;
 
 /**

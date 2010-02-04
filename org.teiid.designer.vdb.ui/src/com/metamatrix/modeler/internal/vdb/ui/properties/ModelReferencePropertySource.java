@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.vdb.ui.properties;
 
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.vdb.edit.VdbEditingContext;

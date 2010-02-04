@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.relational.aspects.uml;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;

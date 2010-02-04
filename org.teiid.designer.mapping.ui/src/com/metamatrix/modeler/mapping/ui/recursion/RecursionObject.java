@@ -9,7 +9,6 @@ package com.metamatrix.modeler.mapping.ui.recursion;
 
 import java.util.Iterator;
 import java.util.List;
-
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.RecursionErrorMode;
 

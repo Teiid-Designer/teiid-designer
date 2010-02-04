@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.relationship.ui.navigation.figure;
 
 import org.eclipse.draw2d.ColorConstants;
-
 import com.metamatrix.modeler.relationship.ui.navigation.model.NavigationModelNode;
 
 

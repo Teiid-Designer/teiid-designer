@@ -10,11 +10,9 @@ package com.metamatrix.modeler.internal.core.index;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.core.index.IndexSelector;
 import com.metamatrix.modeler.core.index.IndexSelectorFactory;
 import com.metamatrix.modeler.core.workspace.ModelResource;

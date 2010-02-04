@@ -8,10 +8,8 @@
 package com.metamatrix.vdb.internal.runtime.model;
 
 import java.util.Date;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 import com.metamatrix.vdb.runtime.BasicModelInfo;

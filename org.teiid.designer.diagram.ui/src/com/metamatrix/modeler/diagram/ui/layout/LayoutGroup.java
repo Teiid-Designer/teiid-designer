@@ -10,10 +10,8 @@ package com.metamatrix.modeler.diagram.ui.layout;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 
 /**

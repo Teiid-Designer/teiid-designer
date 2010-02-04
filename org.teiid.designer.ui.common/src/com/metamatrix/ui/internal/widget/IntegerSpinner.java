@@ -9,9 +9,7 @@ package com.metamatrix.ui.internal.widget;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.swt.widgets.Composite;
-
 import com.metamatrix.core.util.I18nUtil;
 
 /**

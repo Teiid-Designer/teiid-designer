@@ -12,9 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.metadata.runtime.impl.MetadataRecordDelegate;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;

@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.ui.actions;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-
 import com.metamatrix.modeler.core.util.ModelStatisticsVisitor;
 import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
 import com.metamatrix.modeler.core.util.PrimaryMetamodelStatisticsVisitor;

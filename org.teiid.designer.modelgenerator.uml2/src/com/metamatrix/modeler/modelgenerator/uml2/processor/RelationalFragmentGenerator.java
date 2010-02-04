@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.modelgenerator.uml2.processor;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 
 

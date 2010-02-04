@@ -9,14 +9,12 @@ package com.metamatrix.modeler.transformation.ui.util;
 
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.metamodels.transformation.InputSet;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord;

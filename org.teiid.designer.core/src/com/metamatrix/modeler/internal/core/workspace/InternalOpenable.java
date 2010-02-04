@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.core.workspace;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 
 /**

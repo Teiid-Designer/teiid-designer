@@ -11,14 +11,11 @@ package com.metamatrix.modeler.internal.ui.actions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-
-import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.relational.aspects.sql.ProcedureParameterAspect;
 import com.metamatrix.metamodels.xmlservice.aspects.sql.XmlInputAspect;
 import com.metamatrix.modeler.core.ModelerCore;

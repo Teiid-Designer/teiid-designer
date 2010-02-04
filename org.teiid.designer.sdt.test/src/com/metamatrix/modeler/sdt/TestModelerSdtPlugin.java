@@ -10,12 +10,10 @@ package com.metamatrix.modeler.sdt;
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsd.XSDSchema;
@@ -24,7 +22,6 @@ import org.eclipse.xsd.impl.XSDPackageImpl;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
-
 import com.metamatrix.modeler.core.types.DatatypeConstants;
 
 

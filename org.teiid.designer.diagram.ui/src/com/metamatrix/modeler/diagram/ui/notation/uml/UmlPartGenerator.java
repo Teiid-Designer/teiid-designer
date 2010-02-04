@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.notation.uml;
 
 import org.eclipse.gef.EditPart;
-
 import com.metamatrix.modeler.diagram.ui.notation.NotationPartGenerator;
 import com.metamatrix.modeler.diagram.ui.notation.uml.model.UmlAssociationNode;
 import com.metamatrix.modeler.diagram.ui.notation.uml.model.UmlAttributeNode;

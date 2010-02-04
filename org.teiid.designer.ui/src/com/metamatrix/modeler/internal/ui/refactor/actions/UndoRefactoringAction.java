@@ -14,7 +14,6 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.actions.ActionDelegate;
-
 import com.metamatrix.modeler.internal.ui.refactor.RefactorUndoListener;
 import com.metamatrix.modeler.internal.ui.refactor.RefactorUndoManager;
 import com.metamatrix.modeler.ui.UiPlugin;

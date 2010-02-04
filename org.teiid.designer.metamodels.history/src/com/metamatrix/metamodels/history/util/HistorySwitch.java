@@ -7,12 +7,18 @@
  */
 package com.metamatrix.metamodels.history.util;
 
-import com.metamatrix.metamodels.history.*;
-
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import com.metamatrix.metamodels.history.Branch;
+import com.metamatrix.metamodels.history.HistoryCriteria;
+import com.metamatrix.metamodels.history.HistoryLog;
+import com.metamatrix.metamodels.history.HistoryLogEntry;
+import com.metamatrix.metamodels.history.HistoryPackage;
+import com.metamatrix.metamodels.history.Label;
+import com.metamatrix.metamodels.history.LabelLog;
+import com.metamatrix.metamodels.history.Revision;
+import com.metamatrix.metamodels.history.RevisionLog;
 
 /**
  * <!-- begin-user-doc -->

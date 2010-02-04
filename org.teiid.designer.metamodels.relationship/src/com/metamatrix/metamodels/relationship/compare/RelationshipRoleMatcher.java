@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.relationship.compare;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.relationship.RelationshipRole;
 
 

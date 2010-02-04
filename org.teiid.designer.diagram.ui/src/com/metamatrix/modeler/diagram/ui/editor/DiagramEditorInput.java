@@ -11,10 +11,8 @@ package com.metamatrix.modeler.diagram.ui.editor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
-//import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 
 /**
  * PackageDiagramResource is a temporary interface for experimenting with

@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.w3c.dom.Node;
-
 import com.metamatrix.metamodels.xsd.aspects.sql.XsdSimpleTypeDefinitionAspect;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;

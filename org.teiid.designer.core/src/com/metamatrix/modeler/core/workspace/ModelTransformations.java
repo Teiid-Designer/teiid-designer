@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.core.workspace;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.transformation.FragmentMappingRoot;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;

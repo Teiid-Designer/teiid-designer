@@ -8,11 +8,9 @@
 package com.metamatrix.metamodels.relationship.aspects.relationship;
 
 import java.util.Collection;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.relationship.Relationship;
 import com.metamatrix.metamodels.relationship.RelationshipRole;
 import com.metamatrix.metamodels.relationship.RelationshipType;

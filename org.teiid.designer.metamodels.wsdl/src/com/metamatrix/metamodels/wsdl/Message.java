@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.wsdl;
 
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.common.util.EList;
 
 /**

@@ -9,8 +9,7 @@ package com.metamatrix.core.selection;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 
 /**
  * TreeSelectionState

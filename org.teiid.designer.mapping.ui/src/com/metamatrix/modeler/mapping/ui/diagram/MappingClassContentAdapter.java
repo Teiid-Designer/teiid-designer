@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.mapping.ui.diagram;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.InputSet;
 import com.metamatrix.metamodels.transformation.MappingClass;

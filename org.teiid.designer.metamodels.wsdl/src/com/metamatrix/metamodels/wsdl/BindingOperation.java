@@ -7,11 +7,9 @@
  */
 package com.metamatrix.metamodels.wsdl;
 
-import com.metamatrix.metamodels.wsdl.http.HttpOperation;
-
-import com.metamatrix.metamodels.wsdl.soap.SoapOperation;
-
 import org.eclipse.emf.common.util.EList;
+import com.metamatrix.metamodels.wsdl.http.HttpOperation;
+import com.metamatrix.metamodels.wsdl.soap.SoapOperation;
 
 /**
  * <!-- begin-user-doc -->

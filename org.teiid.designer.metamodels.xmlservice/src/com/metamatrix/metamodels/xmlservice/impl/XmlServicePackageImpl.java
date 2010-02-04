@@ -7,9 +7,6 @@
  */
 package com.metamatrix.metamodels.xmlservice.impl;
 
-import org.eclipse.xsd.XSDPackage;
-import org.eclipse.xsd.impl.XSDPackageImpl;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
@@ -18,7 +15,8 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.emf.ecore.impl.EcorePackageImpl;
-
+import org.eclipse.xsd.XSDPackage;
+import org.eclipse.xsd.impl.XSDPackageImpl;
 import com.metamatrix.metamodels.xmlservice.OperationUpdateCount;
 import com.metamatrix.metamodels.xmlservice.XmlInput;
 import com.metamatrix.metamodels.xmlservice.XmlMessage;

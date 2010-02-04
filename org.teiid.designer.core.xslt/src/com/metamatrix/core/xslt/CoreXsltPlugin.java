@@ -10,20 +10,17 @@ package com.metamatrix.core.xslt;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ResourceBundle;
-
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamSource;
-
 import org.eclipse.core.runtime.Plugin;
 import org.jdom.Document;
 import org.jdom.output.XMLOutputter;
 import org.osgi.framework.BundleContext;
-
 import com.metamatrix.core.MetaMatrixCoreException;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.PluginUtilImpl;
 
 /**

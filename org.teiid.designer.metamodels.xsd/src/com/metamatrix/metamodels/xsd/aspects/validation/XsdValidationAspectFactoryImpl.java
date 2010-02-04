@@ -9,7 +9,6 @@ package com.metamatrix.metamodels.xsd.aspects.validation;
 
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.xsd.XSDPackage;
-
 import com.metamatrix.metamodels.xsd.XsdPlugin;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspectFactory;

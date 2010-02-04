@@ -9,7 +9,6 @@ package com.metamatrix.modeler.relationship.ui.layout;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.metamatrix.modeler.diagram.ui.layout.LayoutGroup;
 import com.metamatrix.modeler.diagram.ui.layout.LayoutHelper;
 import com.metamatrix.modeler.diagram.ui.layout.LayoutUtilities;

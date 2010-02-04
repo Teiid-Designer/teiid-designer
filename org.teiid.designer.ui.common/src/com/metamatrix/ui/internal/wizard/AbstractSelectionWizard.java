@@ -15,8 +15,8 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.plugin.PluginUtilities;
-import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.ui.UiConstants;
 

@@ -8,11 +8,9 @@
 package com.metamatrix.query.internal.ui.builder.util;
 
 import java.text.MessageFormat;
-
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-
 import com.metamatrix.api.exception.query.QueryParserException;
 import com.metamatrix.query.parser.QueryParser;
 import com.metamatrix.query.sql.LanguageObject;

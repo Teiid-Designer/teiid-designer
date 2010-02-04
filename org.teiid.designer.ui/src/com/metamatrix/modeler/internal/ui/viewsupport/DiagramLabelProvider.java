@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.ui.viewsupport;
 
 import java.util.HashMap;
 import java.util.Iterator;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -18,7 +17,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.ui.UiConstants;
 

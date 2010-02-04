@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.core.metamodel;
 
 import java.util.List;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EPackage;
-
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelInitializer;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspectFactory;

@@ -8,12 +8,10 @@
 package com.metamatrix.modeler.schema.tools.model.schema;
 
 import java.util.List;
-
 import org.eclipse.xsd.XSDComplexTypeContent;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
-
 import com.metamatrix.modeler.schema.tools.processing.RelationshipProcessor;
 
 public interface SchemaObject {

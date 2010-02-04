@@ -9,7 +9,6 @@ package com.metamatrix.modeler.relationship.ui.navigation.part;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
-
 import com.metamatrix.modeler.relationship.ui.navigation.figure.DummyFocusNodeFigure;
 import com.metamatrix.modeler.relationship.ui.navigation.figure.NavigationDiagramFigureFactory;
 

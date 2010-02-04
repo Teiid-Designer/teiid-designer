@@ -9,12 +9,10 @@ package com.metamatrix.modeler.internal.xml.ui.wizards;
 
 import java.util.Arrays;
 import java.util.Collection;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
 import com.metamatrix.metamodels.xml.XmlFragment;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.xml.IVirtualDocumentFragmentSource;

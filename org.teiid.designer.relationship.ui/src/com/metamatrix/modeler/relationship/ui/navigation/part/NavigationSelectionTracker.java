@@ -15,7 +15,6 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.tools.SelectEditPartTracker;
 import org.eclipse.swt.events.MouseEvent;
-
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
 import com.metamatrix.modeler.relationship.ui.navigation.selection.NavigationSelectionHandler;
 

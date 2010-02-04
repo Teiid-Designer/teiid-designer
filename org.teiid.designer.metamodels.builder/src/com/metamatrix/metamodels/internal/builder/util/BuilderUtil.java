@@ -9,7 +9,6 @@ package com.metamatrix.metamodels.internal.builder.util;
 
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.metamodels.builder.BuilderConstants;
 import com.metamatrix.metamodels.builder.MetamodelBuilderPlugin;

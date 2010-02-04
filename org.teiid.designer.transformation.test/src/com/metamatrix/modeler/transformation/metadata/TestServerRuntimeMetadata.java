@@ -16,12 +16,10 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import com.metamatrix.api.exception.query.QueryMetadataException;
 import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.modeler.core.index.IndexSelector;

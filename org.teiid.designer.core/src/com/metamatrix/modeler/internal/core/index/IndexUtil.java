@@ -21,7 +21,7 @@ import com.metamatrix.core.MetaMatrixCoreException;
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.index.IIndex;
 import com.metamatrix.core.index.IIndexer;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.modeler.core.ModelerCore;

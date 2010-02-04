@@ -9,7 +9,6 @@ package com.metamatrix.modeler.core.search.commands;
 
 import java.util.Collection;
 import java.util.List;
-
 import com.metamatrix.modeler.core.index.IndexSelector;
 
 /**

@@ -11,7 +11,6 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
-
 import com.metamatrix.modeler.relationship.ui.navigation.model.NavigationModelNode;
 
 /**

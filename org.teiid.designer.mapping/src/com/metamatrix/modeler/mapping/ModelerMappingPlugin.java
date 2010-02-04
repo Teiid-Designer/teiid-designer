@@ -7,9 +7,8 @@
  */
 package com.metamatrix.modeler.mapping;
 
-import org.osgi.framework.BundleContext;
-
 import org.eclipse.core.runtime.Plugin;
+import org.osgi.framework.BundleContext;
 
 /**
  * ModelerMappingPlugin is the plugin class for com.metamatrix.modeler.mapping

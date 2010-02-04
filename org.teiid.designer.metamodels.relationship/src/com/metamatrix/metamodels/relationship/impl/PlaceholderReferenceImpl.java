@@ -15,7 +15,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import com.metamatrix.metamodels.relationship.PlaceholderReference;
 import com.metamatrix.metamodels.relationship.PlaceholderReferenceContainer;
 import com.metamatrix.metamodels.relationship.RelationshipPackage;

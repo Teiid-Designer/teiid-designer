@@ -8,11 +8,9 @@
 package com.metamatrix.modeler.mapping.ui;
 
 import java.util.ResourceBundle;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;

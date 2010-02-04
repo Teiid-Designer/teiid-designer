@@ -9,9 +9,7 @@ package com.metamatrix.modeler.jdbc.metadata;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-
 import org.eclipse.core.runtime.IPath;
-
 import com.metamatrix.modeler.jdbc.JdbcException;
 
 /**

@@ -8,11 +8,9 @@
 package com.metamatrix.metamodels.webservice.aspects.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.xsd.XSDComponent;
-
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import org.eclipse.xsd.XSDComponent;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.webservice.Message;
 import com.metamatrix.metamodels.webservice.WebServiceMetamodelPlugin;
 import com.metamatrix.modeler.core.validation.ObjectValidationRule;

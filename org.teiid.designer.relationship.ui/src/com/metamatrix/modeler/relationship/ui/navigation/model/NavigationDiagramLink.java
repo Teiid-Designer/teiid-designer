@@ -9,10 +9,8 @@ package com.metamatrix.modeler.relationship.ui.navigation.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.geometry.PointList;
-
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.connection.AbstractNodeConnectionModel;
 import com.metamatrix.modeler.diagram.ui.connection.BinaryAssociation;

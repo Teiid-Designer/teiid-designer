@@ -14,7 +14,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.SameShellProvider;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.actions.ActionFactory;
-
 import com.metamatrix.modeler.ui.UiConstants;
 
 /**

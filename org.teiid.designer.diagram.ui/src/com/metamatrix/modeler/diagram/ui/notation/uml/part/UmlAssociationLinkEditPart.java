@@ -10,7 +10,14 @@ package com.metamatrix.modeler.diagram.ui.notation.uml.part;
 import java.beans.PropertyChangeEvent;
 import java.util.List;
 import java.util.Vector;
-
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PolygonDecoration;
+import org.eclipse.gef.DragTracker;
+import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.swt.graphics.Color;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.connection.BinaryAssociation;
 import com.metamatrix.modeler.diagram.ui.connection.DiagramUmlAssociation;
@@ -19,22 +26,9 @@ import com.metamatrix.modeler.diagram.ui.connection.LinkEndpointEditPolicy;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionEditPart;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;
 import com.metamatrix.modeler.diagram.ui.connection.decorator.DecoratorFactory;
-
-import org.eclipse.draw2d.ColorConstants;
-
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.PolygonDecoration;
-import org.eclipse.gef.DragTracker;
-import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.Request;
-import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-import org.eclipse.swt.graphics.Color;
-
-
 import com.metamatrix.modeler.diagram.ui.editor.DiagramEditorUtil;
 import com.metamatrix.modeler.diagram.ui.figure.DiagramPolylineConnection;
 import com.metamatrix.modeler.diagram.ui.util.ConnectionSelectionTracker;
-//import com.metamatrix.modeler.diagram.ui.util.DiagramConnectionEndpointEditPolicy;
 import com.metamatrix.modeler.diagram.ui.util.DiagramNodeSelectionEditPolicy;
 
 /**

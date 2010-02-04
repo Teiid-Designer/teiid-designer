@@ -9,7 +9,6 @@ package com.metamatrix.modeler.core.transaction;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
-
 import com.metamatrix.modeler.core.ModelerCoreException;
 
 /**

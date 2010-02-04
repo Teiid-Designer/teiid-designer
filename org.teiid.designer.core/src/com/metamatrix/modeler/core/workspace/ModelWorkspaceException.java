@@ -9,7 +9,6 @@ package com.metamatrix.modeler.core.workspace;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.internal.core.workspace.ModelStatusImpl;
 

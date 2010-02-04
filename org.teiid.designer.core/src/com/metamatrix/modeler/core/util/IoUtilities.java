@@ -12,10 +12,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-
 import com.metamatrix.internal.core.index.IIndexConstants;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 

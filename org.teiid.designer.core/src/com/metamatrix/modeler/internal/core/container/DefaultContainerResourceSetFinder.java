@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.core.container;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.ResourceSetFinder;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;

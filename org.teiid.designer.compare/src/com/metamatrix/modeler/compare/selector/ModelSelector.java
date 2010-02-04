@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.compare.selector;
 
 import java.util.List;
-
 import org.eclipse.emf.common.util.URI;
-
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.util.ModelContents;

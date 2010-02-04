@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.internal.core.index;
 
 import java.io.File;
-
 import org.eclipse.core.resources.IResource;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.internal.core.index.FileDocument;
 import com.metamatrix.modeler.core.index.ResourceDocument;
 

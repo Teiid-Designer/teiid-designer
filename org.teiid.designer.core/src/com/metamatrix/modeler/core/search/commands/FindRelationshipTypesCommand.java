@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.search.commands;
 
 import java.util.Collection;
-
 import com.metamatrix.modeler.core.index.IndexSelector;
 
 /**

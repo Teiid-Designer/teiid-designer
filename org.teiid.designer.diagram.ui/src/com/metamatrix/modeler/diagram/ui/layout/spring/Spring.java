@@ -13,9 +13,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.WeakHashMap;
-
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;
 import com.metamatrix.modeler.diagram.ui.layout.LayoutNode;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;

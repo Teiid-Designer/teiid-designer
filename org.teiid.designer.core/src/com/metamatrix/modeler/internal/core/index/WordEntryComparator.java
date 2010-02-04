@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.core.index;
 
 import java.util.Comparator;
-
 import com.metamatrix.internal.core.index.WordEntry;
 import com.metamatrix.modeler.core.index.IndexConstants;
 

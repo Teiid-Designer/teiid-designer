@@ -7,12 +7,7 @@
  */
 package com.metamatrix.metamodels.xml.impl;
 
-import com.metamatrix.metamodels.xml.BuildStatus;
 import java.util.Collection;
-
-import org.eclipse.xsd.XSDComponent;
-import org.eclipse.xsd.XSDParticle;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -24,7 +19,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-
+import org.eclipse.xsd.XSDComponent;
+import org.eclipse.xsd.XSDParticle;
+import com.metamatrix.metamodels.xml.BuildStatus;
 import com.metamatrix.metamodels.xml.ChoiceOption;
 import com.metamatrix.metamodels.xml.XmlBaseElement;
 import com.metamatrix.metamodels.xml.XmlBuildable;

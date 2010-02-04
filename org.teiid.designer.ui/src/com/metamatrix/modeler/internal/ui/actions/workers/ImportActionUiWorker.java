@@ -16,7 +16,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
-
 import com.metamatrix.modeler.internal.ui.actions.help.NewProjectAction;
 import com.metamatrix.modeler.internal.ui.wizards.ImportWizard;
 import com.metamatrix.modeler.ui.UiConstants;

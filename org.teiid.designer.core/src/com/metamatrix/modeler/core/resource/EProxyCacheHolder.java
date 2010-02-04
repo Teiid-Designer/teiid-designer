@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.resource;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.core.id.ObjectID;
 
 

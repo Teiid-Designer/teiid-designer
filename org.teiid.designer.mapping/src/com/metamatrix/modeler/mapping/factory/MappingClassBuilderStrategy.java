@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.mapping.factory;
 
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.internal.mapping.factory.CompositorBasedBuilderStrategy;
 import com.metamatrix.modeler.internal.mapping.factory.IterationBasedBuilderStrategy;
 import com.metamatrix.modeler.mapping.PluginConstants;

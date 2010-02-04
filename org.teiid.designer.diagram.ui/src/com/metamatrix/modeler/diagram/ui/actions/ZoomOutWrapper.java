@@ -13,7 +13,6 @@ import org.eclipse.gef.ui.actions.ZoomOutAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
-
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramEditor;
 import com.metamatrix.modeler.diagram.ui.editor.ZoomableEditor;

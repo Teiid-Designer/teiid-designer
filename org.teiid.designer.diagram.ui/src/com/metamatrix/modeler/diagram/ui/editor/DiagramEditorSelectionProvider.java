@@ -9,7 +9,6 @@ package com.metamatrix.modeler.diagram.ui.editor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;

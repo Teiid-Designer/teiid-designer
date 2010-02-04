@@ -8,13 +8,11 @@
 package com.metamatrix.modeler.relationship.ui.navigation.part;
 
 import java.util.List;
-
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
-
 import com.metamatrix.modeler.relationship.ui.navigation.NavigationGraphicalViewer;
 import com.metamatrix.modeler.relationship.ui.navigation.figure.NavigationDiagramFigureFactory;
 import com.metamatrix.modeler.relationship.ui.navigation.model.NavigationModelNode;

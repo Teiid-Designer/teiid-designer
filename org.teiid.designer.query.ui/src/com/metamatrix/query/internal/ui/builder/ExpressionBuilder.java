@@ -10,7 +10,6 @@ package com.metamatrix.query.internal.ui.builder;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.expression.ExpressionEditor;
 import com.metamatrix.query.internal.ui.builder.model.ExpressionEditorModel;

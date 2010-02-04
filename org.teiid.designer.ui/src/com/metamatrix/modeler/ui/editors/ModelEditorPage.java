@@ -7,15 +7,13 @@
  */
 package com.metamatrix.modeler.ui.editors;
 
+import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-
-import org.eclipse.emf.edit.provider.INotifyChangedListener;
-
 import com.metamatrix.core.event.EventObjectListener;
 
 /**

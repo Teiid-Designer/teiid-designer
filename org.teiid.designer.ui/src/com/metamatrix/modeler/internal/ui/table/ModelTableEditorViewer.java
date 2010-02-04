@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.ui.table;
 
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.widgets.Composite;
-
 import com.metamatrix.ui.table.DoubleClickTableViewer;
 import com.metamatrix.ui.table.TableViewerSorter;
 

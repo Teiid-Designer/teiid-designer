@@ -10,10 +10,8 @@ package com.metamatrix.modeler.relationship;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.relationship.FakeNavigationResolver;
 import com.metamatrix.modeler.internal.relationship.NavigationContextImpl;

@@ -14,7 +14,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-
 import com.metamatrix.modeler.internal.ui.actions.workers.ImportActionUiWorker;
 import com.metamatrix.modeler.ui.UiPlugin;
 

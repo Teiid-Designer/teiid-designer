@@ -10,13 +10,10 @@ package com.metamatrix.modeler.mapping.ui.actions;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
-
-import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.modeler.core.workspace.ModelResource;

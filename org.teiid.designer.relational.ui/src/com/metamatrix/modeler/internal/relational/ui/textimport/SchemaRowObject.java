@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.relational.ui.textimport;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.metamatrix.modeler.tools.textimport.ui.wizards.AbstractRowObject;
 
 public class SchemaRowObject extends AbstractRowObject {	

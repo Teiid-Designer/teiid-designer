@@ -7,28 +7,21 @@
  */
 package com.metamatrix.metamodels.transformation.impl;
 
-import com.metamatrix.metamodels.transformation.TransformationPackage;
-import com.metamatrix.metamodels.transformation.XQueryTransformation;
-
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.emf.mapping.MappingPackage;
-
 import org.eclipse.emf.mapping.impl.MappingHelperImpl;
+import com.metamatrix.metamodels.transformation.TransformationPackage;
+import com.metamatrix.metamodels.transformation.XQueryTransformation;
 
 /**
  * <!-- begin-user-doc -->

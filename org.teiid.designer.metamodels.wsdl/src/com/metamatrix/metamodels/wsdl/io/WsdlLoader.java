@@ -34,7 +34,7 @@ import org.jdom.input.DOMBuilder;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.internal.core.xml.JdomHelper;
 import com.metamatrix.metamodels.wsdl.Attribute;
 import com.metamatrix.metamodels.wsdl.Binding;

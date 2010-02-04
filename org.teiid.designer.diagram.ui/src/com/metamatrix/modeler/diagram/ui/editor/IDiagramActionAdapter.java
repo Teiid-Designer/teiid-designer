@@ -10,7 +10,6 @@ package com.metamatrix.modeler.diagram.ui.editor;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
-
 import com.metamatrix.modeler.ui.editors.ModelEditorPage;
 import com.metamatrix.ui.actions.GlobalActionsMap;
 

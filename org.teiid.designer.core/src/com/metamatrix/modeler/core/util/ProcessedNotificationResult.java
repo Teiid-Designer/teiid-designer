@@ -9,7 +9,6 @@ package com.metamatrix.modeler.core.util;
 
 import java.util.Collection;
 import java.util.HashSet;
-
 import org.eclipse.emf.ecore.resource.Resource;
 
 

@@ -10,7 +10,6 @@ package com.metamatrix.modeler.diagram.ui.connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlDependency;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 

@@ -9,20 +9,16 @@ package com.metamatrix.modeler.transformation.ui.actions;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
-
-import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlClassifier;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.ui.actions.IModelObjectActionContributor;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
-//import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
 
 /**
  * TransformationDiagramPermanentActionContributor

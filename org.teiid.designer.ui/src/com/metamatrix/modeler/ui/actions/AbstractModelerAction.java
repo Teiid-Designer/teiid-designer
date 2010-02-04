@@ -9,7 +9,6 @@ package com.metamatrix.modeler.ui.actions;
 
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.ui.AbstractUiPlugin;
 import com.metamatrix.ui.actions.AbstractAction;

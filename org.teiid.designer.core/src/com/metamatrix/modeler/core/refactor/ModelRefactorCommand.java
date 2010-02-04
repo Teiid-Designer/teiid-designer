@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.refactor;
 
 import java.util.Collection;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 

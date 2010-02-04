@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.dqp.ui.config;
 
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-
 import com.metamatrix.common.config.api.ComponentType;
 import com.metamatrix.common.config.api.ConfigurationObjectEditor;
 

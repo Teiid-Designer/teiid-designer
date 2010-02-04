@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.xsd;
 
 import java.util.ResourceBundle;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 

@@ -17,7 +17,6 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.tools.SelectEditPartTracker;
 import org.eclipse.swt.events.MouseEvent;
-
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionEditPart;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramViewer;
 import com.metamatrix.modeler.diagram.ui.editor.IDiagramSelectionHandler;

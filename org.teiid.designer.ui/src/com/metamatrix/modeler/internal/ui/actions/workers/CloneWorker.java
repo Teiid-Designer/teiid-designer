@@ -9,12 +9,9 @@ package com.metamatrix.modeler.internal.ui.actions.workers;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.viewers.ISelection;
-
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.jface.viewers.ISelection;
 import com.metamatrix.metamodels.core.ModelImport;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.xml.XmlDocument;

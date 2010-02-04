@@ -11,7 +11,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.container.Container;
 

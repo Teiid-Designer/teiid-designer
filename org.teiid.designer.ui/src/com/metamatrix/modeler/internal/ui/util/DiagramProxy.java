@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.ui.util;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.impl.DiagramImpl;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 

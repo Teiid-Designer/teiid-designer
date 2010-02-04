@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.ui.editors;
 
 import java.util.ArrayList;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -32,7 +31,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.PageBookView;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerResourceNavigator;

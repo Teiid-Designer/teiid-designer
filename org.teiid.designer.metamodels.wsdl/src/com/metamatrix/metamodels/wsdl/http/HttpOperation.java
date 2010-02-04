@@ -7,9 +7,8 @@
  */
 package com.metamatrix.metamodels.wsdl.http;
 
-import com.metamatrix.metamodels.wsdl.BindingOperation;
-
 import org.eclipse.emf.ecore.EObject;
+import com.metamatrix.metamodels.wsdl.BindingOperation;
 
 /**
  * <!-- begin-user-doc -->

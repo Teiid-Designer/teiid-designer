@@ -10,14 +10,11 @@ package com.metamatrix.modeler.internal.core.search.commands;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.xsd.XSDSimpleTypeDefinition;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.ModelerCore;

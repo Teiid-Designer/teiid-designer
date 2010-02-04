@@ -9,10 +9,8 @@ package com.metamatrix.modeler.jdbc.relational.aspects.sql;
 
 import java.util.Iterator;
 import java.util.Properties;
-
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AbstractMetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;

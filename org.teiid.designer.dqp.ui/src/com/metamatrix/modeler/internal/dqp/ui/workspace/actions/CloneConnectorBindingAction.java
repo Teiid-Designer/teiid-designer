@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
-
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;

@@ -11,9 +11,7 @@ import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.modeler.core.ExternalResourceDescriptor;
 import com.metamatrix.modeler.core.container.Container;
 

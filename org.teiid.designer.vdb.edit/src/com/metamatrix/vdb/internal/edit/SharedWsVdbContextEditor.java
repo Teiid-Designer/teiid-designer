@@ -40,7 +40,7 @@ import org.eclipse.xsd.XSDPackage;
 import org.jdom.Document;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.DateUtil;
 import com.metamatrix.core.util.FileUtils;

@@ -11,16 +11,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.core.log.Logger;
 import com.metamatrix.core.log.NullLogger;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.jdbc.JdbcImportSettings;
 import com.metamatrix.modeler.jdbc.metadata.JdbcDatabase;

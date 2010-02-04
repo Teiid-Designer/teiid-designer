@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.function.util;
 
 import java.util.Iterator;
-
 import com.metamatrix.metamodels.function.FunctionParameter;
 import com.metamatrix.metamodels.function.ReturnParameter;
 import com.metamatrix.metamodels.function.ScalarFunction;

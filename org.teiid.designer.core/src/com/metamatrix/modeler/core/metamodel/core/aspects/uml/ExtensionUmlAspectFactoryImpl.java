@@ -8,12 +8,11 @@
 package com.metamatrix.modeler.core.metamodel.core.aspects.uml;
 
 import org.eclipse.emf.ecore.EClassifier;
-
 import com.metamatrix.metamodels.core.extension.ExtensionPackage;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspectFactory;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
-import com.metamatrix.modeler.core.ModelerCore;
 
 /**
  * RelationalUmlAspectFactoryImpl

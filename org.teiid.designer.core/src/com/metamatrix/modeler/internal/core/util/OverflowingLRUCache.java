@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.core.util;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import com.metamatrix.core.util.LRUCache;
 
 /**

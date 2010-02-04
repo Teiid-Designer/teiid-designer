@@ -12,7 +12,6 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
-
 import com.metamatrix.modeler.ui.UiPlugin;
 
 /**

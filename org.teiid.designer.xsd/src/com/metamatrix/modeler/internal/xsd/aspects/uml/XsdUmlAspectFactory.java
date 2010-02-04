@@ -7,10 +7,8 @@
  */
 package com.metamatrix.modeler.internal.xsd.aspects.uml;
 
-import org.eclipse.xsd.XSDPackage;
-
 import org.eclipse.emf.ecore.EClassifier;
-
+import org.eclipse.xsd.XSDPackage;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspectFactory;

@@ -8,14 +8,12 @@
 package com.metamatrix.modeler.internal.ui.properties.sdt;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.properties.ComboBoxPropertyDescriptor;
-
-import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.properties.ModelObjectPropertyDescriptor;

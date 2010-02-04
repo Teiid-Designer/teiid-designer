@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.ui.event;
 
 import java.util.EventObject;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-
 import com.metamatrix.modeler.core.workspace.ModelResource;
 
 /**

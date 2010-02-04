@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.function;
 
 import org.eclipse.emf.ecore.EFactory;
-
 import com.metamatrix.metamodels.function.impl.FunctionFactoryImpl;
 
 /**

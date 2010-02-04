@@ -11,7 +11,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
@@ -28,7 +27,6 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.swt.events.MouseEvent;
-
 import com.metamatrix.modeler.diagram.ui.util.DiagramNodeSelectionEditPolicy;
 import com.metamatrix.modeler.diagram.ui.util.directedit.DirectEditPartEditPolicy;
 import com.metamatrix.modeler.relationship.NavigationNode;

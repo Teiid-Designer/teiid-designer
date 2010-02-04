@@ -12,16 +12,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.viewers.ILabelProvider;
-
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.jface.viewers.ILabelProvider;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.diagram.impl.DiagramEntityImpl;
 import com.metamatrix.modeler.core.workspace.ModelResource;

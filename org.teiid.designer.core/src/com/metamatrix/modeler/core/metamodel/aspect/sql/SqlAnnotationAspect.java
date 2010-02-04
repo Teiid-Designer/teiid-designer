@@ -9,7 +9,6 @@ package com.metamatrix.modeler.core.metamodel.aspect.sql;
 
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 

@@ -10,8 +10,10 @@ package com.metamatrix.modeler.xml.ui.editor;
 import java.util.Collections;
 import java.util.EventObject;
 import java.util.List;
-
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.ToolBarManager;
@@ -22,11 +24,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchWindow;
-
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.provider.INotifyChangedListener;
-
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.metamodels.xml.XmlChoice;
 import com.metamatrix.metamodels.xml.provider.XmlChoiceItemProvider;

@@ -7,6 +7,12 @@
  */
 package com.metamatrix.modeler.jdbc.impl;
 
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
 import com.metamatrix.modeler.jdbc.CaseConversion;
 import com.metamatrix.modeler.jdbc.JdbcDriver;
 import com.metamatrix.modeler.jdbc.JdbcDriverContainer;
@@ -18,14 +24,6 @@ import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.modeler.jdbc.JdbcSourceContainer;
 import com.metamatrix.modeler.jdbc.JdbcSourceProperty;
 import com.metamatrix.modeler.jdbc.SourceNames;
-
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
-import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc -->

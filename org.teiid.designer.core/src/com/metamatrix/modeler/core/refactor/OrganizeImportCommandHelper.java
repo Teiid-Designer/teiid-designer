@@ -10,12 +10,9 @@ package com.metamatrix.modeler.core.refactor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.metamodels.core.CoreFactory;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.types.DatatypeConstants;

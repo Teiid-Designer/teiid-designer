@@ -14,7 +14,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import com.metamatrix.metamodels.xml.ProcessingInstruction;
 import com.metamatrix.metamodels.xml.ProcessingInstructionHolder;
 import com.metamatrix.metamodels.xml.XmlDocumentPackage;

@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.compare.ui.wizard;
 
 import java.util.List;
-
 import org.eclipse.ui.IImportWizard;
-
 import com.metamatrix.modeler.compare.DifferenceReport;
 
 

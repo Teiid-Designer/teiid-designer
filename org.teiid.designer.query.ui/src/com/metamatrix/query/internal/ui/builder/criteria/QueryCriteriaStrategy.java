@@ -8,10 +8,10 @@
 package com.metamatrix.query.internal.ui.builder.criteria;
 
 import com.metamatrix.metamodels.transformation.InputParameter;
-import com.metamatrix.query.ui.UiConstants;
 import com.metamatrix.query.internal.ui.builder.util.CriteriaStrategy;
 import com.metamatrix.query.sql.LanguageObject;
 import com.metamatrix.query.sql.symbol.ElementSymbol;
+import com.metamatrix.query.ui.UiConstants;
 
 /**
  * QueryCriteriaStrategy

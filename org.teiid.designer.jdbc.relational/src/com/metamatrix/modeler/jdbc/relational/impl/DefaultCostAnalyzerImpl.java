@@ -16,10 +16,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.internal.jdbc.JdbcManagerImpl;
 import com.metamatrix.modeler.internal.jdbc.relational.ModelerJdbcRelationalConstants;

@@ -10,16 +10,13 @@ package com.metamatrix.modeler.core.refactor;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.xsd.util.XSDResourceImpl;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-
+import org.eclipse.xsd.util.XSDResourceImpl;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.metamodels.core.CoreFactory;
 import com.metamatrix.metamodels.core.ModelAnnotation;

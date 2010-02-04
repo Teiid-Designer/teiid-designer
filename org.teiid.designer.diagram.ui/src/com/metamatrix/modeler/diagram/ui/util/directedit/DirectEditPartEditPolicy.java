@@ -9,7 +9,6 @@ package com.metamatrix.modeler.diagram.ui.util.directedit;
 
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.DirectEditPolicy;
-
 import org.eclipse.gef.requests.DirectEditRequest;
 
 

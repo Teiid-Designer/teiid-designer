@@ -7,7 +7,6 @@
  */
 package com.metamatrix.core;
 
-import com.metamatrix.core.MetaMatrixRuntimeException;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 
 /**

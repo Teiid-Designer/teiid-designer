@@ -8,11 +8,8 @@
 package com.metamatrix.modeler.core.workspace;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;

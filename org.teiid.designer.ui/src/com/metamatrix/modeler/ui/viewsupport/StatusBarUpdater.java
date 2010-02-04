@@ -18,7 +18,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDParticle;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.ui.viewsupport.ImportContainer;
 import com.metamatrix.modeler.ui.UiConstants;

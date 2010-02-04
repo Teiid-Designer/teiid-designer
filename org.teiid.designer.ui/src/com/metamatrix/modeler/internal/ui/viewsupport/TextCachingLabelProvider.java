@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.ui.viewsupport;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;

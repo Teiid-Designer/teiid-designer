@@ -10,11 +10,9 @@ package com.metamatrix.metamodels.relational.util;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
 import com.metamatrix.metamodels.relational.SearchabilityType;
 import com.metamatrix.modeler.core.ModelerCore;

@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.vdb.ui.editor;
 
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
-
 import com.metamatrix.vdb.edit.VdbEditingContext;
 
 

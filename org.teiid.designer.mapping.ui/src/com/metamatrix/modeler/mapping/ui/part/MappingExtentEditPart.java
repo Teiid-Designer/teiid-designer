@@ -10,7 +10,6 @@ package com.metamatrix.modeler.mapping.ui.part;
 import java.beans.PropertyChangeEvent;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -21,7 +20,6 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.tools.SelectEditPartTracker;
 import org.eclipse.swt.graphics.Color;
-
 import com.metamatrix.metamodels.transformation.StagingTable;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;

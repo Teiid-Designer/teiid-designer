@@ -31,7 +31,7 @@ import com.metamatrix.common.util.crypto.CryptoException;
 import com.metamatrix.common.util.crypto.CryptoUtil;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.common.vdb.api.VDBDefn;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
@@ -613,7 +613,8 @@ public final class ModelerDqpUtils {
             }
             
             if (propDefn.hasDefaultValue() && propDefn.getDefaultValue().equals(value)) {
-            	return new Exception[0];
+                result = false;
+                // need to remove property from connector if connector has this property
             }
         }
         

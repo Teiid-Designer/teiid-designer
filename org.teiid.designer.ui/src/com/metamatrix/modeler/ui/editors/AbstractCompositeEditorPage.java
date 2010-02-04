@@ -9,7 +9,6 @@ package com.metamatrix.modeler.ui.editors;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
@@ -31,7 +30,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.EditorPart;
-
 import com.metamatrix.ui.internal.eventsupport.CompositeNotifyChangeListener;
 import com.metamatrix.ui.internal.eventsupport.CompositeSelectionChangedListener;
 import com.metamatrix.ui.internal.eventsupport.CompositeSelectionProvider;

@@ -8,8 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.connection;
 
 import org.eclipse.draw2d.AbsoluteBendpoint;
-//import org.eclipse.draw2d.Bendpoint;
-//import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 
 /**

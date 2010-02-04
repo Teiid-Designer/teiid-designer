@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.transaction;
 
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 

@@ -8,13 +8,10 @@
 package com.metamatrix.modeler.internal.xsd.aspects.uml;
 
 import java.util.Collection;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.xsd.XSDEnumerationFacet;
-
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.xsd.XSDEnumerationFacet;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlProperty;

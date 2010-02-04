@@ -7,7 +7,7 @@
  */
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * The <code>UnknownQueryDisplayNode</code> class is used to represent an Unknown SQL Statement.

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.relationship.ui.navigation.actions;
 
 import org.eclipse.jface.action.Action;
-
 import com.metamatrix.modeler.relationship.NavigationContext;
 import com.metamatrix.modeler.relationship.ui.UiConstants;
 import com.metamatrix.modeler.relationship.ui.UiPlugin;

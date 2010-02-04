@@ -8,10 +8,8 @@
 package com.metamatrix.metamodels.wsdl.util;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.wsdl.Attribute;
 import com.metamatrix.metamodels.wsdl.AttributeOwner;
 import com.metamatrix.metamodels.wsdl.Binding;

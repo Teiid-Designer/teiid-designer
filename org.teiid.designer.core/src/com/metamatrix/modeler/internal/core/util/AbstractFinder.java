@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.internal.core.util;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.EObjectFinder;
 

@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-
 import com.metamatrix.common.vdb.api.ModelInfo;
 
 /**

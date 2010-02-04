@@ -11,7 +11,6 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
-
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
 

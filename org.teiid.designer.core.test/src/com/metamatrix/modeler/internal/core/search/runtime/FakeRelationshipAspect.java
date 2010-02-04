@@ -9,11 +9,9 @@ package com.metamatrix.modeler.internal.core.search.runtime;
 
 import java.util.Collection;
 import java.util.Collections;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 import com.metamatrix.modeler.core.metamodel.aspect.relationship.RelationshipAspect;

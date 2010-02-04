@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.metamodel.aspect.uml;
 
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 
 /**

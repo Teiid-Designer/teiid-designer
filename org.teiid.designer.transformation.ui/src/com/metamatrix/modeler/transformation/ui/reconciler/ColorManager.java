@@ -10,7 +10,6 @@ package com.metamatrix.modeler.transformation.ui.reconciler;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-
 import com.metamatrix.ui.graphics.GlobalUiColorManager;
 
 /**

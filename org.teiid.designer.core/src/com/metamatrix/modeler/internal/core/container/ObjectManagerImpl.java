@@ -11,7 +11,7 @@ import java.util.Collection;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.core.container.ObjectManager;
 import com.metamatrix.modeler.core.resource.XResource;
 import com.metamatrix.modeler.internal.core.resource.xmi.MtkXmiResourceImpl;

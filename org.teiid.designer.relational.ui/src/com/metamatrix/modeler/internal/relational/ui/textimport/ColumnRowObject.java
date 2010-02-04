@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.relational.ui.textimport;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.tools.textimport.ui.wizards.AbstractRowObject;
 
 

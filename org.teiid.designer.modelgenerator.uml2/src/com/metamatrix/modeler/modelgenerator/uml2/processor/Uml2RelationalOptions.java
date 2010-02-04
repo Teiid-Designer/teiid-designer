@@ -9,12 +9,10 @@ package com.metamatrix.modeler.modelgenerator.uml2.processor;
 
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.modelgenerator.GeneratorOptions;
 import com.metamatrix.modeler.modelgenerator.uml2.Uml2ModelGeneratorPlugin;
 

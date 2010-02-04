@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.internal.xml.ui.wizards;
 
 import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-
 import com.metamatrix.metamodels.xml.XmlFragment;
 import com.metamatrix.modeler.xml.IVirtualDocumentFragmentSource;
 

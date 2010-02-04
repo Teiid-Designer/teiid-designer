@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.webservice.compare;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.webservice.WebServiceComponent;
 import com.metamatrix.modeler.core.compare.AbstractEObjectNameMatcher;
 

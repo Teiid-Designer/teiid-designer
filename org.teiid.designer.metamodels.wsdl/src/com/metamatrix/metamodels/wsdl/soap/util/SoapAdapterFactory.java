@@ -7,14 +7,18 @@
  */
 package com.metamatrix.metamodels.wsdl.soap.util;
 
-import com.metamatrix.metamodels.wsdl.soap.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+import com.metamatrix.metamodels.wsdl.soap.SoapAddress;
+import com.metamatrix.metamodels.wsdl.soap.SoapBinding;
+import com.metamatrix.metamodels.wsdl.soap.SoapBody;
+import com.metamatrix.metamodels.wsdl.soap.SoapFault;
+import com.metamatrix.metamodels.wsdl.soap.SoapHeader;
+import com.metamatrix.metamodels.wsdl.soap.SoapHeaderFault;
+import com.metamatrix.metamodels.wsdl.soap.SoapOperation;
+import com.metamatrix.metamodels.wsdl.soap.SoapPackage;
 
 /**
  * <!-- begin-user-doc -->

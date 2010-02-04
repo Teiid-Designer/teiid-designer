@@ -9,11 +9,9 @@ package com.metamatrix.modeler.internal.core.util;
 
 import java.util.Iterator;
 import java.util.Map;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.core.plugin.PluginUtilities;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.core.ModelerCore;

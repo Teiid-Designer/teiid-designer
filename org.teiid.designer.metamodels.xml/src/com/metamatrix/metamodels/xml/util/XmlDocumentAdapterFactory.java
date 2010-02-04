@@ -7,19 +7,17 @@
  */
 package com.metamatrix.metamodels.xml.util;
 
-import com.metamatrix.metamodels.xml.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.xml.ChoiceOption;
 import com.metamatrix.metamodels.xml.ProcessingInstruction;
 import com.metamatrix.metamodels.xml.ProcessingInstructionHolder;
 import com.metamatrix.metamodels.xml.XmlAll;
 import com.metamatrix.metamodels.xml.XmlAttribute;
 import com.metamatrix.metamodels.xml.XmlBaseElement;
+import com.metamatrix.metamodels.xml.XmlBuildable;
 import com.metamatrix.metamodels.xml.XmlChoice;
 import com.metamatrix.metamodels.xml.XmlComment;
 import com.metamatrix.metamodels.xml.XmlCommentHolder;

@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.relational.impl;
 
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -16,7 +15,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.ColumnSet;
 import com.metamatrix.metamodels.relational.RelationalPackage;

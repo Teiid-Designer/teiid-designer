@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.drawing.part;
 
 import org.eclipse.draw2d.IFigure;
-
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 
 /**

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.ui.wizards;
 
 import org.eclipse.ui.IWorkbenchWizard;
-
 import com.metamatrix.modeler.core.workspace.ModelResource;
 
 /**

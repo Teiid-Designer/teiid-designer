@@ -9,7 +9,6 @@ package com.metamatrix.modeler.jdbc.relational.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import com.metamatrix.modeler.internal.jdbc.relational.util.JdbcRelationalUtil;
 
 /**

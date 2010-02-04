@@ -10,7 +10,6 @@ package com.metamatrix.modeler.jdbc.custom;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;

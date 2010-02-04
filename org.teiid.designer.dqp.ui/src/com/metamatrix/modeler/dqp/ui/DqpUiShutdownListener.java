@@ -9,7 +9,6 @@ package com.metamatrix.modeler.dqp.ui;
 
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchWindow;
-
 import com.metamatrix.modeler.ui.product.IVetoableShutdownListener;
 
 

@@ -8,7 +8,6 @@
 package com.metamatrix.core.event;
 
 import java.util.EventObject;
-
 import com.metamatrix.core.CorePlugin;
 
 public class SynchEventBroker extends AbstractEventBroker {

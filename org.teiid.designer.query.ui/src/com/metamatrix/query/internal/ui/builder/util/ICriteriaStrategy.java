@@ -8,7 +8,6 @@
 package com.metamatrix.query.internal.ui.builder.util;
 
 import org.eclipse.jface.viewers.TreeViewer;
-
 import com.metamatrix.query.sql.LanguageObject;
 import com.metamatrix.query.sql.lang.Command;
 

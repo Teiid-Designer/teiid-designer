@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.connection.decorator;
 
 import org.eclipse.draw2d.PolygonDecoration;
-
 import com.metamatrix.modeler.diagram.ui.connection.BinaryAssociation;
 
 /**

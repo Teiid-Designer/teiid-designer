@@ -9,7 +9,6 @@ package com.metamatrix.modeler.compare.processor;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import com.metamatrix.modeler.compare.DifferenceGuidelines;
 
 /**

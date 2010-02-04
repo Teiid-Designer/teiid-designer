@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-
 import org.eclipse.draw2d.AbsoluteBendpoint;
 import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.ConnectionAnchor;
@@ -22,11 +21,9 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Font;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.diagram.DiagramLink;
 import com.metamatrix.metamodels.diagram.DiagramLinkType;
-//import com.metamatrix.metamodels.diagram.DiagramLinkType;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlAssociation;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.actions.ScaledFont;

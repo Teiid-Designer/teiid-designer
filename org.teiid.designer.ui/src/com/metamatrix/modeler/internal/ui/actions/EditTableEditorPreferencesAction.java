@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.ui.actions;
 
 import org.eclipse.swt.widgets.Shell;
-
 import com.metamatrix.modeler.internal.ui.preferences.TableEditorPreferencesDialog;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.ui.actions.AbstractAction;

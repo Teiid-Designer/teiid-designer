@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.layout.spring;
 
 import java.awt.Rectangle;
-
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 
 /**

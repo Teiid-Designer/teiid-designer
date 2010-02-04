@@ -9,10 +9,8 @@ package com.metamatrix.modeler.diagram.ui.connection;
 
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.geometry.Point;
-
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.BendpointRequest;
-
 import com.metamatrix.modeler.diagram.ui.connection.commands.BendpointCommand;
 import com.metamatrix.modeler.diagram.ui.connection.commands.CreateBendpointCommand;
 import com.metamatrix.modeler.diagram.ui.connection.commands.DeleteBendpointCommand;

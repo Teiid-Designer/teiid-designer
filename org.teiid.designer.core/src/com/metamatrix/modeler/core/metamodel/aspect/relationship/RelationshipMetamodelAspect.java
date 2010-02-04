@@ -9,7 +9,6 @@ package com.metamatrix.modeler.core.metamodel.aspect.relationship;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 
 /**

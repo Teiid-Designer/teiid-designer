@@ -11,7 +11,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.PropertySheet;
-
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 

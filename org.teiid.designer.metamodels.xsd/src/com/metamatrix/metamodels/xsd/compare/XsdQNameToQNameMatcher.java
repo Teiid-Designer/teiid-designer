@@ -9,7 +9,6 @@ package com.metamatrix.metamodels.xsd.compare;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDNamedComponent;
-
 import com.metamatrix.modeler.core.compare.AbstractEObjectNameMatcher;
 
 

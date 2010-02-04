@@ -9,7 +9,6 @@ package com.metamatrix.modeler.modelgenerator.salesforce.model.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.metamatrix.modeler.modelgenerator.salesforce.model.DataModel;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.Relationship;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.SalesforceField;

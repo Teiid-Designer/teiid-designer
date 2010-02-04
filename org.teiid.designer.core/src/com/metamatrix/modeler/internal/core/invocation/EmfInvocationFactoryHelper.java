@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.internal.core.invocation;
 
 import java.lang.reflect.Method;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import com.metamatrix.core.interceptor.InvocationFactoryHelper;
 
 /**

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.ui.viewsupport;
 
 import java.util.Collection;
-
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;

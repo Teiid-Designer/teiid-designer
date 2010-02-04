@@ -9,10 +9,8 @@ package com.metamatrix.modeler.core.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
-
 import com.metamatrix.modeler.core.transaction.SourcedNotification;
 
 /**

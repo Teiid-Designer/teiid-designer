@@ -9,7 +9,6 @@ package com.metamatrix.modeler.jdbc.data;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
 
 /**

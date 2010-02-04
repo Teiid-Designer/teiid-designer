@@ -7,12 +7,10 @@
  */
 package com.metamatrix.metamodels.dependency.impl;
 
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 import com.metamatrix.metamodels.dependency.DependencyInfo;
 import com.metamatrix.metamodels.dependency.DependencyPackage;
-
-import org.eclipse.emf.ecore.EClass;
-
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->

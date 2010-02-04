@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.builder;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.resource.Resource;
 
 

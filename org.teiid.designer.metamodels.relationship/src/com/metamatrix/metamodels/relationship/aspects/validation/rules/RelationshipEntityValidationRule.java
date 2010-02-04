@@ -9,8 +9,7 @@ package com.metamatrix.metamodels.relationship.aspects.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.relationship.RelationshipEntity;
 import com.metamatrix.modeler.core.validation.ObjectValidationRule;
 import com.metamatrix.modeler.core.validation.ValidationContext;

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.jdbc.metadata;
 
 import org.eclipse.core.runtime.IPath;
-
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.data.Request;
 

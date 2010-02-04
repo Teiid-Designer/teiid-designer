@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.ui.actions;
 
 import org.eclipse.ui.IWorkbenchActionConstants;
-
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.ui.product.IProductContexts.Product;
 

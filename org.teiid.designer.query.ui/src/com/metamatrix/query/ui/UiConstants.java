@@ -8,7 +8,6 @@
 package com.metamatrix.query.ui;
 
 import java.util.ResourceBundle;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.ui.PreferenceKeyAndDefaultValue;

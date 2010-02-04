@@ -15,7 +15,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.mapping.Mapping;
-
 import com.metamatrix.modeler.compare.ComparePackage;
 import com.metamatrix.modeler.compare.DifferenceReport;
 

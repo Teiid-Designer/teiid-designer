@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.modelgenerator.uml2;
 
 import java.util.Map;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.modeler.compare.ModelGenerator;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceSelections;

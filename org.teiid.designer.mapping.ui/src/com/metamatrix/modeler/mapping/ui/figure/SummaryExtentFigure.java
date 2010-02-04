@@ -21,7 +21,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.modeler.diagram.ui.util.colors.ColorPalette;
 import com.metamatrix.ui.graphics.GlobalUiFontManager;
 

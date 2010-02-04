@@ -10,7 +10,6 @@ package com.metamatrix.modeler.transformation.ui.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.SWT;
@@ -21,7 +20,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.ui.internal.viewsupport.StatusInfo;
 import com.metamatrix.ui.internal.widget.accumulator.IAccumulatorSource;

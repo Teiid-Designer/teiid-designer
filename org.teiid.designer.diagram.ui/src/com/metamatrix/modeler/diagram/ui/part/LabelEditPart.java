@@ -9,21 +9,17 @@ package com.metamatrix.modeler.diagram.ui.part;
 
 //import org.eclipse.draw2d.ColorConstants;
 import java.beans.PropertyChangeEvent;
-
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
-//import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
-
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.figure.AssociationLabelFigure;
 import com.metamatrix.modeler.diagram.ui.figure.LabeledRectangleFigure;
-//import com.metamatrix.modeler.diagram.ui.figure.NoteFigure;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 
 /**

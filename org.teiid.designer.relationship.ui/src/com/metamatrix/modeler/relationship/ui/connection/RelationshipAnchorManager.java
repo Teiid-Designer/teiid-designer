@@ -8,11 +8,9 @@
 package com.metamatrix.modeler.relationship.ui.connection;
 
 import java.util.List;
-
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.geometry.Dimension;
-
 import com.metamatrix.modeler.diagram.ui.connection.AnchorManager;
 import com.metamatrix.modeler.diagram.ui.connection.DiagramUmlDependency;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionAnchor;

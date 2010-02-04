@@ -8,8 +8,7 @@
 package com.metamatrix.metamodels.builder;
 
 import java.util.Map;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.internal.builder.util.MetaClassUriHelper;
 
 /**

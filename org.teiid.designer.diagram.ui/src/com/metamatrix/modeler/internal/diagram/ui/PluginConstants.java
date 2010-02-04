@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.diagram.ui;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
-
 import com.metamatrix.metamodels.diagram.DiagramLinkType;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.ui.PreferenceKeyAndDefaultValue;

@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.internal.core.workspace;
 
 import java.util.ArrayList;
-
 import org.eclipse.core.resources.IResourceDelta;
-
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceDelta;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
 

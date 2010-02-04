@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.ui.actions;
 
 
 import org.eclipse.ui.ISharedImages;
-
 import com.metamatrix.modeler.internal.ui.actions.workers.PasteWorker;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;

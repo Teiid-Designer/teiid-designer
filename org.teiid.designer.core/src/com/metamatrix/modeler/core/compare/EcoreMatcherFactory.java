@@ -9,7 +9,6 @@ package com.metamatrix.modeler.core.compare;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EReference;

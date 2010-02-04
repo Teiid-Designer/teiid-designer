@@ -9,7 +9,6 @@ package com.metamatrix.modeler.mapping.ui.connection;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.connection.AbstractNodeConnectionModel;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;

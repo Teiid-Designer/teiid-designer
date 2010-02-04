@@ -8,8 +8,7 @@
 package com.metamatrix.modeler.compare.selector;
 
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.modeler.core.util.ModelContents;
 

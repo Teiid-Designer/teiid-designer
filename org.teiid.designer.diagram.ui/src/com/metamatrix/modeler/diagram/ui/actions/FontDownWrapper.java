@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.actions;
 
 import org.eclipse.jface.action.IAction;
-
 import com.metamatrix.modeler.diagram.ui.editor.DiagramEditor;
 
 /**

@@ -10,7 +10,6 @@ package com.metamatrix.modeler.diagram.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -18,7 +17,6 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ILabelProvider;
-
 import com.metamatrix.modeler.diagram.ui.actions.NotationChoiceRadioActionGroup;
 import com.metamatrix.modeler.diagram.ui.notation.NotationFigureGenerator;
 import com.metamatrix.modeler.diagram.ui.notation.NotationModelGenerator;

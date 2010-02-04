@@ -14,7 +14,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import com.metamatrix.metamodels.history.HistoryCriteria;
 import com.metamatrix.metamodels.history.HistoryLog;
 import com.metamatrix.metamodels.history.HistoryPackage;

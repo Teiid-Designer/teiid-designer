@@ -17,7 +17,6 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.modeler.diagram.ui.util.ToolTipUtil;
 import com.metamatrix.modeler.relationship.ui.navigation.model.NavigationModelNode;
 

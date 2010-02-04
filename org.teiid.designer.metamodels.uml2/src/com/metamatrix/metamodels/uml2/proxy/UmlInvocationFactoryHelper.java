@@ -10,10 +10,8 @@ package com.metamatrix.metamodels.uml2.proxy;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.ValueSpecification;
-
 import com.metamatrix.core.interceptor.InvocationFactoryHelper;
 
 /**

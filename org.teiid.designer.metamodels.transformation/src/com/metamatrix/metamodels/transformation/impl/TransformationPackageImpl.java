@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.transformation.impl;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -20,7 +19,6 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.emf.ecore.impl.EcorePackageImpl;
 import org.eclipse.emf.mapping.MappingPackage;
 import org.eclipse.emf.mapping.impl.MappingPackageImpl;
-
 import com.metamatrix.metamodels.core.extension.impl.ExtensionPackageImpl;
 import com.metamatrix.metamodels.core.impl.CorePackageImpl;
 import com.metamatrix.metamodels.transformation.AbstractOperationNode;
@@ -63,7 +61,6 @@ import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 import com.metamatrix.metamodels.transformation.TreeMappingRoot;
 import com.metamatrix.metamodels.transformation.UnionNode;
-
 import com.metamatrix.metamodels.transformation.XQueryTransformation;
 import com.metamatrix.metamodels.transformation.XQueryTransformationMappingRoot;
 

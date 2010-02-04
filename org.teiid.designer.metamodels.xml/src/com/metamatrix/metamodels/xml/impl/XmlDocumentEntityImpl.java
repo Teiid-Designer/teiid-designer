@@ -9,7 +9,6 @@ package com.metamatrix.metamodels.xml.impl;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import com.metamatrix.metamodels.xml.XmlDocumentEntity;
 import com.metamatrix.metamodels.xml.XmlDocumentPackage;
 import com.metamatrix.metamodels.xml.util.XmlDocumentUtil;

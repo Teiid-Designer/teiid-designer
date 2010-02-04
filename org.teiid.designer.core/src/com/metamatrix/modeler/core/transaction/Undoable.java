@@ -9,7 +9,6 @@ package com.metamatrix.modeler.core.transaction;
 
 import java.io.Serializable;
 import java.util.Collection;
-
 import com.metamatrix.modeler.core.ModelerCoreException;
 
 /**

@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.modelgenerator.ui.wizards;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceSelections;
 

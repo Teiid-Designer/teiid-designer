@@ -10,10 +10,8 @@ package com.metamatrix.modeler.internal.dqp.ui.actions;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;

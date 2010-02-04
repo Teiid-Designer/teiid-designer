@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.relationship.ui.diagram;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.diagram.ui.pakkage.IPackageDiagramProvider;

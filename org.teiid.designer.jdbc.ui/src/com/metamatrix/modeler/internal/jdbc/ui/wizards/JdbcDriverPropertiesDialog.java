@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.jdbc.ui.wizards;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
-
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -24,7 +23,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.internal.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 import com.metamatrix.modeler.internal.jdbc.ui.util.JdbcUiUtil;

@@ -10,13 +10,11 @@ package com.metamatrix.modeler.webservice;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDSchema;
-
 import com.metamatrix.metamodels.wsdl.WsdlPackage;
 
 

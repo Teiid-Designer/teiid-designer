@@ -8,10 +8,8 @@
 package com.metamatrix.metamodels.relational.util;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.metamodels.relational.AccessPattern;
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.metamodels.relational.Catalog;
@@ -25,7 +23,6 @@ import com.metamatrix.metamodels.relational.ProcedureResult;
 import com.metamatrix.metamodels.relational.Schema;
 import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.metamodels.relational.UniqueConstraint;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.util.ModelVisitor;

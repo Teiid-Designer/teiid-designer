@@ -9,7 +9,6 @@ package com.metamatrix.modeler.schema.tools.model.jdbc;
 
 
 import org.jdom.Namespace;
-
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaModel;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
 

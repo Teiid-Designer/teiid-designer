@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.ui.viewsupport;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.ModelerCore;
 
 /**

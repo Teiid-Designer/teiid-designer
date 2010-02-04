@@ -8,7 +8,6 @@
 package com.metamatrix.vdb.edit;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import org.eclipse.emf.ecore.resource.Resource;
 
 

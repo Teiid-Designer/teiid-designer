@@ -14,7 +14,6 @@ import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.modeler.relationship.ui.navigation.model.RelationshipModelNode;
 
 

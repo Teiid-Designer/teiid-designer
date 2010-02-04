@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.ui.actions;
 
 import org.eclipse.ui.IWorkbenchActionConstants;
-
 import com.metamatrix.modeler.internal.ui.actions.CloneAction;
 import com.metamatrix.modeler.internal.ui.actions.CopyFullNameAction;
 import com.metamatrix.modeler.internal.ui.actions.CopyNameAction;

@@ -9,9 +9,7 @@ package com.metamatrix.modeler.transformation.ui.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.diagram.ui.model.AbstractDiagramModelNode;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;

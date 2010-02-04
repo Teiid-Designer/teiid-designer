@@ -9,9 +9,7 @@ package com.metamatrix.modeler.compare.selector;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.refactor.OrganizeImportCommand;
 import com.metamatrix.modeler.core.refactor.OrganizeImportHandler;

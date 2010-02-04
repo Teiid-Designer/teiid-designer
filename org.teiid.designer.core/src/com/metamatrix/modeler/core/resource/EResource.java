@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.core.resource;
 
 import java.util.Map;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.util.ModelContents;

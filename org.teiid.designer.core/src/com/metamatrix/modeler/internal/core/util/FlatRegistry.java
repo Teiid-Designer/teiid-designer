@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.core.util;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import com.metamatrix.modeler.core.Registry;
 
 /**

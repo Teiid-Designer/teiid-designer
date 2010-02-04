@@ -8,12 +8,10 @@
 package com.metamatrix.metamodels.xmlservice.aspects.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
-
-import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.xmlservice.XmlInput;
 import com.metamatrix.metamodels.xmlservice.XmlMessage;
 import com.metamatrix.metamodels.xmlservice.XmlServiceMetamodelPlugin;

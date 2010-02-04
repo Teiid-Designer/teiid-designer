@@ -9,7 +9,6 @@ package com.metamatrix.modeler.ui.editors;
 
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -21,7 +20,6 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.EditorActionBarContributor;
-
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.ui.actions.ActionService;
 import com.metamatrix.ui.actions.GlobalActionsMap;

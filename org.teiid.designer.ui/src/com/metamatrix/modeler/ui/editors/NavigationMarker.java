@@ -9,7 +9,6 @@ package com.metamatrix.modeler.ui.editors;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 

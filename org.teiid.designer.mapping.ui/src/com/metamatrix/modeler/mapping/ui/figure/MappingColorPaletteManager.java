@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.mapping.ui.figure;
 
 import org.eclipse.draw2d.ColorConstants;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.transformation.StagingTable;
 import com.metamatrix.modeler.diagram.ui.util.colors.ColorPalette;
 import com.metamatrix.modeler.diagram.ui.util.colors.DefaultColorPaletteManager;

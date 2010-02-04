@@ -11,9 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.xml.ChoiceErrorMode;
 import com.metamatrix.metamodels.xml.ChoiceOption;
 import com.metamatrix.metamodels.xml.XmlAll;

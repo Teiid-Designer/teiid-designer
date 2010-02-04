@@ -8,12 +8,10 @@
 package com.metamatrix.modeler.jdbc.relational.impl;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.core.log.Logger;
 import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.jdbc.JdbcImportSettings;

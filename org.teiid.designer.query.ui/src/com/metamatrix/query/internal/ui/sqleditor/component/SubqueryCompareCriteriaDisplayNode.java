@@ -8,7 +8,6 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-
 import com.metamatrix.query.sql.lang.Command;
 import com.metamatrix.query.sql.lang.SubqueryCompareCriteria;
 import com.metamatrix.query.sql.symbol.Expression;

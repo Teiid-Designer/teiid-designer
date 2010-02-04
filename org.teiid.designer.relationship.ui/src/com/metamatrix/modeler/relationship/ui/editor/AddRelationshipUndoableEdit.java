@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.relationship.ui.editor;
 
 import java.util.Collection;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.CompoundCommand;
-
 import com.metamatrix.metamodels.relationship.Relationship;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;

@@ -10,13 +10,11 @@ package com.metamatrix.modeler.core.refactor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.search.runtime.ResourceImportRecord;
 

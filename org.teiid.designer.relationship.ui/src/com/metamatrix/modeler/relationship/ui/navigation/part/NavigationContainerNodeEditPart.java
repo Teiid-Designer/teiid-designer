@@ -13,7 +13,6 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.swt.events.MouseEvent;
-
 import com.metamatrix.modeler.diagram.ui.util.DiagramNodeSelectionEditPolicy;
 import com.metamatrix.modeler.relationship.NavigationNode;
 import com.metamatrix.modeler.relationship.ui.navigation.figure.NavigationContainerNodeFigure;

@@ -10,12 +10,10 @@ package com.metamatrix.modeler.diagram.ui.connection;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Vector;
-
 import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.DiagramLink;
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
 

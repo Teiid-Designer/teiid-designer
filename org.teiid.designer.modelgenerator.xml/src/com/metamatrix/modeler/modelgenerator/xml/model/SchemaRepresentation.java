@@ -13,9 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.xsd.XSDSchema;
-
 import com.metamatrix.modeler.modelgenerator.xml.wizards.XsdAsRelationalImportWizard;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
 import com.metamatrix.modeler.schema.tools.processing.SchemaUtil;

@@ -7,15 +7,13 @@
  */
 package com.metamatrix.modeler.internal.ui.properties;
 
+import org.eclipse.emf.common.ui.celleditor.ExtendedDialogCellEditor;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
-
-import org.eclipse.emf.common.ui.celleditor.ExtendedDialogCellEditor;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
-
 import com.metamatrix.metamodels.core.CorePackage;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.internal.ui.refactor.NamespaceUriRenameDialog;

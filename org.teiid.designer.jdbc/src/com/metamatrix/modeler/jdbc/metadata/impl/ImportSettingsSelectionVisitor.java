@@ -7,7 +7,7 @@
  */
 package com.metamatrix.modeler.jdbc.metadata.impl;
 
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.jdbc.JdbcImportSettings;
 import com.metamatrix.modeler.jdbc.metadata.JdbcCatalog;
 import com.metamatrix.modeler.jdbc.metadata.JdbcDatabase;

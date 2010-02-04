@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.util.directedit;
 
 import org.eclipse.gef.commands.Command;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 

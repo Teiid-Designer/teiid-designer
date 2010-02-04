@@ -39,7 +39,7 @@ import org.teiid.adminapi.AdminObject;
 import org.teiid.adminapi.AdminOptions;
 import org.teiid.adminapi.VDB;
 import com.metamatrix.common.vdb.api.VDBDefn;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.FileUtil;
 import com.metamatrix.core.util.I18nUtil;

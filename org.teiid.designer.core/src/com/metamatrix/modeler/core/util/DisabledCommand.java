@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.util;
 
 import java.util.Collection;
-
 import org.eclipse.emf.common.command.Command;
 
 /**

@@ -15,13 +15,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.core.event.EventSourceException;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.internal.ui.IModelerCacheListener;
 import com.metamatrix.modeler.internal.ui.ModelerCacheEvent;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;

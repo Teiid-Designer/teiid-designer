@@ -10,9 +10,7 @@ package com.metamatrix.modeler.modelgenerator.salesforce.model.impl;
 import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.TreeMap;
-
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import com.metamatrix.modeler.modelgenerator.salesforce.connection.SalesforceConnection;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.DataModel;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.SalesforceObject;

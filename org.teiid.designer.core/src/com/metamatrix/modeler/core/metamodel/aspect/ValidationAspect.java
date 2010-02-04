@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.metamodel.aspect;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.validation.ValidationContext;
 import com.metamatrix.modeler.core.validation.ValidationRuleSet;
 

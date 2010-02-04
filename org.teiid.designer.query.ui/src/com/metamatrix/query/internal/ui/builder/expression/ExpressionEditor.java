@@ -9,9 +9,7 @@ package com.metamatrix.query.internal.ui.builder.expression;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.swt.widgets.Composite;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.AbstractCompositeExpressionEditor;
 import com.metamatrix.query.internal.ui.builder.model.ExpressionEditorModel;

@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.webservice.aspects.sql;
 
 import org.eclipse.emf.ecore.EClassifier;
-
 import com.metamatrix.metamodels.webservice.WebServicePackage;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspectFactory;

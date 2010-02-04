@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.model;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;

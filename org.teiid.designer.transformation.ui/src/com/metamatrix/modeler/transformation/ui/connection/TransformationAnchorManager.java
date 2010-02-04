@@ -11,10 +11,8 @@ package com.metamatrix.modeler.transformation.ui.connection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.geometry.Dimension;
-
 import com.metamatrix.modeler.diagram.ui.connection.AnchorManager;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionAnchor;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionEditPart;

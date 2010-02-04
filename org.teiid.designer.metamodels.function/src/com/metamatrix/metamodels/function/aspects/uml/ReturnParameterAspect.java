@@ -9,9 +9,8 @@ package com.metamatrix.metamodels.function.aspects.uml;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.function.FunctionPlugin;
 import com.metamatrix.metamodels.function.ReturnParameter;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;

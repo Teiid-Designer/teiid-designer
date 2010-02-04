@@ -7,12 +7,7 @@
  */
 package com.metamatrix.metamodels.xml.impl;
 
-import com.metamatrix.metamodels.xml.BuildStatus;
 import java.util.List;
-
-import org.eclipse.xsd.XSDPackage;
-import org.eclipse.xsd.impl.XSDPackageImpl;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -21,7 +16,9 @@ import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
+import org.eclipse.xsd.XSDPackage;
+import org.eclipse.xsd.impl.XSDPackageImpl;
+import com.metamatrix.metamodels.xml.BuildStatus;
 import com.metamatrix.metamodels.xml.ChoiceErrorMode;
 import com.metamatrix.metamodels.xml.ChoiceOption;
 import com.metamatrix.metamodels.xml.NormalizationType;

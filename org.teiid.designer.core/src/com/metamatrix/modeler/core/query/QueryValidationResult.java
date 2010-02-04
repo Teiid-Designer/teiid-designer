@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.query;
 
 import java.util.Collection;
-
 import com.metamatrix.query.sql.lang.Command;
 
 /** 

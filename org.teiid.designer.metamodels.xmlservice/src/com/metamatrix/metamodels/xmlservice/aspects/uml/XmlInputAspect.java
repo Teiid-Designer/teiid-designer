@@ -8,9 +8,8 @@
 package com.metamatrix.metamodels.xmlservice.aspects.uml;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.xmlservice.XmlInput;
 import com.metamatrix.metamodels.xmlservice.XmlServiceComponent;
 import com.metamatrix.metamodels.xmlservice.XmlServiceMetamodelPlugin;

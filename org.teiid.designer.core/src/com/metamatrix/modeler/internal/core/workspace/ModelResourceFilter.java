@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.core.workspace;
 
 import org.eclipse.core.resources.IResource;
-
 import com.metamatrix.modeler.core.workspace.ResourceFilter;
 
 /** ResourceFilter that only accepts Resources that are models.

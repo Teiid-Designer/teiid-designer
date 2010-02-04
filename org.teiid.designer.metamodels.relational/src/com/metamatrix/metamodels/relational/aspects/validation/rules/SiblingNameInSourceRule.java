@@ -9,11 +9,8 @@ package com.metamatrix.metamodels.relational.aspects.validation.rules;
 
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;

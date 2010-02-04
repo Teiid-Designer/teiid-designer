@@ -9,7 +9,6 @@ package com.metamatrix.modeler.core.index;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-
 import com.metamatrix.core.index.IIndexer;
 import com.metamatrix.modeler.core.ModelerCoreException;
 

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.transformation.ui.figure;
 
 import java.util.List;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.IFigure;
@@ -17,7 +16,6 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Font;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.XQueryTransformationMappingRoot;
 import com.metamatrix.modeler.diagram.ui.figure.AbstractDiagramFigure;

@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.ui.favorites.actions;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewActionDelegate;
@@ -20,7 +19,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionDelegate;
-
 import com.metamatrix.modeler.internal.ui.favorites.FavoritesView;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;

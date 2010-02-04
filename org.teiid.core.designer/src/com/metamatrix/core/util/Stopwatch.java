@@ -23,7 +23,6 @@
 package com.metamatrix.core.util;
 
 import java.io.Serializable;
-
 import com.metamatrix.core.CorePlugin;
 import com.metamatrix.core.log.Logger;
 import com.metamatrix.core.log.MessageLevel;

@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.wizards.datatransfer.ExternalProjectImportWizard;
-
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 

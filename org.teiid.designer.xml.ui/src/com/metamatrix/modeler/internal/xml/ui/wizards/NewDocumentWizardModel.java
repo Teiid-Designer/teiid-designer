@@ -9,10 +9,8 @@ package com.metamatrix.modeler.internal.xml.ui.wizards;
 
 import java.util.Collection;
 import java.util.HashSet;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
-
 import com.metamatrix.metamodels.xml.XmlFragment;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.mapping.factory.MappingClassBuilderStrategy;

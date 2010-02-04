@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.wsdl;
 
 import com.metamatrix.metamodels.wsdl.http.HttpAddress;
-
 import com.metamatrix.metamodels.wsdl.soap.SoapAddress;
 
 /**

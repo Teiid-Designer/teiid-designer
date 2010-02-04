@@ -7,14 +7,21 @@
  */
 package com.metamatrix.metamodels.relationship.util;
 
-import com.metamatrix.metamodels.relationship.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+import com.metamatrix.metamodels.relationship.FileReference;
+import com.metamatrix.metamodels.relationship.PlaceholderReference;
+import com.metamatrix.metamodels.relationship.PlaceholderReferenceContainer;
+import com.metamatrix.metamodels.relationship.Relationship;
+import com.metamatrix.metamodels.relationship.RelationshipContainer;
+import com.metamatrix.metamodels.relationship.RelationshipEntity;
+import com.metamatrix.metamodels.relationship.RelationshipFolder;
+import com.metamatrix.metamodels.relationship.RelationshipPackage;
+import com.metamatrix.metamodels.relationship.RelationshipRole;
+import com.metamatrix.metamodels.relationship.RelationshipType;
+import com.metamatrix.metamodels.relationship.UriReference;
 
 /**
  * <!-- begin-user-doc -->

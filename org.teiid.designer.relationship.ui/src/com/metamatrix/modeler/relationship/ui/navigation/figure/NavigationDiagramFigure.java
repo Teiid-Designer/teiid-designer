@@ -10,13 +10,11 @@ package com.metamatrix.modeler.relationship.ui.navigation.figure;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import com.metamatrix.modeler.relationship.ui.navigation.part.NavigationLayoutUtil;
 
 /**

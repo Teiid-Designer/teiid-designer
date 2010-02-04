@@ -10,7 +10,6 @@ package com.metamatrix.modeler.diagram.ui.editor;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.ISelectionListener;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 
 /**

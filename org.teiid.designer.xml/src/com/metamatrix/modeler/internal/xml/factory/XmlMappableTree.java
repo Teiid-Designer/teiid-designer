@@ -11,12 +11,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDComponent;
-
 import com.metamatrix.metamodels.xml.ProcessingInstruction;
 import com.metamatrix.metamodels.xml.XmlAttribute;
 import com.metamatrix.metamodels.xml.XmlComment;

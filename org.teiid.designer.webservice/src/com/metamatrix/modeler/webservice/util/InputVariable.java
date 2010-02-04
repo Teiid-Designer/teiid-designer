@@ -9,10 +9,8 @@ package com.metamatrix.modeler.webservice.util;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.xsd.XSDNamedComponent;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.xml.XmlValueHolder;
 
 

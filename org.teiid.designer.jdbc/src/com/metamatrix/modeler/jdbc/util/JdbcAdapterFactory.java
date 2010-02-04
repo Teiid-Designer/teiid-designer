@@ -7,14 +7,18 @@
  */
 package com.metamatrix.modeler.jdbc.util;
 
-import com.metamatrix.modeler.jdbc.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+import com.metamatrix.modeler.jdbc.JdbcDriver;
+import com.metamatrix.modeler.jdbc.JdbcDriverContainer;
+import com.metamatrix.modeler.jdbc.JdbcImportOptions;
+import com.metamatrix.modeler.jdbc.JdbcImportSettings;
+import com.metamatrix.modeler.jdbc.JdbcPackage;
+import com.metamatrix.modeler.jdbc.JdbcSource;
+import com.metamatrix.modeler.jdbc.JdbcSourceContainer;
+import com.metamatrix.modeler.jdbc.JdbcSourceProperty;
 
 /**
  * <!-- begin-user-doc -->

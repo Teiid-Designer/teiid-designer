@@ -13,7 +13,7 @@ import java.text.StringCharacterIterator;
 import java.util.Comparator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.HashCodeUtil;
 import com.metamatrix.core.util.IPathComparator;

@@ -9,9 +9,7 @@ package com.metamatrix.modeler.jdbc.metadata.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IPath;
-
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.modeler.jdbc.metadata.JdbcNode;
 

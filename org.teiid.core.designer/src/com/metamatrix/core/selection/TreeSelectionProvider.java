@@ -8,7 +8,6 @@
 package com.metamatrix.core.selection;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 
 /**

@@ -41,7 +41,7 @@ import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.ResourceNameUtil;
 import com.metamatrix.metamodels.wsdl.Definitions;
 import com.metamatrix.metamodels.wsdl.Import;

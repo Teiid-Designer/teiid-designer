@@ -8,7 +8,6 @@
 package com.metamatrix.ui.internal.viewsupport;
 
 import java.io.File;
-
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.xsd.ui.wizards;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.IImportStructureProvider;

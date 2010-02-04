@@ -8,13 +8,10 @@
 package com.metamatrix.modeler.compare.ui.tree;
 
 import java.util.Iterator;
-
+import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
-
-import org.eclipse.emf.mapping.Mapping;
-
 import com.metamatrix.modeler.compare.DifferenceDescriptor;
 import com.metamatrix.modeler.compare.DifferenceType;
 import com.metamatrix.modeler.compare.ui.PluginConstants;

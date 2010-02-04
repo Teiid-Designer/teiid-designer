@@ -10,7 +10,6 @@ package com.metamatrix.metamodels.relational.aspects.validation.rules;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.RelationalFactory;
 

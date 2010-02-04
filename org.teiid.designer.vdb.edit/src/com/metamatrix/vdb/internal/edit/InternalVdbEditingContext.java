@@ -9,11 +9,8 @@ package com.metamatrix.vdb.internal.edit;
 
 import java.io.File;
 import java.io.IOException;
-
 import org.eclipse.core.runtime.IPath;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.metamodels.wsdl.WsdlPackage;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.vdb.edit.VdbEditingContext;

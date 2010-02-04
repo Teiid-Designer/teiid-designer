@@ -7,21 +7,17 @@
  */
 package com.metamatrix.modeler.jdbc.impl;
 
-import com.metamatrix.modeler.jdbc.JdbcImportOptions;
-import com.metamatrix.modeler.jdbc.JdbcImportSettings;
-import com.metamatrix.modeler.jdbc.JdbcPackage;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import com.metamatrix.modeler.jdbc.JdbcImportOptions;
+import com.metamatrix.modeler.jdbc.JdbcImportSettings;
+import com.metamatrix.modeler.jdbc.JdbcPackage;
 
 /**
  * <!-- begin-user-doc -->

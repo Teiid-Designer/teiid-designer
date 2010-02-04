@@ -9,10 +9,8 @@ package com.metamatrix.modeler.core.metamodel.aspect;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.relationship.RelationshipMetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;

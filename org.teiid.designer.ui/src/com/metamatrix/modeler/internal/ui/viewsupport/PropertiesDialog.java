@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.internal.ui.viewsupport;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -16,9 +17,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-
-import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.internal.ui.properties.ModelObjectPropertySheetPage;
 import com.metamatrix.modeler.ui.UiConstants;
 

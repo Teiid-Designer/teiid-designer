@@ -7,14 +7,17 @@
  */
 package com.metamatrix.metamodels.xmlservice.util;
 
-import com.metamatrix.metamodels.xmlservice.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+import com.metamatrix.metamodels.xmlservice.XmlInput;
+import com.metamatrix.metamodels.xmlservice.XmlMessage;
+import com.metamatrix.metamodels.xmlservice.XmlOperation;
+import com.metamatrix.metamodels.xmlservice.XmlOutput;
+import com.metamatrix.metamodels.xmlservice.XmlResult;
+import com.metamatrix.metamodels.xmlservice.XmlServiceComponent;
+import com.metamatrix.metamodels.xmlservice.XmlServicePackage;
 
 /**
  * <!-- begin-user-doc -->

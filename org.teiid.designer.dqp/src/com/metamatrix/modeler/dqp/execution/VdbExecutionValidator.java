@@ -9,7 +9,6 @@ package com.metamatrix.modeler.dqp.execution;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-
 import com.metamatrix.common.vdb.api.VDBDefn;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.vdb.edit.VdbContextEditor;

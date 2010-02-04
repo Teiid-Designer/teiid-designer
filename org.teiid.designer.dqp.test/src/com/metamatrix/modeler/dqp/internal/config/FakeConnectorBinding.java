@@ -9,7 +9,6 @@ package com.metamatrix.modeler.dqp.internal.config;
 
 import java.util.Date;
 import java.util.Properties;
-
 import com.metamatrix.common.config.api.ComponentTypeID;
 import com.metamatrix.common.config.api.ConfigurationID;
 import com.metamatrix.common.config.api.ConnectorBinding;

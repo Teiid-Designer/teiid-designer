@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;

@@ -8,12 +8,10 @@
 package com.metamatrix.modeler.transformation.aspects.sql;
 
 import java.util.Iterator;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.MappingHelper;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTransformationAspect;

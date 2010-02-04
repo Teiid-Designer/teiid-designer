@@ -7,6 +7,18 @@
  */
 package com.metamatrix.metamodels.wsdl.impl;
 
+import java.util.Collection;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.InternalEList;
 import com.metamatrix.metamodels.wsdl.Binding;
 import com.metamatrix.metamodels.wsdl.BindingFault;
 import com.metamatrix.metamodels.wsdl.BindingInput;
@@ -19,30 +31,10 @@ import com.metamatrix.metamodels.wsdl.NamespaceDeclaration;
 import com.metamatrix.metamodels.wsdl.NamespaceDeclarationOwner;
 import com.metamatrix.metamodels.wsdl.WsdlNameRequiredEntity;
 import com.metamatrix.metamodels.wsdl.WsdlPackage;
-
 import com.metamatrix.metamodels.wsdl.http.HttpOperation;
 import com.metamatrix.metamodels.wsdl.http.HttpPackage;
-
 import com.metamatrix.metamodels.wsdl.soap.SoapOperation;
 import com.metamatrix.metamodels.wsdl.soap.SoapPackage;
-
-import java.util.Collection;
-
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->

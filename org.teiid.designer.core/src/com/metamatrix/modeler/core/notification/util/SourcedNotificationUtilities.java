@@ -13,11 +13,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
-
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.modeler.core.transaction.SourcedNotification;
 

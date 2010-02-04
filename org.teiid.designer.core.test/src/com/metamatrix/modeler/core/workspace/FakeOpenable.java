@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.core.workspace;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 
 /**
  * FakeOpenable

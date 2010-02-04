@@ -10,14 +10,11 @@ package com.metamatrix.modeler.core.validation.rules;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.xsd.util.XSDResourceImpl;
-
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
-
-import com.metamatrix.core.util.ArgCheck;
+import org.eclipse.xsd.util.XSDResourceImpl;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.core.validation.ResourceValidationRule;

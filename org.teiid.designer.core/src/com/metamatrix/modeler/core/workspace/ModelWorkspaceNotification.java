@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.workspace;
 
 import org.eclipse.core.resources.IResourceDelta;
-
 import org.eclipse.emf.common.notify.Notification;
 
 /**

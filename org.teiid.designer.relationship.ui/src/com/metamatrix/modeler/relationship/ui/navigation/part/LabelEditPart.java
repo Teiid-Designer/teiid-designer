@@ -9,10 +9,8 @@ package com.metamatrix.modeler.relationship.ui.navigation.part;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
-
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -20,7 +18,6 @@ import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.figure.LabeledRectangleFigure;
 import com.metamatrix.modeler.relationship.ui.navigation.model.FreeNavigationModelNode;

@@ -9,13 +9,10 @@ package com.metamatrix.modeler.relationship.ui.actions;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
-
-import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.ui.actions.IModelObjectActionContributor;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;

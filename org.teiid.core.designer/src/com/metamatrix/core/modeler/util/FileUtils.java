@@ -26,7 +26,6 @@ import java.util.List;
 import com.metamatrix.core.MetaMatrixCoreException;
 import com.metamatrix.core.MetaMatrixRuntimeException;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
-import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.core.util.ChecksumUtil;
 import com.metamatrix.core.util.StringUtil;
 

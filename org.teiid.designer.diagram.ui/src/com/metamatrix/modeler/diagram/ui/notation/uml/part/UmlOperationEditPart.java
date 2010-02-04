@@ -9,7 +9,6 @@ package com.metamatrix.modeler.diagram.ui.notation.uml.part;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -25,13 +24,12 @@ import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.Color;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.notation.uml.model.UmlOperationNode;
 import com.metamatrix.modeler.diagram.ui.part.AbstractNotationEditPart;
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
-import com.metamatrix.modeler.diagram.ui.util.*;
+import com.metamatrix.modeler.diagram.ui.util.HiliteDndNodeSelectionEditPolicy;
 import com.metamatrix.modeler.diagram.ui.util.SelectionTracker;
 import com.metamatrix.modeler.diagram.ui.util.directedit.DirectEditFigure;
 import com.metamatrix.modeler.diagram.ui.util.directedit.DirectEditPart;

@@ -17,7 +17,6 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-
 import com.metamatrix.modeler.diagram.ui.figure.AbstractDiagramFigure;
 import com.metamatrix.modeler.diagram.ui.util.colors.ColorPalette;
 import com.metamatrix.ui.graphics.GlobalUiFontManager;

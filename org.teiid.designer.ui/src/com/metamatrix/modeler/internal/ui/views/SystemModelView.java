@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.ui.views;
 
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
-
 import com.metamatrix.modeler.internal.ui.viewsupport.SystemModelTreeViewer;
 
 

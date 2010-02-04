@@ -9,12 +9,7 @@ package com.metamatrix.modeler.internal.relational.ui.textimport;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.metamatrix.modeler.tools.textimport.ui.wizards.AbstractRowObject;
-    /* SAMPLE DATA
-    OBJECT,     TABLE NAME,     DESCRIPTION, LOCATION
-    TABLE,      PA_PROJECT_ALL, "PA_PROJECTS_AL, stores the highest...All projects can be funded by one or more agreements.", Project_1/Model_1/Schema_1
-    */
 
 /** 
  * @since 4.2

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.schema.tools.model.schema.impl;
 
 import org.eclipse.xsd.XSDElementDeclaration;
-
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaObjectKey;
 
 public class ElementImplKey implements SchemaObjectKey {

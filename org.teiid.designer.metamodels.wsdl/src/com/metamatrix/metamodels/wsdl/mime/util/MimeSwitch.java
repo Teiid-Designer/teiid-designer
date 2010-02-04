@@ -8,10 +8,8 @@
 package com.metamatrix.metamodels.wsdl.mime.util;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.wsdl.mime.MimeContent;
 import com.metamatrix.metamodels.wsdl.mime.MimeElement;
 import com.metamatrix.metamodels.wsdl.mime.MimeElementOwner;

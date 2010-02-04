@@ -9,7 +9,6 @@ package com.metamatrix.modeler.relationship.ui.part;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gef.EditPart;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.connection.AnchorManager;

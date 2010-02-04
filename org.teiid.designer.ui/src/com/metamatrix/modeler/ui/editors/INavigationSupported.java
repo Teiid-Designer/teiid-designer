@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.ui.editors;
 
 import org.eclipse.core.resources.IMarker;
-
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 
 /**

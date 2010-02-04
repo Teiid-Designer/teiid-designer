@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.core;
 import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
-
 import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;

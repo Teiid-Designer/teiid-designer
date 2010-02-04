@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.metamodel;
 
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;

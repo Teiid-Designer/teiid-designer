@@ -10,11 +10,9 @@ package com.metamatrix.metamodels.relationship.compare;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import com.metamatrix.metamodels.relationship.RelationshipPackage;
 import com.metamatrix.modeler.core.compare.EObjectMatcher;
 import com.metamatrix.modeler.core.compare.EObjectMatcherFactory;

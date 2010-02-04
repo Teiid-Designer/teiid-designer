@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.mapping.factory;
 
 import java.util.Iterator;
-
 import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.ecore.EObject;
 

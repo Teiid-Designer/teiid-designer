@@ -9,7 +9,6 @@ package com.metamatrix.modeler.jdbc.relational.impl.custom;
 
 import java.util.List;
 import java.util.Map;
-
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.relational.RelationalFactory;
 import com.metamatrix.metamodels.relational.UniqueKey;

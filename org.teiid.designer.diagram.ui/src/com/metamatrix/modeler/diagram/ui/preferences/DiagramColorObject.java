@@ -10,7 +10,6 @@ package com.metamatrix.modeler.diagram.ui.preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.RGB;
-
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 
 /**

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.webservice;
 
 import org.eclipse.core.runtime.IPath;
-
 import com.metamatrix.modeler.webservice.IWebServiceXsdResource;
 
 

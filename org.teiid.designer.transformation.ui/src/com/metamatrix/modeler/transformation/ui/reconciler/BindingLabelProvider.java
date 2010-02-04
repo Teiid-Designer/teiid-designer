@@ -10,7 +10,6 @@ package com.metamatrix.modeler.transformation.ui.reconciler;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.transformation.ui.PluginConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;

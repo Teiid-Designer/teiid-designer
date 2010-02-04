@@ -12,7 +12,6 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.part.PluginDropAdapter;
 import org.eclipse.ui.part.ResourceTransfer;
-
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;

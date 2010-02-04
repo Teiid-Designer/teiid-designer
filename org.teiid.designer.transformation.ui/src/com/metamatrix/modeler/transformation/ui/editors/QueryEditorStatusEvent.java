@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.transformation.ui.editors;
 
 import java.util.EventObject;
-
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 
 

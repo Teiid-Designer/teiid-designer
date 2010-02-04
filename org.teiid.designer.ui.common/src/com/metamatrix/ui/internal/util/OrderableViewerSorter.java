@@ -10,7 +10,6 @@ package com.metamatrix.ui.internal.util;
 import java.text.Collator;
 import java.text.RuleBasedCollator;
 import java.util.List;
-
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;

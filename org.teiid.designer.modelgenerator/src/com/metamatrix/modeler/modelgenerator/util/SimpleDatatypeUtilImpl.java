@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.modelgenerator.util;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 

@@ -11,7 +11,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.modelgenerator.ui.ModelGeneratorUiConstants;
 

@@ -9,7 +9,6 @@ package com.metamatrix.modeler.compare.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IWorkbenchPage;
-
 import com.metamatrix.modeler.compare.ui.UiConstants;
 import com.metamatrix.modeler.compare.ui.UiPlugin;
 import com.metamatrix.ui.actions.AbstractActionService;

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.ui.explorer;
 
 import java.util.ArrayList;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -27,7 +26,6 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
-
 import com.metamatrix.modeler.internal.core.workspace.DotProjectUtils;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.ui.internal.widget.ListMessageDialog;

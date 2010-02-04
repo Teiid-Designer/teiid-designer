@@ -7,14 +7,12 @@
  */
 package com.metamatrix.modeler.internal.core.metadata.runtime;
 
-import org.eclipse.core.runtime.Path;
-
-import com.metamatrix.metadata.runtime.impl.ColumnRecordImpl;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.eclipse.core.runtime.Path;
+import com.metamatrix.metadata.runtime.impl.ColumnRecordImpl;
 
 public class TestMetadataRecord extends TestCase {
 

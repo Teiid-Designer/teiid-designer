@@ -9,14 +9,11 @@ package com.metamatrix.modeler.transformation.aspects.uml;
 
 import java.util.Collection;
 import java.util.Collections;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlClassifier;

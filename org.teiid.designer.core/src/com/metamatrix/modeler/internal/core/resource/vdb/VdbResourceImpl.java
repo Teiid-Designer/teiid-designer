@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.internal.core.resource.vdb;
 
 import java.util.zip.ZipEntry;
-
 import org.eclipse.emf.common.util.URI;
-
 import com.metamatrix.modeler.internal.core.resource.xmi.MtkXmiResourceImpl;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 

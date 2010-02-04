@@ -8,7 +8,6 @@
 package com.metamatrix.core.util;
 
 import java.util.Comparator;
-
 import org.eclipse.core.runtime.IPath;
 
 /**

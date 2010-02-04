@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.util;
 
 import org.eclipse.gef.GraphicalEditPart;
-
 import com.metamatrix.modeler.diagram.ui.figure.DiagramPolylineConnection;
 
 public class DiagramConnectionEndpointEditPolicy

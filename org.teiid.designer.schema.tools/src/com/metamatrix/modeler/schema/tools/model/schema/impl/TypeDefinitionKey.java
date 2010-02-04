@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.schema.tools.model.schema.impl;
 
 import org.eclipse.xsd.XSDTypeDefinition;
-
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaObjectKey;
 
 public class TypeDefinitionKey implements SchemaObjectKey {

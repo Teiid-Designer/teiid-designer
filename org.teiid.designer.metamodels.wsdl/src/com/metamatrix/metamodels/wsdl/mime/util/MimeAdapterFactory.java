@@ -7,14 +7,16 @@
  */
 package com.metamatrix.metamodels.wsdl.mime.util;
 
-import com.metamatrix.metamodels.wsdl.mime.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+import com.metamatrix.metamodels.wsdl.mime.MimeContent;
+import com.metamatrix.metamodels.wsdl.mime.MimeElement;
+import com.metamatrix.metamodels.wsdl.mime.MimeElementOwner;
+import com.metamatrix.metamodels.wsdl.mime.MimeMultipartRelated;
+import com.metamatrix.metamodels.wsdl.mime.MimePackage;
+import com.metamatrix.metamodels.wsdl.mime.MimePart;
 
 /**
  * <!-- begin-user-doc -->

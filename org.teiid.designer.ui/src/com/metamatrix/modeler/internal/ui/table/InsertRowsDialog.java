@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
-
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.ui.internal.util.WidgetFactory;

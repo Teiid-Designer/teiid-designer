@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Iterator;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
@@ -19,7 +18,6 @@ import org.eclipse.xsd.XSDDiagnosticSeverity;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDSimpleTypeDefinition.Assessment;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metamodels.relational.NullableType;

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.transformation.util;
 
 import java.util.EventObject;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**

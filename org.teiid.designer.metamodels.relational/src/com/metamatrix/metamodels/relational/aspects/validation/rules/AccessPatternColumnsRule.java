@@ -8,13 +8,10 @@
 package com.metamatrix.metamodels.relational.aspects.validation.rules;
 
 import java.util.Iterator;
-
 import org.eclipse.core.runtime.IStatus;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.metamodels.relational.AccessPattern;
 import com.metamatrix.metamodels.relational.Column;

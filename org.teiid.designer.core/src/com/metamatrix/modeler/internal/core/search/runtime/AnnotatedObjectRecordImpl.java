@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.core.search.runtime;
 
 import java.util.Properties;
-
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.search.runtime.AnnotatedObjectRecord;
 

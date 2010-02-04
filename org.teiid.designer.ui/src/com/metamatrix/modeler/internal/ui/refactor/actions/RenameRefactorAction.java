@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.ui.refactor.actions;
 
 import java.text.MessageFormat;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -35,7 +34,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.refactor.ResourceRefactorCommand;
 import com.metamatrix.modeler.core.refactor.ResourceRenameCommand;

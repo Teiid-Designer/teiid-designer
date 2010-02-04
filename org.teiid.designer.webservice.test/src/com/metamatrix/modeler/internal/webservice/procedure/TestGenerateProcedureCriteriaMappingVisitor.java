@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.webservice.procedure;
 
 import junit.framework.TestCase;
-
 import com.metamatrix.query.parser.QueryParser;
 import com.metamatrix.query.sql.lang.Command;
 import com.metamatrix.query.sql.proc.CreateUpdateProcedureCommand;

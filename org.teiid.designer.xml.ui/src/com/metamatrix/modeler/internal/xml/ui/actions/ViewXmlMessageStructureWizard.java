@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.xml.ui.actions;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.xsd.XSDElementDeclaration;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelResource;

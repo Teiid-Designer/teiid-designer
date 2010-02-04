@@ -8,7 +8,6 @@
 package com.metamatrix.vdb.edit.loader;
 
 import java.io.File;
-
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.SmartTestSuite;
 

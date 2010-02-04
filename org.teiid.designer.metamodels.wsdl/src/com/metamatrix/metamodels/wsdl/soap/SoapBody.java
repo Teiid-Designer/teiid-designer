@@ -7,11 +7,9 @@
  */
 package com.metamatrix.metamodels.wsdl.soap;
 
-import com.metamatrix.metamodels.wsdl.BindingParam;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
+import com.metamatrix.metamodels.wsdl.BindingParam;
 
 /**
  * <!-- begin-user-doc -->

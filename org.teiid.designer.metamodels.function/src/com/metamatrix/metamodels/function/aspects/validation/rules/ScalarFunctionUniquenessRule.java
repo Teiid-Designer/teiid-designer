@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.function.aspects.validation.rules;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.function.ScalarFunction;
 import com.metamatrix.metamodels.function.util.FunctionUtil;
 

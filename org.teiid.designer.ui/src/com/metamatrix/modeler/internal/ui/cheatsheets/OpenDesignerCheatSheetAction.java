@@ -15,7 +15,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.cheatsheets.views.CheatSheetView;
-
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.ui.internal.util.UiUtil;

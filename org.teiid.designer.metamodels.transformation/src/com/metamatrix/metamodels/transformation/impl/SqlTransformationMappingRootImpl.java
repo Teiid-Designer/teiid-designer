@@ -7,23 +7,18 @@
  */
 package com.metamatrix.metamodels.transformation.impl;
 
-import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
-import com.metamatrix.metamodels.transformation.TransformationPackage;
-
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.emf.mapping.MappingPackage;
+import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
+import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
  * <!-- begin-user-doc -->

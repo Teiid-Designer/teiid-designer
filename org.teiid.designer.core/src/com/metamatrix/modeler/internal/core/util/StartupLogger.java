@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.core.util;
 
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.modeler.core.ModelerCore;
 
 

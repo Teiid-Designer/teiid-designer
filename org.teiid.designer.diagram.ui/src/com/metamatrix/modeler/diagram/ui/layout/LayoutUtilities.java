@@ -11,9 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.geometry.Point;
-
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;
 import com.metamatrix.modeler.diagram.ui.layout.spring.SpringLayout;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;

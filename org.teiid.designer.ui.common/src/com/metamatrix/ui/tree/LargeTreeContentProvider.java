@@ -9,11 +9,9 @@ package com.metamatrix.ui.tree;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-
 import com.metamatrix.ui.internal.InternalUiConstants;
 
 /** Support for trees with many, many children.

@@ -8,11 +8,7 @@
 package com.metamatrix.modeler.modelgenerator.uml2.processor;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
-
-import com.metamatrix.modeler.modelgenerator.uml2.processor.RelationalFragmentGenerator;
-import com.metamatrix.modeler.modelgenerator.uml2.processor.Uml2RelationalProcessor;
 
 /**
  * TrivialRelationalFragmentGenerator

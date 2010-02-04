@@ -10,7 +10,6 @@ package com.metamatrix.metamodels.xmlservice.aspects.sql;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import com.metamatrix.metamodels.xmlservice.XmlServiceMetamodelPlugin;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;

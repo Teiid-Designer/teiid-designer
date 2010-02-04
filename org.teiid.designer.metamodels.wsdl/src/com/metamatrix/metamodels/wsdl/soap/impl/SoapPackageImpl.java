@@ -7,18 +7,20 @@
  */
 package com.metamatrix.metamodels.wsdl.soap.impl;
 
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
+import org.eclipse.emf.ecore.impl.EcorePackageImpl;
+import org.eclipse.xsd.impl.XSDPackageImpl;
 import com.metamatrix.metamodels.wsdl.WsdlPackage;
-
 import com.metamatrix.metamodels.wsdl.http.HttpPackage;
-
 import com.metamatrix.metamodels.wsdl.http.impl.HttpPackageImpl;
-
 import com.metamatrix.metamodels.wsdl.impl.WsdlPackageImpl;
-
 import com.metamatrix.metamodels.wsdl.mime.MimePackage;
-
 import com.metamatrix.metamodels.wsdl.mime.impl.MimePackageImpl;
-
 import com.metamatrix.metamodels.wsdl.soap.SoapAddress;
 import com.metamatrix.metamodels.wsdl.soap.SoapBinding;
 import com.metamatrix.metamodels.wsdl.soap.SoapBody;
@@ -30,17 +32,6 @@ import com.metamatrix.metamodels.wsdl.soap.SoapOperation;
 import com.metamatrix.metamodels.wsdl.soap.SoapPackage;
 import com.metamatrix.metamodels.wsdl.soap.SoapStyleType;
 import com.metamatrix.metamodels.wsdl.soap.SoapUseType;
-
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
-import org.eclipse.emf.ecore.impl.EPackageImpl;
-import org.eclipse.emf.ecore.impl.EcorePackageImpl;
-
-import org.eclipse.xsd.impl.XSDPackageImpl;
 
 /**
  * <!-- begin-user-doc -->

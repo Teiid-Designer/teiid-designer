@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.webservice.procedure;
 
 import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 

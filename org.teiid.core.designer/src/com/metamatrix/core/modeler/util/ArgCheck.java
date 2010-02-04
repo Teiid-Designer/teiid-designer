@@ -9,7 +9,6 @@ package com.metamatrix.core.modeler.util;
 
 import java.util.Collection;
 import java.util.Map;
-
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 
 /**

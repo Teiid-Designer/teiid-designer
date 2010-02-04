@@ -10,16 +10,14 @@ package com.metamatrix.modeler.internal.ui.properties;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.provider.IItemPropertySource;
+import org.eclipse.emf.edit.ui.provider.PropertySource;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.provider.IItemPropertySource;
-import org.eclipse.emf.edit.ui.provider.PropertySource;
-
 import com.metamatrix.metamodels.core.Datatype;
 import com.metamatrix.modeler.internal.ui.properties.sdt.SimpleDatatypePropertySource;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;

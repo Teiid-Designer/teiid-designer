@@ -18,7 +18,6 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.emf.ecore.impl.EcorePackageImpl;
 import org.eclipse.emf.mapping.MappingPackage;
 import org.eclipse.emf.mapping.impl.MappingPackageImpl;
-
 import com.metamatrix.modeler.compare.CompareFactory;
 import com.metamatrix.modeler.compare.ComparePackage;
 import com.metamatrix.modeler.compare.DifferenceDescriptor;

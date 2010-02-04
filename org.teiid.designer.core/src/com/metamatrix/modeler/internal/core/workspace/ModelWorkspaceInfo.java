@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.core.workspace;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-
 import com.metamatrix.modeler.core.ModelerCore;
 
 /**

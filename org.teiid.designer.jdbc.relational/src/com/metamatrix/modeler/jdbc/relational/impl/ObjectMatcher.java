@@ -12,9 +12,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EClass;
-
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.metamodels.relational.RelationalEntity;
 import com.metamatrix.modeler.jdbc.metadata.JdbcNode;

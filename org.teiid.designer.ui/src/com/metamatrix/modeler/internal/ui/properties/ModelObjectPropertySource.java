@@ -11,10 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.ui.views.properties.IPropertyDescriptor;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnum;
@@ -26,7 +23,7 @@ import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.ui.provider.PropertySource;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
-
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import com.metamatrix.metamodels.diagram.PresentationEntity;
 import com.metamatrix.metamodels.transformation.SqlAlias;
 import com.metamatrix.modeler.core.ModelerCore;

@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.xml.util;
 
 import java.util.Comparator;
-
 import com.metamatrix.metamodels.xml.XmlDocumentPlugin;
 import com.metamatrix.metamodels.xml.XmlNamespace;
 

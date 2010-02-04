@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.relationship.ui.navigation.figure;
 
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.modeler.relationship.ui.UiConstants;
 import com.metamatrix.modeler.relationship.ui.navigation.model.NavigationModelNode;
 

@@ -10,7 +10,6 @@ package com.metamatrix.modeler.diagram.ui.connection;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlRelationship;
 
 /**

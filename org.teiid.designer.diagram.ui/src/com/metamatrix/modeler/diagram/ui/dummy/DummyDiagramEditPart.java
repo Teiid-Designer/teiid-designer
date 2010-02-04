@@ -9,14 +9,11 @@ package com.metamatrix.modeler.diagram.ui.dummy;
 
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
-//import org.eclipse.draw2d.Label;
-//import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 

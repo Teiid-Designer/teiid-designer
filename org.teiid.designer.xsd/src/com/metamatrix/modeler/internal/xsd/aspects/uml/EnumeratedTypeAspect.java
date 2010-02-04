@@ -9,15 +9,12 @@ package com.metamatrix.modeler.internal.xsd.aspects.uml;
 
 import java.util.Collection;
 import java.util.Collections;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDLengthFacet;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-
-import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.core.MetaMatrixRuntimeException;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;

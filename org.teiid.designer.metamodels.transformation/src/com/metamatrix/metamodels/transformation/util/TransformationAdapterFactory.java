@@ -7,8 +7,6 @@
  */
 package com.metamatrix.metamodels.transformation.util;
 
-import com.metamatrix.metamodels.transformation.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
@@ -16,7 +14,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.emf.mapping.MappingRoot;
-
 import com.metamatrix.metamodels.transformation.AbstractOperationNode;
 import com.metamatrix.metamodels.transformation.DataFlowLink;
 import com.metamatrix.metamodels.transformation.DataFlowMappingRoot;
@@ -53,6 +50,8 @@ import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 import com.metamatrix.metamodels.transformation.TreeMappingRoot;
 import com.metamatrix.metamodels.transformation.UnionNode;
+import com.metamatrix.metamodels.transformation.XQueryTransformation;
+import com.metamatrix.metamodels.transformation.XQueryTransformationMappingRoot;
 
 /**
  * <!-- begin-user-doc -->

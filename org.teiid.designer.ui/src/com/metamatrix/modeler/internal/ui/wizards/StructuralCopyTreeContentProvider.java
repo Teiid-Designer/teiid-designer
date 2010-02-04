@@ -8,12 +8,10 @@
 package com.metamatrix.modeler.internal.ui.wizards;
 
 import java.util.ArrayList;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-
 import com.metamatrix.modeler.core.workspace.ModelResource;
 
 /**

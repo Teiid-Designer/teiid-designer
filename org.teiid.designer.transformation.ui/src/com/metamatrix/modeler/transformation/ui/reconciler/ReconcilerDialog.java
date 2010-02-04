@@ -9,15 +9,12 @@ package com.metamatrix.modeler.transformation.ui.reconciler;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.ui.internal.widget.ExtendedTitleAreaDialog;
 

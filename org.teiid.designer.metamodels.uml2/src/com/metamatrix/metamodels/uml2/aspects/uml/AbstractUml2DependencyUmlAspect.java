@@ -9,11 +9,9 @@ package com.metamatrix.metamodels.uml2.aspects.uml;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Dependency;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlDependency;
 

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.relationship;
 
 import org.eclipse.emf.common.util.URI;
-
 import com.metamatrix.modeler.relationship.NavigationLink;
 
 /**

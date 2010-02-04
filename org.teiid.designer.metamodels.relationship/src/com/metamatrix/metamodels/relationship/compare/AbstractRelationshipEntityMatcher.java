@@ -12,12 +12,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingFactory;
-
 import com.metamatrix.metamodels.relationship.RelationshipEntity;
 import com.metamatrix.modeler.core.compare.AbstractEObjectMatcher;
 

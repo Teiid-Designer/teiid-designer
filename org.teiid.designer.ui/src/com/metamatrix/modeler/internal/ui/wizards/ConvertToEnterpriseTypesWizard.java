@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.ui.wizards;
 
 import java.util.HashMap;
 import java.util.Iterator;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;

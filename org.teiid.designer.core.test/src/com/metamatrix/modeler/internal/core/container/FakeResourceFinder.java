@@ -7,12 +7,10 @@
  */
 package com.metamatrix.modeler.internal.core.container;
 
-import org.eclipse.xsd.XSDSchemaDirective;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
+import org.eclipse.xsd.XSDSchemaDirective;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.metamodels.core.ModelImport;
 import com.metamatrix.modeler.core.container.ResourceFinder;

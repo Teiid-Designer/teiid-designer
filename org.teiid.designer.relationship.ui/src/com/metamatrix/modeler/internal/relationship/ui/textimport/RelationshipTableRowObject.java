@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.relationship.ui.textimport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import com.metamatrix.core.util.EquivalenceUtil;
 
 

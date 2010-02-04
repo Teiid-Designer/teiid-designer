@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.xml.choice;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.xml.XmlChoice;
 import com.metamatrix.modeler.mapping.choice.IChoiceObject;
 import com.metamatrix.modeler.mapping.factory.IChoiceFactory;

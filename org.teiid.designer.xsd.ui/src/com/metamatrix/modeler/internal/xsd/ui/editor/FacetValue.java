@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.xsd.ui.editor;
 
 import org.eclipse.xsd.XSDConstrainingFacet;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 
 

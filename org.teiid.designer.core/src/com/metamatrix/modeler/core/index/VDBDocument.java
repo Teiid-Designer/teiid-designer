@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.core.index;
 
 import java.util.Collection;
-
 import org.eclipse.emf.common.util.URI;
-
 import com.metamatrix.core.index.IDocument;
 
 /**

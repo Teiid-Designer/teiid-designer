@@ -8,11 +8,9 @@
 package com.metamatrix.modeler.webservice;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.metamodels.webservice.WebServiceComponent;
 import com.metamatrix.modeler.compare.selector.ModelSelector;
 

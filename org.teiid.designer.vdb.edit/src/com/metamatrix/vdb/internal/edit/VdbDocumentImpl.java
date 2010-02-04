@@ -11,9 +11,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-
 import org.eclipse.emf.common.util.URI;
-
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.internal.core.index.FileDocument;
 import com.metamatrix.modeler.core.index.VDBDocument;

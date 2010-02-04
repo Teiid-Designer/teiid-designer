@@ -9,9 +9,7 @@ package com.metamatrix.modeler.relationship.ui.actions;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.relationship.Relationship;
 import com.metamatrix.metamodels.relationship.RelationshipFolder;
 import com.metamatrix.metamodels.relationship.RelationshipType;

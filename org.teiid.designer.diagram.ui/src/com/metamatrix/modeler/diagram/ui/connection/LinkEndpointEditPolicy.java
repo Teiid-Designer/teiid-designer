@@ -13,7 +13,6 @@ package com.metamatrix.modeler.diagram.ui.connection;
 
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
-
 import com.metamatrix.modeler.diagram.ui.figure.DiagramPolylineConnection;
 
 public class LinkEndpointEditPolicy extends ConnectionEndpointEditPolicy {

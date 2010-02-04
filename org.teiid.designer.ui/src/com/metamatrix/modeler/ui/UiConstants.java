@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.ui;
 
 import java.util.ResourceBundle;
-
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.IPageLayout;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.ui.actions.IModelerActionConstants;

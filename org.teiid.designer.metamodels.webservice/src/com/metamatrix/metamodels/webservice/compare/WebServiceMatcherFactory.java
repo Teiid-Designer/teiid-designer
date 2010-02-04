@@ -10,11 +10,9 @@ package com.metamatrix.metamodels.webservice.compare;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import com.metamatrix.metamodels.webservice.WebServicePackage;
 import com.metamatrix.modeler.core.compare.EObjectMatcherFactory;
 

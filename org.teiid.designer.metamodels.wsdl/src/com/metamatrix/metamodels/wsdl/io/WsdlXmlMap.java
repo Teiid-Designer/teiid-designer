@@ -11,7 +11,6 @@ import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.xmi.XMLResource.XMLInfo;
 import org.eclipse.emf.ecore.xmi.impl.XMLInfoImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMLMapImpl;
-
 import com.metamatrix.metamodels.wsdl.WsdlPackage;
 import com.metamatrix.metamodels.wsdl.http.HttpPackage;
 import com.metamatrix.metamodels.wsdl.soap.SoapPackage;

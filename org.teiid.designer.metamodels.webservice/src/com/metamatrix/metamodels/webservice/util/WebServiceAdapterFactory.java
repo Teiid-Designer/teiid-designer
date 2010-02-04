@@ -7,14 +7,20 @@
  */
 package com.metamatrix.metamodels.webservice.util;
 
-import com.metamatrix.metamodels.webservice.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+import com.metamatrix.metamodels.webservice.Input;
+import com.metamatrix.metamodels.webservice.Interface;
+import com.metamatrix.metamodels.webservice.Message;
+import com.metamatrix.metamodels.webservice.Operation;
+import com.metamatrix.metamodels.webservice.Output;
+import com.metamatrix.metamodels.webservice.SampleFile;
+import com.metamatrix.metamodels.webservice.SampleFromXsd;
+import com.metamatrix.metamodels.webservice.SampleMessages;
+import com.metamatrix.metamodels.webservice.WebServiceComponent;
+import com.metamatrix.metamodels.webservice.WebServicePackage;
 
 /**
  * <!-- begin-user-doc -->

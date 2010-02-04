@@ -9,7 +9,6 @@ package com.metamatrix.metamodels.relational.util;
 
 import java.util.Iterator;
 import java.util.List;
-
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.metamodels.relational.RelationalEntity;
 import com.metamatrix.metamodels.relational.Table;

@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.ui.wizards;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.ui.tree.TreeSplitter;
 

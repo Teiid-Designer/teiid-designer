@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.Status;
 import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.EmbeddedLogger;
 import org.teiid.adminapi.LogConfiguration;
-
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.jdbc.EmbeddedDriver;
 import com.metamatrix.jdbc.api.Connection;

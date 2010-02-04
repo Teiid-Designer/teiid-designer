@@ -9,8 +9,7 @@ package com.metamatrix.metamodels.xmlservice.aspects.uml;
 
 import java.util.Collection;
 import java.util.Collections;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.xmlservice.XmlOperation;
 import com.metamatrix.metamodels.xmlservice.XmlServiceComponent;
 import com.metamatrix.metamodels.xmlservice.XmlServiceMetamodelPlugin;

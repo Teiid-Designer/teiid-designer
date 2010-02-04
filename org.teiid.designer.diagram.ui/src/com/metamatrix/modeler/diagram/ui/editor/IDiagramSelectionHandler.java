@@ -8,11 +8,9 @@
 package com.metamatrix.modeler.diagram.ui.editor;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.ISelection;
-
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionEditPart;
 
 /**

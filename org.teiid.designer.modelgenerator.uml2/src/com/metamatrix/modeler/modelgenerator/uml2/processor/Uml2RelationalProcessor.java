@@ -9,11 +9,9 @@ package com.metamatrix.modeler.modelgenerator.uml2.processor;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
-
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.selection.TreeSelection;
-import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.compare.ModelProducer;

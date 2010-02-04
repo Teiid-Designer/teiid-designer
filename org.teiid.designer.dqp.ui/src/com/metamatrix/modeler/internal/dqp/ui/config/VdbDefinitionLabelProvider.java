@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.dqp.ui.config;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;

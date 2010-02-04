@@ -9,7 +9,6 @@ package com.metamatrix.modeler.diagram.ui.util;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;

@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.compare.selector;
 
 import org.eclipse.core.runtime.CoreException;
-
 import org.eclipse.emf.ecore.resource.ResourceSet;
-
 import com.metamatrix.modeler.compare.ModelerComparePlugin;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;

@@ -30,9 +30,8 @@ import org.eclipse.xsd.XSDPatternFacet;
 import org.eclipse.xsd.XSDTotalDigitsFacet;
 import org.eclipse.xsd.XSDWhiteSpaceFacet;
 import org.eclipse.xsd.impl.XSDFacetImpl;
-
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
 import com.metamatrix.metamodels.xsd.XsdPlugin;
 import com.metamatrix.modeler.core.ModelerCore;

@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.diagram.ui.connection;
 
 import java.util.List;
-
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
-
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
 
 

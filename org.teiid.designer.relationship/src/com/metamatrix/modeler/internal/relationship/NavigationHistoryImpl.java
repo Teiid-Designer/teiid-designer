@@ -10,13 +10,11 @@ package com.metamatrix.modeler.internal.relationship;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.relationship.NavigationContext;
 import com.metamatrix.modeler.relationship.NavigationContextException;
 import com.metamatrix.modeler.relationship.NavigationContextInfo;

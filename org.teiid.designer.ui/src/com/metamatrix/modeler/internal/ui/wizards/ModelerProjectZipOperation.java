@@ -7,16 +7,25 @@
  */
 package com.metamatrix.modeler.internal.ui.wizards;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.jface.operation.*;
-
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.ui.UiConstants;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.operation.ModalContext;
+import org.eclipse.ui.PlatformUI;
+import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.modeler.ui.UiConstants;
 
 /**
  *  Operation for exporting a resource and its children to a new .zip file

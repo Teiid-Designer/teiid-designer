@@ -9,8 +9,7 @@ package com.metamatrix.modeler.internal.webservice;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.webservice.compare.WebServiceMatcherFactory;
 import com.metamatrix.metamodels.xml.compare.XmlMatcherFactory;
 import com.metamatrix.modeler.compare.ModelGenerator;

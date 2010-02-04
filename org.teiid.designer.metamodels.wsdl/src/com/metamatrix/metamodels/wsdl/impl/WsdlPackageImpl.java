@@ -18,7 +18,6 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.emf.ecore.impl.EcorePackageImpl;
 import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.impl.XSDPackageImpl;
-
 import com.metamatrix.metamodels.wsdl.Attribute;
 import com.metamatrix.metamodels.wsdl.AttributeOwner;
 import com.metamatrix.metamodels.wsdl.Binding;

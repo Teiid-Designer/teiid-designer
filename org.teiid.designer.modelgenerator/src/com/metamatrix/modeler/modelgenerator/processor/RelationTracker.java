@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.modelgenerator.processor;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**

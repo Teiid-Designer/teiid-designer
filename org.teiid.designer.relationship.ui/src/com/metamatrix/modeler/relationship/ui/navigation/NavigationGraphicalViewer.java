@@ -11,19 +11,17 @@ import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
 import com.metamatrix.modeler.relationship.NavigationNode;
 import com.metamatrix.modeler.relationship.ui.navigation.part.NavigationContainerNodeEditPart;
 import com.metamatrix.modeler.relationship.ui.navigation.part.NavigationNodeEditPart;
-import com.metamatrix.modeler.relationship.ui.navigation.selection.*;
+import com.metamatrix.modeler.relationship.ui.navigation.selection.NavigationSelectionHandler;
 
 /**
  * @author BLaFond

@@ -10,8 +10,7 @@ package com.metamatrix.modeler.transformation.aspects.sql;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.transformation.MappingClassObject;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 

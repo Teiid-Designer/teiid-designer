@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.xml.aspects.sql;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AbstractMetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;

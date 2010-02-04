@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.internal.core.transaction;
 
 import java.util.Collection;
-
 import org.eclipse.emf.common.command.CompoundCommand;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.core.ModelerCore;

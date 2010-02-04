@@ -9,13 +9,11 @@ package com.metamatrix.modeler.tools.textimport.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-
 import com.metamatrix.modeler.tools.textimport.ui.wizards.ITextImportMainPage;
 
 public abstract class TextImportContributionManager {

@@ -10,7 +10,6 @@
 package com.metamatrix.query.internal.ui.sqleditor.sql;
 
 import java.util.StringTokenizer;
-
 import org.eclipse.jface.text.formatter.IFormattingStrategy;
 
 

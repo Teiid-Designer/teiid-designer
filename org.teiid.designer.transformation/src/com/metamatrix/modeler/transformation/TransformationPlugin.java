@@ -10,10 +10,8 @@ package com.metamatrix.modeler.transformation;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
-
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.transformation.udf.UdfManager;
 

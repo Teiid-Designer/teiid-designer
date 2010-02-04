@@ -7,9 +7,8 @@
  */
 package com.metamatrix.metamodels.wsdl.http;
 
-import com.metamatrix.metamodels.wsdl.Port;
-
 import org.eclipse.emf.ecore.EObject;
+import com.metamatrix.metamodels.wsdl.Port;
 
 /**
  * <!-- begin-user-doc -->

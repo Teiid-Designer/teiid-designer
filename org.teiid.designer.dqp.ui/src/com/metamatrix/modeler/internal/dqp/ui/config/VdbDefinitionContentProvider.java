@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.internal.dqp.ui.config;
 
 import java.util.Collection;
-
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-
 import com.metamatrix.common.vdb.api.VDBDefn;
 
 

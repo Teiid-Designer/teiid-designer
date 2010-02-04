@@ -10,7 +10,7 @@ package com.metamatrix.modeler.internal.ui.table;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -19,9 +19,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-
-import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.ui.internal.eventsupport.SelectionProvider;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 

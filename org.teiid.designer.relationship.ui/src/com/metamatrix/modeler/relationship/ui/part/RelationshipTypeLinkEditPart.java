@@ -8,12 +8,10 @@
 package com.metamatrix.modeler.relationship.ui.part;
 
 import java.util.List;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-
 import com.metamatrix.modeler.diagram.ui.connection.BinaryAssociation;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;
 import com.metamatrix.modeler.diagram.ui.connection.decorator.DecoratorFactory;

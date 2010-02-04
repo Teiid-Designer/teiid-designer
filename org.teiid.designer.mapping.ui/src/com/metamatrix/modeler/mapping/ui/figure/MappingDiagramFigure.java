@@ -9,7 +9,6 @@ package com.metamatrix.modeler.mapping.ui.figure;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.FreeformLayer;
@@ -19,7 +18,6 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.diagram.ui.actions.ScaledFont;

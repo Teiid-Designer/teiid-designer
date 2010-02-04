@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.core;
 
 import java.util.Properties;
-
 import com.metamatrix.modeler.core.ExternalResourceDescriptor;
 
 /**

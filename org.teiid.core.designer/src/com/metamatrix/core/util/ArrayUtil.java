@@ -7,7 +7,7 @@
  */
 package com.metamatrix.core.util;
 
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 
 /**<p>
  * </p>

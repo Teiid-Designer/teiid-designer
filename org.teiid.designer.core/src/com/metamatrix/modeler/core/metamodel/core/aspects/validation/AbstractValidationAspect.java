@@ -9,10 +9,8 @@ package com.metamatrix.modeler.core.metamodel.core.aspects.validation;
 
 import java.util.Collection;
 import java.util.Iterator;
-
 import org.eclipse.emf.ecore.EObject;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AbstractMetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;

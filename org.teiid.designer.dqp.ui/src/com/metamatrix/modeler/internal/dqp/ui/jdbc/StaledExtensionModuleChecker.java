@@ -7,12 +7,10 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.jdbc;
 
+import net.sourceforge.sqlexplorer.ISqlExecVetoListener;
 import org.eclipse.core.runtime.IStatus;
-
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.dqp.ui.connection.IVdbConnectionMgr;
-
-import net.sourceforge.sqlexplorer.ISqlExecVetoListener;
 
 
 /** 

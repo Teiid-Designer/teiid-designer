@@ -8,9 +8,7 @@
 package com.metamatrix.rose.internal.impl;
 
 import java.util.List;
-
 import org.eclipse.emf.importer.rose.parser.RoseNode;
-
 import com.metamatrix.rose.internal.IAmbiguousReference;
 
 /**

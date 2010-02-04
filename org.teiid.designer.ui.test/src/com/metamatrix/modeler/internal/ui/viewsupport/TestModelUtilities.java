@@ -8,14 +8,11 @@
 package com.metamatrix.modeler.internal.ui.viewsupport;
 
 import java.io.File;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-
 import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.modeler.internal.core.workspace.FakeIFile;
 import com.metamatrix.modeler.internal.core.workspace.FakeIResource;

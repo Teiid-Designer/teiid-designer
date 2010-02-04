@@ -7,12 +7,10 @@
  */
 package com.metamatrix.modeler.modelgenerator.wsdl.ui;
 
-import org.osgi.framework.BundleContext;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.ui.IWorkbenchPage;
-
+import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.ui.AbstractUiPlugin;

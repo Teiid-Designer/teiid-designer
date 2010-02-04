@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.mapping.ui.actions;
 
 import java.util.Iterator;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
-
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.StagingTable;
 import com.metamatrix.modeler.diagram.ui.util.RelationalUmlEObjectHelper;

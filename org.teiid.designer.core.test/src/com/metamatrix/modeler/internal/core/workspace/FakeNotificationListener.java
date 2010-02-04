@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.core.workspace;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.notify.Notification;
-
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceNotification;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceNotificationListener;
 

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.ui.actions;
 
 import java.util.List;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;

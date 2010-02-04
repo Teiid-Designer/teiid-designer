@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.core.validation;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.core.util.DateUtil;
 import com.metamatrix.modeler.core.validation.ObjectValidationRule;
 import com.metamatrix.modeler.core.validation.ValidationContext;

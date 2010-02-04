@@ -9,7 +9,6 @@ package com.metamatrix.modeler.dqp.config;
 
 import java.util.Collection;
 import java.util.Map;
-
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.common.config.api.ConnectorBindingType;
 import com.metamatrix.vdb.edit.manifest.ModelReference;

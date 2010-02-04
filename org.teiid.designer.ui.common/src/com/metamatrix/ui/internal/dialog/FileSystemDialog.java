@@ -11,7 +11,6 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.ui.UiConstants;
 import com.metamatrix.ui.internal.viewsupport.FileSystemContentProvider;

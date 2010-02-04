@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.internal.ui.viewsupport;
 
 import java.util.HashSet;
-
 import org.eclipse.core.resources.IResource;
-
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 

@@ -9,8 +9,7 @@ package com.metamatrix.modeler.internal.core.workspace;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
 import com.metamatrix.modeler.internal.core.util.OverflowingLRUCache;
 

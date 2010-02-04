@@ -8,11 +8,9 @@
 package com.metamatrix.modeler.internal.core.container;
 
 import java.util.Collection;
-
 import org.eclipse.emf.edit.command.CopyCommand;
 import org.eclipse.emf.edit.command.CopyToClipboardCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
-
 import com.metamatrix.modeler.internal.core.ModelEditorImpl;
 
 /**

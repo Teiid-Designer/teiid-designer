@@ -9,7 +9,6 @@ package com.metamatrix.modeler.diagram.ui.printing;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.draw2d.PrinterGraphics;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Dimension;

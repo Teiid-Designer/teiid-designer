@@ -10,19 +10,16 @@ package com.metamatrix.modeler.internal.core.search.runtime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import com.metamatrix.internal.core.index.WordEntry;
 import com.metamatrix.modeler.core.metamodel.aspect.relationship.RelationshipAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.relationship.RelationshipTypeAspect;
 import com.metamatrix.modeler.core.search.runtime.RelatedObjectRecord;
 import com.metamatrix.modeler.core.search.runtime.RelationshipRecord;
 import com.metamatrix.modeler.core.search.runtime.RelationshipTypeRecord;
-import com.metamatrix.modeler.internal.core.search.runtime.SearchRuntimeAdapter;
 
 /**
  * TestSearchRuntimeAdapter

@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.ui.table;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
-
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;

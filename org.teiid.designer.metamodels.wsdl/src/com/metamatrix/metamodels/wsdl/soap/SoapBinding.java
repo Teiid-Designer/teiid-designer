@@ -7,9 +7,8 @@
  */
 package com.metamatrix.metamodels.wsdl.soap;
 
-import com.metamatrix.metamodels.wsdl.Binding;
-
 import org.eclipse.emf.ecore.EObject;
+import com.metamatrix.metamodels.wsdl.Binding;
 
 /**
  * <!-- begin-user-doc -->

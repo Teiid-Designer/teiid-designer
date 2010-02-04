@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.compare;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EReference;
 
 /**

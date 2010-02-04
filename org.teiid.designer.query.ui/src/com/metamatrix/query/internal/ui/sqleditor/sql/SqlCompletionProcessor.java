@@ -11,7 +11,6 @@ package com.metamatrix.query.internal.ui.sqleditor.sql;
 
 import java.util.Iterator;
 import java.util.Vector;
-
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
@@ -21,8 +20,6 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationPresenter;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
-
-import com.metamatrix.query.internal.ui.sqleditor.sql.WordPartDetector;
 
 /**
  * The SQL content assis processor. This content assist processor proposes 

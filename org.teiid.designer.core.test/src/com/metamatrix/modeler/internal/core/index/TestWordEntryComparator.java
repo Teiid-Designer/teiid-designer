@@ -13,12 +13,10 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import com.metamatrix.internal.core.index.WordEntry;
 import com.metamatrix.modeler.core.index.IndexConstants;
 

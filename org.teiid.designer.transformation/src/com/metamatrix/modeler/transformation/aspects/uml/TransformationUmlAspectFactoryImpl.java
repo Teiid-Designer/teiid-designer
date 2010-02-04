@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.transformation.aspects.uml;
 
 import org.eclipse.emf.ecore.EClassifier;
-
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspectFactory;

@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.util;
 
 import java.util.Map;
-
 import com.metamatrix.modeler.core.ModelerCoreException;
 
 

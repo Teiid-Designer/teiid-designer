@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.metamodel.aspect.sql;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**

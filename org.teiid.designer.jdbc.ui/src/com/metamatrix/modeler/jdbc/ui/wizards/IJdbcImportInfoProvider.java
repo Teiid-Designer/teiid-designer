@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.jdbc.ui.wizards;
 
 import java.util.List;
-
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.modeler.jdbc.metadata.JdbcDatabase;

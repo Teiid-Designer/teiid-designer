@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.relationship.ui.figure;
 
 import org.eclipse.draw2d.ColorConstants;
-
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.util.colors.ColorPalette;
 import com.metamatrix.modeler.diagram.ui.util.colors.DefaultColorPaletteManager;

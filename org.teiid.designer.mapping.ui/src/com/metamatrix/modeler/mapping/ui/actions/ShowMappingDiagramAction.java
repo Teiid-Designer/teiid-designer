@@ -11,7 +11,6 @@ package com.metamatrix.modeler.mapping.ui.actions;
 //import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-//import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorInput;
@@ -22,11 +21,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
-
 import com.metamatrix.metamodels.diagram.Diagram;
-//import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-//import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramEditor;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;

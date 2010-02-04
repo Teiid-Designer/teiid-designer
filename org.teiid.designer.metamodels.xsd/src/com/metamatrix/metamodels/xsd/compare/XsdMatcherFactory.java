@@ -11,12 +11,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xsd.XSDPackage;
-
 import com.metamatrix.modeler.core.compare.EObjectMatcher;
 import com.metamatrix.modeler.core.compare.EObjectMatcherFactory;
 

@@ -10,7 +10,8 @@ package com.metamatrix.modeler.diagram.ui.connection.decorator;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.PolygonDecoration;
-import org.eclipse.draw2d.geometry.*;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PointList;
 /**
  * OffsetArrowDecoration
  * A decorative Figure intended to be placed on a 

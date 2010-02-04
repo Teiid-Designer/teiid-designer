@@ -10,7 +10,6 @@ package com.metamatrix.modeler.diagram.ui.layout;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
 

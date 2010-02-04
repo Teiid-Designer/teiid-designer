@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.impl.XSDPackageImpl;
-
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.metamodels.webservice.Interface;
 import com.metamatrix.metamodels.webservice.Message;

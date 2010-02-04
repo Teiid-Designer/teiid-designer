@@ -10,11 +10,8 @@ package com.metamatrix.modeler.diagram.ui.pakkage;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.eclipse.jface.preference.IPreferenceStore;
-
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.jface.preference.IPreferenceStore;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.diagram.ui.connection.DiagramUmlAssociation;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;

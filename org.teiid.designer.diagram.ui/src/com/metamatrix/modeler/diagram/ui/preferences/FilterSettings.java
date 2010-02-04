@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.preferences;
 
 import org.eclipse.core.runtime.Preferences;
-
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 

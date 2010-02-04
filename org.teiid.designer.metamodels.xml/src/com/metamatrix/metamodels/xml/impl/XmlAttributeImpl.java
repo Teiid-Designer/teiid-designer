@@ -7,9 +7,6 @@
  */
 package com.metamatrix.metamodels.xml.impl;
 
-import com.metamatrix.metamodels.xml.BuildStatus;
-import org.eclipse.xsd.XSDComponent;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
@@ -17,8 +14,9 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import org.eclipse.xsd.XSDAttributeUseCategory;
+import org.eclipse.xsd.XSDComponent;
+import com.metamatrix.metamodels.xml.BuildStatus;
 import com.metamatrix.metamodels.xml.ValueType;
 import com.metamatrix.metamodels.xml.XmlAttribute;
 import com.metamatrix.metamodels.xml.XmlDocumentPackage;

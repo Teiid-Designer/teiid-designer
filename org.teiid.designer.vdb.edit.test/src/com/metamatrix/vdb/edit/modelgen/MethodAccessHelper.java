@@ -8,7 +8,6 @@
 package com.metamatrix.vdb.edit.modelgen;
 
 import org.eclipse.core.runtime.MultiStatus;
-
 import org.eclipse.emf.ecore.resource.Resource;
 
 

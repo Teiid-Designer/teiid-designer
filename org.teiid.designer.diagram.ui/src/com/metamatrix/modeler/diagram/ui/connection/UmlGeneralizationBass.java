@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.diagram.ui.connection;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlGeneralization;
 
 /**

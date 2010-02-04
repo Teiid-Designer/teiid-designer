@@ -9,11 +9,9 @@ package com.metamatrix.modeler.internal.webservice;
 
 import java.io.File;
 import java.io.InputStream;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 
 
 /** 

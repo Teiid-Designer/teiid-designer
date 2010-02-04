@@ -9,7 +9,6 @@ package com.metamatrix.modeler.core.refactor;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Status;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 

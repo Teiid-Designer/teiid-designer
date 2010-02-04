@@ -7,10 +7,9 @@
  */
 package com.metamatrix.modeler.diagram.ui.connection.commands;
 
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
-
-import org.eclipse.draw2d.geometry.*;
-
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;
 
 public class BendpointCommand extends Command {

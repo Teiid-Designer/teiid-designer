@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.ui.viewsupport;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.notification.util.INotificationHelper;
 

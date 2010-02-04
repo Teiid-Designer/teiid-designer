@@ -8,10 +8,8 @@
 package com.metamatrix.metamodels.diagram.util;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.AbstractDiagramEntity;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.diagram.DiagramContainer;

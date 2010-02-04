@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.modelgenerator.salesforce.connection;
 
 import java.net.URL;
-
 import com.sforce.soap.partner.SoapBindingStub;
 
 public interface SalesforceConnection {

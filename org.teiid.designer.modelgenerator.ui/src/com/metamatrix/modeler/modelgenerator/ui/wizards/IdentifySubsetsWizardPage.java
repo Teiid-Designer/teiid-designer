@@ -9,11 +9,9 @@ package com.metamatrix.modeler.modelgenerator.ui.wizards;
 
 import java.util.EventObject;
 import java.util.List;
-
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
-
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceSelections;

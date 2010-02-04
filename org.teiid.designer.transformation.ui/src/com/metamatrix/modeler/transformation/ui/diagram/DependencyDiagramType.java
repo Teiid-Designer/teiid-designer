@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.transformation.ui.diagram;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.diagram.ui.preferences.DiagramColorObject;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;

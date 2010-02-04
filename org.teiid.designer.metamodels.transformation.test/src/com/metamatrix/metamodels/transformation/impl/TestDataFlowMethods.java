@@ -10,12 +10,10 @@ package com.metamatrix.metamodels.transformation.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import com.metamatrix.metamodels.transformation.DataFlowLink;
 import com.metamatrix.metamodels.transformation.DataFlowMappingRoot;
 import com.metamatrix.metamodels.transformation.DataFlowNode;

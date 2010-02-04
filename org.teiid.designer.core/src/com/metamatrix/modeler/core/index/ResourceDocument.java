@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.index;
 
 import org.eclipse.core.resources.IResource;
-
 import com.metamatrix.core.index.IDocument;
 
 /**

@@ -10,13 +10,10 @@ package com.metamatrix.modeler.internal.dqp.ui.jdbc;
 
 import java.util.Iterator;
 import java.util.List;
-
 import net.sourceforge.sqlexplorer.plugin.views.SqlexplorerViewConstants;
-
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 
 /**

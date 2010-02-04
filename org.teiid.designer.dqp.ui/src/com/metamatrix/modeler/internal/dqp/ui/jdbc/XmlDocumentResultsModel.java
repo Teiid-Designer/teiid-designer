@@ -13,14 +13,11 @@ import java.sql.SQLXML;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
 import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
-
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 
 

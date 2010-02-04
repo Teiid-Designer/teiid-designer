@@ -10,7 +10,6 @@ package com.metamatrix.modeler.tools.genericimport.ui;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.ui.AbstractUiPlugin;

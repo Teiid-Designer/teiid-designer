@@ -12,7 +12,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
-
 import com.metamatrix.metamodels.xml.XmlDocumentNode;
 import com.metamatrix.modeler.internal.xml.ui.wizards.NumberOfLevelsWizard;
 import com.metamatrix.modeler.ui.actions.INewChildAction;

@@ -10,11 +10,9 @@ package com.metamatrix.metamodels.xmlservice.aspects.sql;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.xmlservice.XmlOutput;
 import com.metamatrix.metamodels.xmlservice.XmlResult;
 import com.metamatrix.modeler.core.index.IndexConstants;

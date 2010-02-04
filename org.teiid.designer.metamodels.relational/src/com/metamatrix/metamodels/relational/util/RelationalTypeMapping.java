@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.relational.util;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.relational.SearchabilityType;
 import com.metamatrix.modeler.core.ModelerCoreException;
 

@@ -7,7 +7,11 @@
  */
 package com.metamatrix.query.internal.ui.sqleditor.sql;
 
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Region;
 import org.eclipse.swt.graphics.Point;
 
 /**

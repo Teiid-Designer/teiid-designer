@@ -11,7 +11,6 @@ package com.metamatrix.query.ui.actions;
 //import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IWorkbenchPage;
-
 import com.metamatrix.query.ui.UiConstants;
 import com.metamatrix.query.ui.UiPlugin;
 import com.metamatrix.ui.actions.AbstractActionService;

@@ -10,7 +10,6 @@ package com.metamatrix.query.internal.ui.sqleditor.sql;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-
 import com.metamatrix.query.ui.UiConstants;
 import com.metamatrix.query.ui.UiPlugin;
 

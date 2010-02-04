@@ -9,13 +9,10 @@ package com.metamatrix.modeler.transformation.metadata;
 
 import java.util.Arrays;
 import java.util.Collection;
-
 import org.eclipse.core.runtime.CoreException;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.workspace.ModelWorkspace;

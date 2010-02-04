@@ -10,9 +10,7 @@ package com.metamatrix.modeler.diagram.ui.actions;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.core.ModelImport;
 import com.metamatrix.metamodels.relational.ForeignKey;
 import com.metamatrix.metamodels.relational.UniqueKey;

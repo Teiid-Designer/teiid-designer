@@ -8,14 +8,12 @@
 package com.metamatrix.metamodels.xml.aspects.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.xsd.XSDComponent;
-import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.eclipse.xsd.XSDTypeDefinition;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
+import org.eclipse.xsd.XSDComponent;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
+import org.eclipse.xsd.XSDTypeDefinition;
 import com.metamatrix.metamodels.xml.XmlDocumentNode;
 import com.metamatrix.metamodels.xml.XmlDocumentPlugin;
 import com.metamatrix.metamodels.xsd.XsdUtil;

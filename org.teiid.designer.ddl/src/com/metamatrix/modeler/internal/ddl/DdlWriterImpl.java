@@ -26,7 +26,7 @@ import org.jdom.Document;
 import org.jdom.output.XMLOutputter;
 import com.metamatrix.core.log.Logger;
 import com.metamatrix.core.log.NullLogger;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.xslt.Style;
 import com.metamatrix.core.xslt.XsltTransform;
 import com.metamatrix.internal.core.xml.JdomHelper;

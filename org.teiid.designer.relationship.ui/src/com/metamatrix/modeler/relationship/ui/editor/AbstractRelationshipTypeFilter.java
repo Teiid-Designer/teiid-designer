@@ -9,7 +9,6 @@ package com.metamatrix.modeler.relationship.ui.editor;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-
 import com.metamatrix.metamodels.relationship.RelationshipType;
 
 /**

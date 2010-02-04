@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.mapping.ui.actions;
 
 import org.eclipse.emf.ecore.EObject;
-
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.MappingClassColumn;
 import com.metamatrix.metamodels.transformation.StagingTable;

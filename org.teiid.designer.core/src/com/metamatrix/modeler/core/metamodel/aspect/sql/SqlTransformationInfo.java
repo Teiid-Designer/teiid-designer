@@ -9,8 +9,7 @@ package com.metamatrix.modeler.core.metamodel.aspect.sql;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 
 /**
  * SqlTransformationInfo

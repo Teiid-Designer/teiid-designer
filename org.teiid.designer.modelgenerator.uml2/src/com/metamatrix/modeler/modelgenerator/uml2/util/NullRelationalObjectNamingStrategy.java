@@ -11,7 +11,6 @@ import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Property;
-
 import com.metamatrix.metamodels.relational.BaseTable;
 
 /**

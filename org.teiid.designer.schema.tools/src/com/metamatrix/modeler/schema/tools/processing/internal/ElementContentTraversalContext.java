@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
 
 public class ElementContentTraversalContext {

@@ -11,7 +11,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.undo.IUndoManager;

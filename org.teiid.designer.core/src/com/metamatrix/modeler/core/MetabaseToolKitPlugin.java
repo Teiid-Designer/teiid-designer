@@ -9,12 +9,10 @@ package com.metamatrix.modeler.core;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExtension;
-
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.plugin.PluginUtilities;
-import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.modeler.core.reader.StreamReader;
 import com.metamatrix.modeler.core.writer.StreamWriter;
 

@@ -10,12 +10,10 @@ package com.metamatrix.modeler.core.compare;
 import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 
 /**
  * FakeMappableObject

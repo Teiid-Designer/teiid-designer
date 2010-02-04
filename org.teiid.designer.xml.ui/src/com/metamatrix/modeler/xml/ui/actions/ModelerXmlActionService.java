@@ -9,7 +9,6 @@ package com.metamatrix.modeler.xml.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IWorkbenchPage;
-
 import com.metamatrix.modeler.xml.ui.ModelerXmlUiConstants;
 import com.metamatrix.modeler.xml.ui.ModelerXmlUiPlugin;
 import com.metamatrix.ui.actions.AbstractActionService;

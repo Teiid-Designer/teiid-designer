@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.core.container;
 
 import java.util.List;
-
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.modeler.core.ModelerCoreException;
 
 /**

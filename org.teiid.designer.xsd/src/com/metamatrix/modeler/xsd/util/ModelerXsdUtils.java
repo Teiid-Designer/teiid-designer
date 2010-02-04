@@ -7,10 +7,9 @@
  */
 package com.metamatrix.modeler.xsd.util;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDEnumerationFacet;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-
-import org.eclipse.emf.ecore.EObject;
 
 
 /** 

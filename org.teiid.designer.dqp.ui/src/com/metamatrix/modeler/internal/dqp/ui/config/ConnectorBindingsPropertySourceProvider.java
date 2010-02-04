@@ -9,11 +9,9 @@ package com.metamatrix.modeler.internal.dqp.ui.config;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-
 import com.metamatrix.common.config.api.ConnectorBinding;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.vdb.edit.VdbContextEditor;
