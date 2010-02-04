@@ -9,11 +9,11 @@ package com.metamatrix.modeler.modelgenerator.wsdl;
 
 import java.util.Collection;
 import java.util.Iterator;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.config.ConfigurationManager;
-import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
+//import com.metamatrix.common.config.api.ComponentType;
+//import com.metamatrix.common.config.api.ConnectorBinding;
+//import com.metamatrix.modeler.dqp.DqpPlugin;
+//import com.metamatrix.modeler.dqp.config.ConfigurationManager;
+//import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 
 public class SoapBindingInfo {
 
@@ -82,7 +82,8 @@ public class SoapBindingInfo {
 
     public void createConnectorBinding( String modelName,
                                         String name ) throws Exception {
-        final String suffix = ".xmi"; //$NON-NLS-1$
+        /*
+    	final String suffix = ".xmi"; //$NON-NLS-1$
         if (modelName.endsWith(suffix)) {
             modelName = modelName.substring(0, modelName.length() - suffix.length());
         }
@@ -114,6 +115,7 @@ public class SoapBindingInfo {
         }
         
         impl.addBinding(bind);
+        */
     }
 
     @Override
@@ -133,10 +135,12 @@ public class SoapBindingInfo {
 
     public String generateUniqueName() {
         String candidate = m_operName;
+        /*
         int num = 1;
         while (!ModelerDqpUtils.isUniqueBindingName(candidate)) {
             candidate = m_operName + "_" + num++; //$NON-NLS-1$
         }
+        */
         return candidate;
     }
 
