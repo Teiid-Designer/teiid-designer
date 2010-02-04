@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Set;
 import junit.framework.TestCase;
 import org.eclipse.xsd.XSDSchema;
-import com.metamatrix.core.log.NullLogger;
 import com.metamatrix.modeler.schema.tools.common.SchemaTestUtil;
 import com.metamatrix.modeler.schema.tools.model.jdbc.Column;
 import com.metamatrix.modeler.schema.tools.model.jdbc.Table;
@@ -34,7 +33,7 @@ public class SeparatorCharacterTest extends TestCase {
             List paths = new ArrayList();
             paths.add("./src/sources/CollapseAll.xsd"); //$NON-NLS-1$
             schemas = util.importSchemas(paths);
-            schemaProcessor = new SchemaProcessorImpl(new NullLogger(), null);
+            schemaProcessor = new SchemaProcessorImpl(null);
             Table tab = getTables(schemas, schemaProcessor);
             Column[] columns = tab.getColumns();
             Column col = columns[1];
@@ -54,7 +53,7 @@ public class SeparatorCharacterTest extends TestCase {
             List paths = new ArrayList();
             paths.add("./src/sources/CollapseAll.xsd"); //$NON-NLS-1$
             schemas = util.importSchemas(paths);
-            schemaProcessor = new SchemaProcessorImpl(new NullLogger(), "-"); //$NON-NLS-1$
+            schemaProcessor = new SchemaProcessorImpl("-"); //$NON-NLS-1$
             Table tab = getTables(schemas, schemaProcessor);
             Column[] columns = tab.getColumns();
             Column col = columns[1];

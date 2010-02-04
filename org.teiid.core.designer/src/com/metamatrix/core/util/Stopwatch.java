@@ -24,8 +24,8 @@ package com.metamatrix.core.util;
 
 import java.io.Serializable;
 import com.metamatrix.core.CorePlugin;
-import com.metamatrix.core.log.Logger;
 import com.metamatrix.core.log.MessageLevel;
+import com.metamatrix.core.modeler.CoreModelerPlugin;
 
 public class Stopwatch implements Serializable {
     private static final long serialVersionUID = 8632873770474816540L;
@@ -35,16 +35,15 @@ public class Stopwatch implements Serializable {
     private Statistics stats = new Statistics();
     private boolean active = true;
 
-    private static final String SECONDS      = CorePlugin.Util.getString("Stopwatch.seconds"); //$NON-NLS-1$
+    private static final String SECONDS = CorePlugin.Util.getString("Stopwatch.seconds"); //$NON-NLS-1$
     private static final String MILLISECONDS = CorePlugin.Util.getString("Stopwatch.milliseconds"); //$NON-NLS-1$
     private static final int VALUE_LENGTH = 10;
 
     /**
-     * Return whether the stopwatch is active.  When the stopwatch is active,
-     * it is recording the time durations (via <code>start</code> and <code>stop</code>)
-     * and will print duration statistics (via <code>printDuration</code>).
-     * When the stopwatch is inactive, invoking these methods does nothing
-     * but return immediately.
+     * Return whether the stopwatch is active. When the stopwatch is active, it is recording the time durations (via
+     * <code>start</code> and <code>stop</code>) and will print duration statistics (via <code>printDuration</code>). When the
+     * stopwatch is inactive, invoking these methods does nothing but return immediately.
+     * 
      * @return true if the stopwatch is active, or false if it is inactive.
      */
     public boolean isActive() {
@@ -53,13 +52,16 @@ public class Stopwatch implements Serializable {
 
     /**
      * Set the stopwatch as inactive.
+     * 
      * @see isActive
      */
     public void setInactive() {
         active = false;
     }
+
     /**
      * Set the stopwatch as active.
+     * 
      * @see isActive
      */
     public void setActive() {
@@ -67,63 +69,71 @@ public class Stopwatch implements Serializable {
     }
 
     /**
-     * If the stopwatch is active, record the starting time for a time segment.
-     * If the stopwatch is inactive, the method returns immediately.
+     * If the stopwatch is active, record the starting time for a time segment. If the stopwatch is inactive, the method returns
+     * immediately.
+     * 
      * @see isActive
      */
     public void start() {
-        if ( active ) {
+        if (active) {
             start = System.currentTimeMillis();
         }
     }
-    
+
     /**
-     * If the stopwatch is active, record the starting time for a time segment.
-     * If the stopwatch is inactive, the method returns immediately.
+     * If the stopwatch is active, record the starting time for a time segment. If the stopwatch is inactive, the method returns
+     * immediately.
+     * 
      * @see isActive
      */
-    public void start(boolean reset) {
-        if( reset )
-            reset();
+    public void start( boolean reset ) {
+        if (reset) reset();
         start();
     }
-    
+
     /**
-     * If the stopwatch is active, record the ending time for a time segment.
-     * If the stopwatch is inactive, the method returns immediately.
+     * If the stopwatch is active, record the ending time for a time segment. If the stopwatch is inactive, the method returns
+     * immediately.
+     * 
      * @see isActive
      */
     public void stop() {
-        if ( active ) {
+        if (active) {
             stop = System.currentTimeMillis();
-            stats.add( stop - start );
+            stats.add(stop - start);
         }
     }
+
     /**
      * Reset the statistics for this stopwatch, regardless of the active state.
      */
     public void reset() {
-        start    = 0;
-        stop     = 0;
+        start = 0;
+        stop = 0;
         stats.reset();
     }
+
     /**
      * Return the total duration recorded, in milliseconds.
+     * 
      * @return the total number of milliseconds that have been recorded
      */
     public long getTotalDuration() {
         return stats.getTotal();
     }
+
     /**
      * Return the average duration recorded as a date.
-     * @return the number of milliseconds that have been recorded averaged
-     * over the number of segments
+     * 
+     * @return the number of milliseconds that have been recorded averaged over the number of segments
      */
     public float getAverageDuration() {
         return stats.getAverage();
     }
+
     /**
      * Return the number of segments that have been recorded.
+     * 
      * @return the number of segments
      */
     public int getSegmentCount() {
@@ -135,7 +145,7 @@ public class Stopwatch implements Serializable {
         String units = MILLISECONDS;
         StringBuffer valueString = null;
         long value = getTotalDuration();
-        if ( value >= 1000 ) {
+        if (value >= 1000) {
             float fvalue = value / 1000.0f;
             units = SECONDS;
             valueString = new StringBuffer(Float.toString(fvalue));
@@ -149,46 +159,52 @@ public class Stopwatch implements Serializable {
     public String getTimeValueAsString( long value ) {
         String units = MILLISECONDS;
         StringBuffer valueString = null;
-        if ( value >= 1000 ) {
+        if (value >= 1000) {
             float fvalue = value / 1000.0f;
             units = SECONDS;
             valueString = new StringBuffer(Float.toString(fvalue));
         } else {
             valueString = new StringBuffer(Long.toString(value));
         }
-        while ( valueString.length() < VALUE_LENGTH ) valueString.insert(0,' ');
+        while (valueString.length() < VALUE_LENGTH)
+            valueString.insert(0, ' ');
         return "" + valueString + units; //$NON-NLS-1$
     }
+
     public String getTimeValueAsString( float value ) {
         String units = MILLISECONDS;
-        if ( value >= 1000.0f ) {
+        if (value >= 1000.0f) {
             value = value / 1000.0f;
             units = SECONDS;
         }
         StringBuffer valueString = new StringBuffer(Float.toString(value));
-        while ( valueString.length() < VALUE_LENGTH ) valueString.insert(0,' ');
+        while (valueString.length() < VALUE_LENGTH)
+            valueString.insert(0, ' ');
         return "" + valueString + units; //$NON-NLS-1$
     }
+
     public String getValueAsString( int value ) {
         StringBuffer valueString = new StringBuffer(Integer.toString(value));
-        while ( valueString.length() < VALUE_LENGTH ) valueString.insert(0,' ');
+        while (valueString.length() < VALUE_LENGTH)
+            valueString.insert(0, ' ');
         return "" + valueString; //$NON-NLS-1$
     }
 
     /**
      * Print the current statistics
+     * 
      * @param stream the stream to which the statistics should be printed
      */
-    public void printStatistics(java.io.PrintStream stream) {
-        if ( active ) {
+    public void printStatistics( java.io.PrintStream stream ) {
+        if (active) {
             stream.println(CorePlugin.Util.getString("Stopwatch.Stopwatch_Statistics")); //$NON-NLS-1$
-            stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Total",this.getTimeValueAsString( stats.getTotal() ) ) ); //$NON-NLS-1$
-            stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Previous",this.getTimeValueAsString( stats.getLast() ) ) ); //$NON-NLS-1$
-            if ( stats.getCount() > 1 ) {
-                stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Count",this.getValueAsString( stats.getCount() ) ) ); //$NON-NLS-1$
-                stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Average",this.getTimeValueAsString( stats.getAverage() ) ) ); //$NON-NLS-1$
-                stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Minimum",this.getTimeValueAsString( stats.getMinimum() ) ) ); //$NON-NLS-1$
-                stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Maximum",this.getTimeValueAsString( stats.getMaximum() ) ) ); //$NON-NLS-1$
+            stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Total", this.getTimeValueAsString(stats.getTotal()))); //$NON-NLS-1$
+            stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Previous", this.getTimeValueAsString(stats.getLast()))); //$NON-NLS-1$
+            if (stats.getCount() > 1) {
+                stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Count", this.getValueAsString(stats.getCount()))); //$NON-NLS-1$
+                stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Average", this.getTimeValueAsString(stats.getAverage()))); //$NON-NLS-1$
+                stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Minimum", this.getTimeValueAsString(stats.getMinimum()))); //$NON-NLS-1$
+                stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Maximum", this.getTimeValueAsString(stats.getMaximum()))); //$NON-NLS-1$
             }
         }
     }
@@ -200,7 +216,6 @@ public class Stopwatch implements Serializable {
         printStatistics(System.out);
     }
 
-
     public class Statistics implements Serializable {
         private static final long serialVersionUID = 6451257438010489623L;
         private long minimum = 0;
@@ -210,24 +225,42 @@ public class Stopwatch implements Serializable {
         private int count = 0;
         private boolean minimumInitialized = false;
 
-        public long getMinimum() { return minimum; }
-        public long getMaximum() { return maximum; }
-        public long getLast() { return last; }
-        public float getAverage() { return ( (float)total / (float)count ); }
-        public long getTotal() { return total; }
-        public int getCount() { return count; }
+        public long getMinimum() {
+            return minimum;
+        }
+
+        public long getMaximum() {
+            return maximum;
+        }
+
+        public long getLast() {
+            return last;
+        }
+
+        public float getAverage() {
+            return ((float)total / (float)count);
+        }
+
+        public long getTotal() {
+            return total;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
         public void add( long duration ) {
             ++count;
             total += duration;
             last = duration;
-            if ( duration > maximum ) {
+            if (duration > maximum) {
                 maximum = duration;
-            }
-            else if ( !minimumInitialized || duration < minimum ) {
+            } else if (!minimumInitialized || duration < minimum) {
                 minimum = duration;
                 minimumInitialized = true;
             }
         }
+
         public void reset() {
             minimum = 0;
             maximum = 0;
@@ -237,56 +270,59 @@ public class Stopwatch implements Serializable {
             minimumInitialized = false;
         }
     }
-    
+
     /**
-     * Logs a message containing a time increment in milliseconds and a messages describing the operation or context that
-     * the time relates to.
+     * Logs a message containing a time increment in milliseconds and a messages describing the operation or context that the time
+     * relates to.
+     * 
      * @param message
      * @param time
      * @since 4.3
      */
-    public static void logTimedMessage(String message, long time, Logger log) {
-    	log.log(MessageLevel.INFO, getTimeString(time) + message); 
+    public static void logTimedMessage( String message,
+                                        long time ) {
+        CoreModelerPlugin.Util.log(MessageLevel.INFO, getTimeString(time) + message);
     }
-    
+
     /**
-     * This convience method stops the current stopwatch, logs a message containing the resulting time increment/duration
-     * and restarts the stopwatch. 
+     * This convience method stops the current stopwatch, logs a message containing the resulting time increment/duration and
+     * restarts the stopwatch.
+     * 
      * @param message
      * @since 4.3
      */
-    public void stopLogIncrementAndRestart(String message, Logger log) {
+    public void stopLogIncrementAndRestart( String message ) {
         stop();
-        logTimedMessage(message, getTotalDuration(), log);
+        logTimedMessage(message, getTotalDuration());
         // Restart by reset = true
         start(true);
     }
-    
+
     /**
-     * This convience method stops the current stopwatch, prints a message to System.out containing the resulting time increment/duration
-     * and restarts the stopwatch.
+     * This convience method stops the current stopwatch, prints a message to System.out containing the resulting time
+     * increment/duration and restarts the stopwatch.
+     * 
      * @param message
      * @since 4.3
      */
-    public void stopPrintIncrementAndRestart(String message) {
+    public void stopPrintIncrementAndRestart( String message ) {
         stop();
         System.out.println(message + getTotalDuration());
         // Restart by reset = true
         start(true);
     }
-    
-    private static String getTimeString(long time) {
-        String timeString = StringUtil.Constants.EMPTY_STRING + time; 
+
+    private static String getTimeString( long time ) {
+        String timeString = StringUtil.Constants.EMPTY_STRING + time;
         int nSpaces = 8 - timeString.length();
         StringBuffer buff = new StringBuffer();
-        
+
         buff.append("Time = ["); //$NON-NLS-1$
-        for(int i=0; i<nSpaces; i++ ) {
+        for (int i = 0; i < nSpaces; i++) {
             buff.append(StringUtil.Constants.SPACE);
         }
         buff.append(timeString + "] ms : "); //$NON-NLS-1$
-        
+
         return buff.toString();
     }
 }
-

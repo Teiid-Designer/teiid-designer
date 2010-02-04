@@ -10,8 +10,6 @@ package com.metamatrix.modeler.modelgenerator.wsdl;
 import junit.framework.TestCase;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import com.metamatrix.core.log.Logger;
-import com.metamatrix.core.log.NullLogger;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 
@@ -19,7 +17,6 @@ public class WSDLReaderTest extends TestCase {
 
     public static final String CIS_WSDL = "./src/sources/CountryInfoService.wsdl"; //$NON-NLS-1$
     public static final String badWSDL = "./src/sources/InvalidCountryInfoService.wsdl"; //$NON-NLS-1$
-    private Logger logger;
 
     public WSDLReaderTest( String name ) {
         super(name);
@@ -28,7 +25,6 @@ public class WSDLReaderTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        logger = new NullLogger();
     }
 
     @Override
@@ -41,7 +37,7 @@ public class WSDLReaderTest extends TestCase {
      */
     public void testWSDLReader() {
         WSDLReader reader = null;
-        reader = new WSDLReader(logger);
+        reader = new WSDLReader();
         assertNotNull(reader);
     }
 
@@ -50,7 +46,7 @@ public class WSDLReaderTest extends TestCase {
      */
     public void testWSDLReaderString() {
         WSDLReader reader = null;
-        reader = new WSDLReader(CIS_WSDL, logger);
+        reader = new WSDLReader(CIS_WSDL);
         assertNotNull(reader);
         assertEquals(CIS_WSDL, reader.getFileUri());
     }
@@ -59,7 +55,7 @@ public class WSDLReaderTest extends TestCase {
      * Test method for 'com.metamatrix.modeler.modelgenerator.wsdl.WSDLReader.getModel()'
      */
     public void testGetModel() throws ModelGenerationException {
-        WSDLReader reader = new WSDLReader(CIS_WSDL, logger);
+        WSDLReader reader = new WSDLReader(CIS_WSDL);
         Model model = reader.getModel();
         assertNotNull(model);
     }
@@ -68,7 +64,7 @@ public class WSDLReaderTest extends TestCase {
      * Test method for 'com.metamatrix.modeler.modelgenerator.wsdl.WSDLReader.setFileUri(String)'
      */
     public void testGetSetFileUri() {
-        WSDLReader reader = new WSDLReader(logger);
+        WSDLReader reader = new WSDLReader();
         reader.setFileUri(CIS_WSDL);
         assertEquals(CIS_WSDL, reader.getFileUri());
     }
@@ -99,7 +95,7 @@ public class WSDLReaderTest extends TestCase {
 
     private void validateWSDL( String wsdl,
                                boolean shouldSucceed ) {
-        WSDLReader reader = new WSDLReader(wsdl, logger);
+        WSDLReader reader = new WSDLReader(wsdl);
         MultiStatus status = reader.validateWSDL(null);
         assertNotNull("The Multistatus is Null", status); //$NON-NLS-1$
         if (shouldSucceed) {

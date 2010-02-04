@@ -31,7 +31,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.xsd.XSDSchema;
 import com.ibm.wsdl.ImportImpl;
 import com.ibm.wsdl.factory.WSDLFactoryImpl;
-import com.metamatrix.core.log.Logger;
 import com.metamatrix.modeler.modelgenerator.wsdl.ModelGeneratorWsdlPlugin;
 import com.metamatrix.modeler.modelgenerator.wsdl.SoapBindingInfo;
 import com.metamatrix.modeler.modelgenerator.wsdl.TableBuilder;
@@ -96,50 +95,49 @@ public class ModelBuilder {
         return m_wsdlException;
     }
 
-    public Model getModel( Logger logger ) throws Exception {
+    public Model getModel() throws Exception {
         // wsdl isn't set or can't be read
         if (m_wsdlDef == null) return null;
-        Model theModel = createModel(logger);
+        Model theModel = createModel();
         return theModel;
     }
 
-    private Model createModel( Logger logger ) throws Exception {
+    private Model createModel() throws Exception {
         Model theModel = new ModelImpl();
         Map namespaceMap = m_wsdlDef.getNamespaces();
         theModel.setNamespaces(namespaceMap);
         extractor.findSchema(m_wsdlURI);
 
-		
-		//Get the embedded schema from imported WSDLs
-		extractImportedWSDL(m_wsdlDef);
+        // Get the embedded schema from imported WSDLs
+        extractImportedWSDL(m_wsdlDef);
 
         m_schemas = extractor.getSchemas();
-		setSchemaModel(logger);
-		theModel.setSchemas(m_schemas);
-		Service[] svcs = createServices(getServices(), theModel);
-		theModel.setServices(svcs);	
-		return theModel;
-	}
-    
-	private void extractImportedWSDL(Definition def) throws Exception {
-		Map imports = def.getImports();
-		if(!imports.isEmpty()) {
-			Set keys = imports.keySet();
-			for(Iterator iter = keys.iterator(); iter.hasNext(); ) {
-				String namespace = (String)iter.next();
-				List importImpls = (List)imports.get(namespace);
-				for(Iterator itera = importImpls.iterator(); itera.hasNext(); ) {
-					ImportImpl impImpl = (ImportImpl)itera.next();
-					Definition imported = impImpl.getDefinition();
-					URI baseURI = new URI(imported.getDocumentBaseURI());
-					URL baseURL = baseURI.toURL();
-					extractor.findSchema(baseURL.toString());
-					extractImportedWSDL(imported);
-				}
-				
-			}
-		}
-	}
+        setSchemaModel();
+        theModel.setSchemas(m_schemas);
+        Service[] svcs = createServices(getServices(), theModel);
+        theModel.setServices(svcs);
+        return theModel;
+    }
+
+    private void extractImportedWSDL( Definition def ) throws Exception {
+        Map imports = def.getImports();
+        if (!imports.isEmpty()) {
+            Set keys = imports.keySet();
+            for (Iterator iter = keys.iterator(); iter.hasNext();) {
+                String namespace = (String)iter.next();
+                List importImpls = (List)imports.get(namespace);
+                for (Iterator itera = importImpls.iterator(); itera.hasNext();) {
+                    ImportImpl impImpl = (ImportImpl)itera.next();
+                    Definition imported = impImpl.getDefinition();
+                    URI baseURI = new URI(imported.getDocumentBaseURI());
+                    URL baseURL = baseURI.toURL();
+                    extractor.findSchema(baseURL.toString());
+                    extractImportedWSDL(imported);
+                }
+
+            }
+        }
+    }
 
     private Map getServices() {
         Map services = m_wsdlDef.getServices();
@@ -424,9 +422,9 @@ public class ModelBuilder {
         return partArr;
     }
 
-    private void setSchemaModel( Logger logger ) throws Exception {
+    private void setSchemaModel() throws Exception {
         // process the schemas and get the schema model
-        SchemaProcessor processor = new SchemaProcessorImpl(logger, null);
+        SchemaProcessor processor = new SchemaProcessorImpl(null);
         processor.representTypes(true);
         processor.processSchemas(m_schemas);
         processor.getSchemaModel();

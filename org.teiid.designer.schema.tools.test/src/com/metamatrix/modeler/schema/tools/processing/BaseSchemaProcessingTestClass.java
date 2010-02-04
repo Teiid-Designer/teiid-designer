@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import junit.framework.TestCase;
 import org.eclipse.xsd.XSDSchema;
-import com.metamatrix.core.log.NullLogger;
 import com.metamatrix.modeler.schema.tools.common.SchemaTestUtil;
 import com.metamatrix.modeler.schema.tools.model.jdbc.Column;
 import com.metamatrix.modeler.schema.tools.model.jdbc.Table;
@@ -65,7 +64,7 @@ public abstract class BaseSchemaProcessingTestClass extends TestCase {
         super.setUp();
         SchemaTestUtil util = new SchemaTestUtil();
         schemas = util.importSchemas(getSchemaPaths());
-        schemaProcessor = new SchemaProcessorImpl(new NullLogger(), null);
+        schemaProcessor = new SchemaProcessorImpl(null);
         schemaProcessor.representTypes(representTypes());
     }
 

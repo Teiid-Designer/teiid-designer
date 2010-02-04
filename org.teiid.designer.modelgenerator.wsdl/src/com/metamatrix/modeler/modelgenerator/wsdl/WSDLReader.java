@@ -10,7 +10,6 @@ package com.metamatrix.modeler.modelgenerator.wsdl;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import com.metamatrix.core.log.Logger;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.internal.ModelBuilder;
@@ -24,23 +23,20 @@ import com.metamatrix.modeler.modelgenerator.wsdl.validation.internal.WSDLValida
 public class WSDLReader {
 
     private String m_fileURI;
-    private Logger logger;
     private static WSDLValidator VALIDATOR;
 
     public static final int VALIDATION_SEVERITY_ERROR = 0;
     public static final int VALIDATION_SEVERITY_WARNING = 1;
 
-    public WSDLReader( Logger logger ) {
-        this(null, logger);
+    public WSDLReader() {
+        this(null);
     }
 
     /**
      * @param fileUri the URI of the WSDL file
      */
-    public WSDLReader( String fileUri,
-                       Logger logger ) {
+    public WSDLReader( String fileUri ) {
         m_fileURI = fileUri;
-        this.logger = logger;
     }
 
     /**
@@ -52,7 +48,9 @@ public class WSDLReader {
         try {
             theModel = buildWSDLStructures();
         } catch (NullPointerException ex) {
-            logger.log(IStatus.ERROR, ex, ModelGeneratorWsdlPlugin.Util.getString("WSDLReader.unexpected.parsing.wsdl")); //$NON-NLS-1$
+            ModelGeneratorWsdlPlugin.Util.log(IStatus.ERROR,
+                                              ex,
+                                              ModelGeneratorWsdlPlugin.Util.getString("WSDLReader.unexpected.parsing.wsdl")); //$NON-NLS-1$
             Exception e = new Exception(ModelGeneratorWsdlPlugin.Util.getString("WSDLReader.unexpected.parsing.wsdl")); //$NON-NLS-1$
             throw new ModelGenerationException(e);
         } catch (Exception ex) {
@@ -68,7 +66,7 @@ public class WSDLReader {
             Exception myEx = builder.getWSDLException();
             throw myEx;
         }
-        return builder.getModel(logger);
+        return builder.getModel();
     }
 
     /**

@@ -13,7 +13,6 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
-import com.metamatrix.core.log.Logger;
 import com.metamatrix.modeler.modelgenerator.wsdl.ModelGeneratorWsdlPlugin;
 import com.metamatrix.modeler.schema.tools.model.schema.Column;
 import com.metamatrix.modeler.schema.tools.model.schema.QName;
@@ -28,9 +27,8 @@ import com.metamatrix.modeler.schema.tools.processing.internal.SchemaProcessorIm
 
 public class SOAPSchemaProcessor extends SchemaProcessorImpl {
 
-    public SOAPSchemaProcessor( Logger log,
-                                String separator ) {
-        super(log, separator);
+    public SOAPSchemaProcessor( String separator ) {
+        super(separator);
     }
 
     @Override
@@ -88,7 +86,8 @@ public class SOAPSchemaProcessor extends SchemaProcessorImpl {
                 return;
             }
             // How can the ref be null, or equal to the referencer if the name is null?
-            log.log(IStatus.WARNING, ModelGeneratorWsdlPlugin.Util.getString("SOAPSchemaProcessor.processElementWarning")); //$NON-NLS-1$
+            ModelGeneratorWsdlPlugin.Util.log(IStatus.WARNING,
+                                              ModelGeneratorWsdlPlugin.Util.getString("SOAPSchemaProcessor.processElementWarning")); //$NON-NLS-1$
             return;
         }
 

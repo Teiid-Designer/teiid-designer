@@ -226,7 +226,7 @@ public class XsdAsRelationalImportWizard extends AbstractWizard implements IImpo
         userSettings.set_P_threshold(pThreshold);
         userSettings.set_F_threshold(fThreshold);
 
-        manager = new StateManager(userSettings, util);
+        manager = new StateManager(userSettings);
 
         String requestTableLocalName = prefs.getString(XmlImporterUiPlugin.requestTable);
         userSettings.setRequestTableLocalName(requestTableLocalName);

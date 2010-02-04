@@ -8,8 +8,6 @@
 package com.metamatrix.modeler.modelgenerator.wsdl.model.internal;
 
 import junit.framework.TestCase;
-import com.metamatrix.core.log.Logger;
-import com.metamatrix.core.log.NullLogger;
 import com.metamatrix.modeler.modelgenerator.wsdl.WSDLReaderTest;
 
 public class ModelBuilderTest extends TestCase {
@@ -17,7 +15,6 @@ public class ModelBuilderTest extends TestCase {
     private final String badURI = WSDLReaderTest.CIS_WSDL + "fdfdfd"; //$NON-NLS-1$
     private final String notURI = "this is decidedly NOT a URI"; //$NON-NLS-1$
     private final String fileNotFound = "file:///../FileNotFound.wsdl"; //$NON-NLS-1$
-    private Logger logger;
 
     public ModelBuilderTest( String name ) {
         super(name);
@@ -26,7 +23,6 @@ public class ModelBuilderTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        logger = new NullLogger();
     }
 
     @Override
@@ -140,30 +136,30 @@ public class ModelBuilderTest extends TestCase {
      */
     public void testGetModelNoWSDL() throws Exception {
         ModelBuilder builder = new ModelBuilder();
-        assertNull(builder.getModel(logger));
+        assertNull(builder.getModel());
     }
 
     public void testGetModelGood() throws Exception {
         ModelBuilder builder = new ModelBuilder();
         builder.setWSDL(WSDLReaderTest.CIS_WSDL);
-        assertNotNull(builder.getModel(logger));
+        assertNotNull(builder.getModel());
     }
 
     public void testGetModelBad() throws Exception {
         ModelBuilder builder = new ModelBuilder();
         builder.setWSDL(badURI);
-        assertNull(builder.getModel(logger));
+        assertNull(builder.getModel());
     }
 
     public void testGetModelFileNotFound() throws Exception {
         ModelBuilder builder = new ModelBuilder();
         builder.setWSDL(fileNotFound);
-        assertNull(builder.getModel(logger));
+        assertNull(builder.getModel());
     }
 
     public void testGetModelNotURI() throws Exception {
         ModelBuilder builder = new ModelBuilder();
         builder.setWSDL(notURI);
-        assertNull(builder.getModel(logger));
+        assertNull(builder.getModel());
     }
 }

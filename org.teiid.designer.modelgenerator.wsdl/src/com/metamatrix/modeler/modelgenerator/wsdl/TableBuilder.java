@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import org.eclipse.xsd.XSDSchema;
 import org.jdom.Namespace;
-import com.metamatrix.core.log.Logger;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Message;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
@@ -53,8 +52,7 @@ public class TableBuilder {
         return m_model.getNamespaces();
     }
 
-    public Collection createTables( Operation[] opers,
-                                    Logger logger ) throws ModelBuildingException {
+    public Collection createTables( Operation[] opers ) throws ModelBuildingException {
 
         // This method has the potential of being VERY slow since we do a LOT
         // of looping over collections (operations, messages, parts, elements,
@@ -70,7 +68,7 @@ public class TableBuilder {
 
         try {
             // process the schemas and get the schema model
-            SchemaProcessor processor = new SOAPSchemaProcessor(logger, null);
+            SchemaProcessor processor = new SOAPSchemaProcessor(null);
             processor.representTypes(true);
             processor.setNamespaces(this.m_model.getNamespaces());
             processor.processSchemas(m_schemas);

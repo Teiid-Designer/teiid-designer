@@ -84,7 +84,7 @@ public class RelationalFromWSDLImportWizard extends AbstractWizard implements II
      */
     public void init( IWorkbench workbench,
                       IStructuredSelection currentSelection ) {
-        this.importManager = new WSDLImportWizardManager(UTIL);
+        this.importManager = new WSDLImportWizardManager();
         this.selection = currentSelection;
 
         List selectedResources = IDE.computeSelectedResources(currentSelection);
@@ -102,7 +102,7 @@ public class RelationalFromWSDLImportWizard extends AbstractWizard implements II
      * @param theSelection the initial workspace selection
      */
     public void createWizardPages( ISelection theSelection ) {
-        this.importManager = new WSDLImportWizardManager(UTIL);
+        this.importManager = new WSDLImportWizardManager();
 
         // construct pages
         this.selectWsdlPage = new SelectWsdlPage(this.importManager);
@@ -188,7 +188,7 @@ public class RelationalFromWSDLImportWizard extends AbstractWizard implements II
             opers[i] = (Operation)selectedOperations.get(i);
         }
         TableBuilder tableBuilder = new TableBuilder();
-        Collection tables = tableBuilder.createTables(opers, UTIL);
+        Collection tables = tableBuilder.createTables(opers);
         RelationalModelBuilder modelBuilder = new RelationalModelBuilder(tableBuilder.getNamespaces());
         modelBuilder.createModel(tables, modelName, container);
     }

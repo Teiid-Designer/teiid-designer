@@ -32,7 +32,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.mapping.Mapping;
-import com.metamatrix.core.log.Logger;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.I18nUtil;
@@ -180,14 +179,12 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         protected WorkingArea( final URI importUri,
                                final JdbcDatabase jdbcDatabase,
                                final JdbcImportSettings settings,
-                               final IProgressMonitor monitor,
-                               final Logger logger ) {
+                               final IProgressMonitor monitor ) {
             this.uri = importUri;
             this.resource = new MtkXmiResourceImpl(this.uri);
             ResourceSet container = new ResourceSetImpl();
             container.getResources().add(this.resource);
-            this.context = new ContextImpl(this.resource, this.resource.getModelContents(), jdbcDatabase, settings, monitor,
-                                           logger);
+            this.context = new ContextImpl(this.resource, this.resource.getModelContents(), jdbcDatabase, settings, monitor);
 
             // BML Defect 19640: For now, we need to make sure that the ModelAnnotation exists and the primary metamodel uri
             // and ModelType are set to relational. Later on, we should probably pass this in on the constructor or extract it
@@ -218,7 +215,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
 
     void stopLogIncrementAndRestart( Stopwatch watch,
                                      String message ) {
-        if (debugTimingEnabled) watch.stopLogIncrementAndRestart(message, Util);
+        if (debugTimingEnabled) watch.stopLogIncrementAndRestart(message);
     }
 
     /**
@@ -256,14 +253,13 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         stopLogIncrementAndRestart(sWatch, " RelationalModelProcessor:  Got/Created Model Contents - Delta "); //$NON-NLS-1$
 
         // Set up the context ...
-        final Logger logger = ModelerJdbcRelationalConstants.Util;
-        final Context context = new ContextImpl(modelResource, modelContents, jdbcDatabase, settings, monitor, logger);
+        final Context context = new ContextImpl(modelResource, modelContents, jdbcDatabase, settings, monitor);
 
         stopLogIncrementAndRestart(sWatch, " RelationalModelProcessor:  Created ContextImpl - Delta "); //$NON-NLS-1$
 
         // Create the working area into which the imported objects will be placed prior to merging
         final URI uri = modelResource.getURI();
-        final WorkingArea workingArea = new WorkingArea(uri, jdbcDatabase, settings, monitor, logger);
+        final WorkingArea workingArea = new WorkingArea(uri, jdbcDatabase, settings, monitor);
 
         stopLogIncrementAndRestart(sWatch, " RelationalModelProcessor:  Created Working Area - Delta "); //$NON-NLS-1$
 
@@ -294,14 +290,13 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         stopLogIncrementAndRestart(sWatch, " RelationalModelProcessor:  Got/Created Model Contents - Delta "); //$NON-NLS-1$
 
         // Set up the context ...
-        final Logger logger = ModelerJdbcRelationalConstants.Util;
-        final Context context = new ContextImpl(emfResource, modelContents, jdbcDatabase, settings, monitor, logger);
+        final Context context = new ContextImpl(emfResource, modelContents, jdbcDatabase, settings, monitor);
 
         stopLogIncrementAndRestart(sWatch, " RelationalModelProcessor:  Created ContextImpl - Delta "); //$NON-NLS-1$
 
         // Create the working area into which the imported objects will be placed prior to merging
         final URI uri = modelResource.getEmfResource().getURI();
-        final WorkingArea workingArea = new WorkingArea(uri, jdbcDatabase, settings, monitor, logger);
+        final WorkingArea workingArea = new WorkingArea(uri, jdbcDatabase, settings, monitor);
 
         stopLogIncrementAndRestart(sWatch, " RelationalModelProcessor:  Created Working Area - Delta "); //$NON-NLS-1$
 
@@ -427,12 +422,11 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         final ModelContents modelContents = ModelContents.getModelContents(modelResource);
 
         // Set up the context ...
-        final Logger logger = ModelerJdbcRelationalConstants.Util;
-        final Context context = new ContextImpl(emfResource, modelContents, jdbcDatabase, settings, monitor, logger);
+        final Context context = new ContextImpl(emfResource, modelContents, jdbcDatabase, settings, monitor);
         // Create the working area into which the imported objects will be placed prior to merging
         final URI uri = modelResource.getEmfResource().getURI();
 
-        final WorkingArea workingArea = new WorkingArea(uri, jdbcDatabase, settings, monitor, logger);
+        final WorkingArea workingArea = new WorkingArea(uri, jdbcDatabase, settings, monitor);
 
         // And execute within the context of a transaction
         createDifferenceReport(context, workingArea, problems);
@@ -724,14 +718,14 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             // ----------------------------------------------------------------------------------------
             if (this.isVerboseLogging()) {
                 final String msg = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.Analyzing_structure_of_database"); //$NON-NLS-1$
-                context.getLogger().log(IStatus.INFO, msg);
+                ModelerJdbcRelationalConstants.Util.log(IStatus.INFO, msg);
             }
             final JdbcModelStructure modelStructure = JdbcModelStructure.build(context);
             if (this.isVerboseLogging()) {
                 final StringBuffer sb = new StringBuffer();
                 modelStructure.print(sb);
                 final String msg = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.Completed_analysis._The_following_structure_to_be_put_into_model"); //$NON-NLS-1$
-                context.getLogger().log(IStatus.INFO, msg + sb.toString());
+                ModelerJdbcRelationalConstants.Util.log(IStatus.INFO, msg + sb.toString());
             }
             monitor.worked(UNITS_PHASE_1);
 

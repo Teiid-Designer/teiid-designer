@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import junit.framework.TestCase;
 import org.eclipse.xsd.XSDSchema;
-import com.metamatrix.core.log.NullLogger;
 import com.metamatrix.modeler.schema.tools.common.SchemaTestUtil;
 import com.metamatrix.modeler.schema.tools.model.schema.RootElement;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaModel;
@@ -32,7 +31,7 @@ public class AnonymousTypesWithTypesTest extends TestCase {
             List paths = new ArrayList();
             paths.add("./src/sources/Anonymous_Type.xsd"); //$NON-NLS-1$
             schemas = util.importSchemas(paths);
-            schemaProcessor = new SchemaProcessorImpl(new NullLogger(), null);
+            schemaProcessor = new SchemaProcessorImpl(null);
             schemaProcessor.representTypes(true);
             schemaProcessor.processSchemas(schemas);
         } catch (Exception e) {

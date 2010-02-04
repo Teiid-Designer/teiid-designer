@@ -10,12 +10,11 @@ package com.metamatrix.core;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
-import com.metamatrix.core.log.Logger;
 
 /**
  * @since 4.0
  */
-public interface PluginUtil extends Logger {
+public interface PluginUtil {
     // ============================================================================================================================
     // Utility Methods
 
@@ -35,21 +34,28 @@ public interface PluginUtil extends Logger {
      * 
      * @param status the status to log; may not be null
      */
-    public void log( IStatus status );
+    void log( IStatus status );
+
+    void log( int severity,
+              String message );
+
+    void log( int severity,
+              Throwable error,
+              java.lang.String message );
 
     /**
      * Logs the given object using the object's {@link Object#toString() toString()} method.
      * 
      * @param obj the object to log; may not be null
      */
-    public void log( Object obj );
+    void log( Object obj );
 
     /**
      * Logs the given Throwable.
      * 
      * @param throwable the Throwable to log; may not be null
      */
-    public void log( Throwable t );
+    void log( Throwable t );
 
     /**
      * Returns the localized string identified by the specified key if it exists, or the key itself if not.
@@ -92,5 +98,4 @@ public interface PluginUtil extends Logger {
      */
     String getString( String key,
                       Object parameter );
-
 }

@@ -30,7 +30,6 @@ import org.eclipse.xsd.XSDTerm;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDWildcard;
 import org.eclipse.xsd.util.XSDParser;
-import com.metamatrix.core.log.Logger;
 import com.metamatrix.modeler.schema.tools.ToolsPlugin;
 import com.metamatrix.modeler.schema.tools.model.schema.Column;
 import com.metamatrix.modeler.schema.tools.model.schema.QName;
@@ -58,13 +57,9 @@ public class SchemaProcessorImpl implements SchemaProcessor {
 
     private boolean representTypes = false;
 
-    public Logger log;
-
     private String separator;
 
-    public SchemaProcessorImpl( Logger log,
-                                String separator ) {
-        this.log = log;
+    public SchemaProcessorImpl( String separator ) {
         this.separator = separator;
         clear();
     }
@@ -278,7 +273,7 @@ public class SchemaProcessorImpl implements SchemaProcessor {
                 return;
             }
             // How can the ref be null, or equal to the referencer if the name is null?
-            log.log(IStatus.WARNING, ToolsPlugin.Util.getString("SchemaProcessorImpl.nullElement")); //$NON-NLS-1$
+            ToolsPlugin.Util.log(IStatus.WARNING, ToolsPlugin.Util.getString("SchemaProcessorImpl.nullElement")); //$NON-NLS-1$
             return;
         }
 

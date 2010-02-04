@@ -27,7 +27,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDResourceFactoryImpl;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.core.log.Logger;
 import com.metamatrix.modeler.core.validation.rules.CoreValidationRulesUtil;
 import com.metamatrix.modeler.modelgenerator.xml.XmlImporterUiPlugin;
 import com.metamatrix.modeler.modelgenerator.xml.model.UserSettings;
@@ -70,8 +69,6 @@ public class StateManager {
 
     private String customCatalogName;
 
-    private Logger logger;
-
     public static final int SOURCE_DOCUMENT = 0;
     public static final int SOURCE_HTTP_NO_PARAMS = 1;
     public static final int SOURCE_HTTP_PARAMS = 2;
@@ -80,10 +77,8 @@ public class StateManager {
 
     private boolean acsMode = false;
 
-    public StateManager( UserSettings userSettings,
-                         Logger logger ) {
+    public StateManager( UserSettings userSettings ) {
         this.userSettings = userSettings;
-        this.logger = logger;
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("wsdl", new XSDResourceFactoryImpl()); //$NON-NLS-1$
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("xsd", new XSDResourceFactoryImpl()); //$NON-NLS-1$
         resourceSet = new ResourceSetImpl();
@@ -113,7 +108,7 @@ public class StateManager {
 
     public Collection getPotentialRoots() throws Exception {
         if (null == processor) {
-            processor = new SchemaProcessorImpl(logger, UserSettings.getMergedChildSep());
+            processor = new SchemaProcessorImpl(UserSettings.getMergedChildSep());
         }
 
         if (null == schemaModel || schemasModified) {
