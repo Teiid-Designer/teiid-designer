@@ -9,13 +9,10 @@ package com.metamatrix.modeler.webservice.ui.editor;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.viewers.Viewer;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
-
+import org.eclipse.jface.viewers.Viewer;
 import com.metamatrix.modeler.internal.ui.util.ModelObjectNotificationHelper;
 
 

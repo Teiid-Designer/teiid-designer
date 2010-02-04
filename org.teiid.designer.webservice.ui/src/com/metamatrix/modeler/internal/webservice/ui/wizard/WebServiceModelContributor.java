@@ -20,7 +20,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.compare.ModelGenerator;
