@@ -8,7 +8,6 @@
 package com.metamatrix.core;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 
 /**
@@ -73,15 +72,6 @@ public interface PluginUtil {
      * @since 4.0
      */
     boolean keyExists( String key );
-
-    /**
-     * This method executes the {@link ISafeRunnable}. If this class has not been initialized via the Eclipse platform, this
-     * method simply runs the code and calls the exception handler. If, however, this class is running in the Eclipse environment,
-     * this method delegates to the {@link org.eclipse.core.runtime.Platform#run(org.eclipse.core.runtime.ISafeRunnable)}
-     * 
-     * @param runnable the runnable object to be executed
-     */
-    void run( ISafeRunnable runnable );
 
     /**
      * @param key
