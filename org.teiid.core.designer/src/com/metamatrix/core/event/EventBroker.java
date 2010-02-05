@@ -9,14 +9,4 @@
 package com.metamatrix.core.event;
 
 public interface EventBroker extends EventSource, EventObjectListener {
-    boolean shutdown() throws EventBrokerException;
-
-    boolean isShutdown();
-
-    /**
-     * Return whether this broker has at least one event that has yet to be processed and sent to the appropriate listeners.
-     * 
-     * @return true if there are events that have yet to be processed, or false otherwise.
-     */
-    boolean hasUnprocessedEvents();
 }

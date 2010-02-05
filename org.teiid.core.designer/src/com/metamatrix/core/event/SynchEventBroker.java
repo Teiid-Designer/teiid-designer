@@ -17,16 +17,17 @@ public class SynchEventBroker extends AbstractEventBroker {
     public SynchEventBroker() {
         this(null);
     }
+
     public SynchEventBroker( String name ) {
         super();
-        if ( name == null ) {
+        if (name == null) {
             name = DEFAULT_NAME;
         }
         super.setName(name);
     }
 
     @Override
-    protected void process(EventObject obj) {
+    protected void process( EventObject obj ) {
         super.notifyListeners(obj);
         if (super.isShutdownRequested()) {
             super.setShutdownComplete(true);
@@ -37,18 +38,4 @@ public class SynchEventBroker extends AbstractEventBroker {
     protected void waitToCompleteShutdown() {
         super.setShutdownComplete(true);
     }
-
-    /**
-     * Return whether this broker has at least one event that has yet
-     * to be processed and sent to the appropriate listeners.  This
-     * implementation always returns false, since this broker always
-     * notifies all listeners about an event before another one can be
-     * processed.
-     * @return false in all cases for this implementation
-     */
-    public boolean hasUnprocessedEvents() {
-        return false;    
-    }
-
 }
-

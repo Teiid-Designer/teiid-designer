@@ -24,28 +24,6 @@ import com.metamatrix.core.modeler.util.ArgCheck;
  */
 public class URLClassLoaderRegistry {
 
-    // ===========================================================================================================================
-    // Static Variables
-
-    private static File baseFolder;
-
-    // ===========================================================================================================================
-    // Static Model Methods
-
-    public static void setBaseFolder( final String folder ) {
-        URLClassLoaderRegistry.baseFolder = (folder == null ? null : new File(folder));
-    }
-
-    public static String getBaseFolder() {
-        if (baseFolder == null) {
-            return null;
-        }
-        return baseFolder.getAbsolutePath();
-    }
-
-    // ===========================================================================================================================
-    // Variables
-
     private final Map classLoaders; // keyed by the stringified URL[]
 
     /**
@@ -55,26 +33,6 @@ public class URLClassLoaderRegistry {
         super();
         this.classLoaders = new HashMap();
     }
-
-    // ========================================================================================================
-    // Individual URL Class Loader methods
-    // ========================================================================================================
-
-    public synchronized URLClassLoader removeClassLoader( final URL[] urls ) {
-        ArgCheck.isNotNull(urls);
-        final Object key = doCreateKey(urls);
-        return (URLClassLoader)this.classLoaders.remove(key);
-    }
-
-    public synchronized URLClassLoader removeClassLoader( final String[] urlStrings ) {
-        ArgCheck.isNotNull(urlStrings);
-        final Object key = doCreateKey(urlStrings);
-        return (URLClassLoader)this.classLoaders.remove(key);
-    }
-
-    // ========================================================================================================
-    // Composite Class Loader methods
-    // ========================================================================================================
 
     public URLClassLoader getClassLoader( final String[] urlStrings ) throws MalformedURLException {
         return getClassLoader(urlStrings, null);
@@ -103,14 +61,6 @@ public class URLClassLoaderRegistry {
 
         final Object key = doCreateKey(urls);
         return doGetOrCreateClassLoader(key, urls, parent);
-    }
-
-    // ========================================================================================================
-    // Implementation methods
-    // ========================================================================================================
-
-    protected int size() {
-        return this.classLoaders.size();
     }
 
     protected Object doCreateKey( final String[] urlStrings ) {
@@ -150,9 +100,7 @@ public class URLClassLoaderRegistry {
         // If not found as a URL ...
         if (url == null) {
             // Try a local path ...
-            final File jarFile = (URLClassLoaderRegistry.baseFolder == null ? new File(urlString) : new File(
-                                                                                                             URLClassLoaderRegistry.baseFolder,
-                                                                                                             urlString));
+            final File jarFile = new File(urlString);
             if (jarFile.exists()) {
                 try {
                     url = jarFile.toURI().toURL();
@@ -190,5 +138,4 @@ public class URLClassLoaderRegistry {
                                                   final ClassLoader parent ) {
         return new URLClassLoader(urls, parent);
     }
-
 }

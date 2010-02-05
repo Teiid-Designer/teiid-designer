@@ -12,34 +12,31 @@ package com.metamatrix.core.selection;
  */
 public interface TreeSelection {
 
-    /*====================================================================
-     * Constants defining the selection modes:
-     *====================================================================*/
-    
     /**
-     * Selection constant (value 0) indicating a model object is <i>not</i> selected, nor are any
-     * model objects (directly or indirectly) below it.
+     * Selection constant (value 0) indicating a model object is <i>not</i> selected, nor are any model objects (directly or
+     * indirectly) below it.
      */
-    public static final int UNSELECTED = 0;
+    @SuppressWarnings( "ucd" )
+    int UNSELECTED = 0;
 
     /**
-     * Selection constant (value 1) indicating this model object <i>is</i> selected as are all of the 
-     * model objects (directly and indirectly) below it.
+     * Selection constant (value 1) indicating this model object <i>is</i> selected as are all of the model objects (directly and
+     * indirectly) below it.
      */
-    public static final int SELECTED = 1;
+    int SELECTED = 1;
 
     /**
-     * Selection constant (value 2) indicating this model object is <i>not</i> selected, while some 
-     * of the model objects (directly or indirectly) below it are selected and some are not selected.
+     * Selection constant (value 2) indicating this model object is <i>not</i> selected, while some of the model objects (directly
+     * or indirectly) below it are selected and some are not selected.
      */
-    public static final int PARTIALLY_SELECTED = 2;
+    int PARTIALLY_SELECTED = 2;
 
     /**
      * Return the selection mode on this the specified object.
+     * 
      * @param modelObject the object for which the selection state is to be returned; may not be null
-     * @return the current selection; one of {@link #SELECTED}, {@link #PARTIALLY_SELECTED}
-     * or {@link #UNSELECTED} 
+     * @return the current selection; one of {@link #SELECTED}, {@link #PARTIALLY_SELECTED} or {@link #UNSELECTED}
      */
-    public int getSelectionMode(Object node);
+    int getSelectionMode( Object node );
 
 }

@@ -104,15 +104,6 @@ abstract public class AbstractEventBroker extends AbstractEventSource implements
         }
     }
 
-    public boolean shutdown() {
-        this.shutdownRequested = true;
-        this.waitToCompleteShutdown(); // block until subclass ensures all events are processed
-
-        super.removeAllListeners();
-
-        return this.shutdownComplete;
-    }
-
     public boolean isShutdown() {
         return isShutdownComplete();
     }
@@ -168,10 +159,6 @@ abstract public class AbstractEventBroker extends AbstractEventSource implements
                 final Object[] params = new Object[] {new Double(eventTime), new Integer(count), getShortClassName(obj),
                     getShortClassName(obj.getSource())};
                 eventPerfMsg.append(CorePlugin.Util.getString("AbstractEventBroker.basePerformanceMessage", params)); //$NON-NLS-1$
-
-                if (obj instanceof TargetableEvent) {
-                    eventPerfMsg.append(CorePlugin.Util.getString("AbstractEventBroker.targetedPerformanceMessage", ((TargetableEvent)obj).getTarget())); //$NON-NLS-1$
-                }
 
                 eventPerfMsg.append('\n');
 

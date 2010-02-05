@@ -19,40 +19,4 @@ public class EventSourceException extends MetaMatrixCoreException {
     /**
      */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * No-arg costructor required by Externalizable semantics
-     */
-    public EventSourceException() {
-        super();
-    }
-
-    /**
-     * Construct an instance of EventSourceException.
-     * 
-     * @param message
-     */
-    public EventSourceException( String message ) {
-        super(message);
-    }
-
-    /**
-     * Construct an instance of EventSourceException.
-     * 
-     * @param e
-     */
-    public EventSourceException( Throwable e ) {
-        super(e);
-    }
-
-    /**
-     * Construct an instance of EventSourceException.
-     * 
-     * @param e
-     * @param message
-     */
-    public EventSourceException( Throwable e,
-                                 String message ) {
-        super(e, message);
-    }
 }

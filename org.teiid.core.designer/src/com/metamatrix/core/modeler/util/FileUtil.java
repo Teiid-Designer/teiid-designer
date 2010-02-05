@@ -13,62 +13,27 @@ import com.metamatrix.core.util.FileUtils.Constants;
 
 public final class FileUtil {
 
-    // ===========================================================================================================================
-    // Constants
-    // ===========================================================================================================================
-
     /**
      * Constants for common file extensions.
      * 
      * @since 6.0.0
      */
     public interface Extensions {
-        /**
-         * Value is "{@value} ."
-         * 
-         * @since 6.0.0
-         */
-        String CLASS_LOWER = ".class"; //$NON-NLS-1$
 
         /**
-         * Value is "{@value} ."
-         * 
-         * @since 6.0.0
-         */
-        String CLASS_UPPER = ".CLASS"; //$NON-NLS-1$
-
-        /**
-         * Value is "{@value} ."
-         * 
-         * @since 6.0.0
-         */
-        String JAVA_LOWER = ".java"; //$NON-NLS-1$
-
-        /**
-         * Value is "{@value} ."
-         * 
-         * @since 6.0.0
-         */
-        String JAVA_UPPER = ".JAVA"; //$NON-NLS-1$
-
-        /**
-         * A jar file extension with the value of "{@value}."
+         * A jar file extension with the value of "{@value} ."
          * 
          * @since 6.0.0
          */
         String JAR = ".jar"; //$NON-NLS-1$
 
         /**
-         * A zip file extension with the value of "{@value}."
+         * A zip file extension with the value of "{@value} ."
          * 
          * @since 6.0.0
          */
         String ZIP = ".zip"; //$NON-NLS-1$
     }
-
-    // ===========================================================================================================================
-    // Class Methods
-    // ===========================================================================================================================
 
     /**
      * Checks the specified file name to see if it has an archive extension.
@@ -92,7 +57,7 @@ public final class FileUtil {
 
         return false;
     }
-    
+
     /**
      * @param name the name being tested (never <code>null</code>)
      * @return <code>true</code> if the name ends with a zip file extension and has a simple name with length of one or more
@@ -101,64 +66,38 @@ public final class FileUtil {
     public final static boolean isZipFileName( String name ) {
         return (name.endsWith(Extensions.ZIP) && (name.length() > Extensions.ZIP.length()));
     }
-    
+
     /**
-     * Returns the file extension portion of this file, or an empty string if there is none.
-     * <p>
-     * The file extension portion is defined as the string
-     * following the last period (".") character in the file name.
-     * If there is no period in the file name, the file has no
-     * file extension portion. If the name ends in a period,
-     * the file extension portion is the empty string.
-     * </p>
-     * @param resource
-     * @return the file extension or <code>null</code>
-     * @since 4.3
-     */
-    public static String getFileExtension( final File resource ) {
-        if ( resource != null ) {
-            String ext = getExtension(resource);
-            if( ext != null ) {
-                return ext;
-            }
-        }
-        return StringUtil.Constants.EMPTY_STRING;
-    }
-    
-    /**
-     * Obtains the file extension of the specified <code>File</code>. The extension is considered to be all the
-     * characters after the last occurrence of {@link Constants#FILE_EXTENSION_SEPARATOR_CHAR} in the pathname
-     * of the input.
+     * Obtains the file extension of the specified <code>File</code>. The extension is considered to be all the characters after
+     * the last occurrence of {@link Constants#FILE_EXTENSION_SEPARATOR_CHAR} in the pathname of the input.
+     * 
      * @param theFile the file whose extension is being requested
      * @return the extension or <code>null</code> if not found
      * @since 4.2
      */
-    public static String getExtension(File theFile) {
+    public static String getExtension( File theFile ) {
         return getExtension(theFile.getPath());
     }
-    
+
     /**
-     * Obtains the file extension of the specified file name. The extension is considered to be all the
-     * characters after the last occurrence of {@link Constants#FILE_EXTENSION_SEPARATOR_CHAR}.
+     * Obtains the file extension of the specified file name. The extension is considered to be all the characters after the last
+     * occurrence of {@link Constants#FILE_EXTENSION_SEPARATOR_CHAR}.
+     * 
      * @param theFileName the file whose extension is being requested
      * @return the extension or <code>null</code> if not found
      * @since 4.2
      */
-    public static String getExtension(String theFileName) {
+    public static String getExtension( String theFileName ) {
         String result = StringUtil.Constants.EMPTY_STRING;
         final int index = theFileName.lastIndexOf(Constants.FILE_EXTENSION_SEPARATOR_CHAR);
-        
+
         // make sure extension char is found and is not the last char in the path
         if ((index != -1) && ((index + 1) != theFileName.length())) {
             result = theFileName.substring(index + 1);
         }
-        
+
         return result;
     }
-
-    // ===========================================================================================================================
-    // Constructors
-    // ===========================================================================================================================
 
     /**
      * Prevents instantiation.

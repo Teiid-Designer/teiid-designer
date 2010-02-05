@@ -119,47 +119,4 @@ abstract public class AbstractEventSource implements EventSource {
 
         return returnList;
     }
-
-    /**
-     * Add to this event source all the listeners of the specified AbstractEventSource. This implementation is careful <i>not</i>
-     * to get a lock on both objects at once.
-     */
-    public void addListeners( AbstractEventSource eventSource ) {
-        // This makes a copy within the synchronized method ...
-        final List anyListeners = eventSource.getListeners();
-
-        // Copy the contents of the map into a temporary map ...
-        final Map listenersByClass = new HashMap();
-        synchronized (eventSource) {
-            final Iterator classIter = eventSource.eventClassListeners.entrySet().iterator();
-            while (classIter.hasNext()) {
-                final Map.Entry entry = (Map.Entry)classIter.next();
-                final Object eventClass = entry.getKey();
-                final List listeners = (List)entry.getValue();
-                // Add a copy of the array to the temp map ...
-                listenersByClass.put(eventClass, new ArrayList(listeners));
-            }
-
-        }
-
-        // Now add all the listeners (each of these will be synchronized individually) ...
-        // Add the 'any' listeners ...
-        this.eventListeners.addAll(anyListeners);
-
-        // Add the listeners to specific event classes ...
-        final Iterator classIter = listenersByClass.entrySet().iterator();
-        while (classIter.hasNext()) {
-            final Map.Entry entry = (Map.Entry)classIter.next();
-            final Class eventClass = (Class)entry.getKey();
-            final List listeners = (List)entry.getValue();
-            // Add a copy of the array to the temp map ...
-            final Iterator listenerIter = listeners.iterator();
-            while (listenerIter.hasNext()) {
-                final EventObjectListener listener = (EventObjectListener)listenerIter.next();
-                this.addListener(eventClass, listener);
-            }
-        }
-
-    }
-
 }
