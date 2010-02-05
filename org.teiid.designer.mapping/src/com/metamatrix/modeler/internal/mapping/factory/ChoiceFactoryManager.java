@@ -18,14 +18,13 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.mapping.DebugConstants;
 import com.metamatrix.modeler.mapping.PluginConstants;
 import com.metamatrix.modeler.mapping.factory.IChoiceFactory;
 
 /**
  * ChoiceFactoryManager :: point="com.metamatrix.modeler.mapping.choiceObjectHandler">
  */
-public class ChoiceFactoryManager implements DebugConstants, PluginConstants, PluginConstants.ExtensionPoints.ChoiceObjectHandler {
+public class ChoiceFactoryManager implements PluginConstants, PluginConstants.ExtensionPoints.ChoiceObjectHandler {
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTANTS

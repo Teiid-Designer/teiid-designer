@@ -23,14 +23,13 @@ import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
-import com.metamatrix.modeler.mapping.DebugConstants;
 import com.metamatrix.modeler.mapping.PluginConstants;
 import com.metamatrix.modeler.mapping.factory.ITreeToRelationalMapper;
 
 /**
  * ModelMapperFactory
  */
-public class ModelMapperFactory implements DebugConstants, PluginConstants, PluginConstants.ExtensionPoints.ModelMapper {
+public class ModelMapperFactory implements PluginConstants, PluginConstants.ExtensionPoints.ModelMapper {
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTANTS
