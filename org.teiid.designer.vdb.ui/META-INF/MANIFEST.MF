@@ -8,7 +8,6 @@ Bundle-Activator: com.metamatrix.modeler.vdb.ui.VdbUiPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.internal.vdb.ui.actions,
- com.metamatrix.modeler.internal.vdb.ui.actions.help,
  com.metamatrix.modeler.internal.vdb.ui.editor,
  com.metamatrix.modeler.internal.vdb.ui.extractor,
  com.metamatrix.modeler.internal.vdb.ui.properties,
