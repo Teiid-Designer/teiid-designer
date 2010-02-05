@@ -18,7 +18,6 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
 import com.metamatrix.modeler.core.transaction.SourcedNotification;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.diagram.ui.drawing.model.DrawingModelNode;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.notation.uml.model.UmlClassifierContainerNode;
 import com.metamatrix.modeler.diagram.ui.notation.uml.model.UmlClassifierNode;
@@ -378,8 +377,6 @@ public class TransformationDiagramNotificationHelper {
 
         if (targetNode != null) {
             if (targetNode instanceof UmlClassifierNode) {
-                canDo = true;
-            } else if (targetNode instanceof DrawingModelNode) {
                 canDo = true;
             }
         }

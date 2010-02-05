@@ -26,8 +26,6 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;
-import com.metamatrix.modeler.diagram.ui.drawing.DrawingModelFactory;
-import com.metamatrix.modeler.diagram.ui.drawing.model.DrawingModelNode;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramEditorUtil;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelFactoryImpl;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
@@ -106,9 +104,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
         // Create the DiagramNode
         diagramModelNode = new TransformationDiagramNode(diagram, UiConstants.Util.getString(KEY_TRANSFORMATION_DIAGRAM_NAME));
 
-        // Get Drawing Nodes
-        List drawingNodes = DrawingModelFactory.getDrawingNodes(diagram, diagramModelNode);
-
         diagramModelNode.addChildren(getTransformationDiagramContents(diagramModelNode, diagram));
 
         // Need to clear
@@ -118,8 +113,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
                                                                                                                                diagram);
 
         addLockedImages(diagramModelNode);
-
-        if (!drawingNodes.isEmpty()) diagramModelNode.addChildren(drawingNodes);
 
         return diagramModelNode;
     }
@@ -522,8 +515,6 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
 
         if (targetNode != null) {
             if (targetNode instanceof UmlClassifierNode) {
-                canDo = true;
-            } else if (targetNode instanceof DrawingModelNode) {
                 canDo = true;
             }
         }
