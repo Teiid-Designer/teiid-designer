@@ -118,7 +118,6 @@ public class StandardJdbcDatabaseTest extends JdbcDatabaseTest {
                 final TableLoadingVisitor tableLoader = new TableLoadingVisitor(sw, null, null);
                 helpRunVisitor(tableLoader, JdbcNode.DEPTH_INFINITE, schemaNode);
                 System.out.println("Statistics for loading table columns and PKs for " + schemaNode.getPath() + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-                sw.printStatistics(System.out);
 
                 // Refresh the schema
                 schemaNode.refresh();
@@ -133,7 +132,6 @@ public class StandardJdbcDatabaseTest extends JdbcDatabaseTest {
                 final TableLoadingVisitor tableLoader2 = new TableLoadingVisitor(sw2, null, null);
                 helpRunVisitor(tableLoader2, JdbcNode.DEPTH_INFINITE, schemaNode);
                 System.out.println("Statistics for loading table indexes and FKs for " + schemaNode.getPath() + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-                sw2.printStatistics(System.out);
 
                 // Third time: (printing and timing)
                 // Navigate to the children of the schema node and below
@@ -142,7 +140,6 @@ public class StandardJdbcDatabaseTest extends JdbcDatabaseTest {
                 final TableLoadingVisitor tableVisitor = new TableLoadingVisitor(sw3, System.out, "   "); //$NON-NLS-1$
                 helpRunVisitor(tableVisitor, JdbcNode.DEPTH_INFINITE, schemaNode);
                 System.out.println("Statistics for re-accessing (and printing) table information for " + schemaNode.getPath() + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-                sw3.printStatistics(System.out);
             }
         }
     }

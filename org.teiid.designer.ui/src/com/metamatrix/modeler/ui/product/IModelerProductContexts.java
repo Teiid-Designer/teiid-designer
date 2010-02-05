@@ -33,13 +33,6 @@ public interface IModelerProductContexts extends IProductContexts {
         private static final String METADATA = "metadata."; //$NON-NLS-1$
 
         /**
-         * License context category.
-         * 
-         * @since 4.4
-         */
-        private static final String LICENSE = "license."; //$NON-NLS-1$
-
-        /**
          * Menus context category.
          * 
          * @since 4.4

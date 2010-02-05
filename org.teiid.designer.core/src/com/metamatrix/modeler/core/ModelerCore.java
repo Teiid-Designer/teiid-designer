@@ -99,9 +99,6 @@ import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManagerSaveP
  */
 public class ModelerCore extends Plugin implements DeclarativeTransactionManager {
 
-    // ============================================================================================================================
-    // Constants
-
     public static boolean HEADLESS = false;
 
     /**

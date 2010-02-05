@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import com.metamatrix.core.modeler.util.FileUtil;
-import com.metamatrix.core.util.FileSeparatorUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.ui.UiConstants;
 import com.metamatrix.ui.UiPlugin;
@@ -46,7 +45,7 @@ public class ClasspathEditorDialog extends Dialog {
     // ===========================================================================================================================
 
     static final String PREFIX = I18nUtil.getPropertyPrefix(ClasspathEditorDialog.class);
-    
+
     // ===========================================================================================================================
     // Class Methods
     // ===========================================================================================================================
@@ -461,7 +460,7 @@ public class ClasspathEditorDialog extends Dialog {
     private void processAddedJar( String jarName,
                                   String directory ) {
         boolean processed = false;
-        String jarPath = directory + FileSeparatorUtil.getOSFileSeparator() + jarName;
+        String jarPath = directory + File.separator + jarName;
 
         // check to see if a jar with that name is already on the classpath
         // jars may have a path if they were added from the file system

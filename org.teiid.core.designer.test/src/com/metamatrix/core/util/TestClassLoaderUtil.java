@@ -111,10 +111,6 @@ public class TestClassLoaderUtil extends TestCase {
         }
     }
 
-    // =========================================================================
-    // T E S T C A S E S
-    // =========================================================================
-
     public void testIsPublic1() {
         final Class clazz = List.class;
         if (!this.loaderUtil.isPublic(clazz)) {
@@ -156,18 +152,4 @@ public class TestClassLoaderUtil extends TestCase {
             fail("The " + clazz.getName() + " class does not have a no-arg constructor"); //$NON-NLS-1$//$NON-NLS-2$
         }
     }
-
-    public void testGetAssignableClassesToList() {
-        final Class clazz = List.class;
-        final Class[] results = this.loaderUtil.getAssignableClasses(clazz);
-        helpCheckArray(results, 3, "Classes assignable to " + clazz + ':'); //$NON-NLS-1$
-
-    }
-
-    public void testGetAssignablePublicClassesWithNorArgConstructorsToList() {
-        final Class clazz = List.class;
-        final Class[] results = this.loaderUtil.getAssignablePublicClassesWithNoArgConstructors(clazz);
-        helpCheckArray(results, 1, "Classes assignable (public class w/no-arg const.) to " + clazz + ':'); //$NON-NLS-1$
-    }
-
 }

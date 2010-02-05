@@ -109,32 +109,6 @@ public class TestURLClassLoaderRegistry extends TestCase {
         assertNotNull(registry);
     }
 
-    public void testRemoveWithNullURLArgument() {
-        try {
-            registry.removeClassLoader((URL[])null);
-            fail("Was expecting exception with null URL arg"); //$NON-NLS-1$
-        } catch (IllegalArgumentException err) {
-            // expected
-        }
-    }
-
-    public void testRemoveWithNullStringArgument() {
-        try {
-            registry.removeClassLoader((String[])null);
-            fail("Was expecting exception with null String arg"); //$NON-NLS-1$
-        } catch (IllegalArgumentException err) {
-            // expected
-        }
-    }
-
-    public void testRemoveWithEmptyStringArrayArgument() {
-        registry.removeClassLoader(new String[] {});
-    }
-
-    public void testRemoveWithEmptyUrlArrayArgument() {
-        registry.removeClassLoader(new URL[] {});
-    }
-
     public void testGetClassLoaderWithNullURLArgument() {
         try {
             registry.getClassLoader((URL[])null);

@@ -59,7 +59,6 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
-import com.metamatrix.core.util.UriUtil;
 import com.metamatrix.core.xslt.Style;
 import com.metamatrix.core.xslt.StyleRegistry;
 import com.metamatrix.metamodels.relational.Index;
@@ -95,7 +94,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
  */
 public final class ExportDdlWizard extends AbstractWizard
     implements FileUtils.Constants, IExportWizard, InternalUiConstants.Widgets, PluginConstants.Images, StringUtil.Constants,
-    UiConstants, UiConstants.ProductInfo, UiConstants.ProductInfo.Capabilities, UriUtil.Constants {
+    UiConstants, UiConstants.ProductInfo, UiConstants.ProductInfo.Capabilities {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ExportDdlWizard.class);
 
@@ -217,7 +216,7 @@ public final class ExportDdlWizard extends AbstractWizard
         // make sure license authorizes using RDBMS export
 
         this.selection = selection;
-		this.writer = DdlPlugin.getInstance().createDdlWriter();
+        this.writer = DdlPlugin.getInstance().createDdlWriter();
         this.selections = new ModelWorkspaceSelections();
         this.pg = new AbstractWizardPage(ExportDdlWizard.class.getSimpleName(), PAGE_TITLE) {
             public void createControl( final Composite parent ) {

@@ -51,7 +51,6 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
-import com.metamatrix.core.util.ClassUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.internal.jdbc.ui.InternalModelerJdbcUiPluginConstants;
@@ -73,8 +72,8 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
  * @since 4.0
  */
 public final class JdbcDriverWizard extends AbstractWizard
-    implements ClassUtil.Constants, InternalModelerJdbcUiPluginConstants, InternalModelerJdbcUiPluginConstants.Widgets,
-    InternalUiConstants.Widgets, ListPanel.Constants, StringUtil.Constants {
+    implements InternalModelerJdbcUiPluginConstants, InternalModelerJdbcUiPluginConstants.Widgets, InternalUiConstants.Widgets,
+    ListPanel.Constants, StringUtil.Constants {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(JdbcDriverWizard.class);
 
@@ -100,6 +99,11 @@ public final class JdbcDriverWizard extends AbstractWizard
 
     private static final String REFERENCED_DRIVERS_MESSAGE_SEPARATOR = "\n\n"; //$NON-NLS-1$
     private static final String REFERENCED_DRIVERS_PREFIX = "\t"; //$NON-NLS-1$
+
+    private static final String JAR_EXTENSION = ".jar"; //$NON-NLS-1$
+    private static final String ZIP_EXTENSION = ".zip"; //$NON-NLS-1$
+
+    private static final String LIBRARY_FILTER = '*' + JAR_EXTENSION + "; " + '*' + ZIP_EXTENSION; //$NON-NLS-1$
 
     private static final String[] LIBRARY_FILTER_EXTENSIONS = new String[] {LIBRARY_FILTER};
     private static final String[] LIBRARY_FILTER_NAMES = new String[] {getString("libraryFilterName") + " (" + LIBRARY_FILTER + ')'}; //$NON-NLS-1$ //$NON-NLS-2$

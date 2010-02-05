@@ -193,9 +193,6 @@ public class TestCreateIndexFile extends TestCase {
             for (int i = 0; i < nQueries; i++) {
                 index.queryEntriesMatching(charWord);
             }
-            watch.stopPrintIncrementAndRestart("     ---->> TestCreateIndexFile.testQueryPerformance_0() \n" + //$NON-NLS-1$
-                                               "    NO Indexes cached.  NQueries = " + nQueries + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
 
             // index.setDoCache(true);
             // printQueryResults( index.queryEntriesMatching(charWord) );
@@ -207,9 +204,6 @@ public class TestCreateIndexFile extends TestCase {
                 index.queryEntriesMatching(charWord);
             }
             index.close();
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testQueryPerformance_0() \n" + //$NON-NLS-1$
-                                               "    INDEXES Cached.  NQueries = " + nQueries + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -233,17 +227,8 @@ public class TestCreateIndexFile extends TestCase {
         try {
 
             index = new TestIndex(indexDirectory, TEST_LARGER_INDEX_FILE_NAME, false);
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testQueryPerformance_1() \n" + //$NON-NLS-1$
-                                               "    Created Index File" + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
             index.add(doc, new TestIndexer());
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testQueryPerformance_1() \n" + //$NON-NLS-1$
-                                               "    Indexed the File  = " + testModelFile + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
             index.save();
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testQueryPerformance_1() \n" + //$NON-NLS-1$
-                                               "    Saved the Index File" + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
             assertEquals(1, index.getNumDocuments());
 
             // Find the IndexFile(s) that contain entries matching this prefix
@@ -257,9 +242,6 @@ public class TestCreateIndexFile extends TestCase {
             for (int i = 0; i < nQueries; i++) {
                 index.queryEntriesMatching(charWord);
             }
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testQueryPerformance_1() \n" + //$NON-NLS-1$
-                                               "    NO Indexes cached.  NQueries = " + nQueries + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
 
             // index.setDoCache(true);
             // printQueryResults( index.queryEntriesMatching(charWord) );
@@ -271,9 +253,6 @@ public class TestCreateIndexFile extends TestCase {
                 index.queryEntriesMatching(charWord);
             }
             index.close();
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testQueryPerformance_1() \n" + //$NON-NLS-1$
-                                               "    INDEXES Cached.  NQueries = " + nQueries + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -297,17 +276,8 @@ public class TestCreateIndexFile extends TestCase {
         try {
 
             index = new TestIndex(indexDirectory, TEST_LARGER_INDEX_FILE_NAME, false);
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testQueryPerformance_1() \n" + //$NON-NLS-1$
-                                               "    Created Index File" + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
             index.add(doc, new TestIndexer());
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testQueryPerformance_1() \n" + //$NON-NLS-1$
-                                               "    Indexed the File  = " + testModelFile + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
             index.save();
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testQueryPerformance_1() \n" + //$NON-NLS-1$
-                                               "    Saved the Index File" + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
             assertEquals(1, index.getNumDocuments());
 
             // Find the IndexFile(s) that contain entries matching this prefix
@@ -321,9 +291,6 @@ public class TestCreateIndexFile extends TestCase {
             for (int i = 0; i < nQueries; i++) {
                 index.queryEntriesMatching(charWord);
             }
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testQueryPerformance_1() \n" + //$NON-NLS-1$
-                                               "    NO Indexes cached.  NQueries = " + nQueries + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
 
             // index.setDoCache(true);
             // printQueryResults( index.queryEntriesMatching(charWord) );
@@ -335,9 +302,6 @@ public class TestCreateIndexFile extends TestCase {
                 index.queryEntriesMatching(charWord);
             }
             index.close();
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testQueryPerformance_1() \n" + //$NON-NLS-1$
-                                               "    INDEXES Cached.  NQueries = " + nQueries + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -361,17 +325,8 @@ public class TestCreateIndexFile extends TestCase {
         try {
 
             index = new TestIndex(indexDirectory, TEST_LARGER_INDEX_FILE_NAME, false);
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testOpenCloseBlockIndexInput() \n" + //$NON-NLS-1$
-                                               "    Created Index File" + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
             index.add(doc, new TestIndexer());
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testOpenCloseBlockIndexInput() \n" + //$NON-NLS-1$
-                                               "    Indexed the File  = " + testModelFile + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
             index.save();
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testOpenCloseBlockIndexInput() \n" + //$NON-NLS-1$
-                                               "    Saved the Index File" + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
             assertEquals(1, index.getNumDocuments());
 
             BlocksIndexInput input = index.getBlocksIndexInput();
@@ -385,9 +340,6 @@ public class TestCreateIndexFile extends TestCase {
                     input.close();
                 }
             }
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testOpenCloseBlockIndexInput() \n" + //$NON-NLS-1$
-                                               "    Opened/Closed Index file # Times = " + nOpens + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
 
             for (int i = 0; i < nOpens * 2; i++) {
                 // Close it right away.
@@ -397,9 +349,6 @@ public class TestCreateIndexFile extends TestCase {
                     input.close();
                 }
             }
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testOpenCloseBlockIndexInput() \n" + //$NON-NLS-1$
-                                               "    Opened/Closed Index file # Times = " + nOpens * 2 + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
 
             for (int i = 0; i < nOpens * 5; i++) {
                 // Close it right away.
@@ -409,9 +358,6 @@ public class TestCreateIndexFile extends TestCase {
                     input.close();
                 }
             }
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testOpenCloseBlockIndexInput() \n" + //$NON-NLS-1$
-                                               "    Opened/Closed Index file # Times = " + nOpens * 5 + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
 
             for (int i = 0; i < nOpens * 10; i++) {
                 // Close it right away.
@@ -421,9 +367,6 @@ public class TestCreateIndexFile extends TestCase {
                     input.close();
                 }
             }
-            watch.stopPrintIncrementAndRestart("    ---->> TestCreateIndexFile.testOpenCloseBlockIndexInput() \n" + //$NON-NLS-1$
-                                               "    Opened/Closed Index file # Times = " + nOpens * 10 + //$NON-NLS-1$
-                                               " DTime = "); //$NON-NLS-1$
         } catch (IOException e) {
             e.printStackTrace();
         }

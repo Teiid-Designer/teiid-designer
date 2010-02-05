@@ -60,7 +60,6 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.StringUtil;
-import com.metamatrix.core.util.UriUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
@@ -90,7 +89,7 @@ import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
  * @since 4.2
  */
 public final class VdbEditorModelComposite
-    implements ListPanel.Constants, StringUtil.Constants, VdbUiConstants, UriUtil.Constants, VdbEditor.Constants, Widgets {
+    implements ListPanel.Constants, StringUtil.Constants, VdbUiConstants, VdbEditor.Constants, Widgets {
 
     private static final String I18N_PREFIX = "VdbEditorModelPage."; //$NON-NLS-1$
     private static final String MODEL_SELECTION_DIALOG_TITLE = getString("modelSelectionDialogTitle"); //$NON-NLS-1$

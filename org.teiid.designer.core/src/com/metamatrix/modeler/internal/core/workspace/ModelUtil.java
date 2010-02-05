@@ -194,8 +194,8 @@ public class ModelUtil {
     }
 
     /**
-     * Return true if the IResource represents a Teiid Designer model file, this method also check if the file exists in a
-     * project with model nature.
+     * Return true if the IResource represents a Teiid Designer model file, this method also check if the file exists in a project
+     * with model nature.
      * 
      * @param resource The file that may be a model file
      * @return true if it is a ModelFile and part of a ModelProject
@@ -240,8 +240,8 @@ public class ModelUtil {
     }
 
     /**
-     * Return true if the File represents a Teiid Designer model file or an xsd file this method does not check if the file
-     * exists in a project with model nature. Returns a false for vdb files.
+     * Return true if the File represents a Teiid Designer model file or an xsd file this method does not check if the file exists
+     * in a project with model nature. Returns a false for vdb files.
      * 
      * @param resource The file that may be a model file
      * @return true if it is a ModelFile.
@@ -251,8 +251,8 @@ public class ModelUtil {
     }
 
     /**
-     * Return true if the File represents a Teiid Designer model file, this method does not check if the file exists in a
-     * project with model nature.
+     * Return true if the File represents a Teiid Designer model file, this method does not check if the file exists in a project
+     * with model nature.
      * 
      * @param resource The file that may be a model file
      * @return true if it is a ModelFile.
@@ -843,7 +843,7 @@ public class ModelUtil {
                         if (deviceLocation.startsWith(ModelFileUtil.FILE_COLON)) {
                             deviceLocation = deviceLocation.substring(6) + fileSep;
                         }
-                    } else deviceLocation = FileSeparatorUtil.FILE_SEPARATOR_LINUX;
+                    } else deviceLocation = File.separator;
                 } else {
                     projectPath = projectPath.append(FileUtils.normalizeFileName(pathSegments[i]));
                 }

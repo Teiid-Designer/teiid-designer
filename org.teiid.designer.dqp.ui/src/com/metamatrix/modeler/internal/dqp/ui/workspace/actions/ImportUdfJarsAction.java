@@ -15,7 +15,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import com.metamatrix.core.util.FileSeparatorUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.config.DqpExtensionsHandler;
@@ -26,11 +25,11 @@ import com.metamatrix.ui.internal.util.UiUtil;
 /**
  * @since 5.5
  */
-public class ImportUdfJarsAction extends Action implements
-                                                       DqpUiConstants {
+public class ImportUdfJarsAction extends Action implements DqpUiConstants {
     public static final String ACTION_ID = "ImportUdfJarsAction"; //$NON-NLS-1$
-    
+
     private final static String PREFIX = I18nUtil.getPropertyPrefix(ImportUdfJarsAction.class);
+
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
@@ -65,16 +64,16 @@ public class ImportUdfJarsAction extends Action implements
         String[] fileNames = dialog.getFileNames();
 
         if ((fileNames != null) && (fileNames.length > 0)) {
-            
-            if( !confirmOverwrite(fileNames) ) {
+
+            if (!confirmOverwrite(fileNames)) {
                 return;
             }
-            
+
             String filterPath = dialog.getFilterPath();
             final File[] jarFiles = new File[fileNames.length];
 
             for (int i = 0; i < fileNames.length; ++i) {
-                jarFiles[i] = new File(filterPath + FileSeparatorUtil.getOSFileSeparator() + fileNames[i]);
+                jarFiles[i] = new File(filterPath + File.separator + fileNames[i]);
             }
 
             final boolean[] success = new boolean[1];
@@ -83,10 +82,10 @@ public class ImportUdfJarsAction extends Action implements
 
                 public void run() {
                     DqpExtensionsHandler extensionHandler = DqpPlugin.getInstance().getExtensionsHandler();
-                    success[0] = extensionHandler.addUdfJars(eventSource, jarFiles); 
+                    success[0] = extensionHandler.addUdfJars(eventSource, jarFiles);
                 }
             };
-                                                                                                                      
+
             BusyIndicator.showWhile(shell.getDisplay(), importOperation);
 
             String title = UTIL.getString(PREFIX + "successTitle"); //$NON-NLS-1$
@@ -100,29 +99,29 @@ public class ImportUdfJarsAction extends Action implements
             }
         }
     }
-    
-    private boolean confirmOverwrite(String[] fileNames) {
+
+    private boolean confirmOverwrite( String[] fileNames ) {
         IPath extPath = DqpPlugin.getInstance().getExtensionsHandler().getDqpExtensionsFolderPath();
         boolean existing = false;
-        for( String fName: fileNames ) {
+        for (String fName : fileNames) {
             File theFile = extPath.append(fName).toFile();
-            if( theFile.exists() ) {
+            if (theFile.exists()) {
                 existing = true;
             }
-            if( existing ) {
+            if (existing) {
                 break;
             }
         }
 
         boolean overwrite = false;
-        if( existing ) {
-            overwrite = MessageDialog.openConfirm(UiUtil.getWorkbenchShellOnlyIfUiThread(), 
+        if (existing) {
+            overwrite = MessageDialog.openConfirm(UiUtil.getWorkbenchShellOnlyIfUiThread(),
                                                   UTIL.getStringOrKey(PREFIX + "confirmOverwrite.title"), //$NON-NLS-1$
                                                   UTIL.getStringOrKey(PREFIX + "confirmOverwrite.msg")); //$NON-NLS-1$
         } else {
             overwrite = true;
         }
-        
+
         return overwrite;
     }
 }

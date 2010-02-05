@@ -51,7 +51,6 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
-import com.metamatrix.core.util.UriUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelProject;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -73,7 +72,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 
 public final class ExportModelerProjectSetWizard extends AbstractWizard
     implements FileUtils.Constants, IExportWizard, InternalUiConstants.Widgets, PluginConstants.Images, StringUtil.Constants,
-    UiConstants, UiConstants.ProductInfo, UiConstants.ProductInfo.Capabilities, UriUtil.Constants {
+    UiConstants, UiConstants.ProductInfo, UiConstants.ProductInfo.Capabilities {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ExportModelerProjectSetWizard.class);
 

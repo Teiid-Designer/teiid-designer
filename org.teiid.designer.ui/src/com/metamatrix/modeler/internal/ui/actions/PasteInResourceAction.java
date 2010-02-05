@@ -24,7 +24,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.CopyProjectOperation;
 import org.eclipse.ui.actions.SelectionListenerAction;
 import org.eclipse.ui.part.ResourceTransfer;
-import com.metamatrix.core.util.UriUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
@@ -41,7 +40,7 @@ import com.metamatrix.ui.internal.util.UiUtil;
 /**
  * PasteInResourceAction
  */
-public class PasteInResourceAction extends ModelObjectAction implements UriUtil.Constants, UiConstants {
+public class PasteInResourceAction extends ModelObjectAction implements UiConstants {
 
     /** Delegate for EObject and model paste. */
     private AbstractAction eObjDelegateAction;

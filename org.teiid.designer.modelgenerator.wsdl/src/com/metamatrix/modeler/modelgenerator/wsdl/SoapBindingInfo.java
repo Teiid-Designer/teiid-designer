@@ -7,14 +7,6 @@
  */
 package com.metamatrix.modeler.modelgenerator.wsdl;
 
-import java.util.Collection;
-import java.util.Iterator;
-//import com.metamatrix.common.config.api.ComponentType;
-//import com.metamatrix.common.config.api.ConnectorBinding;
-//import com.metamatrix.modeler.dqp.DqpPlugin;
-//import com.metamatrix.modeler.dqp.config.ConfigurationManager;
-//import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
-
 public class SoapBindingInfo {
 
     public static final int STYLE_RPC_ENCODED = 0;
@@ -22,14 +14,14 @@ public class SoapBindingInfo {
     public static final int STYLE_DOCUMENT_ENCODED = 2;
     public static final int STYLE_DOCUMENT_LITERAL = 3;
 
-    private static final String CONNECTOR_NAME = "XML-Relational SOAP Connector"; //$NON-NLS-1$
+    //    private static final String CONNECTOR_NAME = "XML-Relational SOAP Connector"; //$NON-NLS-1$
     private static final String RPC_ENCODED = "RPC - Encoded"; //$NON-NLS-1$
     private static final String RPC_LITERAL = "RPC - Literal"; //$NON-NLS-1$
     private static final String DOCUMENT_ENCODED = "Document - Encoded"; //$NON-NLS-1$
     private static final String DOCUMENT_LITERAL = "Document - Literal"; //$NON-NLS-1$
 
-    private static final String STYLE = "EncodingStyle"; //$NON-NLS-1$
-    private static final String DESTINATION = "Uri"; //$NON-NLS-1$
+    //    private static final String STYLE = "EncodingStyle"; //$NON-NLS-1$
+    //    private static final String DESTINATION = "Uri"; //$NON-NLS-1$
 
     private String m_destinationURL;
     private String m_operName;
@@ -83,7 +75,7 @@ public class SoapBindingInfo {
     public void createConnectorBinding( String modelName,
                                         String name ) throws Exception {
         /*
-    	final String suffix = ".xmi"; //$NON-NLS-1$
+        final String suffix = ".xmi"; //$NON-NLS-1$
         if (modelName.endsWith(suffix)) {
             modelName = modelName.substring(0, modelName.length() - suffix.length());
         }

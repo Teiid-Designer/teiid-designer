@@ -17,7 +17,6 @@ import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
-import com.metamatrix.core.util.ClassUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -25,74 +24,54 @@ import com.metamatrix.modeler.ui.product.IModelerProductContexts;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.wizard.AbstractSelectionWizard;
 
-/**<p>
- * </p>
+/**
  * @since 4.0
  */
-public class ExportWizard extends AbstractSelectionWizard implements ClassUtil.Constants,
-                                                                     UiConstants,
-                                                                     UiConstants.ExtensionPoints.ExportWizards {
-    //============================================================================================================================
-    // Constants
+public class ExportWizard extends AbstractSelectionWizard implements UiConstants, UiConstants.ExtensionPoints.ExportWizards {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ExportWizard.class);
 
     private static final String TITLE = getString("title"); //$NON-NLS-1$
 
-    //============================================================================================================================
-    // Static Utility Methods
-
-    /**<p>
-     * </p>
+    /**
      * @since 4.0
      */
-    private static String getString(final String id) {
+    private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + id);
     }
 
-    //============================================================================================================================
-    // Constructors
-
-    /**<p>
-     * </p>
+    /**
      * @since 4.0
      */
-    public ExportWizard(final IWorkbench workbench,
-	                    final IStructuredSelection selection ) {
-		super(UiPlugin.getDefault(), workbench, selection, TITLE,
-		      WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_EXPORT_WIZ), ID,
-		      new SingleColumnTableViewerSorter());
-	}
-
-    // ============================================================================================================================
-    // Overridden Methods
+    public ExportWizard( final IWorkbench workbench,
+                         final IStructuredSelection selection ) {
+        super(UiPlugin.getDefault(), workbench, selection, TITLE,
+              WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_EXPORT_WIZ), ID,
+              new SingleColumnTableViewerSorter());
+    }
 
     @Override
     protected IConfigurationElement[] getConfigurationElementsFor() {
-    	// TODO Auto-generated method stub
-    	IConfigurationElement[] elements = super.getConfigurationElementsFor();
+        IConfigurationElement[] elements = super.getConfigurationElementsFor();
 
-    	// FILTER THESE!!
-    	List result = new ArrayList(elements.length);
-    	for( int i=0; i< elements.length; i++ ) {
-    		String contribID = elements[i].getAttribute(UiConstants.ExtensionPoints.ExportWizards.ID_ID);
-    		if (UiPlugin.getDefault().isProductContextValueSupported(IModelerProductContexts.Contributions.EXPORT, contribID)) {
-    			result.add(elements[i]);
-    		}
-    	}
+        // FILTER THESE!!
+        List result = new ArrayList(elements.length);
+        for (int i = 0; i < elements.length; i++) {
+            String contribID = elements[i].getAttribute(UiConstants.ExtensionPoints.ExportWizards.ID_ID);
+            if (UiPlugin.getDefault().isProductContextValueSupported(IModelerProductContexts.Contributions.EXPORT, contribID)) {
+                result.add(elements[i]);
+            }
+        }
 
-    	return (IConfigurationElement[])result.toArray(new IConfigurationElement[result.size()]);
+        return (IConfigurationElement[])result.toArray(new IConfigurationElement[result.size()]);
     }
-    //============================================================================================================================
-    // Implemented Methods
 
-    /**<p>
-     * </p>
+    /**
      * @see com.metamatrix.ui.internal.wizard.AbstractSelectionWizard#createSelectedWizard()
      * @since 4.0
      */
     @Override
-    protected IWizard createSelectedWizard(final IConfigurationElement element) {
+    protected IWizard createSelectedWizard( final IConfigurationElement element ) {
         try {
             return (IWizard)element.createExecutableExtension(CLASS);
         } catch (final CoreException err) {
@@ -102,38 +81,32 @@ public class ExportWizard extends AbstractSelectionWizard implements ClassUtil.C
         }
     }
 
-    /**<p>
-     * </p>
+    /**
      * @see com.metamatrix.ui.internal.wizard.AbstractSelectionWizard#getSelectedWizardIcon(org.eclipse.core.runtime.IConfigurationElement)
      * @since 4.0
      */
     @Override
-    protected String getSelectedWizardIcon(final IConfigurationElement element) {
+    protected String getSelectedWizardIcon( final IConfigurationElement element ) {
         return element.getAttribute(ICON);
     }
 
-    /**<p>
-     * </p>
+    /**
      * @see com.metamatrix.ui.internal.wizard.AbstractSelectionWizard#getSelectedWizardName(org.eclipse.core.runtime.IConfigurationElement)
      * @since 4.0
      */
     @Override
-    protected String getSelectedWizardName(final IConfigurationElement element) {
+    protected String getSelectedWizardName( final IConfigurationElement element ) {
         return element.getAttribute(NAME);
     }
 
-    //============================================================================================================================
-    // Overridden Methods
-
-    /**<p>
-     * </p>
+    /**
      * @see com.metamatrix.ui.internal.wizard.AbstractSelectionWizard#initializeSelectedWizard(org.eclipse.jface.wizard.IWizard)
      * @since 4.0
      */
     @Override
-    protected void initializeSelectedWizard(final IWizard wizard,
-                                            final IWorkbench workbench,
-                                            final IStructuredSelection selection) {
+    protected void initializeSelectedWizard( final IWizard wizard,
+                                             final IWorkbench workbench,
+                                             final IStructuredSelection selection ) {
         ((IExportWizard)wizard).init(workbench, selection);
     }
 }

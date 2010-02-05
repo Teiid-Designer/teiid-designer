@@ -15,18 +15,14 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.importer.rose.parser.RoseNode;
-import com.metamatrix.core.util.UriUtil;
 import com.metamatrix.rose.internal.IRoseConstants;
 import com.metamatrix.rose.internal.IUnit;
 
 /**
  * @since 4.1
  */
-public final class Unit implements
-                       IRoseConstants,
-                       IUnit,
-                       UriUtil.Constants {
-    //============================================================================================================================
+public final class Unit implements IRoseConstants, IUnit {
+    // ============================================================================================================================
     // Variables
 
     private IContainer modelFolder;
@@ -55,7 +51,7 @@ public final class Unit implements
 
     private String loadMsg, parseMsg;
 
-    //============================================================================================================================
+    // ============================================================================================================================
     // Constructors
 
     /**
@@ -63,13 +59,13 @@ public final class Unit implements
      * @param path
      * @since 4.1
      */
-    public Unit(final String name,
-                final String path) {
+    public Unit( final String name,
+                 final String path ) {
         this.name = this.modelName = name;
         this.path = path;
     }
 
-    //============================================================================================================================
+    // ============================================================================================================================
     // Implemented Methods
 
     /**
@@ -157,7 +153,7 @@ public final class Unit implements
      * @since 4.1
      */
     public String getQualifiedName() {
-        return (this.parent == null ? this.name : this.parent.getQualifiedName() + SEPARATOR_CHAR + this.name);
+        return (this.parent == null ? this.name : this.parent.getQualifiedName() + '/' + this.name);
     }
 
     /**
@@ -200,7 +196,7 @@ public final class Unit implements
         return this.selected;
     }
 
-    //============================================================================================================================
+    // ============================================================================================================================
     // Overridden Methods
 
     /**
@@ -212,14 +208,14 @@ public final class Unit implements
         return getName();
     }
 
-    //============================================================================================================================
+    // ============================================================================================================================
     // Property Methods
 
     /**
      * @param unit
      * @since 4.1
      */
-    public void addUnit(final Unit unit) {
+    public void addUnit( final Unit unit ) {
         this.units.add(unit);
         unit.setContainingUnit(this);
     }
@@ -235,7 +231,7 @@ public final class Unit implements
     /**
      * @since 4.1
      */
-    private void setContainingUnit(final Unit parent) {
+    private void setContainingUnit( final Unit parent ) {
         this.parent = parent;
     }
 
@@ -243,7 +239,7 @@ public final class Unit implements
      * @param message
      * @since 4.1
      */
-    public void setLoadMessage(final String message) {
+    public void setLoadMessage( final String message ) {
         this.loadMsg = message;
     }
 
@@ -251,7 +247,7 @@ public final class Unit implements
      * @param status
      * @since 4.1
      */
-    public void setLoadStatus(final int status) {
+    public void setLoadStatus( final int status ) {
         this.loadStatus = status;
     }
 
@@ -259,7 +255,7 @@ public final class Unit implements
      * @param folder
      * @since 4.1
      */
-    public void setModelFolder(final IContainer folder) {
+    public void setModelFolder( final IContainer folder ) {
         this.modelFolder = folder;
         setWorkspaceResource();
     }
@@ -268,7 +264,7 @@ public final class Unit implements
      * @param name
      * @since 4.1
      */
-    public void setModelName(final String name) {
+    public void setModelName( final String name ) {
         this.modelName = name;
         setWorkspaceResource();
     }
@@ -277,7 +273,7 @@ public final class Unit implements
      * @param message
      * @since 4.1
      */
-    public void setParseMessage(final String message) {
+    public void setParseMessage( final String message ) {
         this.parseMsg = message;
     }
 
@@ -285,7 +281,7 @@ public final class Unit implements
      * @param status
      * @since 4.1
      */
-    public void setParseStatus(final int status) {
+    public void setParseStatus( final int status ) {
         this.parseStatus = status;
     }
 
@@ -293,7 +289,7 @@ public final class Unit implements
      * @param path
      * @since 4.1
      */
-    public void setResolvedPath(final String path) {
+    public void setResolvedPath( final String path ) {
         this.resolvedPath = path;
         this.exists = new File(path).exists();
         if (!this.exists) {
@@ -306,7 +302,7 @@ public final class Unit implements
      * @param node
      * @since 4.1
      */
-    public void setRootRoseNode(final RoseNode node) {
+    public void setRootRoseNode( final RoseNode node ) {
         this.node = node;
     }
 
@@ -314,17 +310,17 @@ public final class Unit implements
      * @param selected
      * @since 4.1
      */
-    public void setSelected(final boolean selected) {
+    public void setSelected( final boolean selected ) {
         this.selected = selected;
     }
 
-    //============================================================================================================================
+    // ============================================================================================================================
     // Utility Methods
 
     /**
      * @since 4.1
      */
     private void setWorkspaceResource() {
-        this.resrc =  (this.modelFolder == null ? null : this.modelFolder.findMember(this.modelName));
+        this.resrc = (this.modelFolder == null ? null : this.modelFolder.findMember(this.modelName));
     }
 }
