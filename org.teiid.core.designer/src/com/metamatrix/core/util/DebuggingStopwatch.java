@@ -10,8 +10,7 @@ package com.metamatrix.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/** 
+/**
  * @since 5.0.2
  */
 public class DebuggingStopwatch {
@@ -25,64 +24,53 @@ public class DebuggingStopwatch {
     private long[] increments;
     private List messages;
     private int nValues = 0;
-    
+
     private Stopwatch incStopwatch;
     private Stopwatch totalStopwatch;
-    /** 
-     * 
+
+    /**
      * @since 5.0.2
      */
-    public DebuggingStopwatch(String title, int maxStatistics, boolean printStart) {
+    public DebuggingStopwatch( String title,
+                               int maxStatistics,
+                               boolean printStart ) {
         super();
         this.title = title;
         increments = new long[maxStatistics];
         messages = new ArrayList(maxStatistics);
         incStopwatch = new Stopwatch();
         totalStopwatch = new Stopwatch();
-        if( printStart ) {
-            System.out.println(" *** Stopwatch Statistics intiated for: " + title ); //$NON-NLS-1$
+        if (printStart) {
+            System.out.println(" *** Stopwatch Statistics intiated for: " + title); //$NON-NLS-1$
         }
     }
-    
-    public void addStat(String message) {
-        messages.add(message);
-        incStopwatch.stop();
-        increments[nValues] = incStopwatch.getTotalDuration();
-        incStopwatch.start(true);
-        nValues++;
-    }
-    
+
     public void stopStats() {
         incStopwatch.stop();
         incStopwatch.reset();
     }
-    
+
     public void startStats() {
         incStopwatch.start(true);
     }
-    
+
     public void start() {
         totalStopwatch.start();
     }
-    
+
     public void stop() {
         totalStopwatch.stop();
     }
-    
+
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append(STOPWATCH_STATS + title + NEW_LINE);
-        for( int i=0; i< nValues; i++ ) {
+        for (int i = 0; i < nValues; i++) {
             sb.append(SPACER + messages.get(i) + DELTA_TIME + increments[i] + NEW_LINE);
         }
         sb.append(TOTAL_TIME + totalStopwatch.getTotalDuration() + NEW_LINE);
         sb.append(END);
         return sb.toString();
     }
-    
-    public void print() {
-        System.out.println(this);
-    }
-
 }

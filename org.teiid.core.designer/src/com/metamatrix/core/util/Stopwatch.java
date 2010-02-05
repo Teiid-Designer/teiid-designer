@@ -51,24 +51,6 @@ public class Stopwatch implements Serializable {
     }
 
     /**
-     * Set the stopwatch as inactive.
-     * 
-     * @see isActive
-     */
-    public void setInactive() {
-        active = false;
-    }
-
-    /**
-     * Set the stopwatch as active.
-     * 
-     * @see isActive
-     */
-    public void setActive() {
-        active = true;
-    }
-
-    /**
      * If the stopwatch is active, record the starting time for a time segment. If the stopwatch is inactive, the method returns
      * immediately.
      * 
@@ -190,32 +172,6 @@ public class Stopwatch implements Serializable {
         return "" + valueString; //$NON-NLS-1$
     }
 
-    /**
-     * Print the current statistics
-     * 
-     * @param stream the stream to which the statistics should be printed
-     */
-    public void printStatistics( java.io.PrintStream stream ) {
-        if (active) {
-            stream.println(CorePlugin.Util.getString("Stopwatch.Stopwatch_Statistics")); //$NON-NLS-1$
-            stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Total", this.getTimeValueAsString(stats.getTotal()))); //$NON-NLS-1$
-            stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Previous", this.getTimeValueAsString(stats.getLast()))); //$NON-NLS-1$
-            if (stats.getCount() > 1) {
-                stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Count", this.getValueAsString(stats.getCount()))); //$NON-NLS-1$
-                stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Average", this.getTimeValueAsString(stats.getAverage()))); //$NON-NLS-1$
-                stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Minimum", this.getTimeValueAsString(stats.getMinimum()))); //$NON-NLS-1$
-                stream.println(CorePlugin.Util.getString("Stopwatch.Statistics_Maximum", this.getTimeValueAsString(stats.getMaximum()))); //$NON-NLS-1$
-            }
-        }
-    }
-
-    /**
-     * Print the current statistics to System.out
-     */
-    public void printStatistics() {
-        printStatistics(System.out);
-    }
-
     public class Statistics implements Serializable {
         private static final long serialVersionUID = 6451257438010489623L;
         private long minimum = 0;
@@ -294,20 +250,6 @@ public class Stopwatch implements Serializable {
     public void stopLogIncrementAndRestart( String message ) {
         stop();
         logTimedMessage(message, getTotalDuration());
-        // Restart by reset = true
-        start(true);
-    }
-
-    /**
-     * This convience method stops the current stopwatch, prints a message to System.out containing the resulting time
-     * increment/duration and restarts the stopwatch.
-     * 
-     * @param message
-     * @since 4.3
-     */
-    public void stopPrintIncrementAndRestart( String message ) {
-        stop();
-        System.out.println(message + getTotalDuration());
         // Restart by reset = true
         start(true);
     }

@@ -26,7 +26,7 @@ public class ModelerCoreException extends CoreException implements Externalizabl
     CoreException nestedCoreException;
 
     /**
-     * No-arg costructor required by Externalizable semantics
+     * No-arg constructor required by Externalizable semantics
      */
     public ModelerCoreException() {
         // Set the status to some non-null value for now.
@@ -72,17 +72,6 @@ public class ModelerCoreException extends CoreException implements Externalizabl
      */
     public ModelerCoreException( String message ) {
         super(new Status(IStatus.ERROR, CoreModelerPlugin.PLUGIN_ID, 0, getNonNullMessage(message), null));
-    }
-
-    public ModelerCoreException( int code,
-                                 String message ) {
-        super(new Status(IStatus.ERROR, CoreModelerPlugin.PLUGIN_ID, code, getNonNullMessage(message), null));
-    }
-
-    public ModelerCoreException( Throwable e,
-                                 int code,
-                                 String message ) {
-        super(new Status(IStatus.ERROR, CoreModelerPlugin.PLUGIN_ID, code, getNonNullMessage(message), e));
     }
 
     /**
@@ -332,26 +321,9 @@ public class ModelerCoreException extends CoreException implements Externalizabl
         private boolean ok = false;
 
         /**
-         * Constructor required by Externalizable constract
+         * Constructor required by Externalizable construct
          */
         public StatusImpl() {
-        }
-
-        /**
-         * Create a StatusImpl if you know you're shipping across the wire.
-         * 
-         * @since 4.2
-         */
-        public StatusImpl( int severity,
-                           String pluginId,
-                           int code,
-                           String message,
-                           Throwable exception ) {
-            this.severity = severity;
-            this.plugin = pluginId;
-            this.code = code;
-            this.message = message;
-            this.exception = exception;
         }
 
         /**
@@ -378,35 +350,6 @@ public class ModelerCoreException extends CoreException implements Externalizabl
             this.severity = original.getSeverity();
             this.multiStatus = original.isMultiStatus();
             this.ok = original.isOK();
-        }
-
-        /**
-         * Constructs a StatusImpl. Converts all the IStatus instances into StatusImpls to guarantee serialization.
-         */
-        public StatusImpl( IStatus[] children,
-                           int code,
-                           Throwable exception,
-                           String message,
-                           String plugin,
-                           int severity,
-                           boolean multiStatus,
-                           boolean ok ) {
-            if (children != null) {
-                final int length = children.length;
-                this.children = new StatusImpl[length];
-                for (int i = 0; i < length; i++) {
-                    if (children[i] != null) {
-                        this.children[i] = new StatusImpl(children[i]);
-                    }
-                }
-            }
-            this.code = code;
-            this.exception = exception;
-            this.message = message;
-            this.plugin = plugin;
-            this.severity = severity;
-            this.multiStatus = multiStatus;
-            this.ok = ok;
         }
 
         public IStatus[] getChildren() {

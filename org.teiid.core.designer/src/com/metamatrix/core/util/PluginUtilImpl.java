@@ -99,23 +99,7 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      */
     private static boolean productPropsLoaded;
 
-    private DefaultRunner runner = new DefaultRunner();
-
     private ILog logger;
-
-    /**
-     * Construct an instance of this class by specifying the plugin ID. The name of the resource bundle, which should be of the
-     * form "<code>PLUGIN_ID</code> .i18n", and should manifest itself as a properties file named "i18n.properties" in the
-     * PLUGIN_ID package. This is so that when run outside of the Eclipse Platform, the properties files for all plugins can be
-     * placed on the classpath and are all unique.
-     * 
-     * @param pluginID the identifier of the plugin for which this utility is being instantiated
-     * @param bundle the resource bundle
-     */
-    public PluginUtilImpl( final String pluginID,
-                           final ResourceBundle bundle ) {
-        this(pluginID, RESOURCE_FILE_ROOT + '.' + RESOURCE_FILE_ROOT, bundle);
-    }
 
     /**
      * Construct an instance of this class by specifying the plugin ID.
@@ -178,7 +162,6 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      */
     public void initializePlatformLogger( final Plugin plugin ) {
         this.logger = plugin.getLog();
-        this.runner = new PlatformRunner();
     }
 
     /**
@@ -283,13 +266,6 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      */
     public void log( final Throwable throwable ) {
         log(IStatus.ERROR, throwable, throwable.getLocalizedMessage());
-    }
-
-    /**
-     * @see com.metamatrix.core.PluginUtil#run(org.eclipse.core.runtime.ISafeRunnable)
-     */
-    public void run( ISafeRunnable runnable ) {
-        this.runner.run(runnable);
     }
 
     /**
