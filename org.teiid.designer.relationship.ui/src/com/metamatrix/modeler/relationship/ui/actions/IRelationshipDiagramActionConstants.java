@@ -10,40 +10,21 @@ package com.metamatrix.modeler.relationship.ui.actions;
 import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
 
 /**
- * @author BLaFond
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @author BLaFond To change the template for this generated type comment go to Window&gt;Preferences&gt;Java&gt;Code
+ *         Generation&gt;Code and Comments
  */
 public interface IRelationshipDiagramActionConstants {
 
-	interface DiagramActions {
-        
-//		/** Keys for accessing transformation actions. */
-//		String ADD_TO_DIAGRAM = AddToDiagramAction.class.getName();
-//		String REMOVE_FROM_DIAGRAM = RemoveFromDiagramAction.class.getName();
-//		String CLEAR_DIAGRAM = ClearDiagramAction.class.getName();
-//        
-//		/** All Modeler unique global actions. */
-//		String[] ALL_ACTIONS = new String[] {
-//			ADD_TO_DIAGRAM,
-//			REMOVE_FROM_DIAGRAM,
-//			CLEAR_DIAGRAM 
-//		};
-	}
-    
-    
-	interface ContextMenu {
-        
-		/** The identifier for the diagram editor's context menu. */
-		String DIAGRAM_EDITOR_PAGE = "diagramEditorPage" + IModelerActionConstants.ContextMenu.MENU_ID_SUFFIX; //$NON-NLS-1$
-        
-		/** Name of group for start of transformation menu items. */
-		String DIAGRAM_START = "diagramStart"; //$NON-NLS-1$
+    interface ContextMenu {
 
-		/** Name of group for end of transformation menu items. */
-		String DIAGRAM_END = "diagramEnd"; //$NON-NLS-1$
-	}
+        /** The identifier for the diagram editor's context menu. */
+        String DIAGRAM_EDITOR_PAGE = "diagramEditorPage" + IModelerActionConstants.ContextMenu.MENU_ID_SUFFIX; //$NON-NLS-1$
 
+        /** Name of group for start of transformation menu items. */
+        String DIAGRAM_START = "diagramStart"; //$NON-NLS-1$
+
+        /** Name of group for end of transformation menu items. */
+        String DIAGRAM_END = "diagramEnd"; //$NON-NLS-1$
+    }
 
 }

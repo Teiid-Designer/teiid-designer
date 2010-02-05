@@ -8,7 +8,6 @@ Bundle-Activator: com.metamatrix.modeler.webservice.ui.WebServiceUiPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.internal.webservice.ui,
- com.metamatrix.modeler.internal.webservice.ui.product,
  com.metamatrix.modeler.internal.webservice.ui.wizard,
  com.metamatrix.modeler.webservice.ui,
  com.metamatrix.modeler.webservice.ui.actions,

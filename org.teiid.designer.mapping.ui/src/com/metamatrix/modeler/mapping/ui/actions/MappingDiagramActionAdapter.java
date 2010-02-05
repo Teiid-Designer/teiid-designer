@@ -46,7 +46,7 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.transaction.SourcedNotification;
 import com.metamatrix.modeler.diagram.ui.actions.DiagramGlobalActionsMap;
 import com.metamatrix.modeler.diagram.ui.actions.DiagramPageSetupAction;
-import com.metamatrix.modeler.diagram.ui.drawing.actions.RefreshAction;
+import com.metamatrix.modeler.diagram.ui.actions.RefreshAction;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramActionAdapter;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramEditor;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramToolBarManager;

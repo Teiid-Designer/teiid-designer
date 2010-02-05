@@ -27,7 +27,6 @@ import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
 import com.metamatrix.modeler.core.transaction.SourcedNotification;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
-import com.metamatrix.modeler.diagram.ui.drawing.DrawingModelFactory;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -86,9 +85,6 @@ public class CustomDiagramModelFactory extends RelationshipDiagramModelFactory {
         // Create base diagram node.
         diagramModelNode = new CustomDiagramNode(diagram, Util.getString(KEY_CUSTOM_DIAGRAM_NAME));
 
-        // Get Drawing Nodes
-        List drawingNodes = DrawingModelFactory.getDrawingNodes(diagram, diagramModelNode);
-
         // go get the contents based on the diagram only. DiagramEntity's hold the reference to their objects
         // and nothing else.
         contents = getDiagramContents(diagram);
@@ -113,7 +109,6 @@ public class CustomDiagramModelFactory extends RelationshipDiagramModelFactory {
             super.createDiagramContents(diagramModelNode, relationshipContents, false);
         }
 
-        if (!drawingNodes.isEmpty()) diagramModelNode.addChildren(drawingNodes);
         updateTypeAssociations(diagramModelNode);
         setRelationshipCompleteness(diagramModelNode);
 

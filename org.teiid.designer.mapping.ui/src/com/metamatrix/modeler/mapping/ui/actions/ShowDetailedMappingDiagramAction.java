@@ -38,16 +38,15 @@ import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
  * ShowDetailedMappingDiagramAction
  */
 public class ShowDetailedMappingDiagramAction extends MappingAction {
-    
-    //============================================================================================================================
+
+    // ============================================================================================================================
     // Constants
 
-    //============================================================================================================================
+    // ============================================================================================================================
     // Constructors
-    
+
     /**
-     * Construct an instance of ShowMappingDiagramAction.
-     * 
+     * Construct an instance of ShowDetailedMappingDiagramAction.
      */
     public ShowDetailedMappingDiagramAction() {
         super();
@@ -55,21 +54,22 @@ public class ShowDetailedMappingDiagramAction extends MappingAction {
         setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(UiConstants.Images.SHOW_DETAILED_MAPPING));
 
     }
-    
-    //============================================================================================================================
+
+    // ============================================================================================================================
     // ISelectionListener Methods
-    
+
     /**
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(IWorkbenchPart, ISelection)
      * @since 4.0
      */
     @Override
-    public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
+    public void selectionChanged( final IWorkbenchPart part,
+                                  final ISelection selection ) {
         super.selectionChanged(part, selection);
         determineEnablement();
     }
 
-    //============================================================================================================================
+    // ============================================================================================================================
     // Action Methods
 
     /**
@@ -79,33 +79,34 @@ public class ShowDetailedMappingDiagramAction extends MappingAction {
     @Override
     protected void doRun() {
         final EObject eObject = SelectionUtilities.getSelectedEObject(getSelection());
-        if( eObject != null ) {
+        if (eObject != null) {
             // See if it has a transformation object:
             ModelResource modelResource = ModelUtilities.getModelResourceForModelObject(eObject);
-            if( modelResource != null && wasMappingClassSelected(eObject) ) {
+            if (modelResource != null && wasMappingClassSelected(eObject)) {
 
                 // Let's get Transformation Diagram (i.e. create it if it doesn't exist yet)
                 Diagram transformationDiagram = getTransformationDiagram(modelResource, eObject);
                 ModelEditor editor = getModelEditorForObject(transformationDiagram, true);
-                
-                if( editor != null ) {
+
+                if (editor != null) {
                     editor.openModelObject(transformationDiagram);
                 }
             }
         }
         determineEnablement();
     }
-    
-    private boolean wasMappingClassSelected(EObject eObject) {
-    	if( ModelUtilities.getModelResourceForModelObject(eObject) != null )
-        	return (eObject instanceof MappingClass) && TransformationHelper.isVirtualSqlTable(eObject);
-  		return false;
+
+    private boolean wasMappingClassSelected( EObject eObject ) {
+        if (ModelUtilities.getModelResourceForModelObject(eObject) != null) return (eObject instanceof MappingClass)
+                                                                                   && TransformationHelper.isVirtualSqlTable(eObject);
+        return false;
     }
-    
-    private Diagram getTransformationDiagram(ModelResource modelResource, EObject eObject) {
+
+    private Diagram getTransformationDiagram( ModelResource modelResource,
+                                              EObject eObject ) {
         Iterator iter = null;
         String diagramType = null;
-        if( eObject instanceof StagingTable ) {
+        if (eObject instanceof StagingTable) {
             diagramType = com.metamatrix.modeler.transformation.ui.PluginConstants.TRANSFORMATION_DIAGRAM_TYPE_ID;
         } else {
             diagramType = PluginConstants.MAPPING_TRANSFORMATION_DIAGRAM_TYPE_ID;
@@ -113,16 +114,14 @@ public class ShowDetailedMappingDiagramAction extends MappingAction {
         try {
             iter = modelResource.getModelDiagrams().getDiagrams(eObject).iterator();
         } catch (ModelWorkspaceException e) {
-            String message = UiConstants.Util.getString("ShowDetailedMappingDiagram.getDiagramsError", modelResource.toString());  //$NON-NLS-1$
+            String message = UiConstants.Util.getString("ShowDetailedMappingDiagram.getDiagramsError", modelResource.toString()); //$NON-NLS-1$
             UiConstants.Util.log(IStatus.ERROR, e, message);
         }
-        if( iter != null ) {
+        if (iter != null) {
             Diagram nextDiagram = null;
-            while( iter.hasNext() ) {
+            while (iter.hasNext()) {
                 nextDiagram = (Diagram)iter.next();
-                if( nextDiagram.getType() != null &&
-                    nextDiagram.getType().equals(diagramType))
-                    return nextDiagram;
+                if (nextDiagram.getType() != null && nextDiagram.getType().equals(diagramType)) return nextDiagram;
             }
         }
         // Couldn't find one so create one
@@ -130,94 +129,96 @@ public class ShowDetailedMappingDiagramAction extends MappingAction {
         boolean succeeded = false;
         try {
             requiresStart = ModelerCore.startTxn(false, true, "Create Transformation Diagram", this); //$NON-NLS-1$
-            
+
             Diagram depDiagram = modelResource.getModelDiagrams().createNewDiagram(eObject, true); // Do Not persist this diagram.
             depDiagram.setType(diagramType);
             succeeded = true;
             return depDiagram;
         } catch (ModelWorkspaceException mwe) {
-            String message = UiConstants.Util.getString("ShowDetailedMappingDiagram.createMappingDiagramError", modelResource.toString());  //$NON-NLS-1$
+            String message = UiConstants.Util.getString("ShowDetailedMappingDiagram.createMappingDiagramError", modelResource.toString()); //$NON-NLS-1$
             UiConstants.Util.log(IStatus.ERROR, mwe, message);
         } finally {
-            if( requiresStart ) {
-                if ( succeeded ) {
-                    ModelerCore.commitTxn( );
+            if (requiresStart) {
+                if (succeeded) {
+                    ModelerCore.commitTxn();
                 } else {
-                    ModelerCore.rollbackTxn( );
+                    ModelerCore.rollbackTxn();
                 }
             }
         }
-        
+
         return null;
     }
 
-    //============================================================================================================================
+    // ============================================================================================================================
     // Declared Methods
-    
+
     /**
      * @since 4.0
      */
     private void determineEnablement() {
         final EObject eObject = SelectionUtilities.getSelectedEObject(getSelection());
-        if( eObject != null && wasMappingClassSelected(eObject) ) {
+        if (eObject != null && wasMappingClassSelected(eObject)) {
             // See if it has a transformation object:
             ModelResource modelResource = ModelUtilities.getModelResourceForModelObject(eObject);
-            if( modelResource != null && ModelUtilities.isVirtual(modelResource)) {
-              setEnabled(true);
-              return;
+            if (modelResource != null && ModelUtilities.isVirtual(modelResource)) {
+                setEnabled(true);
+                return;
             }
         }
 
         setEnabled(false);
     }
-    
-    private static ModelEditor getModelEditorForObject(EObject object, boolean forceOpen) {
+
+    private static ModelEditor getModelEditorForObject( EObject object,
+                                                        boolean forceOpen ) {
         ModelEditor result = null;
-        
-        IFile file = null; 
+
+        IFile file = null;
         ModelResource mdlRsrc = ModelUtilities.getModelResourceForModelObject(object);
-        if ( mdlRsrc != null){
-            file = (IFile) mdlRsrc.getResource();
+        if (mdlRsrc != null) {
+            file = (IFile)mdlRsrc.getResource();
             result = getModelEditorForFile(file, forceOpen);
         }
         return result;
     }
-    
+
     // =============================================
     // Private Methods
 
-    private static ModelEditor getModelEditorForFile(IFile file, boolean forceOpen) {
+    private static ModelEditor getModelEditorForFile( IFile file,
+                                                      boolean forceOpen ) {
         ModelEditor result = null;
-        if ( file != null ) {
+        if (file != null) {
             IWorkbenchPage page = UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage();
-            if ( page != null ) {
+            if (page != null) {
                 // look through the open editors and see if there is one available for this model file.
                 IEditorReference[] editors = page.getEditorReferences();
-                for ( int i=0 ; i<editors.length ; ++i ) {
+                for (int i = 0; i < editors.length; ++i) {
                     IEditorPart editor = editors[i].getEditor(false);
-                    if ( editor != null ) {
+                    if (editor != null) {
                         IEditorInput input = editor.getEditorInput();
-                        if ( input instanceof IFileEditorInput ) {
-                            if ( file.equals(((IFileEditorInput) input).getFile()) ) {
+                        if (input instanceof IFileEditorInput) {
+                            if (file.equals(((IFileEditorInput)input).getFile())) {
                                 // found it;
-                                if ( editor instanceof ModelEditor ) {
-                                    result = (ModelEditor) editor;
+                                if (editor instanceof ModelEditor) {
+                                    result = (ModelEditor)editor;
                                 }
                                 break;
                             }
                         }
                     }
                 }
-            
-                if ( result == null && forceOpen) {
 
-                    // there is no editor open for this object.  Open one and hand it the double-click target.
+                if (result == null && forceOpen) {
+
+                    // there is no editor open for this object. Open one and hand it the double-click target.
                     try {
-						IEditorPart editor = IDE.openEditor(page, file);
-                        if ( editor instanceof ModelEditor ) {
-                            result = (ModelEditor) editor;
+                        IEditorPart editor = IDE.openEditor(page, file);
+                        if (editor instanceof ModelEditor) {
+                            result = (ModelEditor)editor;
                         }
-    
+
                     } catch (PartInitException e) {
                         e.printStackTrace();
                     }

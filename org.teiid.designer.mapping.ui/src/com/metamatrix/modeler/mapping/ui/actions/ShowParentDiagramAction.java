@@ -16,7 +16,7 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
-import com.metamatrix.modeler.diagram.ui.drawing.actions.DrawingAction;
+import com.metamatrix.modeler.diagram.ui.actions.DiagramEditorAction;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.mapping.ui.PluginConstants;
@@ -28,7 +28,7 @@ import com.metamatrix.ui.internal.util.UiUtil;
 /**
  * ShowParentDiagramAction
  */
-public class ShowParentDiagramAction extends DrawingAction {
+public class ShowParentDiagramAction extends DiagramEditorAction {
     private static final String textString = "com.metamatrix.modeler.mapping.ui.actions.ShowParentDiagramAction.text";  //$NON-NLS-1$
     private static final String toolTipString = "com.metamatrix.modeler.mapping.ui.actions.ShowParentDiagramAction.toolTip";  //$NON-NLS-1$
     /**
@@ -99,7 +99,7 @@ public class ShowParentDiagramAction extends DrawingAction {
                                   while( iter.hasNext() && parentDiagram == null ) {
                                       nextDiagram = (Diagram)iter.next();
                                       if( nextDiagram.getType() != null 
-                                       && nextDiagram.getType().equals(com.metamatrix.modeler.internal.diagram.ui.PluginConstants.PACKAGE_DIAGRAM_TYPE_ID) ) {
+                                       && nextDiagram.getType().equals(com.metamatrix.modeler.diagram.ui.PluginConstants.PACKAGE_DIAGRAM_TYPE_ID) ) {
                                           parentDiagram = nextDiagram;
                                       } // endif
                                   } // endwhile

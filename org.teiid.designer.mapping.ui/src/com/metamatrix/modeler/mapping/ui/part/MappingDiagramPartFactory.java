@@ -17,8 +17,6 @@ import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.diagram.ui.connection.AnchorManager;
 import com.metamatrix.modeler.diagram.ui.connection.ChopBoxAnchorManager;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionEditPart;
-import com.metamatrix.modeler.diagram.ui.drawing.DrawingPartFactory;
-import com.metamatrix.modeler.diagram.ui.drawing.model.DrawingModelNode;
 import com.metamatrix.modeler.diagram.ui.figure.DiagramFigureFactory;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.model.LabelModelNode;
@@ -54,7 +52,7 @@ import com.metamatrix.modeler.transformation.ui.part.TransformationLinkEditPart;
  * TransformationPartFactory
  */
 public class MappingDiagramPartFactory extends AbstractDiagramEditPartFactory implements UiConstants {
-    private DrawingPartFactory drawingPartFactory;
+
     private DiagramFigureFactory figureFactory;
     private static final String diagramTypeId = PluginConstants.MAPPING_DIAGRAM_TYPE_ID;
 
@@ -66,13 +64,9 @@ public class MappingDiagramPartFactory extends AbstractDiagramEditPartFactory im
                                     Object iModel ) {
         EditPart editPart = null;
 
-        if (drawingPartFactory == null) drawingPartFactory = new DrawingPartFactory();
-
         if (figureFactory == null) figureFactory = new MappingDiagramFigureFactory();
 
-        if (iModel instanceof DrawingModelNode) {
-            editPart = drawingPartFactory.createEditPart(iContext, iModel);
-        } else if (iModel instanceof MappingDiagramNode) {
+        if (iModel instanceof MappingDiagramNode) {
             editPart = new MappingDiagramEditPart();
             ((AbstractDiagramEditPart)editPart).setFigureFactory(figureFactory);
             Object transform = getTransformation(iModel);

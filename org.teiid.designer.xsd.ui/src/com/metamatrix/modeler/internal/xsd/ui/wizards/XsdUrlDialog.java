@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import com.metamatrix.common.protocol.URLHelper;
 import com.metamatrix.core.util.StringUtil;
-import com.metamatrix.metamodels.core.util.UriValidator;
 import com.metamatrix.modeler.ui.IHelpContextIds;
 import com.metamatrix.modeler.xsd.ui.ModelerXsdUiConstants;
 import com.metamatrix.ui.internal.util.UiUtil;
@@ -49,23 +48,6 @@ public class XsdUrlDialog extends Dialog implements IHelpContextIds, ModelerXsdU
      */
     private static final String I18N_PREFIX = "XsdUrlDialog"; //$NON-NLS-1$
     private static final String SEPARATOR = "."; //$NON-NLS-1$
-
-    interface StatusCodes extends UriValidator.StatusCodes {
-        /**
-         * Indicates the current value is unchanged from the original value.
-         */
-        int NO_CHANGE = 1000;
-
-        /**
-         * Indicates the current value is empty and will clear the URI.
-         */
-        int CLEAR_VALUE = 1010;
-
-        /**
-         * Indicates the original value has been changed to a non-empty value.
-         */
-        int CHANGED_VALUE = 1020;
-    }
 
     /**
      * Utility method to obtain Properties values.

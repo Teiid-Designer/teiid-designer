@@ -11,7 +11,6 @@ import org.eclipse.gef.EditPart;
 import com.metamatrix.modeler.diagram.ui.connection.AnchorManager;
 import com.metamatrix.modeler.diagram.ui.connection.BlockAnchorManager;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionEditPart;
-import com.metamatrix.modeler.diagram.ui.drawing.DrawingPartFactory;
 import com.metamatrix.modeler.diagram.ui.figure.DiagramFigureFactory;
 import com.metamatrix.modeler.diagram.ui.part.AbstractDiagramEditPart;
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
@@ -22,36 +21,34 @@ import com.metamatrix.modeler.relationship.ui.part.RelationshipDiagramPartFactor
  * PackageDiagramPartFactory
  */
 public class CustomDiagramPartFactory extends RelationshipDiagramPartFactory {
-    private DrawingPartFactory drawingPartFactory;
+
     private DiagramFigureFactory figureFactory;
     private static final String diagramTypeId = PluginConstants.CUSTOM_RELATIONSHIP_DIAGRAM_TYPE_ID;
-    
+
     @Override
     public EditPart createEditPart( EditPart iContext,
                                     Object iModel ) {
         EditPart editPart = null;
 
-        if (drawingPartFactory == null) drawingPartFactory = new DrawingPartFactory();
-        
         if (figureFactory == null) figureFactory = new CustomDiagramFigureFactory();
-            
-        if( iModel instanceof CustomDiagramNode ) {
+
+        if (iModel instanceof CustomDiagramNode) {
             editPart = new CustomDiagramEditPart();
             ((AbstractDiagramEditPart)editPart).setFigureFactory(figureFactory);
         } else {
             editPart = super.createEditPart(iContext, iModel);
             if (editPart instanceof AbstractDiagramEditPart) ((AbstractDiagramEditPart)editPart).setFigureFactory(figureFactory);
         }
-        
-        if (editPart != null ) {
-            if( editPart instanceof DiagramEditPart ) {
+
+        if (editPart != null) {
+            if (editPart instanceof DiagramEditPart) {
                 editPart.setModel(iModel);
-                ((DiagramEditPart)editPart).setNotationId( getNotationId());
+                ((DiagramEditPart)editPart).setNotationId(getNotationId());
                 ((DiagramEditPart)editPart).setSelectionHandler(getSelectionHandler());
                 ((DiagramEditPart)editPart).setDiagramTypeId(diagramTypeId);
             }
         } else {
-//            ModelerCore.Util.log( IStatus.ERROR, Util.getString(Errors.EDIT_PART_FAILURE));
+            // ModelerCore.Util.log( IStatus.ERROR, Util.getString(Errors.EDIT_PART_FAILURE));
         }
 
         return editPart;
@@ -64,12 +61,12 @@ public class CustomDiagramPartFactory extends RelationshipDiagramPartFactory {
     public NodeConnectionEditPart getConnectionEditPart() {
         return null;
     }
-    
+
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.part.DiagramEditPartFactory#getAnchorManager(com.metamatrix.modeler.diagram.ui.part.DiagramEditPart)
      */
     @Override
-    public AnchorManager getAnchorManager(DiagramEditPart editPart) {
+    public AnchorManager getAnchorManager( DiagramEditPart editPart ) {
         return new BlockAnchorManager(editPart);
     }
 }

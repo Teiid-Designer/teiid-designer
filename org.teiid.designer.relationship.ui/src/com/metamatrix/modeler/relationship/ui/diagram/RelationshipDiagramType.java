@@ -252,7 +252,7 @@ public class RelationshipDiagramType extends AbstractDiagramType {
 	 */
 	@Override
     public boolean isDiagramTooLarge(Diagram diagram) {
-	    int maxLimit = DiagramUiPlugin.getDefault().getPreferenceStore().getInt(com.metamatrix.modeler.internal.diagram.ui.PluginConstants.Prefs.LARGE_MODEL_SIZE);
+	    int maxLimit = DiagramUiPlugin.getDefault().getPreferenceStore().getInt(com.metamatrix.modeler.diagram.ui.PluginConstants.Prefs.LARGE_MODEL_SIZE);
 	    int nObjects = getDiagramObjectCount(diagram);
 		boolean tooLarge = nObjects > maxLimit;
 		if( tooLarge ) {

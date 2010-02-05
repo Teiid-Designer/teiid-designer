@@ -40,12 +40,6 @@
 	<extension point="org.eclipse.help.contexts">
 		<contexts file="helpContexts.xml"  />
 	</extension>
-<extension
-       point="org.eclipse.ui.views">
-    <category
-          id="webservice.ui.advisor"
-          name="%advisorViewCategory"/>
- </extension>
 
 <!-- Special IMarker used to show VDB execution errors -->
    <extension
