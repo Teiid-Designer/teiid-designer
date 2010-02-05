@@ -15,7 +15,6 @@ Export-Package: com.metamatrix.core,
  com.metamatrix.core.modeler.util,
  com.metamatrix.core.plugin,
  com.metamatrix.core.selection,
- com.metamatrix.core.tree,
  com.metamatrix.core.util,
  com.metamatrix.modeler.core
 Require-Bundle: org.eclipse.core.runtime,
