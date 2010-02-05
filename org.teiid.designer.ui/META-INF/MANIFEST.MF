@@ -9,9 +9,7 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.internal.ui,
  com.metamatrix.modeler.internal.ui.actions,
- com.metamatrix.modeler.internal.ui.actions.help,
  com.metamatrix.modeler.internal.ui.actions.workers,
- com.metamatrix.modeler.internal.ui.cheatsheets,
  com.metamatrix.modeler.internal.ui.editors,
  com.metamatrix.modeler.internal.ui.explorer,
  com.metamatrix.modeler.internal.ui.favorites,
