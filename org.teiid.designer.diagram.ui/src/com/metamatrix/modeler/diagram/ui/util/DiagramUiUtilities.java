@@ -45,14 +45,13 @@ import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlPackage;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.connection.BinaryAssociation;
 import com.metamatrix.modeler.diagram.ui.connection.DiagramUmlAssociation;
 import com.metamatrix.modeler.diagram.ui.connection.DiagramUmlDependency;
 import com.metamatrix.modeler.diagram.ui.connection.DiagramUmlGeneralization;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionEditPart;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;
-import com.metamatrix.modeler.diagram.ui.drawing.DrawingConstants;
-import com.metamatrix.modeler.diagram.ui.drawing.model.DrawingModelNode;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramEditor;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramEditorUtil;
 import com.metamatrix.modeler.diagram.ui.figure.DiagramFigure;
@@ -64,7 +63,6 @@ import com.metamatrix.modeler.diagram.ui.notation.uml.model.UmlClassifierNode;
 import com.metamatrix.modeler.diagram.ui.notation.uml.part.UmlClassifierContainerEditPart;
 import com.metamatrix.modeler.diagram.ui.notation.uml.part.UmlClassifierEditPart;
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.util.DiagramProxy;
 import com.metamatrix.modeler.internal.ui.viewsupport.MarkerUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
@@ -393,27 +391,9 @@ public class DiagramUiUtilities {
     }
 
     public static boolean isNonDrawingDiagramObject( EObject eObject ) {
-        if ((eObject instanceof DiagramContainer || eObject instanceof Diagram || eObject instanceof DiagramEntity)
-            && !isDrawingObject(eObject)) return true;
+        if ((eObject instanceof DiagramContainer || eObject instanceof Diagram || eObject instanceof DiagramEntity)) return true;
 
         return false;
-    }
-
-    public static boolean isDrawingObject( EObject eObject ) {
-        boolean result = false;
-        if (eObject instanceof DiagramEntity) {
-            DiagramEntity de = (DiagramEntity)eObject;
-            String userType = de.getUserType();
-
-            if (userType != null) {
-                if (userType.equals(DrawingConstants.Types.ELLIPSE) || userType.equals(DrawingConstants.Types.NOTE)
-                    || userType.equals(DrawingConstants.Types.RECTANGLE) || userType.equals(DrawingConstants.Types.TEXT)) {
-                    result = true;
-                }
-            }
-        }
-
-        return result;
     }
 
     public static boolean isPackageDiagram( EObject eObject ) {
@@ -683,8 +663,7 @@ public class DiagramUiUtilities {
         DiagramModelNode nextDiagramNode = null;
         while (iter.hasNext()) {
             nextObject = iter.next();
-            if (nextObject instanceof DiagramModelNode && !(nextObject instanceof AbstractFreeDiagramModelNode)
-                && !(nextObject instanceof DrawingModelNode)) {
+            if (nextObject instanceof DiagramModelNode && !(nextObject instanceof AbstractFreeDiagramModelNode)) {
                 nextDiagramNode = (DiagramModelNode)nextObject;
                 if (!diagramNodeIsLinked(nextDiagramNode) && nonConnectedNodes.get(nextDiagramNode) == null) nonConnectedNodes.put(nextDiagramNode,
                                                                                                                                    "x"); //$NON-NLS-1$

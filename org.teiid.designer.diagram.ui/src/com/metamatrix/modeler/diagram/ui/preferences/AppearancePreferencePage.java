@@ -16,7 +16,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 
 /**
  * This class represents the preference page for setting the

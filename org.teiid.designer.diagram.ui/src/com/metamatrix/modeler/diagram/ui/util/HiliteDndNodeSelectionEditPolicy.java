@@ -23,13 +23,13 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.association.AssociationDescriptor;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramViewer;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.notation.uml.part.SetAssociationCommand;
 import com.metamatrix.modeler.diagram.ui.part.AbstractDefaultEditPart;
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
 import com.metamatrix.modeler.diagram.ui.part.DropEditPart;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 
 /**
