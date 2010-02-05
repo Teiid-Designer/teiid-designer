@@ -12,9 +12,9 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.RGB;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.actions.ScaledFontManager;
 import com.metamatrix.modeler.diagram.ui.pakkage.PackageDiagramEditPart;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.ui.graphics.GlobalUiColorManager;
 
 /**

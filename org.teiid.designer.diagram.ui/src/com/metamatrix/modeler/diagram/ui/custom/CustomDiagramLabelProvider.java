@@ -24,7 +24,7 @@ import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.MarkerUtilities;
 /**
  * PackageDiagramLabelProvider

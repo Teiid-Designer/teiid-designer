@@ -31,8 +31,8 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;
-import com.metamatrix.modeler.diagram.ui.drawing.DrawingModelFactory;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramEditorUtil;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelFactoryImpl;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
@@ -41,7 +41,6 @@ import com.metamatrix.modeler.diagram.ui.notation.NotationModelGenerator;
 import com.metamatrix.modeler.diagram.ui.notation.uml.model.UmlClassifierNode;
 import com.metamatrix.modeler.diagram.ui.util.DiagramEntityManager;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 
@@ -152,9 +151,6 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
             monitor.subTask("Creating Model Components"); //$NON-NLS-1$
             showProgress = true;
         }
-
-        // Get Drawing Nodes
-        List drawingNodes = DrawingModelFactory.getDrawingNodes(diagram, diagramModelNode);
 
         if (!contents.isEmpty()) {
             iStage = 1;
@@ -278,8 +274,6 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
                 }
             }
         }
-
-        if (!drawingNodes.isEmpty()) diagramModelNode.addChildren(drawingNodes);
 
         return diagramModelNode;
     }

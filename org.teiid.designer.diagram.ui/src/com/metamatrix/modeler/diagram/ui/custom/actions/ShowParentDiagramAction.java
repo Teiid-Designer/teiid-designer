@@ -20,16 +20,16 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
-import com.metamatrix.modeler.diagram.ui.drawing.actions.DrawingAction;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
+import com.metamatrix.modeler.diagram.ui.actions.DiagramEditorAction;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
 
 /**
  * ShowParentDiagramAction
  */
-public class ShowParentDiagramAction extends DrawingAction {
+public class ShowParentDiagramAction extends DiagramEditorAction {
 
 	/**
 	 * Construct an instance of ShowParentDiagramAction.

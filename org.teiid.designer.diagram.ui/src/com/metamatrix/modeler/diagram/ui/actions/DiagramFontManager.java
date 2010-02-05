@@ -13,9 +13,9 @@ import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramViewer;
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.ui.internal.util.UiUtil;
 
 /**

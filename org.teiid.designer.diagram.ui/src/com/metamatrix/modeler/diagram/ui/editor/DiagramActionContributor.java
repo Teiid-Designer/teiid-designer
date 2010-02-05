@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package com.metamatrix.modeler.internal.diagram.ui.editor;
+package com.metamatrix.modeler.diagram.ui.editor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,8 +43,6 @@ import com.metamatrix.modeler.diagram.ui.actions.ZoomComboActionContributeItem;
 import com.metamatrix.modeler.diagram.ui.actions.ZoomComboWrapper;
 import com.metamatrix.modeler.diagram.ui.actions.ZoomInWrapper;
 import com.metamatrix.modeler.diagram.ui.actions.ZoomOutWrapper;
-import com.metamatrix.modeler.diagram.ui.editor.DiagramEditor;
-import com.metamatrix.modeler.diagram.ui.editor.IDiagramActionAdapter;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditorSite;
 import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
 import com.metamatrix.modeler.ui.actions.ModelerActionBarIdManager;

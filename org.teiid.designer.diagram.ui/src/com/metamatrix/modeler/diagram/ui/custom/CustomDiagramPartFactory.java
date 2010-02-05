@@ -9,11 +9,11 @@ package com.metamatrix.modeler.diagram.ui.custom;
 
 //import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gef.EditPart;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.figure.DiagramFigureFactory;
 import com.metamatrix.modeler.diagram.ui.pakkage.PackageDiagramPartFactory;
 import com.metamatrix.modeler.diagram.ui.part.AbstractDiagramEditPart;
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 
 /**
  * PackageDiagramPartFactory

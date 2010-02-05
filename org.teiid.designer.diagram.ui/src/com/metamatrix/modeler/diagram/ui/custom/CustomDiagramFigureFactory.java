@@ -16,9 +16,9 @@ import org.eclipse.swt.graphics.RGB;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.figure.AbstractDiagramFigureFactory;
 import com.metamatrix.modeler.diagram.ui.notation.NotationFigureGenerator;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.ui.graphics.GlobalUiColorManager;
 
 /**

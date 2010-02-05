@@ -27,6 +27,7 @@ import org.eclipse.swt.graphics.RGB;
 import com.metamatrix.metamodels.diagram.DiagramLinkType;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.actions.ScaledFontManager;
 import com.metamatrix.modeler.diagram.ui.connection.BlockConnectionRouter;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;
@@ -40,7 +41,6 @@ import com.metamatrix.modeler.diagram.ui.part.LabelEditPart;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
 import com.metamatrix.modeler.diagram.ui.util.DiagramXYLayoutEditPolicy;
 import com.metamatrix.modeler.diagram.ui.util.LassoDragTracker;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.ui.IDiagramTypeEditPart;
 import com.metamatrix.ui.graphics.GlobalUiColorManager;
 

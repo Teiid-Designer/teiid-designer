@@ -12,13 +12,13 @@ import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.diagram.ui.AbstractDiagramType;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.custom.actions.CustomDiagramActionAdapter;
 import com.metamatrix.modeler.diagram.ui.editor.IDiagramActionAdapter;
 import com.metamatrix.modeler.diagram.ui.figure.DiagramFigureFactory;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelFactory;
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPartFactory;
 import com.metamatrix.modeler.diagram.ui.preferences.DiagramColorObject;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.ui.editors.ModelEditorPage;
 

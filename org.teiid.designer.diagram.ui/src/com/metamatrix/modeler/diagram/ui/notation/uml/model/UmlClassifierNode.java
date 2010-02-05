@@ -24,6 +24,7 @@ import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlOperation;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlProperty;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.connection.BinaryAssociation;
 import com.metamatrix.modeler.diagram.ui.connection.DiagramUmlAssociation;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;
@@ -33,7 +34,6 @@ import com.metamatrix.modeler.diagram.ui.model.ExpandableNode;
 import com.metamatrix.modeler.diagram.ui.part.ExpandableDiagram;
 import com.metamatrix.modeler.diagram.ui.util.DiagramEntityAdapter;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 
 /**

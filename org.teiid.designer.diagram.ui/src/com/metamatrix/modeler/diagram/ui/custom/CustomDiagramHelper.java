@@ -14,7 +14,7 @@ import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlPackage;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.DiagramHelper;
 
 /**

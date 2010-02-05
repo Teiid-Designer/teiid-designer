@@ -22,17 +22,14 @@ import com.metamatrix.modeler.diagram.ui.notation.NotationFigureGenerator;
 import com.metamatrix.modeler.diagram.ui.notation.NotationModelGenerator;
 import com.metamatrix.modeler.diagram.ui.notation.NotationPartGenerator;
 import com.metamatrix.modeler.diagram.ui.preferences.NotationIDAndName;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 
 /**
  * DiagramNotationManager - instantiates and provides access to the extensions that control Notation; Each must supply an
  * EditPartGenerator, DiagramModelGenerator and FigureGenerator. - Reflects user's choice/preference of available Notation
  * extensions - Supports the generation of dynamic Actions representing the available Notation extensions
  */
-public class DiagramNotationManager implements
-                                   PluginConstants,
-                                   DiagramUiConstants,
-                                   NotationChangeListener {
+public class DiagramNotationManager
+    implements PluginConstants, DiagramUiConstants, DiagramUiConstants.ExtensionPoints, NotationChangeListener {
 
     private NotationPartGenerator depfCurrentPartGenerator;
     private NotationModelGenerator dmfCurrentModelGenerator;
@@ -50,18 +47,18 @@ public class DiagramNotationManager implements
     private HashMap<String, IConfigurationElement> hmDiagramModelGeneratorElements;
     private HashMap<String, IConfigurationElement> hmFigureGeneratorElements;
 
-    //    private ArrayList arylNotationActions;
+    // private ArrayList arylNotationActions;
     private NotationChangeListener nclNotationListener;
 
-    //    private String sNotationId;
+    // private String sNotationId;
 
     public DiagramNotationManager() {
         loadNotationExtensions();
         establishInitialNotationExtension();
-        //        setNotationChangeListener( this );
+        // setNotationChangeListener( this );
     }
 
-    public String getExtensionDisplayName(String sExtensionId) {
+    public String getExtensionDisplayName( String sExtensionId ) {
         IExtension ex = hmExtensions.get(sExtensionId);
 
         if (ex != null) {
@@ -85,14 +82,14 @@ public class DiagramNotationManager implements
         return depfCurrentPartGenerator;
     }
 
-    public NotationPartGenerator getEditPartGenerator(String sExtensionId) {
+    public NotationPartGenerator getEditPartGenerator( String sExtensionId ) {
 
         NotationPartGenerator depf = getEditPartGeneratorClassExecutable(sExtensionId);
 
         return depf;
     }
 
-    public void setEditPartGenerator(NotationPartGenerator epfGenerator) {
+    public void setEditPartGenerator( NotationPartGenerator epfGenerator ) {
         this.depfCurrentPartGenerator = epfGenerator;
 
     }
@@ -106,12 +103,12 @@ public class DiagramNotationManager implements
 
     }
 
-    public NotationModelGenerator getDiagramModelGenerator(String sExtensionId) {
+    public NotationModelGenerator getDiagramModelGenerator( String sExtensionId ) {
 
         return getDiagramModelGeneratorClassExecutable(sExtensionId);
     }
 
-    public void setDiagramModelGenerator(NotationModelGenerator dmfGenerator) {
+    public void setDiagramModelGenerator( NotationModelGenerator dmfGenerator ) {
         this.dmfCurrentModelGenerator = dmfGenerator;
 
     }
@@ -123,12 +120,12 @@ public class DiagramNotationManager implements
         return fgfCurrentFigureGenerator;
     }
 
-    public NotationFigureGenerator getFigureGenerator(String sExtensionId) {
+    public NotationFigureGenerator getFigureGenerator( String sExtensionId ) {
 
         return getFigureGeneratorClassExecutable(sExtensionId);
     }
 
-    public void setFigureGenerator(NotationFigureGenerator fgfGenerator) {
+    public void setFigureGenerator( NotationFigureGenerator fgfGenerator ) {
         this.fgfCurrentFigureGenerator = fgfGenerator;
 
     }
@@ -143,7 +140,7 @@ public class DiagramNotationManager implements
         hmFigureGeneratorElements = new HashMap<String, IConfigurationElement>();
         notationSelectionList = new ArrayList<NotationIDAndName>(exExtensions.length);
         // process each extension
-        for (int iExtensionIndex = 0; iExtensionIndex < exExtensions.length; iExtensionIndex++ ) {
+        for (int iExtensionIndex = 0; iExtensionIndex < exExtensions.length; iExtensionIndex++) {
 
             hmExtensions.put(exExtensions[iExtensionIndex].getUniqueIdentifier(), exExtensions[iExtensionIndex]);
 
@@ -152,32 +149,31 @@ public class DiagramNotationManager implements
             String sElementName = null;
 
             // process each element within this extension
-            for (int iElementIndex = 0; iElementIndex < elements.length; iElementIndex++ ) {
+            for (int iElementIndex = 0; iElementIndex < elements.length; iElementIndex++) {
                 sElementName = elements[iElementIndex].getName();
 
                 // determine which element, then save the classname in that array
 
-                if (sElementName.equals(ExtensionPoints.DiagramNotation.EDIT_PART_GENERATOR_ELEMENT)) {
-                    //                    Util.log( IStatus.INFO, "[DiagramNotationManager.loadNotationExtensions] 'put'-ing to
+                if (sElementName.equals(DiagramNotation.EDIT_PART_GENERATOR_ELEMENT)) {
+                    // Util.log( IStatus.INFO, "[DiagramNotationManager.loadNotationExtensions] 'put'-ing to
                     // hmEditPartGeneratorElements; key is: " + sExtensionId + " content is: " + elements[ iElementIndex ]);
                     hmEditPartGeneratorElements.put(sExtensionId, elements[iElementIndex]);
-                } else if (sElementName.equals(ExtensionPoints.DiagramNotation.DIAGRAM_MODEL_GENERATOR_ELEMENT)) {
-                    //                    Util.log( IStatus.INFO, "[DiagramNotationManager.loadNotationExtensions] 'put'-ing to
+                } else if (sElementName.equals(DiagramNotation.DIAGRAM_MODEL_GENERATOR_ELEMENT)) {
+                    // Util.log( IStatus.INFO, "[DiagramNotationManager.loadNotationExtensions] 'put'-ing to
                     // hmDiagramModelGeneratorElements; key is: " + sExtensionId + " content is: " + elements[ iElementIndex ]);
                     hmDiagramModelGeneratorElements.put(sExtensionId, elements[iElementIndex]);
-                } else if (sElementName.equals(ExtensionPoints.DiagramNotation.FIGURE_GENERATOR_ELEMENT)) {
-                    //                    Util.log( IStatus.INFO, "[DiagramNotationManager.loadNotationExtensions] 'put'-ing to
+                } else if (sElementName.equals(DiagramNotation.FIGURE_GENERATOR_ELEMENT)) {
+                    // Util.log( IStatus.INFO, "[DiagramNotationManager.loadNotationExtensions] 'put'-ing to
                     // hmFigureGeneratorElements; key is: " + sExtensionId + " content is: " + elements[ iElementIndex ]);
                     hmFigureGeneratorElements.put(sExtensionId, elements[iElementIndex]);
                 }
-                if (sElementName.equals(ExtensionPoints.DiagramNotation.NOTATION_PREFERENCES)) {
-                    //                    Util.log( IStatus.INFO, "[DiagramNotationManager.loadNotationExtensions] 'put'-ing to
+                if (sElementName.equals(DiagramNotation.NOTATION_PREFERENCES)) {
+                    // Util.log( IStatus.INFO, "[DiagramNotationManager.loadNotationExtensions] 'put'-ing to
                     // hmFigureGeneratorElements; key is: " + sExtensionId + " content is: " + elements[ iElementIndex ]);
-                    String displayName = elements[iElementIndex].getAttribute(ExtensionPoints.DiagramNotation.DISPLAY_NAME);
+                    String displayName = elements[iElementIndex].getAttribute(DiagramNotation.DISPLAY_NAME);
                     if (displayName != null) {
                         NotationIDAndName newIDandName = new NotationIDAndName(
-                                                                               exExtensions[iExtensionIndex]
-                                                                                                            .getSimpleIdentifier(),
+                                                                               exExtensions[iExtensionIndex].getSimpleIdentifier(),
                                                                                displayName);
                         notationSelectionList.add(newIDandName);
                     }
@@ -188,9 +184,9 @@ public class DiagramNotationManager implements
 
     private void establishInitialNotationExtension() {
         // 1. use what is established in user prefs
-        //        IPreferenceStore store = DiagramUiPlugin.getDefault().getPreferenceStore();
+        // IPreferenceStore store = DiagramUiPlugin.getDefault().getPreferenceStore();
 
-        String simpleExtensionID = PluginConstants.DEFAULT_DIAGRAM_NOTATION_ID; //store.getString(PluginConstants.Prefs.DIAGRAM_NOTATION);
+        String simpleExtensionID = PluginConstants.DEFAULT_DIAGRAM_NOTATION_ID; // store.getString(PluginConstants.Prefs.DIAGRAM_NOTATION);
 
         // OR 2. default to the first one in the plugins.xml (index = 0)
         // set the default index value, if we found any extensions
@@ -198,18 +194,16 @@ public class DiagramNotationManager implements
 
         if (exExtensions.length > 0) {
             boolean foundDefault = false;
-            for (int i = 0; i < exExtensions.length; i++ ) {
+            for (int i = 0; i < exExtensions.length; i++) {
                 String extensionID = exExtensions[i].getSimpleIdentifier();
                 if (extensionID.equals(simpleExtensionID)) {
                     foundDefault = true;
                     sCurrentExtensionUid = exExtensions[i].getUniqueIdentifier();
                 }
-                if (foundDefault)
-                    break;
+                if (foundDefault) break;
             }
-            if (!foundDefault)
-                sCurrentExtensionUid = exExtensions[0].getUniqueIdentifier();
-            //            Util.log( IStatus.INFO, "[DiagramNotationManager.getDiagramNotationExtensions] Selecting Default Extension: " +
+            if (!foundDefault) sCurrentExtensionUid = exExtensions[0].getUniqueIdentifier();
+            // Util.log( IStatus.INFO, "[DiagramNotationManager.getDiagramNotationExtensions] Selecting Default Extension: " +
             // sCurrentExtensionUid );
         }
 
@@ -218,29 +212,29 @@ public class DiagramNotationManager implements
     private IExtension[] getDiagramNotationExtensions() {
         if (exExtensions == null) {
 
-            IExtensionPoint epExtensionPoint = 
-                Platform.getExtensionRegistry().getExtensionPoint(DiagramUiConstants.PLUGIN_ID, ExtensionPoints.DiagramNotation.ID);
+            IExtensionPoint epExtensionPoint = Platform.getExtensionRegistry().getExtensionPoint(DiagramUiConstants.PLUGIN_ID,
+                                                                                                 DiagramNotation.ID);
 
             exExtensions = epExtensionPoint.getExtensions();
         }
         return exExtensions;
     }
 
-    private NotationPartGenerator getEditPartGeneratorClassExecutable(String sExtensionUid) {
+    private NotationPartGenerator getEditPartGeneratorClassExecutable( String sExtensionUid ) {
         Object oExecutableExtension = null;
         IConfigurationElement ceElement = null;
 
         try {
             ceElement = hmEditPartGeneratorElements.get(sExtensionUid);
 
-            //            if ( ceElement == null ) {
-            //                Util.log( IStatus.INFO, "[DiagramNotationManager.getEditPartGeneratorClassExecutable] ceElement is NULL! (Key is: "
+            // if ( ceElement == null ) {
+            // Util.log( IStatus.INFO, "[DiagramNotationManager.getEditPartGeneratorClassExecutable] ceElement is NULL! (Key is: "
             // + sExtensionUid );
-            //            } else {
-            //                Util.log( IStatus.INFO, "[DiagramNotationManager.getEditPartGeneratorClassExecutable] ceElement is NOT null (Key
+            // } else {
+            // Util.log( IStatus.INFO, "[DiagramNotationManager.getEditPartGeneratorClassExecutable] ceElement is NOT null (Key
             // is: " + sExtensionUid );
-            //            }
-            oExecutableExtension = ceElement.createExecutableExtension(ExtensionPoints.DiagramNotation.CLASS_NAME);
+            // }
+            oExecutableExtension = ceElement.createExecutableExtension(DiagramNotation.CLASS_NAME);
 
         } catch (CoreException ce) {
             ce.printStackTrace();
@@ -252,20 +246,20 @@ public class DiagramNotationManager implements
         return null;
     }
 
-    private NotationModelGenerator getDiagramModelGeneratorClassExecutable(String sExtensionUid) {
+    private NotationModelGenerator getDiagramModelGeneratorClassExecutable( String sExtensionUid ) {
         Object oExecutableExtension = null;
         IConfigurationElement ceElement = null;
 
         try {
             ceElement = hmDiagramModelGeneratorElements.get(sExtensionUid);
-            //           if ( ceElement == null ) {
-            //               Util.log( IStatus.INFO, "[DiagramNotationManager.getDiagramModelGeneratorClassExecutable] ceElement is NULL!: (Key
+            // if ( ceElement == null ) {
+            // Util.log( IStatus.INFO, "[DiagramNotationManager.getDiagramModelGeneratorClassExecutable] ceElement is NULL!: (Key
             // is: " + sExtensionUid );
-            //           } else {
-            //               Util.log( IStatus.INFO, "[DiagramNotationManager.getDiagramModelGeneratorClassExecutable] ceElement is NOT null
+            // } else {
+            // Util.log( IStatus.INFO, "[DiagramNotationManager.getDiagramModelGeneratorClassExecutable] ceElement is NOT null
             // (Key is: " + sExtensionUid );
-            //           }
-            oExecutableExtension = ceElement.createExecutableExtension(ExtensionPoints.DiagramNotation.CLASS_NAME);
+            // }
+            oExecutableExtension = ceElement.createExecutableExtension(DiagramNotation.CLASS_NAME);
 
         } catch (CoreException ce) {
             ce.printStackTrace();
@@ -277,20 +271,20 @@ public class DiagramNotationManager implements
         return null;
     }
 
-    private NotationFigureGenerator getFigureGeneratorClassExecutable(String sExtensionUid) {
+    private NotationFigureGenerator getFigureGeneratorClassExecutable( String sExtensionUid ) {
         Object oExecutableExtension = null;
         IConfigurationElement ceElement = null;
 
         try {
             ceElement = hmFigureGeneratorElements.get(sExtensionUid);
-            //           if ( ceElement == null ) {
-            //               Util.log( IStatus.INFO, "[DiagramNotationManager.getFigureGeneratorClassExecutable] ceElement is NULL!: (Key is: "
+            // if ( ceElement == null ) {
+            // Util.log( IStatus.INFO, "[DiagramNotationManager.getFigureGeneratorClassExecutable] ceElement is NULL!: (Key is: "
             // + sExtensionUid );
-            //           } else {
-            //               Util.log( IStatus.INFO, "[DiagramNotationManager.getFigureGeneratorClassExecutable] ceElement is NOT null (Key is:
+            // } else {
+            // Util.log( IStatus.INFO, "[DiagramNotationManager.getFigureGeneratorClassExecutable] ceElement is NOT null (Key is:
             // " + sExtensionUid );
-            //           }
-            oExecutableExtension = ceElement.createExecutableExtension(ExtensionPoints.DiagramNotation.CLASS_NAME);
+            // }
+            oExecutableExtension = ceElement.createExecutableExtension(DiagramNotation.CLASS_NAME);
 
         } catch (CoreException ce) {
             ce.printStackTrace();
@@ -302,7 +296,7 @@ public class DiagramNotationManager implements
         return null;
     }
 
-    public void setLabelProvider(ILabelProvider provider) {
+    public void setLabelProvider( ILabelProvider provider ) {
         this.labelProvider = provider;
     }
 
@@ -310,7 +304,7 @@ public class DiagramNotationManager implements
         return this.labelProvider;
     }
 
-    public void setNotationChangeListener(NotationChangeListener nclNotationListener) {
+    public void setNotationChangeListener( NotationChangeListener nclNotationListener ) {
         this.nclNotationListener = nclNotationListener;
     }
 
@@ -318,15 +312,14 @@ public class DiagramNotationManager implements
         return nclNotationListener;
     }
 
-    public void setNotationId(String sNotationId) {
+    public void setNotationId( String sNotationId ) {
         // this method is obsolete for now; may return when we implement notation prefs.
 
     }
 
-    public MenuManager getNotationActionGroup(NotationChangeListener ncl,
-                                              String currentNotationId) {
-        if (exExtensions != null && exExtensions.length > 1)
-            return new NotationChoiceRadioActionGroup(ncl, currentNotationId);
+    public MenuManager getNotationActionGroup( NotationChangeListener ncl,
+                                               String currentNotationId ) {
+        if (exExtensions != null && exExtensions.length > 1) return new NotationChoiceRadioActionGroup(ncl, currentNotationId);
 
         return null;
     }
@@ -336,4 +329,3 @@ public class DiagramNotationManager implements
     }
 
 }
-

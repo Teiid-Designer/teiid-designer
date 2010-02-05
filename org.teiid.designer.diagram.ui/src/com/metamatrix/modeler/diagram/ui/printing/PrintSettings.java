@@ -10,8 +10,8 @@ package com.metamatrix.modeler.diagram.ui.printing;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.printing.PrinterData;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.preferences.DiagramPrintPreferencePage;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 
 
 public class PrintSettings implements

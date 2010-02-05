@@ -9,7 +9,7 @@ package com.metamatrix.modeler.diagram.ui.preferences;
 
 import org.eclipse.core.runtime.Preferences;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 
 /**
  * This class contains the Diagram Filter Settings and Groupings

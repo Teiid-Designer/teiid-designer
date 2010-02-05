@@ -26,16 +26,13 @@ import com.metamatrix.modeler.diagram.ui.editor.CanOpenContextException;
 import com.metamatrix.modeler.diagram.ui.pakkage.PackageDiagramProvider;
 import com.metamatrix.modeler.diagram.ui.preferences.DiagramColorObject;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * DiagramTypeManager - instantiates and provides access to the extensions that control Diagram Types Each must supply an
  * EditPartFactory, DiagramModelFactory and FigureFactory.
  */
-public class DiagramTypeManager implements
-                               PluginConstants,
-                               DiagramUiConstants {
+public class DiagramTypeManager implements PluginConstants, DiagramUiConstants, DiagramUiConstants.ExtensionPoints {
 
     private ILabelProvider labelProvider;
 
@@ -55,7 +52,7 @@ public class DiagramTypeManager implements
         loadAllExtensions();
     }
 
-    public String getExtensionDisplayName(String sExtensionId) {
+    public String getExtensionDisplayName( String sExtensionId ) {
         IExtension ex = hmExtensionsByExtensionId.get(sExtensionId);
 
         if (ex != null) {
@@ -64,12 +61,12 @@ public class DiagramTypeManager implements
         return "Unknown extension id..."; //$NON-NLS-1$     
     }
 
-    //    private List getExtensionIds() {
-    //        return new ArrayList(hmExtensionsByExtensionId.keySet());
-    //    }
+    // private List getExtensionIds() {
+    // return new ArrayList(hmExtensionsByExtensionId.keySet());
+    // }
 
     private void loadAllExtensions() {
-        //        Util.log( IStatus.INFO, "[DiagramTypeManager.loadNotationExtensions] TOP" );
+        // Util.log( IStatus.INFO, "[DiagramTypeManager.loadNotationExtensions] TOP" );
 
         IExtension[] exExtensions = getDiagramTypeExtensions();
 
@@ -78,7 +75,7 @@ public class DiagramTypeManager implements
         diagramTypeMap = new HashMap<String, IDiagramType>();
 
         // process each extension
-        for (int iExtensionIndex = 0; iExtensionIndex < exExtensions.length; iExtensionIndex++ ) {
+        for (int iExtensionIndex = 0; iExtensionIndex < exExtensions.length; iExtensionIndex++) {
 
             hmExtensionsByExtensionId.put(exExtensions[iExtensionIndex].getSimpleIdentifier(), exExtensions[iExtensionIndex]);
 
@@ -87,10 +84,10 @@ public class DiagramTypeManager implements
             String sElementName = null;
 
             // process each element within this extension
-            for (int iElementIndex = 0; iElementIndex < elements.length; iElementIndex++ ) {
+            for (int iElementIndex = 0; iElementIndex < elements.length; iElementIndex++) {
                 sElementName = elements[iElementIndex].getName();
 
-                if (sElementName.equals(ExtensionPoints.DiagramType.DIAGRAM_TYPE_ELEMENT)) {
+                if (sElementName.equals(DiagramType.DIAGRAM_TYPE_ELEMENT)) {
                     hmDiagramTypeElements.put(sExtensionId, elements[iElementIndex]);
                 }
 
@@ -103,24 +100,24 @@ public class DiagramTypeManager implements
     public IExtension[] getDiagramTypeExtensions() {
         if (exExtensions == null) {
 
-            IExtensionPoint epExtensionPoint = 
-                Platform.getExtensionRegistry().getExtensionPoint(DiagramUiConstants.PLUGIN_ID, ExtensionPoints.DiagramType.ID);
+            IExtensionPoint epExtensionPoint = Platform.getExtensionRegistry().getExtensionPoint(DiagramUiConstants.PLUGIN_ID,
+                                                                                                 DiagramType.ID);
 
             exExtensions = epExtensionPoint.getExtensions();
         }
         return exExtensions;
     }
 
-    public boolean isDiagramSimple(String sDiagramTypeId) {
+    public boolean isDiagramSimple( String sDiagramTypeId ) {
         IConfigurationElement ceElement = hmDiagramTypeElements.get(sDiagramTypeId);
-        String simpleDiagram = ceElement.getAttribute(ExtensionPoints.DiagramType.SIMPLE_DIAGRAM);
+        String simpleDiagram = ceElement.getAttribute(DiagramType.SIMPLE_DIAGRAM);
         if (simpleDiagram != null && simpleDiagram.equalsIgnoreCase("true")) {//$NON-NLS-1$ 
             return true;
         }
         return false;
     }
-    
-    public boolean isTransientDiagram(Diagram diagram) {
+
+    public boolean isTransientDiagram( Diagram diagram ) {
         // Walk through the diagram type's and see if any of them can interpret
         boolean isTransient = false;
         Iterator<String> iter = getOrderedExtentionIds().iterator();
@@ -129,28 +126,26 @@ public class DiagramTypeManager implements
         while (iter.hasNext() && !isTransient) {
             nextExtensionID = iter.next();
             nextDiagramType = getDiagram(nextExtensionID);
-            if (nextDiagramType != null)
-                isTransient = nextDiagramType.isTransientDiagram(diagram);
+            if (nextDiagramType != null) isTransient = nextDiagramType.isTransientDiagram(diagram);
         }
 
         return isTransient;
     }
 
-    public IDiagramType getDiagram(String sDiagramTypeId) {
+    public IDiagramType getDiagram( String sDiagramTypeId ) {
         return getDiagramTypeClassExecutable(sDiagramTypeId);
     }
 
-    private IDiagramType getDiagramTypeClassExecutable(String sExtensionId) {
+    private IDiagramType getDiagramTypeClassExecutable( String sExtensionId ) {
         IDiagramType diagramType = null;
         IConfigurationElement ceElement = null;
 
-        if (diagramTypeMap != null)
-            diagramType = diagramTypeMap.get(sExtensionId);
+        if (diagramTypeMap != null) diagramType = diagramTypeMap.get(sExtensionId);
 
         if (diagramType == null) {
             try {
                 ceElement = hmDiagramTypeElements.get(sExtensionId);
-                Object oExecutableExtension = ceElement.createExecutableExtension(ExtensionPoints.DiagramNotation.CLASS_NAME);
+                Object oExecutableExtension = ceElement.createExecutableExtension(DiagramNotation.CLASS_NAME);
                 if (oExecutableExtension instanceof IDiagramType) {
                     diagramType = (IDiagramType)oExecutableExtension;
                     diagramType.setType(sExtensionId);
@@ -164,7 +159,7 @@ public class DiagramTypeManager implements
         return diagramType;
     }
 
-    public void setLabelProvider(ILabelProvider provider) {
+    public void setLabelProvider( ILabelProvider provider ) {
         this.labelProvider = provider;
     }
 
@@ -172,17 +167,16 @@ public class DiagramTypeManager implements
         return this.labelProvider;
     }
 
-    public boolean canOpenContext(Object input) {
+    public boolean canOpenContext( Object input ) {
         boolean canOpen = false;
-        
+
         // Added this to handle the rare case where the input may be a diagram entity. In this case
         // we just need to get the parent diagram and go from there.
         // In theory, we should never get here, but the current state of "findMOdelObject" may result in a diagram entity
         // being used in the "ModelEditorManager.open()" call.
-        if( input instanceof DiagramEntityImpl ) {
+        if (input instanceof DiagramEntityImpl) {
             Diagram parentDiagram = ((DiagramEntityImpl)input).getDiagram();
-            if( parentDiagram != null )
-                canOpen = true;
+            if (parentDiagram != null) canOpen = true;
         } else {
             // Walk through the diagram type's and see if any of them can interpret
             List<String> extensionIDs = getOrderedExtentionIds();
@@ -193,8 +187,7 @@ public class DiagramTypeManager implements
                 while (iter.hasNext() && !canOpen) {
                     nextExtensionID = iter.next();
                     nextDiagramType = getDiagram(nextExtensionID);
-                    if (nextDiagramType != null)
-                        canOpen = nextDiagramType.canOpenContext(input);
+                    if (nextDiagramType != null) canOpen = nextDiagramType.canOpenContext(input);
                 }
             } catch (CanOpenContextException ex) {
                 // Present dialog
@@ -205,29 +198,27 @@ public class DiagramTypeManager implements
         return canOpen;
     }
 
-    public Diagram getDiagramForContext(Object input) {
+    public Diagram getDiagramForContext( Object input ) {
         Diagram diagram = null;
-        
+
         // Added this to handle the rare case where the input may be a diagram entity. In this case
         // we just need to get the parent diagram and go from there.
         // In theory, we should never get here, but the current state of "findMOdelObject" may result in a diagram entity
         // being used in the "ModelEditorManager.open()" call.
-        if( input instanceof DiagramEntityImpl ) {
+        if (input instanceof DiagramEntityImpl) {
             Diagram parentDiagram = ((DiagramEntityImpl)input).getDiagram();
-            if( parentDiagram != null )
-                diagram = parentDiagram;
+            if (parentDiagram != null) diagram = parentDiagram;
         } else {
             // Walk through the diagram type's and see if any of them can interpret
             List<String> extensionIDs = getOrderedExtentionIds();
-    
+
             Iterator<String> iter = extensionIDs.iterator();
             String nextExtensionID = null;
             IDiagramType nextDiagramType = null;
             while (iter.hasNext() && diagram == null) {
                 nextExtensionID = iter.next();
                 nextDiagramType = getDiagram(nextExtensionID);
-                if (nextDiagramType != null)
-                    diagram = nextDiagramType.getDiagramForContext(input);
+                if (nextDiagramType != null) diagram = nextDiagramType.getDiagramForContext(input);
             }
         }
         return diagram;
@@ -257,9 +248,9 @@ public class DiagramTypeManager implements
         return bkgdColorList;
     }
 
-    public Diagram getPackageDiagram(ModelResource resource,
-                                     EObject packageEObject,
-                                     boolean forceCreate) {
+    public Diagram getPackageDiagram( ModelResource resource,
+                                      EObject packageEObject,
+                                      boolean forceCreate ) {
         Diagram someDiagram = null;
 
         // Walk through all plugin extention types and ask for their IPackageDiagramProvider.
@@ -273,14 +264,16 @@ public class DiagramTypeManager implements
         while (iter.hasNext() && someDiagram == null) {
             nextExtensionID = iter.next();
             nextDiagramType = getDiagram(nextExtensionID);
-            if (nextDiagramType.getPackageDiagramProvider() != null)
-                someDiagram = nextDiagramType.getPackageDiagramProvider().getPackageDiagram(resource, packageEObject, forceCreate);
+            if (nextDiagramType.getPackageDiagramProvider() != null) someDiagram = nextDiagramType.getPackageDiagramProvider().getPackageDiagram(resource,
+                                                                                                                                                 packageEObject,
+                                                                                                                                                 forceCreate);
         }
 
         return someDiagram;
     }
 
-    public Diagram getDiagramForGoToMarkerEObject(EObject eObject, boolean forceCreate) {
+    public Diagram getDiagramForGoToMarkerEObject( EObject eObject,
+                                                   boolean forceCreate ) {
         Diagram someDiagram = null;
 
         // Walk through all plugin extention types and ask for their IPackageDiagramProvider.
@@ -302,22 +295,20 @@ public class DiagramTypeManager implements
             someDiagram = pdp.getPackageDiagram(eObject, forceCreate);
             if (someDiagram == null) {
                 EObject parentPackage = DiagramUiUtilities.getParentPackage(eObject);
-                if (parentPackage != null)
-                    someDiagram = pdp.getPackageDiagram(parentPackage, forceCreate);
+                if (parentPackage != null) someDiagram = pdp.getPackageDiagram(parentPackage, forceCreate);
             }
         }
 
         return someDiagram;
     }
 
-    public String getDisplayedPath(Diagram diagram,
-                                   EObject eObject) {
+    public String getDisplayedPath( Diagram diagram,
+                                    EObject eObject ) {
         String somePath = null;
-        
-        if( diagram != null && eObject != null ) {
+
+        if (diagram != null && eObject != null) {
             IDiagramType theDiagramType = getDiagram(diagram.getType());
-            if (theDiagramType != null)
-                somePath = theDiagramType.getDisplayedPath(diagram, eObject);
+            if (theDiagramType != null) somePath = theDiagramType.getDisplayedPath(diagram, eObject);
         }
         return somePath;
     }
@@ -344,8 +335,7 @@ public class DiagramTypeManager implements
                 orderedExtentionIDs.add(nextID);
             }
         }
-        if (pkgType != null)
-            orderedExtentionIDs.add(pkgType);
+        if (pkgType != null) orderedExtentionIDs.add(pkgType);
     }
 
 }

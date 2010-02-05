@@ -27,15 +27,14 @@ import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
 import com.metamatrix.modeler.core.transaction.SourcedNotification;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;
-import com.metamatrix.modeler.diagram.ui.drawing.DrawingModelFactory;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramEditorUtil;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.model.LabelModelNode;
 import com.metamatrix.modeler.diagram.ui.notation.uml.model.UmlClassifierNode;
 import com.metamatrix.modeler.diagram.ui.pakkage.PackageDiagramModelFactory;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 
@@ -76,9 +75,6 @@ public class CustomDiagramModelFactory extends PackageDiagramModelFactory {
 
         // Create base diagram node.
         diagramModelNode = new CustomDiagramNode(diagram, Util.getString(KEY_CUSTOM_DIAGRAM_NAME));
-
-        // Get Drawing Nodes
-        List drawingNodes = DrawingModelFactory.getDrawingNodes(diagram, diagramModelNode);
 
         // go get the contents based on the diagram only. DiagramEntity's hold the reference to their objects
         // and nothing else.
@@ -175,8 +171,6 @@ public class CustomDiagramModelFactory extends PackageDiagramModelFactory {
 
             }
         }
-
-        if (!drawingNodes.isEmpty()) diagramModelNode.addChildren(drawingNodes);
 
         return diagramModelNode;
     }

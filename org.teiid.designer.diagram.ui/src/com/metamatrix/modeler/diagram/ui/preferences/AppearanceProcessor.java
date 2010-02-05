@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.metamatrix.modeler.diagram.ui.DiagramTypeManager;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
 /**

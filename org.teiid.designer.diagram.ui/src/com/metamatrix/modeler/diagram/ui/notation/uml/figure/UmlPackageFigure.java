@@ -19,13 +19,13 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.actions.ScaledFont;
 import com.metamatrix.modeler.diagram.ui.actions.ScaledFontManager;
 import com.metamatrix.modeler.diagram.ui.figure.AbstractDiagramFigure;
 import com.metamatrix.modeler.diagram.ui.figure.LabeledRectangleFigure;
 import com.metamatrix.modeler.diagram.ui.util.colors.ColorPalette;
 import com.metamatrix.modeler.diagram.ui.util.directedit.DirectEditFigure;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 
 /**
  * @author blafond

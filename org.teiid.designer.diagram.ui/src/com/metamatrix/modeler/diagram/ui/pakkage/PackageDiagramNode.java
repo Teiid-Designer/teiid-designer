@@ -13,12 +13,12 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.connection.DiagramUmlAssociation;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel;
 import com.metamatrix.modeler.diagram.ui.model.AbstractLocalDiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.model.LabelModelNode;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 
 /**
  * PackageDiagramNode

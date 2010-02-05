@@ -12,14 +12,13 @@ import org.eclipse.gef.EditPart;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
+import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.connection.AnchorManager;
 import com.metamatrix.modeler.diagram.ui.connection.BlockAnchorManager;
 import com.metamatrix.modeler.diagram.ui.connection.DiagramUmlAssociation;
 import com.metamatrix.modeler.diagram.ui.connection.DiagramUmlDependency;
 import com.metamatrix.modeler.diagram.ui.connection.DiagramUmlGeneralization;
 import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionEditPart;
-import com.metamatrix.modeler.diagram.ui.drawing.DrawingPartFactory;
-import com.metamatrix.modeler.diagram.ui.drawing.model.DrawingModelNode;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramViewer;
 import com.metamatrix.modeler.diagram.ui.figure.DiagramFigureFactory;
 import com.metamatrix.modeler.diagram.ui.model.LabelModelNode;
@@ -38,82 +37,73 @@ import com.metamatrix.modeler.diagram.ui.part.AbstractDiagramEditPartFactory;
 import com.metamatrix.modeler.diagram.ui.part.DiagramEditPart;
 import com.metamatrix.modeler.diagram.ui.part.LabelEditPart;
 import com.metamatrix.modeler.diagram.ui.part.RelationalDropEditPartHelper;
-import com.metamatrix.modeler.internal.diagram.ui.PluginConstants;
 
 /**
  * PackageDiagramPartFactory
  */
-public class PackageDiagramPartFactory extends AbstractDiagramEditPartFactory implements DiagramUiConstants  {
-    protected DrawingPartFactory drawingPartFactory;
+public class PackageDiagramPartFactory extends AbstractDiagramEditPartFactory implements DiagramUiConstants {
     private DiagramFigureFactory figureFactory;
     private static final String diagramTypeId = PluginConstants.PACKAGE_DIAGRAM_TYPE_ID;
-    
-	@Override
-    public EditPart createEditPart(EditPart iContext, Object iModel) {
-		EditPart editPart = createEditPart(iContext, iModel, diagramTypeId);
-		
-		return editPart;
-	}
-    
-    public EditPart createEditPart(EditPart iContext, Object iModel, String diagramType) {
+
+    @Override
+    public EditPart createEditPart( EditPart iContext,
+                                    Object iModel ) {
+        EditPart editPart = createEditPart(iContext, iModel, diagramTypeId);
+
+        return editPart;
+    }
+
+    public EditPart createEditPart( EditPart iContext,
+                                    Object iModel,
+                                    String diagramType ) {
         EditPart editPart = null;
 
-        if( drawingPartFactory == null )
-            drawingPartFactory = new DrawingPartFactory();
+        if (figureFactory == null) figureFactory = new PackageDiagramFigureFactory();
 
-        if( figureFactory == null )
-            figureFactory = new PackageDiagramFigureFactory();
-
-        if( iModel instanceof DrawingModelNode ) {
-            editPart = drawingPartFactory.createEditPart(iContext, iModel);
-        } else if( iModel instanceof PackageDiagramNode ) {
+        if (iModel instanceof PackageDiagramNode) {
             editPart = new PackageDiagramEditPart();
             ((AbstractDiagramEditPart)editPart).setFigureFactory(figureFactory);
-        } else if( iModel instanceof LabelModelNode ) {
+        } else if (iModel instanceof LabelModelNode) {
             editPart = new LabelEditPart();
-        } else  if( iModel instanceof DiagramUmlGeneralization ) {
-			editPart = new UmlGeneralizationLinkEditPart();
-		} else  if( iModel instanceof DiagramUmlDependency ) {
+        } else if (iModel instanceof DiagramUmlGeneralization) {
+            editPart = new UmlGeneralizationLinkEditPart();
+        } else if (iModel instanceof DiagramUmlDependency) {
             editPart = new UmlDependencyLinkEditPart();
-        }  else  if( iModel instanceof DiagramUmlAssociation ) {
-			editPart = new UmlAssociationLinkEditPart();
-		}else {
+        } else if (iModel instanceof DiagramUmlAssociation) {
+            editPart = new UmlAssociationLinkEditPart();
+        } else {
             // Here's where we get the notation manager and tell it to create an EditPart
-            // for this modelObject.  So it'll come back in whatever "Notation" it desires.
+            // for this modelObject. So it'll come back in whatever "Notation" it desires.
             NotationPartGenerator generator = DiagramUiPlugin.getDiagramNotationManager().getEditPartGenerator(getNotationId());
-            if( generator != null ) {
+            if (generator != null) {
                 editPart = generator.createEditPart(iContext, iModel, diagramType);
             } else {
-                ModelerCore.Util.log( IStatus.ERROR, Util.getString(Errors.PART_GENERATOR_FAILURE));
+                ModelerCore.Util.log(IStatus.ERROR, Util.getString(Errors.PART_GENERATOR_FAILURE));
             }
         }
-        
+
         if (editPart != null) {
-            if( editPart instanceof NodeConnectionEditPart ) {
+            if (editPart instanceof NodeConnectionEditPart) {
                 editPart.setModel(iModel);
-				((NodeConnectionEditPart)editPart).setDiagramViewer((DiagramViewer)iContext.getViewer());
+                ((NodeConnectionEditPart)editPart).setDiagramViewer((DiagramViewer)iContext.getViewer());
                 ((NodeConnectionEditPart)editPart).setSourceAndTarget(iContext);
-            } else if( editPart instanceof DiagramEditPart ) {
+            } else if (editPart instanceof DiagramEditPart) {
                 editPart.setModel(iModel);
-                ((DiagramEditPart)editPart).setNotationId( getNotationId());
+                ((DiagramEditPart)editPart).setNotationId(getNotationId());
                 ((DiagramEditPart)editPart).setSelectionHandler(getSelectionHandler());
                 ((DiagramEditPart)editPart).setDiagramTypeId(diagramType);
-                
-                if( editPart instanceof UmlClassifierEditPart ||
-                    editPart instanceof UmlAttributeEditPart ||
-                    editPart instanceof UmlAssociationEditPart ||
-                    editPart instanceof UmlOperationEditPart ) {
+
+                if (editPart instanceof UmlClassifierEditPart || editPart instanceof UmlAttributeEditPart
+                    || editPart instanceof UmlAssociationEditPart || editPart instanceof UmlOperationEditPart) {
                     ((AbstractDefaultEditPart)editPart).setDropHelper(new RelationalDropEditPartHelper((DiagramEditPart)editPart));
                 }
             }
-            
 
         } else {
-        	if( diagramType.equals(diagramTypeId))
-            	ModelerCore.Util.log( IStatus.ERROR, Util.getString(Errors.EDIT_PART_FAILURE));
+            if (diagramType.equals(diagramTypeId)) ModelerCore.Util.log(IStatus.ERROR, Util.getString(Errors.EDIT_PART_FAILURE));
         }
-        
-        if( editPart instanceof DiagramEditPart ) {
+
+        if (editPart instanceof DiagramEditPart) {
             ((DiagramEditPart)editPart).setUnderConstruction(true);
         }
         return editPart;
@@ -130,7 +120,7 @@ public class PackageDiagramPartFactory extends AbstractDiagramEditPartFactory im
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.diagram.ui.part.DiagramEditPartFactory#getAnchorManager(com.metamatrix.modeler.diagram.ui.part.DiagramEditPart)
      */
-    public AnchorManager getAnchorManager(DiagramEditPart editPart) {
+    public AnchorManager getAnchorManager( DiagramEditPart editPart ) {
         return new BlockAnchorManager(editPart);
     }
 

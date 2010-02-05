@@ -7,20 +7,17 @@
  */
 package com.metamatrix.modeler.diagram.ui.actions;
 
-/**
- * FontDownAction
- */
-public class FontDownAction extends DiagramAction {
+class FontDownAction extends DiagramAction {
     private ScaledFont scaledFontManager;
+
     /**
      * Construct an instance of FontUpAction.
-     * 
      */
-    public FontDownAction(ScaledFont fontManager) {
+    public FontDownAction( ScaledFont fontManager ) {
         super();
         this.scaledFontManager = fontManager;
     }
-    
+
     @Override
     protected void doRun() {
         scaledFontManager.decrease();
