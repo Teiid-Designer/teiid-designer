@@ -33,13 +33,12 @@ public class UdfModelEvent {
     // Constructors
     // ===========================================================================================================================
 
-    public UdfModelEvent( URL url ) {
-        this.type = Type.CHANGED;
-        this.url = url;
+    public UdfModelEvent( URL url ) { // NO_UCD
+        this(url, Type.CHANGED);
     }
 
     public UdfModelEvent( URL url,
-                                 Type type ) {
+                          Type type ) {
         this.type = Type.CHANGED;
         this.url = url;
     }

@@ -19,15 +19,6 @@ public class ColorManager {
     public static final RGB BOUND_BACKGROUND = new RGB(255, 255, 255);
     public static final RGB UNBOUND_BACKGROUND = new RGB(245, 215, 230);
 
-    // protected Map fColorTable = new HashMap(10);
-
-    /**
-     * Method disposes of the colors.
-     */
-    public void dispose() {
-        // NO OP since we are now delegating to the ModelerUiColorManager
-    }
-
     /**
      * A getter method that returns a color.
      * 

@@ -229,7 +229,7 @@ public class DatatypeModelSelectorDialog extends ModelWorkspaceDialog implements
         updateStatus(status);
     }
 
-    protected void registerControls() {
+    protected void registerControls() { // NO_UCD
         // System.out.println("ModelSelectorDialog.registerControls() adding as selection changed listener to tree viewer....");
         getTreeViewer().addSelectionChangedListener(this);
     }

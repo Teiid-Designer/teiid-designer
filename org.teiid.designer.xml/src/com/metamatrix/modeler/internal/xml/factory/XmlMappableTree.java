@@ -43,9 +43,10 @@ public class XmlMappableTree extends DefaultMappableTree implements PluginConsta
 
     /**
      * Construct an instance of XmlMappableTree.
+     * 
      * @param treeRoot
      */
-    public XmlMappableTree(EObject treeRoot) {
+    public XmlMappableTree( EObject treeRoot ) {
         super(treeRoot);
         fragmentAdapter = new FragmentMappingAdapter(treeRoot);
     }
@@ -54,26 +55,26 @@ public class XmlMappableTree extends DefaultMappableTree implements PluginConsta
      * @see com.metamatrix.modeler.mapping.factory.IMappableTree#getChildren(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public Collection getChildren(EObject node) {
+    public Collection getChildren( EObject node ) {
         Collection children = super.getChildren(node);
-        ArrayList result = new ArrayList(children.size()); 
+        ArrayList result = new ArrayList(children.size());
         int attributeIndex = 0;
-        for ( Iterator iter = children.iterator() ; iter.hasNext() ; ) {
+        for (Iterator iter = children.iterator(); iter.hasNext();) {
             Object child = iter.next();
-            if ( child instanceof XmlFragmentUse ) {
-                EObject childToAdd = (EObject) child;
-                XmlFragment fragment = (XmlFragment) fragmentAdapter.getFragment(childToAdd);
-                if ( fragment != null ) {
+            if (child instanceof XmlFragmentUse) {
+                EObject childToAdd = (EObject)child;
+                XmlFragment fragment = (XmlFragment)fragmentAdapter.getFragment(childToAdd);
+                if (fragment != null) {
                     EObject root = fragment.getRoot();
-                    if ( root != null ) {
+                    if (root != null) {
                         childToAdd = root;
                     }
                 }
                 result.add(child);
-            } else if ( child instanceof XmlNamespace || child instanceof XmlComment || child instanceof ProcessingInstruction ) {
+            } else if (child instanceof XmlNamespace || child instanceof XmlComment || child instanceof ProcessingInstruction) {
                 // skip it
             } else {
-                if ( child instanceof XmlAttribute ) {
+                if (child instanceof XmlAttribute) {
                     // add attributes to the beginning of the list
                     result.add(attributeIndex++, child);
                 } else {
@@ -88,7 +89,7 @@ public class XmlMappableTree extends DefaultMappableTree implements PluginConsta
      * @see com.metamatrix.modeler.mapping.factory.IMappableTree#getExternalRoots(boolean)
      */
     @Override
-    public List getExternalRoots(boolean recurseFragments) {
+    public List getExternalRoots( boolean recurseFragments ) {
         return super.getExternalRoots(recurseFragments);
     }
 
@@ -96,8 +97,8 @@ public class XmlMappableTree extends DefaultMappableTree implements PluginConsta
      * @see com.metamatrix.modeler.mapping.factory.IMappableTree#getParent(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public EObject getParent(EObject node) {
-        // even if we are inside a fragment, the 
+    public EObject getParent( EObject node ) {
+        // even if we are inside a fragment, the
         return super.getParent(node);
     }
 
@@ -105,21 +106,22 @@ public class XmlMappableTree extends DefaultMappableTree implements PluginConsta
      * @see com.metamatrix.modeler.mapping.factory.IMappableTree#isExternal(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public boolean isExternal(EObject node) {
+    public boolean isExternal( EObject node ) {
         // if this node's XmlFragment is not the same as super.getTreeRoot, then the node is external.
-        return ! getTreeRoot().equals(getFragmentRoot(node));
+        return !getTreeRoot().equals(getFragmentRoot(node));
     }
-    
+
     /**
      * Obtain the real XmlFragmentRoot for the specified node
+     * 
      * @param node
      * @return
      */
-    public EObject getFragmentRoot(EObject node) {
+    public EObject getFragmentRoot( EObject node ) {
         XmlFragment result = null;
-        while ( node != null ) {
-            if ( node instanceof XmlFragment ) {
-                result = (XmlFragment) node;
+        while (node != null) {
+            if (node instanceof XmlFragment) {
+                result = (XmlFragment)node;
                 break;
             }
             node = node.eContainer();
@@ -131,15 +133,15 @@ public class XmlMappableTree extends DefaultMappableTree implements PluginConsta
      * @see com.metamatrix.modeler.mapping.factory.IMappableTree#getDatatype(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public EObject getDatatype(EObject node) {
+    public EObject getDatatype( EObject node ) {
 
         boolean useXsdType = true;
         Preferences prefs = ModelerXmlPlugin.getDefault().getPluginPreferences();
-        if ( prefs.contains(MAPPING_TYPE_FROM_XSD) ) {
+        if (prefs.contains(MAPPING_TYPE_FROM_XSD)) {
             useXsdType = prefs.getBoolean(MAPPING_TYPE_FROM_XSD);
         }
 
-        if ( ! useXsdType ) {            
+        if (!useXsdType) {
             return getStringDatatype();
         }
 
@@ -147,31 +149,32 @@ public class XmlMappableTree extends DefaultMappableTree implements PluginConsta
 
         // get the schema node
         XSDComponent schemaNode = null;
-        if ( node instanceof XmlElement ) {
-            schemaNode = ((XmlElement) node).getXsdComponent();
-        } else if ( node instanceof XmlAttribute ) {
-            schemaNode = ((XmlAttribute) node).getXsdComponent();
+        if (node instanceof XmlElement) {
+            schemaNode = ((XmlElement)node).getXsdComponent();
+        } else if (node instanceof XmlAttribute) {
+            schemaNode = ((XmlAttribute)node).getXsdComponent();
         }
 
-        if (schemaNode != null ) {
+        if (schemaNode != null) {
             // get the schema node's type definition
             result = XsdUtil.getSimpleType(schemaNode);
         }
-        
-        if ( result == null ) {
+
+        if (result == null) {
             // default type is String
             result = getStringDatatype();
         }
-        
+
         return result;
     }
-    
+
     /**
      * Static method to find the String datatype - only need to look it up once.
+     * 
      * @return
      */
     private static EObject getStringDatatype() {
-        if ( stringDatatype == null ) {
+        if (stringDatatype == null) {
             try {
                 stringDatatype = ModelerCore.getWorkspaceDatatypeManager().getBuiltInDatatype(DatatypeConstants.BuiltInNames.STRING);
             } catch (ModelerCoreException e) {
@@ -185,12 +188,13 @@ public class XmlMappableTree extends DefaultMappableTree implements PluginConsta
      * @see com.metamatrix.modeler.mapping.factory.IMappableTree#areEquivalent(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public boolean areEquivalent(EObject objA, EObject objB) {
-//        if ( objA instanceof XmlDocumentNode && objB instanceof XmlDocumentNode ) {
-//            return ((XmlDocumentNode) objA).getXsdComponent().equals(((XmlDocumentNode) objB).getXsdComponent());
-//        }
-//        return super.areEquivalent(objA, objB);
-        
+    public boolean areEquivalent( EObject objA,
+                                  EObject objB ) {
+        // if ( objA instanceof XmlDocumentNode && objB instanceof XmlDocumentNode ) {
+        // return ((XmlDocumentNode) objA).getXsdComponent().equals(((XmlDocumentNode) objB).getXsdComponent());
+        // }
+        // return super.areEquivalent(objA, objB);
+
         // per defect 12301, all mappings will be unique
         return false;
     }
@@ -199,26 +203,26 @@ public class XmlMappableTree extends DefaultMappableTree implements PluginConsta
      * @see com.metamatrix.modeler.mapping.factory.IMappableTree#getUniqueName(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public String getUniqueName(EObject node) {
-        if ( node instanceof XmlDocumentNode ) {
-            String name = ((XmlDocumentNode) node).getName();
+    public String getUniqueName( EObject node ) {
+        if (node instanceof XmlDocumentNode) {
+            String name = ((XmlDocumentNode)node).getName();
             EObject parent = node.eContainer();
-            while ( parent != null && parent instanceof XmlContainerNode ) {
+            while (parent != null && parent instanceof XmlContainerNode) {
                 parent = parent.eContainer();
             }
-            if ( parent != null && parent instanceof XmlDocumentNode ) {
-                return name + '_' + ((XmlDocumentNode) parent).getName();
+            if (parent != null && parent instanceof XmlDocumentNode) {
+                return name + '_' + ((XmlDocumentNode)parent).getName();
             }
         }
         return super.getUniqueName(node);
     }
 
-    /** 
+    /**
      * @see com.metamatrix.modeler.mapping.factory.IMappableTree#isVisibleNode(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isVisibleNode(EObject node) {
+    public boolean isVisibleNode( EObject node ) { // NO_UCD
         // hide all XmlNamespace objects
-        return ! ( node instanceof XmlNamespace );
+        return !(node instanceof XmlNamespace);
     }
 }

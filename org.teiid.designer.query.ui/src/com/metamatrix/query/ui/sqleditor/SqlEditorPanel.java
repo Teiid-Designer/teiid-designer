@@ -1975,8 +1975,6 @@ public class SqlEditorPanel extends SashForm
 
     @Override
     public void dispose() {
-        // dispose ColorManager
-        colorManager.dispose();
         // remove prefStore listener
         IPreferenceStore prefStore = UiPlugin.getDefault().getPreferenceStore();
         prefStore.removePropertyChangeListener(this);

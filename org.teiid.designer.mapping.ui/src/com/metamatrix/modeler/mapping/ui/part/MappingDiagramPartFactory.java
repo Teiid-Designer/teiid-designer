@@ -39,7 +39,6 @@ import com.metamatrix.modeler.mapping.ui.diagram.MappingDiagramUtil;
 import com.metamatrix.modeler.mapping.ui.figure.MappingDiagramFigureFactory;
 import com.metamatrix.modeler.mapping.ui.model.MappingDiagramNode;
 import com.metamatrix.modeler.mapping.ui.model.MappingExtentNode;
-import com.metamatrix.modeler.mapping.ui.model.StagingTableExtentNode;
 import com.metamatrix.modeler.mapping.ui.model.SummaryExtentNode;
 import com.metamatrix.modeler.transformation.ui.actions.TransformationSourceManager;
 import com.metamatrix.modeler.transformation.ui.connection.TransformationAnchorManager;
@@ -77,7 +76,7 @@ public class MappingDiagramPartFactory extends AbstractDiagramEditPartFactory im
             editPart = new SummaryExtentEditPart(diagramTypeId);
             ((AbstractDiagramEditPart)editPart).setFigureFactory(figureFactory);
             ((DiagramEditPart)editPart).setResizable(false);
-        } else if (iModel instanceof MappingExtentNode || iModel instanceof StagingTableExtentNode) {
+        } else if (iModel instanceof MappingExtentNode) {
             editPart = new MappingExtentEditPart(diagramTypeId);
             ((AbstractDiagramEditPart)editPart).setFigureFactory(figureFactory);
             ((DiagramEditPart)editPart).setResizable(false);

@@ -313,7 +313,7 @@ public class Binding {
             String newName = getCurrentAttrName();
             Object attribute = getAttribute();
             if (attribute instanceof EObject) {
-            	TransformationHelper.setSqlColumnName((EObject)getAttribute(), newName, txnSource);
+                TransformationHelper.setSqlColumnName((EObject)getAttribute(), newName, txnSource);
             }
         }
     }
@@ -333,7 +333,7 @@ public class Binding {
      * 
      * @return true if there is a pending modification, false if not.
      */
-    public boolean hasSymbolModification() {
+    public boolean hasSymbolModification() { // NO_UCD
         return (newSymbol != null);
     }
 

@@ -15,29 +15,20 @@ import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
 public interface ITransformationDiagramActionConstants {
     interface DiagramActions {
 
-        /** Keys for accessing transformation actions. */
-        String ADD_TRANSFORMATION_SOURCE = AddTransformationSourceAction.class.getName();
-        String ADD_UNION_SOURCE = AddUnionSourceAction.class.getName();
-        String REMOVE_TRANSFORMATION_SOURCE = RemoveTransformationSourceAction.class.getName();
-        String CLEAR_TRANSFORMATION = ClearTransformationAction.class.getName();
         String RECONCILE_TRANSFORMATION = ReconcileTransformationAction.class.getName();
         String ADD_TO_SQL_FROM = AddToSqlFromAction.class.getName();
         String ADD_TO_SQL_SELECT = AddToSqlSelectAction.class.getName();
         String ADD_JOIN_EXPRESSION = AddJoinExpressionAction.class.getName();
 
-        /** All Modeler unique global actions. */
-        String[] ALL_ACTIONS = new String[] {ADD_TRANSFORMATION_SOURCE, ADD_UNION_SOURCE, REMOVE_TRANSFORMATION_SOURCE,
-            CLEAR_TRANSFORMATION, RECONCILE_TRANSFORMATION, ADD_TO_SQL_FROM, ADD_TO_SQL_SELECT, ADD_JOIN_EXPRESSION};
-
-        /** Values of undo action capabililities */
+        /** Values of undo action capabilities */
         boolean UNDO_ADD_TRANSFORMATION_SOURCE = false;
-        boolean UNDO_ADD_UNION_SOURCE = true;
+        boolean UNDO_ADD_UNION_SOURCE = true; // NO_UCD
         boolean UNDO_REMOVE_TRANSFORMATION_SOURCE = true;
         boolean UNDO_CLEAR_TRANSFORMATION = true;
-        boolean UNDO_RECONCILE_TRANSFORMATION = false;
-        boolean UNDO_ADD_TO_SQL_FROM = false;
-        boolean UNDO_ADD_TO_SQL_SELECT = false;
-        boolean UNDO_ADD_JOIN_EXPRESSION = false;
+        boolean UNDO_RECONCILE_TRANSFORMATION = false; // NO_UCD
+        boolean UNDO_ADD_TO_SQL_FROM = false; // NO_UCD
+        boolean UNDO_ADD_TO_SQL_SELECT = false; // NO_UCD
+        boolean UNDO_ADD_JOIN_EXPRESSION = false; // NO_UCD
     }
 
     interface ContextMenu {

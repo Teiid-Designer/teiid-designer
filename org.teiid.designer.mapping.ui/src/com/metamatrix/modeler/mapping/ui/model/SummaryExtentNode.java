@@ -39,15 +39,6 @@ public class SummaryExtentNode extends MappingExtentNode implements UiConstants 
     private static final String MAPPED_NODES_PREFIX = UiConstants.Util.getString("SummaryExtentNode.mappedNodes.prefix"); //$NON-NLS-1$
     private static final String UNMAPPED_NODES_PREFIX = UiConstants.Util.getString("SummaryExtentNode.unmappedNodes.prefix"); //$NON-NLS-1$
 
-    public SummaryExtentNode( Diagram diagramModelObject,
-                              EObject modelObject,
-                              boolean isCoarse ) {
-        super(diagramModelObject, modelObject, isCoarse);
-
-        // System.out.println("[SummaryExtentNode.ctor 1] BOT");
-
-    }
-
     public SummaryExtentNode( DiagramModelNode diagramModelNode,
                               EObject modelObject,
                               MappingExtent theExtent,

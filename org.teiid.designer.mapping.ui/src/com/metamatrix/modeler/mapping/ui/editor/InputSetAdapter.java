@@ -131,7 +131,7 @@ public class InputSetAdapter {
     /**
      * Refresh lists
      */
-    public void refresh() {
+    public void refresh() { // NO_UCD
         getBindingList().refresh(true);
     }
 
@@ -164,7 +164,7 @@ public class InputSetAdapter {
      * 
      * @param binding the binding to add
      */
-    public void addBinding( BindingAdapter binding ) {
+    public void addBinding( BindingAdapter binding ) { // NO_UCD
         getBindingList().add(binding);
     }
 

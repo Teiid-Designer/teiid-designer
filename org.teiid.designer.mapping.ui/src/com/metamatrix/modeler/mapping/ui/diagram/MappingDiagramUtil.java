@@ -83,10 +83,10 @@ public class MappingDiagramUtil {
                 requiresStart = ModelerCore.startTxn(false, true, "Create Mapping Diagram", documentTreeRootEObject); //$NON-NLS-1$
 
                 Diagram depDiagram = modelResource.getModelDiagrams().createNewDiagram(documentTreeRootEObject, persist); // Do
-                                                                                                                          // Not
-                                                                                                                          // persist
-                                                                                                                          // this
-                                                                                                                          // diagram.
+                // Not
+                // persist
+                // this
+                // diagram.
                 depDiagram.setType(PluginConstants.MAPPING_DIAGRAM_TYPE_ID);
                 succeeded = true;
                 return depDiagram;
@@ -150,7 +150,7 @@ public class MappingDiagramUtil {
         return result;
     }
 
-    public static boolean isMappingClass( final Object input ) {
+    public static boolean isMappingClass( final Object input ) { // NO_UCD
         boolean result = false;
         if (input instanceof EObject && input instanceof MappingClass && !(input instanceof StagingTable)) {
             return true;
@@ -313,7 +313,7 @@ public class MappingDiagramUtil {
 
     }
 
-    public static DiagramEditPart getInputSetEditPart( DiagramEditPart detailedDiagramEditPart ) {
+    public static DiagramEditPart getInputSetEditPart( DiagramEditPart detailedDiagramEditPart ) { // NO_UCD
         DiagramEditPart inputSetEP = null;
         Iterator iter = detailedDiagramEditPart.getChildren().iterator();
         Object nextObj = null;
@@ -329,7 +329,7 @@ public class MappingDiagramUtil {
         return inputSetEP;
     }
 
-    public static DiagramEditPart getTransformationEditPart( DiagramEditPart detailedDiagramEditPart ) {
+    public static DiagramEditPart getTransformationEditPart( DiagramEditPart detailedDiagramEditPart ) { // NO_UCD
         DiagramEditPart transformationEP = null;
         Iterator iter = detailedDiagramEditPart.getChildren().iterator();
         Object nextObj = null;

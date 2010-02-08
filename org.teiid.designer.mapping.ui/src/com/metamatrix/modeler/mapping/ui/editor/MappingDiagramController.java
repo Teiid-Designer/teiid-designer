@@ -693,7 +693,7 @@ public class MappingDiagramController
     }
 
     // Method used by DocumentTree
-    public void resetExtentLocationsFromDiagram( int newY ) {
+    public void resetExtentLocationsFromDiagram( int newY ) { // NO_UCD
         final int tempY = newY;
         UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
             public void run() {

@@ -113,7 +113,7 @@ public final class SummaryExtent extends MappingExtent {
         return documentNodeRef;
     }
 
-    public void clearMappingClasses() {
+    public void clearMappingClasses() { // NO_UCD
         hmapMappingClasses.clear();
     }
 

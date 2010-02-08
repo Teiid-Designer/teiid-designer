@@ -568,12 +568,12 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
         }
     }
 
-    public void updateNodes( Collection inputExtentList,
+    public void updateNodes( Collection inputExtentList, // NO_UCD
                              DiagramModelNode mappingDiagramModelNode ) {
         // Not implemented
     }
 
-    public void removeNodes( Collection inputExtentList,
+    public void removeNodes( Collection inputExtentList, // NO_UCD
                              DiagramModelNode mappingDiagramModelNode ) {
         MappingExtent nextExtent = null;
         List removeList = new ArrayList(1);
@@ -590,51 +590,7 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
         if (!removeList.isEmpty()) mappingDiagramModelNode.removeChildren(removeList, false);
     }
 
-    // public void addStagingTables( Collection inputExtentList, DiagramModelNode mappingDiagramModelNode) {
-    // if( inputExtentList == null || inputExtentList.isEmpty() )
-    // return;
-    //
-    // Collection currentExtents = new ArrayList(getStagingTableExtents(mappingDiagramModelNode));
-    // Collection extentList = new ArrayList(inputExtentList);
-    //        
-    // MappingExtent nextExtent = null;
-    //        
-    // Iterator iter = extentList.iterator();
-    // while( iter.hasNext() ) {
-    // nextExtent = (MappingExtent)iter.next();
-    // if( currentExtents.contains(nextExtent) ) {
-    // DiagramModelNode existingNode = getStagingTableExtentNode(nextExtent);
-    // if( existingNode != null ) {
-    // // existingNode.setMappingExtent(nextExtent);
-    // // existingNode.update();
-    // }
-    // } else {
-    // // CREATE NEW MAPPING DIAGRAM EXTENT NODE HERE
-    // }
-    // }
-    // }
-    //    
-    // public void removeStagingTables( Collection inputExtentList, DiagramModelNode mappingDiagramModelNode) {
-    // if( mappingDiagramModelNode == null )
-    // return;
-    //            
-    // MappingExtent nextExtent = null;
-    // List removeList = new ArrayList(1);
-    // List extentList = new ArrayList(inputExtentList);
-    // Iterator iter = extentList.iterator();
-    // while( iter.hasNext() ) {
-    // nextExtent = (MappingExtent)iter.next();
-    // DiagramModelNode existingStagingTable = getStagingTableExtentNode(nextExtent);
-    // if( existingStagingTable != null )
-    // removeList.add(existingStagingTable);
-    // }
-    //
-    // if( removeList != null && !removeList.isEmpty() ){
-    // mappingDiagramModelNode.removeChildren(removeList, false);
-    // }
-    // }
-
-    public void updateMappingLinks( Collection inputExtentList ) {
+    public void updateMappingLinks( Collection inputExtentList ) { // NO_UCD
 
     }
 

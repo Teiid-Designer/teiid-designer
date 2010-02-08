@@ -51,30 +51,15 @@ public interface IInternalUiConstants extends IUiConstants {
         String OVR16 = IMG_PATH + "ovr16/"; //$NON-NLS-1$
         String WIZBAN = IMG_PATH + "wizban/"; //$NON-NLS-1$
 
-        String DEPLOY = CTOOL16 + "exportWAR.png"; //$NON-NLS-1$
         String IMPORT_WSDL = CTOOL16 + "import_wsdl.gif"; //$NON-NLS-1$
-        String NEW_WEB_SERVICE = CTOOL16 + "NewWebService.png"; //$NON-NLS-1$
         String CREATE_WEB_SERVICE = CTOOL16 + "CreateWebService.png"; //$NON-NLS-1$
-        String OPEN_VDB = CTOOL16 + "openVDB.gif"; //$NON-NLS-1$
-        String PROBLEM_ERROR = CTOOL16 + "ProblemMarker_error.gif"; //$NON-NLS-1$
-        String PROBLEM_INFO = CTOOL16 + "ProblemMarker_info.gif"; //$NON-NLS-1$
-        String PROBLEM_WARNING = CTOOL16 + "ProblemMarker_warning.gif"; //$NON-NLS-1$
-        String PROBLEMS_VIEW = CTOOL16 + "problems_view.gif"; //$NON-NLS-1$
-        String STATUS_GOOD = CTOOL16 + "status_icon_good.gif"; //$NON-NLS-1$
 
         String CLOSE_EDITOR = CVIEW16 + "closeEditor.gif"; //$NON-NLS-1$
-        String DOWN = CVIEW16 + "down.gif"; //$NON-NLS-1$
         String PROBLEM_INDICATOR = CVIEW16 + "problem_indicator.gif"; //$NON-NLS-1$
         String RESOLUTION_STATUS = CVIEW16 + "resolution_status.gif"; //$NON-NLS-1$
         String SCHEMA_EDITOR = CVIEW16 + "schemaEditor.gif"; //$NON-NLS-1$
-        String SHOW_CHECKED_ONLY = CVIEW16 + "showCheckedOnly.gif"; //$NON-NLS-1$
         String SHOW_DEPENDENCIES = CVIEW16 + "show_dependencies.gif"; //$NON-NLS-1$
-        String UNRESOLVE_NAMESPACE = CVIEW16 + "unresolve_namespace.gif"; //$NON-NLS-1$
-        String UP = CVIEW16 + "up.gif"; //$NON-NLS-1$
 
-        String DEPLOY_GRAY = DTOOL16 + "exportWARgray.png"; //$NON-NLS-1$
-
-        String ERROR = OVR16 + "error.gif"; //$NON-NLS-1$
         String OCCURS_N = OVR16 + "occursN.gif"; //$NON-NLS-1$
         String OCCURS_N_TO_M = OVR16 + "occursNToM.gif"; //$NON-NLS-1$
         String OCCURS_N_TO_UNBOUNDED = OVR16 + "occursNToUnbounded.gif"; //$NON-NLS-1$
@@ -85,14 +70,12 @@ public interface IInternalUiConstants extends IUiConstants {
         String OCCURS_ZERO_TO_N = OVR16 + "occursZeroToN.gif"; //$NON-NLS-1$
         String OCCURS_ZERO_TO_UNBOUNDED = OVR16 + "occursZeroToUnbounded.gif"; //$NON-NLS-1$
         String RECURSIVE = OVR16 + "recursive.gif"; //$NON-NLS-1$
-        String WARNING = OVR16 + "warning.gif"; //$NON-NLS-1$
 
         String NEW_MODEL_BANNER = WIZBAN + "WebService.gif"; //$NON-NLS-1$
 
         String SERVICE_ICON = OBJ16 + "service_obj.gif"; //$NON-NLS-1$
         String OPERATION_ICON = OBJ16 + "operation_obj.gif"; //$NON-NLS-1$
         String PORT_ICON = OBJ16 + "port_obj.gif"; //$NON-NLS-1$
-        String BINDING_ICON = OBJ16 + "binding_obj.gif"; //$NON-NLS-1$
     }
 
     /**

@@ -49,7 +49,6 @@ import com.metamatrix.modeler.transformation.validation.SqlTransformationResult;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 import com.metamatrix.query.function.FunctionDescriptor;
 import com.metamatrix.query.function.FunctionLibrary;
-import com.metamatrix.query.function.FunctionLibraryManager;
 import com.metamatrix.query.metadata.QueryMetadataInterface;
 import com.metamatrix.query.metadata.StoredProcedureInfo;
 import com.metamatrix.query.metadata.TempMetadataID;
@@ -121,8 +120,7 @@ public class TransformationSqlHelper implements SqlConstants {
         // Check whether a group can be added to the transformation SQL
         // -----------------------------------------------------------------
         if (TransformationHelper.isValidQuery(transMappingRoot) || TransformationHelper.isValidSetQuery(transMappingRoot)
-            || TransformationHelper.isSelectFromString(transMappingRoot)
-            || TransformationHelper.isEmptySelect(transMappingRoot)) {
+            || TransformationHelper.isSelectFromString(transMappingRoot) || TransformationHelper.isEmptySelect(transMappingRoot)) {
             canUpdate = true;
         }
         return canUpdate;
@@ -139,8 +137,7 @@ public class TransformationSqlHelper implements SqlConstants {
         // -----------------------------------------------------------------
         // Check whether a group can be added to the transformation SQL
         // -----------------------------------------------------------------
-        if (TransformationHelper.isValidQuery(transMappingRoot)
-            || TransformationHelper.isEmptySelect(transMappingRoot)) {
+        if (TransformationHelper.isValidQuery(transMappingRoot) || TransformationHelper.isEmptySelect(transMappingRoot)) {
             canUpdate = true;
         }
         return canUpdate;
@@ -154,7 +151,7 @@ public class TransformationSqlHelper implements SqlConstants {
      * @param addElemsToSelect 'true' if group elements are to be added to the select, 'false' if not.
      * @param source the txn event Source
      */
-    public static void updateAllSqlOnSqlAliasGroupAdded( EObject transMappingRoot,
+    public static void updateAllSqlOnSqlAliasGroupAdded( EObject transMappingRoot, // NO_UCD
                                                          EObject sqlAliasGroup,
                                                          boolean addElemsToSelect,
                                                          Object source ) {
@@ -184,7 +181,7 @@ public class TransformationSqlHelper implements SqlConstants {
      * @param transMappingRoot the transformation mapping root
      * @param sourceEObj the source group removed
      */
-    public static void updateAllSqlOnSqlAliasGroupRemoved( EObject transMappingRoot,
+    public static void updateAllSqlOnSqlAliasGroupRemoved( EObject transMappingRoot, // NO_UCD
                                                            EObject sqlAliasGroup,
                                                            boolean removeElemsFromSelect,
                                                            Object source ) {
@@ -266,8 +263,8 @@ public class TransformationSqlHelper implements SqlConstants {
         // Add the new group to the From clause and its attributes to the select clause
         // WILL NOT CHANGE UNLESS ITS A PARSABLE QUERY. (DONT CHANGE SETQUERY)
         // -----------------------------------------------------------------
-        if (TransformationHelper.isParsableQuery(transMappingRoot)
-            || TransformationHelper.isEmptySelect(transMappingRoot) || TransformationHelper.isSelectFromString(transMappingRoot)) {
+        if (TransformationHelper.isParsableQuery(transMappingRoot) || TransformationHelper.isEmptySelect(transMappingRoot)
+            || TransformationHelper.isSelectFromString(transMappingRoot)) {
             // Add Sources to the SELECT statement
             final TransformationValidator validator = new TransformationValidator((SqlTransformationMappingRoot)transMappingRoot,
                                                                                   false);
@@ -1013,7 +1010,8 @@ public class TransformationSqlHelper implements SqlConstants {
         Iterator iter = removeElements.iterator();
         while (iter.hasNext()) {
             Object remElem = iter.next();
-            if ((remElem instanceof EObject) && com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.isColumn((EObject)remElem)) {
+            if ((remElem instanceof EObject)
+                && com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.isColumn((EObject)remElem)) {
                 SqlColumnAspect columnAspect = (SqlColumnAspect)AspectManager.getSqlAspect((EObject)remElem);
                 removeNames.add(columnAspect.getName((EObject)remElem));
             }
@@ -1185,7 +1183,7 @@ public class TransformationSqlHelper implements SqlConstants {
     }
 
     // Determine if the StoredProcedure and SqlAlias match
-    public static boolean isMatch( StoredProcedure storedProc,
+    public static boolean isMatch( StoredProcedure storedProc, // NO_UCD
                                    SqlAlias sqlAlias ) {
         boolean isMatch = false;
         if (storedProc != null && sqlAlias != null) {
@@ -1467,7 +1465,7 @@ public class TransformationSqlHelper implements SqlConstants {
      * @param command the supplied StoredProcedure object.
      * @return map of unique name to EObject
      */
-    public static Map getProcInputParamEObjects( StoredProcedure storedProc ) {
+    public static Map getProcInputParamEObjects( StoredProcedure storedProc ) { // NO_UCD
         Map symbolEObjMap = new HashMap();
 
         // Add the Procedure Input Parameters to the Map
@@ -2007,7 +2005,7 @@ public class TransformationSqlHelper implements SqlConstants {
      * @param comman the Command language object
      * @return the ordered list of query SELECT element types
      */
-    public static List getProjectedSymbolTypes( Command command ) {
+    public static List getProjectedSymbolTypes( Command command ) { // NO_UCD
         List selectTypes = new ArrayList();
         if (command != null) {
             // Get the list of SELECT symbols
@@ -3137,7 +3135,8 @@ public class TransformationSqlHelper implements SqlConstants {
         Iterator iter = elemEObjs.iterator();
         while (iter.hasNext()) {
             Object elem = iter.next();
-            if ((elem instanceof EObject) && com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.isColumn((EObject)elem)) {
+            if ((elem instanceof EObject)
+                && com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.isColumn((EObject)elem)) {
                 SqlColumnAspect columnAspect = (SqlColumnAspect)AspectManager.getSqlAspect((EObject)elem);
                 if (projSymbolNames.contains(columnAspect.getName((EObject)elem))) {
                     result = true;

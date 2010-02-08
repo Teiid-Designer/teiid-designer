@@ -100,7 +100,6 @@ import com.metamatrix.query.validator.ValidatorReport;
  * TransformationHelper This class contains helper methods for getting "properties" from TransformationMappings
  */
 public class TransformationHelper implements SqlConstants {
-    public static final String TRANSACTIONS = "modelerTransactions"; //$NON-NLS-1$
     public static final String THIS_CLASS = "TransformationHelper"; //$NON-NLS-1$
     private static final boolean IS_UNDOABLE = true;
     private static final boolean IS_SIGNIFICANT = true;
@@ -395,14 +394,14 @@ public class TransformationHelper implements SqlConstants {
     }
 
     public static String getDefaultSqlSelectString( Object transMappingRoot ) {
-    	return BLANK;
-//        EObject target = getTransformationTarget(transMappingRoot);
-//        String selectString = DEFAULT_SELECT;
-//        if (isSqlProcedure(target) || isSqlProcedureResultSet(target)) {
-//            selectString = BLANK;
-//        }
-//
-//        return selectString;
+        return BLANK;
+        // EObject target = getTransformationTarget(transMappingRoot);
+        // String selectString = DEFAULT_SELECT;
+        // if (isSqlProcedure(target) || isSqlProcedureResultSet(target)) {
+        // selectString = BLANK;
+        // }
+        //
+        // return selectString;
     }
 
     public static String getSelectSqlString( Object transMappingRoot ) {
@@ -815,7 +814,7 @@ public class TransformationHelper implements SqlConstants {
      * @param transMappingRoot the transformation mapping root
      * @param eObj the EObject to remove
      */
-    public static void removeSourceAndAliases( Object mappingRoot,
+    public static void removeSourceAndAliases( Object mappingRoot, // NO_UCD
                                                EObject sourceEObj,
                                                boolean isSignificant,
                                                Object txnSource ) {
@@ -1597,7 +1596,7 @@ public class TransformationHelper implements SqlConstants {
      * @param sqlAlias the SqlAlias
      * @return 'true' if the mappingRoot contains the supplied SqlAlias, 'false' if not.
      */
-    public static boolean containsSqlAliasName( Object transMappingRoot,
+    public static boolean containsSqlAliasName( Object transMappingRoot, // NO_UCD
                                                 String desiredName ) {
         boolean contains = false;
         // Check whether the current alias contain any with this name
@@ -2041,7 +2040,7 @@ public class TransformationHelper implements SqlConstants {
      * @param eObj the supplied object
      * @return 'true' if the object is a non-selectable column, 'false' otherwise
      */
-    public static boolean isNonSelectableSqlColumn( Object obj ) {
+    public static boolean isNonSelectableSqlColumn( Object obj ) { // NO_UCD
         boolean isNonSelectCol = false;
         if (obj != null && obj instanceof EObject) {
             SqlAspect sqlAspect = AspectManager.getSqlAspect((EObject)obj);
@@ -2280,7 +2279,7 @@ public class TransformationHelper implements SqlConstants {
         return false;
     }
 
-    public static boolean isSqlDefault( EObject transMappingRoot,
+    public static boolean isSqlDefault( EObject transMappingRoot, // NO_UCD
                                         int cmdType ) {
         boolean result = false;
         if (cmdType == QueryValidator.SELECT_TRNS) {
@@ -2687,13 +2686,13 @@ public class TransformationHelper implements SqlConstants {
     public synchronized static EObject getMappingRoot( EObject targetVirtualGroupEObject ) {
         return getMappingRoot(targetVirtualGroupEObject, NOT_SIGNIFICANT, IS_UNDOABLE);
     }
-    
+
     public synchronized static boolean hasMappingRoot( EObject targetVirtualGroupEObject ) {
         // Throw exception if supplied target is null or invalid
         if (!TransformationHelper.isValidTransformationTarget(targetVirtualGroupEObject)) {
             throw new IllegalArgumentException(NULL_OR_INVALID_TARGET);
         }
-        
+
         List allTransforms = null;
 
         ModelContents modelContents = ModelerCore.getModelEditor().getModelContents(targetVirtualGroupEObject);
@@ -2703,16 +2702,16 @@ public class TransformationHelper implements SqlConstants {
         if (!allTransforms.isEmpty()) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     public synchronized static boolean hasSqlTransformationMappingRoot( EObject targetVirtualGroupEObject ) {
         // Throw exception if supplied target is null or invalid
         if (!TransformationHelper.isValidTransformationTarget(targetVirtualGroupEObject)) {
             throw new IllegalArgumentException(NULL_OR_INVALID_TARGET);
         }
-        
+
         List allTransforms = null;
 
         ModelContents modelContents = ModelerCore.getModelEditor().getModelContents(targetVirtualGroupEObject);
@@ -2720,23 +2719,22 @@ public class TransformationHelper implements SqlConstants {
             allTransforms = modelContents.getTransformations(targetVirtualGroupEObject);
         }
         if (!allTransforms.isEmpty()) {
-        	// Should only be one....
+            // Should only be one....
             Object nextObj = allTransforms.iterator().next();
-        	if (isSqlTransformationMappingRoot(nextObj)) {
-        		return true;
-        	}
+            if (isSqlTransformationMappingRoot(nextObj)) {
+                return true;
+            }
         }
-        
+
         return false;
     }
-    
-    
+
     public synchronized static boolean hasXQueryTransformationMappingRoot( EObject targetVirtualGroupEObject ) {
         // Throw exception if supplied target is null or invalid
         if (!TransformationHelper.isValidTransformationTarget(targetVirtualGroupEObject)) {
             throw new IllegalArgumentException(NULL_OR_INVALID_TARGET);
         }
-        
+
         List allTransforms = null;
 
         ModelContents modelContents = ModelerCore.getModelEditor().getModelContents(targetVirtualGroupEObject);
@@ -2744,13 +2742,13 @@ public class TransformationHelper implements SqlConstants {
             allTransforms = modelContents.getTransformations(targetVirtualGroupEObject);
         }
         if (!allTransforms.isEmpty()) {
-        	// Should only be one....
+            // Should only be one....
             Object nextObj = allTransforms.iterator().next();
-        	if (isXQueryTransformationMappingRoot(nextObj)) {
-        		return true;
-        	}
+            if (isXQueryTransformationMappingRoot(nextObj)) {
+                return true;
+            }
         }
-        
+
         return false;
     }
 
@@ -2781,7 +2779,7 @@ public class TransformationHelper implements SqlConstants {
      * @param transMappingRoot the transformation MappingRoot
      * @return the external map to use when resolving
      */
-    public static Map getExternalMetadataMap( Object transMappingRoot,
+    public static Map getExternalMetadataMap( Object transMappingRoot, // NO_UCD
                                               int cmdType ) {
         return SqlMappingRootCache.getExternalMetadataMap(transMappingRoot, cmdType);
     }
@@ -2792,7 +2790,7 @@ public class TransformationHelper implements SqlConstants {
      * @param transMappingRoot the transformation mapping root
      * @return the map of external metadata to use when resolving the query.
      */
-    public static Map getExternalMapForCreateUpdateProcedure( EObject transMappingRoot,
+    public static Map getExternalMapForCreateUpdateProcedure( EObject transMappingRoot, // NO_UCD
                                                               int cmdType ) {
         return SqlMappingRootCache.getExternalMapForCreateUpdateProc(transMappingRoot, cmdType);
     }
@@ -2867,7 +2865,7 @@ public class TransformationHelper implements SqlConstants {
      * @param proc the StoredProcedure
      * @return the List of ResultSet Parameters
      */
-    public static List getProcedureResultSetParameters( final StoredProcedure proc ) {
+    public static List getProcedureResultSetParameters( final StoredProcedure proc ) { // NO_UCD
         List resultParams = Collections.EMPTY_LIST;
         if (proc != null && proc.getProcedureID() instanceof ProcedureRecord) {
             ProcedureRecord record = (ProcedureRecord)proc.getProcedureID();
@@ -3015,7 +3013,7 @@ public class TransformationHelper implements SqlConstants {
      * @param procedure the Procedure
      * @return the map of external metadata to use when resolving the query.
      */
-    public static Map getExternalMetadataMapForProcedure( final Procedure procedure ) {
+    public static Map getExternalMetadataMapForProcedure( final Procedure procedure ) { // NO_UCD
         Map externalMetadata = new HashMap();
 
         // GroupSymbol (name form) for InputSet
@@ -3360,7 +3358,7 @@ public class TransformationHelper implements SqlConstants {
      * @param cmdType the provided command type
      * @return true if the transformation references the source Group, or false if not.
      */
-    public static boolean hasSourceGroup( Object transMappingRoot,
+    public static boolean hasSourceGroup( Object transMappingRoot, // NO_UCD
                                           Object sourceGroup,
                                           int cmdType ) {
         return SqlMappingRootCache.hasSourceGroup(transMappingRoot, sourceGroup, cmdType);
@@ -3500,36 +3498,36 @@ public class TransformationHelper implements SqlConstants {
         return result;
     }
 
-//    /**
-//     * Method to determine if the transformation SELECT is the default SELECT
-//     * 
-//     * @param transMappingRoot the transformation mapping root.
-//     * @return true if the Select SQL is the initial default, false if not.
-//     */
-//    public static boolean isInitialSelect( Object transMappingRoot ) {
-//        String sqlString = TransformationHelper.getSelectSqlString(transMappingRoot);
-//        return isDefaultSelect(sqlString);
-//    }
+    // /**
+    // * Method to determine if the transformation SELECT is the default SELECT
+    // *
+    // * @param transMappingRoot the transformation mapping root.
+    // * @return true if the Select SQL is the initial default, false if not.
+    // */
+    // public static boolean isInitialSelect( Object transMappingRoot ) {
+    // String sqlString = TransformationHelper.getSelectSqlString(transMappingRoot);
+    // return isDefaultSelect(sqlString);
+    // }
 
-//    /**
-//     * Method to determine if the supplied SQL is the initial default
-//     * 
-//     * @param sqlString the SQL string.
-//     * @return true if the supplied SQL is the default select, false if not.
-//     */
-//    public static boolean isDefaultSelect( String sqlString ) {
-//        if (sqlString == null) return false;
-//
-//        StringBuffer sb = new StringBuffer(sqlString);
-//        SqlStringUtil.replaceAll(sb, CR, BLANK);
-//        SqlStringUtil.replaceAll(sb, TAB, BLANK);
-//        SqlStringUtil.replaceAll(sb, DBL_SPACE, SPACE);
-//        String str = sb.toString();
-//        if (str != null && str.trim().equalsIgnoreCase(DEFAULT_SELECT)) {
-//            return true;
-//        }
-//        return false;
-//    }
+    // /**
+    // * Method to determine if the supplied SQL is the initial default
+    // *
+    // * @param sqlString the SQL string.
+    // * @return true if the supplied SQL is the default select, false if not.
+    // */
+    // public static boolean isDefaultSelect( String sqlString ) {
+    // if (sqlString == null) return false;
+    //
+    // StringBuffer sb = new StringBuffer(sqlString);
+    // SqlStringUtil.replaceAll(sb, CR, BLANK);
+    // SqlStringUtil.replaceAll(sb, TAB, BLANK);
+    // SqlStringUtil.replaceAll(sb, DBL_SPACE, SPACE);
+    // String str = sb.toString();
+    // if (str != null && str.trim().equalsIgnoreCase(DEFAULT_SELECT)) {
+    // return true;
+    // }
+    // return false;
+    // }
 
     /**
      * Method to determine if the transformation SELECT is a 'SELECT xxx FROM' String
@@ -4800,7 +4798,7 @@ public class TransformationHelper implements SqlConstants {
         }
     }
 
-    public static void printTransformation( EObject someEObject ) {
+    public static void printTransformation( EObject someEObject ) { // NO_UCD
         SqlTransformationMappingRoot mappingRoot = null;
         if (someEObject instanceof TransformationMappingRoot) {
             if (isSqlTransformationMappingRoot(someEObject)) {

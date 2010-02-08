@@ -130,7 +130,7 @@ public class XmlDocumentSelectorDialog extends ModelWorkspaceDialog implements M
         updateStatus(status);
     }
 
-    protected void registerControls() {
+    protected void registerControls() { // NO_UCD
         getTreeViewer().addSelectionChangedListener(this);
     }
 

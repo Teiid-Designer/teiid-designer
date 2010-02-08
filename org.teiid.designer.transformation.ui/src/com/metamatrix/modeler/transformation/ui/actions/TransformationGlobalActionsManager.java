@@ -67,7 +67,7 @@ public class TransformationGlobalActionsManager {
         return canCut;
     }
 
-    public static void cut( List sourceEObjects ) throws ModelerCoreException {
+    public static void cut( List sourceEObjects ) throws ModelerCoreException { // NO_UCD
 
         if (sourceEObjects != null && !sourceEObjects.isEmpty()) {
 
@@ -98,7 +98,7 @@ public class TransformationGlobalActionsManager {
         return canCopy;
     }
 
-    public static void copy( List sourceEObjects ) throws ModelerCoreException {
+    public static void copy( List sourceEObjects ) throws ModelerCoreException { // NO_UCD
         if (sourceEObjects != null && !sourceEObjects.isEmpty()) {
 
             Iterator iter = sourceEObjects.iterator();
@@ -141,7 +141,7 @@ public class TransformationGlobalActionsManager {
         return false;
     }
 
-    public static void paste( List sourceEObjects ) throws ModelerCoreException {
+    public static void paste( List sourceEObjects ) throws ModelerCoreException { // NO_UCD
         if (sourceEObjects != null && !sourceEObjects.isEmpty()) {
 
             Iterator iter = sourceEObjects.iterator();
@@ -295,7 +295,7 @@ public class TransformationGlobalActionsManager {
         return isOK;
     }
 
-    public static boolean allSourceObjectsAreInputs( EObject transformationEObject,
+    public static boolean allSourceObjectsAreInputs( EObject transformationEObject, // NO_UCD
                                                      List sourceEObjects ) {
 
         if (!ModelObjectUtilities.isReadOnly(transformationEObject)
@@ -320,7 +320,7 @@ public class TransformationGlobalActionsManager {
         return false;
     }
 
-    public static boolean anySourceObjectsAreInputs( EObject transformationEObject,
+    public static boolean anySourceObjectsAreInputs( EObject transformationEObject, // NO_UCD
                                                      List sourceEObjects ) {
 
         if (!ModelObjectUtilities.isReadOnly(transformationEObject)

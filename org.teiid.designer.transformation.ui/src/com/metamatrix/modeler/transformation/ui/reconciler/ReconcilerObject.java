@@ -235,7 +235,7 @@ public class ReconcilerObject {
     /**
      * Refresh lists
      */
-    public void refresh() {
+    public void refresh() { // NO_UCD
         bindingList.refresh(true);
         sqlList.refresh(true);
         updateCommandFromBindings();
@@ -332,7 +332,7 @@ public class ReconcilerObject {
      * 
      * @return 'true' if any type conflicts
      */
-    public boolean hasTypeConflict( int index ) {
+    public boolean hasTypeConflict( int index ) { // NO_UCD
         boolean hasConflict = false;
         if (index >= 0 && index < bindingList.size()) {
             Binding binding = bindingList.get(index);
@@ -458,7 +458,7 @@ public class ReconcilerObject {
         return unbindEnabled;
     }
 
-    public boolean shouldEnableCreateNew( List selectedSymbols ) {
+    public boolean shouldEnableCreateNew( List selectedSymbols ) { // NO_UCD
         boolean enableCreate = false;
 
         if (selectedSymbols.size() > 0) {

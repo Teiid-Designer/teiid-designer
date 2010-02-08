@@ -19,9 +19,6 @@ public interface IPackageDiagramActionConstants {
     String REMOVE_FROM_DIAGRAM = RemoveFromDiagramAction.class.getName();
     String CLEAR_DIAGRAM = ClearDiagramAction.class.getName();
 
-    /** All Modeler unique global actions. */
-    String[] ALL_ACTIONS = new String[] {ADD_TO_DIAGRAM, REMOVE_FROM_DIAGRAM, CLEAR_DIAGRAM};
-
     interface ContextMenu {
 
         /** The identifier for the diagram editor's context menu. */

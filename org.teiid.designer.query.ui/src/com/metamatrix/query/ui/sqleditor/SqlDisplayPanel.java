@@ -132,7 +132,6 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
 
     @Override
     public void dispose() {
-        colorManager.dispose();
         super.dispose();
     }
 

@@ -105,7 +105,7 @@ public class NewVirtualDocumentWizardPage extends WizardPage implements ModelerX
      * 
      * @param flag true or false
      */
-    public static void setIncludeXMLDocuments( boolean flag ) {
+    public static void setIncludeXMLDocuments( boolean flag ) { // NO_UCD
         includeXMLDocuments = flag;
     }
 
@@ -123,7 +123,7 @@ public class NewVirtualDocumentWizardPage extends WizardPage implements ModelerX
      * 
      * @param flag true or false
      */
-    public static void setIncludeXMLFragments( boolean flag ) {
+    public static void setIncludeXMLFragments( boolean flag ) { // NO_UCD
         includeXMLFragments = flag;
     }
 
@@ -152,7 +152,7 @@ public class NewVirtualDocumentWizardPage extends WizardPage implements ModelerX
      */
     public void createControl( Composite parent ) {
         model.setWizHolder(parent);
-        
+
         panel = new NewVirtualDocumentWizardPanel(parent, model, this);
 
         // if a builder strategy has been set let the panel know
@@ -346,7 +346,7 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
         this.setLayout(layout);
         GridData mainGridData = new GridData();
         this.setLayoutData(mainGridData);
-        
+
         // customize scroll bars to give better scrolling behavior
         ScrollBar bar = getHorizontalBar();
 
@@ -361,10 +361,10 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
             bar.setIncrement(12);
             bar.setPageIncrement(60);
         }
-        
+
         Composite pnlMain = WidgetFactory.createPanel(this, SWT.NONE, GridData.FILL_BOTH);
         setContent(pnlMain);
-        
+
         /*
          * XSD File selection group
          */
@@ -406,7 +406,7 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
             documentsAccumulatorCompositeLayout.marginHeight = 2;
             GridData accumulatorGridData = new GridData(GridData.FILL_BOTH);
             documentsAccumulatorComposite.setLayoutData(accumulatorGridData);
-            
+
             IAccumulatorSource documentsAccumulatorSource = new NewVirtualDocumentAccumulatorSource(this, DOCUMENTS);
             String documentsAvailableHdr = Util.getString("NewVirtualDocumentWizardPage.documentsAccumulatorLeftLabel"); //$NON-NLS-1$
             String documentsSelectedHdr = Util.getString("NewVirtualDocumentWizardPage.documentsAccumulatorRightLabel"); //$NON-NLS-1$
@@ -426,7 +426,7 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
             fragmentsAccumulatorCompositeLayout.marginHeight = 2;
             GridData accumulatorGridData = new GridData(GridData.FILL_HORIZONTAL);
             fragmentsAccumulatorComposite.setLayoutData(accumulatorGridData);
-            
+
             IAccumulatorSource fragmentsAccumulatorSource = new NewVirtualDocumentAccumulatorSource(this, FRAGMENTS);
             String fragmentsAvailableHdr = Util.getString("NewVirtualDocumentWizardPage.fragmentsAccumulatorLeftLabel"); //$NON-NLS-1$
             String fragmentsSelectedHdr = Util.getString("NewVirtualDocumentWizardPage.fragmentsAccumulatorRightLabel"); //$NON-NLS-1$
@@ -577,7 +577,7 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
                 }
             }
         });
-        
+
         // need to size scroll panel
         Point pt = pnlMain.computeSize(SWT.DEFAULT, SWT.DEFAULT);
         setMinWidth(pt.x);

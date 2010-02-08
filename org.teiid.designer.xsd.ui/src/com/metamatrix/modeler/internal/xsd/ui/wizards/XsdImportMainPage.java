@@ -53,10 +53,6 @@ public class XsdImportMainPage extends AbstractWizardPage {
         return (this.importFrom != -1) && super.canFlipToNextPage();
     }
 
-    int getImportFrom() {
-        return this.importFrom;
-    }
-
     boolean isImportFromUrl() {
         return importFrom == IMPORT_FROM_URL;
     }

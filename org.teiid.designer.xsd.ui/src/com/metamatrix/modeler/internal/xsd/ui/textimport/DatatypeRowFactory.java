@@ -73,7 +73,7 @@ public class DatatypeRowFactory {
         return IRowObject.UNKNOWN;
     }
 
-    public static String createValidName( final String input,
+    public static String createValidName( final String input, // NO_UCD
                                           final boolean performValidityCheck ) {
         String validName = nameValidator.createValidName(input, performValidityCheck);
         if (validName != null) return validName;
