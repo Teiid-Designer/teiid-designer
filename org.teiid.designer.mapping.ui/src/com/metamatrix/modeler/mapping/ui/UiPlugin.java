@@ -7,8 +7,6 @@
  */
 package com.metamatrix.modeler.mapping.ui;
 
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchPage;
@@ -25,8 +23,8 @@ import com.metamatrix.ui.actions.ActionService;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class UiPlugin extends AbstractUiPlugin implements UiConstants{
-    //The shared instance.
+public class UiPlugin extends AbstractUiPlugin implements UiConstants {
+    // The shared instance.
     private static UiPlugin plugin;
 
     /**
@@ -39,29 +37,24 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants{
 
     /**
      * Returns the shared instance.
+     * 
      * @since 4.0
      */
     public static UiPlugin getDefault() {
         return UiPlugin.plugin;
     }
 
-    /**
-     * Returns the workspace instance.
-     */
-    public static IWorkspace getWorkspace() {
-        return ResourcesPlugin.getWorkspace();
-    }
-	private MappingNotificationListener notificationListener = new MappingNotificationListener();
+    private MappingNotificationListener notificationListener = new MappingNotificationListener();
 
     private void init() {
-		try {
-			ModelerCore.getModelContainer().getChangeNotifier().addListener(notificationListener);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
+        try {
+            ModelerCore.getModelContainer().getChangeNotifier().addListener(notificationListener);
+        } catch (CoreException e) {
+            e.printStackTrace();
+        }
     }
 
-    //============================================================================================================================
+    // ============================================================================================================================
     // AbstractUiPlugin Methods
 
     /**
@@ -69,7 +62,7 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants{
      * @since 5.0
      */
     @Override
-    public void start(BundleContext context) throws Exception {
+    public void start( BundleContext context ) throws Exception {
         super.start(context);
         // Initialize logging/i18n utility
         ((PluginUtilImpl)Util).initializePlatformLogger(this);
@@ -77,7 +70,7 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants{
         storeDefaultPreferenceValues();
     }
 
-    //============================================================================================================================
+    // ============================================================================================================================
     // AbstractUiPlugin Methods
 
     /**
@@ -85,7 +78,7 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants{
      * @since 4.0
      */
     @Override
-    protected ActionService createActionService(IWorkbenchPage page) {
+    protected ActionService createActionService( IWorkbenchPage page ) {
         return null;
     }
 
@@ -94,7 +87,7 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants{
      * @since 4.0
      */
     @Override
-    public ActionService getActionService(IWorkbenchPage page) {
+    public ActionService getActionService( IWorkbenchPage page ) {
         // This plugin uses the DiagramActionService
         return DiagramUiPlugin.getDefault().getActionService(page);
     }
@@ -109,33 +102,31 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants{
     }
 
     /**
-	 * <p>
-	 * {@inheritDoc}
-	 * </p>
-	 *
-	 * @see com.metamatrix.ui.AbstractUiPlugin#stop(org.osgi.framework.BundleContext)
-	 */
-	@Override
-	public void stop( BundleContext context ) throws Exception {
-		ModelerCore.getModelContainer().getChangeNotifier().removeListener(notificationListener);
-		super.stop(context);
-	}
+     * <p>
+     * {@inheritDoc}
+     * </p>
+     * 
+     * @see com.metamatrix.ui.AbstractUiPlugin#stop(org.osgi.framework.BundleContext)
+     */
+    @Override
+    public void stop( BundleContext context ) throws Exception {
+        ModelerCore.getModelContainer().getChangeNotifier().removeListener(notificationListener);
+        super.stop(context);
+    }
 
-    //=========================================================================================================
+    // =========================================================================================================
     // Instance methods
     private void storeDefaultPreferenceValues() {
-        //Store default values of preferences.  Needs to be done once.  Does not change current
-        //values of preferences if any are already stored.
+        // Store default values of preferences. Needs to be done once. Does not change current
+        // values of preferences if any are already stored.
         IPreferenceStore preferenceStore = DiagramUiPlugin.getDefault().getPreferenceStore();
 
         for (int i = 0; i < PluginConstants.Prefs.Appearance.PREFERENCES.length; i++) {
-            PreferenceKeyAndDefaultValue.storePreferenceDefault(preferenceStore,
-                    PluginConstants.Prefs.Appearance.PREFERENCES[i]);
+            PreferenceKeyAndDefaultValue.storePreferenceDefault(preferenceStore, PluginConstants.Prefs.Appearance.PREFERENCES[i]);
         }
 
         for (int i = 0; i < PluginConstants.Prefs.PREFERENCES.length; i++) {
-            PreferenceKeyAndDefaultValue.storePreferenceDefault(preferenceStore,
-                    PluginConstants.Prefs.PREFERENCES[i]);
+            PreferenceKeyAndDefaultValue.storePreferenceDefault(preferenceStore, PluginConstants.Prefs.PREFERENCES[i]);
         }
 
         DiagramUiPlugin.getDefault().savePluginPreferences();

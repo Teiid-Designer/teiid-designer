@@ -52,6 +52,5 @@ public interface ModelerXsdUiConstants {
      */
     interface Images extends UiConstants.Images {
         String IMPORT_XSD_ICON = WIZBAN + "import_xsd.gif"; //$NON-NLS-1$
-        String XSD_FILE_ICON = OBJ16 + "XSDModelFile.gif"; //$NON-NLS-1$
     }
 }

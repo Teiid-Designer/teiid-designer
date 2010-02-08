@@ -53,8 +53,5 @@ public interface ITransformationDiagramActionConstants {
 
         /** Name of group for start of transformation diagram menu items. */
         String TRANS_DIAGRAM_START = "transformationDiagramStart"; //$NON-NLS-1$
-
-        /** Name of group for end of transformation diagram menu items. */
-        String TRANS_DIAGRAM_END = "transformationDiagramEnd"; //$NON-NLS-1$
     }
 }

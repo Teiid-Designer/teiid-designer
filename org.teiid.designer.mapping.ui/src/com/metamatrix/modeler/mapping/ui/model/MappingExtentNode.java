@@ -38,7 +38,6 @@ public class MappingExtentNode extends AbstractDiagramModelNode {
     protected static final String sTargetNamespace = UiConstants.Util.getString("MappingExtentTooltip.targetNamespace"); //$NON-NLS-1$
     protected static final String sQualifiedName = UiConstants.Util.getString("MappingExtentTooltip.qualifiedName"); //$NON-NLS-1$
     protected static final String sMappingClassPrefix = UiConstants.Util.getString("MappingExtentTooltip.mappingClassPrefix"); //$NON-NLS-1$
-    protected static final String sLocationPrefix = UiConstants.Util.getString("MappingExtentTooltip.locationPrefix"); //$NON-NLS-1$
     protected static final String sStagingTablePrefix = UiConstants.Util.getString("MappingExtentTooltip.stagingTablePrefix"); //$NON-NLS-1$
     protected static final String sPathInDocumentPrefix = UiConstants.Util.getString("MappingExtentTooltip.pathInDocumentPrefix"); //$NON-NLS-1$
     protected static final String sXsdComponentPrefix = UiConstants.Util.getString("MappingExtentTooltip.xsdComponentPrefix"); //$NON-NLS-1$

@@ -25,37 +25,24 @@ public class MappingLink extends AbstractNodeConnectionModel {
 
     /**
      * Construct an instance of MappingLink
-     * 
      */
-    public MappingLink(DiagramModelNode source, DiagramModelNode target) {
+    public MappingLink( DiagramModelNode source,
+                        DiagramModelNode target ) {
         super();
         setSourceNode(source);
         setTargetNode(target);
     }
 
-    /**
-     * Construct an instance of MappingLink.
-     * 
-     */
-    public MappingLink(DiagramModelNode source, DiagramModelNode target, String sName) {
-        super();
-
-        setSourceNode(source);
-        setTargetNode(target);
-    }
-
-
-    public void setSource(DiagramModelNode iSource) {
+    public void setSource( DiagramModelNode iSource ) {
         sourceNode = iSource;
     }
 
-    public void setTarget(DiagramModelNode iTarget) {
+    public void setTarget( DiagramModelNode iTarget ) {
         targetNode = iTarget;
     }
 
-
     @Override
-    public void setRouterStyle(String sRouterStyle) {
+    public void setRouterStyle( String sRouterStyle ) {
 
         if (this.sRouterStyle == null || !this.sRouterStyle.equals(sRouterStyle)) {
 
@@ -90,7 +77,7 @@ public class MappingLink extends AbstractNodeConnectionModel {
      * @param node
      */
     @Override
-    public void setSourceNode(Object node) {
+    public void setSourceNode( Object node ) {
         sourceNode = (DiagramModelNode)node;
     }
 
@@ -98,30 +85,27 @@ public class MappingLink extends AbstractNodeConnectionModel {
      * @param node
      */
     @Override
-    public void setTargetNode(Object node) {
+    public void setTargetNode( Object node ) {
         targetNode = (DiagramModelNode)node;
     }
 
-
-    
     @Override
     public String toString() {
-            
+
         return new StringBuffer().append(" MappingLink:") //$NON-NLS-1$
         .append(" Source = ").append(sourceNode.getName()) //$NON-NLS-1$
         .append(" Target = ").append(targetNode.getName()) //$NON-NLS-1$
         .toString();
     }
-	
-	
-	/* (non-Javadoc)
-	 * @see com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel#getToolTipString()
-	 */
-	@Override
+
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.diagram.ui.connection.NodeConnectionModel#getToolTipString()
+     */
+    @Override
     public List getToolTipStrings() {
-		List newList = new ArrayList(1);
-		newList.add(this.toString());
-		return newList;
-	}
+        List newList = new ArrayList(1);
+        newList.add(this.toString());
+        return newList;
+    }
 
 }

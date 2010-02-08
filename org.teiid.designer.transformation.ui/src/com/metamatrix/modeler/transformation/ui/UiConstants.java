@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.transformation.ui;
 
 import java.util.ResourceBundle;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.swt.graphics.Color;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
@@ -28,8 +27,6 @@ public interface UiConstants {
     String PLUGIN_ID = "org.teiid.designer.transformation.ui"; //$NON-NLS-1$
 
     String PACKAGE_ID = UiConstants.class.getPackage().getName();
-
-    String EXT_ID_PREFIX = "com.metamatrix.modeler.transformation.ui"; //$NON-NLS-1$
 
     /**
      * Contains private constants used by other constants within this class.
@@ -81,14 +78,6 @@ public interface UiConstants {
      * @since 4.0
      */
     interface Colors {
-        Color GROUP_HEADER = DiagramUiConstants.Colors.GROUP_HEADER;
-        Color GROUP_BKGRND = DiagramUiConstants.Colors.GROUP_BKGRND;
-        Color HILITE = ColorConstants.lightGreen;
-        Color SELECTION = ColorConstants.lightBlue;
-        Color OUTLINE = GROUP_BKGRND;
-        Color VIRTUAL_GROUP_HEADER = DiagramUiConstants.Colors.VIRTUAL_GROUP_HEADER;
-        Color VIRTUAL_RS_GROUP_HEADER = DiagramUiConstants.Colors.VIRTUAL_RS_GROUP_HEADER;
-        Color VIRTUAL_GROUP_BKGRND = DiagramUiConstants.Colors.VIRTUAL_GROUP_BKGRND;
         Color DEPENDENCY = DiagramUiConstants.Colors.DEPENDENCY;
     }
 }

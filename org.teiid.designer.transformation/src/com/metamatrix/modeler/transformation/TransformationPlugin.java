@@ -24,7 +24,7 @@ public class TransformationPlugin extends Plugin {
      * The plug-in identifier of this plugin (value <code>"com.metamatrix.modeler.transformation"</code>).
      */
     public static final String PLUGIN_ID = "org.teiid.designer.transformation"; //$NON-NLS-1$
-    
+
     public static final String PACKAGE_ID = TransformationPlugin.class.getPackage().getName();
 
     public static final String FUNCTION_DEFS = "FunctionDefinitions.xmi"; //$NON-NLS-1$
@@ -34,8 +34,6 @@ public class TransformationPlugin extends Plugin {
      */
     private static final String I18N_NAME = PACKAGE_ID + ".i18n"; //$NON-NLS-1$
     public static final PluginUtilImpl Util = new PluginUtilImpl(PLUGIN_ID, I18N_NAME, ResourceBundle.getBundle(I18N_NAME));
-
-    public static final boolean DEBUG = false;
 
     /**
      * Delimiter used by extension/extension point declarations

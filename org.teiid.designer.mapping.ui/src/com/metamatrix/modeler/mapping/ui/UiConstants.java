@@ -56,13 +56,11 @@ public interface UiConstants {
      * @since 4.0
      */
     interface Colors {
-        Color GROUP_HEADER = DiagramUiConstants.Colors.GROUP_HEADER;
         Color GROUP_BKGRND = DiagramUiConstants.Colors.GROUP_BKGRND;
         Color HILITE = ColorConstants.lightGreen;
         Color SELECTION = ColorConstants.lightBlue;
         Color OUTLINE = GROUP_BKGRND;
         Color VIRTUAL_GROUP_HEADER = DiagramUiConstants.Colors.VIRTUAL_GROUP_HEADER;
-        Color VIRTUAL_RS_GROUP_HEADER = DiagramUiConstants.Colors.VIRTUAL_RS_GROUP_HEADER;
         Color VIRTUAL_GROUP_BKGRND = DiagramUiConstants.Colors.VIRTUAL_GROUP_BKGRND;
         Color INPUT_SET_HEADER = GlobalUiColorManager.getColor(new RGB(250, 160, 210));
         Color INPUT_SET_BKGRND = GlobalUiColorManager.getColor(new RGB(250, 240, 240));
@@ -84,7 +82,6 @@ public interface UiConstants {
             private static final String COBJ = FULL + "obj16/"; //$NON-NLS-1$
         }
 
-        String SHOW_COARSE_MAPPING = PC.CVIEW16 + "tb_show_coarse_mapping.gif"; //$NON-NLS-1$
         String SHOW_DETAILED_MAPPING = PC.CVIEW16 + "tb_show_detailed_mapping.gif"; //$NON-NLS-1$
         String GENERATE_MAPPING_CLASSES = PC.CVIEW16 + "tb_gen_mapping_classes.gif"; //$NON-NLS-1$
         String NEW_MAPPING_CLASS = PC.CVIEW16 + "tb_new_mapping_class.gif"; //$NON-NLS-1$
@@ -99,8 +96,6 @@ public interface UiConstants {
         String RECURSION_IMAGE = PC.COBJ + "recursion.gif"; //$NON-NLS-1$
         String EDIT_OBJECT_ICON = PC.COBJ + "edit_model_object.gif"; //$NON-NLS-1$
         String SHOW_ALL_MAPPING_CLASSES = PC.CVIEW16 + "show_exposed_mapping_classes.gif"; //$NON-NLS-1$
-        String SHOW_EXPOSED_MAPPING_CLASSES = PC.CVIEW16 + "show_exposed_mapping_classes.gif"; //$NON-NLS-1$
-        String COLLAPSE_MAPPING_CLASS_COLUMNS = PC.CVIEW16 + "collapse_mapping_classes.gif"; //$NON-NLS-1$
         String EXPAND_MAPPING_CLASS_COLUMNS = PC.CVIEW16 + "expand_mapping_classes.gif"; //$NON-NLS-1$
         String SYNC_TREE_AND_DIAGRAM_WHEN_EXPANDING = PC.CVIEW16 + "synced.gif"; //$NON-NLS-1$
         String POPULATE_DIAGRAM_FROM_TREE_SELECTION = PC.CVIEW16 + "filter_change.gif"; //$NON-NLS-1$

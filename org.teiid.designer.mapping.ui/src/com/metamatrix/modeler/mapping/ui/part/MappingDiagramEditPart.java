@@ -325,20 +325,8 @@ public class MappingDiagramEditPart extends AbstractDiagramEditPart implements E
         return yValue;
     }
 
-    public boolean hasConnections() {
-        EditPart canvasEditPart = getViewer().getContents();
-        Iterator iter = canvasEditPart.getChildren().iterator();
-        DiagramEditPart nextEditPart = null;
-
-        while (iter.hasNext()) {
-            nextEditPart = (DiagramEditPart)iter.next();
-            if (!nextEditPart.getSourceConnections().isEmpty() || !nextEditPart.getTargetConnections().isEmpty()) return true;
-        }
-        return false;
-    }
-
     /**
-     * Reset font from Font Managar and call layout on all diagram objects.
+     * Reset font from Font Manager and call layout on all diagram objects.
      */
     @Override
     public void refreshFont( boolean refreshChildren ) {
