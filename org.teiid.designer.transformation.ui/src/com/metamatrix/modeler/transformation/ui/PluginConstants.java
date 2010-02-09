@@ -49,6 +49,7 @@ public interface PluginConstants {
         String REVALIDATE_TRANSFORMATION_ICON = "icons/full/cview16/validate.gif"; //$NON-NLS-1$
         String EDIT_TRANSFORMATION_ICON = "icons/full/cview16/tb_edit_transformation.gif"; //$NON-NLS-1$
         String SEARCH_TRANSFORMATION_ICON = "icons/full/cview16/search_transformation.gif"; //$NON-NLS-1$
+        String PREVIEW_VIRTUAL_DATA_ICON = "icons/full/cview16/previewVirtualData.png"; //$NON-NLS-1$
     }
 
     interface Prefs {
