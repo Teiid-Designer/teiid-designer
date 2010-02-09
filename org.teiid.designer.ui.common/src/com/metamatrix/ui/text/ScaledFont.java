@@ -7,7 +7,6 @@
  */
 package com.metamatrix.ui.text;
 
-import org.eclipse.swt.graphics.Font;
 
 /**
  * ScaledFont
@@ -21,20 +20,6 @@ public interface ScaledFont {
     boolean canIncrease();
     
     boolean canDecrease();
-    
-    Font getFont();
-    
-    String getName();
-    
-    int getSize();
-    
-    int getStyle();
-    
-    void setFont(Font newFont);
-    
-    void setFont(String typeName, int size, int style); 
-    
-    void setSize(int newSize);
 
     void addFontChangeListener(IFontChangeListener listener);
 

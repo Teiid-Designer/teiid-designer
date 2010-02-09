@@ -47,6 +47,16 @@ public class DownFont extends AbstractAction implements IFontChangeListener {
     // METHODS
     ///////////////////////////////////////////////////////////////////////////////////////////////
     
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.ui.actions.AbstractAction#dispose()
+     */
+    @Override
+    public void dispose() {
+        getFontManager().removeFontChangeListener(this);
+        super.dispose();
+    }
 
     private TextFontManager getFontManager() {
         return panel.getFontManager();
@@ -64,7 +74,6 @@ public class DownFont extends AbstractAction implements IFontChangeListener {
     }
     
     public void fontChanged() {
-//        System.out.println("[DownFont.fontChanged] new size: " + tfmFontManager.getSize() ); //$NON-NLS-1$        
         setEnableState();
     }
 }

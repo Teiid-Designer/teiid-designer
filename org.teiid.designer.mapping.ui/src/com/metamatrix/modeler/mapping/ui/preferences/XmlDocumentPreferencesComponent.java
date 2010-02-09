@@ -246,10 +246,20 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
         return UiPlugin.getDefault().getPreferenceStore();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#addValidationListener(com.metamatrix.ui.internal.preferences.IEditorPreferencesValidationListener)
+     */
     public void addValidationListener( IEditorPreferencesValidationListener listener ) {
         this.validationListeners.add(listener);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#removeValidationListener(com.metamatrix.ui.internal.preferences.IEditorPreferencesValidationListener)
+     */
     public void removeValidationListener( IEditorPreferencesValidationListener listener ) {
         this.validationListeners.remove(listener);
     }

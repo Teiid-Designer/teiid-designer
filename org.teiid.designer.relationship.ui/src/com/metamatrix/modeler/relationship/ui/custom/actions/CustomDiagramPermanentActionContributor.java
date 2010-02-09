@@ -98,44 +98,6 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
     public List<IAction> getAdditionalModelingActions(ISelection theSelection) {
         return Collections.EMPTY_LIST;
     }
-
-    /* (non-Javadoc)
-     * @see com.metamatrix.modeler.ui.actions.IModelObjectActionContributor#contributeToEditMenu(org.eclipse.jface.action.IMenuManager, org.eclipse.jface.viewers.ISelection)
-     */
-    public void contributeToEditMenu(IMenuManager theMenuMgr, ISelection theSelection) {
-        // Need to check the selection first.
-        
-        if( SelectionUtilities.isSingleSelection(theSelection) ) {
-            Object selectedObject = SelectionUtilities.getSelectedObject(theSelection);
-            if( selectedObject instanceof EObject ) {
-                EObject eObject = (EObject)selectedObject;
-				if( RelationshipDiagramUtil.isRelationshipModelResource(eObject) ){
-	                if( isPackage(eObject) ) {
-	                    addToChildMenu(theMenuMgr);
-	                }
-	                if( eObject.eContainer()!= null && isPackage(eObject.eContainer() )) {
-	                    addToSiblingMenu(theMenuMgr);
-	                } else if( eObject.eContainer() == null ) {
-	                    addToSiblingMenu(theMenuMgr);
-	                }
-				}
-            } else if( (selectedObject instanceof IResource) && 
-            			ModelUtilities.isModelFile((IResource)selectedObject) ) {
-            	// make sure this is a relationship model
-            	
-            	ModelResource mr = null;
-            	
-				try {
-					mr = ModelUtilities.getModelResource((IFile)selectedObject, false);
-				} catch (ModelWorkspaceException e) {
-					e.printStackTrace();
-				}
-            	
-            	if( mr != null && RelationshipDiagramUtil.isRelationshipModelResource(mr))
-                	addToChildMenu(theMenuMgr);
-            }
-        }
-    }
     
     /**
      * Construct and register actions.

@@ -40,11 +40,6 @@ public class LabelContributionItem extends ControlContribution {
         super("LabelContributionItem");  //$NON-NLS-1$
     }
     
-    public LabelContributionItem(int theWidth) {
-        this();
-        this.width = theWidth;
-    }
-    
     /* (non-Javadoc)  
      * @see org.eclipse.jface.action.ControlContribution#computeWidth(org.eclipse.swt.widgets.Control)
      */

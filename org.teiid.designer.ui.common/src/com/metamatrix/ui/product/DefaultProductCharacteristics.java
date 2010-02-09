@@ -10,14 +10,9 @@ package com.metamatrix.ui.product;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.ContributionItem;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.IWorkbenchWindow;
 import com.metamatrix.ui.internal.product.WorkbenchState;
 
 
@@ -85,14 +80,6 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
         return false;
     }
     
-    public IAction getProductAction(String productActionID) {
-        return null;
-    }
-    
-    public IAction getRetargetableAction(String retargetableActionID, IWorkbenchWindow theWindow) {
-        return null;
-    }
-    
     /** 
      * @see com.metamatrix.ui.product.IProductCharacteristics#getCreateHiddenProjectWizardPage()
      * @since 4.4
@@ -128,25 +115,6 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
         return ResourcesPlugin.getWorkspace().getRoot();
     }
 
-    /** 
-     * @see com.metamatrix.ui.product.IProductCharacteristics#handlePartEvent(int, org.eclipse.ui.IWorkbenchPartReference)
-     * @since 5.0
-     */
-    public void handlePartEvent(int theEventID,
-                                IWorkbenchPartReference theRef) {
-        // no default implementation
-    }
-
-    /** 
-     * @see com.metamatrix.ui.product.IProductCharacteristics#handlePerspectiveEvent(int, org.eclipse.ui.IWorkbenchPage, org.eclipse.ui.IPerspectiveDescriptor)
-     * @since 5.0
-     */
-    public void handlePerspectiveEvent(int theEventID,
-                                       IWorkbenchPage thePage,
-                                       IPerspectiveDescriptor thePerspective) {
-        // no default implementation
-    }
-    
     /**
      *  
      * @see com.metamatrix.ui.product.IProductCharacteristics#getNewModelInput(org.eclipse.jface.viewers.ISelection)
@@ -154,17 +122,6 @@ public class DefaultProductCharacteristics implements IProductCharacteristics {
      */
     public Object getNewModelInput(ISelection theSelection) {
         return null;
-    }
-
-    /**
-     *  
-     * @see com.metamatrix.ui.product.IProductCharacteristics#postProcess(java.lang.Object, org.eclipse.swt.widgets.Shell)
-     * @since 5.0
-     */
-    public boolean postProcess(Object theSomeObject,
-                               Shell theShell) {
-        // Default implementation is a pass-through:  TRUE
-        return true;
     }
 
     /**

@@ -35,29 +35,11 @@ public class DoubleClickTableViewer extends TableViewer {
      * Construct an instance of DoubleClickTableViewer.
      * 
      * @param parent
-     */
-    public DoubleClickTableViewer( Composite parent ) {
-        super(parent);
-    }
-
-    /**
-     * Construct an instance of DoubleClickTableViewer.
-     * 
-     * @param parent
      * @param style
      */
     public DoubleClickTableViewer( Composite parent,
                                    int style ) {
         super(parent, style);
-    }
-
-    /**
-     * Construct an instance of DoubleClickTableViewer.
-     * 
-     * @param table
-     */
-    public DoubleClickTableViewer( Table table ) {
-        super(table);
     }
 
     /**

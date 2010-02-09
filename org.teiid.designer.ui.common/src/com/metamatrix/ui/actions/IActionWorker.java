@@ -21,8 +21,6 @@ public interface IActionWorker {
     
     Object getSelection();
     
-    boolean isEnabled();
-    
     boolean getEnableAfterExecute();
     
     WorkerProblem getWorkerProblem();

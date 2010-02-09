@@ -7,7 +7,6 @@
  */
 package com.metamatrix.ui.internal.widget;
 
-import java.util.Arrays;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
@@ -119,22 +118,7 @@ public class ListPanel extends AbstractVerticalButtonPanel implements StringUtil
                       final int itemStyle,
                       final java.util.List items ) {
         this(parent, title, controller, style, itemStyle, GridData.FILL_BOTH, items);
-    }
-
-    /**
-     * @param parent
-     * @param style
-     * @since 4.0
-     */
-    public ListPanel( final Composite parent,
-                      final String title,
-                      final IListPanelController controller,
-                      final int style,
-                      final int itemStyle,
-                      final int gridStyle,
-                      final Object[] items ) {
-        this(parent, title, controller, style, itemStyle, gridStyle, items == null ? null : Arrays.asList(items));
-    }
+    }    
 
     /**
      * @param parent
@@ -257,7 +241,7 @@ public class ListPanel extends AbstractVerticalButtonPanel implements StringUtil
      * 
      * @param theListener the listener being added
      */
-    public void addCheckStateListener( ICheckStateListener theListener ) {
+    public void addCheckStateListener( ICheckStateListener theListener ) { // NO_UCD (Indicates this is ignored by unused code detection tool)
         if (getViewer() instanceof CheckboxTableViewer) {
             if (this.checkStateListeners == null) {
                 checkStateListeners = new ListenerList(ListenerList.IDENTITY);

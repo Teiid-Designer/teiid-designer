@@ -19,15 +19,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -77,38 +72,12 @@ public abstract class AbstractActionService implements ActionService, InternalUi
     }
 
     /**
-     * @see com.metamatrix.ui.actions.ActionService#addEditorSelectionListener(IEditorPart, ISelectionChangedListener)
-     */
-    public void addEditorSelectionListener( IEditorPart theEditor,
-                                            ISelectionChangedListener theListener ) {
-        ISelectionProvider source = theEditor.getSite().getSelectionProvider();
-
-        if (source != null) {
-            source.addSelectionChangedListener(theListener);
-            theListener.selectionChanged(new SelectionChangedEvent(source, source.getSelection()));
-        }
-    }
-
-    /**
      * @see com.metamatrix.ui.actions.ActionService#addResourceChangeListener(org.eclipse.core.resources.IResourceChangeListener)
      */
     public void addResourceChangeListener( IResourceChangeListener theListener ) {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
 
         workspace.addResourceChangeListener(theListener);
-    }
-
-    /**
-     * @see com.metamatrix.ui.actions.ActionService#addViewSelectionListener(IViewPart, ISelectionChangedListener)
-     */
-    public void addViewSelectionListener( IViewPart theView,
-                                          ISelectionChangedListener theListener ) {
-        ISelectionProvider source = theView.getSite().getSelectionProvider();
-
-        if (source != null) {
-            source.addSelectionChangedListener(theListener);
-            theListener.selectionChanged(new SelectionChangedEvent(source, source.getSelection()));
-        }
     }
 
     /**
@@ -155,15 +124,6 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      */
     public void contributePermanentActionsToContextMenu( IMenuManager theMenuMgr,
                                                          ISelection theSelection ) {
-        // must be overriden in order to contribute
-    }
-
-    /**
-     * @see com.metamatrix.ui.actions.ActionService#contributePermanentActionsToEditMenu(org.eclipse.jface.action.IMenuManager,
-     *      org.eclipse.jface.viewers.ISelection)
-     */
-    public void contributePermanentActionsToEditMenu( IMenuManager theMenuMgr,
-                                                      ISelection theSelection ) {
         // must be overriden in order to contribute
     }
 
@@ -329,40 +289,6 @@ public abstract class AbstractActionService implements ActionService, InternalUi
     }
 
     /**
-     * Adds this action to the registry if it is not already there, or even if it is there and 'force' is true
-     * 
-     * @param sActionKey the action's key
-     * @param theAction the action to add
-     * @param bForce if true, register even if one has already been registered
-     * @return true if successful
-     */
-    public boolean registerAction( String sActionKey,
-                                   IAction theAction,
-                                   boolean bForce ) {
-
-        if (actionMap.containsKey(sActionKey) && !bForce) {
-            return false;
-        }
-        if (!IAction.class.isAssignableFrom(theAction.getClass())) {
-            Assertion.assertTrue(IAction.class.isAssignableFrom(theAction.getClass()),
-                                 Util.getString(PREFIX + "ClassNotAssignableToIActionMessage", //$NON-NLS-1$
-                                                new Object[] {theAction}));
-        }
-
-        actionMap.put(sActionKey, theAction);
-        return true;
-    }
-
-    /**
-     * Convenience version of registerAction. Key defaults to getId of the action.
-     * 
-     * @param theActionId the action identifier
-     */
-    public boolean registerAction( IAction theAction ) {
-        return registerAction(theAction.getClass().getName(), theAction);
-    }
-
-    /**
      * Indicates if and action with the given identifier has been registered.
      * 
      * @param theActionId the action identifier
@@ -370,16 +296,6 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      */
     public boolean isRegistered( String theActionId ) {
         return actionMap.containsKey(theActionId);
-    }
-
-    /**
-     * Indicates if and action with the given <code>Class</code> has been registered.
-     * 
-     * @param theActionClass the action class
-     * @return <code>true</code> if the action is registered; <code>false</code> otherwise.
-     */
-    public boolean isRegistered( Class<IAction> theActionClass ) {
-        return isRegistered(theActionClass.getName());
     }
 
     /**
@@ -421,47 +337,12 @@ public abstract class AbstractActionService implements ActionService, InternalUi
     }
 
     /**
-     * Removes the action with the given from the action service.
-     * 
-     * @param theActionClass the class of the action being removed
-     * @throws com.metamatrix.core.util.AssertionError if input is null
-     */
-    public void removeAction( Class<IAction> theActionClass ) {
-        Assertion.isNotNull(theActionClass);
-        actionMap.remove(theActionClass.getName());
-    }
-
-    /**
-     * @see com.metamatrix.ui.actions.ActionService#removeEditorSelectionListener(IEditorPart, ISelectionChangedListener)
-     */
-    public void removeEditorSelectionListener( IEditorPart theEditor,
-                                               ISelectionChangedListener theListener ) {
-        ISelectionProvider source = theEditor.getSite().getSelectionProvider();
-
-        if (source != null) {
-            source.removeSelectionChangedListener(theListener);
-        }
-    }
-
-    /**
      * @see com.metamatrix.ui.actions.ActionService#removeResourceChangeListener(org.eclipse.core.resources.IResourceChangeListener)
      */
     public void removeResourceChangeListener( IResourceChangeListener theListener ) {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
 
         workspace.removeResourceChangeListener(theListener);
-    }
-
-    /**
-     * @see com.metamatrix.ui.actions.ActionService#removeViewSelectionListener(IViewPart, ISelectionChangedListener)
-     */
-    public void removeViewSelectionListener( IViewPart theView,
-                                             ISelectionChangedListener theListener ) {
-        ISelectionProvider source = theView.getSite().getSelectionProvider();
-
-        if (source != null) {
-            source.removeSelectionChangedListener(theListener);
-        }
     }
 
     /**

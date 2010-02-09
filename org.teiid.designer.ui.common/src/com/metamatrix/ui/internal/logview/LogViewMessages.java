@@ -14,7 +14,6 @@ import com.metamatrix.ui.UiConstants;
  * @since 4.3
  */
 public class LogViewMessages {
-    public static String column_severity = getString("LogView_column_severity"); //$NON-NLS-1$
     public static String column_message = getString("LogView_column_message"); //$NON-NLS-1$
     public static String column_plugin = getString("LogView_column_plugin"); //$NON-NLS-1$
     public static String column_date = getString("LogView_column_date"); //$NON-NLS-1$

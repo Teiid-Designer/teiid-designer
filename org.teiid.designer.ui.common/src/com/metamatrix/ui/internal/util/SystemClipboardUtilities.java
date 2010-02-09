@@ -41,7 +41,7 @@ public class SystemClipboardUtilities {
     /**
      * Clears the text contents of the system clipboard.
      */
-    public static void clear() {
+    public static void clear() { // NO_UCD (Indicates this is ignored by unused code detection tool)
         clear(TextTransfer.getInstance());
     }
     

@@ -56,25 +56,6 @@ public interface InternalUiConstants extends UiConstants {
     }
 
     /**
-     * Contains debug contexts defined by this plug-in.
-     * 
-     * @since 4.0
-     */
-    interface Debug {
-        interface Metrics {
-            // debug setting that should be used only by aspects
-            String ACTION_RUN = "metricsTimingActionRun"; //$NON-NLS-1$
-
-            // debug setting that should be used only by aspects
-            String ACTION_SELECTION = "metricsTimingActionSelection"; //$NON-NLS-1$
-
-            String NOTIFICATIONS = "metricsTimingNotifications"; //$NON-NLS-1$
-            String CONSTRUCTOR = "metricsTimingConstructor"; //$NON-NLS-1$
-            String METHOD = "metricsTimingMethod"; //$NON-NLS-1$
-        }
-    }
-
-    /**
      * Contains widget constants.
      * 
      * @since 4.0

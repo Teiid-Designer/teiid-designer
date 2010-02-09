@@ -174,7 +174,7 @@ public class CheckboxTreeViewerWizardPanel extends Composite implements UiConsta
             @Override
             public void widgetSelected( SelectionEvent ev ) {
                 treeViewer.setListenerEnabled(false);
-                TreeViewerUtil.setAllChecked(treeViewer, true, true);
+                TreeViewerUtil.setAllChecked(treeViewer, true);
                 treeViewer.setListenerEnabled(true);
                 checkboxStateChanged();
             }
@@ -188,7 +188,7 @@ public class CheckboxTreeViewerWizardPanel extends Composite implements UiConsta
             @Override
             public void widgetSelected( SelectionEvent ev ) {
                 treeViewer.setListenerEnabled(false);
-                TreeViewerUtil.setAllChecked(treeViewer, false, true);
+                TreeViewerUtil.setAllChecked(treeViewer, false);
                 treeViewer.setListenerEnabled(true);
                 checkboxStateChanged();
             }

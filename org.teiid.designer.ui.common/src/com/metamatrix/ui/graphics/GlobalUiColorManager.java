@@ -53,16 +53,4 @@ public class GlobalUiColorManager {
         return color;
     }
 
-
-    public static void removeColor(RGB rgb) {
-        Color color = getColor(rgb);
-        if( color != null ) {
-            color.dispose();
-            fColorTable.remove(rgb);
-        }
-    }
-
-    public static int getNumberOfColors() {
-        return fColorTable.values().size();
-    }
 }

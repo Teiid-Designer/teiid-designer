@@ -26,14 +26,6 @@ public interface IModelObjectActionContributor {
     void contributeToContextMenu(IMenuManager theMenuMgr, ISelection theSelection);
     
     /**
-     * Called to give the <code>IModelObjectActionContributor</code> an opportunity to contribute to the 
-     * Edit menu
-     * @param theMenuMgr the Edit menu
-     * @param theSelection the current selection
-     */
-    void contributeToEditMenu(IMenuManager theMenuMgr, ISelection theSelection);
-    
-    /**
      * Called to give the <code>IModelObjectActionContributor</code> an opportunity to contribute to the Modeling actions
      * submenu
      * @param theSelection the current selection

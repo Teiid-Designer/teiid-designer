@@ -431,11 +431,18 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#addValidationListener(com.metamatrix.ui.internal.preferences.IEditorPreferencesValidationListener)
+     */
     public void addValidationListener( IEditorPreferencesValidationListener listener ) {
         this.validationListeners.add(listener);
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#removeValidationListener(com.metamatrix.ui.internal.preferences.IEditorPreferencesValidationListener)
      */
     public void removeValidationListener( IEditorPreferencesValidationListener listener ) {

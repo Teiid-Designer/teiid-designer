@@ -16,8 +16,7 @@ public interface TreeSelection {
      * Selection constant (value 0) indicating a model object is <i>not</i> selected, nor are any model objects (directly or
      * indirectly) below it.
      */
-    @SuppressWarnings( "ucd" )
-    int UNSELECTED = 0;
+    int UNSELECTED = 0; // NO_UCD (Indicates this is ignored by unused code detection tool)
 
     /**
      * Selection constant (value 1) indicating this model object <i>is</i> selected as are all of the model objects (directly and

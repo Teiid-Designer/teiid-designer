@@ -176,62 +176,6 @@ public class RadioMessageDialog extends MessageDialog {
     }
 
     /**
-     * Convenience method to open a simple radio question dialog, with a single button.
-     * 
-     * @param parent the parent shell of the dialog, or <code>null</code> if none
-     * @param title the dialog's title, or <code>null</code> if none
-     * @param message the message
-     * @return the index of the selected radio button
-     */
-    public static int openQuestion( Shell parent,
-                                    String title,
-                                    String message,
-                                    String optionsTitle,
-                                    String[] options ) {
-        return openMulti(parent, QUESTION, title, message, optionsTitle, options, 0); // first is default
-    }
-
-    /**
-     * Convenience method to open a simple radio warning dialog, with a single button.
-     * 
-     * @param parent the parent shell of the dialog, or <code>null</code> if none
-     * @param title the dialog's title, or <code>null</code> if none
-     * @param message the message
-     * @return the index of the selected radio button
-     */
-    public static int openWarning( Shell parent,
-                                   String title,
-                                   String message,
-                                   String optionsTitle,
-                                   String[] options ) {
-        return openMulti(parent, WARNING, title, message, optionsTitle, options, 0); // first is default
-    }
-
-    /**
-     * Convenience method to open a simple radio warning dialog, with a single button.
-     * 
-     * @param parent the parent shell of the dialog, or <code>null</code> if none
-     * @param type the type of dialog... use one of the constants: QUESTION, WARNING, INFORMATION, ERROR
-     * @param title the dialog's title, or <code>null</code> if none
-     * @param message the message
-     * @return the index of the selected radio button
-     */
-    public static int openMulti( Shell parent,
-                                 int type,
-                                 String title,
-                                 String message,
-                                 String optionsTitle,
-                                 String[] options,
-                                 int defaultRadioButton ) {
-        RadioMessageDialog dialog = new RadioMessageDialog(parent, title,
-                                                           null, // accept the default window icon
-                                                           message, type, optionsTitle, options, defaultRadioButton,
-                                                           new String[] {IDialogConstants.OK_LABEL}, 0); // yes is the default
-        dialog.open();
-        return dialog.getSelected();
-    }
-
-    /**
      * Convenience method to open a simple radio warning dialog, with a single button.
      * 
      * @param parent the parent shell of the dialog, or <code>null</code> if none

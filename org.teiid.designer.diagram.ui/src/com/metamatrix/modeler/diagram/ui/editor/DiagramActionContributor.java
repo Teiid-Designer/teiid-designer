@@ -565,6 +565,9 @@ public final class DiagramActionContributor extends AbstractModelEditorPageActio
      */
     @Override
     public void dispose() {
+        if (this.popupMenuExtender != null) {
+            this.popupMenuExtender.dispose();
+        }
 
         for (Iterator<AbstractAction> iter = allRegisteredActions.keySet().iterator(); iter.hasNext();) {
             AbstractAction theAction = iter.next();

@@ -237,34 +237,7 @@ public class ListMessageDialog extends MessageDialog {
         
         return list;
     }
-    
-    /**
-     * Obtains the items being displayed. 
-     * @return the items
-     * @since 4.2
-     */
-    protected List getItems() {
-        return this.items;
-    }
-    
-    /**
-     * Obtains the dialog <code>IBaseLabelProvider<code>. 
-     * @return the label provider
-     * @since 4.2
-     */
-    protected IBaseLabelProvider getLabelProvider() {
-        return this.labelProvider;
-    }
-    
-    /**
-     * Obtains the dialog <code>ListViewer</code>.
-     * @return the viewer
-     * @since 4.2
-     */
-    protected ListViewer getViewer() {
-        return this.viewer;
-    }
-    
+
     /**
      * Sets the items to display in the dialog.
      * @param theItems the items to display

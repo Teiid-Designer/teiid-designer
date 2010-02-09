@@ -12,10 +12,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import com.metamatrix.ui.AbstractUiPlugin;
 
@@ -41,13 +38,6 @@ public interface ActionService {
      * @param theSelection the current selection
      */
     void contributePermanentActionsToContextMenu(IMenuManager theMenuMgr, ISelection theSelection);
-
-    /**
-     * Gives the <code>IModelObjectActionContributor</code>s a chance to contribute to the Edit menu
-     * @param theMenuMgr the Edit menu
-     * @param theSelection the current selection
-     */
-    void contributePermanentActionsToEditMenu(IMenuManager theMenuMgr, ISelection theSelection);
     
     /**
      * Notifies the service that it is no longer needed. The service should shutdown and dispose of any
@@ -72,25 +62,11 @@ public interface ActionService {
      */
     IAction getDefaultAction(String theActionId);
     
-    /**
-     * Adds the given listener to the list receiving editor selection events.
-     * @param theEditor the editor whose events will be listened to
-     * @param theListener the listener being added
-     */
-    void addEditorSelectionListener(IEditorPart theEditor, ISelectionChangedListener theListener);
-    
     /** 
      * Adds the given listener to the workspace to receive {@link org.eclipse.core.resources.IResourceChangeEvent}s.
      * @param listener the listener being added
      */
     void addResourceChangeListener(IResourceChangeListener theListener);
-    
-    /**
-     * Adds the given listener to the list receiving view selection events.
-     * @param theView the view whose events will be listened to
-     * @param theListener the listener being added
-     */
-    void addViewSelectionListener(IViewPart theView, ISelectionChangedListener theListener);
     
     /**
      * Adds the given listener to the list receiving workbench selection events.
@@ -99,25 +75,11 @@ public interface ActionService {
      */
     void addWorkbenchSelectionListener(ISelectionListener theListener);
     
-    /**
-     * Removes the given listener from the list receiving editor selection events.
-     * @param theEditor the editor whose events are no longer listened to
-     * @param theListener the listener being removed
-     */
-    void removeEditorSelectionListener(IEditorPart theEditor, ISelectionChangedListener theListener);
-    
     /** 
      * Removes the given listener from the workspace from receiving {@link org.eclipse.core.resources.IResourceChangeEvent}s.
      * @param listener the listener being removed
      */
     void removeResourceChangeListener(IResourceChangeListener theListener);
-    
-    /**
-     * Removes the given listener from the list receiving view selection events.
-     * @param theView the view whose events are no longer listened to
-     * @param theListener the listener being removed
-     */
-    void removeViewSelectionListener(IViewPart theView, ISelectionChangedListener theListener);
     
     /**
      * Removes the given listener from the list receiving workbench selection events.
@@ -131,14 +93,6 @@ public interface ActionService {
      * @return the plugin
      */
     AbstractUiPlugin getPlugin();
-     
-    
-    /**   
-     * Convenience version of registerAction.  Key defaults to getId of the action.  
-     * @param theActionId the action identifier
-     * @return true if successful
-     */
-    boolean registerAction( IAction theAction );
     
     /**   
      * Registers an action.  
@@ -148,16 +102,6 @@ public interface ActionService {
      */
     boolean registerAction( String sActionId, IAction theAction );
 
-    
-    /**   
-     * Registers an action.  
-     * @param theActionId the action identifier
-     * @param theAction the action  
-     * @param bForce true if this action should replace an exising one with the same key  
-     * @return true if successful
-     */
-    boolean registerAction( String sActionId, IAction theAction, boolean bForce );
-    
     /**
      * Indicates if and action with the given identifier has been registered.
      * @param theActionId the action identifier
@@ -166,25 +110,11 @@ public interface ActionService {
     boolean isRegistered(String theActionId);
     
     /**
-     * Indicates if and action with the given <code>Class</code> has been registered.
-     * @param theActionClass the action class
-     * @return <code>true</code> if the action is registered; <code>false</code> otherwise.
-     */
-    boolean isRegistered(Class<IAction> theActionClass);
-    
-    /**
      * Removes the action with the given identifier from the action service.
      * @param theActionId the identifier of the action being removed
      * @throws com.metamatrix.core.util.AssertionError if input is null
      */
     void removeAction(String theActionId);
-    
-    /**
-     * Removes the action with the given from the action service.
-     * @param theActionClass the class of the action being removed
-     * @throws com.metamatrix.core.util.AssertionError if input is null
-     */
-    void removeAction(Class<IAction> theActionClass);
     
     /**
      * Sets the <code>IWorkbenchWindow</code> associated with this action service. <strong>Must</strong> be 

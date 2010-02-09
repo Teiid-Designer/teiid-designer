@@ -80,25 +80,9 @@ public class ScaledFontManager {
     }
 
 
-    public boolean canIncrease( int iSize ) {
-
-        if (iSize < MAX_FONT_SIZE)
-            return true;
-        return false;
-    }
-
-
     public boolean canDecrease() {
         int currSize = getSize();
         if (currSize  > MIN_FONT_SIZE)
-            return true;
-        return false;
-    }
-
-
-    public boolean canDecrease( int iSize ) {
-
-        if (iSize > MIN_FONT_SIZE)
             return true;
         return false;
     }
@@ -118,14 +102,6 @@ public class ScaledFontManager {
     public int getStyle() {
         return currentStyle;
     }
-
-    public void setFont(String typeName, int size, int style) {
-        setName(typeName);
-        setSize(size);
-        setStyle(style);
-        resetFont();
-    }
-
 
     public void setFont(Font newFont) {
         currentFont = newFont;

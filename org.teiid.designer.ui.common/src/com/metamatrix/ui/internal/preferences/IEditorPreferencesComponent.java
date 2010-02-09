@@ -50,7 +50,7 @@ public interface IEditorPreferencesComponent {
      * @return
      */        
     public void addValidationListener(IEditorPreferencesValidationListener listener);
-    public void removeValidationListener(IEditorPreferencesValidationListener listener);
+    public void removeValidationListener(IEditorPreferencesValidationListener listener);// NO_UCD (Indicates this is ignored by unused code detection tool)
     
     
     /**

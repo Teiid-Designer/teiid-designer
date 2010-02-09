@@ -64,20 +64,6 @@ public class AccumulatorDialog extends Dialog {
 		this.rightSideLabelText = rightSideLabelText;
     	setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
 	}
-		
-	/**
-	 * AccumulatorDialog constructor.
-	 * 
-	 * @param parent   parent of this dialog
-	 * @param source   handler of the Available (left-hand) side
-	 * @param title    dialog display title
-	 * @param initialRightSideItems  Collection (String) of items initially to be
-	 * 				placed on the Selected (right-hand) side
-	 */
-	public AccumulatorDialog(Shell parent, IAccumulatorSource source, String title,
-			Collection /*<String>*/initialRightSideItems) {
-		this(parent, source, title, initialRightSideItems, null, null, null);
-	}
 
 	//=============================================================
 	// Instance methods

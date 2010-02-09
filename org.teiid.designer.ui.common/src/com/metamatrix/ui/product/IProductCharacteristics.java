@@ -8,16 +8,9 @@
 package com.metamatrix.ui.product;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.action.ContributionItem;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.IWorkbenchWindow;
-import com.metamatrix.ui.internal.product.WorkbenchState;
 
 
 
@@ -82,26 +75,6 @@ public interface IProductCharacteristics {
      * @since 4.4
      */
     IProject getHiddenProject(boolean theCreateProjectFlag);
-
-    /**
-     * Gets the IAction that corresponds to the specified ID.  Note: it is up to the
-     * implementor as to what the ID means.  It may not be the same as Eclipse's IDs
-     * as defined in plugin.xml, for example.
-     * 
-     * @param productActionID the ID to obtain.
-     * @return the corresponding IAction
-     */
-    IAction getProductAction(String productActionID);
-    
-    /**
-     * Gets the IAction that corresponds to the specified ID.  Note: it is up to the
-     * implementor as to what the ID means.  It may not be the same as Eclipse's IDs
-     * as defined in plugin.xml, for example.
-     * 
-     * @param retargetableActionID the ID to obtain.
-     * @return the corresponding IAction
-     */
-    IAction getRetargetableAction(String retargetableActionID, IWorkbenchWindow theWindow);
     
     /**
      * Obtains an <code>IWizardPage</code> capable of creating the hidden project.
@@ -109,46 +82,7 @@ public interface IProductCharacteristics {
      * @since 4.4
      */
     IWizardPage getCreateHiddenProjectWizardPage();
-    
-    /**
-     * Obtains a workbench state 
-     * @return instanceof WorkbenchState
-     * @since 5.0
-     */
-    WorkbenchState getWorkbenchState();
-    
-    /**
-     * Obtains <code>ContributionItem</code> which provides an MRU list for the File Menu
-     * @return
-     * @since 5.0
-     */
-    ContributionItem getFileMruMenu();
-    
-    /**
-     * Obtains an object representing this product's root context for models.   
-     * @return an Object that is the root workspace for this product.  Known implementations
-     * include the <code>WorkspaceRoot</code> and the current <code>VdbEditingContext</code>.
-     * @since 5.0
-     */
-    Object getRootWorkspaceContext();
-    
-    /**
-     * Method provides ability for products to operate on perspectives and views based on activation events of Parts.
-     * @param eventID
-     * @param ref
-     * @since 5.0
-     */
-    void handlePartEvent(int eventID, IWorkbenchPartReference ref );
-    
-    /**
-     * Method provides ability for products to operate on perspectives and views based on activation events of perspectives.
-     * @param eventID
-     * @param page
-     * @param perspective
-     * @since 5.0
-     */
-    void handlePerspectiveEvent(int eventID, IWorkbenchPage page, IPerspectiveDescriptor perspective );
-    
+
     /**
      * Method used by NewModelWizard to determine if any customizer can pre-populate the NewModeWizard with model class, type 
      * or builder info based on selection. 
@@ -168,17 +102,6 @@ public interface IProductCharacteristics {
      * @since 5.0
      */
     public boolean preProcess(Object someObject, Shell shell);
-    
-    
-    /**
-     * Method used by actions, wizards, etc... to post-process using some input object.
-     * implementors should check object type, process the object, then return true if processing should continue, or false if 
-     * processing should stop. Implementors should handle all UI/Dialog within this method. 
-     * @param someObject
-     * @return
-     * @since 5.0
-     */
-    public boolean postProcess(Object someObject, Shell shell);
     
     /**
      * Method used by actions, wizards, views, etc... to get the specified information about an object. 

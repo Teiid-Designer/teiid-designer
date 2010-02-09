@@ -59,22 +59,6 @@ public class TestSelectionProvider extends TestCase {
         assertNull(p.getSelection());
     }
 
-    /*
-     * Test for void SelectionProvider(ISelection)
-     */
-    public void testSelectionProviderISelection() {
-        SelectionProvider p = new SelectionProvider();
-        assertNotNull(p);
-        assertNotNull(p.getListenerList());
-        assertNull(p.getSelection());
-        ISelection selection = createSelection();
-        p = new SelectionProvider(selection);
-        assertNotNull(p);
-        assertNotNull(p.getListenerList());
-        assertNotNull(p.getSelection());
-        assertTrue( selection == p.getSelection());
-    }
-
     public void testAddSelectionChangedListener() {
         SelectionProvider p = new SelectionProvider();
         p.addSelectionChangedListener(null);
@@ -85,14 +69,6 @@ public class TestSelectionProvider extends TestCase {
         assertTrue(p.getListenerList().size() == 1);
         p.addSelectionChangedListener(l);
         assertTrue(p.getListenerList().size() == 1);
-    }
-
-    public void testGetSelection() {
-        ISelection selection = createSelection();
-        SelectionProvider p = new SelectionProvider(selection);
-        assertNotNull(p);
-        assertNotNull(p.getSelection());
-        assertTrue( selection == p.getSelection());
     }
 
     public void testRemoveSelectionChangedListener() {

@@ -164,18 +164,6 @@ public abstract class AbstractProductCustomizer implements IProductCustomizer,
      * Helper method to obtain i18n properties values. 
      * @param thePrefix the key prefix
      * @param theKey the key
-     * @return the value
-     * @since 4.3
-     */
-    protected String getString(String thePrefix,
-                               String theKey) {
-        return Util.getStringOrKey(thePrefix + theKey);
-    }
-    
-    /**
-     * Helper method to obtain i18n properties values. 
-     * @param thePrefix the key prefix
-     * @param theKey the key
      * @param theParams the parameters to substitute in the i18n properties value
      * @return the value
      * @since 4.3

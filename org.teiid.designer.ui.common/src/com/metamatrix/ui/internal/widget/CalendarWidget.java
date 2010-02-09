@@ -82,18 +82,6 @@ public class CalendarWidget extends Composite implements InternalUiConstants {
     private Composite pnlTime;
 
     /**
-     * Construct an instance of <code>CalendarWidget</code> suitable for entering a {@link java.sql.Timestamp}. Both the calendar
-     * and the time is shown.
-     * 
-     * @param theParent
-     * @param theStyle
-     */
-    public CalendarWidget( Composite theParent,
-                           int theStyle ) {
-        this(theParent, theStyle, true);
-    }
-
-    /**
      * Construct an instance of <code>CalendarWidget</code>. The calendar will always be shown.
      * 
      * @param theParent
@@ -473,7 +461,7 @@ public class CalendarWidget extends Composite implements InternalUiConstants {
         }
     }
 
-    public void removeSelectionListener( SelectionListener theListener ) {
+    public void removeSelectionListener( SelectionListener theListener ) { // NO_UCD (Indicates this is ignored by unused code detection tool)
         checkWidget();
 
         if (theListener == null) {

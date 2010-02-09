@@ -42,6 +42,16 @@ public class UpFont extends AbstractAction implements IFontChangeListener {
     // METHODS
     ///////////////////////////////////////////////////////////////////////////////////////////////
     
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.ui.actions.AbstractAction#dispose()
+     */
+    @Override
+    public void dispose() {
+        getFontManager().removeFontChangeListener(this);
+        super.dispose();
+    }
 
     private TextFontManager getFontManager() {
         return panel.getFontManager();
@@ -59,8 +69,6 @@ public class UpFont extends AbstractAction implements IFontChangeListener {
     }
         
     public void fontChanged() {        
-//        System.out.println("[UpFont.fontChanged] new size: " + tfmFontManager.getSize() ); //$NON-NLS-1$        
-                
         setEnableState();
     }
 }

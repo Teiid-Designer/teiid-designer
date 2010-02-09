@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.jface.text.TextViewer;
-import org.eclipse.swt.graphics.Font;
 
     /**
      * TextFontManager
@@ -36,8 +35,6 @@ import org.eclipse.swt.graphics.Font;
          * @see com.metamatrix.modeler.diagram.ui.actions.ScaledFont#increase()
          */
         public void increase() {
-//            System.out.println("[TextFontManager.increase]"); //$NON-NLS-1$            
-            
             if ( sfmManager.canIncrease() ) {            
                 sfmManager.increase();
                 updateTextWidget();
@@ -48,8 +45,6 @@ import org.eclipse.swt.graphics.Font;
          * @see com.metamatrix.modeler.diagram.ui.actions.ScaledFont#decrease()
          */
         public void decrease() {
-//            System.out.println("[TextFontManager.decrease]"); //$NON-NLS-1$            
-                                            
             if ( sfmManager.canDecrease() ) {            
                 sfmManager.decrease();
                 updateTextWidget();
@@ -57,8 +52,6 @@ import org.eclipse.swt.graphics.Font;
         }
 
         public void updateTextWidget() {
-//            System.out.println("[TextFontManager.updateTextWidget]"); //$NON-NLS-1$
-
             if ( sfmManager != null && viewer.getTextWidget() != null ) {
             
                 viewer.getTextWidget()
@@ -80,53 +73,6 @@ import org.eclipse.swt.graphics.Font;
          */
         public boolean canDecrease() {
             return sfmManager.canDecrease();
-        }
-
-        /* (non-Javadoc)
-         * @see com.metamatrix.modeler.diagram.ui.actions.ScaledFont#getFont()
-         */
-        public Font getFont() {
-            return sfmManager.getFont();
-        }
-
-        /* (non-Javadoc)
-         * @see com.metamatrix.modeler.diagram.ui.actions.ScaledFont#getName()
-         */
-        public String getName() {
-            return sfmManager.getName();
-        }
-
-        /* (non-Javadoc)
-         * @see com.metamatrix.modeler.diagram.ui.actions.ScaledFont#getSize()
-         */
-        public int getSize() {
-            return sfmManager.getSize();
-        }
-
-        /* (non-Javadoc)
-         * @see com.metamatrix.modeler.diagram.ui.actions.ScaledFont#getStyle()
-         */
-        public int getStyle() {
-            return sfmManager.getStyle();
-        }
-
-        /* (non-Javadoc)
-         * @see com.metamatrix.modeler.diagram.ui.actions.ScaledFont#setFont(org.eclipse.swt.graphics.Font)
-         */
-        public void setFont(Font newFont) {
-            sfmManager.setFont(newFont);
-        }
-    
-        public void setFont(String typeName, int size, int style) {
-            sfmManager.setFont(typeName, size, style);
-        }
-
-        /* (non-Javadoc)
-         * @see com.metamatrix.modeler.diagram.ui.actions.ScaledFont#setSize(int)
-         */
-        public void setSize(int newSize) {
-            sfmManager.setSize(newSize);
-            fireFontChanged();
         }
 
         /**

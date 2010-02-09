@@ -63,14 +63,13 @@ import com.metamatrix.modeler.jdbc.JdbcPackage;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
-import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * ModelUtilities is a collection of static methods that isolate our connection to ModelerCore and generic model/metamodel
  * functionality.
  */
-public abstract class ModelUtilities implements UiConstants, InternalUiConstants.Debug.Metrics {
+public abstract class ModelUtilities implements UiConstants {
 
     private static Container workspaceContainer;
     private static AdapterFactoryContentProvider emfContentProvider;

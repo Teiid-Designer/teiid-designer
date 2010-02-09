@@ -87,7 +87,7 @@ public class InheritanceCheckboxTreeViewer extends CheckboxTreeViewer implements
                     if (isChecked) {
                         viewer.setGrayed(node, false);
                         // Set all descendant nodes to checked:
-                        List /*<Object>*/descendants = TreeViewerUtil.getDescendantsOfNode(viewer, node, false, true);
+                        List /*<Object>*/descendants = TreeViewerUtil.getDescendantsOfNode(viewer, node, false);
                         Iterator it = descendants.iterator();
                         while (it.hasNext()) {
                             Object curNode = it.next();
@@ -173,7 +173,7 @@ public class InheritanceCheckboxTreeViewer extends CheckboxTreeViewer implements
                         // Unchecked
                         if (contentProvider != null) {
                             if (deselectingDescendants) {
-                                List /*<Object>*/descendants = TreeViewerUtil.getDescendantsOfNode(viewer, node, true, true);
+                                List /*<Object>*/descendants = TreeViewerUtil.getDescendantsOfNode(viewer, node, true);
                                 Iterator it = descendants.iterator();
                                 while (it.hasNext()) {
                                     Object curNode = it.next();

@@ -9,9 +9,7 @@
 -->
 <plugin>
 
-   <extension-point id="remoteObjectType" name="%remoteObjectType" schema="schema/remoteObjectType.exsd"/>
    <extension-point id="editorPreferences" name="%extension-point.name.0" schema="schema/editorPreferences.exsd"/>
-   <extension-point id="dockBars" name="%dockBars.name" schema="schema/dockBars.exsd"/>
    <extension-point id="productCustomizer" name="%productCustomizer" schema="schema/productCustomizer.exsd"/>
 
    <extension

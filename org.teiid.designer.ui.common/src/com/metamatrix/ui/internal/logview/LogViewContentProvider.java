@@ -36,7 +36,4 @@ public class LogViewContentProvider implements ITreeContentProvider {
     }
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
     }
-    public boolean isDeleted(Object element) {
-        return false;
-    }
 }

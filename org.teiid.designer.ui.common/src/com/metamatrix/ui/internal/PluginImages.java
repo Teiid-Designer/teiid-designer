@@ -27,7 +27,6 @@ public class PluginImages {
     private static final String PATH_OBJ = ICONS_PATH + "obj16/"; //$NON-NLS-1$
     private static final String PATH_LCL = ICONS_PATH + "elcl16/"; //$NON-NLS-1$
     private static final String PATH_LCL_DISABLED = ICONS_PATH + "dlcl16/"; //$NON-NLS-1$
-    private static final String PATH_OVR = ICONS_PATH + "ovr16/"; //$NON-NLS-1$
     private static final String PATH_EVENTS = ICONS_PATH + "eview16/"; //$NON-NLS-1$
 
 
@@ -55,10 +54,6 @@ public class PluginImages {
 
     public static final ImageDescriptor DESC_PROPERTIES_DISABLED =
         create(PATH_LCL_DISABLED, "properties.gif"); //$NON-NLS-1$
-    public static final ImageDescriptor DESC_REFRESH =
-        create(PATH_LCL, "refresh.gif"); //$NON-NLS-1$
-    public static final ImageDescriptor DESC_REFRESH_DISABLED =
-        create(PATH_LCL_DISABLED, "refresh.gif"); //$NON-NLS-1$
     public static final ImageDescriptor DESC_CLEAR = create(PATH_LCL, "clear.gif"); //$NON-NLS-1$
     public static final ImageDescriptor DESC_CLEAR_DISABLED =
         create(PATH_LCL_DISABLED, "clear.gif"); //$NON-NLS-1$
@@ -88,24 +83,6 @@ public class PluginImages {
     public static final ImageDescriptor DESC_IMPORT_DISABLED =
         create(PATH_LCL_DISABLED, "import_log.gif"); //$NON-NLS-1$
     
-    public static final ImageDescriptor DESC_COLLAPSE_ALL =
-        create(PATH_LCL, "collapseall.gif"); //$NON-NLS-1$
-    
-    public static final ImageDescriptor DESC_HORIZONTAL_VIEW =
-        create(PATH_LCL, "th_horizontal.gif"); //$NON-NLS-1$
-    
-    public static final ImageDescriptor DESC_HORIZONTAL_VIEW_DISABLED = 
-        create(PATH_LCL_DISABLED, "th_horizontal.gif"); //$NON-NLS-1$
-    
-    public static final ImageDescriptor DESC_VERTICAL_VIEW =
-        create(PATH_LCL, "th_vertical.gif"); //$NON-NLS-1$
-    
-    public static final ImageDescriptor DESC_VERTICAL_VIEW_DISABLED = 
-        create(PATH_LCL_DISABLED, "th_vertical.gif"); //$NON-NLS-1$
-    
-    public static final ImageDescriptor DESC_HIDE_PANE =
-        create(PATH_EVENTS, "hide_pane.gif"); //$NON-NLS-1$
-    
     /*
      * Event Details
      */
@@ -113,34 +90,8 @@ public class PluginImages {
         create(PATH_EVENTS, "event_prev.gif"); //$NON-NLS-1$
     public static final ImageDescriptor DESC_NEXT_EVENT = 
         create(PATH_EVENTS, "event_next.gif"); //$NON-NLS-1$
-    /*
-     * Overlays
-     */
-    public static final ImageDescriptor DESC_RUN_CO =
-        create(PATH_OVR, "run_co.gif"); //$NON-NLS-1$
 
     private static ImageDescriptor create(String prefix, String name) {
         return UiPlugin.getDefault().getImageDescriptor(prefix + name);
-//        return ImageDescriptor.createFromURL(makeIconURL(prefix, name));
     }
-
-//    public static Image get(String key) {
-//        return PLUGIN_REGISTRY.get(key);
-//    }
-//    private static URL makeIconURL(String prefix, String name) {
-//        String path = prefix + name;
-//        URL url = null;
-//        try {
-//            URL baseURL = Platform.resolve(UiPlugin.getDefault().getBundle().getEntry("/")); //$NON-NLS-1$
-//            url = new URL(baseURL, path);
-//        } catch (Exception e) {
-//            return null;
-//        }
-//        return url;
-//    }
-//    public static Image manage(String key, ImageDescriptor desc) {
-//        Image image = desc.createImage();
-//        PLUGIN_REGISTRY.put(key, image);
-//        return image;
-//    }
 }

@@ -201,23 +201,6 @@ public final class ModelerActionService extends AbstractActionService
     }
 
     /**
-     * Gives the <code>IModelObjectActionContributor</code>s a chance to contribute to the Edit menu
-     * 
-     * @param theMenuMgr the Edit menu
-     * @param theSelection the current selection
-     */
-    @Override
-    public void contributePermanentActionsToEditMenu( IMenuManager theMenuMgr,
-                                                      ISelection theSelection ) {
-        List contributors = getModelObjectActionContributors();
-
-        for (int size = contributors.size(), i = 0; i < size; i++) {
-            IModelObjectActionContributor contributor = (IModelObjectActionContributor)modelObjectContributors.get(i);
-            contributor.contributeToEditMenu(theMenuMgr, theSelection);
-        }
-    }
-
-    /**
      * Fills the given menu with the standard items appropriate for a context menu of a part in the Modeler.
      * 
      * @param theMenuMgr the menu being contributed to (should be a context menu)

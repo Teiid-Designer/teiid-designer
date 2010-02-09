@@ -242,23 +242,6 @@ implements INullSelectionListener, ISelectionChangedListener {
         return tipId;
     }
 
-//    /* (non-Javadoc)
-//     * @see org.eclipse.jface.action.Action#getToolTipText()
-//     */
-//    public String getToolTipText() {
-//        // use for debugging purposes to see the identity hash of toolbar buttons
-//        return super.getToolTipText() + " (" + System.identityHashCode(this) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-//    }
-
-    /**
-     * Gets the flag indicating whether or not using wait-cursor.
-     *
-     * @return  use-wait-cursor flag
-     */
-    protected boolean getUseWaitCursor() {
-    	return useWaitCursor;
-    }
-
     /**<p>
 	 * </p>
 	 * @since 4.0

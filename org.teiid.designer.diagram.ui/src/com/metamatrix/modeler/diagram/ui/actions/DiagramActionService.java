@@ -242,16 +242,6 @@ public final class DiagramActionService extends AbstractActionService
 
         return super.isRegistered(theActionId);
     }
-    
-    @Override
-    public boolean isRegistered(Class<IAction> theActionClass) {
-        if ( !bHasBeenInitialized ) {
-            bHasBeenInitialized = true;
-            initializeGlobalActions();                
-        }
-
-        return super.isRegistered(theActionClass);
-    }   
 
     /**
      * Fills the given menu with the standard items appropriate for a context menu of a part in

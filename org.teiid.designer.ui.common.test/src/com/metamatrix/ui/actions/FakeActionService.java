@@ -11,10 +11,7 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import com.metamatrix.ui.AbstractUiPlugin;
 
@@ -51,14 +48,6 @@ public class FakeActionService implements ActionService {
     }
 
     /**
-     * @see com.metamatrix.ui.actions.ActionService#contributePermanentActionsToEditMenu(org.eclipse.jface.action.IMenuManager,
-     *      org.eclipse.jface.viewers.ISelection)
-     */
-    public void contributePermanentActionsToEditMenu( IMenuManager theMenuMgr,
-                                                      ISelection theSelection ) {
-    }
-
-    /**
      * @see com.metamatrix.ui.actions.ActionService#getAction(java.lang.String)
      * @since 4.0
      */
@@ -74,29 +63,9 @@ public class FakeActionService implements ActionService {
     }
 
     /**
-     * @see com.metamatrix.ui.actions.ActionService#addEditorSelectionListener(org.eclipse.ui.IEditorPart,
-     *      org.eclipse.jface.viewers.ISelectionChangedListener)
-     * @since 4.0
-     */
-    public void addEditorSelectionListener( IEditorPart theEditor,
-                                            ISelectionChangedListener theListener ) {
-
-    }
-
-    /**
      * @see com.metamatrix.ui.actions.ActionService#addResourceChangeListener(IResourceChangeListener)
      */
     public void addResourceChangeListener( IResourceChangeListener theListener ) {
-    }
-
-    /**
-     * @see com.metamatrix.ui.actions.ActionService#addViewSelectionListener(org.eclipse.ui.IViewPart,
-     *      org.eclipse.jface.viewers.ISelectionChangedListener)
-     * @since 4.0
-     */
-    public void addViewSelectionListener( IViewPart theView,
-                                          ISelectionChangedListener theListener ) {
-
     }
 
     /**
@@ -110,29 +79,9 @@ public class FakeActionService implements ActionService {
     }
 
     /**
-     * @see com.metamatrix.ui.actions.ActionService#removeEditorSelectionListener(org.eclipse.ui.IEditorPart,
-     *      org.eclipse.jface.viewers.ISelectionChangedListener)
-     * @since 4.0
-     */
-    public void removeEditorSelectionListener( IEditorPart theEditor,
-                                               ISelectionChangedListener theListener ) {
-
-    }
-
-    /**
      * @see com.metamatrix.ui.actions.ActionService#removeResourceChangeListener(IResourceChangeListener)
      */
     public void removeResourceChangeListener( IResourceChangeListener theListener ) {
-    }
-
-    /**
-     * @see com.metamatrix.ui.actions.ActionService#removeViewSelectionListener(org.eclipse.ui.IViewPart,
-     *      org.eclipse.jface.viewers.ISelectionChangedListener)
-     * @since 4.0
-     */
-    public void removeViewSelectionListener( IViewPart theView,
-                                             ISelectionChangedListener theListener ) {
-
     }
 
     /**
@@ -166,16 +115,6 @@ public class FakeActionService implements ActionService {
     }
 
     /**
-     * Convenience version of registerAction. Key defaults to getId of the action.
-     * 
-     * @param theActionId the action identifier
-     * @return true if successful
-     */
-    public boolean registerAction( IAction theAction ) {
-        return false;
-    }
-
-    /**
      * Registers an action.
      * 
      * @param theActionId the action identifier
@@ -184,20 +123,6 @@ public class FakeActionService implements ActionService {
      */
     public boolean registerAction( String sActionId,
                                    IAction theAction ) {
-        return false;
-    }
-
-    /**
-     * Registers an action.
-     * 
-     * @param theActionId the action identifier
-     * @param theAction the action
-     * @param bForce true if this action should replace an exising one with the same key
-     * @return true if successful
-     */
-    public boolean registerAction( String sActionId,
-                                   IAction theAction,
-                                   boolean bForce ) {
         return false;
     }
 
@@ -212,31 +137,12 @@ public class FakeActionService implements ActionService {
     }
 
     /**
-     * Indicates if and action with the given <code>Class</code> has been registered.
-     * 
-     * @param theActionClass the action class
-     * @return <code>true</code> if the action is registered; <code>false</code> otherwise.
-     */
-    public boolean isRegistered( Class theActionClass ) {
-        return false;
-    }
-
-    /**
      * Removes the action with the given identifier from the action service.
      * 
      * @param theActionId the identifier of the action being removed
      * @throws com.metamatrix.core.util.AssertionError if input is null
      */
     public void removeAction( String theActionId ) {
-    }
-
-    /**
-     * Removes the action with the given from the action service.
-     * 
-     * @param theActionClass the class of the action being removed
-     * @throws com.metamatrix.core.util.AssertionError if input is null
-     */
-    public void removeAction( Class theActionClass ) {
     }
 
     /**

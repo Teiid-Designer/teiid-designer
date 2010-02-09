@@ -183,14 +183,6 @@ public class ModelObjectWorker implements
     
     /**
      *  
-     * @see com.metamatrix.ui.actions.IActionWorker#isEnabled()
-     * @since 4.2
-     */
-    public boolean isEnabled() {
-        return enabled;
-    }
-    /**
-     *  
      * @see com.metamatrix.ui.actions.IActionWorker#getEnableAfterExecute()
      * @since 4.2
      */

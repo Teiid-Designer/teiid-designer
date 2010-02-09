@@ -99,15 +99,6 @@ public class ExtendedMenuManager extends MenuManager {
             super.appendToGroup(theGroupName, theItem);
         }
     }
-    
-    /**
-     * Convenience method indicating if the specified identifier already exists in the menu.
-     * @param theId the identifier being checked
-     * @return <code>true</code> if it already exists; <code>false</code> otherwise.
-     */
-    protected boolean contains(String theId) {
-        return (indexOf(theId) != -1);
-    }
 
     /**
      * @see org.eclipse.jface.action.ContributionManager#insert(int, org.eclipse.jface.action.IContributionItem)

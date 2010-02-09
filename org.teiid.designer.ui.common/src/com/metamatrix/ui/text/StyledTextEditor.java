@@ -23,7 +23,6 @@ import org.eclipse.jface.bindings.keys.SWTKeySupport;
 import org.eclipse.jface.text.DefaultTextDoubleClickStrategy;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.IUndoManager;
 import org.eclipse.jface.text.TextViewer;
@@ -274,19 +273,10 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
     }
 
     /**
-     * @param listener the listener being registered to receive notification when the viewer's document is changed
-     * @see IDocument#addDocumentListener(org.eclipse.jface.text.IDocumentListener)
-     * @since 5.5.3
-     */
-    public void addDocumentListener( IDocumentListener listener ) {
-        this.viewer.getDocument().addDocumentListener(listener);
-    }
-
-    /**
      * @param listener the listener being registered to receive a notification when the context menu will be show
      * @since 5.5.3
      */
-    public void addMenuListener( IMenuListener listener ) {
+    public void addMenuListener( IMenuListener listener ) { // NO_UCD (Indicates this is ignored by unused code detection tool)
         if (this.menuListeners == null) {
             this.menuListeners = new ArrayList(1);
         }
@@ -690,18 +680,10 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
     }
 
     /**
-     * @param listener the listener who will no long be notified when the viewer's document is changed
-     * @since 5.5.3
-     */
-    public void removeDocumentListener( IDocumentListener listener ) {
-        this.viewer.getDocument().removeDocumentListener(listener);
-    }
-
-    /**
      * @param listener the listener who will no longer be notified when the context menu is being shown
      * @since 5.5.3
      */
-    public void removeMenuListener( IMenuListener listener ) {
+    public void removeMenuListener( IMenuListener listener ) { // NO_UCD (Indicates this is ignored by unused code detection tool)
         if (this.menuListeners != null) {
             this.menuListeners.remove(listener);
         }

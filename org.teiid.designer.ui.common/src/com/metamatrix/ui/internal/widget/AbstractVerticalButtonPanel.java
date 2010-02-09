@@ -47,18 +47,6 @@ public abstract class AbstractVerticalButtonPanel extends Composite {
      * </p>
      * 
      * @param parent
-     * @since 4.0
-     */
-    protected AbstractVerticalButtonPanel(final String name,
-                                          final Composite parent) {
-        this(name, parent, SWT.NONE);
-    }
-
-    /**
-     * <p>
-     * </p>
-     * 
-     * @param parent
      * @param style
      * @since 4.0
      */

@@ -81,38 +81,6 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
         } 
     }
 
-    /* (non-Javadoc)
-     * @see com.metamatrix.modeler.ui.actions.IModelObjectActionContributor#contributeToEditMenu(org.eclipse.jface.action.IMenuManager, org.eclipse.jface.viewers.ISelection)
-     */
-    public void contributeToEditMenu(IMenuManager theMenuMgr, ISelection theSelection) {
-        // Need to check the selection first.
-        
-        if( SelectionUtilities.isSingleSelection(theSelection) ) {
-            Object selectedObject = SelectionUtilities.getSelectedObject(theSelection);
-            
-            if( supportsDiagrams(selectedObject) ) {
-                if( selectedObject instanceof EObject ) {
-                    EObject eObject = (EObject)selectedObject;
-                    
-                    if( isPackage(eObject) ) {
-                        addToChildMenu(theMenuMgr);
-                    }
-                    
-                    if( eObject instanceof Diagram || (eObject.eContainer() != null && isPackage(eObject.eContainer())) ) {
-                        addToSiblingMenu(theMenuMgr);
-                    } else if( eObject.eContainer() == null ) {
-                        addToSiblingMenu(theMenuMgr);
-                    }
-
-                } else if( (selectedObject instanceof IResource) && 
-                            ModelUtilities.isModelFile((IResource)selectedObject) &&
-                            !ModelUtil.isXsdFile((IResource)selectedObject)) {
-                        addToResourceChildMenu(theMenuMgr);
-                }
-            }
-        }  
-    }
-
     /**
      *  
      * @see com.metamatrix.modeler.ui.actions.IModelObjectActionContributor#getAdditionalModelingActions(org.eclipse.jface.viewers.ISelection)

@@ -31,7 +31,6 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.ui.internal.widget.InheritanceCheckboxTreeViewer;
-import com.metamatrix.ui.tree.TreeSplitter;
 import com.metamatrix.ui.tree.TreeViewerUtil;
 
 /**
@@ -97,9 +96,6 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
         StructuralCopyTreeContentProvider contentProvider = StructuralCopyTreeContentProvider.getInstance();
         viewer.setContentProvider(contentProvider);
         ModelExplorerLabelProvider labelProvider = new ModelExplorerLabelProvider();
-        // enable below to use the large tree support. Needs more work (on this end,
-        // at least, since we'd need to know about TreeSplitters, etc)
-        // viewer.setContentProvider(new LargeTreeContentProvider(labelProvider, contentProvider));
         viewer.setLabelProvider(labelProvider);
 
         // clear out the input to make sure we can set the hash lookup flag:
@@ -328,14 +324,7 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
         while (!done) {
             IndexAndObject io = (IndexAndObject)curNode.getUserObject();
             Object obj = io.getObject();
-            Object[] children;
-            if (obj instanceof TreeSplitter && !((TreeSplitter)obj).isMaterialized()) {
-                // unmaterialized, don't descend into it:
-                children = TreeViewerUtil.EMPTY_OBJECT_ARRAY;
-
-            } else {
-                children = ((ITreeContentProvider)viewer.getContentProvider()).getChildren(obj);
-            } // endif
+            Object[] children = ((ITreeContentProvider)viewer.getContentProvider()).getChildren(obj);
             int childIndex = firstRequiredChildIndex(viewer, 0, children);
             if (childIndex >= 0) {
                 DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(new IndexAndObject(childIndex, children[childIndex]));
@@ -352,13 +341,7 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
                     } else {
                         io = (IndexAndObject)curNode.getUserObject();
                         Object curNodeContentObject = io.getObject();
-                        if (curNodeContentObject instanceof TreeSplitter && !((TreeSplitter)obj).isMaterialized()) {
-                            // unmaterialized, don't descend into it:
-                            children = TreeViewerUtil.EMPTY_OBJECT_ARRAY;
-
-                        } else {
-                            children = ((ITreeContentProvider)viewer.getContentProvider()).getChildren(curNodeContentObject);
-                        } // endif
+                        children = ((ITreeContentProvider)viewer.getContentProvider()).getChildren(curNodeContentObject);
                         int prevNodeIndex = indexOf(prevNodeContentObject, children);
                         childIndex = firstRequiredChildIndex(viewer, prevNodeIndex + 1, children);
                         if (childIndex >= 0) {

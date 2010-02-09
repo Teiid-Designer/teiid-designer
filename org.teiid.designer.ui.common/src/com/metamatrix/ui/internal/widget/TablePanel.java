@@ -41,7 +41,6 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 public class TablePanel extends AbstractVerticalButtonPanel implements Widgets {
 
     public static interface Constants {
-        int NONE = 0;
         int ITEMS_ORDERED = 1;
         int ITEMS_EDITABLE = 1 << 1;
         int ITEMS_COMMONLY_ALL_SELECTED = 1 << 2;
@@ -236,29 +235,12 @@ public class TablePanel extends AbstractVerticalButtonPanel implements Widgets {
     /**
      * @since 4.0
      */
-    public void addItem( final Object item ) {
-        addItems(new Object[] {item});
-    }
-
-    /**
-     * @since 4.0
-     */
     public void addItems( final Object[] items ) {
         if (items.length > 0) {
             final TableViewer viewer = getTableViewer();
             viewer.add(items);
             viewer.setSelection(new StructuredSelection(items));
             updateButtons();
-        }
-    }
-
-    /**
-     * @since 4.0
-     */
-    public void clear() {
-        final TableViewer viewer = getTableViewer();
-        for (Object obj = viewer.getElementAt(0); obj != null; obj = viewer.getElementAt(0)) {
-            viewer.remove(obj);
         }
     }
 

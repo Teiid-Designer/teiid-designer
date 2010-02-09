@@ -26,13 +26,6 @@ public class TableSizeAdapter extends ControlAdapter {
 
     private Table table;
     private int margin;
-
-    /**
-     * Construct an instance of TableSizeAdapter for the specified Table.
-     */
-    public TableSizeAdapter(Table table) {
-        this(table, 0);
-    }
     
     public TableSizeAdapter(Table table, int margin) {
         this.table = table;

@@ -31,10 +31,6 @@ public class TableColumnSelectionHelper {
 
     private Table table;
 
-    public TableColumnSelectionHelper( Table theTable ) {
-        construct(theTable);
-    }
-
     public TableColumnSelectionHelper( TableViewer theViewer ) {
         ArgCheck.isNotNull(theViewer);
         construct(theViewer.getTable());

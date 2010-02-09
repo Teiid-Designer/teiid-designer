@@ -92,27 +92,6 @@ public class EditableSpinner extends Composite implements UiConstants {
         // We'll do it in the setPossibleValues method.
     }
 
-    /**
-     * Construct an instance of Spinner using the given values.
-     * 
-     * @param theParent the parent container
-     * @param thePossibleValues the list of values
-     */
-    public EditableSpinner( Composite theParent,
-                            List thePossibleValues ) {
-        this(theParent);
-
-        if ((thePossibleValues != null) && !thePossibleValues.isEmpty()) {
-            setPossibleValues(thePossibleValues);
-            handleUpSelected();
-        } else {
-            throw new IllegalStateException(Util.getString(PREFIX + "nullOrEmptyList")); //$NON-NLS-1$
-        }
-
-        // wire the Text at the end of this ctor, since it installs possible vals
-        registerControls();
-    }
-
     public void setEditable( boolean b ) {
         txfValue.setEditable(b);
     }

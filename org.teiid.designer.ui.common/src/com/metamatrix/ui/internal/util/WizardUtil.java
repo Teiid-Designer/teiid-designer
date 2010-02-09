@@ -158,17 +158,6 @@ public final class WizardUtil implements InternalUiConstants.Widgets,
     public static IContainer validateFileAndFolder(final Text fileText,
                                                    final Text folderText,
                                                    final WizardPage page,
-                                                   final String fileExtension) throws CoreException {
-        return validateFileAndFolder(fileText, folderText, page, fileExtension, IMessageProvider.ERROR);
-    }
-
-    /**<p>
-     * </p>
-     * @since 4.0
-     */
-    public static IContainer validateFileAndFolder(final Text fileText,
-                                                   final Text folderText,
-                                                   final WizardPage page,
                                                    final String fileExtension,
                                                    final int existsLevel) throws CoreException {
         return validateFileAndFolder(fileText, folderText, page, fileExtension, existsLevel, false);

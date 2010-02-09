@@ -27,8 +27,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -44,15 +42,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.HyperlinkSettings;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
@@ -92,13 +87,6 @@ public final class WidgetFactory implements
 
     // ============================================================================================================================
     // Static Methods
-
-    /**
-     * @since 5.0.1
-     */
-    public static Button createButton(final Composite parent) {
-        return createButton(parent, null, 0, 1, SWT.PUSH);
-    }
 
     /**
      * @since 5.0.1
@@ -180,14 +168,6 @@ public final class WidgetFactory implements
      * @since 4.0
      */
     public static Button createCheckBox(final Composite parent,
-                                        final boolean selected) {
-        return createCheckBox(parent, null, selected);
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static Button createCheckBox(final Composite parent,
                                         final String name,
                                         final int gridStyle) {
         return createCheckBox(parent, name, gridStyle, 1, false);
@@ -238,32 +218,9 @@ public final class WidgetFactory implements
     /**
      * @since 4.0
      */
-    public static Combo createCombo(final Composite parent) {
-        return createCombo(parent, SWT.NONE);
-    }
-
-    /**
-     * @since 4.0
-     */
     public static Combo createCombo(final Composite parent,
                                     final int style) {
         return createCombo(parent, style, GridData.HORIZONTAL_ALIGN_FILL);
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static Combo createCombo(final Composite parent,
-                                    final List items) {
-        return createCombo(parent, SWT.NONE, GridData.HORIZONTAL_ALIGN_FILL, 1, items, null, true);
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static Combo createCombo(final Composite parent,
-                                    final Object[] items) {
-        return createCombo(parent, items == null ? (List)null : Arrays.asList(items));
     }
 
     /**
@@ -446,13 +403,6 @@ public final class WidgetFactory implements
         return combo;
     }
 
-    /**
-     * @since 5.0
-     */
-    public static Control createExpander(final Composite parent) {
-        return createPanel(parent, SWT.NO_TRIM, GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL);
-    }
-
     public static FormText createFormText(final Composite parent,
                                           FormToolkit toolkit,
                                           String html,
@@ -471,13 +421,6 @@ public final class WidgetFactory implements
         formText.setText(html, true, false);
         formText.addHyperlinkListener(listener);
         return formText;
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static Group createGroup(final Composite parent) {
-        return createGroup(parent, null);
     }
 
     /**
@@ -533,13 +476,6 @@ public final class WidgetFactory implements
             group.setText(name);
         }
         return group;
-    }
-
-    /**
-     * @since 5.0
-     */
-    public static Control createHorizontalExpander(final Composite parent) {
-        return createPanel(parent, SWT.NO_TRIM, GridData.GRAB_HORIZONTAL);
     }
 
     /**
@@ -611,26 +547,6 @@ public final class WidgetFactory implements
      */
     public static Label createLabel(final Composite parent,
                                     final int gridStyle,
-                                    final String text,
-                                    final Image image,
-                                    final int style) {
-        return createLabel(parent, gridStyle, 1, text, image, style);
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static Label createLabel(final Composite parent,
-                                    final int gridStyle,
-                                    final Image image) {
-        return createLabel(parent, gridStyle, image, SWT.NONE);
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static Label createLabel(final Composite parent,
-                                    final int gridStyle,
                                     final Image image,
                                     final int style) {
         return createLabel(parent, gridStyle, 1, null, image, style);
@@ -651,15 +567,6 @@ public final class WidgetFactory implements
                                     final String text,
                                     final int style) {
         return createLabel(parent, text, null, style);
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static Label createLabel(final Composite parent,
-                                    final String text,
-                                    final Image image) {
-        return createLabel(parent, text, image, SWT.NONE);
     }
 
     /**
@@ -744,34 +651,6 @@ public final class WidgetFactory implements
             }
         };
         return dlg;
-    }
-
-    /**
-     * Creates a resizable wizard dialog with the specified title for a dynamically created wizard containing the specified page.
-     *
-     * @param shell
-     *            The shell under which to create the wizard dialog.
-     * @param title
-     *            The title of the dialog.
-     * @param page
-     *            The single page to be added to the dynamically created wizard.
-     * @return The resizable wizard dialog.
-     * @since 4.0
-     */
-    public static WizardDialog createOnePageWizardDialog(final Shell shell,
-                                                         final String title,
-                                                         final IWizardPage page) {
-        ArgCheck.isNotNull(page);
-        final Wizard wizard = new Wizard() {
-
-            @Override
-            public boolean performFinish() {
-                return true;
-            }
-        };
-        wizard.setWindowTitle(title);
-        wizard.addPage(page);
-        return createOnePageWizardDialog(shell, wizard);
     }
 
     /**
@@ -867,24 +746,6 @@ public final class WidgetFactory implements
         final Button button = createButton(parent, name, gridStyle, span, SWT.RADIO);
         button.setSelection(selected);
         return button;
-    }
-
-    /**
-     * @since 5.0.1
-     */
-    public static Spinner createSpinner(final Composite parent) {
-        return createSpinner(parent, 0);
-    }
-
-    /**
-     * @since 5.0.1
-     */
-    public static Spinner createSpinner(final Composite parent,
-                                        final int gridStyle) {
-        final Spinner spinner = new Spinner(parent, SWT.BORDER | SWT.WRAP);
-        final GridData gridData = new GridData(gridStyle);
-        spinner.setLayoutData(gridData);
-        return spinner;
     }
 
     /**
@@ -1065,33 +926,6 @@ public final class WidgetFactory implements
      * @since 4.0
      */
     public static Text createTextBox(final Composite parent,
-                                     final String text) {
-        return createTextBox(parent, SWT.NONE, GridData.FILL_BOTH, text);
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static Text createTextBox(final Composite parent,
-                                     final int style,
-                                     final String text) {
-        return createTextBox(parent, style, GridData.FILL_BOTH, 1, text);
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static Text createTextBox(final Composite parent,
-                                     final int style,
-                                     final int gridStyle,
-                                     final String text) {
-        return createTextBox(parent, style, gridStyle, 1, text);
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static Text createTextBox(final Composite parent,
                                      final int style,
                                      final int gridStyle,
                                      final int span,
@@ -1208,14 +1042,6 @@ public final class WidgetFactory implements
     }
 
     /**
-     * @since 4.0
-     */
-    public static Text createTextField(final Composite parent,
-                                       final String text) {
-        return createTextField(parent, GridData.HORIZONTAL_ALIGN_FILL, text);
-    }
-
-    /**
      * Creates a {@link org.eclipse.swt.widgets.ToolBar} on the specifiec <code>ViewForm</code>. Actions can be installed in
      * the <code>ToolBar</code> by adding them to the returned <code>IToolBarManager</code>.
      *
@@ -1292,39 +1118,6 @@ public final class WidgetFactory implements
             fld.setText(text);
         }
         return fld;
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static Tree createTree(final Composite parent) {
-        return createTree(parent, SWT.NONE, GridData.FILL_BOTH);
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static Tree createTree(final Composite parent,
-                                  int style) {
-        return createTree(parent, style, GridData.FILL_BOTH);
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static Tree createTree(final Composite parent,
-                                  int style,
-                                  final int gridStyle) {
-        final Tree tree = new Tree(parent, style);
-        tree.setLayoutData(new GridData(gridStyle));
-        return tree;
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static TreeViewer createTreeViewer(final Composite parent) {
-        return createTreeViewer(parent, SWT.NONE);
     }
 
     /**
@@ -1447,29 +1240,6 @@ public final class WidgetFactory implements
     }
 
     /**
-     * @since 5.0
-     */
-    public static Control createVerticalExpander(final Composite parent) {
-        return createPanel(parent, SWT.NO_TRIM, GridData.GRAB_VERTICAL);
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static ViewForm createViewForm(final Composite parent) {
-        return createViewForm(parent, SWT.NONE, 0, 1);
-    }
-
-    /**
-     * @since 5.0.1
-     */
-    public static ViewForm createViewForm(final Composite parent,
-                                          final int style,
-                                          final int gridStyle) {
-        return createViewForm(parent, style, gridStyle, 1);
-    }
-
-    /**
      * @since 4.0
      */
     public static ViewForm createViewForm(final Composite parent,
@@ -1511,13 +1281,6 @@ public final class WidgetFactory implements
     /**
      * @since 4.0
      */
-    public static WrappingLabel createWrappingLabel(final Composite parent) {
-        return createWrappingLabel(parent, GridData.FILL_BOTH);
-    }
-
-    /**
-     * @since 4.0
-     */
     public static WrappingLabel createWrappingLabel(final Composite parent,
                                                     final int gridStyle) {
         return createWrappingLabel(parent, gridStyle, 1);
@@ -1530,14 +1293,6 @@ public final class WidgetFactory implements
                                                     final int gridStyle,
                                                     final int span) {
         return createWrappingLabel(parent, gridStyle, span, null);
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static WrappingLabel createWrappingLabel(final Composite parent,
-                                                    final String text) {
-        return createWrappingLabel(parent, GridData.FILL_BOTH, text);
     }
 
     /**

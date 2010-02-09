@@ -264,8 +264,4 @@ public class GlobalActionsMap implements Map,
         return map.values();
     }
 
-    protected Map getMap() {
-        return map;
-    }
-        
 }

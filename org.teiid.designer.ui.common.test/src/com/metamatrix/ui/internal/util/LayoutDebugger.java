@@ -23,7 +23,7 @@ import com.metamatrix.ui.graphics.GlobalUiColorManager;
 /**
  * @author PForhan
  */
-public class LayoutDebugger {
+public class LayoutDebugger { // NO_UCD (Indicates this is ignored by unused code detection tool)
 
     public static void debugLayout(Composite composite)
     {

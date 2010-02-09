@@ -11,7 +11,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
-import com.metamatrix.ui.tree.TreeSplitter;
 
 /**
  * StructuralCopyTreeViewerFilter
@@ -29,10 +28,6 @@ public class StructuralCopyTreeViewerFilter extends ViewerFilter {
 			if (ModelObjectUtilities.isPrimaryMetamodelObject(node)) {
 				okay = true;
             }
-
-        // support treeSplitter objects, if they come through:
-        } else if (element instanceof TreeSplitter) {
-            okay = true;
         } // endif
 
 		return okay;

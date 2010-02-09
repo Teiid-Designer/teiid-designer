@@ -155,19 +155,6 @@ public class AccumulatorPanel extends Composite implements InternalUiConstants {
         this(parent, source, initialRightSideItemsColl, labelProvider, leftSideLabelText, rightSideLabelText, -1, -1, -1, -1);
     }
 
-    /**
-     * Constructor.
-     * 
-     * @param parent Parent of this control
-     * @param source Provider of data for "available" column, and provider of control to display the column
-     * @initialRightSideItemsColl items initially displayed in the "selected" column
-     */
-    public AccumulatorPanel( Composite parent,
-                             IAccumulatorSource source,
-                             Collection /*<Object>*/initialRightSideItemsColl ) {
-        this(parent, source, initialRightSideItemsColl, null, null, null);
-    }
-
     // ============================================================
     // Instance methods
     // ============================================================

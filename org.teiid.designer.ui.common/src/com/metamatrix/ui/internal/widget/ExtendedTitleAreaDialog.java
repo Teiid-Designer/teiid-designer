@@ -195,16 +195,7 @@ public class ExtendedTitleAreaDialog extends TitleAreaDialog {
         settings.put(SHELL_WIDTH, shellSize.x);
         settings.put(SHELL_HEIGHT, shellSize.y);
     }
-    
-    /**
-     * Sets the flag indicating if the <code>Shell</code> geometry (x, y, height, width) should be persisted
-     * from session to session.
-     * @param thePersistFlag
-     */
-    protected void setPersistGeometry(boolean thePersistFlag) {
-        this.persistGeometry = thePersistFlag;
-    }
-    
+
     /**
      * Get initial Size from Relative Screen settings, if they are set
      * @return the Initial screen size

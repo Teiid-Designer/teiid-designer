@@ -19,11 +19,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.jface.dialogs.Dialog;
@@ -114,13 +111,6 @@ public final class WidgetUtil implements
      * @since 4.0
      */
     public static boolean confirmOverwrite(final File file) {
-        return showConfirmation(getString(CONFIRM_OVERWRITE_MESSAGE_ID, getFileExistsMessage(file)));
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static boolean confirmOverwrite(final IFile file) {
         return showConfirmation(getString(CONFIRM_OVERWRITE_MESSAGE_ID, getFileExistsMessage(file)));
     }
 
@@ -352,35 +342,6 @@ public final class WidgetUtil implements
     }
 
     /**
-     * Gets the index of the specified child in it's parents child collection.
-     *
-     * @param theChild
-     *            the child whose index is being requested
-     * @return the index or -1 if the child is a root
-     * @throws IllegalArgumentException
-     *             if the child in <code>null</code>
-     */
-    public static int getChildIndex(final TreeItem theChild) {
-        ArgCheck.isNotNull(theChild);
-
-        int result = -1;
-        TreeItem parent = theChild.getParentItem();
-
-        if (parent != null) {
-            TreeItem[] kids = parent.getItems();
-
-            for (int i = 0; i < kids.length; i++) {
-                if (kids[i] == theChild) {
-                    result = i;
-                    break;
-                }
-            }
-        }
-
-        return result;
-    }
-
-    /**
      * @param file
      *            An existing file.
      * @return A standard "File already exists" message for the specified file.
@@ -454,19 +415,6 @@ public final class WidgetUtil implements
                                    final int style) {
         ArgCheck.isNotNull(widget);
         return hasState(widget.getStyle(), style);
-    }
-
-    /**
-     * Initializes the specified panel with a layout and layout data.
-     *
-     * @param panel
-     * @param gridStyle
-     * @param span
-     * @param columns
-     * @since 5.0.1
-     */
-    public static void initializePanel(Composite panel) {
-        initializePanel(panel, 0, 1, 1);
     }
 
     /**
@@ -595,51 +543,6 @@ public final class WidgetUtil implements
                 tmp = new File(sItem);
 
                 if (!tmp.exists()) {
-                    itr.remove();
-                }
-            }
-
-            // modify setting if needed
-            if (resourceItems.length != newItems.size()) {
-                // convert back to string array
-                String[] resourceNames = new String[newItems.size()];
-
-                for (int ndx = resourceNames.length; --ndx >= 0;) {
-                    resourceNames[ndx] = (String)newItems.get(ndx);
-                }
-
-                // persist items
-                settings.put(id, resourceNames);
-            }
-        }
-    }
-
-    /**
-     * Removes any missing project resources from the specified <code>IDialogSettings</code> for the given key. All item values
-     * found for the specified key will be considered to be a project resource name. If that name does not represent a current
-     * project resource it is removed from the list. Ideally this method should be called prior to using the settings in a dialog.
-     *
-     * @param settings
-     *            The dialog settings needing to remove missing resource values from; may not be null.
-     * @param id
-     *            The identifier of the text array containing resources; may not be null.
-     * @since 4.1
-     */
-    public static void removeMissingProjectResources(final IDialogSettings settings,
-                                                     final String id) {
-        ArgCheck.isNotNull(settings);
-        ArgCheck.isNotNull(id);
-
-        String[] resourceItems = settings.getArray(id);
-
-        if ((resourceItems != null) && (resourceItems.length > 0)) {
-            final int RESOURCE_TYPES = IResource.FOLDER | IResource.PROJECT | IResource.FILE;
-            IWorkspace workspace = ResourcesPlugin.getWorkspace();
-            List newItems = new ArrayList(Arrays.asList(resourceItems));
-            Iterator itr = newItems.iterator();
-
-            while (itr.hasNext()) {
-                if (!workspace.validatePath((String)itr.next(), RESOURCE_TYPES).isOK()) {
                     itr.remove();
                 }
             }
@@ -869,14 +772,6 @@ public final class WidgetUtil implements
      * @since 4.0
      */
     public static void setComboItems(final Combo combo,
-                                     final Object[] items) {
-        setComboItems(combo, Arrays.asList(items), null);
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static void setComboItems(final Combo combo,
                                      final List items,
                                      final ILabelProvider provider) {
         setComboItems(combo, items, provider, false);
@@ -945,15 +840,6 @@ public final class WidgetUtil implements
     }
 
     /**
-     * @since 4.0
-     */
-    public static void setComboText(final Combo combo,
-                                    final Object selection,
-                                    final boolean add) {
-        setComboText(combo, selection, null, add);
-    }
-
-    /**
      * @param combo
      *            never null.
      * @param selection
@@ -999,71 +885,6 @@ public final class WidgetUtil implements
         gd.widthHint = Math.max(widthHint, minSize.x);
         button.setLayoutData(gd);
         gc.dispose();
-    }
-
-    /**
-     * Sets the weights of the <code>SashForm</code> based on the preferred size of it's children. Therefore, all the children
-     * must have been added and completed prior to calling this method.
-     *
-     * @param theSash
-     *            the <code>SashForm</code> whose weights are being set
-     * @throws IllegalArgumentException
-     *             if input is <code>null</code>
-     */
-    public static void setSashFormWeights(SashForm theSash) {
-        int[] weights = getSashFormWeights(theSash);
-        if (weights != null) {
-            theSash.setWeights(weights);
-        } // endif
-    }
-
-    /**
-     * Shortens the given text <code>textValue</code> so that its width in pixels does not exceed the width of the table column.
-     * Overrides characters in the center of the original string with an ellipsis ("...") if necessary. If a <code>null</code>
-     * value is given, <code>null</code> is returned. Use in the {{@link org.eclipse.jface.viewers.ITableLabelProvider }. Also, a {
-     * {@link org.eclipse.swt.events.ControlListener } will need to be setup to refresh the table when the table is resized.
-     *
-     * @param textValue the original string or <code>null</code>
-     * @param column the table column
-     * @return the string to display, or <code>null</code> if null was passed in
-     * @since 5.5.3
-     * @see Dialog#shortenText(String, org.eclipse.swt.widgets.Control)
-     */
-    public static String shortenText( String textValue,
-                                      TableColumn column ) {
-        if (textValue == null) {
-            return null;
-        }
-
-        GC gc = new GC(column.getParent());
-        int maxWidth = column.getWidth() - 5;
-
-        if (gc.textExtent(textValue).x < maxWidth) {
-            gc.dispose();
-            return textValue;
-        }
-
-        int length = textValue.length();
-        int pivot = length / 2;
-        int start = pivot;
-        int end = pivot + 1;
-
-        while (start >= 0 && end < length) {
-            String s1 = textValue.substring(0, start);
-            String s2 = textValue.substring(end, length);
-            String s = s1 + Dialog.ELLIPSIS + s2;
-            int l = gc.textExtent(s).x;
-            if (l < maxWidth) {
-                gc.dispose();
-                return s;
-            }
-            start--;
-            end++;
-        }
-
-        gc.dispose();
-
-        return textValue;
     }
 
     /**
@@ -1153,32 +974,6 @@ public final class WidgetUtil implements
     }
 
     /**
-     * Displays the appropriate dialog according to the specified status' severity, containing a message obtained from passing the
-     * specified prefix and status to {@link #getCauseMessage(String, IStatus)}.
-     *
-     * @param prefix
-     *            The prefix of the message to display.
-     * @param status
-     *            The status containing the cause of the error or warning.
-     * @param severity
-     *            Either {@link IStatus#ERROR}or {@link IStatus#WARNING}.
-     * @since 4.0
-     */
-    public static void showCause(final String prefix,
-                                 final IStatus status) {
-        ArgCheck.isNotNull(prefix);
-        ArgCheck.isNotNull(status);
-        final String msg = getCauseMessage(prefix, status);
-        Status newStatus;
-        if (status.isMultiStatus()) {
-            newStatus = new MultiStatus(status.getPlugin(), status.getCode(), status.getChildren(), msg, status.getException());
-        } else {
-            newStatus = new Status(status.getSeverity(), status.getPlugin(), status.getCode(), msg, status.getException());
-        }
-        show(newStatus);
-    }
-
-    /**
      * Displays an error dialog containing a message obtained from passing the specified prefix and throwable to
      * {@link #getCauseMessage(String, Throwable)}.
      *
@@ -1249,27 +1044,6 @@ public final class WidgetUtil implements
      */
     public static void showError(final Throwable error) {
         showError(getMessage(error));
-    }
-
-    /**
-     * @param selection
-     *            An initial folder to be selected in the dialog; may be null.
-     * @since 4.0
-     */
-    public static IContainer showFolderSelectionDialog(final IContainer selection) {
-        return showFolderSelectionDialog(selection, null);
-    }
-
-    /**
-     * @param selection
-     *            An initial folder to be selected in the dialog; may be null.
-     * @param validator
-     *            The validator that will determine whether the current selection is valid within the dialog caller's context.
-     * @since 4.0
-     */
-    public static IContainer showFolderSelectionDialog(final IContainer selection,
-                                                       final ISelectionStatusValidator validator) {
-        return showFolderSelectionDialog(selection, null, validator);
     }
 
     /**
@@ -1453,14 +1227,6 @@ public final class WidgetUtil implements
             return dlg.getResult();
         }
         return EMPTY_STRING_ARRAY;
-    }
-
-    /**
-     * @since 4.0
-     */
-    public static void toggleCheckedState(final TreeItem item,
-                                          final ITreeViewerController controller) {
-        setChecked(item, !isChecked(item), true, controller);
     }
 
     // ============================================================================================================================

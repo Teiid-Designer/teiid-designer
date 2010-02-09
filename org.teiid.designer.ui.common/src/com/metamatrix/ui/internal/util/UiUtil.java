@@ -9,9 +9,6 @@ package com.metamatrix.ui.internal.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
@@ -19,11 +16,11 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -36,7 +33,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -340,16 +336,6 @@ public final class UiUtil implements UiConstants {
     }
 
     /**
-     * @return The selection in the active workbench window.
-     * @since 4.0
-     */
-    public static ISelection getWorkbenchWindowSelection() {
-        ISelectionService service = UiUtil.getWorkbenchWindowOnlyIfUiThread().getSelectionService();
-        ISelection selection = service.getSelection();
-        return selection;
-    }
-
-    /**
      * Opens a system editor with the specified file system resource.
      * 
      * @param theFile the file being opened in a system editor
@@ -464,44 +450,6 @@ public final class UiUtil implements UiConstants {
                 WidgetUtil.showError(err);
             }
         }
-    }
-
-    /**
-     * Creates a new scaled <code>Image</code> from the specified one.
-     * 
-     * @param theSourceImage the soure image whose size is being scaled to create the new image
-     * @param theWidth the width of the new image
-     * @param theHeight the height of the new image
-     * @return the scaled image
-     * @since 4.2
-     */
-    public static Image scaleImage( Image theSourceImage,
-                                    int theWidth,
-                                    int theHeight ) {
-        return new Image(null, theSourceImage.getImageData().scaledTo(theWidth, theHeight));
-    }
-
-    /**
-     * Sorts the specified list according to the natural order of the text for each of the items in the list returned by the
-     * specified label provider.
-     * 
-     * @param list The list to sort.
-     * @param provider The label provider used to sort the list.
-     * @since 4.0
-     */
-    public static List<String> sort( final List<Object> list,
-                                     final ILabelProvider provider ) {
-        final List<String> sortedList = new ArrayList<String>(list.size());
-        for (final Iterator<Object> iter = list.iterator(); iter.hasNext();) {
-            final String text = provider.getText(iter.next());
-            int index = Collections.binarySearch(sortedList, text);
-            if (index < 0) {
-                sortedList.add(-(index + 1), text);
-            } else {
-                sortedList.add(index, text);
-            }
-        }
-        return sortedList;
     }
 
     /**

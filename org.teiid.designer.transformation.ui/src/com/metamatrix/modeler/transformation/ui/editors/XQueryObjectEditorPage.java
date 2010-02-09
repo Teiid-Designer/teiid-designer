@@ -126,7 +126,7 @@ public class XQueryObjectEditorPage implements ModelObjectEditorPage, UiConstant
         int style = SWT.WRAP | SWT.V_SCROLL;
         this.textEditor = new StyledTextEditor(parent, style);
 
-        this.textEditor.addDocumentListener(new IDocumentListener() {
+        this.textEditor.getDocument().addDocumentListener(new IDocumentListener() {
             public void documentAboutToBeChanged( DocumentEvent event ) {
             }
 

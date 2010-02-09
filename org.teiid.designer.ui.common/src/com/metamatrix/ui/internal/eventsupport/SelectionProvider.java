@@ -38,13 +38,6 @@ public class SelectionProvider implements ISelectionProvider {
     public SelectionProvider() {
     }
 
-    /**
-     * Create a SelectionProvider and supply an initial selection.
-     */
-    public SelectionProvider(ISelection initialSelection) {
-        this.currentSelection = initialSelection;
-    }
-
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
      */

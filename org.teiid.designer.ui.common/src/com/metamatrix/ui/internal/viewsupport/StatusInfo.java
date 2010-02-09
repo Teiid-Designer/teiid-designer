@@ -104,14 +104,6 @@ public class StatusInfo implements IStatus {
         fSeverity= IStatus.INFO;
     }
 
-    /**
-     * Sets the status to OK.
-     */
-    public void setOK() {
-        fStatusMessage= null;
-        fSeverity= IStatus.OK;
-    }
-
     /*
      * @see IStatus#matches(int)
      */

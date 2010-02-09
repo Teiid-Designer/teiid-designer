@@ -53,9 +53,5 @@ public class TreeNodeMap {
         }
         return result;
     }
-    
-    public Object get( Object theTreeNode ) {
-        return hmap.get( theTreeNode );
-    }
 
 }

@@ -49,13 +49,6 @@ public class MappingDiagramPermanentActionContributor  implements IModelObjectAc
         
         // Need to check the selection first.   
     }
-
-    /* (non-Javadoc)
-     * @see com.metamatrix.modeler.ui.actions.IModelObjectActionContributor#contributeToEditMenu(org.eclipse.jface.action.IMenuManager, org.eclipse.jface.viewers.ISelection)
-     */
-    public void contributeToEditMenu(IMenuManager theMenuMgr, ISelection theSelection) {
-        // Need to check the selection first.
-    }
     
     /**
      *  
