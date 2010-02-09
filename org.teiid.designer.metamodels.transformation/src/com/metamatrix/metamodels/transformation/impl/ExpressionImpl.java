@@ -20,31 +20,22 @@ import com.metamatrix.metamodels.transformation.ExpressionOwner;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Expression</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Expression</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.ExpressionImpl#getValue <em>Value</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.ExpressionImpl#getOwner <em>Owner</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.ExpressionImpl#getValue <em>Value</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.ExpressionImpl#getOwner <em>Owner</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class ExpressionImpl extends EObjectImpl implements Expression {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getValue() <em>Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getValue()
      * @generated
      * @ordered
@@ -52,9 +43,8 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
     protected static final String VALUE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getValue() <em>Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getValue()
      * @generated
      * @ordered
@@ -62,8 +52,8 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
     protected String value = VALUE_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected ExpressionImpl() {
@@ -71,8 +61,8 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -81,8 +71,8 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getValue() {
@@ -90,20 +80,20 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setValue(String newValue) {
+    public void setValue( String newValue ) {
         String oldValue = value;
         value = newValue;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.EXPRESSION__VALUE, oldValue, value));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.EXPRESSION__VALUE, oldValue, value));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public ExpressionOwner getOwner() {
@@ -112,55 +102,60 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setOwner(ExpressionOwner newOwner) {
+    public void setOwner( ExpressionOwner newOwner ) {
         if (newOwner != eContainer || (eContainerFeatureID != TransformationPackage.EXPRESSION__OWNER && newOwner != null)) {
-            if (EcoreUtil.isAncestor(this, newOwner))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newOwner)) throw new IllegalArgumentException(
+                                                                                         "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newOwner != null)
-                msgs = ((InternalEObject)newOwner).eInverseAdd(this, TransformationPackage.EXPRESSION_OWNER__EXPRESSIONS, ExpressionOwner.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newOwner != null) msgs = ((InternalEObject)newOwner).eInverseAdd(this,
+                                                                                 TransformationPackage.EXPRESSION_OWNER__EXPRESSIONS,
+                                                                                 ExpressionOwner.class,
+                                                                                 msgs);
             msgs = eBasicSetContainer((InternalEObject)newOwner, TransformationPackage.EXPRESSION__OWNER, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.EXPRESSION__OWNER, newOwner, newOwner));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          TransformationPackage.EXPRESSION__OWNER, newOwner,
+                                                                          newOwner));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.EXPRESSION__OWNER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.EXPRESSION__OWNER, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.EXPRESSION__OWNER:
@@ -173,16 +168,19 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.EXPRESSION__OWNER:
-                    return eContainer.eInverseRemove(this, TransformationPackage.EXPRESSION_OWNER__EXPRESSIONS, ExpressionOwner.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.EXPRESSION_OWNER__EXPRESSIONS,
+                                                     ExpressionOwner.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -191,12 +189,13 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.EXPRESSION__VALUE:
                 return getValue();
@@ -207,12 +206,13 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.EXPRESSION__VALUE:
                 setValue((String)newValue);
@@ -225,12 +225,12 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.EXPRESSION__VALUE:
                 setValue(VALUE_EDEFAULT);
@@ -243,12 +243,12 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.EXPRESSION__VALUE:
                 return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
@@ -259,8 +259,8 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -274,4 +274,4 @@ public class ExpressionImpl extends EObjectImpl implements Expression {
         return result.toString();
     }
 
-} //ExpressionImpl
+} // ExpressionImpl

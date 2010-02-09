@@ -36,12 +36,6 @@ import com.metamatrix.metamodels.core.extension.impl.ExtensionPackageImpl;
  * @generated
  */
 public class CorePackageImpl extends EPackageImpl implements CorePackage {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->

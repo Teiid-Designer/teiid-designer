@@ -28,12 +28,6 @@ import com.metamatrix.metamodels.relationship.RelationshipPackage;
  * @generated
  */
 public class RelationshipItemProvider extends RelationshipEntityItemProvider {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -85,7 +79,7 @@ public class RelationshipItemProvider extends RelationshipEntityItemProvider {
      * 
      * @generated
      */
-    protected void addTargetsPropertyDescriptorGen( Object object ) {
+    protected void addTargetsPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Relationship_targets_feature"), //$NON-NLS-1$
@@ -121,7 +115,7 @@ public class RelationshipItemProvider extends RelationshipEntityItemProvider {
      * 
      * @generated
      */
-    protected void addSourcesPropertyDescriptorGen( Object object ) {
+    protected void addSourcesPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Relationship_sources_feature"), //$NON-NLS-1$
@@ -157,7 +151,7 @@ public class RelationshipItemProvider extends RelationshipEntityItemProvider {
      * 
      * @generated
      */
-    protected void addTypePropertyDescriptorGen( Object object ) {
+    protected void addTypePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Relationship_type_feature"), //$NON-NLS-1$
@@ -230,7 +224,7 @@ public class RelationshipItemProvider extends RelationshipEntityItemProvider {
      * 
      * @generated
      */
-    public String getTextGen( Object object ) {
+    public String getTextGen( Object object ) { // NO_UCD
         String label = ((Relationship)object).getName();
         return label == null || label.length() == 0 ? getString("_UI_Relationship_type") : //$NON-NLS-1$
         getString("_UI_Relationship_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
@@ -281,7 +275,7 @@ public class RelationshipItemProvider extends RelationshipEntityItemProvider {
      * 
      * @generated
      */
-    protected void collectNewChildDescriptorsGen( Collection newChildDescriptors,
+    protected void collectNewChildDescriptorsGen( Collection newChildDescriptors, // NO_UCD
                                                   Object object ) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
 

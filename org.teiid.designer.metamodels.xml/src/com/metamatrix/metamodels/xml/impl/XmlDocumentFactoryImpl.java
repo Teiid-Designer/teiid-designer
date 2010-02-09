@@ -312,7 +312,7 @@ public class XmlDocumentFactoryImpl extends EFactoryImpl implements XmlDocumentF
      * @generated
      */
     @Deprecated
-    public static XmlDocumentPackage getPackage() {
+    public static XmlDocumentPackage getPackage() { // NO_UCD
         return XmlDocumentPackage.eINSTANCE;
     }
 

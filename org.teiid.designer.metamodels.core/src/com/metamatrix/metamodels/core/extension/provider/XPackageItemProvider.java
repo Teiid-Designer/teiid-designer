@@ -26,12 +26,6 @@ import com.metamatrix.metamodels.core.util.CoreUtil;
  * @generated
  */
 public class XPackageItemProvider extends EPackageItemProvider {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -47,7 +41,7 @@ public class XPackageItemProvider extends EPackageItemProvider {
      * 
      * @generated
      */
-    public List getPropertyDescriptorsGen( Object object ) {
+    public List getPropertyDescriptorsGen( Object object ) { // NO_UCD
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
@@ -100,7 +94,7 @@ public class XPackageItemProvider extends EPackageItemProvider {
      * 
      * @generated
      */
-    public String getTextGen( Object object ) {
+    public String getTextGen( Object object ) { // NO_UCD
         String label = ((XPackage)object).getName();
         return label == null || label.length() == 0 ? getString("_UI_XPackage_type") : //$NON-NLS-1$
         getString("_UI_XPackage_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
@@ -147,7 +141,7 @@ public class XPackageItemProvider extends EPackageItemProvider {
      * 
      * @generated
      */
-    protected void collectNewChildDescriptorsGen( Collection newChildDescriptors,
+    protected void collectNewChildDescriptorsGen( Collection newChildDescriptors, // NO_UCD
                                                   Object object ) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
 

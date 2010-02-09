@@ -26,37 +26,28 @@ import com.metamatrix.metamodels.relationship.RelationshipPackage;
 import com.metamatrix.metamodels.relationship.UriReference;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Uri Reference</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Uri Reference</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#getName <em>Name</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#getUri <em>Uri</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#isResolvable <em>Resolvable</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#getEncoding <em>Encoding</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#getAbstract <em>Abstract</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#getKeywords <em>Keywords</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#getRelatedUris <em>Related Uris</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#getProperties <em>Properties</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#getName <em>Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#getUri <em>Uri</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#isResolvable <em>Resolvable</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#getEncoding <em>Encoding</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#getAbstract <em>Abstract</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#getKeywords <em>Keywords</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#getRelatedUris <em>Related Uris</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.UriReferenceImpl#getProperties <em>Properties</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriReference {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -64,9 +55,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -74,9 +64,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     protected String name = NAME_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getUri() <em>Uri</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getUri() <em>Uri</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getUri()
      * @generated
      * @ordered
@@ -84,9 +73,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     protected static final String URI_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getUri() <em>Uri</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getUri() <em>Uri</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getUri()
      * @generated
      * @ordered
@@ -94,9 +82,9 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     protected String uri = URI_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isResolvable() <em>Resolvable</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #isResolvable() <em>Resolvable</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #isResolvable()
      * @generated
      * @ordered
@@ -104,9 +92,9 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     protected static final boolean RESOLVABLE_EDEFAULT = true;
 
     /**
-     * The cached value of the '{@link #isResolvable() <em>Resolvable</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isResolvable() <em>Resolvable</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #isResolvable()
      * @generated
      * @ordered
@@ -114,9 +102,9 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     protected boolean resolvable = RESOLVABLE_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getEncoding() <em>Encoding</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getEncoding() <em>Encoding</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getEncoding()
      * @generated
      * @ordered
@@ -124,9 +112,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     protected static final String ENCODING_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getEncoding() <em>Encoding</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getEncoding() <em>Encoding</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getEncoding()
      * @generated
      * @ordered
@@ -134,9 +121,9 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     protected String encoding = ENCODING_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getAbstract() <em>Abstract</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getAbstract() <em>Abstract</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getAbstract()
      * @generated
      * @ordered
@@ -144,9 +131,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     protected static final String ABSTRACT_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getAbstract() <em>Abstract</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getAbstract() <em>Abstract</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getAbstract()
      * @generated
      * @ordered
@@ -154,9 +140,9 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     protected String abstract_ = ABSTRACT_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getKeywords() <em>Keywords</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getKeywords() <em>Keywords</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getKeywords()
      * @generated
      * @ordered
@@ -164,9 +150,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     protected static final String KEYWORDS_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getKeywords() <em>Keywords</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getKeywords() <em>Keywords</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getKeywords()
      * @generated
      * @ordered
@@ -174,9 +159,9 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     protected String keywords = KEYWORDS_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getRelatedUris() <em>Related Uris</em>}' attribute list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getRelatedUris() <em>Related Uris</em>}' attribute list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getRelatedUris()
      * @generated
      * @ordered
@@ -184,9 +169,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     protected EList relatedUris = null;
 
     /**
-     * The cached value of the '{@link #getProperties() <em>Properties</em>}' map.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getProperties() <em>Properties</em>}' map. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getProperties()
      * @generated
      * @ordered
@@ -194,8 +178,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     protected EMap properties = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected UriReferenceImpl() {
@@ -203,8 +187,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -213,8 +197,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getName() {
@@ -222,20 +206,20 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setName(String newName) {
+    public void setName( String newName ) {
         String oldName = name;
         name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.URI_REFERENCE__NAME, oldName, name));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.URI_REFERENCE__NAME, oldName, name));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getUri() {
@@ -243,20 +227,20 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setUri(String newUri) {
+    public void setUri( String newUri ) {
         String oldUri = uri;
         uri = newUri;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.URI_REFERENCE__URI, oldUri, uri));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.URI_REFERENCE__URI, oldUri, uri));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isResolvable() {
@@ -264,20 +248,21 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setResolvable(boolean newResolvable) {
+    public void setResolvable( boolean newResolvable ) {
         boolean oldResolvable = resolvable;
         resolvable = newResolvable;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.URI_REFERENCE__RESOLVABLE, oldResolvable, resolvable));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.URI_REFERENCE__RESOLVABLE, oldResolvable,
+                                                                   resolvable));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getEncoding() {
@@ -285,20 +270,21 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setEncoding(String newEncoding) {
+    public void setEncoding( String newEncoding ) {
         String oldEncoding = encoding;
         encoding = newEncoding;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.URI_REFERENCE__ENCODING, oldEncoding, encoding));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.URI_REFERENCE__ENCODING, oldEncoding,
+                                                                   encoding));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getAbstract() {
@@ -306,20 +292,21 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setAbstract(String newAbstract) {
+    public void setAbstract( String newAbstract ) {
         String oldAbstract = abstract_;
         abstract_ = newAbstract;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.URI_REFERENCE__ABSTRACT, oldAbstract, abstract_));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.URI_REFERENCE__ABSTRACT, oldAbstract,
+                                                                   abstract_));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getKeywords() {
@@ -327,20 +314,21 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setKeywords(String newKeywords) {
+    public void setKeywords( String newKeywords ) {
         String oldKeywords = keywords;
         keywords = newKeywords;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.URI_REFERENCE__KEYWORDS, oldKeywords, keywords));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.URI_REFERENCE__KEYWORDS, oldKeywords,
+                                                                   keywords));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getRelatedUris() {
@@ -351,35 +339,36 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EMap getProperties() {
         if (properties == null) {
-            properties = new EcoreEMap(EcorePackage.eINSTANCE.getEStringToStringMapEntry(), EStringToStringMapEntryImpl.class, this, RelationshipPackage.URI_REFERENCE__PROPERTIES);
+            properties = new EcoreEMap(EcorePackage.eINSTANCE.getEStringToStringMapEntry(), EStringToStringMapEntryImpl.class,
+                                       this, RelationshipPackage.URI_REFERENCE__PROPERTIES);
         }
         return properties;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     @Override
     public String getDisplayableName() {
         final String name = this.getName();
         final String uri = this.getUri();
-        if ( name != null && name.trim().length() != 0 ) {
+        if (name != null && name.trim().length() != 0) {
             return name + "=" + uri; //$NON-NLS-1$
         }
         return uri;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -390,34 +379,38 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case RelationshipPackage.URI_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, RelationshipPackage.URI_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case RelationshipPackage.URI_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER:
@@ -432,16 +425,19 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case RelationshipPackage.URI_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER:
-                    return eContainer.eInverseRemove(this, RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS, PlaceholderReferenceContainer.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS,
+                                                     PlaceholderReferenceContainer.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -450,12 +446,13 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.URI_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER:
                 return getPlaceholderReferenceContainer();
@@ -480,12 +477,13 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.URI_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER:
                 setPlaceholderReferenceContainer((PlaceholderReferenceContainer)newValue);
@@ -521,12 +519,12 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.URI_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER:
                 setPlaceholderReferenceContainer((PlaceholderReferenceContainer)null);
@@ -560,12 +558,12 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.URI_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER:
                 return getPlaceholderReferenceContainer() != null;
@@ -590,8 +588,8 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -617,4 +615,4 @@ public class UriReferenceImpl extends PlaceholderReferenceImpl implements UriRef
         return result.toString();
     }
 
-} //UriReferenceImpl
+} // UriReferenceImpl

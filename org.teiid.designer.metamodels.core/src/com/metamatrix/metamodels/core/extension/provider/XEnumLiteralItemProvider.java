@@ -22,12 +22,6 @@ import com.metamatrix.metamodels.core.extension.XEnumLiteral;
  * @generated
  */
 public class XEnumLiteralItemProvider extends EEnumLiteralItemProvider {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -79,7 +73,7 @@ public class XEnumLiteralItemProvider extends EEnumLiteralItemProvider {
      * 
      * @generated
      */
-    public String getTextGen( Object object ) {
+    public String getTextGen( Object object ) { // NO_UCD
         String label = ((XEnumLiteral)object).getName();
         return label == null || label.length() == 0 ? getString("_UI_XEnumLiteral_type") : //$NON-NLS-1$
         getString("_UI_XEnumLiteral_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
@@ -115,7 +109,7 @@ public class XEnumLiteralItemProvider extends EEnumLiteralItemProvider {
      * 
      * @generated
      */
-    protected void collectNewChildDescriptorsGen( Collection newChildDescriptors,
+    protected void collectNewChildDescriptorsGen( Collection newChildDescriptors, // NO_UCD
                                                   Object object ) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
     }

@@ -10,37 +10,27 @@ package com.metamatrix.metamodels.transformation;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Mapping Class Object</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Mapping Class Object</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.MappingClassObject#getName <em>Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.MappingClassObject#getName <em>Name</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see com.metamatrix.metamodels.transformation.TransformationPackage#getMappingClassObject()
  * @model abstract="true"
  * @generated
  */
-public interface MappingClassObject extends EObject{
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
+public interface MappingClassObject extends EObject {
 
     /**
-     * Returns the value of the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Name</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Name</em>' attribute.
      * @see #setName(String)
      * @see com.metamatrix.metamodels.transformation.TransformationPackage#getMappingClassObject_Name()
@@ -50,13 +40,13 @@ public interface MappingClassObject extends EObject{
     String getName();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.transformation.MappingClassObject#getName <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.transformation.MappingClassObject#getName <em>Name</em>}'
+     * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Name</em>' attribute.
      * @see #getName()
      * @generated
      */
-    void setName(String value);
+    void setName( String value );
 
 } // MappingClassObject

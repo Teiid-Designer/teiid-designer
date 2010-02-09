@@ -31,193 +31,195 @@ import com.metamatrix.metamodels.wsdl.Types;
 import com.metamatrix.metamodels.wsdl.WsdlPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Types</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Types</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.TypesImpl#getDocumentation <em>Documentation</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.TypesImpl#getDeclaredNamespaces <em>Declared Namespaces</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.TypesImpl#getElements <em>Elements</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.TypesImpl#getDefinitions <em>Definitions</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.TypesImpl#getSchemas <em>Schemas</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.TypesImpl#getDocumentation <em>Documentation</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.TypesImpl#getDeclaredNamespaces <em>Declared Namespaces</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.TypesImpl#getElements <em>Elements</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.TypesImpl#getDefinitions <em>Definitions</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.TypesImpl#getSchemas <em>Schemas</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class TypesImpl extends EObjectImpl implements Types {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' containment reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' containment reference. <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
      * @see #getDocumentation()
      * @generated
      * @ordered
      */
-	protected Documentation documentation = null;
+    protected Documentation documentation = null;
 
     /**
-     * The cached value of the '{@link #getDeclaredNamespaces() <em>Declared Namespaces</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getDeclaredNamespaces() <em>Declared Namespaces</em>}' containment reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getDeclaredNamespaces()
      * @generated
      * @ordered
      */
-	protected EList declaredNamespaces = null;
+    protected EList declaredNamespaces = null;
 
     /**
-     * The cached value of the '{@link #getElements() <em>Elements</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getElements() <em>Elements</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getElements()
      * @generated
      * @ordered
      */
-	protected EList elements = null;
+    protected EList elements = null;
 
     /**
-     * The cached value of the '{@link #getSchemas() <em>Schemas</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getSchemas() <em>Schemas</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getSchemas()
      * @generated
      * @ordered
      */
-	protected EList schemas = null;
+    protected EList schemas = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected TypesImpl() {
+    protected TypesImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return WsdlPackage.eINSTANCE.getTypes();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public Documentation getDocumentation() {
+    public Documentation getDocumentation() {
         return documentation;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public NotificationChain basicSetDocumentation(Documentation newDocumentation, NotificationChain msgs) {
+    public NotificationChain basicSetDocumentation( Documentation newDocumentation,
+                                                    NotificationChain msgs ) {
         Documentation oldDocumentation = documentation;
         documentation = newDocumentation;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WsdlPackage.TYPES__DOCUMENTATION, oldDocumentation, newDocumentation);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WsdlPackage.TYPES__DOCUMENTATION,
+                                                                   oldDocumentation, newDocumentation);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setDocumentation(Documentation newDocumentation) {
+    public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
-            if (documentation != null)
-                msgs = ((InternalEObject)documentation).eInverseRemove(this, WsdlPackage.DOCUMENTATION__DOCUMENTED, Documentation.class, msgs);
-            if (newDocumentation != null)
-                msgs = ((InternalEObject)newDocumentation).eInverseAdd(this, WsdlPackage.DOCUMENTATION__DOCUMENTED, Documentation.class, msgs);
+            if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
+                                                                                              WsdlPackage.DOCUMENTATION__DOCUMENTED,
+                                                                                              Documentation.class,
+                                                                                              msgs);
+            if (newDocumentation != null) msgs = ((InternalEObject)newDocumentation).eInverseAdd(this,
+                                                                                                 WsdlPackage.DOCUMENTATION__DOCUMENTED,
+                                                                                                 Documentation.class,
+                                                                                                 msgs);
             msgs = basicSetDocumentation(newDocumentation, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.TYPES__DOCUMENTATION, newDocumentation, newDocumentation));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          WsdlPackage.TYPES__DOCUMENTATION, newDocumentation,
+                                                                          newDocumentation));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getDeclaredNamespaces() {
+    public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
-            declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this, WsdlPackage.TYPES__DECLARED_NAMESPACES, WsdlPackage.NAMESPACE_DECLARATION__OWNER);
+            declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
+                                                                        WsdlPackage.TYPES__DECLARED_NAMESPACES,
+                                                                        WsdlPackage.NAMESPACE_DECLARATION__OWNER);
         }
         return declaredNamespaces;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getElements() {
+    public EList getElements() {
         if (elements == null) {
-            elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.TYPES__ELEMENTS, WsdlPackage.ELEMENT__ELEMENT_OWNER);
+            elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.TYPES__ELEMENTS,
+                                                              WsdlPackage.ELEMENT__ELEMENT_OWNER);
         }
         return elements;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public Definitions getDefinitions() {
+    public Definitions getDefinitions() {
         if (eContainerFeatureID != WsdlPackage.TYPES__DEFINITIONS) return null;
         return (Definitions)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setDefinitions(Definitions newDefinitions) {
+    public void setDefinitions( Definitions newDefinitions ) {
         if (newDefinitions != eContainer || (eContainerFeatureID != WsdlPackage.TYPES__DEFINITIONS && newDefinitions != null)) {
-            if (EcoreUtil.isAncestor(this, newDefinitions))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newDefinitions)) throw new IllegalArgumentException(
+                                                                                               "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newDefinitions != null)
-                msgs = ((InternalEObject)newDefinitions).eInverseAdd(this, WsdlPackage.DEFINITIONS__TYPES, Definitions.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newDefinitions != null) msgs = ((InternalEObject)newDefinitions).eInverseAdd(this,
+                                                                                             WsdlPackage.DEFINITIONS__TYPES,
+                                                                                             Definitions.class,
+                                                                                             msgs);
             msgs = eBasicSetContainer((InternalEObject)newDefinitions, WsdlPackage.TYPES__DEFINITIONS, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.TYPES__DEFINITIONS, newDefinitions, newDefinitions));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.TYPES__DEFINITIONS,
+                                                                          newDefinitions, newDefinitions));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getSchemas() {
+    public EList getSchemas() {
         if (schemas == null) {
             schemas = new EObjectContainmentEList(XSDSchema.class, this, WsdlPackage.TYPES__SCHEMAS);
         }
@@ -225,42 +227,49 @@ public class TypesImpl extends EObjectImpl implements Types {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WsdlPackage.TYPES__DOCUMENTATION:
-                    if (documentation != null)
-                        msgs = ((InternalEObject)documentation).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - WsdlPackage.TYPES__DOCUMENTATION, null, msgs);
+                    if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
+                                                                                                      EOPPOSITE_FEATURE_BASE
+                                                                                                      - WsdlPackage.TYPES__DOCUMENTATION,
+                                                                                                      null,
+                                                                                                      msgs);
                     return basicSetDocumentation((Documentation)otherEnd, msgs);
                 case WsdlPackage.TYPES__DECLARED_NAMESPACES:
                     return ((InternalEList)getDeclaredNamespaces()).basicAdd(otherEnd, msgs);
                 case WsdlPackage.TYPES__ELEMENTS:
                     return ((InternalEList)getElements()).basicAdd(otherEnd, msgs);
                 case WsdlPackage.TYPES__DEFINITIONS:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, WsdlPackage.TYPES__DEFINITIONS, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WsdlPackage.TYPES__DOCUMENTATION:
@@ -281,12 +290,12 @@ public class TypesImpl extends EObjectImpl implements Types {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case WsdlPackage.TYPES__DEFINITIONS:
@@ -299,12 +308,13 @@ public class TypesImpl extends EObjectImpl implements Types {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.TYPES__DOCUMENTATION:
                 return getDocumentation();
@@ -321,12 +331,13 @@ public class TypesImpl extends EObjectImpl implements Types {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.TYPES__DOCUMENTATION:
                 setDocumentation((Documentation)newValue);
@@ -351,12 +362,12 @@ public class TypesImpl extends EObjectImpl implements Types {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.TYPES__DOCUMENTATION:
                 setDocumentation((Documentation)null);
@@ -378,12 +389,12 @@ public class TypesImpl extends EObjectImpl implements Types {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.TYPES__DOCUMENTATION:
                 return documentation != null;
@@ -400,47 +411,57 @@ public class TypesImpl extends EObjectImpl implements Types {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public int eBaseStructuralFeatureID(int derivedFeatureID, Class baseClass) {
+    public int eBaseStructuralFeatureID( int derivedFeatureID,
+                                         Class baseClass ) {
         if (baseClass == NamespaceDeclarationOwner.class) {
             switch (derivedFeatureID) {
-                case WsdlPackage.TYPES__DECLARED_NAMESPACES: return WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES;
-                default: return -1;
+                case WsdlPackage.TYPES__DECLARED_NAMESPACES:
+                    return WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES;
+                default:
+                    return -1;
             }
         }
         if (baseClass == ElementOwner.class) {
             switch (derivedFeatureID) {
-                case WsdlPackage.TYPES__ELEMENTS: return WsdlPackage.ELEMENT_OWNER__ELEMENTS;
-                default: return -1;
+                case WsdlPackage.TYPES__ELEMENTS:
+                    return WsdlPackage.ELEMENT_OWNER__ELEMENTS;
+                default:
+                    return -1;
             }
         }
         return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public int eDerivedStructuralFeatureID(int baseFeatureID, Class baseClass) {
+    public int eDerivedStructuralFeatureID( int baseFeatureID,
+                                            Class baseClass ) {
         if (baseClass == NamespaceDeclarationOwner.class) {
             switch (baseFeatureID) {
-                case WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES: return WsdlPackage.TYPES__DECLARED_NAMESPACES;
-                default: return -1;
+                case WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES:
+                    return WsdlPackage.TYPES__DECLARED_NAMESPACES;
+                default:
+                    return -1;
             }
         }
         if (baseClass == ElementOwner.class) {
             switch (baseFeatureID) {
-                case WsdlPackage.ELEMENT_OWNER__ELEMENTS: return WsdlPackage.TYPES__ELEMENTS;
-                default: return -1;
+                case WsdlPackage.ELEMENT_OWNER__ELEMENTS:
+                    return WsdlPackage.TYPES__ELEMENTS;
+                default:
+                    return -1;
             }
         }
         return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
     }
 
-} //TypesImpl
+} // TypesImpl

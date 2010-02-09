@@ -22,189 +22,183 @@ import com.metamatrix.metamodels.wsdl.soap.SoapPackage;
 import com.metamatrix.metamodels.wsdl.soap.SoapStyleType;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Operation</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Operation</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapOperationImpl#getBindingOperation <em>Binding Operation</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapOperationImpl#getStyle <em>Style</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapOperationImpl#getAction <em>Action</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapOperationImpl#getBindingOperation <em>Binding Operation</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapOperationImpl#getStyle <em>Style</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapOperationImpl#getAction <em>Action</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class SoapOperationImpl extends EObjectImpl implements SoapOperation {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getStyle() <em>Style</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getStyle() <em>Style</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getStyle()
      * @generated
      * @ordered
      */
-	protected static final SoapStyleType STYLE_EDEFAULT = SoapStyleType.DOCUMENT_LITERAL;
+    protected static final SoapStyleType STYLE_EDEFAULT = SoapStyleType.DOCUMENT_LITERAL;
 
     /**
-     * The cached value of the '{@link #getStyle() <em>Style</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getStyle() <em>Style</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getStyle()
      * @generated
      * @ordered
      */
-	protected SoapStyleType style = STYLE_EDEFAULT;
+    protected SoapStyleType style = STYLE_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getAction() <em>Action</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getAction() <em>Action</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getAction()
      * @generated
      * @ordered
      */
-	protected static final String ACTION_EDEFAULT = null;
+    protected static final String ACTION_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getAction() <em>Action</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getAction() <em>Action</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getAction()
      * @generated
      * @ordered
      */
-	protected String action = ACTION_EDEFAULT;
+    protected String action = ACTION_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected SoapOperationImpl() {
+    protected SoapOperationImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return SoapPackage.eINSTANCE.getSoapOperation();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public SoapStyleType getStyle() {
+    public SoapStyleType getStyle() {
         return style;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setStyle(SoapStyleType newStyle) {
+    public void setStyle( SoapStyleType newStyle ) {
         SoapStyleType oldStyle = style;
         style = newStyle == null ? STYLE_EDEFAULT : newStyle;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_OPERATION__STYLE, oldStyle, style));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_OPERATION__STYLE,
+                                                                   oldStyle, style));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getAction() {
+    public String getAction() {
         return action;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setAction(String newAction) {
+    public void setAction( String newAction ) {
         String oldAction = action;
         action = newAction;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_OPERATION__ACTION, oldAction, action));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_OPERATION__ACTION,
+                                                                   oldAction, action));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public BindingOperation getBindingOperation() {
+    public BindingOperation getBindingOperation() {
         if (eContainerFeatureID != SoapPackage.SOAP_OPERATION__BINDING_OPERATION) return null;
         return (BindingOperation)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setBindingOperation(BindingOperation newBindingOperation) {
-        if (newBindingOperation != eContainer || (eContainerFeatureID != SoapPackage.SOAP_OPERATION__BINDING_OPERATION && newBindingOperation != null)) {
-            if (EcoreUtil.isAncestor(this, newBindingOperation))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setBindingOperation( BindingOperation newBindingOperation ) {
+        if (newBindingOperation != eContainer
+            || (eContainerFeatureID != SoapPackage.SOAP_OPERATION__BINDING_OPERATION && newBindingOperation != null)) {
+            if (EcoreUtil.isAncestor(this, newBindingOperation)) throw new IllegalArgumentException(
+                                                                                                    "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newBindingOperation != null)
-                msgs = ((InternalEObject)newBindingOperation).eInverseAdd(this, WsdlPackage.BINDING_OPERATION__SOAP_OPERATION, BindingOperation.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newBindingOperation != null) msgs = ((InternalEObject)newBindingOperation).eInverseAdd(this,
+                                                                                                       WsdlPackage.BINDING_OPERATION__SOAP_OPERATION,
+                                                                                                       BindingOperation.class,
+                                                                                                       msgs);
             msgs = eBasicSetContainer((InternalEObject)newBindingOperation, SoapPackage.SOAP_OPERATION__BINDING_OPERATION, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_OPERATION__BINDING_OPERATION, newBindingOperation, newBindingOperation));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          SoapPackage.SOAP_OPERATION__BINDING_OPERATION,
+                                                                          newBindingOperation, newBindingOperation));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case SoapPackage.SOAP_OPERATION__BINDING_OPERATION:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, SoapPackage.SOAP_OPERATION__BINDING_OPERATION, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case SoapPackage.SOAP_OPERATION__BINDING_OPERATION:
@@ -217,16 +211,19 @@ public class SoapOperationImpl extends EObjectImpl implements SoapOperation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case SoapPackage.SOAP_OPERATION__BINDING_OPERATION:
-                    return eContainer.eInverseRemove(this, WsdlPackage.BINDING_OPERATION__SOAP_OPERATION, BindingOperation.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     WsdlPackage.BINDING_OPERATION__SOAP_OPERATION,
+                                                     BindingOperation.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -235,12 +232,13 @@ public class SoapOperationImpl extends EObjectImpl implements SoapOperation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_OPERATION__BINDING_OPERATION:
                 return getBindingOperation();
@@ -253,12 +251,13 @@ public class SoapOperationImpl extends EObjectImpl implements SoapOperation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_OPERATION__BINDING_OPERATION:
                 setBindingOperation((BindingOperation)newValue);
@@ -274,12 +273,12 @@ public class SoapOperationImpl extends EObjectImpl implements SoapOperation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_OPERATION__BINDING_OPERATION:
                 setBindingOperation((BindingOperation)null);
@@ -295,12 +294,12 @@ public class SoapOperationImpl extends EObjectImpl implements SoapOperation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_OPERATION__BINDING_OPERATION:
                 return getBindingOperation() != null;
@@ -313,11 +312,11 @@ public class SoapOperationImpl extends EObjectImpl implements SoapOperation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     public String toString() {
         if (eIsProxy()) return super.toString();
 
@@ -330,4 +329,4 @@ public class SoapOperationImpl extends EObjectImpl implements SoapOperation {
         return result.toString();
     }
 
-} //SoapOperationImpl
+} // SoapOperationImpl

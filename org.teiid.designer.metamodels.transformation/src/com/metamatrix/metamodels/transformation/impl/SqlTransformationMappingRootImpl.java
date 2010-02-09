@@ -21,25 +21,18 @@ import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Sql Transformation Mapping Root</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Sql Transformation Mapping Root</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class SqlTransformationMappingRootImpl extends TransformationMappingRootImpl implements SqlTransformationMappingRoot {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected SqlTransformationMappingRootImpl() {
@@ -47,8 +40,8 @@ public class SqlTransformationMappingRootImpl extends TransformationMappingRootI
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -57,40 +50,47 @@ public class SqlTransformationMappingRootImpl extends TransformationMappingRootI
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.SQL_TRANSFORMATION_MAPPING_ROOT__HELPER:
-                    if (helper != null)
-                        msgs = ((InternalEObject)helper).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TransformationPackage.SQL_TRANSFORMATION_MAPPING_ROOT__HELPER, null, msgs);
+                    if (helper != null) msgs = ((InternalEObject)helper).eInverseRemove(this,
+                                                                                        EOPPOSITE_FEATURE_BASE
+                                                                                        - TransformationPackage.SQL_TRANSFORMATION_MAPPING_ROOT__HELPER,
+                                                                                        null,
+                                                                                        msgs);
                     return basicSetHelper((MappingHelper)otherEnd, msgs);
                 case TransformationPackage.SQL_TRANSFORMATION_MAPPING_ROOT__NESTED:
                     return ((InternalEList)getNested()).basicAdd(otherEnd, msgs);
                 case TransformationPackage.SQL_TRANSFORMATION_MAPPING_ROOT__NESTED_IN:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.SQL_TRANSFORMATION_MAPPING_ROOT__NESTED_IN, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.SQL_TRANSFORMATION_MAPPING_ROOT__HELPER:
@@ -107,12 +107,12 @@ public class SqlTransformationMappingRootImpl extends TransformationMappingRootI
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.SQL_TRANSFORMATION_MAPPING_ROOT__NESTED_IN:
@@ -125,12 +125,13 @@ public class SqlTransformationMappingRootImpl extends TransformationMappingRootI
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.SQL_TRANSFORMATION_MAPPING_ROOT__HELPER:
                 return getHelper();
@@ -159,12 +160,13 @@ public class SqlTransformationMappingRootImpl extends TransformationMappingRootI
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.SQL_TRANSFORMATION_MAPPING_ROOT__HELPER:
                 setHelper((MappingHelper)newValue);
@@ -204,12 +206,12 @@ public class SqlTransformationMappingRootImpl extends TransformationMappingRootI
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.SQL_TRANSFORMATION_MAPPING_ROOT__HELPER:
                 setHelper((MappingHelper)null);
@@ -246,12 +248,12 @@ public class SqlTransformationMappingRootImpl extends TransformationMappingRootI
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.SQL_TRANSFORMATION_MAPPING_ROOT__HELPER:
                 return helper != null;
@@ -277,4 +279,4 @@ public class SqlTransformationMappingRootImpl extends TransformationMappingRootI
         return eDynamicIsSet(eFeature);
     }
 
-} //SqlTransformationMappingRootImpl
+} // SqlTransformationMappingRootImpl

@@ -12,40 +12,30 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Data Flow Node</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Data Flow Node</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.DataFlowNode#getName <em>Name</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.DataFlowNode#getOwner <em>Owner</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.DataFlowNode#getInputLinks <em>Input Links</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.DataFlowNode#getOutputLinks <em>Output Links</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.DataFlowNode#getName <em>Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.DataFlowNode#getOwner <em>Owner</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.DataFlowNode#getInputLinks <em>Input Links</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.DataFlowNode#getOutputLinks <em>Output Links</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see com.metamatrix.metamodels.transformation.TransformationPackage#getDataFlowNode()
  * @model
  * @generated
  */
-public interface DataFlowNode extends EObject{
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
+public interface DataFlowNode extends EObject {
 
     /**
-     * Returns the value of the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Name</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Name</em>' attribute.
      * @see #setName(String)
      * @see com.metamatrix.metamodels.transformation.TransformationPackage#getDataFlowNode_Name()
@@ -55,24 +45,24 @@ public interface DataFlowNode extends EObject{
     String getName();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.transformation.DataFlowNode#getName <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.transformation.DataFlowNode#getName <em>Name</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Name</em>' attribute.
      * @see #getName()
      * @generated
      */
-    void setName(String value);
+    void setName( String value );
 
     /**
-     * Returns the value of the '<em><b>Owner</b></em>' container reference.
-     * It is bidirectional and its opposite is '{@link com.metamatrix.metamodels.transformation.DataFlowMappingRoot#getNodes <em>Nodes</em>}'.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Owner</b></em>' container reference. It is bidirectional and its opposite is '
+     * {@link com.metamatrix.metamodels.transformation.DataFlowMappingRoot#getNodes <em>Nodes</em>}'. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Owner</em>' container reference isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Owner</em>' container reference isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Owner</em>' container reference.
      * @see #setOwner(DataFlowMappingRoot)
      * @see com.metamatrix.metamodels.transformation.TransformationPackage#getDataFlowNode_Owner()
@@ -83,25 +73,25 @@ public interface DataFlowNode extends EObject{
     DataFlowMappingRoot getOwner();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.transformation.DataFlowNode#getOwner <em>Owner</em>}' container reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.transformation.DataFlowNode#getOwner <em>Owner</em>}' container
+     * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Owner</em>' container reference.
      * @see #getOwner()
      * @generated
      */
-    void setOwner(DataFlowMappingRoot value);
+    void setOwner( DataFlowMappingRoot value );
 
     /**
-     * Returns the value of the '<em><b>Input Links</b></em>' reference list.
-     * The list contents are of type {@link com.metamatrix.metamodels.transformation.DataFlowLink}.
-     * It is bidirectional and its opposite is '{@link com.metamatrix.metamodels.transformation.DataFlowLink#getOutputNode <em>Output Node</em>}'.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Input Links</b></em>' reference list. The list contents are of type
+     * {@link com.metamatrix.metamodels.transformation.DataFlowLink}. It is bidirectional and its opposite is '
+     * {@link com.metamatrix.metamodels.transformation.DataFlowLink#getOutputNode <em>Output Node</em>}'. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Input Links</em>' reference list isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Input Links</em>' reference list isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Input Links</em>' reference list.
      * @see com.metamatrix.metamodels.transformation.TransformationPackage#getDataFlowNode_InputLinks()
      * @see com.metamatrix.metamodels.transformation.DataFlowLink#getOutputNode
@@ -111,15 +101,15 @@ public interface DataFlowNode extends EObject{
     EList getInputLinks();
 
     /**
-     * Returns the value of the '<em><b>Output Links</b></em>' reference list.
-     * The list contents are of type {@link com.metamatrix.metamodels.transformation.DataFlowLink}.
-     * It is bidirectional and its opposite is '{@link com.metamatrix.metamodels.transformation.DataFlowLink#getInputNode <em>Input Node</em>}'.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Output Links</b></em>' reference list. The list contents are of type
+     * {@link com.metamatrix.metamodels.transformation.DataFlowLink}. It is bidirectional and its opposite is '
+     * {@link com.metamatrix.metamodels.transformation.DataFlowLink#getInputNode <em>Input Node</em>}'. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Output Links</em>' reference list isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Output Links</em>' reference list isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Output Links</em>' reference list.
      * @see com.metamatrix.metamodels.transformation.TransformationPackage#getDataFlowNode_OutputLinks()
      * @see com.metamatrix.metamodels.transformation.DataFlowLink#getInputNode
@@ -129,35 +119,35 @@ public interface DataFlowNode extends EObject{
     EList getOutputLinks();
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @model dataType="com.metamatrix.metamodels.transformation.List" many="false" parameters=""
      * @generated
      */
-    List getInputNodes();
+    List getInputNodes(); // NO_UCD
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @model dataType="com.metamatrix.metamodels.transformation.List" many="false" parameters=""
      * @generated
      */
-    List getOutputNodes();
+    List getOutputNodes(); // NO_UCD
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @model dataType="com.metamatrix.metamodels.transformation.List" many="false" parameters=""
      * @generated
      */
-    List getProjectedSymbols();
+    List getProjectedSymbols(); // NO_UCD
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @model parameters=""
      * @generated
      */
-    String getSqlString();
+    String getSqlString(); // NO_UCD
 
 } // DataFlowNode

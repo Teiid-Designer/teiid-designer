@@ -280,7 +280,7 @@ public class XmlElementItemProvider extends XmlBaseElementItemProvider {
      * 
      * @generated
      */
-    protected void collectNewChildDescriptorsGen( Collection newChildDescriptors,
+    protected void collectNewChildDescriptorsGen( Collection newChildDescriptors, // NO_UCD
                                                   Object object ) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
 

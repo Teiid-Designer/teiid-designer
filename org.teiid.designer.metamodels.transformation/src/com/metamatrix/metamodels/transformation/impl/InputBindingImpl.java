@@ -22,32 +22,24 @@ import com.metamatrix.metamodels.transformation.MappingClassSet;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Input Binding</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Input Binding</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.InputBindingImpl#getMappingClassSet <em>Mapping Class Set</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.InputBindingImpl#getInputParameter <em>Input Parameter</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.InputBindingImpl#getMappingClassColumn <em>Mapping Class Column</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.InputBindingImpl#getMappingClassSet <em>Mapping Class Set</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.InputBindingImpl#getInputParameter <em>Input Parameter</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.InputBindingImpl#getMappingClassColumn <em>Mapping Class Column</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class InputBindingImpl extends EObjectImpl implements InputBinding {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getInputParameter() <em>Input Parameter</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getInputParameter() <em>Input Parameter</em>}' reference. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getInputParameter()
      * @generated
      * @ordered
@@ -55,9 +47,9 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
     protected InputParameter inputParameter = null;
 
     /**
-     * The cached value of the '{@link #getMappingClassColumn() <em>Mapping Class Column</em>}' reference.
-     * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getMappingClassColumn() <em>Mapping Class Column</em>}' reference. <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * 
      * @see #getMappingClassColumn()
      * @generated
      * @ordered
@@ -65,8 +57,8 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
     protected MappingClassColumn mappingClassColumn = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected InputBindingImpl() {
@@ -74,8 +66,8 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -84,8 +76,8 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public MappingClassSet getMappingClassSet() {
@@ -94,29 +86,33 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setMappingClassSet(MappingClassSet newMappingClassSet) {
-        if (newMappingClassSet != eContainer || (eContainerFeatureID != TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET && newMappingClassSet != null)) {
-            if (EcoreUtil.isAncestor(this, newMappingClassSet))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setMappingClassSet( MappingClassSet newMappingClassSet ) {
+        if (newMappingClassSet != eContainer
+            || (eContainerFeatureID != TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET && newMappingClassSet != null)) {
+            if (EcoreUtil.isAncestor(this, newMappingClassSet)) throw new IllegalArgumentException(
+                                                                                                   "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newMappingClassSet != null)
-                msgs = ((InternalEObject)newMappingClassSet).eInverseAdd(this, TransformationPackage.MAPPING_CLASS_SET__INPUT_BINDING, MappingClassSet.class, msgs);
-            msgs = eBasicSetContainer((InternalEObject)newMappingClassSet, TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newMappingClassSet != null) msgs = ((InternalEObject)newMappingClassSet).eInverseAdd(this,
+                                                                                                     TransformationPackage.MAPPING_CLASS_SET__INPUT_BINDING,
+                                                                                                     MappingClassSet.class,
+                                                                                                     msgs);
+            msgs = eBasicSetContainer((InternalEObject)newMappingClassSet,
+                                      TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET,
+                                      msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET, newMappingClassSet, newMappingClassSet));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET,
+                                                                          newMappingClassSet, newMappingClassSet));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public InputParameter getInputParameter() {
@@ -124,16 +120,17 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
             InputParameter oldInputParameter = inputParameter;
             inputParameter = (InputParameter)eResolveProxy((InternalEObject)inputParameter);
             if (inputParameter != oldInputParameter) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, TransformationPackage.INPUT_BINDING__INPUT_PARAMETER, oldInputParameter, inputParameter));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+                                                                           TransformationPackage.INPUT_BINDING__INPUT_PARAMETER,
+                                                                           oldInputParameter, inputParameter));
             }
         }
         return inputParameter;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public InputParameter basicGetInputParameter() {
@@ -141,20 +138,21 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setInputParameter(InputParameter newInputParameter) {
+    public void setInputParameter( InputParameter newInputParameter ) {
         InputParameter oldInputParameter = inputParameter;
         inputParameter = newInputParameter;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.INPUT_BINDING__INPUT_PARAMETER, oldInputParameter, inputParameter));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.INPUT_BINDING__INPUT_PARAMETER,
+                                                                   oldInputParameter, inputParameter));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public MappingClassColumn getMappingClassColumn() {
@@ -162,16 +160,19 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
             MappingClassColumn oldMappingClassColumn = mappingClassColumn;
             mappingClassColumn = (MappingClassColumn)eResolveProxy((InternalEObject)mappingClassColumn);
             if (mappingClassColumn != oldMappingClassColumn) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, TransformationPackage.INPUT_BINDING__MAPPING_CLASS_COLUMN, oldMappingClassColumn, mappingClassColumn));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(
+                                                                           this,
+                                                                           Notification.RESOLVE,
+                                                                           TransformationPackage.INPUT_BINDING__MAPPING_CLASS_COLUMN,
+                                                                           oldMappingClassColumn, mappingClassColumn));
             }
         }
         return mappingClassColumn;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public MappingClassColumn basicGetMappingClassColumn() {
@@ -179,46 +180,51 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setMappingClassColumn(MappingClassColumn newMappingClassColumn) {
+    public void setMappingClassColumn( MappingClassColumn newMappingClassColumn ) {
         MappingClassColumn oldMappingClassColumn = mappingClassColumn;
         mappingClassColumn = newMappingClassColumn;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.INPUT_BINDING__MAPPING_CLASS_COLUMN, oldMappingClassColumn, mappingClassColumn));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.INPUT_BINDING__MAPPING_CLASS_COLUMN,
+                                                                   oldMappingClassColumn, mappingClassColumn));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET:
@@ -231,16 +237,19 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET:
-                    return eContainer.eInverseRemove(this, TransformationPackage.MAPPING_CLASS_SET__INPUT_BINDING, MappingClassSet.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.MAPPING_CLASS_SET__INPUT_BINDING,
+                                                     MappingClassSet.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -249,12 +258,13 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET:
                 return getMappingClassSet();
@@ -269,12 +279,13 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET:
                 setMappingClassSet((MappingClassSet)newValue);
@@ -290,12 +301,12 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET:
                 setMappingClassSet((MappingClassSet)null);
@@ -311,12 +322,12 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET:
                 return getMappingClassSet() != null;
@@ -328,4 +339,4 @@ public class InputBindingImpl extends EObjectImpl implements InputBinding {
         return eDynamicIsSet(eFeature);
     }
 
-} //InputBindingImpl
+} // InputBindingImpl

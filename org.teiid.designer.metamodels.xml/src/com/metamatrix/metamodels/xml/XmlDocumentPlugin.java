@@ -28,7 +28,7 @@ public class XmlDocumentPlugin extends Plugin {
     private static final String MISSING_RESOURCE = "<Missing message for key"; //$NON-NLS-1$
 
     public static final String PLUGIN_ID = "org.teiid.designer.metamodels.xml"; //$NON-NLS-1$
-    
+
     public static final String PACKAGE_ID = XmlDocumentPlugin.class.getPackage().getName();
 
     /**
@@ -115,7 +115,6 @@ public class XmlDocumentPlugin extends Plugin {
         return new XmlDocumentBuilderImpl();
     }
 
-    public static boolean DEBUG = false;
     static XmlDocumentPlugin INSTANCE = null;
 
     /**

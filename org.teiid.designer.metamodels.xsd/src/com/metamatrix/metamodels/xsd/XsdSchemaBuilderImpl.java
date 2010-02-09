@@ -116,7 +116,7 @@ public class XsdSchemaBuilderImpl {
      * @param monitor - Progress Monitor
      * @return - The StringBuffer of messages for the user.
      */
-    public static MultiStatus buildSchemas( final XsdBuilderOptions ops,
+    public static MultiStatus buildSchemas( final XsdBuilderOptions ops, // NO_UCD
                                             IProgressMonitor monitor ) {
         XsdSchemaBuilderImpl builder = new XsdSchemaBuilderImpl(ops);
         return builder.buildSchemas(monitor, null);

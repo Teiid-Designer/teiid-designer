@@ -36,372 +36,398 @@ import com.metamatrix.metamodels.wsdl.soap.SoapHeader;
 import com.metamatrix.metamodels.wsdl.soap.SoapPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Binding Input</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Binding Input</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getDocumentation <em>Documentation</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getDeclaredNamespaces <em>Declared Namespaces</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getElements <em>Elements</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getMimeElements <em>Mime Elements</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getName <em>Name</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getSoapHeader <em>Soap Header</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getSoapBody <em>Soap Body</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getBindingOperation <em>Binding Operation</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getDocumentation <em>Documentation</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getDeclaredNamespaces <em>Declared Namespaces</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getElements <em>Elements</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getMimeElements <em>Mime Elements</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getName <em>Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getSoapHeader <em>Soap Header</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getSoapBody <em>Soap Body</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.BindingInputImpl#getBindingOperation <em>Binding Operation</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class BindingInputImpl extends EObjectImpl implements BindingInput {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' containment reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' containment reference. <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
      * @see #getDocumentation()
      * @generated
      * @ordered
      */
-	protected Documentation documentation = null;
+    protected Documentation documentation = null;
 
     /**
-     * The cached value of the '{@link #getDeclaredNamespaces() <em>Declared Namespaces</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getDeclaredNamespaces() <em>Declared Namespaces</em>}' containment reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getDeclaredNamespaces()
      * @generated
      * @ordered
      */
-	protected EList declaredNamespaces = null;
+    protected EList declaredNamespaces = null;
 
     /**
-     * The cached value of the '{@link #getElements() <em>Elements</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getElements() <em>Elements</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getElements()
      * @generated
      * @ordered
      */
-	protected EList elements = null;
+    protected EList elements = null;
 
     /**
-     * The cached value of the '{@link #getMimeElements() <em>Mime Elements</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getMimeElements() <em>Mime Elements</em>}' containment reference list. <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
+     * 
      * @see #getMimeElements()
      * @generated
      * @ordered
      */
-	protected EList mimeElements = null;
+    protected EList mimeElements = null;
 
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
      */
-	protected static final String NAME_EDEFAULT = null;
+    protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
      */
-	protected String name = NAME_EDEFAULT;
+    protected String name = NAME_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getSoapHeader() <em>Soap Header</em>}' containment reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getSoapHeader() <em>Soap Header</em>}' containment reference. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getSoapHeader()
      * @generated
      * @ordered
      */
-	protected SoapHeader soapHeader = null;
+    protected SoapHeader soapHeader = null;
 
     /**
-     * The cached value of the '{@link #getSoapBody() <em>Soap Body</em>}' containment reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getSoapBody() <em>Soap Body</em>}' containment reference. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getSoapBody()
      * @generated
      * @ordered
      */
-	protected SoapBody soapBody = null;
+    protected SoapBody soapBody = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected BindingInputImpl() {
+    protected BindingInputImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return WsdlPackage.eINSTANCE.getBindingInput();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public Documentation getDocumentation() {
+    public Documentation getDocumentation() {
         return documentation;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public NotificationChain basicSetDocumentation(Documentation newDocumentation, NotificationChain msgs) {
+    public NotificationChain basicSetDocumentation( Documentation newDocumentation,
+                                                    NotificationChain msgs ) {
         Documentation oldDocumentation = documentation;
         documentation = newDocumentation;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WsdlPackage.BINDING_INPUT__DOCUMENTATION, oldDocumentation, newDocumentation);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+                                                                   WsdlPackage.BINDING_INPUT__DOCUMENTATION, oldDocumentation,
+                                                                   newDocumentation);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setDocumentation(Documentation newDocumentation) {
+    public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
-            if (documentation != null)
-                msgs = ((InternalEObject)documentation).eInverseRemove(this, WsdlPackage.DOCUMENTATION__DOCUMENTED, Documentation.class, msgs);
-            if (newDocumentation != null)
-                msgs = ((InternalEObject)newDocumentation).eInverseAdd(this, WsdlPackage.DOCUMENTATION__DOCUMENTED, Documentation.class, msgs);
+            if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
+                                                                                              WsdlPackage.DOCUMENTATION__DOCUMENTED,
+                                                                                              Documentation.class,
+                                                                                              msgs);
+            if (newDocumentation != null) msgs = ((InternalEObject)newDocumentation).eInverseAdd(this,
+                                                                                                 WsdlPackage.DOCUMENTATION__DOCUMENTED,
+                                                                                                 Documentation.class,
+                                                                                                 msgs);
             msgs = basicSetDocumentation(newDocumentation, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.BINDING_INPUT__DOCUMENTATION, newDocumentation, newDocumentation));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          WsdlPackage.BINDING_INPUT__DOCUMENTATION,
+                                                                          newDocumentation, newDocumentation));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getDeclaredNamespaces() {
+    public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
-            declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this, WsdlPackage.BINDING_INPUT__DECLARED_NAMESPACES, WsdlPackage.NAMESPACE_DECLARATION__OWNER);
+            declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
+                                                                        WsdlPackage.BINDING_INPUT__DECLARED_NAMESPACES,
+                                                                        WsdlPackage.NAMESPACE_DECLARATION__OWNER);
         }
         return declaredNamespaces;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getElements() {
+    public EList getElements() {
         if (elements == null) {
-            elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.BINDING_INPUT__ELEMENTS, WsdlPackage.ELEMENT__ELEMENT_OWNER);
+            elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.BINDING_INPUT__ELEMENTS,
+                                                              WsdlPackage.ELEMENT__ELEMENT_OWNER);
         }
         return elements;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getMimeElements() {
+    public EList getMimeElements() {
         if (mimeElements == null) {
-            mimeElements = new EObjectContainmentWithInverseEList(MimeElement.class, this, WsdlPackage.BINDING_INPUT__MIME_ELEMENTS, MimePackage.MIME_ELEMENT__MIME_ELEMENT_OWNER);
+            mimeElements = new EObjectContainmentWithInverseEList(MimeElement.class, this,
+                                                                  WsdlPackage.BINDING_INPUT__MIME_ELEMENTS,
+                                                                  MimePackage.MIME_ELEMENT__MIME_ELEMENT_OWNER);
         }
         return mimeElements;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getName() {
+    public String getName() {
         return name;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setName(String newName) {
+    public void setName( String newName ) {
         String oldName = name;
         name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.BINDING_INPUT__NAME, oldName, name));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.BINDING_INPUT__NAME,
+                                                                   oldName, name));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public SoapHeader getSoapHeader() {
+    public SoapHeader getSoapHeader() {
         return soapHeader;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public NotificationChain basicSetSoapHeader(SoapHeader newSoapHeader, NotificationChain msgs) {
+    public NotificationChain basicSetSoapHeader( SoapHeader newSoapHeader,
+                                                 NotificationChain msgs ) {
         SoapHeader oldSoapHeader = soapHeader;
         soapHeader = newSoapHeader;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WsdlPackage.BINDING_INPUT__SOAP_HEADER, oldSoapHeader, newSoapHeader);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+                                                                   WsdlPackage.BINDING_INPUT__SOAP_HEADER, oldSoapHeader,
+                                                                   newSoapHeader);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setSoapHeader(SoapHeader newSoapHeader) {
+    public void setSoapHeader( SoapHeader newSoapHeader ) {
         if (newSoapHeader != soapHeader) {
             NotificationChain msgs = null;
-            if (soapHeader != null)
-                msgs = ((InternalEObject)soapHeader).eInverseRemove(this, SoapPackage.SOAP_HEADER__BINDING_PARAM, SoapHeader.class, msgs);
-            if (newSoapHeader != null)
-                msgs = ((InternalEObject)newSoapHeader).eInverseAdd(this, SoapPackage.SOAP_HEADER__BINDING_PARAM, SoapHeader.class, msgs);
+            if (soapHeader != null) msgs = ((InternalEObject)soapHeader).eInverseRemove(this,
+                                                                                        SoapPackage.SOAP_HEADER__BINDING_PARAM,
+                                                                                        SoapHeader.class,
+                                                                                        msgs);
+            if (newSoapHeader != null) msgs = ((InternalEObject)newSoapHeader).eInverseAdd(this,
+                                                                                           SoapPackage.SOAP_HEADER__BINDING_PARAM,
+                                                                                           SoapHeader.class,
+                                                                                           msgs);
             msgs = basicSetSoapHeader(newSoapHeader, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.BINDING_INPUT__SOAP_HEADER, newSoapHeader, newSoapHeader));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          WsdlPackage.BINDING_INPUT__SOAP_HEADER, newSoapHeader,
+                                                                          newSoapHeader));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public SoapBody getSoapBody() {
+    public SoapBody getSoapBody() {
         return soapBody;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public NotificationChain basicSetSoapBody(SoapBody newSoapBody, NotificationChain msgs) {
+    public NotificationChain basicSetSoapBody( SoapBody newSoapBody,
+                                               NotificationChain msgs ) {
         SoapBody oldSoapBody = soapBody;
         soapBody = newSoapBody;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WsdlPackage.BINDING_INPUT__SOAP_BODY, oldSoapBody, newSoapBody);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WsdlPackage.BINDING_INPUT__SOAP_BODY,
+                                                                   oldSoapBody, newSoapBody);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setSoapBody(SoapBody newSoapBody) {
+    public void setSoapBody( SoapBody newSoapBody ) {
         if (newSoapBody != soapBody) {
             NotificationChain msgs = null;
-            if (soapBody != null)
-                msgs = ((InternalEObject)soapBody).eInverseRemove(this, SoapPackage.SOAP_BODY__BINDING_PARAM, SoapBody.class, msgs);
-            if (newSoapBody != null)
-                msgs = ((InternalEObject)newSoapBody).eInverseAdd(this, SoapPackage.SOAP_BODY__BINDING_PARAM, SoapBody.class, msgs);
+            if (soapBody != null) msgs = ((InternalEObject)soapBody).eInverseRemove(this,
+                                                                                    SoapPackage.SOAP_BODY__BINDING_PARAM,
+                                                                                    SoapBody.class,
+                                                                                    msgs);
+            if (newSoapBody != null) msgs = ((InternalEObject)newSoapBody).eInverseAdd(this,
+                                                                                       SoapPackage.SOAP_BODY__BINDING_PARAM,
+                                                                                       SoapBody.class,
+                                                                                       msgs);
             msgs = basicSetSoapBody(newSoapBody, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.BINDING_INPUT__SOAP_BODY, newSoapBody, newSoapBody));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          WsdlPackage.BINDING_INPUT__SOAP_BODY, newSoapBody,
+                                                                          newSoapBody));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public BindingOperation getBindingOperation() {
+    public BindingOperation getBindingOperation() {
         if (eContainerFeatureID != WsdlPackage.BINDING_INPUT__BINDING_OPERATION) return null;
         return (BindingOperation)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setBindingOperation(BindingOperation newBindingOperation) {
-        if (newBindingOperation != eContainer || (eContainerFeatureID != WsdlPackage.BINDING_INPUT__BINDING_OPERATION && newBindingOperation != null)) {
-            if (EcoreUtil.isAncestor(this, newBindingOperation))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setBindingOperation( BindingOperation newBindingOperation ) {
+        if (newBindingOperation != eContainer
+            || (eContainerFeatureID != WsdlPackage.BINDING_INPUT__BINDING_OPERATION && newBindingOperation != null)) {
+            if (EcoreUtil.isAncestor(this, newBindingOperation)) throw new IllegalArgumentException(
+                                                                                                    "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newBindingOperation != null)
-                msgs = ((InternalEObject)newBindingOperation).eInverseAdd(this, WsdlPackage.BINDING_OPERATION__BINDING_INPUT, BindingOperation.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newBindingOperation != null) msgs = ((InternalEObject)newBindingOperation).eInverseAdd(this,
+                                                                                                       WsdlPackage.BINDING_OPERATION__BINDING_INPUT,
+                                                                                                       BindingOperation.class,
+                                                                                                       msgs);
             msgs = eBasicSetContainer((InternalEObject)newBindingOperation, WsdlPackage.BINDING_INPUT__BINDING_OPERATION, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.BINDING_INPUT__BINDING_OPERATION, newBindingOperation, newBindingOperation));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          WsdlPackage.BINDING_INPUT__BINDING_OPERATION,
+                                                                          newBindingOperation, newBindingOperation));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public boolean isNameValid() {
+    public boolean isNameValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WsdlPackage.BINDING_INPUT__DOCUMENTATION:
-                    if (documentation != null)
-                        msgs = ((InternalEObject)documentation).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - WsdlPackage.BINDING_INPUT__DOCUMENTATION, null, msgs);
+                    if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
+                                                                                                      EOPPOSITE_FEATURE_BASE
+                                                                                                      - WsdlPackage.BINDING_INPUT__DOCUMENTATION,
+                                                                                                      null,
+                                                                                                      msgs);
                     return basicSetDocumentation((Documentation)otherEnd, msgs);
                 case WsdlPackage.BINDING_INPUT__DECLARED_NAMESPACES:
                     return ((InternalEList)getDeclaredNamespaces()).basicAdd(otherEnd, msgs);
@@ -410,33 +436,40 @@ public class BindingInputImpl extends EObjectImpl implements BindingInput {
                 case WsdlPackage.BINDING_INPUT__MIME_ELEMENTS:
                     return ((InternalEList)getMimeElements()).basicAdd(otherEnd, msgs);
                 case WsdlPackage.BINDING_INPUT__SOAP_HEADER:
-                    if (soapHeader != null)
-                        msgs = ((InternalEObject)soapHeader).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - WsdlPackage.BINDING_INPUT__SOAP_HEADER, null, msgs);
+                    if (soapHeader != null) msgs = ((InternalEObject)soapHeader).eInverseRemove(this,
+                                                                                                EOPPOSITE_FEATURE_BASE
+                                                                                                - WsdlPackage.BINDING_INPUT__SOAP_HEADER,
+                                                                                                null,
+                                                                                                msgs);
                     return basicSetSoapHeader((SoapHeader)otherEnd, msgs);
                 case WsdlPackage.BINDING_INPUT__SOAP_BODY:
-                    if (soapBody != null)
-                        msgs = ((InternalEObject)soapBody).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - WsdlPackage.BINDING_INPUT__SOAP_BODY, null, msgs);
+                    if (soapBody != null) msgs = ((InternalEObject)soapBody).eInverseRemove(this,
+                                                                                            EOPPOSITE_FEATURE_BASE
+                                                                                            - WsdlPackage.BINDING_INPUT__SOAP_BODY,
+                                                                                            null,
+                                                                                            msgs);
                     return basicSetSoapBody((SoapBody)otherEnd, msgs);
                 case WsdlPackage.BINDING_INPUT__BINDING_OPERATION:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, WsdlPackage.BINDING_INPUT__BINDING_OPERATION, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WsdlPackage.BINDING_INPUT__DOCUMENTATION:
@@ -461,16 +494,19 @@ public class BindingInputImpl extends EObjectImpl implements BindingInput {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case WsdlPackage.BINDING_INPUT__BINDING_OPERATION:
-                    return eContainer.eInverseRemove(this, WsdlPackage.BINDING_OPERATION__BINDING_INPUT, BindingOperation.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     WsdlPackage.BINDING_OPERATION__BINDING_INPUT,
+                                                     BindingOperation.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -479,12 +515,13 @@ public class BindingInputImpl extends EObjectImpl implements BindingInput {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.BINDING_INPUT__DOCUMENTATION:
                 return getDocumentation();
@@ -507,12 +544,13 @@ public class BindingInputImpl extends EObjectImpl implements BindingInput {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.BINDING_INPUT__DOCUMENTATION:
                 setDocumentation((Documentation)newValue);
@@ -546,12 +584,12 @@ public class BindingInputImpl extends EObjectImpl implements BindingInput {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.BINDING_INPUT__DOCUMENTATION:
                 setDocumentation((Documentation)null);
@@ -582,12 +620,12 @@ public class BindingInputImpl extends EObjectImpl implements BindingInput {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.BINDING_INPUT__DOCUMENTATION:
                 return documentation != null;
@@ -610,79 +648,97 @@ public class BindingInputImpl extends EObjectImpl implements BindingInput {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public int eBaseStructuralFeatureID(int derivedFeatureID, Class baseClass) {
+    public int eBaseStructuralFeatureID( int derivedFeatureID,
+                                         Class baseClass ) {
         if (baseClass == NamespaceDeclarationOwner.class) {
             switch (derivedFeatureID) {
-                case WsdlPackage.BINDING_INPUT__DECLARED_NAMESPACES: return WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES;
-                default: return -1;
+                case WsdlPackage.BINDING_INPUT__DECLARED_NAMESPACES:
+                    return WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES;
+                default:
+                    return -1;
             }
         }
         if (baseClass == ElementOwner.class) {
             switch (derivedFeatureID) {
-                case WsdlPackage.BINDING_INPUT__ELEMENTS: return WsdlPackage.ELEMENT_OWNER__ELEMENTS;
-                default: return -1;
+                case WsdlPackage.BINDING_INPUT__ELEMENTS:
+                    return WsdlPackage.ELEMENT_OWNER__ELEMENTS;
+                default:
+                    return -1;
             }
         }
         if (baseClass == MimeElementOwner.class) {
             switch (derivedFeatureID) {
-                case WsdlPackage.BINDING_INPUT__MIME_ELEMENTS: return MimePackage.MIME_ELEMENT_OWNER__MIME_ELEMENTS;
-                default: return -1;
+                case WsdlPackage.BINDING_INPUT__MIME_ELEMENTS:
+                    return MimePackage.MIME_ELEMENT_OWNER__MIME_ELEMENTS;
+                default:
+                    return -1;
             }
         }
         if (baseClass == WsdlNameOptionalEntity.class) {
             switch (derivedFeatureID) {
-                case WsdlPackage.BINDING_INPUT__NAME: return WsdlPackage.WSDL_NAME_OPTIONAL_ENTITY__NAME;
-                default: return -1;
+                case WsdlPackage.BINDING_INPUT__NAME:
+                    return WsdlPackage.WSDL_NAME_OPTIONAL_ENTITY__NAME;
+                default:
+                    return -1;
             }
         }
         return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public int eDerivedStructuralFeatureID(int baseFeatureID, Class baseClass) {
+    public int eDerivedStructuralFeatureID( int baseFeatureID,
+                                            Class baseClass ) {
         if (baseClass == NamespaceDeclarationOwner.class) {
             switch (baseFeatureID) {
-                case WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES: return WsdlPackage.BINDING_INPUT__DECLARED_NAMESPACES;
-                default: return -1;
+                case WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES:
+                    return WsdlPackage.BINDING_INPUT__DECLARED_NAMESPACES;
+                default:
+                    return -1;
             }
         }
         if (baseClass == ElementOwner.class) {
             switch (baseFeatureID) {
-                case WsdlPackage.ELEMENT_OWNER__ELEMENTS: return WsdlPackage.BINDING_INPUT__ELEMENTS;
-                default: return -1;
+                case WsdlPackage.ELEMENT_OWNER__ELEMENTS:
+                    return WsdlPackage.BINDING_INPUT__ELEMENTS;
+                default:
+                    return -1;
             }
         }
         if (baseClass == MimeElementOwner.class) {
             switch (baseFeatureID) {
-                case MimePackage.MIME_ELEMENT_OWNER__MIME_ELEMENTS: return WsdlPackage.BINDING_INPUT__MIME_ELEMENTS;
-                default: return -1;
+                case MimePackage.MIME_ELEMENT_OWNER__MIME_ELEMENTS:
+                    return WsdlPackage.BINDING_INPUT__MIME_ELEMENTS;
+                default:
+                    return -1;
             }
         }
         if (baseClass == WsdlNameOptionalEntity.class) {
             switch (baseFeatureID) {
-                case WsdlPackage.WSDL_NAME_OPTIONAL_ENTITY__NAME: return WsdlPackage.BINDING_INPUT__NAME;
-                default: return -1;
+                case WsdlPackage.WSDL_NAME_OPTIONAL_ENTITY__NAME:
+                    return WsdlPackage.BINDING_INPUT__NAME;
+                default:
+                    return -1;
             }
         }
         return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     public String toString() {
         if (eIsProxy()) return super.toString();
 
@@ -693,4 +749,4 @@ public class BindingInputImpl extends EObjectImpl implements BindingInput {
         return result.toString();
     }
 
-} //BindingInputImpl
+} // BindingInputImpl

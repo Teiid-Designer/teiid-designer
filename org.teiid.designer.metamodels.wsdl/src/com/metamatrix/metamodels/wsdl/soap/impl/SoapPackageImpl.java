@@ -34,131 +34,117 @@ import com.metamatrix.metamodels.wsdl.soap.SoapStyleType;
 import com.metamatrix.metamodels.wsdl.soap.SoapUseType;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Package</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EClass soapAddressEClass = null;
+    private EClass soapAddressEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EClass soapHeaderFaultEClass = null;
+    private EClass soapHeaderFaultEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EClass soapFaultEClass = null;
+    private EClass soapFaultEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EClass soapHeaderEClass = null;
+    private EClass soapHeaderEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EClass soapBodyEClass = null;
+    private EClass soapBodyEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EClass soapOperationEClass = null;
+    private EClass soapOperationEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EClass soapBindingEClass = null;
+    private EClass soapBindingEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EEnum soapStyleTypeEEnum = null;
+    private EEnum soapStyleTypeEEnum = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EEnum soapUseTypeEEnum = null;
+    private EEnum soapUseTypeEEnum = null;
 
     /**
-     * Creates an instance of the model <b>Package</b>, registered with
-     * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
-     * package URI value.
-     * <p>Note: the correct way to create the package is via the static
-     * factory method {@link #init init()}, which also performs
-     * initialization of the package, or returns the registered package,
-     * if one already exists.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
+     * EPackage.Registry} by the package package URI value.
+     * <p>
+     * Note: the correct way to create the package is via the static factory method {@link #init init()}, which also performs
+     * initialization of the package, or returns the registered package, if one already exists. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see org.eclipse.emf.ecore.EPackage.Registry
      * @see com.metamatrix.metamodels.wsdl.soap.SoapPackage#eNS_URI
      * @see #init()
      * @generated
      */
-	private SoapPackageImpl() {
+    private SoapPackageImpl() {
         super(eNS_URI, SoapFactory.eINSTANCE);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private static boolean isInited = false;
+    private static boolean isInited = false;
 
     /**
-     * Creates, registers, and initializes the <b>Package</b> for this
-     * model, and for any others upon which it depends.  Simple
-     * dependencies are satisfied by calling this method on all
-     * dependent packages before doing anything else.  This method drives
-     * initialization for interdependent packages directly, in parallel
-     * with this package, itself.
-     * <p>Of this package and its interdependencies, all packages which
-     * have not yet been registered by their URI values are first created
-     * and registered.  The packages are then initialized in two steps:
-     * meta-model objects for all of the packages are created before any
-     * are initialized, since one package's meta-model objects may refer to
-     * those of another.
-     * <p>Invocation of this method will not affect any packages that have
-     * already been initialized.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends. Simple
+     * dependencies are satisfied by calling this method on all dependent packages before doing anything else. This method drives
+     * initialization for interdependent packages directly, in parallel with this package, itself.
+     * <p>
+     * Of this package and its interdependencies, all packages which have not yet been registered by their URI values are first
+     * created and registered. The packages are then initialized in two steps: meta-model objects for all of the packages are
+     * created before any are initialized, since one package's meta-model objects may refer to those of another.
+     * <p>
+     * Invocation of this method will not affect any packages that have already been initialized. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #eNS_URI
      * @see #createPackageContents()
      * @see #initializePackageContents()
      * @generated
      */
-	public static SoapPackage init() {
+    public static SoapPackage init() {
         if (isInited) return (SoapPackage)EPackage.Registry.INSTANCE.getEPackage(SoapPackage.eNS_URI);
 
         // Obtain or create and register package
@@ -194,371 +180,370 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EClass getSoapAddress() {
+    public EClass getSoapAddress() {
         return soapAddressEClass;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapAddress_Location() {
+    public EAttribute getSoapAddress_Location() {
         return (EAttribute)soapAddressEClass.getEStructuralFeatures().get(1);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getSoapAddress_Port() {
+    public EReference getSoapAddress_Port() {
         return (EReference)soapAddressEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EClass getSoapHeaderFault() {
+    public EClass getSoapHeaderFault() {
         return soapHeaderFaultEClass;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapHeaderFault_Parts() {
+    public EAttribute getSoapHeaderFault_Parts() {
         return (EAttribute)soapHeaderFaultEClass.getEStructuralFeatures().get(2);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapHeaderFault_Message() {
+    public EAttribute getSoapHeaderFault_Message() {
         return (EAttribute)soapHeaderFaultEClass.getEStructuralFeatures().get(3);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getSoapHeaderFault_MessagePart() {
+    public EReference getSoapHeaderFault_MessagePart() {
         return (EReference)soapHeaderFaultEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getSoapHeaderFault_SoapHeader() {
+    public EReference getSoapHeaderFault_SoapHeader() {
         return (EReference)soapHeaderFaultEClass.getEStructuralFeatures().get(1);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EClass getSoapFault() {
+    public EClass getSoapFault() {
         return soapFaultEClass;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapFault_Use() {
+    public EAttribute getSoapFault_Use() {
         return (EAttribute)soapFaultEClass.getEStructuralFeatures().get(1);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapFault_Namespace() {
+    public EAttribute getSoapFault_Namespace() {
         return (EAttribute)soapFaultEClass.getEStructuralFeatures().get(2);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapFault_EncodingStyles() {
+    public EAttribute getSoapFault_EncodingStyles() {
         return (EAttribute)soapFaultEClass.getEStructuralFeatures().get(3);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getSoapFault_BindingFault() {
+    public EReference getSoapFault_BindingFault() {
         return (EReference)soapFaultEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EClass getSoapHeader() {
+    public EClass getSoapHeader() {
         return soapHeaderEClass;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapHeader_Use() {
+    public EAttribute getSoapHeader_Use() {
         return (EAttribute)soapHeaderEClass.getEStructuralFeatures().get(3);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapHeader_Namespace() {
+    public EAttribute getSoapHeader_Namespace() {
         return (EAttribute)soapHeaderEClass.getEStructuralFeatures().get(4);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapHeader_EncodingStyles() {
+    public EAttribute getSoapHeader_EncodingStyles() {
         return (EAttribute)soapHeaderEClass.getEStructuralFeatures().get(5);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapHeader_Parts() {
+    public EAttribute getSoapHeader_Parts() {
         return (EAttribute)soapHeaderEClass.getEStructuralFeatures().get(6);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapHeader_Message() {
+    public EAttribute getSoapHeader_Message() {
         return (EAttribute)soapHeaderEClass.getEStructuralFeatures().get(7);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getSoapHeader_BindingParam() {
+    public EReference getSoapHeader_BindingParam() {
         return (EReference)soapHeaderEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getSoapHeader_MessagePart() {
+    public EReference getSoapHeader_MessagePart() {
         return (EReference)soapHeaderEClass.getEStructuralFeatures().get(1);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getSoapHeader_HeaderFault() {
+    public EReference getSoapHeader_HeaderFault() {
         return (EReference)soapHeaderEClass.getEStructuralFeatures().get(2);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EClass getSoapBody() {
+    public EClass getSoapBody() {
         return soapBodyEClass;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapBody_Use() {
+    public EAttribute getSoapBody_Use() {
         return (EAttribute)soapBodyEClass.getEStructuralFeatures().get(1);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapBody_Namespace() {
+    public EAttribute getSoapBody_Namespace() {
         return (EAttribute)soapBodyEClass.getEStructuralFeatures().get(2);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapBody_EncodingStyles() {
+    public EAttribute getSoapBody_EncodingStyles() {
         return (EAttribute)soapBodyEClass.getEStructuralFeatures().get(3);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapBody_Parts() {
+    public EAttribute getSoapBody_Parts() {
         return (EAttribute)soapBodyEClass.getEStructuralFeatures().get(4);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getSoapBody_BindingParam() {
+    public EReference getSoapBody_BindingParam() {
         return (EReference)soapBodyEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EClass getSoapOperation() {
+    public EClass getSoapOperation() {
         return soapOperationEClass;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapOperation_Style() {
+    public EAttribute getSoapOperation_Style() {
         return (EAttribute)soapOperationEClass.getEStructuralFeatures().get(1);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapOperation_Action() {
+    public EAttribute getSoapOperation_Action() {
         return (EAttribute)soapOperationEClass.getEStructuralFeatures().get(2);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getSoapOperation_BindingOperation() {
+    public EReference getSoapOperation_BindingOperation() {
         return (EReference)soapOperationEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EClass getSoapBinding() {
+    public EClass getSoapBinding() {
         return soapBindingEClass;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapBinding_Transport() {
+    public EAttribute getSoapBinding_Transport() {
         return (EAttribute)soapBindingEClass.getEStructuralFeatures().get(1);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getSoapBinding_Style() {
+    public EAttribute getSoapBinding_Style() {
         return (EAttribute)soapBindingEClass.getEStructuralFeatures().get(2);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getSoapBinding_Binding() {
+    public EReference getSoapBinding_Binding() {
         return (EReference)soapBindingEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EEnum getSoapStyleType() {
+    public EEnum getSoapStyleType() {
         return soapStyleTypeEEnum;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EEnum getSoapUseType() {
+    public EEnum getSoapUseType() {
         return soapUseTypeEEnum;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public SoapFactory getSoapFactory() {
+    public SoapFactory getSoapFactory() {
         return (SoapFactory)getEFactoryInstance();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private boolean isCreated = false;
+    private boolean isCreated = false;
 
     /**
-     * Creates the meta-model objects for the package.  This method is
-     * guarded to have no affect on any invocation but its first.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Creates the meta-model objects for the package. This method is guarded to have no affect on any invocation but its first.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void createPackageContents() {
+    public void createPackageContents() {
         if (isCreated) return;
         isCreated = true;
 
@@ -612,20 +597,19 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private boolean isInitialized = false;
+    private boolean isInitialized = false;
 
     /**
-     * Complete the initialization of the package and its meta-model.  This
-     * method is guarded to have no affect on any invocation but its first.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Complete the initialization of the package and its meta-model. This method is guarded to have no affect on any invocation
+     * but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void initializePackageContents() {
+    public void initializePackageContents() {
         if (isInitialized) return;
         isInitialized = true;
 
@@ -642,47 +626,119 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
 
         // Initialize classes and features; add operations and parameters
         initEClass(soapAddressEClass, SoapAddress.class, "SoapAddress", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getSoapAddress_Port(), theWsdlPackage.getPort(), theWsdlPackage.getPort_SoapAddress(), "port", null, 1, 1, SoapAddress.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapAddress_Location(), ecorePackage.getEString(), "location", null, 0, 1, SoapAddress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getSoapAddress_Port(),
+                       theWsdlPackage.getPort(),
+                       theWsdlPackage.getPort_SoapAddress(),
+                       "port", null, 1, 1, SoapAddress.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapAddress_Location(),
+                       ecorePackage.getEString(),
+                       "location", null, 0, 1, SoapAddress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(soapHeaderFaultEClass, SoapHeaderFault.class, "SoapHeaderFault", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getSoapHeaderFault_MessagePart(), theWsdlPackage.getMessagePart(), null, "messagePart", null, 0, -1, SoapHeaderFault.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getSoapHeaderFault_SoapHeader(), this.getSoapHeader(), this.getSoapHeader_HeaderFault(), "soapHeader", null, 1, 1, SoapHeaderFault.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapHeaderFault_Parts(), ecorePackage.getEString(), "parts", null, 0, -1, SoapHeaderFault.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapHeaderFault_Message(), ecorePackage.getEString(), "message", null, 0, 1, SoapHeaderFault.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(soapHeaderFaultEClass,
+                   SoapHeaderFault.class,
+                   "SoapHeaderFault", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getSoapHeaderFault_MessagePart(),
+                       theWsdlPackage.getMessagePart(),
+                       null,
+                       "messagePart", null, 0, -1, SoapHeaderFault.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getSoapHeaderFault_SoapHeader(),
+                       this.getSoapHeader(),
+                       this.getSoapHeader_HeaderFault(),
+                       "soapHeader", null, 1, 1, SoapHeaderFault.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapHeaderFault_Parts(),
+                       ecorePackage.getEString(),
+                       "parts", null, 0, -1, SoapHeaderFault.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapHeaderFault_Message(),
+                       ecorePackage.getEString(),
+                       "message", null, 0, 1, SoapHeaderFault.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(soapFaultEClass, SoapFault.class, "SoapFault", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getSoapFault_BindingFault(), theWsdlPackage.getBindingFault(), theWsdlPackage.getBindingFault_SoapFault(), "bindingFault", null, 0, 1, SoapFault.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapFault_Use(), this.getSoapUseType(), "use", null, 0, 1, SoapFault.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapFault_Namespace(), ecorePackage.getEString(), "namespace", null, 0, 1, SoapFault.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapFault_EncodingStyles(), ecorePackage.getEString(), "encodingStyles", null, 0, -1, SoapFault.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getSoapFault_BindingFault(),
+                       theWsdlPackage.getBindingFault(),
+                       theWsdlPackage.getBindingFault_SoapFault(),
+                       "bindingFault", null, 0, 1, SoapFault.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapFault_Use(),
+                       this.getSoapUseType(),
+                       "use", null, 0, 1, SoapFault.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapFault_Namespace(),
+                       ecorePackage.getEString(),
+                       "namespace", null, 0, 1, SoapFault.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapFault_EncodingStyles(),
+                       ecorePackage.getEString(),
+                       "encodingStyles", null, 0, -1, SoapFault.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(soapHeaderEClass, SoapHeader.class, "SoapHeader", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getSoapHeader_BindingParam(), theWsdlPackage.getBindingParam(), theWsdlPackage.getBindingParam_SoapHeader(), "bindingParam", null, 1, 1, SoapHeader.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getSoapHeader_MessagePart(), theWsdlPackage.getMessagePart(), null, "messagePart", null, 0, -1, SoapHeader.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getSoapHeader_HeaderFault(), this.getSoapHeaderFault(), this.getSoapHeaderFault_SoapHeader(), "headerFault", null, 0, 1, SoapHeader.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapHeader_Use(), this.getSoapUseType(), "use", null, 0, 1, SoapHeader.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapHeader_Namespace(), ecorePackage.getEString(), "namespace", null, 0, 1, SoapHeader.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapHeader_EncodingStyles(), ecorePackage.getEString(), "encodingStyles", null, 0, -1, SoapHeader.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapHeader_Parts(), ecorePackage.getEString(), "parts", null, 0, -1, SoapHeader.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapHeader_Message(), ecorePackage.getEString(), "message", null, 0, 1, SoapHeader.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getSoapHeader_BindingParam(),
+                       theWsdlPackage.getBindingParam(),
+                       theWsdlPackage.getBindingParam_SoapHeader(),
+                       "bindingParam", null, 1, 1, SoapHeader.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getSoapHeader_MessagePart(),
+                       theWsdlPackage.getMessagePart(),
+                       null,
+                       "messagePart", null, 0, -1, SoapHeader.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getSoapHeader_HeaderFault(),
+                       this.getSoapHeaderFault(),
+                       this.getSoapHeaderFault_SoapHeader(),
+                       "headerFault", null, 0, 1, SoapHeader.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapHeader_Use(),
+                       this.getSoapUseType(),
+                       "use", null, 0, 1, SoapHeader.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapHeader_Namespace(),
+                       ecorePackage.getEString(),
+                       "namespace", null, 0, 1, SoapHeader.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapHeader_EncodingStyles(),
+                       ecorePackage.getEString(),
+                       "encodingStyles", null, 0, -1, SoapHeader.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapHeader_Parts(),
+                       ecorePackage.getEString(),
+                       "parts", null, 0, -1, SoapHeader.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapHeader_Message(),
+                       ecorePackage.getEString(),
+                       "message", null, 0, 1, SoapHeader.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(soapBodyEClass, SoapBody.class, "SoapBody", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getSoapBody_BindingParam(), theWsdlPackage.getBindingParam(), theWsdlPackage.getBindingParam_SoapBody(), "bindingParam", null, 1, 1, SoapBody.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapBody_Use(), this.getSoapUseType(), "use", null, 0, 1, SoapBody.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapBody_Namespace(), ecorePackage.getEString(), "namespace", null, 0, 1, SoapBody.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapBody_EncodingStyles(), ecorePackage.getEString(), "encodingStyles", null, 0, -1, SoapBody.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapBody_Parts(), ecorePackage.getEString(), "parts", null, 0, -1, SoapBody.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getSoapBody_BindingParam(),
+                       theWsdlPackage.getBindingParam(),
+                       theWsdlPackage.getBindingParam_SoapBody(),
+                       "bindingParam", null, 1, 1, SoapBody.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapBody_Use(),
+                       this.getSoapUseType(),
+                       "use", null, 0, 1, SoapBody.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapBody_Namespace(),
+                       ecorePackage.getEString(),
+                       "namespace", null, 0, 1, SoapBody.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapBody_EncodingStyles(),
+                       ecorePackage.getEString(),
+                       "encodingStyles", null, 0, -1, SoapBody.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapBody_Parts(),
+                       ecorePackage.getEString(),
+                       "parts", null, 0, -1, SoapBody.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(soapOperationEClass, SoapOperation.class, "SoapOperation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getSoapOperation_BindingOperation(), theWsdlPackage.getBindingOperation(), theWsdlPackage.getBindingOperation_SoapOperation(), "bindingOperation", null, 1, 1, SoapOperation.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapOperation_Style(), this.getSoapStyleType(), "style", "DOCUMENT", 0, 1, SoapOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getSoapOperation_Action(), ecorePackage.getEString(), "action", null, 0, 1, SoapOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(soapOperationEClass,
+                   SoapOperation.class,
+                   "SoapOperation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getSoapOperation_BindingOperation(),
+                       theWsdlPackage.getBindingOperation(),
+                       theWsdlPackage.getBindingOperation_SoapOperation(),
+                       "bindingOperation", null, 1, 1, SoapOperation.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapOperation_Style(),
+                       this.getSoapStyleType(),
+                       "style", "DOCUMENT", 0, 1, SoapOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getSoapOperation_Action(),
+                       ecorePackage.getEString(),
+                       "action", null, 0, 1, SoapOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(soapBindingEClass, SoapBinding.class, "SoapBinding", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getSoapBinding_Binding(), theWsdlPackage.getBinding(), theWsdlPackage.getBinding_SoapBinding(), "binding", null, 1, 1, SoapBinding.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapBinding_Transport(), ecorePackage.getEString(), "transport", null, 0, 1, SoapBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSoapBinding_Style(), this.getSoapStyleType(), "style", "DOCUMENT", 0, 1, SoapBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEReference(getSoapBinding_Binding(),
+                       theWsdlPackage.getBinding(),
+                       theWsdlPackage.getBinding_SoapBinding(),
+                       "binding", null, 1, 1, SoapBinding.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapBinding_Transport(),
+                       ecorePackage.getEString(),
+                       "transport", null, 0, 1, SoapBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSoapBinding_Style(),
+                       this.getSoapStyleType(),
+                       "style", "DOCUMENT", 0, 1, SoapBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
         // Initialize enums and add enum literals
         initEEnum(soapStyleTypeEEnum, SoapStyleType.class, "SoapStyleType"); //$NON-NLS-1$
@@ -697,4 +753,4 @@ public class SoapPackageImpl extends EPackageImpl implements SoapPackage {
         createResource(eNS_URI);
     }
 
-} //SoapPackageImpl
+} // SoapPackageImpl

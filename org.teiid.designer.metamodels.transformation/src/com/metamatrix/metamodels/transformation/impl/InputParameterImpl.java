@@ -21,32 +21,23 @@ import com.metamatrix.metamodels.transformation.InputSet;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Input Parameter</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Input Parameter</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.InputParameterImpl#getName <em>Name</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.InputParameterImpl#getInputSet <em>Input Set</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.InputParameterImpl#getType <em>Type</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.InputParameterImpl#getName <em>Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.InputParameterImpl#getInputSet <em>Input Set</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.InputParameterImpl#getType <em>Type</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class InputParameterImpl extends EObjectImpl implements InputParameter {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -54,9 +45,8 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
     protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -64,9 +54,8 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
     protected String name = NAME_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getType() <em>Type</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getType() <em>Type</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getType()
      * @generated
      * @ordered
@@ -74,8 +63,8 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
     protected EObject type = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected InputParameterImpl() {
@@ -83,8 +72,8 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -93,8 +82,8 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getName() {
@@ -102,20 +91,20 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setName(String newName) {
+    public void setName( String newName ) {
         String oldName = name;
         name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.INPUT_PARAMETER__NAME, oldName, name));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.INPUT_PARAMETER__NAME, oldName, name));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public InputSet getInputSet() {
@@ -124,29 +113,31 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setInputSet(InputSet newInputSet) {
-        if (newInputSet != eContainer || (eContainerFeatureID != TransformationPackage.INPUT_PARAMETER__INPUT_SET && newInputSet != null)) {
-            if (EcoreUtil.isAncestor(this, newInputSet))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setInputSet( InputSet newInputSet ) {
+        if (newInputSet != eContainer
+            || (eContainerFeatureID != TransformationPackage.INPUT_PARAMETER__INPUT_SET && newInputSet != null)) {
+            if (EcoreUtil.isAncestor(this, newInputSet)) throw new IllegalArgumentException(
+                                                                                            "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newInputSet != null)
-                msgs = ((InternalEObject)newInputSet).eInverseAdd(this, TransformationPackage.INPUT_SET__INPUT_PARAMETERS, InputSet.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newInputSet != null) msgs = ((InternalEObject)newInputSet).eInverseAdd(this,
+                                                                                       TransformationPackage.INPUT_SET__INPUT_PARAMETERS,
+                                                                                       InputSet.class,
+                                                                                       msgs);
             msgs = eBasicSetContainer((InternalEObject)newInputSet, TransformationPackage.INPUT_PARAMETER__INPUT_SET, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.INPUT_PARAMETER__INPUT_SET, newInputSet, newInputSet));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          TransformationPackage.INPUT_PARAMETER__INPUT_SET,
+                                                                          newInputSet, newInputSet));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EObject getType() {
@@ -154,16 +145,17 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
             EObject oldType = type;
             type = eResolveProxy((InternalEObject)type);
             if (type != oldType) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, TransformationPackage.INPUT_PARAMETER__TYPE, oldType, type));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+                                                                           TransformationPackage.INPUT_PARAMETER__TYPE, oldType,
+                                                                           type));
             }
         }
         return type;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EObject basicGetType() {
@@ -171,46 +163,50 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setType(EObject newType) {
+    public void setType( EObject newType ) {
         EObject oldType = type;
         type = newType;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.INPUT_PARAMETER__TYPE, oldType, type));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.INPUT_PARAMETER__TYPE, oldType, type));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.INPUT_PARAMETER__INPUT_SET:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.INPUT_PARAMETER__INPUT_SET, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.INPUT_PARAMETER__INPUT_SET:
@@ -223,16 +219,19 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.INPUT_PARAMETER__INPUT_SET:
-                    return eContainer.eInverseRemove(this, TransformationPackage.INPUT_SET__INPUT_PARAMETERS, InputSet.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.INPUT_SET__INPUT_PARAMETERS,
+                                                     InputSet.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -241,12 +240,13 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.INPUT_PARAMETER__NAME:
                 return getName();
@@ -260,12 +260,13 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.INPUT_PARAMETER__NAME:
                 setName((String)newValue);
@@ -281,12 +282,12 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.INPUT_PARAMETER__NAME:
                 setName(NAME_EDEFAULT);
@@ -302,12 +303,12 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.INPUT_PARAMETER__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -320,8 +321,8 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -335,4 +336,4 @@ public class InputParameterImpl extends EObjectImpl implements InputParameter {
         return result.toString();
     }
 
-} //InputParameterImpl
+} // InputParameterImpl

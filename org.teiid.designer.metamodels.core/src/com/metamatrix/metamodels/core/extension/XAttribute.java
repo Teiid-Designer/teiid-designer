@@ -18,11 +18,4 @@ import org.eclipse.emf.ecore.EAttribute;
  */
 public interface XAttribute extends EAttribute {
 
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
-
 } // XAttribute

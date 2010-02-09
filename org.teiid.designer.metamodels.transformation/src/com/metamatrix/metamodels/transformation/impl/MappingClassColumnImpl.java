@@ -20,31 +20,22 @@ import com.metamatrix.metamodels.transformation.MappingClassColumn;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Mapping Class Column</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Mapping Class Column</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassColumnImpl#getMappingClass <em>Mapping Class</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassColumnImpl#getType <em>Type</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassColumnImpl#getMappingClass <em>Mapping Class</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassColumnImpl#getType <em>Type</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class MappingClassColumnImpl extends MappingClassObjectImpl implements MappingClassColumn {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getType() <em>Type</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getType() <em>Type</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getType()
      * @generated
      * @ordered
@@ -52,8 +43,8 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
     protected EObject type = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MappingClassColumnImpl() {
@@ -61,8 +52,8 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -71,8 +62,8 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EObject getType() {
@@ -80,16 +71,17 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
             EObject oldType = type;
             type = eResolveProxy((InternalEObject)type);
             if (type != oldType) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, TransformationPackage.MAPPING_CLASS_COLUMN__TYPE, oldType, type));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+                                                                           TransformationPackage.MAPPING_CLASS_COLUMN__TYPE,
+                                                                           oldType, type));
             }
         }
         return type;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EObject basicGetType() {
@@ -97,20 +89,21 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setType(EObject newType) {
+    public void setType( EObject newType ) {
         EObject oldType = type;
         type = newType;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.MAPPING_CLASS_COLUMN__TYPE, oldType, type));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.MAPPING_CLASS_COLUMN__TYPE, oldType,
+                                                                   type));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public MappingClass getMappingClass() {
@@ -119,55 +112,65 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setMappingClass(MappingClass newMappingClass) {
-        if (newMappingClass != eContainer || (eContainerFeatureID != TransformationPackage.MAPPING_CLASS_COLUMN__MAPPING_CLASS && newMappingClass != null)) {
-            if (EcoreUtil.isAncestor(this, newMappingClass))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setMappingClass( MappingClass newMappingClass ) {
+        if (newMappingClass != eContainer
+            || (eContainerFeatureID != TransformationPackage.MAPPING_CLASS_COLUMN__MAPPING_CLASS && newMappingClass != null)) {
+            if (EcoreUtil.isAncestor(this, newMappingClass)) throw new IllegalArgumentException(
+                                                                                                "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newMappingClass != null)
-                msgs = ((InternalEObject)newMappingClass).eInverseAdd(this, TransformationPackage.MAPPING_CLASS__COLUMNS, MappingClass.class, msgs);
-            msgs = eBasicSetContainer((InternalEObject)newMappingClass, TransformationPackage.MAPPING_CLASS_COLUMN__MAPPING_CLASS, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newMappingClass != null) msgs = ((InternalEObject)newMappingClass).eInverseAdd(this,
+                                                                                               TransformationPackage.MAPPING_CLASS__COLUMNS,
+                                                                                               MappingClass.class,
+                                                                                               msgs);
+            msgs = eBasicSetContainer((InternalEObject)newMappingClass,
+                                      TransformationPackage.MAPPING_CLASS_COLUMN__MAPPING_CLASS,
+                                      msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.MAPPING_CLASS_COLUMN__MAPPING_CLASS, newMappingClass, newMappingClass));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(
+                                                                          this,
+                                                                          Notification.SET,
+                                                                          TransformationPackage.MAPPING_CLASS_COLUMN__MAPPING_CLASS,
+                                                                          newMappingClass, newMappingClass));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.MAPPING_CLASS_COLUMN__MAPPING_CLASS:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.MAPPING_CLASS_COLUMN__MAPPING_CLASS, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.MAPPING_CLASS_COLUMN__MAPPING_CLASS:
@@ -180,12 +183,12 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.MAPPING_CLASS_COLUMN__MAPPING_CLASS:
@@ -198,12 +201,13 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS_COLUMN__NAME:
                 return getName();
@@ -217,12 +221,13 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS_COLUMN__NAME:
                 setName((String)newValue);
@@ -238,12 +243,12 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS_COLUMN__NAME:
                 setName(NAME_EDEFAULT);
@@ -259,12 +264,12 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS_COLUMN__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -276,4 +281,4 @@ public class MappingClassColumnImpl extends MappingClassObjectImpl implements Ma
         return eDynamicIsSet(eFeature);
     }
 
-} //MappingClassColumnImpl
+} // MappingClassColumnImpl

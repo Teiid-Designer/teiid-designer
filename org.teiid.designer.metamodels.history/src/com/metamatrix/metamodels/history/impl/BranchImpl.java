@@ -19,31 +19,22 @@ import com.metamatrix.metamodels.history.HistoryPackage;
 import com.metamatrix.metamodels.history.Revision;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Branch</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Branch</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.history.impl.BranchImpl#getPreviousRevision <em>Previous Revision</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.BranchImpl#getVersion <em>Version</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.BranchImpl#getPreviousRevision <em>Previous Revision</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.BranchImpl#getVersion <em>Version</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class BranchImpl extends HistoryLogEntryImpl implements Branch {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getVersion() <em>Version</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getVersion() <em>Version</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getVersion()
      * @generated
      * @ordered
@@ -51,9 +42,8 @@ public class BranchImpl extends HistoryLogEntryImpl implements Branch {
     protected static final String VERSION_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getVersion() <em>Version</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getVersion() <em>Version</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getVersion()
      * @generated
      * @ordered
@@ -61,8 +51,8 @@ public class BranchImpl extends HistoryLogEntryImpl implements Branch {
     protected String version = VERSION_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected BranchImpl() {
@@ -70,8 +60,8 @@ public class BranchImpl extends HistoryLogEntryImpl implements Branch {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -80,8 +70,8 @@ public class BranchImpl extends HistoryLogEntryImpl implements Branch {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getVersion() {
@@ -89,20 +79,20 @@ public class BranchImpl extends HistoryLogEntryImpl implements Branch {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setVersion(String newVersion) {
+    public void setVersion( String newVersion ) {
         String oldVersion = version;
         version = newVersion;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.BRANCH__VERSION, oldVersion, version));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.BRANCH__VERSION,
+                                                                   oldVersion, version));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Revision getPreviousRevision() {
@@ -111,55 +101,61 @@ public class BranchImpl extends HistoryLogEntryImpl implements Branch {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setPreviousRevision(Revision newPreviousRevision) {
-        if (newPreviousRevision != eContainer || (eContainerFeatureID != HistoryPackage.BRANCH__PREVIOUS_REVISION && newPreviousRevision != null)) {
-            if (EcoreUtil.isAncestor(this, newPreviousRevision))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setPreviousRevision( Revision newPreviousRevision ) {
+        if (newPreviousRevision != eContainer
+            || (eContainerFeatureID != HistoryPackage.BRANCH__PREVIOUS_REVISION && newPreviousRevision != null)) {
+            if (EcoreUtil.isAncestor(this, newPreviousRevision)) throw new IllegalArgumentException(
+                                                                                                    "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newPreviousRevision != null)
-                msgs = ((InternalEObject)newPreviousRevision).eInverseAdd(this, HistoryPackage.REVISION__BRANCH, Revision.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newPreviousRevision != null) msgs = ((InternalEObject)newPreviousRevision).eInverseAdd(this,
+                                                                                                       HistoryPackage.REVISION__BRANCH,
+                                                                                                       Revision.class,
+                                                                                                       msgs);
             msgs = eBasicSetContainer((InternalEObject)newPreviousRevision, HistoryPackage.BRANCH__PREVIOUS_REVISION, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.BRANCH__PREVIOUS_REVISION, newPreviousRevision, newPreviousRevision));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          HistoryPackage.BRANCH__PREVIOUS_REVISION,
+                                                                          newPreviousRevision, newPreviousRevision));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HistoryPackage.BRANCH__PREVIOUS_REVISION:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, HistoryPackage.BRANCH__PREVIOUS_REVISION, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HistoryPackage.BRANCH__PREVIOUS_REVISION:
@@ -172,12 +168,12 @@ public class BranchImpl extends HistoryLogEntryImpl implements Branch {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case HistoryPackage.BRANCH__PREVIOUS_REVISION:
@@ -190,12 +186,13 @@ public class BranchImpl extends HistoryLogEntryImpl implements Branch {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.BRANCH__TIMESTAMP:
                 return getTimestamp();
@@ -210,12 +207,13 @@ public class BranchImpl extends HistoryLogEntryImpl implements Branch {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.BRANCH__TIMESTAMP:
                 setTimestamp((String)newValue);
@@ -234,12 +232,12 @@ public class BranchImpl extends HistoryLogEntryImpl implements Branch {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.BRANCH__TIMESTAMP:
                 setTimestamp(TIMESTAMP_EDEFAULT);
@@ -258,12 +256,12 @@ public class BranchImpl extends HistoryLogEntryImpl implements Branch {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.BRANCH__TIMESTAMP:
                 return TIMESTAMP_EDEFAULT == null ? timestamp != null : !TIMESTAMP_EDEFAULT.equals(timestamp);
@@ -278,8 +276,8 @@ public class BranchImpl extends HistoryLogEntryImpl implements Branch {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -293,4 +291,4 @@ public class BranchImpl extends HistoryLogEntryImpl implements Branch {
         return result.toString();
     }
 
-} //BranchImpl
+} // BranchImpl

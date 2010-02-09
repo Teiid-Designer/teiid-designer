@@ -30,12 +30,6 @@ import com.metamatrix.metamodels.relationship.UriReference;
  * @generated
  */
 public class RelationshipFactoryImpl extends EFactoryImpl implements RelationshipFactory {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -243,7 +237,7 @@ public class RelationshipFactoryImpl extends EFactoryImpl implements Relationshi
      * @generated
      */
     @Deprecated
-    public static RelationshipPackage getPackage() {
+    public static RelationshipPackage getPackage() { // NO_UCD
         return RelationshipPackage.eINSTANCE;
     }
 

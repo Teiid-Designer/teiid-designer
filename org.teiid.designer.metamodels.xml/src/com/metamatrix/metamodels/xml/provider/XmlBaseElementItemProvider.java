@@ -56,7 +56,7 @@ public class XmlBaseElementItemProvider extends XmlDocumentNodeItemProvider {
      * 
      * @generated
      */
-    public List getPropertyDescriptorsGen( Object object ) {
+    public List getPropertyDescriptorsGen( Object object ) { // NO_UCD
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
@@ -91,7 +91,7 @@ public class XmlBaseElementItemProvider extends XmlDocumentNodeItemProvider {
      * 
      * @generated
      */
-    protected void addChoiceCriteriaPropertyDescriptorGen( Object object ) {
+    protected void addChoiceCriteriaPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ChoiceOption_choiceCriteria_feature"), //$NON-NLS-1$
@@ -144,7 +144,7 @@ public class XmlBaseElementItemProvider extends XmlDocumentNodeItemProvider {
      * 
      * @generated
      */
-    protected void addDefaultForPropertyDescriptorGen( Object object ) {
+    protected void addDefaultForPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ChoiceOption_defaultFor_feature"), //$NON-NLS-1$

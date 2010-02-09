@@ -30,7 +30,7 @@ public class CoreMetamodelPlugin extends Plugin {
     private static final String MISSING_RESOURCE = "<Missing message for key"; //$NON-NLS-1$
 
     public static final String PLUGIN_ID = "org.teiid.designer.metamodels.core"; //$NON-NLS-1$
-    
+
     public static final String PACKAGE_ID = CoreMetamodelPlugin.class.getPackage().getName();
 
     /**
@@ -118,7 +118,6 @@ public class CoreMetamodelPlugin extends Plugin {
         return RESOURCE_LOCATOR;
     }
 
-    public static boolean DEBUG = false;
     static CoreMetamodelPlugin INSTANCE = null;
 
     /**

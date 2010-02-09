@@ -26,7 +26,7 @@ import com.metamatrix.core.util.PluginUtilImpl;
 public class FunctionPlugin extends Plugin {
 
     public static final String PLUGIN_ID = "org.teiid.designer.metamodels.function"; //$NON-NLS-1$
-    
+
     public static final String PACKAGE_ID = FunctionPlugin.class.getPackage().getName();
 
     /**
@@ -101,7 +101,6 @@ public class FunctionPlugin extends Plugin {
         return RESOURCE_LOCATOR;
     }
 
-    public static boolean DEBUG = false;
     static FunctionPlugin INSTANCE = null;
 
     /**

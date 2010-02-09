@@ -26,188 +26,198 @@ import com.metamatrix.metamodels.webservice.SampleMessages;
 import com.metamatrix.metamodels.webservice.WebServicePackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Sample Messages</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Sample Messages</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.webservice.impl.SampleMessagesImpl#getMessage <em>Message</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.webservice.impl.SampleMessagesImpl#getSampleFiles <em>Sample Files</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.webservice.impl.SampleMessagesImpl#getSampleFromXsd <em>Sample From Xsd</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.webservice.impl.SampleMessagesImpl#getMessage <em>Message</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.webservice.impl.SampleMessagesImpl#getSampleFiles <em>Sample Files</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.webservice.impl.SampleMessagesImpl#getSampleFromXsd <em>Sample From Xsd</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class SampleMessagesImpl extends EObjectImpl implements SampleMessages {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getSampleFiles() <em>Sample Files</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getSampleFiles() <em>Sample Files</em>}' containment reference list. <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
+     * 
      * @see #getSampleFiles()
      * @generated
      * @ordered
      */
-	protected EList sampleFiles = null;
+    protected EList sampleFiles = null;
 
     /**
-     * The cached value of the '{@link #getSampleFromXsd() <em>Sample From Xsd</em>}' containment reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getSampleFromXsd() <em>Sample From Xsd</em>}' containment reference. <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
+     * 
      * @see #getSampleFromXsd()
      * @generated
      * @ordered
      */
-	protected SampleFromXsd sampleFromXsd = null;
+    protected SampleFromXsd sampleFromXsd = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected SampleMessagesImpl() {
+    protected SampleMessagesImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return WebServicePackage.eINSTANCE.getSampleMessages();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public Message getMessage() {
+    public Message getMessage() {
         if (eContainerFeatureID != WebServicePackage.SAMPLE_MESSAGES__MESSAGE) return null;
         return (Message)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setMessage(Message newMessage) {
+    public void setMessage( Message newMessage ) {
         if (newMessage != eContainer || (eContainerFeatureID != WebServicePackage.SAMPLE_MESSAGES__MESSAGE && newMessage != null)) {
-            if (EcoreUtil.isAncestor(this, newMessage))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newMessage)) throw new IllegalArgumentException(
+                                                                                           "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newMessage != null)
-                msgs = ((InternalEObject)newMessage).eInverseAdd(this, WebServicePackage.MESSAGE__SAMPLES, Message.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newMessage != null) msgs = ((InternalEObject)newMessage).eInverseAdd(this,
+                                                                                     WebServicePackage.MESSAGE__SAMPLES,
+                                                                                     Message.class,
+                                                                                     msgs);
             msgs = eBasicSetContainer((InternalEObject)newMessage, WebServicePackage.SAMPLE_MESSAGES__MESSAGE, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.SAMPLE_MESSAGES__MESSAGE, newMessage, newMessage));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          WebServicePackage.SAMPLE_MESSAGES__MESSAGE, newMessage,
+                                                                          newMessage));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getSampleFiles() {
+    public EList getSampleFiles() {
         if (sampleFiles == null) {
-            sampleFiles = new EObjectContainmentWithInverseEList(SampleFile.class, this, WebServicePackage.SAMPLE_MESSAGES__SAMPLE_FILES, WebServicePackage.SAMPLE_FILE__SAMPLE_MESSAGES);
+            sampleFiles = new EObjectContainmentWithInverseEList(SampleFile.class, this,
+                                                                 WebServicePackage.SAMPLE_MESSAGES__SAMPLE_FILES,
+                                                                 WebServicePackage.SAMPLE_FILE__SAMPLE_MESSAGES);
         }
         return sampleFiles;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public SampleFromXsd getSampleFromXsd() {
+    public SampleFromXsd getSampleFromXsd() {
         return sampleFromXsd;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public NotificationChain basicSetSampleFromXsd(SampleFromXsd newSampleFromXsd, NotificationChain msgs) {
+    public NotificationChain basicSetSampleFromXsd( SampleFromXsd newSampleFromXsd,
+                                                    NotificationChain msgs ) {
         SampleFromXsd oldSampleFromXsd = sampleFromXsd;
         sampleFromXsd = newSampleFromXsd;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WebServicePackage.SAMPLE_MESSAGES__SAMPLE_FROM_XSD, oldSampleFromXsd, newSampleFromXsd);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+                                                                   WebServicePackage.SAMPLE_MESSAGES__SAMPLE_FROM_XSD,
+                                                                   oldSampleFromXsd, newSampleFromXsd);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setSampleFromXsd(SampleFromXsd newSampleFromXsd) {
+    public void setSampleFromXsd( SampleFromXsd newSampleFromXsd ) {
         if (newSampleFromXsd != sampleFromXsd) {
             NotificationChain msgs = null;
-            if (sampleFromXsd != null)
-                msgs = ((InternalEObject)sampleFromXsd).eInverseRemove(this, WebServicePackage.SAMPLE_FROM_XSD__SAMPLE_MESSAGES, SampleFromXsd.class, msgs);
-            if (newSampleFromXsd != null)
-                msgs = ((InternalEObject)newSampleFromXsd).eInverseAdd(this, WebServicePackage.SAMPLE_FROM_XSD__SAMPLE_MESSAGES, SampleFromXsd.class, msgs);
+            if (sampleFromXsd != null) msgs = ((InternalEObject)sampleFromXsd).eInverseRemove(this,
+                                                                                              WebServicePackage.SAMPLE_FROM_XSD__SAMPLE_MESSAGES,
+                                                                                              SampleFromXsd.class,
+                                                                                              msgs);
+            if (newSampleFromXsd != null) msgs = ((InternalEObject)newSampleFromXsd).eInverseAdd(this,
+                                                                                                 WebServicePackage.SAMPLE_FROM_XSD__SAMPLE_MESSAGES,
+                                                                                                 SampleFromXsd.class,
+                                                                                                 msgs);
             msgs = basicSetSampleFromXsd(newSampleFromXsd, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.SAMPLE_MESSAGES__SAMPLE_FROM_XSD, newSampleFromXsd, newSampleFromXsd));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          WebServicePackage.SAMPLE_MESSAGES__SAMPLE_FROM_XSD,
+                                                                          newSampleFromXsd, newSampleFromXsd));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WebServicePackage.SAMPLE_MESSAGES__MESSAGE:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, WebServicePackage.SAMPLE_MESSAGES__MESSAGE, msgs);
                 case WebServicePackage.SAMPLE_MESSAGES__SAMPLE_FILES:
                     return ((InternalEList)getSampleFiles()).basicAdd(otherEnd, msgs);
                 case WebServicePackage.SAMPLE_MESSAGES__SAMPLE_FROM_XSD:
-                    if (sampleFromXsd != null)
-                        msgs = ((InternalEObject)sampleFromXsd).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - WebServicePackage.SAMPLE_MESSAGES__SAMPLE_FROM_XSD, null, msgs);
+                    if (sampleFromXsd != null) msgs = ((InternalEObject)sampleFromXsd).eInverseRemove(this,
+                                                                                                      EOPPOSITE_FEATURE_BASE
+                                                                                                      - WebServicePackage.SAMPLE_MESSAGES__SAMPLE_FROM_XSD,
+                                                                                                      null,
+                                                                                                      msgs);
                     return basicSetSampleFromXsd((SampleFromXsd)otherEnd, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WebServicePackage.SAMPLE_MESSAGES__MESSAGE:
@@ -224,12 +234,12 @@ public class SampleMessagesImpl extends EObjectImpl implements SampleMessages {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case WebServicePackage.SAMPLE_MESSAGES__MESSAGE:
@@ -242,12 +252,13 @@ public class SampleMessagesImpl extends EObjectImpl implements SampleMessages {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.SAMPLE_MESSAGES__MESSAGE:
                 return getMessage();
@@ -260,12 +271,13 @@ public class SampleMessagesImpl extends EObjectImpl implements SampleMessages {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.SAMPLE_MESSAGES__MESSAGE:
                 setMessage((Message)newValue);
@@ -282,12 +294,12 @@ public class SampleMessagesImpl extends EObjectImpl implements SampleMessages {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.SAMPLE_MESSAGES__MESSAGE:
                 setMessage((Message)null);
@@ -303,12 +315,12 @@ public class SampleMessagesImpl extends EObjectImpl implements SampleMessages {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.SAMPLE_MESSAGES__MESSAGE:
                 return getMessage() != null;
@@ -320,4 +332,4 @@ public class SampleMessagesImpl extends EObjectImpl implements SampleMessages {
         return eDynamicIsSet(eFeature);
     }
 
-} //SampleMessagesImpl
+} // SampleMessagesImpl

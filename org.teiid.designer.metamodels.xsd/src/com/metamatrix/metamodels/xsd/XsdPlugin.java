@@ -26,7 +26,7 @@ import com.metamatrix.core.util.PluginUtilImpl;
 public class XsdPlugin extends Plugin {
 
     public static final String PLUGIN_ID = "org.teiid.designer.metamodels.xsd"; //$NON-NLS-1$
-    
+
     public static final String PACKAGE_ID = XsdPlugin.class.getPackage().getName();
 
     /**
@@ -101,7 +101,6 @@ public class XsdPlugin extends Plugin {
         return RESOURCE_LOCATOR;
     }
 
-    public static boolean DEBUG = false;
     static XsdPlugin INSTANCE = null;
 
     /**

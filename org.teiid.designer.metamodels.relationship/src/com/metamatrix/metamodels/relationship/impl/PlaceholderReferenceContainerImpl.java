@@ -21,30 +21,24 @@ import com.metamatrix.metamodels.relationship.PlaceholderReferenceContainer;
 import com.metamatrix.metamodels.relationship.RelationshipPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Placeholder Reference Container</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Placeholder Reference Container</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.PlaceholderReferenceContainerImpl#getPlaceholders <em>Placeholders</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.PlaceholderReferenceContainerImpl#getPlaceholders <em>Placeholders</em>}
+ * </li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class PlaceholderReferenceContainerImpl extends EObjectImpl implements PlaceholderReferenceContainer {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getPlaceholders() <em>Placeholders</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getPlaceholders() <em>Placeholders</em>}' containment reference list. <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
+     * 
      * @see #getPlaceholders()
      * @generated
      * @ordered
@@ -52,8 +46,8 @@ public class PlaceholderReferenceContainerImpl extends EObjectImpl implements Pl
     protected EList placeholders = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected PlaceholderReferenceContainerImpl() {
@@ -61,8 +55,8 @@ public class PlaceholderReferenceContainerImpl extends EObjectImpl implements Pl
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -71,24 +65,31 @@ public class PlaceholderReferenceContainerImpl extends EObjectImpl implements Pl
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getPlaceholders() {
         if (placeholders == null) {
-            placeholders = new EObjectContainmentWithInverseEList(PlaceholderReference.class, this, RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS, RelationshipPackage.PLACEHOLDER_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER);
+            placeholders = new EObjectContainmentWithInverseEList(
+                                                                  PlaceholderReference.class,
+                                                                  this,
+                                                                  RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS,
+                                                                  RelationshipPackage.PLACEHOLDER_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER);
         }
         return placeholders;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS:
@@ -97,18 +98,20 @@ public class PlaceholderReferenceContainerImpl extends EObjectImpl implements Pl
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS:
@@ -121,12 +124,13 @@ public class PlaceholderReferenceContainerImpl extends EObjectImpl implements Pl
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS:
                 return getPlaceholders();
@@ -135,12 +139,13 @@ public class PlaceholderReferenceContainerImpl extends EObjectImpl implements Pl
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS:
                 getPlaceholders().clear();
@@ -151,12 +156,12 @@ public class PlaceholderReferenceContainerImpl extends EObjectImpl implements Pl
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS:
                 getPlaceholders().clear();
@@ -166,12 +171,12 @@ public class PlaceholderReferenceContainerImpl extends EObjectImpl implements Pl
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS:
                 return placeholders != null && !placeholders.isEmpty();
@@ -179,4 +184,4 @@ public class PlaceholderReferenceContainerImpl extends EObjectImpl implements Pl
         return eDynamicIsSet(eFeature);
     }
 
-} //PlaceholderReferenceContainerImpl
+} // PlaceholderReferenceContainerImpl

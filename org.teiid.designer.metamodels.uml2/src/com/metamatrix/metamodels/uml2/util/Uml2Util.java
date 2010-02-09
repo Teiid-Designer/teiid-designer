@@ -25,7 +25,7 @@ import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
 public class Uml2Util {
 
     // ==================================================================================
-    //                        C O N S T R U C T O R S
+    // C O N S T R U C T O R S
     // ==================================================================================
 
     /**
@@ -34,49 +34,56 @@ public class Uml2Util {
     private Uml2Util() {
         super();
     }
-    
+
     // ==================================================================================
-    //                      P U B L I C   M E T H O D S
+    // P U B L I C M E T H O D S
     // ==================================================================================
 
     /**
      * Add any {@link org.eclipse.uml2.Class} instances found under the supplied container
+     * 
      * @param container the EObject or Resource under which the classes are to be found; may not be null
      * @param depth how deep to search beneath the container, see {@link ModelVisitorProcessor}
      * @return the classes that were found; may not be null
      */
-    public static Collection findClasses( final Object container, final int depth  ) {
+    public static Collection findClasses( final Object container, // NO_UCD
+                                          final int depth ) { // NO_UCD
         final ClassFinder finder = new ClassFinder();
-        executeVisitor(container,finder,depth);
+        executeVisitor(container, finder, depth);
         return finder.getObjects();
     }
 
     /**
      * Add any {@link org.eclipse.uml2.Association} instances found under the supplied container
+     * 
      * @param container the EObject or Resource under which the assocations are to be found; may not be null
      * @param depth how deep to search beneath the container, see {@link ModelVisitorProcessor}
      * @return the assocations that were found; may not be null
      */
-    public static Collection findAssocations( final Object container, final int depth  ) {
+    public static Collection findAssocations( final Object container,
+                                              final int depth ) {
         final AssociationFinder finder = new AssociationFinder();
-        executeVisitor(container,finder,depth);
+        executeVisitor(container, finder, depth);
         return finder.getObjects();
     }
 
     /**
      * Add any {@link org.eclipse.uml2.Dependency} instances found under the supplied container
+     * 
      * @param container the EObject or Resource under which the assocations are to be found; may not be null
      * @param depth how deep to search beneath the container, see {@link ModelVisitorProcessor}
      * @return the dependency relationships that were found; may not be null
      */
-    public static Collection findDependencies( final Object container, final int depth  ) {
+    public static Collection findDependencies( final Object container,
+                                               final int depth ) {
         final DependencyFinder finder = new DependencyFinder();
-        executeVisitor(container,finder,depth);
+        executeVisitor(container, finder, depth);
         return finder.getObjects();
     }
-    
+
     /**
-     * Helper method to create any possible association between two elements. 
+     * Helper method to create any possible association between two elements.
+     * 
      * @param firstEndType
      * @param firstEndIsNavigable
      * @param firstEndAggregation
@@ -91,45 +98,47 @@ public class Uml2Util {
      * @param secondEndUpperBound
      * @return
      */
-    public static Association createAssociation(final Type type1,
-                                                final boolean end1IsNavigable,
-                                                final AggregationKind end1Aggregation,
-                                                final String end1Name,
-                                                final int end1LowerBound,
-                                                final int end1UpperBound,
-                                                final Type type2,
-                                                final boolean end2IsNavigable,
-                                                final AggregationKind end2Aggregation,
-                                                final String end2Name,
-                                                final int end2LowerBound,
-                                                final int end2UpperBound) {
+    public static Association createAssociation( final Type type1,
+                                                 final boolean end1IsNavigable,
+                                                 final AggregationKind end1Aggregation,
+                                                 final String end1Name,
+                                                 final int end1LowerBound,
+                                                 final int end1UpperBound,
+                                                 final Type type2,
+                                                 final boolean end2IsNavigable,
+                                                 final AggregationKind end2Aggregation,
+                                                 final String end2Name,
+                                                 final int end2LowerBound,
+                                                 final int end2UpperBound ) {
         ArgCheck.isNotNull(type1);
 
-        return type1.createAssociation( end1IsNavigable,
-                                        end1Aggregation,
-                                        end1Name,
-                                        end1LowerBound,
-                                        end1UpperBound,
-                                        type2,
-                                        end2IsNavigable,
-                                        end2Aggregation,
-                                        end2Name,
-                                        end2LowerBound,
-                                        end2UpperBound);
- 
+        return type1.createAssociation(end1IsNavigable,
+                                       end1Aggregation,
+                                       end1Name,
+                                       end1LowerBound,
+                                       end1UpperBound,
+                                       type2,
+                                       end2IsNavigable,
+                                       end2Aggregation,
+                                       end2Name,
+                                       end2LowerBound,
+                                       end2UpperBound);
+
     }
-    
+
     // ==================================================================================
-    //                    P R O T E C T E D   M E T H O D S
+    // P R O T E C T E D M E T H O D S
     // ==================================================================================
-    
-    protected static void executeVisitor( final Object container, final ModelVisitor visitor, final int depth ) {
+
+    protected static void executeVisitor( final Object container,
+                                          final ModelVisitor visitor,
+                                          final int depth ) {
         final ModelVisitorProcessor processor = new ModelVisitorProcessor(visitor);
         try {
-            if ( container instanceof Resource ) {
-                processor.walk((Resource)container,depth);
-            } else if ( container instanceof EObject ) {
-                processor.walk((EObject)container,depth);
+            if (container instanceof Resource) {
+                processor.walk((Resource)container, depth);
+            } else if (container instanceof EObject) {
+                processor.walk((EObject)container, depth);
             }
         } catch (ModelerCoreException e) {
             ModelerCore.Util.log(e);

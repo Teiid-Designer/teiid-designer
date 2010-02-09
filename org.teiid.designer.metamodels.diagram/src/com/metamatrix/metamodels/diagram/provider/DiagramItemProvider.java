@@ -128,7 +128,7 @@ public class DiagramItemProvider extends PresentationEntityItemProvider {
      * 
      * @generated
      */
-    protected void addTargetPropertyDescriptorGen( Object object ) {
+    protected void addTargetPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Diagram_target_feature"), //$NON-NLS-1$

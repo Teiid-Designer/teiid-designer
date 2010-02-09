@@ -7,40 +7,30 @@
  */
 package com.metamatrix.metamodels.wsdl;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Output</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Output</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.wsdl.Output#getOperation <em>Operation</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.Output#getOperation <em>Operation</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see com.metamatrix.metamodels.wsdl.WsdlPackage#getOutput()
  * @model
  * @generated
  */
-public interface Output extends ParamType{
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
+public interface Output extends ParamType {
 
     /**
-     * Returns the value of the '<em><b>Operation</b></em>' container reference.
-     * It is bidirectional and its opposite is '{@link com.metamatrix.metamodels.wsdl.Operation#getOutput <em>Output</em>}'.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Operation</em>' container reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
+     * Returns the value of the '<em><b>Operation</b></em>' container reference. It is bidirectional and its opposite is '
+     * {@link com.metamatrix.metamodels.wsdl.Operation#getOutput <em>Output</em>}'. <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Operation</em>' container reference isn't clear, there really should be more of a description
+     * here...
+     * </p>
+     * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Operation</em>' container reference.
      * @see #setOperation(Operation)
      * @see com.metamatrix.metamodels.wsdl.WsdlPackage#getOutput_Operation()
@@ -48,16 +38,16 @@ public interface Output extends ParamType{
      * @model opposite="output" required="true"
      * @generated
      */
-	Operation getOperation();
+    Operation getOperation();
 
     /**
      * Sets the value of the '{@link com.metamatrix.metamodels.wsdl.Output#getOperation <em>Operation</em>}' container reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Operation</em>' container reference.
      * @see #getOperation()
      * @generated
      */
-	void setOperation(Operation value);
+    void setOperation( Operation value );
 
 } // Output

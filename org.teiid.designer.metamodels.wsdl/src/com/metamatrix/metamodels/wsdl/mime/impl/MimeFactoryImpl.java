@@ -22,12 +22,6 @@ import com.metamatrix.metamodels.wsdl.mime.MimePart;
  * @generated
  */
 public class MimeFactoryImpl extends EFactoryImpl implements MimeFactory {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -103,7 +97,7 @@ public class MimeFactoryImpl extends EFactoryImpl implements MimeFactory {
      * @generated
      */
     @Deprecated
-    public static MimePackage getPackage() {
+    public static MimePackage getPackage() { // NO_UCD
         return MimePackage.eINSTANCE;
     }
 

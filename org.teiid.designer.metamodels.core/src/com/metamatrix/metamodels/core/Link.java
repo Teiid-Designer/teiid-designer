@@ -28,12 +28,6 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface Link extends EObject {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Returns the value of the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc -->

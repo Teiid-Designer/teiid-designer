@@ -24,30 +24,21 @@ import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Mapping Root</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Mapping Root</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.TransformationMappingRootImpl#getTarget <em>Target</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.TransformationMappingRootImpl#getTarget <em>Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public abstract class TransformationMappingRootImpl extends MappingRootImpl implements TransformationMappingRoot {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getTarget() <em>Target</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getTarget() <em>Target</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getTarget()
      * @generated
      * @ordered
@@ -55,8 +46,8 @@ public abstract class TransformationMappingRootImpl extends MappingRootImpl impl
     protected EObject target = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected TransformationMappingRootImpl() {
@@ -64,8 +55,8 @@ public abstract class TransformationMappingRootImpl extends MappingRootImpl impl
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -74,8 +65,8 @@ public abstract class TransformationMappingRootImpl extends MappingRootImpl impl
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EObject getTarget() {
@@ -83,16 +74,19 @@ public abstract class TransformationMappingRootImpl extends MappingRootImpl impl
             EObject oldTarget = target;
             target = eResolveProxy((InternalEObject)target);
             if (target != oldTarget) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, TransformationPackage.TRANSFORMATION_MAPPING_ROOT__TARGET, oldTarget, target));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(
+                                                                           this,
+                                                                           Notification.RESOLVE,
+                                                                           TransformationPackage.TRANSFORMATION_MAPPING_ROOT__TARGET,
+                                                                           oldTarget, target));
             }
         }
         return target;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EObject basicGetTarget() {
@@ -100,52 +94,60 @@ public abstract class TransformationMappingRootImpl extends MappingRootImpl impl
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setTarget(EObject newTarget) {
+    public void setTarget( EObject newTarget ) {
         EObject oldTarget = target;
         target = newTarget;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.TRANSFORMATION_MAPPING_ROOT__TARGET, oldTarget, target));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.TRANSFORMATION_MAPPING_ROOT__TARGET,
+                                                                   oldTarget, target));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.TRANSFORMATION_MAPPING_ROOT__HELPER:
-                    if (helper != null)
-                        msgs = ((InternalEObject)helper).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TransformationPackage.TRANSFORMATION_MAPPING_ROOT__HELPER, null, msgs);
+                    if (helper != null) msgs = ((InternalEObject)helper).eInverseRemove(this,
+                                                                                        EOPPOSITE_FEATURE_BASE
+                                                                                        - TransformationPackage.TRANSFORMATION_MAPPING_ROOT__HELPER,
+                                                                                        null,
+                                                                                        msgs);
                     return basicSetHelper((MappingHelper)otherEnd, msgs);
                 case TransformationPackage.TRANSFORMATION_MAPPING_ROOT__NESTED:
                     return ((InternalEList)getNested()).basicAdd(otherEnd, msgs);
                 case TransformationPackage.TRANSFORMATION_MAPPING_ROOT__NESTED_IN:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.TRANSFORMATION_MAPPING_ROOT__NESTED_IN, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.TRANSFORMATION_MAPPING_ROOT__HELPER:
@@ -162,12 +164,12 @@ public abstract class TransformationMappingRootImpl extends MappingRootImpl impl
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.TRANSFORMATION_MAPPING_ROOT__NESTED_IN:
@@ -180,12 +182,13 @@ public abstract class TransformationMappingRootImpl extends MappingRootImpl impl
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TRANSFORMATION_MAPPING_ROOT__HELPER:
                 return getHelper();
@@ -214,12 +217,13 @@ public abstract class TransformationMappingRootImpl extends MappingRootImpl impl
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TRANSFORMATION_MAPPING_ROOT__HELPER:
                 setHelper((MappingHelper)newValue);
@@ -259,12 +263,12 @@ public abstract class TransformationMappingRootImpl extends MappingRootImpl impl
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TRANSFORMATION_MAPPING_ROOT__HELPER:
                 setHelper((MappingHelper)null);
@@ -301,12 +305,12 @@ public abstract class TransformationMappingRootImpl extends MappingRootImpl impl
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TRANSFORMATION_MAPPING_ROOT__HELPER:
                 return helper != null;
@@ -332,50 +336,53 @@ public abstract class TransformationMappingRootImpl extends MappingRootImpl impl
         return eDynamicIsSet(eFeature);
     }
 
-// GSG 5/19/05 - This has been commented out due to the regeneration of the transformation metamodel. These overridden methods might
-// no longer be needed.
-//  /**
-//  * Overrides the MappingImpl implementation to fix defect 10694.
-//  * @see org.eclipse.emf.mapping.MappingRoot#createMapping(java.util.Collection, java.util.Collection)
-//  */
-// public Mapping createMapping(Collection inputs, Collection outputs)
-// {
-//   Mapping newMapping = MappingPackage.eINSTANCE.getMappingFactory().createMapping();
-//   newMapping.getInputs().addAll(inputs);
-//   newMapping.getOutputs().addAll(outputs);
-//
-//   if (getTypeMappingRoot() != null)
-//   {
-//     Collection inputTypes = getTypeClassifiers(inputs);
-//     if (!inputTypes.isEmpty())
-//     {
-//       Collection outputTypes = getTypeClassifiers(outputs);
-//
-//       Collection typeMappings = getTypeMappings(inputTypes, outputTypes);
-//       if (!typeMappings.isEmpty())
-//       {
-//         newMapping.setTypeMapping((Mapping)typeMappings.iterator().next());
-//       }
-//     }
-//   }
-//   return newMapping;
-// }
-// 
+    // GSG 5/19/05 - This has been commented out due to the regeneration of the transformation metamodel. These overridden methods
+    // might
+    // no longer be needed.
+    // /**
+    // * Overrides the MappingImpl implementation to fix defect 10694.
+    // * @see org.eclipse.emf.mapping.MappingRoot#createMapping(java.util.Collection, java.util.Collection)
+    // */
+    // public Mapping createMapping(Collection inputs, Collection outputs)
+    // {
+    // Mapping newMapping = MappingPackage.eINSTANCE.getMappingFactory().createMapping();
+    // newMapping.getInputs().addAll(inputs);
+    // newMapping.getOutputs().addAll(outputs);
+    //
+    // if (getTypeMappingRoot() != null)
+    // {
+    // Collection inputTypes = getTypeClassifiers(inputs);
+    // if (!inputTypes.isEmpty())
+    // {
+    // Collection outputTypes = getTypeClassifiers(outputs);
+    //
+    // Collection typeMappings = getTypeMappings(inputTypes, outputTypes);
+    // if (!typeMappings.isEmpty())
+    // {
+    // newMapping.setTypeMapping((Mapping)typeMappings.iterator().next());
+    // }
+    // }
+    // }
+    // return newMapping;
+    // }
+    // 
 
-     /**
-      * Overrides the MappingImpl implementation to so that RemoveCommands on the MappingRoot objects work.
-      * Default implementation for some reason seems to check that the root level object for every input/output
-      * object on a MappingRoot also needs to be on the inputs/outputs for a command to ececute.
-      * See defect 13015 (MappingDomains need to be set on MappingRoots; merging mapping calsses followed by 
-      * undoing merge followed by remerging is causing an error when trying to execute a Compound command 
-      * having a remove command. This is hapenning because canCreateMapping() is returning false on MappingRoot 
-      * object. Overrided the method in TransformationMappingRoootImpl to always return true.
-      * @see org.eclipse.emf.mapping.MappingRoot#canCreateMapping(java.util.Collection, java.util.Collection, org.eclipse.emf.mapping.Mapping)
-      */
-     @Override
-    public boolean canCreateMapping(Collection inputs, Collection outputs, Mapping mapping) {
-         return true;
-     }
-    
-    
-} //TransformationMappingRootImpl
+    /**
+     * Overrides the MappingImpl implementation to so that RemoveCommands on the MappingRoot objects work. Default implementation
+     * for some reason seems to check that the root level object for every input/output object on a MappingRoot also needs to be
+     * on the inputs/outputs for a command to ececute. See defect 13015 (MappingDomains need to be set on MappingRoots; merging
+     * mapping calsses followed by undoing merge followed by remerging is causing an error when trying to execute a Compound
+     * command having a remove command. This is hapenning because canCreateMapping() is returning false on MappingRoot object.
+     * Overrided the method in TransformationMappingRoootImpl to always return true.
+     * 
+     * @see org.eclipse.emf.mapping.MappingRoot#canCreateMapping(java.util.Collection, java.util.Collection,
+     *      org.eclipse.emf.mapping.Mapping)
+     */
+    @Override
+    public boolean canCreateMapping( Collection inputs,
+                                     Collection outputs,
+                                     Mapping mapping ) {
+        return true;
+    }
+
+} // TransformationMappingRootImpl

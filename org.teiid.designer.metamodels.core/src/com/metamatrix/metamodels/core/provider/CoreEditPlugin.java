@@ -19,12 +19,6 @@ import com.metamatrix.metamodels.core.extension.provider.ExtensionEditPlugin;
  * @generated
  */
 public final class CoreEditPlugin extends EMFPlugin {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Keep track of the singleton. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -65,7 +59,7 @@ public final class CoreEditPlugin extends EMFPlugin {
      * @return the singleton instance.
      * @generated
      */
-    public static Implementation getPlugin() {
+    public static Implementation getPlugin() { // NO_UCD
         return plugin;
     }
 

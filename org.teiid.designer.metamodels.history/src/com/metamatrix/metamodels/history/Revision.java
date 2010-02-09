@@ -10,43 +10,33 @@ package com.metamatrix.metamodels.history;
 import org.eclipse.emf.common.util.EList;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Revision</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Revision</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.history.Revision#getHistoryLog <em>History Log</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.Revision#getBranch <em>Branch</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.Revision#getLabel <em>Label</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.Revision#getNextRevision <em>Next Revision</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.Revision#getPreviousRevision <em>Previous Revision</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.Revision#getComment <em>Comment</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.Revision#getVersion <em>Version</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.Revision#getHistoryLog <em>History Log</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.Revision#getBranch <em>Branch</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.Revision#getLabel <em>Label</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.Revision#getNextRevision <em>Next Revision</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.Revision#getPreviousRevision <em>Previous Revision</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.Revision#getComment <em>Comment</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.Revision#getVersion <em>Version</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see com.metamatrix.metamodels.history.HistoryPackage#getRevision()
  * @model
  * @generated
  */
-public interface Revision extends HistoryLogEntry{
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
+public interface Revision extends HistoryLogEntry {
 
     /**
-     * Returns the value of the '<em><b>Comment</b></em>' attribute.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Comment</b></em>' attribute. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Comment</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Comment</em>' attribute isn't clear, there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Comment</em>' attribute.
      * @see #setComment(String)
      * @see com.metamatrix.metamodels.history.HistoryPackage#getRevision_Comment()
@@ -56,23 +46,22 @@ public interface Revision extends HistoryLogEntry{
     String getComment();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.history.Revision#getComment <em>Comment</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.history.Revision#getComment <em>Comment</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Comment</em>' attribute.
      * @see #getComment()
      * @generated
      */
-    void setComment(String value);
+    void setComment( String value );
 
     /**
-     * Returns the value of the '<em><b>Version</b></em>' attribute.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Version</b></em>' attribute. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Version</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Version</em>' attribute isn't clear, there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Version</em>' attribute.
      * @see #setVersion(String)
      * @see com.metamatrix.metamodels.history.HistoryPackage#getRevision_Version()
@@ -82,24 +71,24 @@ public interface Revision extends HistoryLogEntry{
     String getVersion();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.history.Revision#getVersion <em>Version</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.history.Revision#getVersion <em>Version</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Version</em>' attribute.
      * @see #getVersion()
      * @generated
      */
-    void setVersion(String value);
+    void setVersion( String value );
 
     /**
-     * Returns the value of the '<em><b>History Log</b></em>' container reference.
-     * It is bidirectional and its opposite is '{@link com.metamatrix.metamodels.history.RevisionLog#getFirstRevision <em>First Revision</em>}'.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>History Log</b></em>' container reference. It is bidirectional and its opposite is '
+     * {@link com.metamatrix.metamodels.history.RevisionLog#getFirstRevision <em>First Revision</em>}'. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>History Log</em>' container reference isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>History Log</em>' container reference isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>History Log</em>' container reference.
      * @see #setHistoryLog(RevisionLog)
      * @see com.metamatrix.metamodels.history.HistoryPackage#getRevision_HistoryLog()
@@ -110,25 +99,25 @@ public interface Revision extends HistoryLogEntry{
     RevisionLog getHistoryLog();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.history.Revision#getHistoryLog <em>History Log</em>}' container reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.history.Revision#getHistoryLog <em>History Log</em>}' container
+     * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>History Log</em>' container reference.
      * @see #getHistoryLog()
      * @generated
      */
-    void setHistoryLog(RevisionLog value);
+    void setHistoryLog( RevisionLog value );
 
     /**
-     * Returns the value of the '<em><b>Branch</b></em>' containment reference list.
-     * The list contents are of type {@link com.metamatrix.metamodels.history.Branch}.
-     * It is bidirectional and its opposite is '{@link com.metamatrix.metamodels.history.Branch#getPreviousRevision <em>Previous Revision</em>}'.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Branch</b></em>' containment reference list. The list contents are of type
+     * {@link com.metamatrix.metamodels.history.Branch}. It is bidirectional and its opposite is '
+     * {@link com.metamatrix.metamodels.history.Branch#getPreviousRevision <em>Previous Revision</em>}'. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Branch</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Branch</em>' containment reference list isn't clear, there really should be more of a
+     * description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Branch</em>' containment reference list.
      * @see com.metamatrix.metamodels.history.HistoryPackage#getRevision_Branch()
      * @see com.metamatrix.metamodels.history.Branch#getPreviousRevision
@@ -138,15 +127,15 @@ public interface Revision extends HistoryLogEntry{
     EList getBranch();
 
     /**
-     * Returns the value of the '<em><b>Label</b></em>' containment reference list.
-     * The list contents are of type {@link com.metamatrix.metamodels.history.Label}.
-     * It is bidirectional and its opposite is '{@link com.metamatrix.metamodels.history.Label#getRevision <em>Revision</em>}'.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Label</b></em>' containment reference list. The list contents are of type
+     * {@link com.metamatrix.metamodels.history.Label}. It is bidirectional and its opposite is '
+     * {@link com.metamatrix.metamodels.history.Label#getRevision <em>Revision</em>}'. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Label</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Label</em>' containment reference list isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Label</em>' containment reference list.
      * @see com.metamatrix.metamodels.history.HistoryPackage#getRevision_Label()
      * @see com.metamatrix.metamodels.history.Label#getRevision
@@ -156,14 +145,14 @@ public interface Revision extends HistoryLogEntry{
     EList getLabel();
 
     /**
-     * Returns the value of the '<em><b>Next Revision</b></em>' containment reference.
-     * It is bidirectional and its opposite is '{@link com.metamatrix.metamodels.history.Revision#getPreviousRevision <em>Previous Revision</em>}'.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Next Revision</b></em>' containment reference. It is bidirectional and its opposite is '
+     * {@link com.metamatrix.metamodels.history.Revision#getPreviousRevision <em>Previous Revision</em>}'. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Next Revision</em>' containment reference isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Next Revision</em>' containment reference isn't clear, there really should be more of a
+     * description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Next Revision</em>' containment reference.
      * @see #setNextRevision(Revision)
      * @see com.metamatrix.metamodels.history.HistoryPackage#getRevision_NextRevision()
@@ -174,24 +163,24 @@ public interface Revision extends HistoryLogEntry{
     Revision getNextRevision();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.history.Revision#getNextRevision <em>Next Revision</em>}' containment reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.history.Revision#getNextRevision <em>Next Revision</em>}'
+     * containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Next Revision</em>' containment reference.
      * @see #getNextRevision()
      * @generated
      */
-    void setNextRevision(Revision value);
+    void setNextRevision( Revision value );
 
     /**
-     * Returns the value of the '<em><b>Previous Revision</b></em>' container reference.
-     * It is bidirectional and its opposite is '{@link com.metamatrix.metamodels.history.Revision#getNextRevision <em>Next Revision</em>}'.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Previous Revision</b></em>' container reference. It is bidirectional and its opposite is '
+     * {@link com.metamatrix.metamodels.history.Revision#getNextRevision <em>Next Revision</em>}'. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Previous Revision</em>' container reference isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Previous Revision</em>' container reference isn't clear, there really should be more of a
+     * description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Previous Revision</em>' container reference.
      * @see #setPreviousRevision(Revision)
      * @see com.metamatrix.metamodels.history.HistoryPackage#getRevision_PreviousRevision()
@@ -202,13 +191,13 @@ public interface Revision extends HistoryLogEntry{
     Revision getPreviousRevision();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.history.Revision#getPreviousRevision <em>Previous Revision</em>}' container reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.history.Revision#getPreviousRevision <em>Previous Revision</em>}'
+     * container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Previous Revision</em>' container reference.
      * @see #getPreviousRevision()
      * @generated
      */
-    void setPreviousRevision(Revision value);
+    void setPreviousRevision( Revision value );
 
 } // Revision

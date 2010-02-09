@@ -7,31 +7,21 @@
  */
 package com.metamatrix.metamodels.transformation;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Sort Node</b></em>'.
- * <!-- end-user-doc -->
- *
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Sort Node</b></em>'. <!-- end-user-doc -->
+ * 
  * @see com.metamatrix.metamodels.transformation.TransformationPackage#getSortNode()
  * @model
  * @generated
  */
-public interface SortNode extends OperationNode{
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
+public interface SortNode extends OperationNode {
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @model parameters=""
      * @generated
      */
-    String getOrderBy();
+    String getOrderBy(); // NO_UCD
 
 } // SortNode

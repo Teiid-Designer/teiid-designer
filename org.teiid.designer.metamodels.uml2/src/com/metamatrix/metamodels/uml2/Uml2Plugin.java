@@ -24,8 +24,8 @@ import com.metamatrix.core.util.PluginUtilImpl;
 
 public class Uml2Plugin extends Plugin {
 
-    public static final String PLUGIN_ID =  "org.teiid.designer.metamodels.uml2";  //$NON-NLS-1$
-    
+    public static final String PLUGIN_ID = "org.teiid.designer.metamodels.uml2"; //$NON-NLS-1$
+
     public static final String PACKAGE_ID = Uml2Plugin.class.getPackage().getName();
 
     /**
@@ -110,14 +110,13 @@ public class Uml2Plugin extends Plugin {
         return RESOURCE_LOCATOR;
     }
 
-    public static boolean DEBUG = false;
     static Uml2Plugin INSTANCE = null;
 
     /**
      * Construct an instance of MetaMatrixPlugin.
      */
     public Uml2Plugin() {
-    	INSTANCE = this;
+        INSTANCE = this;
     }
 
     /**

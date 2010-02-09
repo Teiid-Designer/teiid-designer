@@ -13,19 +13,17 @@ import java.util.List;
 import org.eclipse.emf.common.util.AbstractEnumerator;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the literals of the enumeration '<em><b>Direction Kind</b></em>',
- * and utility methods for working with them.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Direction Kind</b></em>', and utility
+ * methods for working with them. <!-- end-user-doc -->
+ * 
  * @see com.metamatrix.metamodels.relational.RelationalPackage#getDirectionKind()
  * @model
  * @generated
  */
 public final class DirectionKind extends AbstractEnumerator {
     /**
-     * The '<em><b>IN</b></em>' literal value.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The '<em><b>IN</b></em>' literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #IN_LITERAL
      * @model
      * @generated
@@ -34,9 +32,8 @@ public final class DirectionKind extends AbstractEnumerator {
     public static final int IN = 0;
 
     /**
-     * The '<em><b>OUT</b></em>' literal value.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The '<em><b>OUT</b></em>' literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #OUT_LITERAL
      * @model
      * @generated
@@ -45,9 +42,8 @@ public final class DirectionKind extends AbstractEnumerator {
     public static final int OUT = 1;
 
     /**
-     * The '<em><b>INOUT</b></em>' literal value.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The '<em><b>INOUT</b></em>' literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #INOUT_LITERAL
      * @model
      * @generated
@@ -56,9 +52,8 @@ public final class DirectionKind extends AbstractEnumerator {
     public static final int INOUT = 2;
 
     /**
-     * The '<em><b>RETURN</b></em>' literal value.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The '<em><b>RETURN</b></em>' literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #RETURN_LITERAL
      * @model
      * @generated
@@ -67,9 +62,8 @@ public final class DirectionKind extends AbstractEnumerator {
     public static final int RETURN = 3;
 
     /**
-     * The '<em><b>UNKNOWN</b></em>' literal value.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The '<em><b>UNKNOWN</b></em>' literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #UNKNOWN_LITERAL
      * @model
      * @generated
@@ -78,13 +72,12 @@ public final class DirectionKind extends AbstractEnumerator {
     public static final int UNKNOWN = 4;
 
     /**
-     * The '<em><b>IN</b></em>' literal object.
-     * <!-- begin-user-doc -->
+     * The '<em><b>IN</b></em>' literal object. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of '<em><b>IN</b></em>' literal object isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of '<em><b>IN</b></em>' literal object isn't clear, there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @see #IN
      * @generated
      * @ordered
@@ -92,13 +85,12 @@ public final class DirectionKind extends AbstractEnumerator {
     public static final DirectionKind IN_LITERAL = new DirectionKind(IN, "IN"); //$NON-NLS-1$
 
     /**
-     * The '<em><b>OUT</b></em>' literal object.
-     * <!-- begin-user-doc -->
+     * The '<em><b>OUT</b></em>' literal object. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of '<em><b>OUT</b></em>' literal object isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of '<em><b>OUT</b></em>' literal object isn't clear, there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @see #OUT
      * @generated
      * @ordered
@@ -106,13 +98,12 @@ public final class DirectionKind extends AbstractEnumerator {
     public static final DirectionKind OUT_LITERAL = new DirectionKind(OUT, "OUT"); //$NON-NLS-1$
 
     /**
-     * The '<em><b>INOUT</b></em>' literal object.
-     * <!-- begin-user-doc -->
+     * The '<em><b>INOUT</b></em>' literal object. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of '<em><b>INOUT</b></em>' literal object isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of '<em><b>INOUT</b></em>' literal object isn't clear, there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @see #INOUT
      * @generated
      * @ordered
@@ -120,13 +111,12 @@ public final class DirectionKind extends AbstractEnumerator {
     public static final DirectionKind INOUT_LITERAL = new DirectionKind(INOUT, "INOUT"); //$NON-NLS-1$
 
     /**
-     * The '<em><b>RETURN</b></em>' literal object.
-     * <!-- begin-user-doc -->
+     * The '<em><b>RETURN</b></em>' literal object. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of '<em><b>RETURN</b></em>' literal object isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of '<em><b>RETURN</b></em>' literal object isn't clear, there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @see #RETURN
      * @generated
      * @ordered
@@ -134,13 +124,13 @@ public final class DirectionKind extends AbstractEnumerator {
     public static final DirectionKind RETURN_LITERAL = new DirectionKind(RETURN, "RETURN"); //$NON-NLS-1$
 
     /**
-     * The '<em><b>UNKNOWN</b></em>' literal object.
-     * <!-- begin-user-doc -->
+     * The '<em><b>UNKNOWN</b></em>' literal object. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of '<em><b>UNKNOWN</b></em>' literal object isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of '<em><b>UNKNOWN</b></em>' literal object isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @see #UNKNOWN
      * @generated
      * @ordered
@@ -148,35 +138,27 @@ public final class DirectionKind extends AbstractEnumerator {
     public static final DirectionKind UNKNOWN_LITERAL = new DirectionKind(UNKNOWN, "UNKNOWN"); //$NON-NLS-1$
 
     /**
-     * An array of all the '<em><b>Direction Kind</b></em>' enumerators.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * An array of all the '<em><b>Direction Kind</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    private static final DirectionKind[] VALUES_ARRAY =
-        new DirectionKind[] {
-            IN_LITERAL,
-            OUT_LITERAL,
-            INOUT_LITERAL,
-            RETURN_LITERAL,
-            UNKNOWN_LITERAL,
-        };
+    private static final DirectionKind[] VALUES_ARRAY = new DirectionKind[] {IN_LITERAL, OUT_LITERAL, INOUT_LITERAL,
+        RETURN_LITERAL, UNKNOWN_LITERAL,};
 
     /**
-     * A public read-only list of all the '<em><b>Direction Kind</b></em>' enumerators.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * A public read-only list of all the '<em><b>Direction Kind</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @generated
      */
-    public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+    public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY)); // NO_UCD
 
     /**
-     * Returns the '<em><b>Direction Kind</b></em>' literal with the specified name.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the '<em><b>Direction Kind</b></em>' literal with the specified name. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public static DirectionKind get(String name) {
+    public static DirectionKind get( String name ) {
         for (int i = 0; i < VALUES_ARRAY.length; ++i) {
             DirectionKind result = VALUES_ARRAY[i];
             if (result.toString().equals(name)) {
@@ -187,30 +169,35 @@ public final class DirectionKind extends AbstractEnumerator {
     }
 
     /**
-     * Returns the '<em><b>Direction Kind</b></em>' literal with the specified value.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the '<em><b>Direction Kind</b></em>' literal with the specified value. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @generated
      */
-    public static DirectionKind get(int value) {
+    public static DirectionKind get( int value ) { // NO_UCD
         switch (value) {
-            case IN: return IN_LITERAL;
-            case OUT: return OUT_LITERAL;
-            case INOUT: return INOUT_LITERAL;
-            case RETURN: return RETURN_LITERAL;
-            case UNKNOWN: return UNKNOWN_LITERAL;
+            case IN:
+                return IN_LITERAL;
+            case OUT:
+                return OUT_LITERAL;
+            case INOUT:
+                return INOUT_LITERAL;
+            case RETURN:
+                return RETURN_LITERAL;
+            case UNKNOWN:
+                return UNKNOWN_LITERAL;
         }
-        return null;	
+        return null;
     }
 
     /**
-     * Only this class can construct instances.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Only this class can construct instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    private DirectionKind(int value, String name) {
+    private DirectionKind( int value,
+                           String name ) {
         super(value, name);
     }
 
-} //DirectionKind
+} // DirectionKind

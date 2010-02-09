@@ -24,12 +24,6 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface LinkContainer extends EObject {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Returns the value of the '<em><b>Links</b></em>' containment reference list. The list contents are of type

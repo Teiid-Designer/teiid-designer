@@ -20,189 +20,183 @@ import com.metamatrix.metamodels.webservice.SampleMessages;
 import com.metamatrix.metamodels.webservice.WebServicePackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Sample File</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Sample File</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.webservice.impl.SampleFileImpl#getName <em>Name</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.webservice.impl.SampleFileImpl#getUrl <em>Url</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.webservice.impl.SampleFileImpl#getSampleMessages <em>Sample Messages</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.webservice.impl.SampleFileImpl#getName <em>Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.webservice.impl.SampleFileImpl#getUrl <em>Url</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.webservice.impl.SampleFileImpl#getSampleMessages <em>Sample Messages</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class SampleFileImpl extends EObjectImpl implements SampleFile {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
      */
-	protected static final String NAME_EDEFAULT = null;
+    protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
      */
-	protected String name = NAME_EDEFAULT;
+    protected String name = NAME_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getUrl() <em>Url</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getUrl() <em>Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getUrl()
      * @generated
      * @ordered
      */
-	protected static final String URL_EDEFAULT = null;
+    protected static final String URL_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getUrl() <em>Url</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getUrl() <em>Url</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getUrl()
      * @generated
      * @ordered
      */
-	protected String url = URL_EDEFAULT;
+    protected String url = URL_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected SampleFileImpl() {
+    protected SampleFileImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return WebServicePackage.eINSTANCE.getSampleFile();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getName() {
+    public String getName() {
         return name;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setName(String newName) {
+    public void setName( String newName ) {
         String oldName = name;
         name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.SAMPLE_FILE__NAME, oldName, name));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.SAMPLE_FILE__NAME,
+                                                                   oldName, name));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getUrl() {
+    public String getUrl() {
         return url;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setUrl(String newUrl) {
+    public void setUrl( String newUrl ) {
         String oldUrl = url;
         url = newUrl;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.SAMPLE_FILE__URL, oldUrl, url));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.SAMPLE_FILE__URL,
+                                                                   oldUrl, url));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public SampleMessages getSampleMessages() {
+    public SampleMessages getSampleMessages() {
         if (eContainerFeatureID != WebServicePackage.SAMPLE_FILE__SAMPLE_MESSAGES) return null;
         return (SampleMessages)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setSampleMessages(SampleMessages newSampleMessages) {
-        if (newSampleMessages != eContainer || (eContainerFeatureID != WebServicePackage.SAMPLE_FILE__SAMPLE_MESSAGES && newSampleMessages != null)) {
-            if (EcoreUtil.isAncestor(this, newSampleMessages))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setSampleMessages( SampleMessages newSampleMessages ) {
+        if (newSampleMessages != eContainer
+            || (eContainerFeatureID != WebServicePackage.SAMPLE_FILE__SAMPLE_MESSAGES && newSampleMessages != null)) {
+            if (EcoreUtil.isAncestor(this, newSampleMessages)) throw new IllegalArgumentException(
+                                                                                                  "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newSampleMessages != null)
-                msgs = ((InternalEObject)newSampleMessages).eInverseAdd(this, WebServicePackage.SAMPLE_MESSAGES__SAMPLE_FILES, SampleMessages.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newSampleMessages != null) msgs = ((InternalEObject)newSampleMessages).eInverseAdd(this,
+                                                                                                   WebServicePackage.SAMPLE_MESSAGES__SAMPLE_FILES,
+                                                                                                   SampleMessages.class,
+                                                                                                   msgs);
             msgs = eBasicSetContainer((InternalEObject)newSampleMessages, WebServicePackage.SAMPLE_FILE__SAMPLE_MESSAGES, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.SAMPLE_FILE__SAMPLE_MESSAGES, newSampleMessages, newSampleMessages));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          WebServicePackage.SAMPLE_FILE__SAMPLE_MESSAGES,
+                                                                          newSampleMessages, newSampleMessages));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WebServicePackage.SAMPLE_FILE__SAMPLE_MESSAGES:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, WebServicePackage.SAMPLE_FILE__SAMPLE_MESSAGES, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WebServicePackage.SAMPLE_FILE__SAMPLE_MESSAGES:
@@ -215,16 +209,19 @@ public class SampleFileImpl extends EObjectImpl implements SampleFile {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case WebServicePackage.SAMPLE_FILE__SAMPLE_MESSAGES:
-                    return eContainer.eInverseRemove(this, WebServicePackage.SAMPLE_MESSAGES__SAMPLE_FILES, SampleMessages.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     WebServicePackage.SAMPLE_MESSAGES__SAMPLE_FILES,
+                                                     SampleMessages.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -233,12 +230,13 @@ public class SampleFileImpl extends EObjectImpl implements SampleFile {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.SAMPLE_FILE__NAME:
                 return getName();
@@ -251,12 +249,13 @@ public class SampleFileImpl extends EObjectImpl implements SampleFile {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.SAMPLE_FILE__NAME:
                 setName((String)newValue);
@@ -272,12 +271,12 @@ public class SampleFileImpl extends EObjectImpl implements SampleFile {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.SAMPLE_FILE__NAME:
                 setName(NAME_EDEFAULT);
@@ -293,12 +292,12 @@ public class SampleFileImpl extends EObjectImpl implements SampleFile {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.SAMPLE_FILE__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -311,11 +310,11 @@ public class SampleFileImpl extends EObjectImpl implements SampleFile {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     public String toString() {
         if (eIsProxy()) return super.toString();
 
@@ -328,4 +327,4 @@ public class SampleFileImpl extends EObjectImpl implements SampleFile {
         return result.toString();
     }
 
-} //SampleFileImpl
+} // SampleFileImpl

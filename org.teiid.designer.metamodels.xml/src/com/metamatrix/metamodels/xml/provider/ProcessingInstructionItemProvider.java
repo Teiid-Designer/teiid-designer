@@ -114,7 +114,7 @@ public class ProcessingInstructionItemProvider extends XmlDocumentEntityItemProv
      * 
      * @generated
      */
-    public String getTextGen( Object object ) {
+    public String getTextGen( Object object ) { // NO_UCD
         String label = ((ProcessingInstruction)object).getRawText();
         return label == null || label.length() == 0 ? getString("_UI_ProcessingInstruction_type") : //$NON-NLS-1$
         getString("_UI_ProcessingInstruction_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$

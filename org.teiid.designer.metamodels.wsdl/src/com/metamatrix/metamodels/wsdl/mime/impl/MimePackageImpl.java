@@ -29,103 +29,89 @@ import com.metamatrix.metamodels.wsdl.soap.SoapPackage;
 import com.metamatrix.metamodels.wsdl.soap.impl.SoapPackageImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Package</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class MimePackageImpl extends EPackageImpl implements MimePackage {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EClass mimeContentEClass = null;
+    private EClass mimeContentEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EClass mimeMultipartRelatedEClass = null;
+    private EClass mimeMultipartRelatedEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EClass mimePartEClass = null;
+    private EClass mimePartEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EClass mimeElementOwnerEClass = null;
+    private EClass mimeElementOwnerEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EClass mimeElementEClass = null;
+    private EClass mimeElementEClass = null;
 
     /**
-     * Creates an instance of the model <b>Package</b>, registered with
-     * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
-     * package URI value.
-     * <p>Note: the correct way to create the package is via the static
-     * factory method {@link #init init()}, which also performs
-     * initialization of the package, or returns the registered package,
-     * if one already exists.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
+     * EPackage.Registry} by the package package URI value.
+     * <p>
+     * Note: the correct way to create the package is via the static factory method {@link #init init()}, which also performs
+     * initialization of the package, or returns the registered package, if one already exists. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see org.eclipse.emf.ecore.EPackage.Registry
      * @see com.metamatrix.metamodels.wsdl.mime.MimePackage#eNS_URI
      * @see #init()
      * @generated
      */
-	private MimePackageImpl() {
+    private MimePackageImpl() {
         super(eNS_URI, MimeFactory.eINSTANCE);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private static boolean isInited = false;
+    private static boolean isInited = false;
 
     /**
-     * Creates, registers, and initializes the <b>Package</b> for this
-     * model, and for any others upon which it depends.  Simple
-     * dependencies are satisfied by calling this method on all
-     * dependent packages before doing anything else.  This method drives
-     * initialization for interdependent packages directly, in parallel
-     * with this package, itself.
-     * <p>Of this package and its interdependencies, all packages which
-     * have not yet been registered by their URI values are first created
-     * and registered.  The packages are then initialized in two steps:
-     * meta-model objects for all of the packages are created before any
-     * are initialized, since one package's meta-model objects may refer to
-     * those of another.
-     * <p>Invocation of this method will not affect any packages that have
-     * already been initialized.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends. Simple
+     * dependencies are satisfied by calling this method on all dependent packages before doing anything else. This method drives
+     * initialization for interdependent packages directly, in parallel with this package, itself.
+     * <p>
+     * Of this package and its interdependencies, all packages which have not yet been registered by their URI values are first
+     * created and registered. The packages are then initialized in two steps: meta-model objects for all of the packages are
+     * created before any are initialized, since one package's meta-model objects may refer to those of another.
+     * <p>
+     * Invocation of this method will not affect any packages that have already been initialized. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #eNS_URI
      * @see #createPackageContents()
      * @see #initializePackageContents()
      * @generated
      */
-	public static MimePackage init() {
+    public static MimePackage init() {
         if (isInited) return (MimePackage)EPackage.Registry.INSTANCE.getEPackage(MimePackage.eNS_URI);
 
         // Obtain or create and register package
@@ -161,137 +147,136 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EClass getMimeContent() {
+    public EClass getMimeContent() {
         return mimeContentEClass;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getMimeContent_Type() {
+    public EAttribute getMimeContent_Type() {
         return (EAttribute)mimeContentEClass.getEStructuralFeatures().get(1);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getMimeContent_Xml() {
+    public EAttribute getMimeContent_Xml() {
         return (EAttribute)mimeContentEClass.getEStructuralFeatures().get(2);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getMimeContent_MessagePart() {
+    public EReference getMimeContent_MessagePart() {
         return (EReference)mimeContentEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EClass getMimeMultipartRelated() {
+    public EClass getMimeMultipartRelated() {
         return mimeMultipartRelatedEClass;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getMimeMultipartRelated_MimeParts() {
+    public EReference getMimeMultipartRelated_MimeParts() {
         return (EReference)mimeMultipartRelatedEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EClass getMimePart() {
+    public EClass getMimePart() {
         return mimePartEClass;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getMimePart_MimeMultipartRelated() {
+    public EReference getMimePart_MimeMultipartRelated() {
         return (EReference)mimePartEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EClass getMimeElementOwner() {
+    public EClass getMimeElementOwner() {
         return mimeElementOwnerEClass;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getMimeElementOwner_MimeElements() {
+    public EReference getMimeElementOwner_MimeElements() {
         return (EReference)mimeElementOwnerEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EClass getMimeElement() {
+    public EClass getMimeElement() {
         return mimeElementEClass;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getMimeElement_MimeElementOwner() {
+    public EReference getMimeElement_MimeElementOwner() {
         return (EReference)mimeElementEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public MimeFactory getMimeFactory() {
+    public MimeFactory getMimeFactory() {
         return (MimeFactory)getEFactoryInstance();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private boolean isCreated = false;
+    private boolean isCreated = false;
 
     /**
-     * Creates the meta-model objects for the package.  This method is
-     * guarded to have no affect on any invocation but its first.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Creates the meta-model objects for the package. This method is guarded to have no affect on any invocation but its first.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void createPackageContents() {
+    public void createPackageContents() {
         if (isCreated) return;
         isCreated = true;
 
@@ -315,20 +300,19 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private boolean isInitialized = false;
+    private boolean isInitialized = false;
 
     /**
-     * Complete the initialization of the package and its meta-model.  This
-     * method is guarded to have no affect on any invocation but its first.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Complete the initialization of the package and its meta-model. This method is guarded to have no affect on any invocation
+     * but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void initializePackageContents() {
+    public void initializePackageContents() {
         if (isInitialized) return;
         isInitialized = true;
 
@@ -347,24 +331,47 @@ public class MimePackageImpl extends EPackageImpl implements MimePackage {
 
         // Initialize classes and features; add operations and parameters
         initEClass(mimeContentEClass, MimeContent.class, "MimeContent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getMimeContent_MessagePart(), theWsdlPackage.getMessagePart(), null, "messagePart", null, 0, 1, MimeContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getMimeContent_Type(), ecorePackage.getEString(), "type", null, 0, 1, MimeContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getMimeContent_Xml(), ecorePackage.getEBoolean(), "xml", "false", 0, 1, MimeContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEReference(getMimeContent_MessagePart(),
+                       theWsdlPackage.getMessagePart(),
+                       null,
+                       "messagePart", null, 0, 1, MimeContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getMimeContent_Type(),
+                       ecorePackage.getEString(),
+                       "type", null, 0, 1, MimeContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getMimeContent_Xml(),
+                       ecorePackage.getEBoolean(),
+                       "xml", "false", 0, 1, MimeContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
-        initEClass(mimeMultipartRelatedEClass, MimeMultipartRelated.class, "MimeMultipartRelated", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getMimeMultipartRelated_MimeParts(), this.getMimePart(), this.getMimePart_MimeMultipartRelated(), "mimeParts", null, 0, -1, MimeMultipartRelated.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(mimeMultipartRelatedEClass,
+                   MimeMultipartRelated.class,
+                   "MimeMultipartRelated", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getMimeMultipartRelated_MimeParts(),
+                       this.getMimePart(),
+                       this.getMimePart_MimeMultipartRelated(),
+                       "mimeParts", null, 0, -1, MimeMultipartRelated.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(mimePartEClass, MimePart.class, "MimePart", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getMimePart_MimeMultipartRelated(), this.getMimeMultipartRelated(), this.getMimeMultipartRelated_MimeParts(), "mimeMultipartRelated", null, 1, 1, MimePart.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getMimePart_MimeMultipartRelated(),
+                       this.getMimeMultipartRelated(),
+                       this.getMimeMultipartRelated_MimeParts(),
+                       "mimeMultipartRelated", null, 1, 1, MimePart.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(mimeElementOwnerEClass, MimeElementOwner.class, "MimeElementOwner", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getMimeElementOwner_MimeElements(), this.getMimeElement(), this.getMimeElement_MimeElementOwner(), "mimeElements", null, 0, -1, MimeElementOwner.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(mimeElementOwnerEClass,
+                   MimeElementOwner.class,
+                   "MimeElementOwner", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getMimeElementOwner_MimeElements(),
+                       this.getMimeElement(),
+                       this.getMimeElement_MimeElementOwner(),
+                       "mimeElements", null, 0, -1, MimeElementOwner.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(mimeElementEClass, MimeElement.class, "MimeElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getMimeElement_MimeElementOwner(), this.getMimeElementOwner(), this.getMimeElementOwner_MimeElements(), "mimeElementOwner", null, 1, 1, MimeElement.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getMimeElement_MimeElementOwner(),
+                       this.getMimeElementOwner(),
+                       this.getMimeElementOwner_MimeElements(),
+                       "mimeElementOwner", null, 1, 1, MimeElement.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         // Create resource
         createResource(eNS_URI);
     }
 
-} //MimePackageImpl
+} // MimePackageImpl

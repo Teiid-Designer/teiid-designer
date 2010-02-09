@@ -25,12 +25,6 @@ import com.metamatrix.metamodels.history.RevisionLog;
  * @generated
  */
 public class HistoryFactoryImpl extends EFactoryImpl implements HistoryFactory {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -142,7 +136,7 @@ public class HistoryFactoryImpl extends EFactoryImpl implements HistoryFactory {
      * @generated
      */
     @Deprecated
-    public static HistoryPackage getPackage() {
+    public static HistoryPackage getPackage() { // NO_UCD
         return HistoryPackage.eINSTANCE;
     }
 

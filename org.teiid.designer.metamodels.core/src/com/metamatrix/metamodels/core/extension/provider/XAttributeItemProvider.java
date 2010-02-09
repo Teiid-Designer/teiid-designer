@@ -32,12 +32,6 @@ import com.metamatrix.metamodels.core.util.CoreUtil;
  * @generated
  */
 public class XAttributeItemProvider extends EAttributeItemProvider {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -72,7 +66,7 @@ public class XAttributeItemProvider extends EAttributeItemProvider {
      * 
      * @generated
      */
-    public List getPropertyDescriptorsGen( Object object ) {
+    public List getPropertyDescriptorsGen( Object object ) { // NO_UCD
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
@@ -80,7 +74,7 @@ public class XAttributeItemProvider extends EAttributeItemProvider {
         return itemPropertyDescriptors;
     }
 
-    protected void removePropertyDescriptor( final EStructuralFeature feature ) {
+    protected void removePropertyDescriptor( final EStructuralFeature feature ) { // NO_UCD
         if (feature == null) {
             return;
         }
@@ -156,7 +150,7 @@ public class XAttributeItemProvider extends EAttributeItemProvider {
      * 
      * @generated
      */
-    public Object getImageGen( Object object ) {
+    public Object getImageGen( Object object ) { // NO_UCD
         return overlayImage(object, getResourceLocator().getImage("full/obj16/XAttribute")); //$NON-NLS-1$
     }
 
@@ -185,7 +179,7 @@ public class XAttributeItemProvider extends EAttributeItemProvider {
      * 
      * @generated
      */
-    public String getTextGen( Object object ) {
+    public String getTextGen( Object object ) { // NO_UCD
         String label = ((XAttribute)object).getName();
         return label == null || label.length() == 0 ? getString("_UI_XAttribute_type") : //$NON-NLS-1$
         getString("_UI_XAttribute_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
@@ -221,7 +215,7 @@ public class XAttributeItemProvider extends EAttributeItemProvider {
      * 
      * @generated
      */
-    protected void collectNewChildDescriptorsGen( Collection newChildDescriptors,
+    protected void collectNewChildDescriptorsGen( Collection newChildDescriptors, // NO_UCD
                                                   Object object ) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
     }

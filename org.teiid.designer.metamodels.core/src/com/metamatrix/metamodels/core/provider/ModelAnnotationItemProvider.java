@@ -7,7 +7,6 @@
  */
 package com.metamatrix.metamodels.core.provider;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -41,46 +40,32 @@ import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.core.custom.impl.XsdModelAnnotationImpl;
 
 /**
- * This is the item provider adapter for a {@link com.metamatrix.metamodels.core.ModelAnnotation} object.
- * <!-- begin-user-doc -->
+ * This is the item provider adapter for a {@link com.metamatrix.metamodels.core.ModelAnnotation} object. <!-- begin-user-doc -->
  * <!-- end-user-doc -->
+ * 
  * @generated
  */
-public class ModelAnnotationItemProvider
-    extends ItemProviderAdapter
-    implements
-        IEditingDomainItemProvider,
-        IStructuredItemContentProvider,
-        ITreeItemContentProvider,
-        IItemLabelProvider,
-        IItemPropertySource {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
+public class ModelAnnotationItemProvider extends ItemProviderAdapter
+    implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider,
+    IItemPropertySource {
 
     /**
-     * This constructs an instance from a factory and a notifier.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public ModelAnnotationItemProvider(AdapterFactory adapterFactory) {
+    public ModelAnnotationItemProvider( AdapterFactory adapterFactory ) {
         super(adapterFactory);
     }
 
     /**
-     * This returns the property descriptors for the adapted class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     @Override
-    public List getPropertyDescriptors(Object object)
-    {
-    	// Start customized code
+    public List getPropertyDescriptors( Object object ) {
+        // Start customized code
         // mmDefect_12555 - Repopulate the list of property descriptors every call
         if (itemPropertyDescriptors != null) {
             this.itemPropertyDescriptors.clear();
@@ -91,14 +76,14 @@ public class ModelAnnotationItemProvider
 
             // mmDefect_12555 - Specialize the visible properties for XSD resources
             boolean isXsd = (object instanceof XsdModelAnnotationImpl);
-            
-//            addDescriptionPropertyDescriptor(object);
+
+            // addDescriptionPropertyDescriptor(object);
             if (!isXsd) {
                 addNameInSourcePropertyDescriptor(object);
             }
             addPrimaryMetamodelUriPropertyDescriptor(object);
             addModelTypePropertyDescriptor(object);
-//            addVisiblePropertyDescriptor(object); // hidden, since settable in 4.2 using VDB Editor
+            // addVisiblePropertyDescriptor(object); // hidden, since settable in 4.2 using VDB Editor
             if (!isXsd) {
                 addMaxSetSizePropertyDescriptor(object);
                 addSupportsDistinctPropertyDescriptor(object);
@@ -107,20 +92,19 @@ public class ModelAnnotationItemProvider
                 addSupportsOuterJoinPropertyDescriptor(object);
                 addSupportsWhereAllPropertyDescriptor(object);
             }
-    		// End customized code
-           	addNamespaceUriPropertyDescriptor(object);
+            // End customized code
+            addNamespaceUriPropertyDescriptor(object);
             addExtensionPackagePropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
 
     /**
-     * This returns the property descriptors for the adapted class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public List getPropertyDescriptorsGen(Object object) {
+    public List getPropertyDescriptorsGen( Object object ) { // NO_UCD
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
@@ -144,649 +128,566 @@ public class ModelAnnotationItemProvider
     }
 
     /**
-     * This adds a property descriptor for the Description feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Description feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
-    protected void addDescriptionPropertyDescriptor(Object object)
-    {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_description_feature"), //$NON-NLS-1$
-                 // Start customized code
-                 getString("_UI_ModelAnnotation_description_feature_description"), //$NON-NLS-1$
-                 CorePackage.eINSTANCE.getModelAnnotation_Description(),
-                 false,
-                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-                 getString("_UI_ModelAnnotation_description_feature_category"), //$NON-NLS-1$
-                 // End customized code
-                 null));
+    protected void addDescriptionPropertyDescriptor( Object object ) {
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_description_feature"), //$NON-NLS-1$
+                                                                 // Start customized code
+                                                                 getString("_UI_ModelAnnotation_description_feature_description"), //$NON-NLS-1$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_Description(),
+                                                                 false,
+                                                                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                                                                 getString("_UI_ModelAnnotation_description_feature_category"), //$NON-NLS-1$
+                                                                 // End customized code
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Description feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Description feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected void addDescriptionPropertyDescriptorGen(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_description_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_description_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                 CorePackage.eINSTANCE.getModelAnnotation_Description(),
-                 true,
-                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-                 null,
-                 null));
+    protected void addDescriptionPropertyDescriptorGen( Object object ) { // NO_UCD
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_description_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_description_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_Description(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                                                                 null,
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Name In Source feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Name In Source feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
-    protected void addNameInSourcePropertyDescriptor(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_nameInSource_feature"), //$NON-NLS-1$
-                 // Start customized code
-                 getString("_UI_ModelAnnotation_nameInSource_feature_description"), //$NON-NLS-1$
-                 CorePackage.eINSTANCE.getModelAnnotation_NameInSource(),
-                 true,
-                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-                 getString("_UI_ModelAnnotation_nameInSource_feature_category"), //$NON-NLS-1$
-                 // End customized code
-                 null));
+    protected void addNameInSourcePropertyDescriptor( Object object ) {
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_nameInSource_feature"), //$NON-NLS-1$
+                                                                 // Start customized code
+                                                                 getString("_UI_ModelAnnotation_nameInSource_feature_description"), //$NON-NLS-1$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_NameInSource(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                                                                 getString("_UI_ModelAnnotation_nameInSource_feature_category"), //$NON-NLS-1$
+                                                                 // End customized code
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Name In Source feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Name In Source feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected void addNameInSourcePropertyDescriptorGen(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_nameInSource_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_nameInSource_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                 CorePackage.eINSTANCE.getModelAnnotation_NameInSource(),
-                 true,
-                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-                 null,
-                 null));
+    protected void addNameInSourcePropertyDescriptorGen( Object object ) { // NO_UCD
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_nameInSource_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_nameInSource_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_NameInSource(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                                                                 null,
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Primary Metamodel Uri feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Primary Metamodel Uri feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
-    protected void addPrimaryMetamodelUriPropertyDescriptor(Object object)
-    {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_primaryMetamodelUri_feature"), //$NON-NLS-1$
-                 // Start customized code
-                 getString("_UI_ModelAnnotation_primaryMetamodelUri_feature_description"), //$NON-NLS-1$
-                 CorePackage.eINSTANCE.getModelAnnotation_PrimaryMetamodelUri(),
-                 false,
-                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-                 getString("_UI_ModelAnnotation_primaryMetamodelUri_feature_category"), //$NON-NLS-1$
-                 // End customized code
-                 null));
+    protected void addPrimaryMetamodelUriPropertyDescriptor( Object object ) {
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_primaryMetamodelUri_feature"), //$NON-NLS-1$
+                                                                 // Start customized code
+                                                                 getString("_UI_ModelAnnotation_primaryMetamodelUri_feature_description"), //$NON-NLS-1$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_PrimaryMetamodelUri(),
+                                                                 false,
+                                                                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                                                                 getString("_UI_ModelAnnotation_primaryMetamodelUri_feature_category"), //$NON-NLS-1$
+                                                                 // End customized code
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Primary Metamodel Uri feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Primary Metamodel Uri feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected void addPrimaryMetamodelUriPropertyDescriptorGen(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_primaryMetamodelUri_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_primaryMetamodelUri_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                 CorePackage.eINSTANCE.getModelAnnotation_PrimaryMetamodelUri(),
-                 true,
-                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-                 null,
-                 null));
+    protected void addPrimaryMetamodelUriPropertyDescriptorGen( Object object ) { // NO_UCD
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_primaryMetamodelUri_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_primaryMetamodelUri_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_PrimaryMetamodelUri(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                                                                 null,
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Model Type feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Model Type feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
-    protected void addModelTypePropertyDescriptor(Object object)
-    {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_modelType_feature"), //$NON-NLS-1$
-                 // Start customized code
-                 getString("_UI_ModelAnnotation_modelType_feature_description"), //$NON-NLS-1$
-                 CorePackage.eINSTANCE.getModelAnnotation_ModelType(),
-                 false,
-                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-                 getString("_UI_ModelAnnotation_modelType_feature_category"), //$NON-NLS-1$
-                 // Start customized code
-                 null));
+    protected void addModelTypePropertyDescriptor( Object object ) {
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_modelType_feature"), //$NON-NLS-1$
+                                                                 // Start customized code
+                                                                 getString("_UI_ModelAnnotation_modelType_feature_description"), //$NON-NLS-1$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_ModelType(),
+                                                                 false,
+                                                                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                                                                 getString("_UI_ModelAnnotation_modelType_feature_category"), //$NON-NLS-1$
+                                                                 // Start customized code
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Model Type feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Model Type feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected void addModelTypePropertyDescriptorGen(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_modelType_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_modelType_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                 CorePackage.eINSTANCE.getModelAnnotation_ModelType(),
-                 true,
-                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-                 null,
-                 null));
+    protected void addModelTypePropertyDescriptorGen( Object object ) { // NO_UCD
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_modelType_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_modelType_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_ModelType(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                                                                 null,
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Max Set Size feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Max Set Size feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
-    protected void addMaxSetSizePropertyDescriptor(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_maxSetSize_feature"), //$NON-NLS-1$
-                 // Start customized code
-                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_MaxSetSize"), //$NON-NLS-1$
-                 CorePackage.eINSTANCE.getModelAnnotation_MaxSetSize(),
-                 true,
-                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-                 getString("_UI_ModelAnnotation_maxSetSize_feature_category"), //$NON-NLS-1$
-                 // End customized code
-                 null));
+    protected void addMaxSetSizePropertyDescriptor( Object object ) {
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_maxSetSize_feature"), //$NON-NLS-1$
+                                                                 // Start customized code
+                                                                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_MaxSetSize"), //$NON-NLS-1$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_MaxSetSize(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+                                                                 getString("_UI_ModelAnnotation_maxSetSize_feature_category"), //$NON-NLS-1$
+                                                                 // End customized code
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Max Set Size feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Max Set Size feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected void addMaxSetSizePropertyDescriptorGen(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_maxSetSize_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_maxSetSize_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                 CorePackage.eINSTANCE.getModelAnnotation_MaxSetSize(),
-                 true,
-                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-                 null,
-                 null));
+    protected void addMaxSetSizePropertyDescriptorGen( Object object ) { // NO_UCD
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_maxSetSize_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_maxSetSize_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_MaxSetSize(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+                                                                 null,
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Visible feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Visible feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
-    protected void addVisiblePropertyDescriptor(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_visible_feature"), //$NON-NLS-1$
-                 // Start customized code
-                 getString("_UI_ModelAnnotation_visible_feature_description"), //$NON-NLS-1$
-                 CorePackage.eINSTANCE.getModelAnnotation_Visible(),
-                 true,
-                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                 getString("_UI_ModelAnnotation_visible_feature_category"), //$NON-NLS-1$
-                 // End customized code
-                 null));
+    protected void addVisiblePropertyDescriptor( Object object ) {
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_visible_feature"), //$NON-NLS-1$
+                                                                 // Start customized code
+                                                                 getString("_UI_ModelAnnotation_visible_feature_description"), //$NON-NLS-1$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_Visible(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                                                                 getString("_UI_ModelAnnotation_visible_feature_category"), //$NON-NLS-1$
+                                                                 // End customized code
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Visible feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Visible feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected void addVisiblePropertyDescriptorGen(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_visible_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_visible_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                 CorePackage.eINSTANCE.getModelAnnotation_Visible(),
-                 true,
-                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                 null,
-                 null));
+    protected void addVisiblePropertyDescriptorGen( Object object ) { // NO_UCD
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_visible_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_visible_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_Visible(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                                                                 null,
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Supports Distinct feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Supports Distinct feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
-    protected void addSupportsDistinctPropertyDescriptor(Object object) {
+    protected void addSupportsDistinctPropertyDescriptor( Object object ) {
         // If the ModelAnnotation is contained within a virtual model then "supportsDistinct" cannot be set
         boolean isSettable = !(isVirtual(object));
-        
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_supportsDistinct_feature"), //$NON-NLS-1$
-                 // Start customized code
-                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_SupportsDistinct"), //$NON-NLS-1$
-                 CorePackage.eINSTANCE.getModelAnnotation_SupportsDistinct(),
-                 isSettable,
-                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                 getString("_UI_ModelAnnotation_supportsDistinct_feature_category"), //$NON-NLS-1$
-                 // End customized code
-                 null));
+
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_supportsDistinct_feature"), //$NON-NLS-1$
+                                                                 // Start customized code
+                                                                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_SupportsDistinct"), //$NON-NLS-1$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsDistinct(),
+                                                                 isSettable,
+                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                                                                 getString("_UI_ModelAnnotation_supportsDistinct_feature_category"), //$NON-NLS-1$
+                                                                 // End customized code
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Supports Distinct feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Supports Distinct feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected void addSupportsDistinctPropertyDescriptorGen(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_supportsDistinct_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_supportsDistinct_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                 CorePackage.eINSTANCE.getModelAnnotation_SupportsDistinct(),
-                 true,
-                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                 null,
-                 null));
+    protected void addSupportsDistinctPropertyDescriptorGen( Object object ) { // NO_UCD
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_supportsDistinct_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_supportsDistinct_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsDistinct(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                                                                 null,
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Supports Join feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Supports Join feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
-    protected void addSupportsJoinPropertyDescriptor(Object object) {
+    protected void addSupportsJoinPropertyDescriptor( Object object ) {
         // If the ModelAnnotation is contained within a virtual model then "supportsJoin" cannot be set
         boolean isSettable = !(isVirtual(object));
-        
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_supportsJoin_feature"), //$NON-NLS-1$
-                 // Start customized code
-                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_SupportsJoin"), //$NON-NLS-1$
-                 CorePackage.eINSTANCE.getModelAnnotation_SupportsJoin(),
-                 isSettable,
-                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                 getString("_UI_ModelAnnotation_supportsJoin_feature_category"), //$NON-NLS-1$
-                 // End customized code
-                 null));
+
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_supportsJoin_feature"), //$NON-NLS-1$
+                                                                 // Start customized code
+                                                                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_SupportsJoin"), //$NON-NLS-1$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsJoin(),
+                                                                 isSettable,
+                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                                                                 getString("_UI_ModelAnnotation_supportsJoin_feature_category"), //$NON-NLS-1$
+                                                                 // End customized code
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Supports Join feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Supports Join feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected void addSupportsJoinPropertyDescriptorGen(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_supportsJoin_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_supportsJoin_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                 CorePackage.eINSTANCE.getModelAnnotation_SupportsJoin(),
-                 true,
-                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                 null,
-                 null));
+    protected void addSupportsJoinPropertyDescriptorGen( Object object ) { // NO_UCD
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_supportsJoin_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_supportsJoin_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsJoin(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                                                                 null,
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Supports Order By feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Supports Order By feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
-    protected void addSupportsOrderByPropertyDescriptor(Object object) {
+    protected void addSupportsOrderByPropertyDescriptor( Object object ) {
         // If the ModelAnnotation is contained within a virtual model then "supportsOrderBy" cannot be set
         boolean isSettable = !(isVirtual(object));
-        
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_supportsOrderBy_feature"), //$NON-NLS-1$
-                 // Start customized code
-                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_SupportsOrderBy"), //$NON-NLS-1$                                  
-                 CorePackage.eINSTANCE.getModelAnnotation_SupportsOrderBy(),
-                 isSettable,
-                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                 getString("_UI_ModelAnnotation_supportsOrderBy_feature_category"), //$NON-NLS-1$
-                 // End customized code
-                 null));
+
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_supportsOrderBy_feature"), //$NON-NLS-1$
+                                                                 // Start customized code
+                                                                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_SupportsOrderBy"), //$NON-NLS-1$                                  
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsOrderBy(),
+                                                                 isSettable,
+                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                                                                 getString("_UI_ModelAnnotation_supportsOrderBy_feature_category"), //$NON-NLS-1$
+                                                                 // End customized code
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Supports Order By feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Supports Order By feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected void addSupportsOrderByPropertyDescriptorGen(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_supportsOrderBy_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_supportsOrderBy_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                 CorePackage.eINSTANCE.getModelAnnotation_SupportsOrderBy(),
-                 true,
-                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                 null,
-                 null));
+    protected void addSupportsOrderByPropertyDescriptorGen( Object object ) { // NO_UCD
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_supportsOrderBy_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_supportsOrderBy_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsOrderBy(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                                                                 null,
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Supports Outer Join feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Supports Outer Join feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
-    protected void addSupportsOuterJoinPropertyDescriptor(Object object) {
+    protected void addSupportsOuterJoinPropertyDescriptor( Object object ) {
         // If the ModelAnnotation is contained within a virtual model then "supportsOuterJoin" cannot be set
         boolean isSettable = !(isVirtual(object));
-        
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_supportsOuterJoin_feature"), //$NON-NLS-1$
-                 // Start customized code
-                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_SupportsOuterJoin"), //$NON-NLS-1$                 
-                 CorePackage.eINSTANCE.getModelAnnotation_SupportsOuterJoin(),
-                 isSettable,
-                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                 getString("_UI_ModelAnnotation_supportsOuterJoin_feature_category"), //$NON-NLS-1$
-                 // End customized code
-                 null));
+
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_supportsOuterJoin_feature"), //$NON-NLS-1$
+                                                                 // Start customized code
+                                                                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_SupportsOuterJoin"), //$NON-NLS-1$                 
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsOuterJoin(),
+                                                                 isSettable,
+                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                                                                 getString("_UI_ModelAnnotation_supportsOuterJoin_feature_category"), //$NON-NLS-1$
+                                                                 // End customized code
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Supports Outer Join feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Supports Outer Join feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected void addSupportsOuterJoinPropertyDescriptorGen(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_supportsOuterJoin_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_supportsOuterJoin_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                 CorePackage.eINSTANCE.getModelAnnotation_SupportsOuterJoin(),
-                 true,
-                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                 null,
-                 null));
+    protected void addSupportsOuterJoinPropertyDescriptorGen( Object object ) { // NO_UCD
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_supportsOuterJoin_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_supportsOuterJoin_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsOuterJoin(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                                                                 null,
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Supports Where All feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Supports Where All feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
-    protected void addSupportsWhereAllPropertyDescriptor(Object object) {
+    protected void addSupportsWhereAllPropertyDescriptor( Object object ) {
         // If the ModelAnnotation is contained within a virtual model then "supportsWhereAll" cannot be set
         boolean isSettable = !(isVirtual(object));
-        
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_supportsWhereAll_feature"), //$NON-NLS-1$
-                 // Start customized code
-                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_SupportsWhereAll"), //$NON-NLS-1$
-                 CorePackage.eINSTANCE.getModelAnnotation_SupportsWhereAll(),
-                 isSettable,
-                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                 getString("_UI_ModelAnnotation_supportsWhereAll_feature_category"), //$NON-NLS-1$
-                 // Start customized code
-                 null));
+
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_supportsWhereAll_feature"), //$NON-NLS-1$
+                                                                 // Start customized code
+                                                                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_SupportsWhereAll"), //$NON-NLS-1$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsWhereAll(),
+                                                                 isSettable,
+                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                                                                 getString("_UI_ModelAnnotation_supportsWhereAll_feature_category"), //$NON-NLS-1$
+                                                                 // Start customized code
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Supports Where All feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Supports Where All feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected void addSupportsWhereAllPropertyDescriptorGen(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_supportsWhereAll_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_supportsWhereAll_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                 CorePackage.eINSTANCE.getModelAnnotation_SupportsWhereAll(),
-                 true,
-                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                 null,
-                 null));
+    protected void addSupportsWhereAllPropertyDescriptorGen( Object object ) { // NO_UCD
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_supportsWhereAll_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_supportsWhereAll_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsWhereAll(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                                                                 null,
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Namespace Uri feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Namespace Uri feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected void addNamespaceUriPropertyDescriptor(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_namespaceUri_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_namespaceUri_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                 CorePackage.eINSTANCE.getModelAnnotation_NamespaceUri(),
-                 true,
-                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-                 getString("_UI_ModelAnnotation_namespaceUri_feature_category"), //$NON-NLS-1$
-                 null));
+    protected void addNamespaceUriPropertyDescriptor( Object object ) {
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_namespaceUri_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_namespaceUri_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_NamespaceUri(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                                                                 getString("_UI_ModelAnnotation_namespaceUri_feature_category"), //$NON-NLS-1$
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Producer Name feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Producer Name feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected void addProducerNamePropertyDescriptor(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_ProducerName_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_ProducerName_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                 CorePackage.eINSTANCE.getModelAnnotation_ProducerName(),
-                 true,
-                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-                 null,
-                 null));
+    protected void addProducerNamePropertyDescriptor( Object object ) {
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_ProducerName_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_ProducerName_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_ProducerName(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                                                                 null,
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Producer Version feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Producer Version feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected void addProducerVersionPropertyDescriptor(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_ProducerVersion_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_ProducerVersion_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                 CorePackage.eINSTANCE.getModelAnnotation_ProducerVersion(),
-                 true,
-                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-                 null,
-                 null));
+    protected void addProducerVersionPropertyDescriptor( Object object ) {
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_ProducerVersion_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_ProducerVersion_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_ProducerVersion(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                                                                 null,
+                                                                 null));
     }
 
     /**
-     * This adds a property descriptor for the Extension Package feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Extension Package feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
-    protected void addExtensionPackagePropertyDescriptor(Object object) {
-    	// Start customized code
+    protected void addExtensionPackagePropertyDescriptor( Object object ) {
+        // Start customized code
         itemPropertyDescriptors.add(new ItemPropertyDescriptor(
-			((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-            getResourceLocator(),
-            getString("_UI_ModelAnnotation_extensionPackage_feature"), //$NON-NLS-1$
-            getString("_UI_ModelAnnotation_extensionPackage_feature_description"), //$NON-NLS-1$
-            CorePackage.eINSTANCE.getModelAnnotation_ExtensionPackage(),
-            true,
-            null,
-            getString("_UI_ModelAnnotation_extensionPackage_feature_category"), //$NON-NLS-1$
-            null) {
-				/**
-                 * @see org.eclipse.emf.edit.provider.ItemPropertyDescriptor#getChoiceOfValues(java.lang.Object)
-                 */
-                @Override
-                public Collection getChoiceOfValues(Object object) {
-                    // mmDefect_12555 - Get the list of extension package choices
-                    //Collection results = super.getChoiceOfValues(object);
-                    Collection results = getReachableXPackages(object);
-                    if ( !results.contains(null) ) {
-                        final List newResults = new ArrayList(results.size() + 1);
-                        newResults.add(null);
-                        newResults.addAll(results);
-                        results = newResults;
-                    }
-                    return results;
+                                                               ((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                               getResourceLocator(),
+                                                               getString("_UI_ModelAnnotation_extensionPackage_feature"), //$NON-NLS-1$
+                                                               getString("_UI_ModelAnnotation_extensionPackage_feature_description"), //$NON-NLS-1$
+                                                               CorePackage.eINSTANCE.getModelAnnotation_ExtensionPackage(),
+                                                               true,
+                                                               null,
+                                                               getString("_UI_ModelAnnotation_extensionPackage_feature_category"), //$NON-NLS-1$
+                                                               null) {
+            /**
+             * @see org.eclipse.emf.edit.provider.ItemPropertyDescriptor#getChoiceOfValues(java.lang.Object)
+             */
+            @Override
+            public Collection getChoiceOfValues( Object object ) {
+                // mmDefect_12555 - Get the list of extension package choices
+                // Collection results = super.getChoiceOfValues(object);
+                Collection results = getReachableXPackages(object);
+                if (!results.contains(null)) {
+                    final List newResults = new ArrayList(results.size() + 1);
+                    newResults.add(null);
+                    newResults.addAll(results);
+                    results = newResults;
                 }
+                return results;
+            }
 
-                // mmDefect_12555 - Collect all the extension package instances encountered in the workspace.
-                // This specialization is required since a XsdModelAnnotationImpl is not owned by a 
-                // resource. Calls to super.getChoiceOfValues(object) return an empty collection since
-                // the logic does not have a resource or resource set to search over.
-                private Collection getReachableXPackages(Object object) {
-                    Collection result = new HashSet();
-                    if (object instanceof XsdModelAnnotationImpl) {
-                        EClassifier type = CorePackage.eINSTANCE.getModelAnnotation_ExtensionPackage().getEType();
-                        Collection visited = new HashSet();
-                        Resource resource = ((XsdModelAnnotationImpl)object).getResource();
-                        if (resource != null) {
-                            ResourceSet resourceSet = resource.getResourceSet();
-                            if (resourceSet != null) {
-                                for (TreeIterator i = resourceSet.getAllContents(); i.hasNext();) {
-                                    Object child = i.next();
-                                    if (child instanceof EObject) {
-                                        collectReachableObjectsOfType(visited, result, (EObject)child, type);
-                                        i.prune();
-                                    }
-                                }
-                            } else {
-                                for (Iterator i = resource.getContents().iterator(); i.hasNext();) {
-                                    collectReachableObjectsOfType(visited, result, (EObject)i.next(), type);
+            // mmDefect_12555 - Collect all the extension package instances encountered in the workspace.
+            // This specialization is required since a XsdModelAnnotationImpl is not owned by a
+            // resource. Calls to super.getChoiceOfValues(object) return an empty collection since
+            // the logic does not have a resource or resource set to search over.
+            private Collection getReachableXPackages( Object object ) {
+                Collection result = new HashSet();
+                if (object instanceof XsdModelAnnotationImpl) {
+                    EClassifier type = CorePackage.eINSTANCE.getModelAnnotation_ExtensionPackage().getEType();
+                    Collection visited = new HashSet();
+                    Resource resource = ((XsdModelAnnotationImpl)object).getResource();
+                    if (resource != null) {
+                        ResourceSet resourceSet = resource.getResourceSet();
+                        if (resourceSet != null) {
+                            for (TreeIterator i = resourceSet.getAllContents(); i.hasNext();) {
+                                Object child = i.next();
+                                if (child instanceof EObject) {
+                                    collectReachableObjectsOfType(visited, result, (EObject)child, type);
+                                    i.prune();
                                 }
                             }
                         } else {
-                            collectReachableObjectsOfType(visited, result, EcoreUtil.getRootContainer((EObject)object), type);
+                            for (Iterator i = resource.getContents().iterator(); i.hasNext();) {
+                                collectReachableObjectsOfType(visited, result, (EObject)i.next(), type);
+                            }
                         }
-                        return result;
-                    } else if (object instanceof ModelAnnotation){
-                        EClassifier type = CorePackage.eINSTANCE.getModelAnnotation_ExtensionPackage().getEType();
-                        return getReachableObjectsOfType((EObject)object,type);
+                    } else {
+                        collectReachableObjectsOfType(visited, result, EcoreUtil.getRootContainer((EObject)object), type);
                     }
                     return result;
+                } else if (object instanceof ModelAnnotation) {
+                    EClassifier type = CorePackage.eINSTANCE.getModelAnnotation_ExtensionPackage().getEType();
+                    return getReachableObjectsOfType((EObject)object, type);
                 }
-            });
+                return result;
+            }
+        });
         // End customized code
     }
 
     /**
-     * This adds a property descriptor for the Extension Package feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Extension Package feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected void addExtensionPackagePropertyDescriptorGen(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_ModelAnnotation_extensionPackage_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_extensionPackage_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                 CorePackage.eINSTANCE.getModelAnnotation_ExtensionPackage(),
-                 true,
-                 null,
-                 null,
-                 null));
+    protected void addExtensionPackagePropertyDescriptorGen( Object object ) { // NO_UCD
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_ModelAnnotation_extensionPackage_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_extensionPackage_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 CorePackage.eINSTANCE.getModelAnnotation_ExtensionPackage(),
+                                                                 true,
+                                                                 null,
+                                                                 null,
+                                                                 null));
     }
 
     /**
      * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
      * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
-     * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Collection getChildrenFeatures(Object object) {
+    public Collection getChildrenFeatures( Object object ) {
         if (childrenFeatures == null) {
             super.getChildrenFeatures(object);
             childrenFeatures.add(CorePackage.eINSTANCE.getModelAnnotation_Tags());
@@ -796,12 +697,13 @@ public class ModelAnnotationItemProvider
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    protected EStructuralFeature getChildFeature(Object object, Object child) {
+    protected EStructuralFeature getChildFeature( Object object,
+                                                  Object child ) {
         // Check the type of the specified child object and return the proper feature to use for
         // adding (see {@link AddCommand}) it as a child.
 
@@ -809,39 +711,35 @@ public class ModelAnnotationItemProvider
     }
 
     /**
-     * This returns ModelAnnotation.gif.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This returns ModelAnnotation.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object getImage(Object object) {
+    public Object getImage( Object object ) {
         return getResourceLocator().getImage("full/obj16/ModelAnnotation"); //$NON-NLS-1$
     }
 
     /**
-     * This returns the label text for the adapted class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public String getText(Object object) {
+    public String getText( Object object ) {
         String label = ((ModelAnnotation)object).getNameInSource();
-        return label == null || label.length() == 0 ?
-            getString("_UI_ModelAnnotation_type") : //$NON-NLS-1$
-            getString("_UI_ModelAnnotation_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+        return label == null || label.length() == 0 ? getString("_UI_ModelAnnotation_type") : //$NON-NLS-1$
+        getString("_UI_ModelAnnotation_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
-     * This handles model notifications by calling {@link #updateChildren} to update any cached
-     * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating a viewer
+     * notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void notifyChanged(Notification notification) {
+    public void notifyChanged( Notification notification ) {
         updateChildren(notification);
 
         switch (notification.getFeatureID(ModelAnnotation.class)) {
@@ -870,31 +768,26 @@ public class ModelAnnotationItemProvider
     }
 
     /**
-     * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s
-     * describing all of the children that can be created under this object.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all of the children that
+     * can be created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
+    protected void collectNewChildDescriptors( Collection newChildDescriptors,
+                                               Object object ) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
 
-        newChildDescriptors.add
-            (createChildParameter
-                (CorePackage.eINSTANCE.getModelAnnotation_Tags(),
-                 EcoreFactory.eINSTANCE.create(EcorePackage.eINSTANCE.getEStringToStringMapEntry())));
+        newChildDescriptors.add(createChildParameter(CorePackage.eINSTANCE.getModelAnnotation_Tags(),
+                                                     EcoreFactory.eINSTANCE.create(EcorePackage.eINSTANCE.getEStringToStringMapEntry())));
 
-        newChildDescriptors.add
-            (createChildParameter
-                (CorePackage.eINSTANCE.getModelAnnotation_ModelImports(),
-                 CoreFactory.eINSTANCE.createModelImport()));
+        newChildDescriptors.add(createChildParameter(CorePackage.eINSTANCE.getModelAnnotation_ModelImports(),
+                                                     CoreFactory.eINSTANCE.createModelImport()));
     }
 
     /**
-     * Return the resource locator for this item provider's resources.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -903,13 +796,14 @@ public class ModelAnnotationItemProvider
     }
 
     /**
-     * Return whether the resource containing this object represents a virtual model.
-     * If we cannot determine if the resource is a virtual model then false is returned
+     * Return whether the resource containing this object represents a virtual model. If we cannot determine if the resource is a
+     * virtual model then false is returned
+     * 
      * @generated NOT
      */
-    protected boolean isVirtual(Object object) {
+    protected boolean isVirtual( Object object ) {
         if (object instanceof ModelAnnotation) {
-            ModelAnnotation annot = (ModelAnnotation) object;
+            ModelAnnotation annot = (ModelAnnotation)object;
             if (annot.getModelType() == ModelType.VIRTUAL_LITERAL) {
                 return true;
             }

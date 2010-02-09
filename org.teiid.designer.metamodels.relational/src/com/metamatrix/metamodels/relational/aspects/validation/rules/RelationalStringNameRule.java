@@ -32,64 +32,68 @@ public class RelationalStringNameRule extends StringNameRule {
 
     /**
      * Construct an instance of RelationalStringNameRule.
+     * 
      * @param invalidChars
      * @param featureID
      */
-    public RelationalStringNameRule(char[] invalidChars, int featureID) {
+    public RelationalStringNameRule( char[] invalidChars, // NO_UCD
+                                     int featureID ) { // NO_UCD
         super(invalidChars, featureID);
     }
 
     /**
      * Construct an instance of RelationalStringNameRule.
+     * 
      * @param featureID
      */
-    public RelationalStringNameRule(int featureID) {
+    public RelationalStringNameRule( int featureID ) {
         super(featureID);
     }
-    
+
     /**
-     * This method groups siblings into the following domains, and chooses only those siblings that are in
-     * the same domain as the supplied object.
+     * This method groups siblings into the following domains, and chooses only those siblings that are in the same domain as the
+     * supplied object.
      * <ul>
-     *  <li>{@link Catalog} and {@link Schema} instances</li>
-     *  <li>{@link BaseTable} and {@link View} instances</li>
-     *  <li>{@link Procedure} instances</li>
-     *  <li>{@link ProcedureColumn} instances</li>
-     *  <li>{@link AccessPattern} instances</li>
-     *  <li>{@link UniqueKey}, {@link ForeignKey} and {@link Index} instances</li>
-     *  <li></li>
-     *  <li></li>
+     * <li>{@link Catalog} and {@link Schema} instances</li>
+     * <li>{@link BaseTable} and {@link View} instances</li>
+     * <li>{@link Procedure} instances</li>
+     * <li>{@link ProcedureColumn} instances</li>
+     * <li>{@link AccessPattern} instances</li>
+     * <li>{@link UniqueKey}, {@link ForeignKey} and {@link Index} instances</li>
+     * <li></li>
+     * <li></li>
      * </ul>
+     * 
      * @see com.metamatrix.modeler.core.validation.rules.StringNameRule#getSiblingsForUniquenessCheck(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public List getSiblingsForUniquenessCheck(final EObject eObject) {
+    public List getSiblingsForUniquenessCheck( final EObject eObject ) {
         Object parent = eObject.eContainer();
-        if ( parent == null ) {
+        if (parent == null) {
             parent = eObject.eResource();
         }
-        if ( eObject instanceof Table ) {
+        if (eObject instanceof Table) {
             return RelationalUtil.findTables(parent, ModelVisitorProcessor.DEPTH_ONE);
-        } else if ( eObject instanceof Procedure ) {
+        } else if (eObject instanceof Procedure) {
             return RelationalUtil.findProcedures(parent, ModelVisitorProcessor.DEPTH_ONE);
-        } else if ( eObject instanceof ProcedureParameter ) {
+        } else if (eObject instanceof ProcedureParameter) {
             return RelationalUtil.findProcedureParameters(parent, ModelVisitorProcessor.DEPTH_ONE);
-        } else if ( eObject instanceof Index ) {
+        } else if (eObject instanceof Index) {
             return RelationalUtil.findIndexes(parent, ModelVisitorProcessor.DEPTH_ONE);
-        } else if ( eObject instanceof ForeignKey || eObject instanceof UniqueKey ) {
+        } else if (eObject instanceof ForeignKey || eObject instanceof UniqueKey) {
             return RelationalUtil.findKeys(parent, ModelVisitorProcessor.DEPTH_ONE);
-        } else if ( eObject instanceof Column ) {
+        } else if (eObject instanceof Column) {
             return RelationalUtil.findColumns(parent, ModelVisitorProcessor.DEPTH_ONE);
-        } else if ( eObject instanceof AccessPattern ) {
-            if ( parent instanceof Table ) {
+        } else if (eObject instanceof AccessPattern) {
+            if (parent instanceof Table) {
                 return ((Table)parent).getAccessPatterns();
             }
             return new LinkedList();
-        } else if ( eObject instanceof LogicalRelationship ) {
+        } else if (eObject instanceof LogicalRelationship) {
             return RelationalUtil.findLogicalRelationships(parent, ModelVisitorProcessor.DEPTH_ONE);
-        } else if( eObject instanceof Schema ) {
+        } else if (eObject instanceof Schema) {
             return RelationalUtil.findSchemas(parent, ModelVisitorProcessor.DEPTH_ONE);
-        } else if( eObject instanceof Catalog ) {
+        } else if (eObject instanceof Catalog) {
             return RelationalUtil.findCatalogs(parent, ModelVisitorProcessor.DEPTH_ONE);
         }
         return super.getSiblingsForUniquenessCheck(eObject);

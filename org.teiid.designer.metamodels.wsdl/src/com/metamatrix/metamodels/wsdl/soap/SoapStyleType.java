@@ -13,99 +13,82 @@ import java.util.List;
 import org.eclipse.emf.common.util.AbstractEnumerator;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the literals of the enumeration '<em><b>Style Type</b></em>',
- * and utility methods for working with them.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Style Type</b></em>', and utility methods
+ * for working with them. <!-- end-user-doc -->
+ * 
  * @see com.metamatrix.metamodels.wsdl.soap.SoapPackage#getSoapStyleType()
  * @model
  * @generated
  */
 public final class SoapStyleType extends AbstractEnumerator {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The '<em><b>RPC</b></em>' literal value.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The '<em><b>RPC</b></em>' literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #RPC_LITERAL
      * @model
      * @generated
      * @ordered
      */
-	public static final int RPC = 0;
+    public static final int RPC = 0;
 
     /**
-     * The '<em><b>DOCUMENT</b></em>' literal value.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The '<em><b>DOCUMENT</b></em>' literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #DOCUMENT_LITERAL
      * @model
      * @generated
      * @ordered
      */
-	public static final int DOCUMENT = 1;
+    public static final int DOCUMENT = 1;
 
     /**
-     * The '<em><b>RPC</b></em>' literal object.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>RPC</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
+     * The '<em><b>RPC</b></em>' literal object. <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of '<em><b>RPC</b></em>' literal object isn't clear, there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * 
      * @see #RPC
      * @generated
      * @ordered
      */
-	public static final SoapStyleType RPC_LITERAL = new SoapStyleType(RPC, "RPC"); //$NON-NLS-1$
+    public static final SoapStyleType RPC_LITERAL = new SoapStyleType(RPC, "RPC"); //$NON-NLS-1$
 
     /**
-     * The '<em><b>DOCUMENT</b></em>' literal object.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>DOCUMENT</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
+     * The '<em><b>DOCUMENT</b></em>' literal object. <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of '<em><b>DOCUMENT</b></em>' literal object isn't clear, there really should be more of a description
+     * here...
+     * </p>
+     * <!-- end-user-doc -->
+     * 
      * @see #DOCUMENT
      * @generated
      * @ordered
      */
-	public static final SoapStyleType DOCUMENT_LITERAL = new SoapStyleType(DOCUMENT, "DOCUMENT"); //$NON-NLS-1$
+    public static final SoapStyleType DOCUMENT_LITERAL = new SoapStyleType(DOCUMENT, "DOCUMENT"); //$NON-NLS-1$
 
     /**
-     * An array of all the '<em><b>Style Type</b></em>' enumerators.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * An array of all the '<em><b>Style Type</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private static final SoapStyleType[] VALUES_ARRAY =
-        new SoapStyleType[] {
-            RPC_LITERAL,
-            DOCUMENT_LITERAL,
-        };
+    private static final SoapStyleType[] VALUES_ARRAY = new SoapStyleType[] {RPC_LITERAL, DOCUMENT_LITERAL,};
 
     /**
-     * A public read-only list of all the '<em><b>Style Type</b></em>' enumerators.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * A public read-only list of all the '<em><b>Style Type</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+    public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY)); // NO_UCD
 
     /**
-     * Returns the '<em><b>Style Type</b></em>' literal with the specified name.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Returns the '<em><b>Style Type</b></em>' literal with the specified name. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public static SoapStyleType get(String name) {
+    public static SoapStyleType get( String name ) {
         for (int i = 0; i < VALUES_ARRAY.length; ++i) {
             SoapStyleType result = VALUES_ARRAY[i];
             if (result.toString().equals(name)) {
@@ -116,27 +99,28 @@ public final class SoapStyleType extends AbstractEnumerator {
     }
 
     /**
-     * Returns the '<em><b>Style Type</b></em>' literal with the specified value.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Returns the '<em><b>Style Type</b></em>' literal with the specified value. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public static SoapStyleType get(int value) {
+    public static SoapStyleType get( int value ) { // NO_UCD
         switch (value) {
-            case RPC: return RPC_LITERAL;
-            case DOCUMENT: return DOCUMENT_LITERAL;
+            case RPC:
+                return RPC_LITERAL;
+            case DOCUMENT:
+                return DOCUMENT_LITERAL;
         }
-        return null;	
+        return null;
     }
 
     /**
-     * Only this class can construct instances.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Only this class can construct instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private SoapStyleType(int value, String name) {
+    private SoapStyleType( int value,
+                           String name ) {
         super(value, name);
     }
 
-} //SoapStyleType
+} // SoapStyleType

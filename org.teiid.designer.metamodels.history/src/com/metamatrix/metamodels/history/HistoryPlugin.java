@@ -29,7 +29,7 @@ import com.metamatrix.core.util.PluginUtilImpl;
 public class HistoryPlugin extends Plugin {
 
     public static final String PLUGIN_ID = "org.teiid.designer.metamodels.history"; //$NON-NLS-1$
-    
+
     public static final String PACKAGE_ID = HistoryPlugin.class.getPackage().getName();
 
     /**
@@ -104,7 +104,6 @@ public class HistoryPlugin extends Plugin {
         return RESOURCE_LOCATOR;
     }
 
-    public static boolean DEBUG = false;
     static HistoryPlugin INSTANCE = null;
 
     /**

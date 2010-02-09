@@ -20,25 +20,17 @@ import com.metamatrix.metamodels.transformation.StagingTable;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Staging Table</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Staging Table</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class StagingTableImpl extends MappingClassImpl implements StagingTable {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected StagingTableImpl() {
@@ -46,8 +38,8 @@ public class StagingTableImpl extends MappingClassImpl implements StagingTable {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -56,40 +48,47 @@ public class StagingTableImpl extends MappingClassImpl implements StagingTable {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.STAGING_TABLE__COLUMNS:
                     return ((InternalEList)getColumns()).basicAdd(otherEnd, msgs);
                 case TransformationPackage.STAGING_TABLE__MAPPING_CLASS_SET:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.STAGING_TABLE__MAPPING_CLASS_SET, msgs);
                 case TransformationPackage.STAGING_TABLE__INPUT_SET:
-                    if (inputSet != null)
-                        msgs = ((InternalEObject)inputSet).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TransformationPackage.STAGING_TABLE__INPUT_SET, null, msgs);
+                    if (inputSet != null) msgs = ((InternalEObject)inputSet).eInverseRemove(this,
+                                                                                            EOPPOSITE_FEATURE_BASE
+                                                                                            - TransformationPackage.STAGING_TABLE__INPUT_SET,
+                                                                                            null,
+                                                                                            msgs);
                     return basicSetInputSet((InputSet)otherEnd, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.STAGING_TABLE__COLUMNS:
@@ -106,16 +105,19 @@ public class StagingTableImpl extends MappingClassImpl implements StagingTable {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.STAGING_TABLE__MAPPING_CLASS_SET:
-                    return eContainer.eInverseRemove(this, TransformationPackage.MAPPING_CLASS_SET__MAPPING_CLASSES, MappingClassSet.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.MAPPING_CLASS_SET__MAPPING_CLASSES,
+                                                     MappingClassSet.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -124,12 +126,13 @@ public class StagingTableImpl extends MappingClassImpl implements StagingTable {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.STAGING_TABLE__NAME:
                 return getName();
@@ -154,12 +157,13 @@ public class StagingTableImpl extends MappingClassImpl implements StagingTable {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.STAGING_TABLE__NAME:
                 setName((String)newValue);
@@ -194,12 +198,12 @@ public class StagingTableImpl extends MappingClassImpl implements StagingTable {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.STAGING_TABLE__NAME:
                 setName(NAME_EDEFAULT);
@@ -233,12 +237,12 @@ public class StagingTableImpl extends MappingClassImpl implements StagingTable {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.STAGING_TABLE__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -262,4 +266,4 @@ public class StagingTableImpl extends MappingClassImpl implements StagingTable {
         return eDynamicIsSet(eFeature);
     }
 
-} //StagingTableImpl
+} // StagingTableImpl

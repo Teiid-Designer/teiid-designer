@@ -28,12 +28,6 @@ import com.metamatrix.metamodels.webservice.WebServicePackage;
  * @generated
  */
 public class WebServiceFactoryImpl extends EFactoryImpl implements WebServiceFactory {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -209,7 +203,7 @@ public class WebServiceFactoryImpl extends EFactoryImpl implements WebServiceFac
      * @generated
      */
     @Deprecated
-    public static WebServicePackage getPackage() {
+    public static WebServicePackage getPackage() { // NO_UCD
         return WebServicePackage.eINSTANCE;
     }
 

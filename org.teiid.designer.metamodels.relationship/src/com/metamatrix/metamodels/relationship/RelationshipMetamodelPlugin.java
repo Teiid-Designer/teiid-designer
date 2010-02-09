@@ -37,7 +37,7 @@ public class RelationshipMetamodelPlugin extends Plugin {
     public static final String BUILTIN_RELATIONSHIP_TYPES_URI = "http://www.metamatrix.com/relationships/BuiltInRelationshipTypes-instance"; //$NON-NLS-1$
 
     public static final String PLUGIN_ID = "org.teiid.designer.metamodels.relationship"; //$NON-NLS-1$
-    
+
     public static final String PACKAGE_ID = RelationshipMetamodelPlugin.class.getPackage().getName();
 
     /**
@@ -179,9 +179,6 @@ public class RelationshipMetamodelPlugin extends Plugin {
 
     // The shared instance.
     static RelationshipMetamodelPlugin INSTANCE = new RelationshipMetamodelPlugin();
-    protected URL baseURL;
-
-    public static boolean DEBUG = false;
 
     /**
      * Construct an instance of MetaMatrixPlugin.
@@ -238,7 +235,7 @@ public class RelationshipMetamodelPlugin extends Plugin {
      * @return
      * @since 4.3
      */
-    public static synchronized Resource getBuiltInRelationshipTypesResource() {
+    public static synchronized Resource getBuiltInRelationshipTypesResource() { // NO_UCD
         if (builtInTypesResource == null) {
             URI uri = URI.createURI(BUILTIN_RELATIONSHIP_TYPES_URI);
             builtInTypesResource = getGlobalResourceSet().getResource(uri, true);

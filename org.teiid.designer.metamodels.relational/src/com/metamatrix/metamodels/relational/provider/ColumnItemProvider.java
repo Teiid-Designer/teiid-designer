@@ -109,7 +109,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addNativeTypePropertyDescriptorGen( Object object ) {
+    protected void addNativeTypePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_nativeType_feature"), //$NON-NLS-1$
@@ -145,7 +145,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addTypePropertyDescriptorGen( Object object ) {
+    protected void addTypePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_type_feature"), //$NON-NLS-1$
@@ -181,7 +181,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addNullablePropertyDescriptorGen( Object object ) {
+    protected void addNullablePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_nullable_feature"), //$NON-NLS-1$
@@ -217,7 +217,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addAutoIncrementedPropertyDescriptorGen( Object object ) {
+    protected void addAutoIncrementedPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_autoIncremented_feature"), //$NON-NLS-1$
@@ -253,7 +253,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addDefaultValuePropertyDescriptorGen( Object object ) {
+    protected void addDefaultValuePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_defaultValue_feature"), //$NON-NLS-1$
@@ -289,7 +289,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addMinimumValuePropertyDescriptorGen( Object object ) {
+    protected void addMinimumValuePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_minimumValue_feature"), //$NON-NLS-1$
@@ -325,7 +325,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addMaximumValuePropertyDescriptorGen( Object object ) {
+    protected void addMaximumValuePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_maximumValue_feature"), //$NON-NLS-1$
@@ -361,7 +361,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addFormatPropertyDescriptorGen( Object object ) {
+    protected void addFormatPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_format_feature"), //$NON-NLS-1$
@@ -397,7 +397,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addLengthPropertyDescriptorGen( Object object ) {
+    protected void addLengthPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_length_feature"), //$NON-NLS-1$
@@ -433,7 +433,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addFixedLengthPropertyDescriptorGen( Object object ) {
+    protected void addFixedLengthPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_fixedLength_feature"), //$NON-NLS-1$
@@ -469,7 +469,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addScalePropertyDescriptorGen( Object object ) {
+    protected void addScalePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_scale_feature"), //$NON-NLS-1$
@@ -505,7 +505,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addPrecisionPropertyDescriptorGen( Object object ) {
+    protected void addPrecisionPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_precision_feature"), //$NON-NLS-1$
@@ -541,7 +541,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addCharacterSetNamePropertyDescriptorGen( Object object ) {
+    protected void addCharacterSetNamePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_characterSetName_feature"), //$NON-NLS-1$
@@ -577,7 +577,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addCollationNamePropertyDescriptorGen( Object object ) {
+    protected void addCollationNamePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_collationName_feature"), //$NON-NLS-1$
@@ -613,7 +613,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addSelectablePropertyDescriptorGen( Object object ) {
+    protected void addSelectablePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_selectable_feature"), //$NON-NLS-1$
@@ -649,7 +649,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addUpdateablePropertyDescriptorGen( Object object ) {
+    protected void addUpdateablePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_updateable_feature"), //$NON-NLS-1$
@@ -685,7 +685,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addCaseSensitivePropertyDescriptorGen( Object object ) {
+    protected void addCaseSensitivePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_caseSensitive_feature"), //$NON-NLS-1$
@@ -721,7 +721,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addSearchabilityPropertyDescriptorGen( Object object ) {
+    protected void addSearchabilityPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_searchability_feature"), //$NON-NLS-1$
@@ -757,7 +757,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addCurrencyPropertyDescriptorGen( Object object ) {
+    protected void addCurrencyPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_currency_feature"), //$NON-NLS-1$
@@ -793,7 +793,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addRadixPropertyDescriptorGen( Object object ) {
+    protected void addRadixPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_radix_feature"), //$NON-NLS-1$
@@ -829,7 +829,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addSignedPropertyDescriptorGen( Object object ) {
+    protected void addSignedPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_signed_feature"), //$NON-NLS-1$
@@ -926,7 +926,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addUniqueKeysPropertyDescriptorGen( Object object ) {
+    protected void addUniqueKeysPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_uniqueKeys_feature"), //$NON-NLS-1$
@@ -977,7 +977,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addIndexesPropertyDescriptorGen( Object object ) {
+    protected void addIndexesPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_indexes_feature"), //$NON-NLS-1$
@@ -1032,7 +1032,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addForeignKeysPropertyDescriptorGen( Object object ) {
+    protected void addForeignKeysPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_foreignKeys_feature"), //$NON-NLS-1$
@@ -1087,7 +1087,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addAccessPatternsPropertyDescriptorGen( Object object ) {
+    protected void addAccessPatternsPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Column_accessPatterns_feature"), //$NON-NLS-1$
@@ -1142,7 +1142,7 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    public String getTextGen( Object object ) {
+    public String getTextGen( Object object ) { // NO_UCD
         String label = ((Column)object).getName();
         return label == null || label.length() == 0 ? getString("_UI_Column_type") : //$NON-NLS-1$
         getString("_UI_Column_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$

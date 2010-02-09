@@ -25,12 +25,6 @@ import com.metamatrix.metamodels.relationship.RelationshipPackage;
  * @generated
  */
 public class FileReferenceItemProvider extends UriReferenceItemProvider {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -64,7 +58,7 @@ public class FileReferenceItemProvider extends UriReferenceItemProvider {
      * 
      * @generated
      */
-    public List getPropertyDescriptorsGen( Object object ) {
+    public List getPropertyDescriptorsGen( Object object ) { // NO_UCD
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
@@ -100,7 +94,7 @@ public class FileReferenceItemProvider extends UriReferenceItemProvider {
      * 
      * @generated
      */
-    protected void addToolNamePropertyDescriptorGen( Object object ) {
+    protected void addToolNamePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_FileReference_toolName_feature"), //$NON-NLS-1$
@@ -136,7 +130,7 @@ public class FileReferenceItemProvider extends UriReferenceItemProvider {
      * 
      * @generated
      */
-    protected void addToolVersionPropertyDescriptorGen( Object object ) {
+    protected void addToolVersionPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_FileReference_toolVersion_feature"), //$NON-NLS-1$
@@ -172,7 +166,7 @@ public class FileReferenceItemProvider extends UriReferenceItemProvider {
      * 
      * @generated
      */
-    protected void addFormatNamePropertyDescriptorGen( Object object ) {
+    protected void addFormatNamePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_FileReference_formatName_feature"), //$NON-NLS-1$
@@ -208,7 +202,7 @@ public class FileReferenceItemProvider extends UriReferenceItemProvider {
      * 
      * @generated
      */
-    protected void addFormatVersionPropertyDescriptorGen( Object object ) {
+    protected void addFormatVersionPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_FileReference_formatVersion_feature"), //$NON-NLS-1$

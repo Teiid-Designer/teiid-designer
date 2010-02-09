@@ -17,12 +17,6 @@ import org.eclipse.emf.ecore.EFactory;
  * @generated
  */
 public interface CoreFactory extends EFactory {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * The singleton instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -83,6 +77,6 @@ public interface CoreFactory extends EFactory {
      * @return the package supported by this factory.
      * @generated
      */
-    CorePackage getCorePackage();
+    CorePackage getCorePackage(); // NO_UCD
 
 } // CoreFactory

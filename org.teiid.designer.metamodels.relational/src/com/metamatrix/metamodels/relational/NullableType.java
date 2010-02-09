@@ -13,19 +13,17 @@ import java.util.List;
 import org.eclipse.emf.common.util.AbstractEnumerator;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the literals of the enumeration '<em><b>Nullable Type</b></em>',
- * and utility methods for working with them.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Nullable Type</b></em>', and utility
+ * methods for working with them. <!-- end-user-doc -->
+ * 
  * @see com.metamatrix.metamodels.relational.RelationalPackage#getNullableType()
  * @model
  * @generated
  */
 public final class NullableType extends AbstractEnumerator {
     /**
-     * The '<em><b>NO NULLS</b></em>' literal value.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The '<em><b>NO NULLS</b></em>' literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #NO_NULLS_LITERAL
      * @model
      * @generated
@@ -34,9 +32,8 @@ public final class NullableType extends AbstractEnumerator {
     public static final int NO_NULLS = 0;
 
     /**
-     * The '<em><b>NULLABLE</b></em>' literal value.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The '<em><b>NULLABLE</b></em>' literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #NULLABLE_LITERAL
      * @model
      * @generated
@@ -45,9 +42,8 @@ public final class NullableType extends AbstractEnumerator {
     public static final int NULLABLE = 1;
 
     /**
-     * The '<em><b>NULLABLE UNKNOWN</b></em>' literal value.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The '<em><b>NULLABLE UNKNOWN</b></em>' literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #NULLABLE_UNKNOWN_LITERAL
      * @model
      * @generated
@@ -56,13 +52,13 @@ public final class NullableType extends AbstractEnumerator {
     public static final int NULLABLE_UNKNOWN = 2;
 
     /**
-     * The '<em><b>NO NULLS</b></em>' literal object.
-     * <!-- begin-user-doc -->
+     * The '<em><b>NO NULLS</b></em>' literal object. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of '<em><b>NO NULLS</b></em>' literal object isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of '<em><b>NO NULLS</b></em>' literal object isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @see #NO_NULLS
      * @generated
      * @ordered
@@ -70,13 +66,13 @@ public final class NullableType extends AbstractEnumerator {
     public static final NullableType NO_NULLS_LITERAL = new NullableType(NO_NULLS, "NO_NULLS"); //$NON-NLS-1$
 
     /**
-     * The '<em><b>NULLABLE</b></em>' literal object.
-     * <!-- begin-user-doc -->
+     * The '<em><b>NULLABLE</b></em>' literal object. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of '<em><b>NULLABLE</b></em>' literal object isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of '<em><b>NULLABLE</b></em>' literal object isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @see #NULLABLE
      * @generated
      * @ordered
@@ -84,13 +80,13 @@ public final class NullableType extends AbstractEnumerator {
     public static final NullableType NULLABLE_LITERAL = new NullableType(NULLABLE, "NULLABLE"); //$NON-NLS-1$
 
     /**
-     * The '<em><b>NULLABLE UNKNOWN</b></em>' literal object.
-     * <!-- begin-user-doc -->
+     * The '<em><b>NULLABLE UNKNOWN</b></em>' literal object. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of '<em><b>NULLABLE UNKNOWN</b></em>' literal object isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of '<em><b>NULLABLE UNKNOWN</b></em>' literal object isn't clear, there really should be more of a
+     * description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @see #NULLABLE_UNKNOWN
      * @generated
      * @ordered
@@ -98,33 +94,27 @@ public final class NullableType extends AbstractEnumerator {
     public static final NullableType NULLABLE_UNKNOWN_LITERAL = new NullableType(NULLABLE_UNKNOWN, "NULLABLE_UNKNOWN"); //$NON-NLS-1$
 
     /**
-     * An array of all the '<em><b>Nullable Type</b></em>' enumerators.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * An array of all the '<em><b>Nullable Type</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    private static final NullableType[] VALUES_ARRAY =
-        new NullableType[] {
-            NO_NULLS_LITERAL,
-            NULLABLE_LITERAL,
-            NULLABLE_UNKNOWN_LITERAL,
-        };
+    private static final NullableType[] VALUES_ARRAY = new NullableType[] {NO_NULLS_LITERAL, NULLABLE_LITERAL,
+        NULLABLE_UNKNOWN_LITERAL,};
 
     /**
-     * A public read-only list of all the '<em><b>Nullable Type</b></em>' enumerators.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * A public read-only list of all the '<em><b>Nullable Type</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @generated
      */
-    public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+    public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY)); // NO_UCD
 
     /**
-     * Returns the '<em><b>Nullable Type</b></em>' literal with the specified name.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the '<em><b>Nullable Type</b></em>' literal with the specified name. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public static NullableType get(String name) {
+    public static NullableType get( String name ) {
         for (int i = 0; i < VALUES_ARRAY.length; ++i) {
             NullableType result = VALUES_ARRAY[i];
             if (result.toString().equals(name)) {
@@ -135,28 +125,30 @@ public final class NullableType extends AbstractEnumerator {
     }
 
     /**
-     * Returns the '<em><b>Nullable Type</b></em>' literal with the specified value.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the '<em><b>Nullable Type</b></em>' literal with the specified value. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public static NullableType get(int value) {
+    public static NullableType get( int value ) { // NO_UCD
         switch (value) {
-            case NO_NULLS: return NO_NULLS_LITERAL;
-            case NULLABLE: return NULLABLE_LITERAL;
-            case NULLABLE_UNKNOWN: return NULLABLE_UNKNOWN_LITERAL;
+            case NO_NULLS:
+                return NO_NULLS_LITERAL;
+            case NULLABLE:
+                return NULLABLE_LITERAL;
+            case NULLABLE_UNKNOWN:
+                return NULLABLE_UNKNOWN_LITERAL;
         }
-        return null;	
+        return null;
     }
 
     /**
-     * Only this class can construct instances.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Only this class can construct instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    private NullableType(int value, String name) {
+    private NullableType( int value,
+                          String name ) {
         super(value, name);
     }
 
-} //NullableType
+} // NullableType

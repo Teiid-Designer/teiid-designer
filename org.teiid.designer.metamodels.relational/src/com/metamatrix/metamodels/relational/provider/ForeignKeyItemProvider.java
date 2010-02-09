@@ -151,7 +151,7 @@ public class ForeignKeyItemProvider extends RelationshipItemProvider {
      * 
      * @generated
      */
-    protected void addColumnsPropertyDescriptorGen( Object object ) {
+    protected void addColumnsPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ForeignKey_columns_feature"), //$NON-NLS-1$
@@ -199,7 +199,7 @@ public class ForeignKeyItemProvider extends RelationshipItemProvider {
      * 
      * @generated
      */
-    protected void addUniqueKeyPropertyDescriptorGen( Object object ) {
+    protected void addUniqueKeyPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ForeignKey_uniqueKey_feature"), //$NON-NLS-1$

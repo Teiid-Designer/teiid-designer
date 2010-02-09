@@ -33,283 +33,290 @@ import com.metamatrix.metamodels.wsdl.NamespaceDeclarationOwner;
 import com.metamatrix.metamodels.wsdl.WsdlPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Message</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Message</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.MessageImpl#getName <em>Name</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.MessageImpl#getDocumentation <em>Documentation</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.MessageImpl#getDeclaredNamespaces <em>Declared Namespaces</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.MessageImpl#getElements <em>Elements</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.MessageImpl#getDefinitions <em>Definitions</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.MessageImpl#getParts <em>Parts</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.MessageImpl#getName <em>Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.MessageImpl#getDocumentation <em>Documentation</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.MessageImpl#getDeclaredNamespaces <em>Declared Namespaces</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.MessageImpl#getElements <em>Elements</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.MessageImpl#getDefinitions <em>Definitions</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.MessageImpl#getParts <em>Parts</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class MessageImpl extends EObjectImpl implements Message {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
      */
-	protected static final String NAME_EDEFAULT = null;
+    protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
      */
-	protected String name = NAME_EDEFAULT;
+    protected String name = NAME_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' containment reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' containment reference. <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
      * @see #getDocumentation()
      * @generated
      * @ordered
      */
-	protected Documentation documentation = null;
+    protected Documentation documentation = null;
 
     /**
-     * The cached value of the '{@link #getDeclaredNamespaces() <em>Declared Namespaces</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getDeclaredNamespaces() <em>Declared Namespaces</em>}' containment reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getDeclaredNamespaces()
      * @generated
      * @ordered
      */
-	protected EList declaredNamespaces = null;
+    protected EList declaredNamespaces = null;
 
     /**
-     * The cached value of the '{@link #getElements() <em>Elements</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getElements() <em>Elements</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getElements()
      * @generated
      * @ordered
      */
-	protected EList elements = null;
+    protected EList elements = null;
 
     /**
-     * The cached value of the '{@link #getParts() <em>Parts</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getParts() <em>Parts</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getParts()
      * @generated
      * @ordered
      */
-	protected EList parts = null;
+    protected EList parts = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected MessageImpl() {
+    protected MessageImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return WsdlPackage.eINSTANCE.getMessage();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getName() {
+    public String getName() {
         return name;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setName(String newName) {
+    public void setName( String newName ) {
         String oldName = name;
         name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.MESSAGE__NAME, oldName, name));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.MESSAGE__NAME, oldName,
+                                                                   name));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public Documentation getDocumentation() {
+    public Documentation getDocumentation() {
         return documentation;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public NotificationChain basicSetDocumentation(Documentation newDocumentation, NotificationChain msgs) {
+    public NotificationChain basicSetDocumentation( Documentation newDocumentation,
+                                                    NotificationChain msgs ) {
         Documentation oldDocumentation = documentation;
         documentation = newDocumentation;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WsdlPackage.MESSAGE__DOCUMENTATION, oldDocumentation, newDocumentation);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WsdlPackage.MESSAGE__DOCUMENTATION,
+                                                                   oldDocumentation, newDocumentation);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setDocumentation(Documentation newDocumentation) {
+    public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
-            if (documentation != null)
-                msgs = ((InternalEObject)documentation).eInverseRemove(this, WsdlPackage.DOCUMENTATION__DOCUMENTED, Documentation.class, msgs);
-            if (newDocumentation != null)
-                msgs = ((InternalEObject)newDocumentation).eInverseAdd(this, WsdlPackage.DOCUMENTATION__DOCUMENTED, Documentation.class, msgs);
+            if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
+                                                                                              WsdlPackage.DOCUMENTATION__DOCUMENTED,
+                                                                                              Documentation.class,
+                                                                                              msgs);
+            if (newDocumentation != null) msgs = ((InternalEObject)newDocumentation).eInverseAdd(this,
+                                                                                                 WsdlPackage.DOCUMENTATION__DOCUMENTED,
+                                                                                                 Documentation.class,
+                                                                                                 msgs);
             msgs = basicSetDocumentation(newDocumentation, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.MESSAGE__DOCUMENTATION, newDocumentation, newDocumentation));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          WsdlPackage.MESSAGE__DOCUMENTATION, newDocumentation,
+                                                                          newDocumentation));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getDeclaredNamespaces() {
+    public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
-            declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this, WsdlPackage.MESSAGE__DECLARED_NAMESPACES, WsdlPackage.NAMESPACE_DECLARATION__OWNER);
+            declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
+                                                                        WsdlPackage.MESSAGE__DECLARED_NAMESPACES,
+                                                                        WsdlPackage.NAMESPACE_DECLARATION__OWNER);
         }
         return declaredNamespaces;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getElements() {
+    public EList getElements() {
         if (elements == null) {
-            elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.MESSAGE__ELEMENTS, WsdlPackage.ELEMENT__ELEMENT_OWNER);
+            elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.MESSAGE__ELEMENTS,
+                                                              WsdlPackage.ELEMENT__ELEMENT_OWNER);
         }
         return elements;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public Definitions getDefinitions() {
+    public Definitions getDefinitions() {
         if (eContainerFeatureID != WsdlPackage.MESSAGE__DEFINITIONS) return null;
         return (Definitions)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setDefinitions(Definitions newDefinitions) {
+    public void setDefinitions( Definitions newDefinitions ) {
         if (newDefinitions != eContainer || (eContainerFeatureID != WsdlPackage.MESSAGE__DEFINITIONS && newDefinitions != null)) {
-            if (EcoreUtil.isAncestor(this, newDefinitions))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newDefinitions)) throw new IllegalArgumentException(
+                                                                                               "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newDefinitions != null)
-                msgs = ((InternalEObject)newDefinitions).eInverseAdd(this, WsdlPackage.DEFINITIONS__MESSAGES, Definitions.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newDefinitions != null) msgs = ((InternalEObject)newDefinitions).eInverseAdd(this,
+                                                                                             WsdlPackage.DEFINITIONS__MESSAGES,
+                                                                                             Definitions.class,
+                                                                                             msgs);
             msgs = eBasicSetContainer((InternalEObject)newDefinitions, WsdlPackage.MESSAGE__DEFINITIONS, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.MESSAGE__DEFINITIONS, newDefinitions, newDefinitions));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          WsdlPackage.MESSAGE__DEFINITIONS, newDefinitions,
+                                                                          newDefinitions));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getParts() {
+    public EList getParts() {
         if (parts == null) {
-            parts = new EObjectContainmentWithInverseEList(MessagePart.class, this, WsdlPackage.MESSAGE__PARTS, WsdlPackage.MESSAGE_PART__MESSAGE);
+            parts = new EObjectContainmentWithInverseEList(MessagePart.class, this, WsdlPackage.MESSAGE__PARTS,
+                                                           WsdlPackage.MESSAGE_PART__MESSAGE);
         }
         return parts;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public boolean isNameValid() {
+    public boolean isNameValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public IStatus isValid() {
+    public IStatus isValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WsdlPackage.MESSAGE__DOCUMENTATION:
-                    if (documentation != null)
-                        msgs = ((InternalEObject)documentation).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - WsdlPackage.MESSAGE__DOCUMENTATION, null, msgs);
+                    if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
+                                                                                                      EOPPOSITE_FEATURE_BASE
+                                                                                                      - WsdlPackage.MESSAGE__DOCUMENTATION,
+                                                                                                      null,
+                                                                                                      msgs);
                     return basicSetDocumentation((Documentation)otherEnd, msgs);
                 case WsdlPackage.MESSAGE__DECLARED_NAMESPACES:
                     return ((InternalEList)getDeclaredNamespaces()).basicAdd(otherEnd, msgs);
                 case WsdlPackage.MESSAGE__ELEMENTS:
                     return ((InternalEList)getElements()).basicAdd(otherEnd, msgs);
                 case WsdlPackage.MESSAGE__DEFINITIONS:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, WsdlPackage.MESSAGE__DEFINITIONS, msgs);
                 case WsdlPackage.MESSAGE__PARTS:
                     return ((InternalEList)getParts()).basicAdd(otherEnd, msgs);
@@ -317,18 +324,20 @@ public class MessageImpl extends EObjectImpl implements Message {
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WsdlPackage.MESSAGE__DOCUMENTATION:
@@ -349,12 +358,12 @@ public class MessageImpl extends EObjectImpl implements Message {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case WsdlPackage.MESSAGE__DEFINITIONS:
@@ -367,12 +376,13 @@ public class MessageImpl extends EObjectImpl implements Message {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.MESSAGE__NAME:
                 return getName();
@@ -391,12 +401,13 @@ public class MessageImpl extends EObjectImpl implements Message {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.MESSAGE__NAME:
                 setName((String)newValue);
@@ -424,12 +435,12 @@ public class MessageImpl extends EObjectImpl implements Message {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.MESSAGE__NAME:
                 setName(NAME_EDEFAULT);
@@ -454,12 +465,12 @@ public class MessageImpl extends EObjectImpl implements Message {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.MESSAGE__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -478,77 +489,93 @@ public class MessageImpl extends EObjectImpl implements Message {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public int eBaseStructuralFeatureID(int derivedFeatureID, Class baseClass) {
+    @Override
+    public int eBaseStructuralFeatureID( int derivedFeatureID,
+                                         Class baseClass ) {
         if (baseClass == Documented.class) {
             switch (derivedFeatureID) {
-                case WsdlPackage.MESSAGE__DOCUMENTATION: return WsdlPackage.DOCUMENTED__DOCUMENTATION;
-                default: return -1;
+                case WsdlPackage.MESSAGE__DOCUMENTATION:
+                    return WsdlPackage.DOCUMENTED__DOCUMENTATION;
+                default:
+                    return -1;
             }
         }
         if (baseClass == NamespaceDeclarationOwner.class) {
             switch (derivedFeatureID) {
-                case WsdlPackage.MESSAGE__DECLARED_NAMESPACES: return WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES;
-                default: return -1;
+                case WsdlPackage.MESSAGE__DECLARED_NAMESPACES:
+                    return WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES;
+                default:
+                    return -1;
             }
         }
         if (baseClass == ElementOwner.class) {
             switch (derivedFeatureID) {
-                case WsdlPackage.MESSAGE__ELEMENTS: return WsdlPackage.ELEMENT_OWNER__ELEMENTS;
-                default: return -1;
+                case WsdlPackage.MESSAGE__ELEMENTS:
+                    return WsdlPackage.ELEMENT_OWNER__ELEMENTS;
+                default:
+                    return -1;
             }
         }
         if (baseClass == ExtensibleDocumented.class) {
             switch (derivedFeatureID) {
-                default: return -1;
+                default:
+                    return -1;
             }
         }
         return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public int eDerivedStructuralFeatureID(int baseFeatureID, Class baseClass) {
+    @Override
+    public int eDerivedStructuralFeatureID( int baseFeatureID,
+                                            Class baseClass ) {
         if (baseClass == Documented.class) {
             switch (baseFeatureID) {
-                case WsdlPackage.DOCUMENTED__DOCUMENTATION: return WsdlPackage.MESSAGE__DOCUMENTATION;
-                default: return -1;
+                case WsdlPackage.DOCUMENTED__DOCUMENTATION:
+                    return WsdlPackage.MESSAGE__DOCUMENTATION;
+                default:
+                    return -1;
             }
         }
         if (baseClass == NamespaceDeclarationOwner.class) {
             switch (baseFeatureID) {
-                case WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES: return WsdlPackage.MESSAGE__DECLARED_NAMESPACES;
-                default: return -1;
+                case WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES:
+                    return WsdlPackage.MESSAGE__DECLARED_NAMESPACES;
+                default:
+                    return -1;
             }
         }
         if (baseClass == ElementOwner.class) {
             switch (baseFeatureID) {
-                case WsdlPackage.ELEMENT_OWNER__ELEMENTS: return WsdlPackage.MESSAGE__ELEMENTS;
-                default: return -1;
+                case WsdlPackage.ELEMENT_OWNER__ELEMENTS:
+                    return WsdlPackage.MESSAGE__ELEMENTS;
+                default:
+                    return -1;
             }
         }
         if (baseClass == ExtensibleDocumented.class) {
             switch (baseFeatureID) {
-                default: return -1;
+                default:
+                    return -1;
             }
         }
         return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     public String toString() {
         if (eIsProxy()) return super.toString();
 
@@ -559,4 +586,4 @@ public class MessageImpl extends EObjectImpl implements Message {
         return result.toString();
     }
 
-} //MessageImpl
+} // MessageImpl

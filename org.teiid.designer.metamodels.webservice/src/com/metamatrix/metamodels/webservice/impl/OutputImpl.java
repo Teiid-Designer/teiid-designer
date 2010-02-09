@@ -24,158 +24,160 @@ import com.metamatrix.metamodels.webservice.WebServicePackage;
 import com.metamatrix.metamodels.xml.XmlDocument;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Output</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Output</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.webservice.impl.OutputImpl#getOperation <em>Operation</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.webservice.impl.OutputImpl#getXmlDocument <em>Xml Document</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.webservice.impl.OutputImpl#getOperation <em>Operation</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.webservice.impl.OutputImpl#getXmlDocument <em>Xml Document</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class OutputImpl extends MessageImpl implements Output {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getXmlDocument() <em>Xml Document</em>}' reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getXmlDocument() <em>Xml Document</em>}' reference. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getXmlDocument()
      * @generated
      * @ordered
      */
-	protected XmlDocument xmlDocument = null;
+    protected XmlDocument xmlDocument = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected OutputImpl() {
+    protected OutputImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return WebServicePackage.eINSTANCE.getOutput();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public Operation getOperation() {
+    public Operation getOperation() {
         if (eContainerFeatureID != WebServicePackage.OUTPUT__OPERATION) return null;
         return (Operation)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setOperation(Operation newOperation) {
+    public void setOperation( Operation newOperation ) {
         if (newOperation != eContainer || (eContainerFeatureID != WebServicePackage.OUTPUT__OPERATION && newOperation != null)) {
-            if (EcoreUtil.isAncestor(this, newOperation))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newOperation)) throw new IllegalArgumentException(
+                                                                                             "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newOperation != null)
-                msgs = ((InternalEObject)newOperation).eInverseAdd(this, WebServicePackage.OPERATION__OUTPUT, Operation.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newOperation != null) msgs = ((InternalEObject)newOperation).eInverseAdd(this,
+                                                                                         WebServicePackage.OPERATION__OUTPUT,
+                                                                                         Operation.class,
+                                                                                         msgs);
             msgs = eBasicSetContainer((InternalEObject)newOperation, WebServicePackage.OUTPUT__OPERATION, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.OUTPUT__OPERATION, newOperation, newOperation));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          WebServicePackage.OUTPUT__OPERATION, newOperation,
+                                                                          newOperation));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public XmlDocument getXmlDocument() {
+    public XmlDocument getXmlDocument() {
         if (xmlDocument != null && xmlDocument.eIsProxy()) {
             XmlDocument oldXmlDocument = xmlDocument;
             xmlDocument = (XmlDocument)eResolveProxy((InternalEObject)xmlDocument);
             if (xmlDocument != oldXmlDocument) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, WebServicePackage.OUTPUT__XML_DOCUMENT, oldXmlDocument, xmlDocument));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+                                                                           WebServicePackage.OUTPUT__XML_DOCUMENT,
+                                                                           oldXmlDocument, xmlDocument));
             }
         }
         return xmlDocument;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public XmlDocument basicGetXmlDocument() {
+    public XmlDocument basicGetXmlDocument() {
         return xmlDocument;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setXmlDocument(XmlDocument newXmlDocument) {
+    public void setXmlDocument( XmlDocument newXmlDocument ) {
         XmlDocument oldXmlDocument = xmlDocument;
         xmlDocument = newXmlDocument;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.OUTPUT__XML_DOCUMENT, oldXmlDocument, xmlDocument));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   WebServicePackage.OUTPUT__XML_DOCUMENT, oldXmlDocument,
+                                                                   xmlDocument));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WebServicePackage.OUTPUT__SAMPLES:
-                    if (samples != null)
-                        msgs = ((InternalEObject)samples).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - WebServicePackage.OUTPUT__SAMPLES, null, msgs);
+                    if (samples != null) msgs = ((InternalEObject)samples).eInverseRemove(this,
+                                                                                          EOPPOSITE_FEATURE_BASE
+                                                                                          - WebServicePackage.OUTPUT__SAMPLES,
+                                                                                          null,
+                                                                                          msgs);
                     return basicSetSamples((SampleMessages)otherEnd, msgs);
                 case WebServicePackage.OUTPUT__OPERATION:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, WebServicePackage.OUTPUT__OPERATION, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WebServicePackage.OUTPUT__SAMPLES:
@@ -190,12 +192,12 @@ public class OutputImpl extends MessageImpl implements Output {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case WebServicePackage.OUTPUT__OPERATION:
@@ -208,12 +210,13 @@ public class OutputImpl extends MessageImpl implements Output {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.OUTPUT__NAME:
                 return getName();
@@ -238,12 +241,13 @@ public class OutputImpl extends MessageImpl implements Output {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.OUTPUT__NAME:
                 setName((String)newValue);
@@ -271,12 +275,12 @@ public class OutputImpl extends MessageImpl implements Output {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.OUTPUT__NAME:
                 setName(NAME_EDEFAULT);
@@ -304,12 +308,12 @@ public class OutputImpl extends MessageImpl implements Output {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.OUTPUT__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -329,4 +333,4 @@ public class OutputImpl extends MessageImpl implements Output {
         return eDynamicIsSet(eFeature);
     }
 
-} //OutputImpl
+} // OutputImpl

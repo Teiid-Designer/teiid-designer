@@ -21,12 +21,6 @@ import com.metamatrix.metamodels.transformation.SortNode;
  * @generated
  */
 public class SortNodeItemProvider extends OperationNodeItemProvider {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->

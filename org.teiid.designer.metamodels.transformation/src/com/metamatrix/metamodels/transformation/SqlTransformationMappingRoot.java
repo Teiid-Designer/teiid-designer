@@ -7,23 +7,14 @@
  */
 package com.metamatrix.metamodels.transformation;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Sql Transformation Mapping Root</b></em>'.
- * <!-- end-user-doc -->
- *
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Sql Transformation Mapping Root</b></em>'. <!--
+ * end-user-doc -->
+ * 
  * @see com.metamatrix.metamodels.transformation.TransformationPackage#getSqlTransformationMappingRoot()
  * @model
  * @generated
  */
-public interface SqlTransformationMappingRoot extends TransformationMappingRoot{
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
+public interface SqlTransformationMappingRoot extends TransformationMappingRoot {
 
 } // SqlTransformationMappingRoot

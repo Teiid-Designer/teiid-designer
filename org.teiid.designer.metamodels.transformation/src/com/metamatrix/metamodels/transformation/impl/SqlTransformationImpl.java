@@ -27,41 +27,33 @@ import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Sql Transformation</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Sql Transformation</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#getSelectSql <em>Select Sql</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#getInsertSql <em>Insert Sql</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#getUpdateSql <em>Update Sql</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#getDeleteSql <em>Delete Sql</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#isInsertAllowed <em>Insert Allowed</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#isUpdateAllowed <em>Update Allowed</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#isDeleteAllowed <em>Delete Allowed</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#isOutputLocked <em>Output Locked</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#isInsertSqlDefault <em>Insert Sql Default</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#isUpdateSqlDefault <em>Update Sql Default</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#isDeleteSqlDefault <em>Delete Sql Default</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#getAliases <em>Aliases</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#getSelectSql <em>Select Sql</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#getInsertSql <em>Insert Sql</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#getUpdateSql <em>Update Sql</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#getDeleteSql <em>Delete Sql</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#isInsertAllowed <em>Insert Allowed</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#isUpdateAllowed <em>Update Allowed</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#isDeleteAllowed <em>Delete Allowed</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#isOutputLocked <em>Output Locked</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#isInsertSqlDefault <em>Insert Sql Default</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#isUpdateSqlDefault <em>Update Sql Default</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#isDeleteSqlDefault <em>Delete Sql Default</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.SqlTransformationImpl#getAliases <em>Aliases</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class SqlTransformationImpl extends MappingHelperImpl implements SqlTransformation {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getSelectSql() <em>Select Sql</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getSelectSql() <em>Select Sql</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getSelectSql()
      * @generated
      * @ordered
@@ -69,9 +61,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected static final String SELECT_SQL_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getSelectSql() <em>Select Sql</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getSelectSql() <em>Select Sql</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getSelectSql()
      * @generated
      * @ordered
@@ -79,9 +71,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected String selectSql = SELECT_SQL_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getInsertSql() <em>Insert Sql</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getInsertSql() <em>Insert Sql</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getInsertSql()
      * @generated
      * @ordered
@@ -89,9 +81,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected static final String INSERT_SQL_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getInsertSql() <em>Insert Sql</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getInsertSql() <em>Insert Sql</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getInsertSql()
      * @generated
      * @ordered
@@ -99,9 +91,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected String insertSql = INSERT_SQL_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getUpdateSql() <em>Update Sql</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getUpdateSql() <em>Update Sql</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getUpdateSql()
      * @generated
      * @ordered
@@ -109,9 +101,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected static final String UPDATE_SQL_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getUpdateSql() <em>Update Sql</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getUpdateSql() <em>Update Sql</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getUpdateSql()
      * @generated
      * @ordered
@@ -119,9 +111,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected String updateSql = UPDATE_SQL_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getDeleteSql() <em>Delete Sql</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getDeleteSql() <em>Delete Sql</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getDeleteSql()
      * @generated
      * @ordered
@@ -129,9 +121,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected static final String DELETE_SQL_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getDeleteSql() <em>Delete Sql</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getDeleteSql() <em>Delete Sql</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getDeleteSql()
      * @generated
      * @ordered
@@ -139,9 +131,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected String deleteSql = DELETE_SQL_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isInsertAllowed() <em>Insert Allowed</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #isInsertAllowed() <em>Insert Allowed</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isInsertAllowed()
      * @generated
      * @ordered
@@ -149,9 +141,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected static final boolean INSERT_ALLOWED_EDEFAULT = true;
 
     /**
-     * The cached value of the '{@link #isInsertAllowed() <em>Insert Allowed</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isInsertAllowed() <em>Insert Allowed</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isInsertAllowed()
      * @generated
      * @ordered
@@ -159,9 +151,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected boolean insertAllowed = INSERT_ALLOWED_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isUpdateAllowed() <em>Update Allowed</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #isUpdateAllowed() <em>Update Allowed</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isUpdateAllowed()
      * @generated
      * @ordered
@@ -169,9 +161,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected static final boolean UPDATE_ALLOWED_EDEFAULT = true;
 
     /**
-     * The cached value of the '{@link #isUpdateAllowed() <em>Update Allowed</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isUpdateAllowed() <em>Update Allowed</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isUpdateAllowed()
      * @generated
      * @ordered
@@ -179,9 +171,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected boolean updateAllowed = UPDATE_ALLOWED_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isDeleteAllowed() <em>Delete Allowed</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #isDeleteAllowed() <em>Delete Allowed</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isDeleteAllowed()
      * @generated
      * @ordered
@@ -189,9 +181,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected static final boolean DELETE_ALLOWED_EDEFAULT = true;
 
     /**
-     * The cached value of the '{@link #isDeleteAllowed() <em>Delete Allowed</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isDeleteAllowed() <em>Delete Allowed</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isDeleteAllowed()
      * @generated
      * @ordered
@@ -199,9 +191,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected boolean deleteAllowed = DELETE_ALLOWED_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isOutputLocked() <em>Output Locked</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #isOutputLocked() <em>Output Locked</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isOutputLocked()
      * @generated
      * @ordered
@@ -209,9 +201,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected static final boolean OUTPUT_LOCKED_EDEFAULT = false;
 
     /**
-     * The cached value of the '{@link #isOutputLocked() <em>Output Locked</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isOutputLocked() <em>Output Locked</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isOutputLocked()
      * @generated
      * @ordered
@@ -219,9 +211,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected boolean outputLocked = OUTPUT_LOCKED_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isInsertSqlDefault() <em>Insert Sql Default</em>}' attribute.
-     * <!-- begin-user-doc -->
+     * The default value of the '{@link #isInsertSqlDefault() <em>Insert Sql Default</em>}' attribute. <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * 
      * @see #isInsertSqlDefault()
      * @generated
      * @ordered
@@ -229,9 +221,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected static final boolean INSERT_SQL_DEFAULT_EDEFAULT = true;
 
     /**
-     * The cached value of the '{@link #isInsertSqlDefault() <em>Insert Sql Default</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isInsertSqlDefault() <em>Insert Sql Default</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isInsertSqlDefault()
      * @generated
      * @ordered
@@ -239,9 +231,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected boolean insertSqlDefault = INSERT_SQL_DEFAULT_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isUpdateSqlDefault() <em>Update Sql Default</em>}' attribute.
-     * <!-- begin-user-doc -->
+     * The default value of the '{@link #isUpdateSqlDefault() <em>Update Sql Default</em>}' attribute. <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * 
      * @see #isUpdateSqlDefault()
      * @generated
      * @ordered
@@ -249,9 +241,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected static final boolean UPDATE_SQL_DEFAULT_EDEFAULT = true;
 
     /**
-     * The cached value of the '{@link #isUpdateSqlDefault() <em>Update Sql Default</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isUpdateSqlDefault() <em>Update Sql Default</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isUpdateSqlDefault()
      * @generated
      * @ordered
@@ -259,9 +251,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected boolean updateSqlDefault = UPDATE_SQL_DEFAULT_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isDeleteSqlDefault() <em>Delete Sql Default</em>}' attribute.
-     * <!-- begin-user-doc -->
+     * The default value of the '{@link #isDeleteSqlDefault() <em>Delete Sql Default</em>}' attribute. <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * 
      * @see #isDeleteSqlDefault()
      * @generated
      * @ordered
@@ -269,9 +261,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected static final boolean DELETE_SQL_DEFAULT_EDEFAULT = true;
 
     /**
-     * The cached value of the '{@link #isDeleteSqlDefault() <em>Delete Sql Default</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isDeleteSqlDefault() <em>Delete Sql Default</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isDeleteSqlDefault()
      * @generated
      * @ordered
@@ -279,9 +271,9 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected boolean deleteSqlDefault = DELETE_SQL_DEFAULT_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getAliases() <em>Aliases</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getAliases() <em>Aliases</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getAliases()
      * @generated
      * @ordered
@@ -289,8 +281,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     protected EList aliases = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected SqlTransformationImpl() {
@@ -298,8 +290,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -308,8 +300,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getSelectSql() {
@@ -317,20 +309,21 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setSelectSql(String newSelectSql) {
+    public void setSelectSql( String newSelectSql ) {
         String oldSelectSql = selectSql;
         selectSql = newSelectSql;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.SQL_TRANSFORMATION__SELECT_SQL, oldSelectSql, selectSql));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.SQL_TRANSFORMATION__SELECT_SQL,
+                                                                   oldSelectSql, selectSql));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getInsertSql() {
@@ -338,20 +331,21 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setInsertSql(String newInsertSql) {
+    public void setInsertSql( String newInsertSql ) {
         String oldInsertSql = insertSql;
         insertSql = newInsertSql;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.SQL_TRANSFORMATION__INSERT_SQL, oldInsertSql, insertSql));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.SQL_TRANSFORMATION__INSERT_SQL,
+                                                                   oldInsertSql, insertSql));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getUpdateSql() {
@@ -359,20 +353,21 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setUpdateSql(String newUpdateSql) {
+    public void setUpdateSql( String newUpdateSql ) {
         String oldUpdateSql = updateSql;
         updateSql = newUpdateSql;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.SQL_TRANSFORMATION__UPDATE_SQL, oldUpdateSql, updateSql));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.SQL_TRANSFORMATION__UPDATE_SQL,
+                                                                   oldUpdateSql, updateSql));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getDeleteSql() {
@@ -380,20 +375,21 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setDeleteSql(String newDeleteSql) {
+    public void setDeleteSql( String newDeleteSql ) {
         String oldDeleteSql = deleteSql;
         deleteSql = newDeleteSql;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.SQL_TRANSFORMATION__DELETE_SQL, oldDeleteSql, deleteSql));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.SQL_TRANSFORMATION__DELETE_SQL,
+                                                                   oldDeleteSql, deleteSql));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isInsertAllowed() {
@@ -401,20 +397,21 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setInsertAllowed(boolean newInsertAllowed) {
+    public void setInsertAllowed( boolean newInsertAllowed ) {
         boolean oldInsertAllowed = insertAllowed;
         insertAllowed = newInsertAllowed;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.SQL_TRANSFORMATION__INSERT_ALLOWED, oldInsertAllowed, insertAllowed));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.SQL_TRANSFORMATION__INSERT_ALLOWED,
+                                                                   oldInsertAllowed, insertAllowed));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isUpdateAllowed() {
@@ -422,20 +419,21 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setUpdateAllowed(boolean newUpdateAllowed) {
+    public void setUpdateAllowed( boolean newUpdateAllowed ) {
         boolean oldUpdateAllowed = updateAllowed;
         updateAllowed = newUpdateAllowed;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.SQL_TRANSFORMATION__UPDATE_ALLOWED, oldUpdateAllowed, updateAllowed));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.SQL_TRANSFORMATION__UPDATE_ALLOWED,
+                                                                   oldUpdateAllowed, updateAllowed));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isDeleteAllowed() {
@@ -443,20 +441,21 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setDeleteAllowed(boolean newDeleteAllowed) {
+    public void setDeleteAllowed( boolean newDeleteAllowed ) {
         boolean oldDeleteAllowed = deleteAllowed;
         deleteAllowed = newDeleteAllowed;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.SQL_TRANSFORMATION__DELETE_ALLOWED, oldDeleteAllowed, deleteAllowed));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.SQL_TRANSFORMATION__DELETE_ALLOWED,
+                                                                   oldDeleteAllowed, deleteAllowed));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isOutputLocked() {
@@ -464,20 +463,21 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setOutputLocked(boolean newOutputLocked) {
+    public void setOutputLocked( boolean newOutputLocked ) {
         boolean oldOutputLocked = outputLocked;
         outputLocked = newOutputLocked;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.SQL_TRANSFORMATION__OUTPUT_LOCKED, oldOutputLocked, outputLocked));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.SQL_TRANSFORMATION__OUTPUT_LOCKED,
+                                                                   oldOutputLocked, outputLocked));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isInsertSqlDefault() {
@@ -485,20 +485,21 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setInsertSqlDefault(boolean newInsertSqlDefault) {
+    public void setInsertSqlDefault( boolean newInsertSqlDefault ) {
         boolean oldInsertSqlDefault = insertSqlDefault;
         insertSqlDefault = newInsertSqlDefault;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.SQL_TRANSFORMATION__INSERT_SQL_DEFAULT, oldInsertSqlDefault, insertSqlDefault));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.SQL_TRANSFORMATION__INSERT_SQL_DEFAULT,
+                                                                   oldInsertSqlDefault, insertSqlDefault));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isUpdateSqlDefault() {
@@ -506,20 +507,21 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setUpdateSqlDefault(boolean newUpdateSqlDefault) {
+    public void setUpdateSqlDefault( boolean newUpdateSqlDefault ) {
         boolean oldUpdateSqlDefault = updateSqlDefault;
         updateSqlDefault = newUpdateSqlDefault;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.SQL_TRANSFORMATION__UPDATE_SQL_DEFAULT, oldUpdateSqlDefault, updateSqlDefault));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.SQL_TRANSFORMATION__UPDATE_SQL_DEFAULT,
+                                                                   oldUpdateSqlDefault, updateSqlDefault));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isDeleteSqlDefault() {
@@ -527,45 +529,49 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setDeleteSqlDefault(boolean newDeleteSqlDefault) {
+    public void setDeleteSqlDefault( boolean newDeleteSqlDefault ) {
         boolean oldDeleteSqlDefault = deleteSqlDefault;
         deleteSqlDefault = newDeleteSqlDefault;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.SQL_TRANSFORMATION__DELETE_SQL_DEFAULT, oldDeleteSqlDefault, deleteSqlDefault));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.SQL_TRANSFORMATION__DELETE_SQL_DEFAULT,
+                                                                   oldDeleteSqlDefault, deleteSqlDefault));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getAliases() {
         if (aliases == null) {
-            aliases = new EObjectContainmentWithInverseEList(SqlAlias.class, this, TransformationPackage.SQL_TRANSFORMATION__ALIASES, TransformationPackage.SQL_ALIAS__SQL_TRANSFORMATION);
+            aliases = new EObjectContainmentWithInverseEList(SqlAlias.class, this,
+                                                             TransformationPackage.SQL_TRANSFORMATION__ALIASES,
+                                                             TransformationPackage.SQL_ALIAS__SQL_TRANSFORMATION);
         }
         return aliases;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.SQL_TRANSFORMATION__MAPPER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.SQL_TRANSFORMATION__MAPPER, msgs);
                 case TransformationPackage.SQL_TRANSFORMATION__NESTED_IN:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.SQL_TRANSFORMATION__NESTED_IN, msgs);
                 case TransformationPackage.SQL_TRANSFORMATION__NESTED:
                     return ((InternalEList)getNested()).basicAdd(otherEnd, msgs);
@@ -575,18 +581,20 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.SQL_TRANSFORMATION__MAPPER:
@@ -605,12 +613,12 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.SQL_TRANSFORMATION__MAPPER:
@@ -625,12 +633,13 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.SQL_TRANSFORMATION__MAPPER:
                 return getMapper();
@@ -670,12 +679,13 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.SQL_TRANSFORMATION__MAPPER:
                 setMapper((Mapping)newValue);
@@ -732,12 +742,12 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.SQL_TRANSFORMATION__MAPPER:
                 setMapper((Mapping)null);
@@ -792,12 +802,12 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.SQL_TRANSFORMATION__MAPPER:
                 return getMapper() != null;
@@ -836,8 +846,8 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -871,4 +881,4 @@ public class SqlTransformationImpl extends MappingHelperImpl implements SqlTrans
         return result.toString();
     }
 
-} //SqlTransformationImpl
+} // SqlTransformationImpl

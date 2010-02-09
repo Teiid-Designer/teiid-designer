@@ -21,25 +21,17 @@ import com.metamatrix.metamodels.transformation.TransformationMapping;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Mapping</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Mapping</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class TransformationMappingImpl extends MappingImpl implements TransformationMapping {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected TransformationMappingImpl() {
@@ -47,8 +39,8 @@ public class TransformationMappingImpl extends MappingImpl implements Transforma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -57,40 +49,47 @@ public class TransformationMappingImpl extends MappingImpl implements Transforma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.TRANSFORMATION_MAPPING__HELPER:
-                    if (helper != null)
-                        msgs = ((InternalEObject)helper).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TransformationPackage.TRANSFORMATION_MAPPING__HELPER, null, msgs);
+                    if (helper != null) msgs = ((InternalEObject)helper).eInverseRemove(this,
+                                                                                        EOPPOSITE_FEATURE_BASE
+                                                                                        - TransformationPackage.TRANSFORMATION_MAPPING__HELPER,
+                                                                                        null,
+                                                                                        msgs);
                     return basicSetHelper((MappingHelper)otherEnd, msgs);
                 case TransformationPackage.TRANSFORMATION_MAPPING__NESTED:
                     return ((InternalEList)getNested()).basicAdd(otherEnd, msgs);
                 case TransformationPackage.TRANSFORMATION_MAPPING__NESTED_IN:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.TRANSFORMATION_MAPPING__NESTED_IN, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.TRANSFORMATION_MAPPING__HELPER:
@@ -107,12 +106,12 @@ public class TransformationMappingImpl extends MappingImpl implements Transforma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.TRANSFORMATION_MAPPING__NESTED_IN:
@@ -125,12 +124,13 @@ public class TransformationMappingImpl extends MappingImpl implements Transforma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TRANSFORMATION_MAPPING__HELPER:
                 return getHelper();
@@ -150,12 +150,13 @@ public class TransformationMappingImpl extends MappingImpl implements Transforma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TRANSFORMATION_MAPPING__HELPER:
                 setHelper((MappingHelper)newValue);
@@ -183,12 +184,12 @@ public class TransformationMappingImpl extends MappingImpl implements Transforma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TRANSFORMATION_MAPPING__HELPER:
                 setHelper((MappingHelper)null);
@@ -213,12 +214,12 @@ public class TransformationMappingImpl extends MappingImpl implements Transforma
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TRANSFORMATION_MAPPING__HELPER:
                 return helper != null;
@@ -236,4 +237,4 @@ public class TransformationMappingImpl extends MappingImpl implements Transforma
         return eDynamicIsSet(eFeature);
     }
 
-} //TransformationMappingImpl
+} // TransformationMappingImpl

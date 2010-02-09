@@ -12,42 +12,32 @@ import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.metamodels.wsdl.BindingParam;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Body</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Body</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.SoapBody#getBindingParam <em>Binding Param</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.SoapBody#getUse <em>Use</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.SoapBody#getNamespace <em>Namespace</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.SoapBody#getEncodingStyles <em>Encoding Styles</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.SoapBody#getParts <em>Parts</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.SoapBody#getBindingParam <em>Binding Param</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.SoapBody#getUse <em>Use</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.SoapBody#getNamespace <em>Namespace</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.SoapBody#getEncodingStyles <em>Encoding Styles</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.SoapBody#getParts <em>Parts</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see com.metamatrix.metamodels.wsdl.soap.SoapPackage#getSoapBody()
  * @model
  * @generated
  */
-public interface SoapBody extends EObject{
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
+public interface SoapBody extends EObject {
 
     /**
-     * Returns the value of the '<em><b>Use</b></em>' attribute.
-     * The literals are from the enumeration {@link com.metamatrix.metamodels.wsdl.soap.SoapUseType}.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Use</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
+     * Returns the value of the '<em><b>Use</b></em>' attribute. The literals are from the enumeration
+     * {@link com.metamatrix.metamodels.wsdl.soap.SoapUseType}. <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Use</em>' attribute isn't clear, there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Use</em>' attribute.
      * @see com.metamatrix.metamodels.wsdl.soap.SoapUseType
      * @see #setUse(SoapUseType)
@@ -55,86 +45,84 @@ public interface SoapBody extends EObject{
      * @model
      * @generated
      */
-	SoapUseType getUse();
+    SoapUseType getUse();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.wsdl.soap.SoapBody#getUse <em>Use</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.wsdl.soap.SoapBody#getUse <em>Use</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Use</em>' attribute.
      * @see com.metamatrix.metamodels.wsdl.soap.SoapUseType
      * @see #getUse()
      * @generated
      */
-	void setUse(SoapUseType value);
+    void setUse( SoapUseType value );
 
     /**
-     * Returns the value of the '<em><b>Namespace</b></em>' attribute.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Namespace</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
+     * Returns the value of the '<em><b>Namespace</b></em>' attribute. <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Namespace</em>' attribute isn't clear, there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Namespace</em>' attribute.
      * @see #setNamespace(String)
      * @see com.metamatrix.metamodels.wsdl.soap.SoapPackage#getSoapBody_Namespace()
      * @model
      * @generated
      */
-	String getNamespace();
+    String getNamespace();
 
     /**
      * Sets the value of the '{@link com.metamatrix.metamodels.wsdl.soap.SoapBody#getNamespace <em>Namespace</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Namespace</em>' attribute.
      * @see #getNamespace()
      * @generated
      */
-	void setNamespace(String value);
+    void setNamespace( String value );
 
     /**
-     * Returns the value of the '<em><b>Encoding Styles</b></em>' attribute list.
-     * The list contents are of type {@link java.lang.String}.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Encoding Styles</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
+     * Returns the value of the '<em><b>Encoding Styles</b></em>' attribute list. The list contents are of type
+     * {@link java.lang.String}. <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Encoding Styles</em>' attribute list isn't clear, there really should be more of a description
+     * here...
+     * </p>
+     * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Encoding Styles</em>' attribute list.
      * @see com.metamatrix.metamodels.wsdl.soap.SoapPackage#getSoapBody_EncodingStyles()
      * @model type="java.lang.String"
      * @generated
      */
-	EList getEncodingStyles();
+    EList getEncodingStyles();
 
     /**
-     * Returns the value of the '<em><b>Parts</b></em>' attribute list.
-     * The list contents are of type {@link java.lang.String}.
+     * Returns the value of the '<em><b>Parts</b></em>' attribute list. The list contents are of type {@link java.lang.String}.
      * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Parts</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Parts</em>' attribute list isn't clear, there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Parts</em>' attribute list.
      * @see com.metamatrix.metamodels.wsdl.soap.SoapPackage#getSoapBody_Parts()
      * @model type="java.lang.String"
      * @generated
      */
-	EList getParts();
+    EList getParts();
 
     /**
-     * Returns the value of the '<em><b>Binding Param</b></em>' container reference.
-     * It is bidirectional and its opposite is '{@link com.metamatrix.metamodels.wsdl.BindingParam#getSoapBody <em>Soap Body</em>}'.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Binding Param</em>' container reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
+     * Returns the value of the '<em><b>Binding Param</b></em>' container reference. It is bidirectional and its opposite is '
+     * {@link com.metamatrix.metamodels.wsdl.BindingParam#getSoapBody <em>Soap Body</em>}'. <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Binding Param</em>' container reference isn't clear, there really should be more of a
+     * description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Binding Param</em>' container reference.
      * @see #setBindingParam(BindingParam)
      * @see com.metamatrix.metamodels.wsdl.soap.SoapPackage#getSoapBody_BindingParam()
@@ -142,16 +130,16 @@ public interface SoapBody extends EObject{
      * @model opposite="soapBody" required="true"
      * @generated
      */
-	BindingParam getBindingParam();
+    BindingParam getBindingParam();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.wsdl.soap.SoapBody#getBindingParam <em>Binding Param</em>}' container reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.wsdl.soap.SoapBody#getBindingParam <em>Binding Param</em>}'
+     * container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Binding Param</em>' container reference.
      * @see #getBindingParam()
      * @generated
      */
-	void setBindingParam(BindingParam value);
+    void setBindingParam( BindingParam value );
 
 } // SoapBody

@@ -26,19 +26,13 @@ import com.metamatrix.metamodels.core.extension.XPackage;
  * @generated
  */
 public class ExtensionFactoryImpl extends EFactoryImpl implements ExtensionFactory {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated
      */
-    public static ExtensionFactory init() {
+    public static ExtensionFactory init() { // NO_UCD
         try {
             ExtensionFactory theExtensionFactory = (ExtensionFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.metamatrix.com/metamodels/Extension"); //$NON-NLS-1$ 
             if (theExtensionFactory != null) {
@@ -148,7 +142,7 @@ public class ExtensionFactoryImpl extends EFactoryImpl implements ExtensionFacto
      * @generated
      */
     @Deprecated
-    public static ExtensionPackage getPackage() {
+    public static ExtensionPackage getPackage() { // NO_UCD
         return ExtensionPackage.eINSTANCE;
     }
 

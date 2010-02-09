@@ -23,109 +23,109 @@ import com.metamatrix.metamodels.webservice.SampleMessages;
 import com.metamatrix.metamodels.webservice.WebServicePackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Input</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Input</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.webservice.impl.InputImpl#getOperation <em>Operation</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.webservice.impl.InputImpl#getOperation <em>Operation</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class InputImpl extends MessageImpl implements Input {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected InputImpl() {
+    protected InputImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return WebServicePackage.eINSTANCE.getInput();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public Operation getOperation() {
+    public Operation getOperation() {
         if (eContainerFeatureID != WebServicePackage.INPUT__OPERATION) return null;
         return (Operation)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setOperation(Operation newOperation) {
+    public void setOperation( Operation newOperation ) {
         if (newOperation != eContainer || (eContainerFeatureID != WebServicePackage.INPUT__OPERATION && newOperation != null)) {
-            if (EcoreUtil.isAncestor(this, newOperation))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newOperation)) throw new IllegalArgumentException(
+                                                                                             "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newOperation != null)
-                msgs = ((InternalEObject)newOperation).eInverseAdd(this, WebServicePackage.OPERATION__INPUT, Operation.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newOperation != null) msgs = ((InternalEObject)newOperation).eInverseAdd(this,
+                                                                                         WebServicePackage.OPERATION__INPUT,
+                                                                                         Operation.class,
+                                                                                         msgs);
             msgs = eBasicSetContainer((InternalEObject)newOperation, WebServicePackage.INPUT__OPERATION, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.INPUT__OPERATION, newOperation, newOperation));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          WebServicePackage.INPUT__OPERATION, newOperation,
+                                                                          newOperation));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WebServicePackage.INPUT__SAMPLES:
-                    if (samples != null)
-                        msgs = ((InternalEObject)samples).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - WebServicePackage.INPUT__SAMPLES, null, msgs);
+                    if (samples != null) msgs = ((InternalEObject)samples).eInverseRemove(this,
+                                                                                          EOPPOSITE_FEATURE_BASE
+                                                                                          - WebServicePackage.INPUT__SAMPLES,
+                                                                                          null,
+                                                                                          msgs);
                     return basicSetSamples((SampleMessages)otherEnd, msgs);
                 case WebServicePackage.INPUT__OPERATION:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, WebServicePackage.INPUT__OPERATION, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WebServicePackage.INPUT__SAMPLES:
@@ -140,12 +140,12 @@ public class InputImpl extends MessageImpl implements Input {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case WebServicePackage.INPUT__OPERATION:
@@ -158,12 +158,13 @@ public class InputImpl extends MessageImpl implements Input {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.INPUT__NAME:
                 return getName();
@@ -185,12 +186,13 @@ public class InputImpl extends MessageImpl implements Input {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.INPUT__NAME:
                 setName((String)newValue);
@@ -215,12 +217,12 @@ public class InputImpl extends MessageImpl implements Input {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.INPUT__NAME:
                 setName(NAME_EDEFAULT);
@@ -245,12 +247,12 @@ public class InputImpl extends MessageImpl implements Input {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.INPUT__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -268,4 +270,4 @@ public class InputImpl extends MessageImpl implements Input {
         return eDynamicIsSet(eFeature);
     }
 
-} //InputImpl
+} // InputImpl

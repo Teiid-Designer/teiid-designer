@@ -26,37 +26,30 @@ import com.metamatrix.metamodels.transformation.RecursionErrorMode;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Mapping Class</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Mapping Class</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#isRecursive <em>Recursive</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#isRecursionAllowed <em>Recursion Allowed</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#getRecursionCriteria <em>Recursion Criteria</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#getRecursionLimit <em>Recursion Limit</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#getRecursionLimitErrorMode <em>Recursion Limit Error Mode</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#getColumns <em>Columns</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#getMappingClassSet <em>Mapping Class Set</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#getInputSet <em>Input Set</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#isRecursive <em>Recursive</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#isRecursionAllowed <em>Recursion Allowed</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#getRecursionCriteria <em>Recursion Criteria</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#getRecursionLimit <em>Recursion Limit</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#getRecursionLimitErrorMode <em>Recursion Limit Error
+ * Mode</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#getColumns <em>Columns</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#getMappingClassSet <em>Mapping Class Set</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassImpl#getInputSet <em>Input Set</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class MappingClassImpl extends MappingClassObjectImpl implements MappingClass {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #isRecursive() <em>Recursive</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #isRecursive() <em>Recursive</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #isRecursive()
      * @generated
      * @ordered
@@ -64,9 +57,9 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     protected static final boolean RECURSIVE_EDEFAULT = false;
 
     /**
-     * The cached value of the '{@link #isRecursive() <em>Recursive</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isRecursive() <em>Recursive</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #isRecursive()
      * @generated
      * @ordered
@@ -74,9 +67,9 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     protected boolean recursive = RECURSIVE_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isRecursionAllowed() <em>Recursion Allowed</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #isRecursionAllowed() <em>Recursion Allowed</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isRecursionAllowed()
      * @generated
      * @ordered
@@ -84,9 +77,9 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     protected static final boolean RECURSION_ALLOWED_EDEFAULT = false;
 
     /**
-     * The cached value of the '{@link #isRecursionAllowed() <em>Recursion Allowed</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isRecursionAllowed() <em>Recursion Allowed</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isRecursionAllowed()
      * @generated
      * @ordered
@@ -94,9 +87,9 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     protected boolean recursionAllowed = RECURSION_ALLOWED_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getRecursionCriteria() <em>Recursion Criteria</em>}' attribute.
-     * <!-- begin-user-doc -->
+     * The default value of the '{@link #getRecursionCriteria() <em>Recursion Criteria</em>}' attribute. <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * 
      * @see #getRecursionCriteria()
      * @generated
      * @ordered
@@ -104,9 +97,9 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     protected static final String RECURSION_CRITERIA_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getRecursionCriteria() <em>Recursion Criteria</em>}' attribute.
-     * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getRecursionCriteria() <em>Recursion Criteria</em>}' attribute. <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * 
      * @see #getRecursionCriteria()
      * @generated
      * @ordered
@@ -114,9 +107,9 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     protected String recursionCriteria = RECURSION_CRITERIA_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getRecursionLimit() <em>Recursion Limit</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getRecursionLimit() <em>Recursion Limit</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getRecursionLimit()
      * @generated
      * @ordered
@@ -124,9 +117,9 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     protected static final int RECURSION_LIMIT_EDEFAULT = 5;
 
     /**
-     * The cached value of the '{@link #getRecursionLimit() <em>Recursion Limit</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getRecursionLimit() <em>Recursion Limit</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getRecursionLimit()
      * @generated
      * @ordered
@@ -134,9 +127,9 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     protected int recursionLimit = RECURSION_LIMIT_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getRecursionLimitErrorMode() <em>Recursion Limit Error Mode</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getRecursionLimitErrorMode() <em>Recursion Limit Error Mode</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getRecursionLimitErrorMode()
      * @generated
      * @ordered
@@ -144,9 +137,9 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     protected static final RecursionErrorMode RECURSION_LIMIT_ERROR_MODE_EDEFAULT = RecursionErrorMode.THROW_LITERAL;
 
     /**
-     * The cached value of the '{@link #getRecursionLimitErrorMode() <em>Recursion Limit Error Mode</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getRecursionLimitErrorMode() <em>Recursion Limit Error Mode</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getRecursionLimitErrorMode()
      * @generated
      * @ordered
@@ -154,9 +147,9 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     protected RecursionErrorMode recursionLimitErrorMode = RECURSION_LIMIT_ERROR_MODE_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getColumns() <em>Columns</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getColumns() <em>Columns</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getColumns()
      * @generated
      * @ordered
@@ -164,9 +157,9 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     protected EList columns = null;
 
     /**
-     * The cached value of the '{@link #getInputSet() <em>Input Set</em>}' containment reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getInputSet() <em>Input Set</em>}' containment reference. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getInputSet()
      * @generated
      * @ordered
@@ -174,8 +167,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     protected InputSet inputSet = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MappingClassImpl() {
@@ -183,8 +176,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -193,8 +186,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isRecursive() {
@@ -202,20 +195,21 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setRecursive(boolean newRecursive) {
+    public void setRecursive( boolean newRecursive ) {
         boolean oldRecursive = recursive;
         recursive = newRecursive;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.MAPPING_CLASS__RECURSIVE, oldRecursive, recursive));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.MAPPING_CLASS__RECURSIVE, oldRecursive,
+                                                                   recursive));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isRecursionAllowed() {
@@ -223,20 +217,21 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setRecursionAllowed(boolean newRecursionAllowed) {
+    public void setRecursionAllowed( boolean newRecursionAllowed ) {
         boolean oldRecursionAllowed = recursionAllowed;
         recursionAllowed = newRecursionAllowed;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.MAPPING_CLASS__RECURSION_ALLOWED, oldRecursionAllowed, recursionAllowed));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.MAPPING_CLASS__RECURSION_ALLOWED,
+                                                                   oldRecursionAllowed, recursionAllowed));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getRecursionCriteria() {
@@ -244,20 +239,21 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setRecursionCriteria(String newRecursionCriteria) {
+    public void setRecursionCriteria( String newRecursionCriteria ) {
         String oldRecursionCriteria = recursionCriteria;
         recursionCriteria = newRecursionCriteria;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.MAPPING_CLASS__RECURSION_CRITERIA, oldRecursionCriteria, recursionCriteria));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.MAPPING_CLASS__RECURSION_CRITERIA,
+                                                                   oldRecursionCriteria, recursionCriteria));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public int getRecursionLimit() {
@@ -265,20 +261,21 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setRecursionLimit(int newRecursionLimit) {
+    public void setRecursionLimit( int newRecursionLimit ) {
         int oldRecursionLimit = recursionLimit;
         recursionLimit = newRecursionLimit;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.MAPPING_CLASS__RECURSION_LIMIT, oldRecursionLimit, recursionLimit));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.MAPPING_CLASS__RECURSION_LIMIT,
+                                                                   oldRecursionLimit, recursionLimit));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public RecursionErrorMode getRecursionLimitErrorMode() {
@@ -286,32 +283,37 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setRecursionLimitErrorMode(RecursionErrorMode newRecursionLimitErrorMode) {
+    public void setRecursionLimitErrorMode( RecursionErrorMode newRecursionLimitErrorMode ) {
         RecursionErrorMode oldRecursionLimitErrorMode = recursionLimitErrorMode;
         recursionLimitErrorMode = newRecursionLimitErrorMode == null ? RECURSION_LIMIT_ERROR_MODE_EDEFAULT : newRecursionLimitErrorMode;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.MAPPING_CLASS__RECURSION_LIMIT_ERROR_MODE, oldRecursionLimitErrorMode, recursionLimitErrorMode));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(
+                                                                   this,
+                                                                   Notification.SET,
+                                                                   TransformationPackage.MAPPING_CLASS__RECURSION_LIMIT_ERROR_MODE,
+                                                                   oldRecursionLimitErrorMode, recursionLimitErrorMode));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getColumns() {
         if (columns == null) {
-            columns = new EObjectContainmentWithInverseEList(MappingClassColumn.class, this, TransformationPackage.MAPPING_CLASS__COLUMNS, TransformationPackage.MAPPING_CLASS_COLUMN__MAPPING_CLASS);
+            columns = new EObjectContainmentWithInverseEList(MappingClassColumn.class, this,
+                                                             TransformationPackage.MAPPING_CLASS__COLUMNS,
+                                                             TransformationPackage.MAPPING_CLASS_COLUMN__MAPPING_CLASS);
         }
         return columns;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public MappingClassSet getMappingClassSet() {
@@ -320,29 +322,33 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setMappingClassSet(MappingClassSet newMappingClassSet) {
-        if (newMappingClassSet != eContainer || (eContainerFeatureID != TransformationPackage.MAPPING_CLASS__MAPPING_CLASS_SET && newMappingClassSet != null)) {
-            if (EcoreUtil.isAncestor(this, newMappingClassSet))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setMappingClassSet( MappingClassSet newMappingClassSet ) {
+        if (newMappingClassSet != eContainer
+            || (eContainerFeatureID != TransformationPackage.MAPPING_CLASS__MAPPING_CLASS_SET && newMappingClassSet != null)) {
+            if (EcoreUtil.isAncestor(this, newMappingClassSet)) throw new IllegalArgumentException(
+                                                                                                   "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newMappingClassSet != null)
-                msgs = ((InternalEObject)newMappingClassSet).eInverseAdd(this, TransformationPackage.MAPPING_CLASS_SET__MAPPING_CLASSES, MappingClassSet.class, msgs);
-            msgs = eBasicSetContainer((InternalEObject)newMappingClassSet, TransformationPackage.MAPPING_CLASS__MAPPING_CLASS_SET, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newMappingClassSet != null) msgs = ((InternalEObject)newMappingClassSet).eInverseAdd(this,
+                                                                                                     TransformationPackage.MAPPING_CLASS_SET__MAPPING_CLASSES,
+                                                                                                     MappingClassSet.class,
+                                                                                                     msgs);
+            msgs = eBasicSetContainer((InternalEObject)newMappingClassSet,
+                                      TransformationPackage.MAPPING_CLASS__MAPPING_CLASS_SET,
+                                      msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.MAPPING_CLASS__MAPPING_CLASS_SET, newMappingClassSet, newMappingClassSet));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          TransformationPackage.MAPPING_CLASS__MAPPING_CLASS_SET,
+                                                                          newMappingClassSet, newMappingClassSet));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public InputSet getInputSet() {
@@ -350,74 +356,89 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public NotificationChain basicSetInputSet(InputSet newInputSet, NotificationChain msgs) {
+    public NotificationChain basicSetInputSet( InputSet newInputSet,
+                                               NotificationChain msgs ) {
         InputSet oldInputSet = inputSet;
         inputSet = newInputSet;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TransformationPackage.MAPPING_CLASS__INPUT_SET, oldInputSet, newInputSet);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.MAPPING_CLASS__INPUT_SET, oldInputSet,
+                                                                   newInputSet);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setInputSet(InputSet newInputSet) {
+    public void setInputSet( InputSet newInputSet ) {
         if (newInputSet != inputSet) {
             NotificationChain msgs = null;
-            if (inputSet != null)
-                msgs = ((InternalEObject)inputSet).eInverseRemove(this, TransformationPackage.INPUT_SET__MAPPING_CLASS, InputSet.class, msgs);
-            if (newInputSet != null)
-                msgs = ((InternalEObject)newInputSet).eInverseAdd(this, TransformationPackage.INPUT_SET__MAPPING_CLASS, InputSet.class, msgs);
+            if (inputSet != null) msgs = ((InternalEObject)inputSet).eInverseRemove(this,
+                                                                                    TransformationPackage.INPUT_SET__MAPPING_CLASS,
+                                                                                    InputSet.class,
+                                                                                    msgs);
+            if (newInputSet != null) msgs = ((InternalEObject)newInputSet).eInverseAdd(this,
+                                                                                       TransformationPackage.INPUT_SET__MAPPING_CLASS,
+                                                                                       InputSet.class,
+                                                                                       msgs);
             msgs = basicSetInputSet(newInputSet, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.MAPPING_CLASS__INPUT_SET, newInputSet, newInputSet));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          TransformationPackage.MAPPING_CLASS__INPUT_SET,
+                                                                          newInputSet, newInputSet));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.MAPPING_CLASS__COLUMNS:
                     return ((InternalEList)getColumns()).basicAdd(otherEnd, msgs);
                 case TransformationPackage.MAPPING_CLASS__MAPPING_CLASS_SET:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.MAPPING_CLASS__MAPPING_CLASS_SET, msgs);
                 case TransformationPackage.MAPPING_CLASS__INPUT_SET:
-                    if (inputSet != null)
-                        msgs = ((InternalEObject)inputSet).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TransformationPackage.MAPPING_CLASS__INPUT_SET, null, msgs);
+                    if (inputSet != null) msgs = ((InternalEObject)inputSet).eInverseRemove(this,
+                                                                                            EOPPOSITE_FEATURE_BASE
+                                                                                            - TransformationPackage.MAPPING_CLASS__INPUT_SET,
+                                                                                            null,
+                                                                                            msgs);
                     return basicSetInputSet((InputSet)otherEnd, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.MAPPING_CLASS__COLUMNS:
@@ -434,16 +455,19 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.MAPPING_CLASS__MAPPING_CLASS_SET:
-                    return eContainer.eInverseRemove(this, TransformationPackage.MAPPING_CLASS_SET__MAPPING_CLASSES, MappingClassSet.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.MAPPING_CLASS_SET__MAPPING_CLASSES,
+                                                     MappingClassSet.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -452,12 +476,13 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS__NAME:
                 return getName();
@@ -482,12 +507,13 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS__NAME:
                 setName((String)newValue);
@@ -522,12 +548,12 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS__NAME:
                 setName(NAME_EDEFAULT);
@@ -561,12 +587,12 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -591,8 +617,8 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -614,4 +640,4 @@ public class MappingClassImpl extends MappingClassObjectImpl implements MappingC
         return result.toString();
     }
 
-} //MappingClassImpl
+} // MappingClassImpl

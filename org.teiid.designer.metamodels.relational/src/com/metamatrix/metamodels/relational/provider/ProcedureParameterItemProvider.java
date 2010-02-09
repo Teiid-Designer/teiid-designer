@@ -121,7 +121,7 @@ public class ProcedureParameterItemProvider extends RelationalEntityItemProvider
      * 
      * @generated
      */
-    protected void addDirectionPropertyDescriptorGen( Object object ) {
+    protected void addDirectionPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ProcedureParameter_direction_feature"), //$NON-NLS-1$
@@ -157,7 +157,7 @@ public class ProcedureParameterItemProvider extends RelationalEntityItemProvider
      * 
      * @generated
      */
-    protected void addDefaultValuePropertyDescriptorGen( Object object ) {
+    protected void addDefaultValuePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ProcedureParameter_defaultValue_feature"), //$NON-NLS-1$
@@ -193,7 +193,7 @@ public class ProcedureParameterItemProvider extends RelationalEntityItemProvider
      * 
      * @generated
      */
-    protected void addNativeTypePropertyDescriptorGen( Object object ) {
+    protected void addNativeTypePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ProcedureParameter_nativeType_feature"), //$NON-NLS-1$
@@ -229,7 +229,7 @@ public class ProcedureParameterItemProvider extends RelationalEntityItemProvider
      * 
      * @generated
      */
-    protected void addLengthPropertyDescriptorGen( Object object ) {
+    protected void addLengthPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ProcedureParameter_length_feature"), //$NON-NLS-1$
@@ -265,7 +265,7 @@ public class ProcedureParameterItemProvider extends RelationalEntityItemProvider
      * 
      * @generated
      */
-    protected void addPrecisionPropertyDescriptorGen( Object object ) {
+    protected void addPrecisionPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ProcedureParameter_precision_feature"), //$NON-NLS-1$
@@ -301,7 +301,7 @@ public class ProcedureParameterItemProvider extends RelationalEntityItemProvider
      * 
      * @generated
      */
-    protected void addScalePropertyDescriptorGen( Object object ) {
+    protected void addScalePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ProcedureParameter_scale_feature"), //$NON-NLS-1$
@@ -337,7 +337,7 @@ public class ProcedureParameterItemProvider extends RelationalEntityItemProvider
      * 
      * @generated
      */
-    protected void addNullablePropertyDescriptorGen( Object object ) {
+    protected void addNullablePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ProcedureParameter_nullable_feature"), //$NON-NLS-1$
@@ -373,7 +373,7 @@ public class ProcedureParameterItemProvider extends RelationalEntityItemProvider
      * 
      * @generated
      */
-    protected void addRadixPropertyDescriptorGen( Object object ) {
+    protected void addRadixPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ProcedureParameter_radix_feature"), //$NON-NLS-1$
@@ -409,7 +409,7 @@ public class ProcedureParameterItemProvider extends RelationalEntityItemProvider
      * 
      * @generated
      */
-    protected void addTypePropertyDescriptorGen( Object object ) {
+    protected void addTypePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ProcedureParameter_type_feature"), //$NON-NLS-1$
@@ -457,7 +457,7 @@ public class ProcedureParameterItemProvider extends RelationalEntityItemProvider
      * 
      * @generated
      */
-    public Object getImageGen( Object object ) {
+    public Object getImageGen( Object object ) { // NO_UCD
         return getResourceLocator().getImage("full/obj16/ProcedureParameter"); //$NON-NLS-1$
     }
 
@@ -494,7 +494,7 @@ public class ProcedureParameterItemProvider extends RelationalEntityItemProvider
      * 
      * @generated
      */
-    public String getTextGen( Object object ) {
+    public String getTextGen( Object object ) { // NO_UCD
         String label = ((ProcedureParameter)object).getName();
         return label == null || label.length() == 0 ? getString("_UI_ProcedureParameter_type") : //$NON-NLS-1$
         getString("_UI_ProcedureParameter_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$

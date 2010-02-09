@@ -59,7 +59,7 @@ public final class RelationalEditPlugin extends EMFPlugin {
      * @return the singleton instance.
      * @generated
      */
-    public static Implementation getPlugin() {
+    public static Implementation getPlugin() { // NO_UCD
         return plugin;
     }
 

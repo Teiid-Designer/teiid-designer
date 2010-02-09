@@ -21,25 +21,17 @@ import com.metamatrix.metamodels.transformation.TransformationPackage;
 import com.metamatrix.metamodels.transformation.TreeMappingRoot;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Tree Mapping Root</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Tree Mapping Root</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class TreeMappingRootImpl extends TransformationMappingRootImpl implements TreeMappingRoot {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected TreeMappingRootImpl() {
@@ -47,8 +39,8 @@ public class TreeMappingRootImpl extends TransformationMappingRootImpl implement
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -57,40 +49,47 @@ public class TreeMappingRootImpl extends TransformationMappingRootImpl implement
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.TREE_MAPPING_ROOT__HELPER:
-                    if (helper != null)
-                        msgs = ((InternalEObject)helper).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TransformationPackage.TREE_MAPPING_ROOT__HELPER, null, msgs);
+                    if (helper != null) msgs = ((InternalEObject)helper).eInverseRemove(this,
+                                                                                        EOPPOSITE_FEATURE_BASE
+                                                                                        - TransformationPackage.TREE_MAPPING_ROOT__HELPER,
+                                                                                        null,
+                                                                                        msgs);
                     return basicSetHelper((MappingHelper)otherEnd, msgs);
                 case TransformationPackage.TREE_MAPPING_ROOT__NESTED:
                     return ((InternalEList)getNested()).basicAdd(otherEnd, msgs);
                 case TransformationPackage.TREE_MAPPING_ROOT__NESTED_IN:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.TREE_MAPPING_ROOT__NESTED_IN, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.TREE_MAPPING_ROOT__HELPER:
@@ -107,12 +106,12 @@ public class TreeMappingRootImpl extends TransformationMappingRootImpl implement
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.TREE_MAPPING_ROOT__NESTED_IN:
@@ -125,12 +124,13 @@ public class TreeMappingRootImpl extends TransformationMappingRootImpl implement
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TREE_MAPPING_ROOT__HELPER:
                 return getHelper();
@@ -159,12 +159,13 @@ public class TreeMappingRootImpl extends TransformationMappingRootImpl implement
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TREE_MAPPING_ROOT__HELPER:
                 setHelper((MappingHelper)newValue);
@@ -204,12 +205,12 @@ public class TreeMappingRootImpl extends TransformationMappingRootImpl implement
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TREE_MAPPING_ROOT__HELPER:
                 setHelper((MappingHelper)null);
@@ -246,12 +247,12 @@ public class TreeMappingRootImpl extends TransformationMappingRootImpl implement
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TREE_MAPPING_ROOT__HELPER:
                 return helper != null;
@@ -277,4 +278,4 @@ public class TreeMappingRootImpl extends TransformationMappingRootImpl implement
         return eDynamicIsSet(eFeature);
     }
 
-} //TreeMappingRootImpl
+} // TreeMappingRootImpl

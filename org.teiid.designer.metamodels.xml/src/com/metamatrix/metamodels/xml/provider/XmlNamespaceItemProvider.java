@@ -122,7 +122,7 @@ public class XmlNamespaceItemProvider extends XmlDocumentEntityItemProvider {
      * 
      * @generated
      */
-    public String getTextGen( Object object ) {
+    public String getTextGen( Object object ) { // NO_UCD
         String label = ((XmlNamespace)object).getPrefix();
         return label == null || label.length() == 0 ? getString("_UI_XmlNamespace_type") : //$NON-NLS-1$
         getString("_UI_XmlNamespace_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$

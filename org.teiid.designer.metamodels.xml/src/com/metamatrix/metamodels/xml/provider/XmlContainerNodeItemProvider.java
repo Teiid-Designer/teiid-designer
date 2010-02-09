@@ -62,7 +62,7 @@ public class XmlContainerNodeItemProvider extends XmlDocumentEntityItemProvider 
      * 
      * @generated
      */
-    public List getPropertyDescriptorsGen( Object object ) {
+    public List getPropertyDescriptorsGen( Object object ) { // NO_UCD
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
@@ -102,7 +102,7 @@ public class XmlContainerNodeItemProvider extends XmlDocumentEntityItemProvider 
      * 
      * @generated
      */
-    protected void addChoiceCriteriaPropertyDescriptorGen( Object object ) {
+    protected void addChoiceCriteriaPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ChoiceOption_choiceCriteria_feature"), //$NON-NLS-1$
@@ -138,7 +138,7 @@ public class XmlContainerNodeItemProvider extends XmlDocumentEntityItemProvider 
      * 
      * @generated
      */
-    protected void addChoiceOrderPropertyDescriptorGen( Object object ) {
+    protected void addChoiceOrderPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ChoiceOption_choiceOrder_feature"), //$NON-NLS-1$
@@ -174,7 +174,7 @@ public class XmlContainerNodeItemProvider extends XmlDocumentEntityItemProvider 
      * 
      * @generated
      */
-    protected void addDefaultForPropertyDescriptorGen( Object object ) {
+    protected void addDefaultForPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_ChoiceOption_defaultFor_feature"), //$NON-NLS-1$
@@ -227,7 +227,7 @@ public class XmlContainerNodeItemProvider extends XmlDocumentEntityItemProvider 
      * 
      * @generated
      */
-    protected void addExcludeFromDocumentPropertyDescriptorGen( Object object ) {
+    protected void addExcludeFromDocumentPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_XmlContainerNode_excludeFromDocument_feature"), //$NON-NLS-1$
@@ -263,7 +263,7 @@ public class XmlContainerNodeItemProvider extends XmlDocumentEntityItemProvider 
      * 
      * @generated
      */
-    protected void addMinOccursPropertyDescriptorGen( Object object ) {
+    protected void addMinOccursPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_XmlContainerNode_minOccurs_feature"), //$NON-NLS-1$
@@ -299,7 +299,7 @@ public class XmlContainerNodeItemProvider extends XmlDocumentEntityItemProvider 
      * 
      * @generated
      */
-    protected void addMaxOccursPropertyDescriptorGen( Object object ) {
+    protected void addMaxOccursPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_XmlContainerNode_maxOccurs_feature"), //$NON-NLS-1$
@@ -335,7 +335,7 @@ public class XmlContainerNodeItemProvider extends XmlDocumentEntityItemProvider 
      * 
      * @generated
      */
-    protected void addXsdComponentPropertyDescriptorGen( Object object ) {
+    protected void addXsdComponentPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_XmlContainerNode_xsdComponent_feature"), //$NON-NLS-1$
@@ -469,7 +469,7 @@ public class XmlContainerNodeItemProvider extends XmlDocumentEntityItemProvider 
      * 
      * @generated
      */
-    protected void collectNewChildDescriptorsGen( Collection newChildDescriptors,
+    protected void collectNewChildDescriptorsGen( Collection newChildDescriptors, // NO_UCD
                                                   Object object ) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
 

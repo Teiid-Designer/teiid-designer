@@ -32,12 +32,6 @@ import com.metamatrix.metamodels.core.LinkContainer;
  * @generated
  */
 public class LinkContainerImpl extends EObjectImpl implements LinkContainer {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * The cached value of the '{@link #getLinks() <em>Links</em>}' containment reference list. <!-- begin-user-doc --> <!--

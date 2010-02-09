@@ -30,34 +30,29 @@ import com.metamatrix.metamodels.relationship.RelationshipPackage;
 import com.metamatrix.metamodels.relationship.RelationshipType;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Folder</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Folder</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipFolderImpl#getPlaceholders <em>Placeholders</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipFolderImpl#getOwnedRelationships <em>Owned Relationships</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipFolderImpl#getOwnedRelationshipTypes <em>Owned Relationship Types</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipFolderImpl#getOwnedRelationshipFolders <em>Owned Relationship Folders</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipFolderImpl#getOwner <em>Owner</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipFolderImpl#getPlaceholders <em>Placeholders</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipFolderImpl#getOwnedRelationships <em>Owned Relationships
+ * </em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipFolderImpl#getOwnedRelationshipTypes <em>Owned Relationship
+ * Types</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipFolderImpl#getOwnedRelationshipFolders <em>Owned
+ * Relationship Folders</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipFolderImpl#getOwner <em>Owner</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class RelationshipFolderImpl extends RelationshipEntityImpl implements RelationshipFolder {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getPlaceholders() <em>Placeholders</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getPlaceholders() <em>Placeholders</em>}' containment reference list. <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
+     * 
      * @see #getPlaceholders()
      * @generated
      * @ordered
@@ -65,9 +60,9 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
     protected EList placeholders = null;
 
     /**
-     * The cached value of the '{@link #getOwnedRelationships() <em>Owned Relationships</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getOwnedRelationships() <em>Owned Relationships</em>}' containment reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getOwnedRelationships()
      * @generated
      * @ordered
@@ -75,9 +70,9 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
     protected EList ownedRelationships = null;
 
     /**
-     * The cached value of the '{@link #getOwnedRelationshipTypes() <em>Owned Relationship Types</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getOwnedRelationshipTypes() <em>Owned Relationship Types</em>}' containment reference
+     * list. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getOwnedRelationshipTypes()
      * @generated
      * @ordered
@@ -85,9 +80,9 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
     protected EList ownedRelationshipTypes = null;
 
     /**
-     * The cached value of the '{@link #getOwnedRelationshipFolders() <em>Owned Relationship Folders</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getOwnedRelationshipFolders() <em>Owned Relationship Folders</em>}' containment reference
+     * list. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getOwnedRelationshipFolders()
      * @generated
      * @ordered
@@ -95,8 +90,8 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
     protected EList ownedRelationshipFolders = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected RelationshipFolderImpl() {
@@ -104,8 +99,8 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -114,56 +109,72 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getPlaceholders() {
         if (placeholders == null) {
-            placeholders = new EObjectContainmentWithInverseEList(PlaceholderReference.class, this, RelationshipPackage.RELATIONSHIP_FOLDER__PLACEHOLDERS, RelationshipPackage.PLACEHOLDER_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER);
+            placeholders = new EObjectContainmentWithInverseEList(
+                                                                  PlaceholderReference.class,
+                                                                  this,
+                                                                  RelationshipPackage.RELATIONSHIP_FOLDER__PLACEHOLDERS,
+                                                                  RelationshipPackage.PLACEHOLDER_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER);
         }
         return placeholders;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getOwnedRelationships() {
         if (ownedRelationships == null) {
-            ownedRelationships = new EObjectContainmentWithInverseEList(Relationship.class, this, RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIPS, RelationshipPackage.RELATIONSHIP__RELATIONSHIP_CONTAINER);
+            ownedRelationships = new EObjectContainmentWithInverseEList(
+                                                                        Relationship.class,
+                                                                        this,
+                                                                        RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIPS,
+                                                                        RelationshipPackage.RELATIONSHIP__RELATIONSHIP_CONTAINER);
         }
         return ownedRelationships;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getOwnedRelationshipTypes() {
         if (ownedRelationshipTypes == null) {
-            ownedRelationshipTypes = new EObjectContainmentWithInverseEList(RelationshipType.class, this, RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIP_TYPES, RelationshipPackage.RELATIONSHIP_TYPE__OWNER);
+            ownedRelationshipTypes = new EObjectContainmentWithInverseEList(
+                                                                            RelationshipType.class,
+                                                                            this,
+                                                                            RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIP_TYPES,
+                                                                            RelationshipPackage.RELATIONSHIP_TYPE__OWNER);
         }
         return ownedRelationshipTypes;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getOwnedRelationshipFolders() {
         if (ownedRelationshipFolders == null) {
-            ownedRelationshipFolders = new EObjectContainmentWithInverseEList(RelationshipFolder.class, this, RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIP_FOLDERS, RelationshipPackage.RELATIONSHIP_FOLDER__OWNER);
+            ownedRelationshipFolders = new EObjectContainmentWithInverseEList(
+                                                                              RelationshipFolder.class,
+                                                                              this,
+                                                                              RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIP_FOLDERS,
+                                                                              RelationshipPackage.RELATIONSHIP_FOLDER__OWNER);
         }
         return ownedRelationshipFolders;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public RelationshipFolder getOwner() {
@@ -172,33 +183,37 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setOwner(RelationshipFolder newOwner) {
+    public void setOwner( RelationshipFolder newOwner ) {
         if (newOwner != eContainer || (eContainerFeatureID != RelationshipPackage.RELATIONSHIP_FOLDER__OWNER && newOwner != null)) {
-            if (EcoreUtil.isAncestor(this, newOwner))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newOwner)) throw new IllegalArgumentException(
+                                                                                         "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newOwner != null)
-                msgs = ((InternalEObject)newOwner).eInverseAdd(this, RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIP_FOLDERS, RelationshipFolder.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newOwner != null) msgs = ((InternalEObject)newOwner).eInverseAdd(this,
+                                                                                 RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIP_FOLDERS,
+                                                                                 RelationshipFolder.class,
+                                                                                 msgs);
             msgs = eBasicSetContainer((InternalEObject)newOwner, RelationshipPackage.RELATIONSHIP_FOLDER__OWNER, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.RELATIONSHIP_FOLDER__OWNER, newOwner, newOwner));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          RelationshipPackage.RELATIONSHIP_FOLDER__OWNER,
+                                                                          newOwner, newOwner));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case RelationshipPackage.RELATIONSHIP_FOLDER__PLACEHOLDERS:
@@ -210,25 +225,26 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
                 case RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIP_FOLDERS:
                     return ((InternalEList)getOwnedRelationshipFolders()).basicAdd(otherEnd, msgs);
                 case RelationshipPackage.RELATIONSHIP_FOLDER__OWNER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, RelationshipPackage.RELATIONSHIP_FOLDER__OWNER, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case RelationshipPackage.RELATIONSHIP_FOLDER__PLACEHOLDERS:
@@ -249,16 +265,19 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case RelationshipPackage.RELATIONSHIP_FOLDER__OWNER:
-                    return eContainer.eInverseRemove(this, RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIP_FOLDERS, RelationshipFolder.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIP_FOLDERS,
+                                                     RelationshipFolder.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -267,12 +286,13 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.RELATIONSHIP_FOLDER__NAME:
                 return getName();
@@ -291,12 +311,13 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.RELATIONSHIP_FOLDER__NAME:
                 setName((String)newValue);
@@ -325,12 +346,12 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.RELATIONSHIP_FOLDER__NAME:
                 setName(NAME_EDEFAULT);
@@ -355,12 +376,12 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.RELATIONSHIP_FOLDER__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -379,58 +400,68 @@ public class RelationshipFolderImpl extends RelationshipEntityImpl implements Re
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public int eBaseStructuralFeatureID(int derivedFeatureID, Class baseClass) {
+    public int eBaseStructuralFeatureID( int derivedFeatureID,
+                                         Class baseClass ) {
         if (baseClass == PlaceholderReferenceContainer.class) {
             switch (derivedFeatureID) {
-                case RelationshipPackage.RELATIONSHIP_FOLDER__PLACEHOLDERS: return RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS;
-                default: return -1;
+                case RelationshipPackage.RELATIONSHIP_FOLDER__PLACEHOLDERS:
+                    return RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS;
+                default:
+                    return -1;
             }
         }
         if (baseClass == RelationshipContainer.class) {
             switch (derivedFeatureID) {
-                case RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIPS: return RelationshipPackage.RELATIONSHIP_CONTAINER__OWNED_RELATIONSHIPS;
-                default: return -1;
+                case RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIPS:
+                    return RelationshipPackage.RELATIONSHIP_CONTAINER__OWNED_RELATIONSHIPS;
+                default:
+                    return -1;
             }
         }
         return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public int eDerivedStructuralFeatureID(int baseFeatureID, Class baseClass) {
+    public int eDerivedStructuralFeatureID( int baseFeatureID,
+                                            Class baseClass ) {
         if (baseClass == PlaceholderReferenceContainer.class) {
             switch (baseFeatureID) {
-                case RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS: return RelationshipPackage.RELATIONSHIP_FOLDER__PLACEHOLDERS;
-                default: return -1;
+                case RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS:
+                    return RelationshipPackage.RELATIONSHIP_FOLDER__PLACEHOLDERS;
+                default:
+                    return -1;
             }
         }
         if (baseClass == RelationshipContainer.class) {
             switch (baseFeatureID) {
-                case RelationshipPackage.RELATIONSHIP_CONTAINER__OWNED_RELATIONSHIPS: return RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIPS;
-                default: return -1;
+                case RelationshipPackage.RELATIONSHIP_CONTAINER__OWNED_RELATIONSHIPS:
+                    return RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIPS;
+                default:
+                    return -1;
             }
         }
         return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     @Override
     public IStatus isValid() {
         final String msg = RelationshipMetamodelPlugin.Util.getString("RelationshipFolderImpl.Folder_is_valid"); //$NON-NLS-1$
-        return new Status(IStatus.OK,RelationshipMetamodelPlugin.PLUGIN_ID,0,msg,null);
+        return new Status(IStatus.OK, RelationshipMetamodelPlugin.PLUGIN_ID, 0, msg, null);
     }
 
-} //RelationshipFolderImpl
+} // RelationshipFolderImpl

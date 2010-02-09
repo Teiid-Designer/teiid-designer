@@ -28,7 +28,7 @@ import com.metamatrix.core.util.PluginUtilImpl;
  */
 public class WsdlMetamodelPlugin extends Plugin {
     public static final String PLUGIN_ID = "org.teiid.designer.metamodels.wsdl"; //$NON-NLS-1$
-    
+
     public static final String PACKAGE_ID = WsdlMetamodelPlugin.class.getPackage().getName();
 
     /**
@@ -99,11 +99,10 @@ public class WsdlMetamodelPlugin extends Plugin {
      * 
      * @return the EMF ResourceLocator used when run as a plugin
      */
-    public static ResourceLocator getPluginResourceLocator() {
+    public static ResourceLocator getPluginResourceLocator() { // NO_UCD
         return RESOURCE_LOCATOR;
     }
 
-    public static boolean DEBUG = false;
     static WsdlMetamodelPlugin INSTANCE = null;
 
     /**

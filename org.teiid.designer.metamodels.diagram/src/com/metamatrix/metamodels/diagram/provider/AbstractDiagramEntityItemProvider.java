@@ -126,7 +126,7 @@ public class AbstractDiagramEntityItemProvider extends PresentationEntityItemPro
      * 
      * @generated
      */
-    protected void addModelObjectPropertyDescriptorGen( Object object ) {
+    protected void addModelObjectPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_AbstractDiagramEntity_modelObject_feature"), //$NON-NLS-1$

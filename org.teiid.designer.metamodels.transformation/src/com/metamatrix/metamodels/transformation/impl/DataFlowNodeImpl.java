@@ -28,33 +28,24 @@ import com.metamatrix.metamodels.transformation.DataFlowNode;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Data Flow Node</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Data Flow Node</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowNodeImpl#getName <em>Name</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowNodeImpl#getOwner <em>Owner</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowNodeImpl#getInputLinks <em>Input Links</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowNodeImpl#getOutputLinks <em>Output Links</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowNodeImpl#getName <em>Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowNodeImpl#getOwner <em>Owner</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowNodeImpl#getInputLinks <em>Input Links</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowNodeImpl#getOutputLinks <em>Output Links</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -62,9 +53,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -72,9 +62,9 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     protected String name = NAME_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getInputLinks() <em>Input Links</em>}' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getInputLinks() <em>Input Links</em>}' reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getInputLinks()
      * @generated
      * @ordered
@@ -82,9 +72,9 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     protected EList inputLinks = null;
 
     /**
-     * The cached value of the '{@link #getOutputLinks() <em>Output Links</em>}' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getOutputLinks() <em>Output Links</em>}' reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getOutputLinks()
      * @generated
      * @ordered
@@ -92,8 +82,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     protected EList outputLinks = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected DataFlowNodeImpl() {
@@ -101,8 +91,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -111,8 +101,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getName() {
@@ -120,20 +110,20 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setName(String newName) {
+    public void setName( String newName ) {
         String oldName = name;
         name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.DATA_FLOW_NODE__NAME, oldName, name));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.DATA_FLOW_NODE__NAME, oldName, name));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public DataFlowMappingRoot getOwner() {
@@ -142,53 +132,58 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setOwner(DataFlowMappingRoot newOwner) {
+    public void setOwner( DataFlowMappingRoot newOwner ) {
         if (newOwner != eContainer || (eContainerFeatureID != TransformationPackage.DATA_FLOW_NODE__OWNER && newOwner != null)) {
-            if (EcoreUtil.isAncestor(this, newOwner))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newOwner)) throw new IllegalArgumentException(
+                                                                                         "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newOwner != null)
-                msgs = ((InternalEObject)newOwner).eInverseAdd(this, TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES, DataFlowMappingRoot.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newOwner != null) msgs = ((InternalEObject)newOwner).eInverseAdd(this,
+                                                                                 TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES,
+                                                                                 DataFlowMappingRoot.class,
+                                                                                 msgs);
             msgs = eBasicSetContainer((InternalEObject)newOwner, TransformationPackage.DATA_FLOW_NODE__OWNER, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.DATA_FLOW_NODE__OWNER, newOwner, newOwner));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          TransformationPackage.DATA_FLOW_NODE__OWNER, newOwner,
+                                                                          newOwner));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getInputLinks() {
         if (inputLinks == null) {
-            inputLinks = new EObjectWithInverseResolvingEList(DataFlowLink.class, this, TransformationPackage.DATA_FLOW_NODE__INPUT_LINKS, TransformationPackage.DATA_FLOW_LINK__OUTPUT_NODE);
+            inputLinks = new EObjectWithInverseResolvingEList(DataFlowLink.class, this,
+                                                              TransformationPackage.DATA_FLOW_NODE__INPUT_LINKS,
+                                                              TransformationPackage.DATA_FLOW_LINK__OUTPUT_NODE);
         }
         return inputLinks;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getOutputLinks() {
         if (outputLinks == null) {
-            outputLinks = new EObjectWithInverseResolvingEList(DataFlowLink.class, this, TransformationPackage.DATA_FLOW_NODE__OUTPUT_LINKS, TransformationPackage.DATA_FLOW_LINK__INPUT_NODE);
+            outputLinks = new EObjectWithInverseResolvingEList(DataFlowLink.class, this,
+                                                               TransformationPackage.DATA_FLOW_NODE__OUTPUT_LINKS,
+                                                               TransformationPackage.DATA_FLOW_LINK__INPUT_NODE);
         }
         return outputLinks;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     public List getInputNodes() {
@@ -204,8 +199,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     public List getOutputNodes() {
@@ -221,8 +216,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public List getProjectedSymbols() {
@@ -232,8 +227,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getSqlString() {
@@ -243,17 +238,19 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.DATA_FLOW_NODE__OWNER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.DATA_FLOW_NODE__OWNER, msgs);
                 case TransformationPackage.DATA_FLOW_NODE__INPUT_LINKS:
                     return ((InternalEList)getInputLinks()).basicAdd(otherEnd, msgs);
@@ -263,18 +260,20 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.DATA_FLOW_NODE__OWNER:
@@ -291,16 +290,19 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.DATA_FLOW_NODE__OWNER:
-                    return eContainer.eInverseRemove(this, TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES, DataFlowMappingRoot.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES,
+                                                     DataFlowMappingRoot.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -309,12 +311,13 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.DATA_FLOW_NODE__NAME:
                 return getName();
@@ -329,12 +332,13 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.DATA_FLOW_NODE__NAME:
                 setName((String)newValue);
@@ -355,12 +359,12 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.DATA_FLOW_NODE__NAME:
                 setName(NAME_EDEFAULT);
@@ -379,12 +383,12 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.DATA_FLOW_NODE__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -399,8 +403,8 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -414,4 +418,4 @@ public class DataFlowNodeImpl extends EObjectImpl implements DataFlowNode {
         return result.toString();
     }
 
-} //DataFlowNodeImpl
+} // DataFlowNodeImpl

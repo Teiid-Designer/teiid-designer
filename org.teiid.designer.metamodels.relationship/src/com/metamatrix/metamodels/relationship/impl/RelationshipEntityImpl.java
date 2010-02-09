@@ -17,30 +17,21 @@ import com.metamatrix.metamodels.relationship.RelationshipEntity;
 import com.metamatrix.metamodels.relationship.RelationshipPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Entity</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Entity</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipEntityImpl#getName <em>Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipEntityImpl#getName <em>Name</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public abstract class RelationshipEntityImpl extends EObjectImpl implements RelationshipEntity {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -48,9 +39,8 @@ public abstract class RelationshipEntityImpl extends EObjectImpl implements Rela
     protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -58,8 +48,8 @@ public abstract class RelationshipEntityImpl extends EObjectImpl implements Rela
     protected String name = NAME_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected RelationshipEntityImpl() {
@@ -67,8 +57,8 @@ public abstract class RelationshipEntityImpl extends EObjectImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -77,8 +67,8 @@ public abstract class RelationshipEntityImpl extends EObjectImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getName() {
@@ -86,42 +76,43 @@ public abstract class RelationshipEntityImpl extends EObjectImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setName(String newName) {
+    public void setName( String newName ) {
         String oldName = name;
         name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.RELATIONSHIP_ENTITY__NAME, oldName, name));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.RELATIONSHIP_ENTITY__NAME, oldName, name));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     public abstract IStatus isValid();
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public IStatus isValidGen() {
+    public IStatus isValidGen() { // NO_UCD
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.RELATIONSHIP_ENTITY__NAME:
                 return getName();
@@ -130,12 +121,13 @@ public abstract class RelationshipEntityImpl extends EObjectImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.RELATIONSHIP_ENTITY__NAME:
                 setName((String)newValue);
@@ -145,12 +137,12 @@ public abstract class RelationshipEntityImpl extends EObjectImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.RELATIONSHIP_ENTITY__NAME:
                 setName(NAME_EDEFAULT);
@@ -160,12 +152,12 @@ public abstract class RelationshipEntityImpl extends EObjectImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.RELATIONSHIP_ENTITY__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -174,8 +166,8 @@ public abstract class RelationshipEntityImpl extends EObjectImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -189,4 +181,4 @@ public abstract class RelationshipEntityImpl extends EObjectImpl implements Rela
         return result.toString();
     }
 
-} //RelationshipEntityImpl
+} // RelationshipEntityImpl

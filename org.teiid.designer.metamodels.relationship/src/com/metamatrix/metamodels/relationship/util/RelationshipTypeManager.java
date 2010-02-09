@@ -68,20 +68,20 @@ public class RelationshipTypeManager {
 
     public static class Names {
         public static final String ANY = "Any"; //$NON-NLS-1$
-        public static final String GENERIC = "Generic"; //$NON-NLS-1$
-        public static final String COMPOSITION = "Composition"; //$NON-NLS-1$
-        public static final String GENERALIZATION = "Generalization"; //$NON-NLS-1$
-        public static final String DEPENDENCY = "Dependency"; //$NON-NLS-1$
-        public static final String CLASSIFICATION = "Classification"; //$NON-NLS-1$
-        public static final String CAUSALITY = "Causality"; //$NON-NLS-1$
-        public static final String PROCESS = "Process"; //$NON-NLS-1$
-        public static final String REALIZATION = "Realization"; //$NON-NLS-1$
-        public static final String USAGE = "Usage"; //$NON-NLS-1$
-        public static final String REFINEMENT = "Refinement"; //$NON-NLS-1$
-        public static final String TRANSFORMATION = "Transformation"; //$NON-NLS-1$
+        public static final String GENERIC = "Generic"; //$NON-NLS-1$ // NO_UCD
+        public static final String COMPOSITION = "Composition"; //$NON-NLS-1$ // NO_UCD
+        public static final String GENERALIZATION = "Generalization"; //$NON-NLS-1$ // NO_UCD
+        public static final String DEPENDENCY = "Dependency"; //$NON-NLS-1$ // NO_UCD
+        public static final String CLASSIFICATION = "Classification"; //$NON-NLS-1$ // NO_UCD
+        public static final String CAUSALITY = "Causality"; //$NON-NLS-1$ // NO_UCD
+        public static final String PROCESS = "Process"; //$NON-NLS-1$ // NO_UCD
+        public static final String REALIZATION = "Realization"; //$NON-NLS-1$ // NO_UCD
+        public static final String USAGE = "Usage"; //$NON-NLS-1$ // NO_UCD
+        public static final String REFINEMENT = "Refinement"; //$NON-NLS-1$ // NO_UCD
+        public static final String TRANSFORMATION = "Transformation"; //$NON-NLS-1$ // NO_UCD
         public static final String MANIFESTATION = "Manifestation"; //$NON-NLS-1$
-        public static final String CONSUMPTION = "Consumption"; //$NON-NLS-1$
-        public static final String COMPLIANCE = "Compliance"; //$NON-NLS-1$
+        public static final String CONSUMPTION = "Consumption"; //$NON-NLS-1$ // NO_UCD
+        public static final String COMPLIANCE = "Compliance"; //$NON-NLS-1$ // NO_UCD
     }
 
     /**
@@ -98,7 +98,7 @@ public class RelationshipTypeManager {
     /**
      * Construct an instance of RelationshipTypeManager.
      */
-    public RelationshipTypeManager( final Resource resource ) {
+    public RelationshipTypeManager( final Resource resource ) { // NO_UCD
         super();
         ArgCheck.isNotNull(resource);
         this.uri = resource.getURI();
@@ -166,7 +166,7 @@ public class RelationshipTypeManager {
      * @param name
      * @return return true if a built-in RelationshipType instance exists with the specified name, or false otherwise.
      */
-    public boolean hasBuiltInRelationshipType( final String name ) {
+    public boolean hasBuiltInRelationshipType( final String name ) { // NO_UCD
         return hasBuiltInRelationshipType(name, false);
     }
 
@@ -225,7 +225,7 @@ public class RelationshipTypeManager {
     // P R O T E C T E D M E T H O D S
     // ==================================================================================
 
-    protected URI getUri() {
+    protected URI getUri() { // NO_UCD
         return this.uri;
     }
 

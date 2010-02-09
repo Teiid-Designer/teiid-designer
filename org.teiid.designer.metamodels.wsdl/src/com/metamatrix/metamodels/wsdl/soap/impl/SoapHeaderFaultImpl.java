@@ -27,94 +27,83 @@ import com.metamatrix.metamodels.wsdl.soap.SoapPackage;
 import com.metamatrix.metamodels.wsdl.soap.SoapUseType;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Header Fault</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Header Fault</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapHeaderFaultImpl#getMessagePart <em>Message Part</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapHeaderFaultImpl#getSoapHeader <em>Soap Header</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapHeaderFaultImpl#getParts <em>Parts</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapHeaderFaultImpl#getMessage <em>Message</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapHeaderFaultImpl#getMessagePart <em>Message Part</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapHeaderFaultImpl#getSoapHeader <em>Soap Header</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapHeaderFaultImpl#getParts <em>Parts</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapHeaderFaultImpl#getMessage <em>Message</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFault {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getMessagePart() <em>Message Part</em>}' reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getMessagePart() <em>Message Part</em>}' reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getMessagePart()
      * @generated
      * @ordered
      */
-	protected EList messagePart = null;
+    protected EList messagePart = null;
 
     /**
-     * The cached value of the '{@link #getParts() <em>Parts</em>}' attribute list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getParts() <em>Parts</em>}' attribute list. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getParts()
      * @generated
      * @ordered
      */
-	protected EList parts = null;
+    protected EList parts = null;
 
     /**
-     * The default value of the '{@link #getMessage() <em>Message</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getMessage()
      * @generated
      * @ordered
      */
-	protected static final String MESSAGE_EDEFAULT = null;
+    protected static final String MESSAGE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getMessage() <em>Message</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getMessage()
      * @generated
      * @ordered
      */
-	protected String message = MESSAGE_EDEFAULT;
+    protected String message = MESSAGE_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected SoapHeaderFaultImpl() {
+    protected SoapHeaderFaultImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return SoapPackage.eINSTANCE.getSoapHeaderFault();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getParts() {
+    public EList getParts() {
         if (parts == null) {
             parts = new EDataTypeUniqueEList(String.class, this, SoapPackage.SOAP_HEADER_FAULT__PARTS);
         }
@@ -122,32 +111,32 @@ public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFaul
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getMessage() {
+    public String getMessage() {
         return message;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setMessage(String newMessage) {
+    public void setMessage( String newMessage ) {
         String oldMessage = message;
         message = newMessage;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_HEADER_FAULT__MESSAGE, oldMessage, message));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   SoapPackage.SOAP_HEADER_FAULT__MESSAGE, oldMessage, message));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getMessagePart() {
+    public EList getMessagePart() {
         if (messagePart == null) {
             messagePart = new EObjectResolvingEList(MessagePart.class, this, SoapPackage.SOAP_HEADER_FAULT__MESSAGE_PART);
         }
@@ -155,69 +144,74 @@ public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFaul
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public SoapHeader getSoapHeader() {
+    public SoapHeader getSoapHeader() {
         if (eContainerFeatureID != SoapPackage.SOAP_HEADER_FAULT__SOAP_HEADER) return null;
         return (SoapHeader)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setSoapHeader(SoapHeader newSoapHeader) {
-        if (newSoapHeader != eContainer || (eContainerFeatureID != SoapPackage.SOAP_HEADER_FAULT__SOAP_HEADER && newSoapHeader != null)) {
-            if (EcoreUtil.isAncestor(this, newSoapHeader))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setSoapHeader( SoapHeader newSoapHeader ) {
+        if (newSoapHeader != eContainer
+            || (eContainerFeatureID != SoapPackage.SOAP_HEADER_FAULT__SOAP_HEADER && newSoapHeader != null)) {
+            if (EcoreUtil.isAncestor(this, newSoapHeader)) throw new IllegalArgumentException(
+                                                                                              "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newSoapHeader != null)
-                msgs = ((InternalEObject)newSoapHeader).eInverseAdd(this, SoapPackage.SOAP_HEADER__HEADER_FAULT, SoapHeader.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newSoapHeader != null) msgs = ((InternalEObject)newSoapHeader).eInverseAdd(this,
+                                                                                           SoapPackage.SOAP_HEADER__HEADER_FAULT,
+                                                                                           SoapHeader.class,
+                                                                                           msgs);
             msgs = eBasicSetContainer((InternalEObject)newSoapHeader, SoapPackage.SOAP_HEADER_FAULT__SOAP_HEADER, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_HEADER_FAULT__SOAP_HEADER, newSoapHeader, newSoapHeader));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          SoapPackage.SOAP_HEADER_FAULT__SOAP_HEADER,
+                                                                          newSoapHeader, newSoapHeader));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case SoapPackage.SOAP_HEADER_FAULT__BINDING_FAULT:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, SoapPackage.SOAP_HEADER_FAULT__BINDING_FAULT, msgs);
                 case SoapPackage.SOAP_HEADER_FAULT__SOAP_HEADER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, SoapPackage.SOAP_HEADER_FAULT__SOAP_HEADER, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case SoapPackage.SOAP_HEADER_FAULT__BINDING_FAULT:
@@ -232,12 +226,12 @@ public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFaul
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case SoapPackage.SOAP_HEADER_FAULT__BINDING_FAULT:
@@ -252,12 +246,13 @@ public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFaul
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_HEADER_FAULT__BINDING_FAULT:
                 return getBindingFault();
@@ -280,12 +275,13 @@ public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFaul
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_HEADER_FAULT__BINDING_FAULT:
                 setBindingFault((BindingFault)newValue);
@@ -319,12 +315,12 @@ public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFaul
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_HEADER_FAULT__BINDING_FAULT:
                 setBindingFault((BindingFault)null);
@@ -355,12 +351,12 @@ public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFaul
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_HEADER_FAULT__BINDING_FAULT:
                 return getBindingFault() != null;
@@ -383,11 +379,11 @@ public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFaul
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     public String toString() {
         if (eIsProxy()) return super.toString();
 
@@ -400,4 +396,4 @@ public class SoapHeaderFaultImpl extends SoapFaultImpl implements SoapHeaderFaul
         return result.toString();
     }
 
-} //SoapHeaderFaultImpl
+} // SoapHeaderFaultImpl

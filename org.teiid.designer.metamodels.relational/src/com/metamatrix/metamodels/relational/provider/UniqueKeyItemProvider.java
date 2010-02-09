@@ -139,7 +139,7 @@ public class UniqueKeyItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addForeignKeysPropertyDescriptorGen( Object object ) {
+    protected void addForeignKeysPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_UniqueKey_foreignKeys_feature"), //$NON-NLS-1$

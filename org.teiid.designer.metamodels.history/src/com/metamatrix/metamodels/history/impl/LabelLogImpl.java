@@ -21,30 +21,22 @@ import com.metamatrix.metamodels.history.Label;
 import com.metamatrix.metamodels.history.LabelLog;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Label Log</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Label Log</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.history.impl.LabelLogImpl#getLabels <em>Labels</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.LabelLogImpl#getLabels <em>Labels</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class LabelLogImpl extends HistoryLogImpl implements LabelLog {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getLabels() <em>Labels</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getLabels() <em>Labels</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getLabels()
      * @generated
      * @ordered
@@ -52,8 +44,8 @@ public class LabelLogImpl extends HistoryLogImpl implements LabelLog {
     protected EList labels = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected LabelLogImpl() {
@@ -61,8 +53,8 @@ public class LabelLogImpl extends HistoryLogImpl implements LabelLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -71,29 +63,36 @@ public class LabelLogImpl extends HistoryLogImpl implements LabelLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getLabels() {
         if (labels == null) {
-            labels = new EObjectContainmentWithInverseEList(Label.class, this, HistoryPackage.LABEL_LOG__LABELS, HistoryPackage.LABEL__HISTORY_LOG);
+            labels = new EObjectContainmentWithInverseEList(Label.class, this, HistoryPackage.LABEL_LOG__LABELS,
+                                                            HistoryPackage.LABEL__HISTORY_LOG);
         }
         return labels;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HistoryPackage.LABEL_LOG__HISTORY_CRITERIA:
-                    if (historyCriteria != null)
-                        msgs = ((InternalEObject)historyCriteria).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - HistoryPackage.LABEL_LOG__HISTORY_CRITERIA, null, msgs);
+                    if (historyCriteria != null) msgs = ((InternalEObject)historyCriteria).eInverseRemove(this,
+                                                                                                          EOPPOSITE_FEATURE_BASE
+                                                                                                          - HistoryPackage.LABEL_LOG__HISTORY_CRITERIA,
+                                                                                                          null,
+                                                                                                          msgs);
                     return basicSetHistoryCriteria((HistoryCriteria)otherEnd, msgs);
                 case HistoryPackage.LABEL_LOG__LABELS:
                     return ((InternalEList)getLabels()).basicAdd(otherEnd, msgs);
@@ -101,18 +100,20 @@ public class LabelLogImpl extends HistoryLogImpl implements LabelLog {
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HistoryPackage.LABEL_LOG__HISTORY_CRITERIA:
@@ -127,12 +128,13 @@ public class LabelLogImpl extends HistoryLogImpl implements LabelLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.LABEL_LOG__HISTORY_CRITERIA:
                 return getHistoryCriteria();
@@ -147,12 +149,13 @@ public class LabelLogImpl extends HistoryLogImpl implements LabelLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.LABEL_LOG__HISTORY_CRITERIA:
                 setHistoryCriteria((HistoryCriteria)newValue);
@@ -172,12 +175,12 @@ public class LabelLogImpl extends HistoryLogImpl implements LabelLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.LABEL_LOG__HISTORY_CRITERIA:
                 setHistoryCriteria((HistoryCriteria)null);
@@ -196,12 +199,12 @@ public class LabelLogImpl extends HistoryLogImpl implements LabelLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.LABEL_LOG__HISTORY_CRITERIA:
                 return historyCriteria != null;
@@ -215,4 +218,4 @@ public class LabelLogImpl extends HistoryLogImpl implements LabelLog {
         return eDynamicIsSet(eFeature);
     }
 
-} //LabelLogImpl
+} // LabelLogImpl

@@ -74,7 +74,7 @@ public class XmlChoiceItemProvider extends XmlContainerNodeItemProvider {
      * 
      * @generated
      */
-    protected void addDefaultErrorModePropertyDescriptorGen( Object object ) {
+    protected void addDefaultErrorModePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_XmlChoice_defaultErrorMode_feature"), //$NON-NLS-1$
@@ -98,8 +98,8 @@ public class XmlChoiceItemProvider extends XmlContainerNodeItemProvider {
                                                                getResourceLocator(),
                                                                getString("_UI_XmlChoice_defaultOption_feature"), //$NON-NLS-1$
                                                                getString("XmlDocumentNodeItemProvider._UI_PropertyDescriptor_description_DefaultOption"), //$NON-NLS-1$ 
-                                                               XmlDocumentPackage.eINSTANCE.getXmlChoice_DefaultOption(),
-                                                               true, null, null, null) {
+                                                               XmlDocumentPackage.eINSTANCE.getXmlChoice_DefaultOption(), true,
+                                                               null, null, null) {
 
             /**
              * @see org.eclipse.emf.edit.provider.ItemPropertyDescriptor#getChoiceOfValues(java.lang.Object)
@@ -129,7 +129,7 @@ public class XmlChoiceItemProvider extends XmlContainerNodeItemProvider {
      * 
      * @generated
      */
-    protected void addDefaultOptionPropertyDescriptorGen( Object object ) {
+    protected void addDefaultOptionPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_XmlChoice_defaultOption_feature"), //$NON-NLS-1$

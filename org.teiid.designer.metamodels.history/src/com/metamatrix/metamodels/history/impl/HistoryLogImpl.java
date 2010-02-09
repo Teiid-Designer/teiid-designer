@@ -19,32 +19,24 @@ import com.metamatrix.metamodels.history.HistoryLog;
 import com.metamatrix.metamodels.history.HistoryPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Log</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Log</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.history.impl.HistoryLogImpl#getHistoryCriteria <em>History Criteria</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.HistoryLogImpl#getName <em>Name</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.HistoryLogImpl#getUri <em>Uri</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.HistoryLogImpl#getHistoryCriteria <em>History Criteria</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.HistoryLogImpl#getName <em>Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.HistoryLogImpl#getUri <em>Uri</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getHistoryCriteria() <em>History Criteria</em>}' containment reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getHistoryCriteria() <em>History Criteria</em>}' containment reference. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getHistoryCriteria()
      * @generated
      * @ordered
@@ -52,9 +44,8 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
     protected HistoryCriteria historyCriteria = null;
 
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -62,9 +53,8 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
     protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -72,9 +62,8 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
     protected String name = NAME_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getUri() <em>Uri</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getUri() <em>Uri</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getUri()
      * @generated
      * @ordered
@@ -82,9 +71,8 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
     protected static final String URI_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getUri() <em>Uri</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getUri() <em>Uri</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getUri()
      * @generated
      * @ordered
@@ -92,8 +80,8 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
     protected String uri = URI_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected HistoryLogImpl() {
@@ -101,8 +89,8 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -111,8 +99,8 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getName() {
@@ -120,20 +108,20 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setName(String newName) {
+    public void setName( String newName ) {
         String oldName = name;
         name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.HISTORY_LOG__NAME, oldName, name));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.HISTORY_LOG__NAME,
+                                                                   oldName, name));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getUri() {
@@ -141,20 +129,20 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setUri(String newUri) {
+    public void setUri( String newUri ) {
         String oldUri = uri;
         uri = newUri;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.HISTORY_LOG__URI, oldUri, uri));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.HISTORY_LOG__URI,
+                                                                   oldUri, uri));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public HistoryCriteria getHistoryCriteria() {
@@ -162,68 +150,84 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public NotificationChain basicSetHistoryCriteria(HistoryCriteria newHistoryCriteria, NotificationChain msgs) {
+    public NotificationChain basicSetHistoryCriteria( HistoryCriteria newHistoryCriteria,
+                                                      NotificationChain msgs ) {
         HistoryCriteria oldHistoryCriteria = historyCriteria;
         historyCriteria = newHistoryCriteria;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, HistoryPackage.HISTORY_LOG__HISTORY_CRITERIA, oldHistoryCriteria, newHistoryCriteria);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+                                                                   HistoryPackage.HISTORY_LOG__HISTORY_CRITERIA,
+                                                                   oldHistoryCriteria, newHistoryCriteria);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setHistoryCriteria(HistoryCriteria newHistoryCriteria) {
+    public void setHistoryCriteria( HistoryCriteria newHistoryCriteria ) {
         if (newHistoryCriteria != historyCriteria) {
             NotificationChain msgs = null;
-            if (historyCriteria != null)
-                msgs = ((InternalEObject)historyCriteria).eInverseRemove(this, HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG, HistoryCriteria.class, msgs);
-            if (newHistoryCriteria != null)
-                msgs = ((InternalEObject)newHistoryCriteria).eInverseAdd(this, HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG, HistoryCriteria.class, msgs);
+            if (historyCriteria != null) msgs = ((InternalEObject)historyCriteria).eInverseRemove(this,
+                                                                                                  HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG,
+                                                                                                  HistoryCriteria.class,
+                                                                                                  msgs);
+            if (newHistoryCriteria != null) msgs = ((InternalEObject)newHistoryCriteria).eInverseAdd(this,
+                                                                                                     HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG,
+                                                                                                     HistoryCriteria.class,
+                                                                                                     msgs);
             msgs = basicSetHistoryCriteria(newHistoryCriteria, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.HISTORY_LOG__HISTORY_CRITERIA, newHistoryCriteria, newHistoryCriteria));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          HistoryPackage.HISTORY_LOG__HISTORY_CRITERIA,
+                                                                          newHistoryCriteria, newHistoryCriteria));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HistoryPackage.HISTORY_LOG__HISTORY_CRITERIA:
-                    if (historyCriteria != null)
-                        msgs = ((InternalEObject)historyCriteria).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - HistoryPackage.HISTORY_LOG__HISTORY_CRITERIA, null, msgs);
+                    if (historyCriteria != null) msgs = ((InternalEObject)historyCriteria).eInverseRemove(this,
+                                                                                                          EOPPOSITE_FEATURE_BASE
+                                                                                                          - HistoryPackage.HISTORY_LOG__HISTORY_CRITERIA,
+                                                                                                          null,
+                                                                                                          msgs);
                     return basicSetHistoryCriteria((HistoryCriteria)otherEnd, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HistoryPackage.HISTORY_LOG__HISTORY_CRITERIA:
@@ -236,12 +240,13 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.HISTORY_LOG__HISTORY_CRITERIA:
                 return getHistoryCriteria();
@@ -254,12 +259,13 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.HISTORY_LOG__HISTORY_CRITERIA:
                 setHistoryCriteria((HistoryCriteria)newValue);
@@ -275,12 +281,12 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.HISTORY_LOG__HISTORY_CRITERIA:
                 setHistoryCriteria((HistoryCriteria)null);
@@ -296,12 +302,12 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.HISTORY_LOG__HISTORY_CRITERIA:
                 return historyCriteria != null;
@@ -314,8 +320,8 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -331,4 +337,4 @@ public abstract class HistoryLogImpl extends EObjectImpl implements HistoryLog {
         return result.toString();
     }
 
-} //HistoryLogImpl
+} // HistoryLogImpl

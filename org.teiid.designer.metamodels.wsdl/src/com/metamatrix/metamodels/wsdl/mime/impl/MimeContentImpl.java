@@ -21,238 +21,234 @@ import com.metamatrix.metamodels.wsdl.mime.MimeElementOwner;
 import com.metamatrix.metamodels.wsdl.mime.MimePackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Content</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Content</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.wsdl.mime.impl.MimeContentImpl#getMimeElementOwner <em>Mime Element Owner</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.mime.impl.MimeContentImpl#getMessagePart <em>Message Part</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.mime.impl.MimeContentImpl#getType <em>Type</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.mime.impl.MimeContentImpl#isXml <em>Xml</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.mime.impl.MimeContentImpl#getMimeElementOwner <em>Mime Element Owner</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.mime.impl.MimeContentImpl#getMessagePart <em>Message Part</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.mime.impl.MimeContentImpl#getType <em>Type</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.mime.impl.MimeContentImpl#isXml <em>Xml</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class MimeContentImpl extends EObjectImpl implements MimeContent {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getMessagePart() <em>Message Part</em>}' reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getMessagePart() <em>Message Part</em>}' reference. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getMessagePart()
      * @generated
      * @ordered
      */
-	protected MessagePart messagePart = null;
+    protected MessagePart messagePart = null;
 
     /**
-     * The default value of the '{@link #getType() <em>Type</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getType() <em>Type</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getType()
      * @generated
      * @ordered
      */
-	protected static final String TYPE_EDEFAULT = null;
+    protected static final String TYPE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getType() <em>Type</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getType()
      * @generated
      * @ordered
      */
-	protected String type = TYPE_EDEFAULT;
+    protected String type = TYPE_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isXml() <em>Xml</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #isXml() <em>Xml</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #isXml()
      * @generated
      * @ordered
      */
-	protected static final boolean XML_EDEFAULT = false;
+    protected static final boolean XML_EDEFAULT = false;
 
     /**
-     * The cached value of the '{@link #isXml() <em>Xml</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #isXml() <em>Xml</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #isXml()
      * @generated
      * @ordered
      */
-	protected boolean xml = XML_EDEFAULT;
+    protected boolean xml = XML_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected MimeContentImpl() {
+    protected MimeContentImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return MimePackage.eINSTANCE.getMimeContent();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public MimeElementOwner getMimeElementOwner() {
+    public MimeElementOwner getMimeElementOwner() {
         if (eContainerFeatureID != MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER) return null;
         return (MimeElementOwner)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setMimeElementOwner(MimeElementOwner newMimeElementOwner) {
-        if (newMimeElementOwner != eContainer || (eContainerFeatureID != MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER && newMimeElementOwner != null)) {
-            if (EcoreUtil.isAncestor(this, newMimeElementOwner))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setMimeElementOwner( MimeElementOwner newMimeElementOwner ) {
+        if (newMimeElementOwner != eContainer
+            || (eContainerFeatureID != MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER && newMimeElementOwner != null)) {
+            if (EcoreUtil.isAncestor(this, newMimeElementOwner)) throw new IllegalArgumentException(
+                                                                                                    "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newMimeElementOwner != null)
-                msgs = ((InternalEObject)newMimeElementOwner).eInverseAdd(this, MimePackage.MIME_ELEMENT_OWNER__MIME_ELEMENTS, MimeElementOwner.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newMimeElementOwner != null) msgs = ((InternalEObject)newMimeElementOwner).eInverseAdd(this,
+                                                                                                       MimePackage.MIME_ELEMENT_OWNER__MIME_ELEMENTS,
+                                                                                                       MimeElementOwner.class,
+                                                                                                       msgs);
             msgs = eBasicSetContainer((InternalEObject)newMimeElementOwner, MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER, newMimeElementOwner, newMimeElementOwner));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER,
+                                                                          newMimeElementOwner, newMimeElementOwner));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getType() {
+    public String getType() {
         return type;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setType(String newType) {
+    public void setType( String newType ) {
         String oldType = type;
         type = newType;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, MimePackage.MIME_CONTENT__TYPE, oldType, type));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, MimePackage.MIME_CONTENT__TYPE,
+                                                                   oldType, type));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public boolean isXml() {
+    public boolean isXml() {
         return xml;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setXml(boolean newXml) {
+    public void setXml( boolean newXml ) {
         boolean oldXml = xml;
         xml = newXml;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, MimePackage.MIME_CONTENT__XML, oldXml, xml));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, MimePackage.MIME_CONTENT__XML, oldXml,
+                                                                   xml));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public MessagePart getMessagePart() {
+    public MessagePart getMessagePart() {
         if (messagePart != null && messagePart.eIsProxy()) {
             MessagePart oldMessagePart = messagePart;
             messagePart = (MessagePart)eResolveProxy((InternalEObject)messagePart);
             if (messagePart != oldMessagePart) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, MimePackage.MIME_CONTENT__MESSAGE_PART, oldMessagePart, messagePart));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+                                                                           MimePackage.MIME_CONTENT__MESSAGE_PART,
+                                                                           oldMessagePart, messagePart));
             }
         }
         return messagePart;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public MessagePart basicGetMessagePart() {
+    public MessagePart basicGetMessagePart() {
         return messagePart;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setMessagePart(MessagePart newMessagePart) {
+    public void setMessagePart( MessagePart newMessagePart ) {
         MessagePart oldMessagePart = messagePart;
         messagePart = newMessagePart;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, MimePackage.MIME_CONTENT__MESSAGE_PART, oldMessagePart, messagePart));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   MimePackage.MIME_CONTENT__MESSAGE_PART, oldMessagePart,
+                                                                   messagePart));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER:
@@ -265,16 +261,19 @@ public class MimeContentImpl extends EObjectImpl implements MimeContent {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER:
-                    return eContainer.eInverseRemove(this, MimePackage.MIME_ELEMENT_OWNER__MIME_ELEMENTS, MimeElementOwner.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     MimePackage.MIME_ELEMENT_OWNER__MIME_ELEMENTS,
+                                                     MimeElementOwner.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -283,12 +282,13 @@ public class MimeContentImpl extends EObjectImpl implements MimeContent {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER:
                 return getMimeElementOwner();
@@ -304,12 +304,13 @@ public class MimeContentImpl extends EObjectImpl implements MimeContent {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER:
                 setMimeElementOwner((MimeElementOwner)newValue);
@@ -328,12 +329,12 @@ public class MimeContentImpl extends EObjectImpl implements MimeContent {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER:
                 setMimeElementOwner((MimeElementOwner)null);
@@ -352,12 +353,12 @@ public class MimeContentImpl extends EObjectImpl implements MimeContent {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case MimePackage.MIME_CONTENT__MIME_ELEMENT_OWNER:
                 return getMimeElementOwner() != null;
@@ -372,11 +373,11 @@ public class MimeContentImpl extends EObjectImpl implements MimeContent {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     public String toString() {
         if (eIsProxy()) return super.toString();
 
@@ -389,4 +390,4 @@ public class MimeContentImpl extends EObjectImpl implements MimeContent {
         return result.toString();
     }
 
-} //MimeContentImpl
+} // MimeContentImpl

@@ -82,7 +82,7 @@ public class UriValidator {
          * 
          * @since 4.3
          */
-        int INVALID_AUTHORITY = VALID_AUTHORITY * INVALID_FACTOR;
+        int INVALID_AUTHORITY = VALID_AUTHORITY * INVALID_FACTOR; // NO_UCD
 
         /**
          * Status code indicating the value is a valid {@link org.eclipse.emf.common.util.URI} device component.
@@ -96,7 +96,7 @@ public class UriValidator {
          * 
          * @since 4.3
          */
-        int INVALID_DEVICE = VALID_DEVICE * INVALID_FACTOR;
+        int INVALID_DEVICE = VALID_DEVICE * INVALID_FACTOR; // NO_UCD
 
         /**
          * Status code indicating the value is a valid {@link org.eclipse.emf.common.util.URI} fragment component.
@@ -110,7 +110,7 @@ public class UriValidator {
          * 
          * @since 4.3
          */
-        int INVALID_FRAGMENT = VALID_FRAGMENT * INVALID_FACTOR;
+        int INVALID_FRAGMENT = VALID_FRAGMENT * INVALID_FACTOR; // NO_UCD
 
         /**
          * Status code indicating the value is a valid {@link org.eclipse.emf.common.util.URI} jar authority component.
@@ -124,7 +124,7 @@ public class UriValidator {
          * 
          * @since 4.3
          */
-        int INVALID_ARCHIVE_AUTHORITY = VALID_ARCHIVE_AUTHORITY * INVALID_FACTOR;
+        int INVALID_ARCHIVE_AUTHORITY = VALID_ARCHIVE_AUTHORITY * INVALID_FACTOR; // NO_UCD
 
         /**
          * Status code indicating the value is a valid {@link org.eclipse.emf.common.util.URI} opaque part component.
@@ -138,7 +138,7 @@ public class UriValidator {
          * 
          * @since 4.3
          */
-        int INVALID_OPAQUE_PART = VALID_OPAQUE_PART * INVALID_FACTOR;
+        int INVALID_OPAQUE_PART = VALID_OPAQUE_PART * INVALID_FACTOR; // NO_UCD
 
         /**
          * Status code indicating the value is a valid {@link org.eclipse.emf.common.util.URI} query component.
@@ -152,7 +152,7 @@ public class UriValidator {
          * 
          * @since 4.3
          */
-        int INVALID_QUERY = VALID_QUERY * INVALID_FACTOR;
+        int INVALID_QUERY = VALID_QUERY * INVALID_FACTOR; // NO_UCD
 
         /**
          * Status code indicating the value is a valid {@link org.eclipse.emf.common.util.URI} scheme component.
@@ -166,7 +166,7 @@ public class UriValidator {
          * 
          * @since 4.3
          */
-        int INVALID_SCHEME = VALID_SCHEME * INVALID_FACTOR;
+        int INVALID_SCHEME = VALID_SCHEME * INVALID_FACTOR; // NO_UCD
 
         /**
          * Status code indicating the value is a valid {@link org.eclipse.emf.common.util.URI} segment component.
@@ -180,7 +180,7 @@ public class UriValidator {
          * 
          * @since 4.3
          */
-        int INVALID_SEGMENT = VALID_SEGMENT * INVALID_FACTOR;
+        int INVALID_SEGMENT = VALID_SEGMENT * INVALID_FACTOR; // NO_UCD
 
         /**
          * Status code indicating the value is a valid {@link org.eclipse.emf.common.util.URI} segment array component.
@@ -194,7 +194,7 @@ public class UriValidator {
          * 
          * @since 4.3
          */
-        int INVALID_SEGMENTS = VALID_SEGMENTS * INVALID_FACTOR;
+        int INVALID_SEGMENTS = VALID_SEGMENTS * INVALID_FACTOR; // NO_UCD
     }
 
     /**
@@ -371,7 +371,7 @@ public class UriValidator {
      * @return <code>true</code>if valid; <code>false</code> otherwise.
      * @since 4.3
      */
-    public static boolean isValid( String theUri ) {
+    public static boolean isValid( String theUri ) { // NO_UCD
         boolean result = false;
 
         if (StringUtil.isEmpty(theUri)) {
@@ -478,7 +478,7 @@ public class UriValidator {
      * @since 4.3
      * @see URI#validAuthority(java.lang.String)
      */
-    public static IStatus validateAuthority( String theAuthority ) {
+    public static IStatus validateAuthority( String theAuthority ) { // NO_UCD
         return createStatus(UriComponents.AUTHORITY, theAuthority, isValidAuthority(theAuthority));
     }
 
@@ -502,7 +502,7 @@ public class UriValidator {
      * @since 4.3
      * @see URI#validDevice(java.lang.String)
      */
-    public static IStatus validateDevice( String theDevice ) {
+    public static IStatus validateDevice( String theDevice ) { // NO_UCD
         return createStatus(UriComponents.DEVICE, theDevice, isValidDevice(theDevice));
     }
 
@@ -526,7 +526,7 @@ public class UriValidator {
      * @since 4.3
      * @see URI#validFragment(java.lang.String)
      */
-    public static IStatus validateFragment( String theFragment ) {
+    public static IStatus validateFragment( String theFragment ) { // NO_UCD
         return createStatus(UriComponents.FRAGMENT, theFragment, isValidFragment(theFragment));
     }
 
@@ -550,7 +550,7 @@ public class UriValidator {
      * @since 4.3
      * @see URI#validArchiveAuthority(java.lang.String)
      */
-    public static IStatus validateArchiveAuthority( String theArchiveAuthority ) {
+    public static IStatus validateArchiveAuthority( String theArchiveAuthority ) { // NO_UCD
         return createStatus(UriComponents.JAR_AUTHORITY, theArchiveAuthority, isValidArchiveAuthority(theArchiveAuthority));
     }
 
@@ -574,7 +574,7 @@ public class UriValidator {
      * @since 4.3
      * @see URI#validOpaquePart(java.lang.String)
      */
-    public static IStatus validateOpaquePart( String theOpaquePart ) {
+    public static IStatus validateOpaquePart( String theOpaquePart ) { // NO_UCD
         return createStatus(UriComponents.OPAQUE_PART, theOpaquePart, isValidOpaquePart(theOpaquePart));
     }
 
@@ -598,7 +598,7 @@ public class UriValidator {
      * @since 4.3
      * @see URI#validQuery(java.lang.String)
      */
-    public static IStatus validateQuery( String theQuery ) {
+    public static IStatus validateQuery( String theQuery ) { // NO_UCD
         return createStatus(UriComponents.QUERY, theQuery, isValidQuery(theQuery));
     }
 
@@ -622,7 +622,7 @@ public class UriValidator {
      * @since 4.3
      * @see URI#validScheme(java.lang.String)
      */
-    public static IStatus validateScheme( String theScheme ) {
+    public static IStatus validateScheme( String theScheme ) { // NO_UCD
         return createStatus(UriComponents.SCHEME, theScheme, isValidScheme(theScheme));
     }
 
@@ -646,7 +646,7 @@ public class UriValidator {
      * @since 4.3
      * @see URI#validSegment(java.lang.String)
      */
-    public static IStatus validateSegment( String theSegment ) {
+    public static IStatus validateSegment( String theSegment ) { // NO_UCD
         return createStatus(UriComponents.SEGMENT, theSegment, isValidSegment(theSegment));
     }
 
@@ -659,7 +659,7 @@ public class UriValidator {
      * @since 4.3
      * @see URI#validSegments(java.lang.String[])
      */
-    public static boolean isValidSegments( String[] theSegments ) throws AssertionError {
+    public static boolean isValidSegments( String[] theSegments ) throws AssertionError { // NO_UCD
         Assertion.isNotNull(theSegments, createNullValueMessage(UriComponents.SEGMENTS));
         return URI.validSegments(theSegments);
     }
@@ -673,7 +673,7 @@ public class UriValidator {
      * @since 4.3
      * @see URI#validSegments(java.lang.String[])
      */
-    public static IStatus validateSegments( String[] theSegments ) throws AssertionError {
+    public static IStatus validateSegments( String[] theSegments ) throws AssertionError { // NO_UCD
         Assertion.isNotNull(theSegments, createNullValueMessage(UriComponents.SEGMENTS));
 
         IStatus result = null;

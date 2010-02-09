@@ -25,32 +25,24 @@ import com.metamatrix.metamodels.transformation.MappingClassSet;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Mapping Class Set</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Mapping Class Set</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassSetImpl#getMappingClasses <em>Mapping Classes</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassSetImpl#getTarget <em>Target</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassSetImpl#getInputBinding <em>Input Binding</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassSetImpl#getMappingClasses <em>Mapping Classes</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassSetImpl#getTarget <em>Target</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassSetImpl#getInputBinding <em>Input Binding</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getMappingClasses() <em>Mapping Classes</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getMappingClasses() <em>Mapping Classes</em>}' containment reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getMappingClasses()
      * @generated
      * @ordered
@@ -58,9 +50,8 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
     protected EList mappingClasses = null;
 
     /**
-     * The cached value of the '{@link #getTarget() <em>Target</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getTarget() <em>Target</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getTarget()
      * @generated
      * @ordered
@@ -68,9 +59,9 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
     protected EObject target = null;
 
     /**
-     * The cached value of the '{@link #getInputBinding() <em>Input Binding</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getInputBinding() <em>Input Binding</em>}' containment reference list. <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
+     * 
      * @see #getInputBinding()
      * @generated
      * @ordered
@@ -78,8 +69,8 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
     protected EList inputBinding = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MappingClassSetImpl() {
@@ -87,8 +78,8 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -97,20 +88,22 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getMappingClasses() {
         if (mappingClasses == null) {
-            mappingClasses = new EObjectContainmentWithInverseEList(MappingClass.class, this, TransformationPackage.MAPPING_CLASS_SET__MAPPING_CLASSES, TransformationPackage.MAPPING_CLASS__MAPPING_CLASS_SET);
+            mappingClasses = new EObjectContainmentWithInverseEList(MappingClass.class, this,
+                                                                    TransformationPackage.MAPPING_CLASS_SET__MAPPING_CLASSES,
+                                                                    TransformationPackage.MAPPING_CLASS__MAPPING_CLASS_SET);
         }
         return mappingClasses;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EObject getTarget() {
@@ -118,16 +111,17 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
             EObject oldTarget = target;
             target = eResolveProxy((InternalEObject)target);
             if (target != oldTarget) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, TransformationPackage.MAPPING_CLASS_SET__TARGET, oldTarget, target));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+                                                                           TransformationPackage.MAPPING_CLASS_SET__TARGET,
+                                                                           oldTarget, target));
             }
         }
         return target;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EObject basicGetTarget() {
@@ -135,36 +129,42 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setTarget(EObject newTarget) {
+    public void setTarget( EObject newTarget ) {
         EObject oldTarget = target;
         target = newTarget;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.MAPPING_CLASS_SET__TARGET, oldTarget, target));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.MAPPING_CLASS_SET__TARGET, oldTarget,
+                                                                   target));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getInputBinding() {
         if (inputBinding == null) {
-            inputBinding = new EObjectContainmentWithInverseEList(InputBinding.class, this, TransformationPackage.MAPPING_CLASS_SET__INPUT_BINDING, TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET);
+            inputBinding = new EObjectContainmentWithInverseEList(InputBinding.class, this,
+                                                                  TransformationPackage.MAPPING_CLASS_SET__INPUT_BINDING,
+                                                                  TransformationPackage.INPUT_BINDING__MAPPING_CLASS_SET);
         }
         return inputBinding;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.MAPPING_CLASS_SET__MAPPING_CLASSES:
@@ -175,18 +175,20 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.MAPPING_CLASS_SET__MAPPING_CLASSES:
@@ -201,12 +203,13 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS_SET__MAPPING_CLASSES:
                 return getMappingClasses();
@@ -220,12 +223,13 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS_SET__MAPPING_CLASSES:
                 getMappingClasses().clear();
@@ -243,12 +247,12 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS_SET__MAPPING_CLASSES:
                 getMappingClasses().clear();
@@ -264,12 +268,12 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS_SET__MAPPING_CLASSES:
                 return mappingClasses != null && !mappingClasses.isEmpty();
@@ -281,4 +285,4 @@ public class MappingClassSetImpl extends EObjectImpl implements MappingClassSet 
         return eDynamicIsSet(eFeature);
     }
 
-} //MappingClassSetImpl
+} // MappingClassSetImpl

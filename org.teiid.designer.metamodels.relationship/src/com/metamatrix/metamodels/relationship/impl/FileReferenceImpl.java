@@ -20,33 +20,25 @@ import com.metamatrix.metamodels.relationship.PlaceholderReferenceContainer;
 import com.metamatrix.metamodels.relationship.RelationshipPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>File Reference</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>File Reference</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.FileReferenceImpl#getToolName <em>Tool Name</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.FileReferenceImpl#getToolVersion <em>Tool Version</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.FileReferenceImpl#getFormatName <em>Format Name</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.FileReferenceImpl#getFormatVersion <em>Format Version</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.FileReferenceImpl#getToolName <em>Tool Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.FileReferenceImpl#getToolVersion <em>Tool Version</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.FileReferenceImpl#getFormatName <em>Format Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.FileReferenceImpl#getFormatVersion <em>Format Version</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class FileReferenceImpl extends UriReferenceImpl implements FileReference {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getToolName() <em>Tool Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getToolName() <em>Tool Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getToolName()
      * @generated
      * @ordered
@@ -54,9 +46,9 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     protected static final String TOOL_NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getToolName() <em>Tool Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getToolName() <em>Tool Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getToolName()
      * @generated
      * @ordered
@@ -64,9 +56,9 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     protected String toolName = TOOL_NAME_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getToolVersion() <em>Tool Version</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getToolVersion() <em>Tool Version</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getToolVersion()
      * @generated
      * @ordered
@@ -74,9 +66,9 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     protected static final String TOOL_VERSION_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getToolVersion() <em>Tool Version</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getToolVersion() <em>Tool Version</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getToolVersion()
      * @generated
      * @ordered
@@ -84,9 +76,9 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     protected String toolVersion = TOOL_VERSION_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getFormatName() <em>Format Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getFormatName() <em>Format Name</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getFormatName()
      * @generated
      * @ordered
@@ -94,9 +86,9 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     protected static final String FORMAT_NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getFormatName() <em>Format Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getFormatName() <em>Format Name</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getFormatName()
      * @generated
      * @ordered
@@ -104,9 +96,9 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     protected String formatName = FORMAT_NAME_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getFormatVersion() <em>Format Version</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getFormatVersion() <em>Format Version</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getFormatVersion()
      * @generated
      * @ordered
@@ -114,9 +106,9 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     protected static final String FORMAT_VERSION_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getFormatVersion() <em>Format Version</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getFormatVersion() <em>Format Version</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getFormatVersion()
      * @generated
      * @ordered
@@ -124,8 +116,8 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     protected String formatVersion = FORMAT_VERSION_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected FileReferenceImpl() {
@@ -133,8 +125,8 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -143,8 +135,8 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getToolName() {
@@ -152,20 +144,21 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setToolName(String newToolName) {
+    public void setToolName( String newToolName ) {
         String oldToolName = toolName;
         toolName = newToolName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.FILE_REFERENCE__TOOL_NAME, oldToolName, toolName));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.FILE_REFERENCE__TOOL_NAME, oldToolName,
+                                                                   toolName));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getToolVersion() {
@@ -173,20 +166,21 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setToolVersion(String newToolVersion) {
+    public void setToolVersion( String newToolVersion ) {
         String oldToolVersion = toolVersion;
         toolVersion = newToolVersion;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.FILE_REFERENCE__TOOL_VERSION, oldToolVersion, toolVersion));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.FILE_REFERENCE__TOOL_VERSION,
+                                                                   oldToolVersion, toolVersion));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getFormatName() {
@@ -194,20 +188,21 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setFormatName(String newFormatName) {
+    public void setFormatName( String newFormatName ) {
         String oldFormatName = formatName;
         formatName = newFormatName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.FILE_REFERENCE__FORMAT_NAME, oldFormatName, formatName));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.FILE_REFERENCE__FORMAT_NAME,
+                                                                   oldFormatName, formatName));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getFormatVersion() {
@@ -215,20 +210,21 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setFormatVersion(String newFormatVersion) {
+    public void setFormatVersion( String newFormatVersion ) {
         String oldFormatVersion = formatVersion;
         formatVersion = newFormatVersion;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.FILE_REFERENCE__FORMAT_VERSION, oldFormatVersion, formatVersion));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.FILE_REFERENCE__FORMAT_VERSION,
+                                                                   oldFormatVersion, formatVersion));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     @Override
@@ -237,8 +233,8 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -249,34 +245,38 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case RelationshipPackage.FILE_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, RelationshipPackage.FILE_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case RelationshipPackage.FILE_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER:
@@ -291,16 +291,19 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case RelationshipPackage.FILE_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER:
-                    return eContainer.eInverseRemove(this, RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS, PlaceholderReferenceContainer.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     RelationshipPackage.PLACEHOLDER_REFERENCE_CONTAINER__PLACEHOLDERS,
+                                                     PlaceholderReferenceContainer.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -309,12 +312,13 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.FILE_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER:
                 return getPlaceholderReferenceContainer();
@@ -347,12 +351,13 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.FILE_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER:
                 setPlaceholderReferenceContainer((PlaceholderReferenceContainer)newValue);
@@ -400,12 +405,12 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.FILE_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER:
                 setPlaceholderReferenceContainer((PlaceholderReferenceContainer)null);
@@ -451,12 +456,12 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.FILE_REFERENCE__PLACEHOLDER_REFERENCE_CONTAINER:
                 return getPlaceholderReferenceContainer() != null;
@@ -489,8 +494,8 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -510,4 +515,4 @@ public class FileReferenceImpl extends UriReferenceImpl implements FileReference
         return result.toString();
     }
 
-} //FileReferenceImpl
+} // FileReferenceImpl

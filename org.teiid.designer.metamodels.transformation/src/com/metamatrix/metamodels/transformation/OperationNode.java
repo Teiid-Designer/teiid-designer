@@ -7,55 +7,45 @@
  */
 package com.metamatrix.metamodels.transformation;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Operation Node</b></em>'.
- * <!-- end-user-doc -->
- *
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Operation Node</b></em>'. <!-- end-user-doc -->
+ * 
  * @see com.metamatrix.metamodels.transformation.TransformationPackage#getOperationNode()
  * @model
  * @generated
  */
 public interface OperationNode extends AbstractOperationNode {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @model parameters=""
      * @generated
      */
-    int getMinInputs();
+    int getMinInputs(); // NO_UCD
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @model parameters=""
      * @generated
      */
-    int getMaxInputs();
+    int getMaxInputs(); // NO_UCD
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @model parameters=""
      * @generated
      */
-    int getMinOutputs();
+    int getMinOutputs(); // NO_UCD
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @model parameters=""
      * @generated
      */
-    int getMaxOutputs();
+    int getMaxOutputs(); // NO_UCD
 
 } // OperationNode

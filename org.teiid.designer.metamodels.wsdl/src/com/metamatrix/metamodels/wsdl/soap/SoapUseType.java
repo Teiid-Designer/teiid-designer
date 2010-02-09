@@ -13,99 +13,83 @@ import java.util.List;
 import org.eclipse.emf.common.util.AbstractEnumerator;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the literals of the enumeration '<em><b>Use Type</b></em>',
- * and utility methods for working with them.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Use Type</b></em>', and utility methods for
+ * working with them. <!-- end-user-doc -->
+ * 
  * @see com.metamatrix.metamodels.wsdl.soap.SoapPackage#getSoapUseType()
  * @model
  * @generated
  */
 public final class SoapUseType extends AbstractEnumerator {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The '<em><b>LITERAL</b></em>' literal value.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The '<em><b>LITERAL</b></em>' literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #LITERAL_LITERAL
      * @model
      * @generated
      * @ordered
      */
-	public static final int LITERAL = 0;
+    public static final int LITERAL = 0;
 
     /**
-     * The '<em><b>ENCODED</b></em>' literal value.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The '<em><b>ENCODED</b></em>' literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #ENCODED_LITERAL
      * @model
      * @generated
      * @ordered
      */
-	public static final int ENCODED = 1;
+    public static final int ENCODED = 1;
 
     /**
-     * The '<em><b>LITERAL</b></em>' literal object.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>LITERAL</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
+     * The '<em><b>LITERAL</b></em>' literal object. <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of '<em><b>LITERAL</b></em>' literal object isn't clear, there really should be more of a description
+     * here...
+     * </p>
+     * <!-- end-user-doc -->
+     * 
      * @see #LITERAL
      * @generated
      * @ordered
      */
-	public static final SoapUseType LITERAL_LITERAL = new SoapUseType(LITERAL, "LITERAL"); //$NON-NLS-1$
+    public static final SoapUseType LITERAL_LITERAL = new SoapUseType(LITERAL, "LITERAL"); //$NON-NLS-1$
 
     /**
-     * The '<em><b>ENCODED</b></em>' literal object.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>ENCODED</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
+     * The '<em><b>ENCODED</b></em>' literal object. <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of '<em><b>ENCODED</b></em>' literal object isn't clear, there really should be more of a description
+     * here...
+     * </p>
+     * <!-- end-user-doc -->
+     * 
      * @see #ENCODED
      * @generated
      * @ordered
      */
-	public static final SoapUseType ENCODED_LITERAL = new SoapUseType(ENCODED, "ENCODED"); //$NON-NLS-1$
+    public static final SoapUseType ENCODED_LITERAL = new SoapUseType(ENCODED, "ENCODED"); //$NON-NLS-1$
 
     /**
-     * An array of all the '<em><b>Use Type</b></em>' enumerators.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * An array of all the '<em><b>Use Type</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private static final SoapUseType[] VALUES_ARRAY =
-        new SoapUseType[] {
-            LITERAL_LITERAL,
-            ENCODED_LITERAL,
-        };
+    private static final SoapUseType[] VALUES_ARRAY = new SoapUseType[] {LITERAL_LITERAL, ENCODED_LITERAL,};
 
     /**
-     * A public read-only list of all the '<em><b>Use Type</b></em>' enumerators.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * A public read-only list of all the '<em><b>Use Type</b></em>' enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+    public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY)); // NO_UCD
 
     /**
-     * Returns the '<em><b>Use Type</b></em>' literal with the specified name.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Returns the '<em><b>Use Type</b></em>' literal with the specified name. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public static SoapUseType get(String name) {
+    public static SoapUseType get( String name ) {
         for (int i = 0; i < VALUES_ARRAY.length; ++i) {
             SoapUseType result = VALUES_ARRAY[i];
             if (result.toString().equals(name)) {
@@ -116,27 +100,28 @@ public final class SoapUseType extends AbstractEnumerator {
     }
 
     /**
-     * Returns the '<em><b>Use Type</b></em>' literal with the specified value.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Returns the '<em><b>Use Type</b></em>' literal with the specified value. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public static SoapUseType get(int value) {
+    public static SoapUseType get( int value ) { // NO_UCD
         switch (value) {
-            case LITERAL: return LITERAL_LITERAL;
-            case ENCODED: return ENCODED_LITERAL;
+            case LITERAL:
+                return LITERAL_LITERAL;
+            case ENCODED:
+                return ENCODED_LITERAL;
         }
-        return null;	
+        return null;
     }
 
     /**
-     * Only this class can construct instances.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Only this class can construct instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private SoapUseType(int value, String name) {
+    private SoapUseType( int value,
+                         String name ) {
         super(value, name);
     }
 
-} //SoapUseType
+} // SoapUseType

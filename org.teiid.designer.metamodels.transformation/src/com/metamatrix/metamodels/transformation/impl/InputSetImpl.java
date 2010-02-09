@@ -25,31 +25,23 @@ import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Input Set</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Input Set</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.InputSetImpl#getMappingClass <em>Mapping Class</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.InputSetImpl#getInputParameters <em>Input Parameters</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.InputSetImpl#getMappingClass <em>Mapping Class</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.InputSetImpl#getInputParameters <em>Input Parameters</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class InputSetImpl extends EObjectImpl implements InputSet {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getInputParameters() <em>Input Parameters</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getInputParameters() <em>Input Parameters</em>}' containment reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getInputParameters()
      * @generated
      * @ordered
@@ -57,8 +49,8 @@ public class InputSetImpl extends EObjectImpl implements InputSet {
     protected EList inputParameters = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected InputSetImpl() {
@@ -66,8 +58,8 @@ public class InputSetImpl extends EObjectImpl implements InputSet {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -76,8 +68,8 @@ public class InputSetImpl extends EObjectImpl implements InputSet {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public MappingClass getMappingClass() {
@@ -86,50 +78,56 @@ public class InputSetImpl extends EObjectImpl implements InputSet {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setMappingClass(MappingClass newMappingClass) {
-        if (newMappingClass != eContainer || (eContainerFeatureID != TransformationPackage.INPUT_SET__MAPPING_CLASS && newMappingClass != null)) {
-            if (EcoreUtil.isAncestor(this, newMappingClass))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setMappingClass( MappingClass newMappingClass ) {
+        if (newMappingClass != eContainer
+            || (eContainerFeatureID != TransformationPackage.INPUT_SET__MAPPING_CLASS && newMappingClass != null)) {
+            if (EcoreUtil.isAncestor(this, newMappingClass)) throw new IllegalArgumentException(
+                                                                                                "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newMappingClass != null)
-                msgs = ((InternalEObject)newMappingClass).eInverseAdd(this, TransformationPackage.MAPPING_CLASS__INPUT_SET, MappingClass.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newMappingClass != null) msgs = ((InternalEObject)newMappingClass).eInverseAdd(this,
+                                                                                               TransformationPackage.MAPPING_CLASS__INPUT_SET,
+                                                                                               MappingClass.class,
+                                                                                               msgs);
             msgs = eBasicSetContainer((InternalEObject)newMappingClass, TransformationPackage.INPUT_SET__MAPPING_CLASS, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.INPUT_SET__MAPPING_CLASS, newMappingClass, newMappingClass));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          TransformationPackage.INPUT_SET__MAPPING_CLASS,
+                                                                          newMappingClass, newMappingClass));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getInputParameters() {
         if (inputParameters == null) {
-            inputParameters = new EObjectContainmentWithInverseEList(InputParameter.class, this, TransformationPackage.INPUT_SET__INPUT_PARAMETERS, TransformationPackage.INPUT_PARAMETER__INPUT_SET);
+            inputParameters = new EObjectContainmentWithInverseEList(InputParameter.class, this,
+                                                                     TransformationPackage.INPUT_SET__INPUT_PARAMETERS,
+                                                                     TransformationPackage.INPUT_PARAMETER__INPUT_SET);
         }
         return inputParameters;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.INPUT_SET__MAPPING_CLASS:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.INPUT_SET__MAPPING_CLASS, msgs);
                 case TransformationPackage.INPUT_SET__INPUT_PARAMETERS:
                     return ((InternalEList)getInputParameters()).basicAdd(otherEnd, msgs);
@@ -137,18 +135,20 @@ public class InputSetImpl extends EObjectImpl implements InputSet {
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.INPUT_SET__MAPPING_CLASS:
@@ -163,16 +163,19 @@ public class InputSetImpl extends EObjectImpl implements InputSet {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.INPUT_SET__MAPPING_CLASS:
-                    return eContainer.eInverseRemove(this, TransformationPackage.MAPPING_CLASS__INPUT_SET, MappingClass.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.MAPPING_CLASS__INPUT_SET,
+                                                     MappingClass.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -181,12 +184,13 @@ public class InputSetImpl extends EObjectImpl implements InputSet {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.INPUT_SET__MAPPING_CLASS:
                 return getMappingClass();
@@ -197,12 +201,13 @@ public class InputSetImpl extends EObjectImpl implements InputSet {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.INPUT_SET__MAPPING_CLASS:
                 setMappingClass((MappingClass)newValue);
@@ -216,12 +221,12 @@ public class InputSetImpl extends EObjectImpl implements InputSet {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.INPUT_SET__MAPPING_CLASS:
                 setMappingClass((MappingClass)null);
@@ -234,12 +239,12 @@ public class InputSetImpl extends EObjectImpl implements InputSet {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.INPUT_SET__MAPPING_CLASS:
                 return getMappingClass() != null;
@@ -249,4 +254,4 @@ public class InputSetImpl extends EObjectImpl implements InputSet {
         return eDynamicIsSet(eFeature);
     }
 
-} //InputSetImpl
+} // InputSetImpl

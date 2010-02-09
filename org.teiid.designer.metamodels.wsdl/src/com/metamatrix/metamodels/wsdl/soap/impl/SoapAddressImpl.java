@@ -21,147 +21,142 @@ import com.metamatrix.metamodels.wsdl.soap.SoapAddress;
 import com.metamatrix.metamodels.wsdl.soap.SoapPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Address</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Address</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapAddressImpl#getPort <em>Port</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapAddressImpl#getLocation <em>Location</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapAddressImpl#getPort <em>Port</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapAddressImpl#getLocation <em>Location</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class SoapAddressImpl extends EObjectImpl implements SoapAddress {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getLocation() <em>Location</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getLocation() <em>Location</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getLocation()
      * @generated
      * @ordered
      */
-	protected static final String LOCATION_EDEFAULT = null;
+    protected static final String LOCATION_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getLocation() <em>Location</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getLocation() <em>Location</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getLocation()
      * @generated
      * @ordered
      */
-	protected String location = LOCATION_EDEFAULT;
+    protected String location = LOCATION_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected SoapAddressImpl() {
+    protected SoapAddressImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return SoapPackage.eINSTANCE.getSoapAddress();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getLocation() {
+    public String getLocation() {
         return location;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setLocation(String newLocation) {
+    public void setLocation( String newLocation ) {
         String oldLocation = location;
         location = newLocation;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_ADDRESS__LOCATION, oldLocation, location));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_ADDRESS__LOCATION,
+                                                                   oldLocation, location));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public Port getPort() {
+    public Port getPort() {
         if (eContainerFeatureID != SoapPackage.SOAP_ADDRESS__PORT) return null;
         return (Port)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setPort(Port newPort) {
+    public void setPort( Port newPort ) {
         if (newPort != eContainer || (eContainerFeatureID != SoapPackage.SOAP_ADDRESS__PORT && newPort != null)) {
-            if (EcoreUtil.isAncestor(this, newPort))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newPort)) throw new IllegalArgumentException(
+                                                                                        "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newPort != null)
-                msgs = ((InternalEObject)newPort).eInverseAdd(this, WsdlPackage.PORT__SOAP_ADDRESS, Port.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newPort != null) msgs = ((InternalEObject)newPort).eInverseAdd(this,
+                                                                               WsdlPackage.PORT__SOAP_ADDRESS,
+                                                                               Port.class,
+                                                                               msgs);
             msgs = eBasicSetContainer((InternalEObject)newPort, SoapPackage.SOAP_ADDRESS__PORT, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_ADDRESS__PORT, newPort, newPort));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_ADDRESS__PORT,
+                                                                          newPort, newPort));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case SoapPackage.SOAP_ADDRESS__PORT:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, SoapPackage.SOAP_ADDRESS__PORT, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case SoapPackage.SOAP_ADDRESS__PORT:
@@ -174,12 +169,12 @@ public class SoapAddressImpl extends EObjectImpl implements SoapAddress {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case SoapPackage.SOAP_ADDRESS__PORT:
@@ -192,12 +187,13 @@ public class SoapAddressImpl extends EObjectImpl implements SoapAddress {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_ADDRESS__PORT:
                 return getPort();
@@ -208,12 +204,13 @@ public class SoapAddressImpl extends EObjectImpl implements SoapAddress {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_ADDRESS__PORT:
                 setPort((Port)newValue);
@@ -226,12 +223,12 @@ public class SoapAddressImpl extends EObjectImpl implements SoapAddress {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_ADDRESS__PORT:
                 setPort((Port)null);
@@ -244,12 +241,12 @@ public class SoapAddressImpl extends EObjectImpl implements SoapAddress {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_ADDRESS__PORT:
                 return getPort() != null;
@@ -260,11 +257,11 @@ public class SoapAddressImpl extends EObjectImpl implements SoapAddress {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     public String toString() {
         if (eIsProxy()) return super.toString();
 
@@ -275,4 +272,4 @@ public class SoapAddressImpl extends EObjectImpl implements SoapAddress {
         return result.toString();
     }
 
-} //SoapAddressImpl
+} // SoapAddressImpl

@@ -42,12 +42,6 @@ import com.metamatrix.metamodels.wsdl.WsdlPackage;
  * @generated
  */
 public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -391,7 +385,7 @@ public class WsdlFactoryImpl extends EFactoryImpl implements WsdlFactory {
      * @generated
      */
     @Deprecated
-    public static WsdlPackage getPackage() {
+    public static WsdlPackage getPackage() { // NO_UCD
         return WsdlPackage.eINSTANCE;
     }
 

@@ -21,147 +21,144 @@ import com.metamatrix.metamodels.wsdl.http.HttpOperation;
 import com.metamatrix.metamodels.wsdl.http.HttpPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Operation</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Operation</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.wsdl.http.impl.HttpOperationImpl#getBindingOperation <em>Binding Operation</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.http.impl.HttpOperationImpl#getLocation <em>Location</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.http.impl.HttpOperationImpl#getBindingOperation <em>Binding Operation</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.http.impl.HttpOperationImpl#getLocation <em>Location</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class HttpOperationImpl extends EObjectImpl implements HttpOperation {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getLocation() <em>Location</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getLocation() <em>Location</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getLocation()
      * @generated
      * @ordered
      */
-	protected static final String LOCATION_EDEFAULT = null;
+    protected static final String LOCATION_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getLocation() <em>Location</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getLocation() <em>Location</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getLocation()
      * @generated
      * @ordered
      */
-	protected String location = LOCATION_EDEFAULT;
+    protected String location = LOCATION_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected HttpOperationImpl() {
+    protected HttpOperationImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return HttpPackage.eINSTANCE.getHttpOperation();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getLocation() {
+    public String getLocation() {
         return location;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setLocation(String newLocation) {
+    public void setLocation( String newLocation ) {
         String oldLocation = location;
         location = newLocation;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HttpPackage.HTTP_OPERATION__LOCATION, oldLocation, location));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, HttpPackage.HTTP_OPERATION__LOCATION,
+                                                                   oldLocation, location));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public BindingOperation getBindingOperation() {
+    public BindingOperation getBindingOperation() {
         if (eContainerFeatureID != HttpPackage.HTTP_OPERATION__BINDING_OPERATION) return null;
         return (BindingOperation)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setBindingOperation(BindingOperation newBindingOperation) {
-        if (newBindingOperation != eContainer || (eContainerFeatureID != HttpPackage.HTTP_OPERATION__BINDING_OPERATION && newBindingOperation != null)) {
-            if (EcoreUtil.isAncestor(this, newBindingOperation))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setBindingOperation( BindingOperation newBindingOperation ) {
+        if (newBindingOperation != eContainer
+            || (eContainerFeatureID != HttpPackage.HTTP_OPERATION__BINDING_OPERATION && newBindingOperation != null)) {
+            if (EcoreUtil.isAncestor(this, newBindingOperation)) throw new IllegalArgumentException(
+                                                                                                    "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newBindingOperation != null)
-                msgs = ((InternalEObject)newBindingOperation).eInverseAdd(this, WsdlPackage.BINDING_OPERATION__HTTP_OPERATION, BindingOperation.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newBindingOperation != null) msgs = ((InternalEObject)newBindingOperation).eInverseAdd(this,
+                                                                                                       WsdlPackage.BINDING_OPERATION__HTTP_OPERATION,
+                                                                                                       BindingOperation.class,
+                                                                                                       msgs);
             msgs = eBasicSetContainer((InternalEObject)newBindingOperation, HttpPackage.HTTP_OPERATION__BINDING_OPERATION, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HttpPackage.HTTP_OPERATION__BINDING_OPERATION, newBindingOperation, newBindingOperation));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          HttpPackage.HTTP_OPERATION__BINDING_OPERATION,
+                                                                          newBindingOperation, newBindingOperation));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HttpPackage.HTTP_OPERATION__BINDING_OPERATION:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, HttpPackage.HTTP_OPERATION__BINDING_OPERATION, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HttpPackage.HTTP_OPERATION__BINDING_OPERATION:
@@ -174,16 +171,19 @@ public class HttpOperationImpl extends EObjectImpl implements HttpOperation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case HttpPackage.HTTP_OPERATION__BINDING_OPERATION:
-                    return eContainer.eInverseRemove(this, WsdlPackage.BINDING_OPERATION__HTTP_OPERATION, BindingOperation.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     WsdlPackage.BINDING_OPERATION__HTTP_OPERATION,
+                                                     BindingOperation.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -192,12 +192,13 @@ public class HttpOperationImpl extends EObjectImpl implements HttpOperation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HttpPackage.HTTP_OPERATION__BINDING_OPERATION:
                 return getBindingOperation();
@@ -208,12 +209,13 @@ public class HttpOperationImpl extends EObjectImpl implements HttpOperation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HttpPackage.HTTP_OPERATION__BINDING_OPERATION:
                 setBindingOperation((BindingOperation)newValue);
@@ -226,12 +228,12 @@ public class HttpOperationImpl extends EObjectImpl implements HttpOperation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HttpPackage.HTTP_OPERATION__BINDING_OPERATION:
                 setBindingOperation((BindingOperation)null);
@@ -244,12 +246,12 @@ public class HttpOperationImpl extends EObjectImpl implements HttpOperation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HttpPackage.HTTP_OPERATION__BINDING_OPERATION:
                 return getBindingOperation() != null;
@@ -260,11 +262,11 @@ public class HttpOperationImpl extends EObjectImpl implements HttpOperation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     public String toString() {
         if (eIsProxy()) return super.toString();
 
@@ -275,4 +277,4 @@ public class HttpOperationImpl extends EObjectImpl implements HttpOperation {
         return result.toString();
     }
 
-} //HttpOperationImpl
+} // HttpOperationImpl

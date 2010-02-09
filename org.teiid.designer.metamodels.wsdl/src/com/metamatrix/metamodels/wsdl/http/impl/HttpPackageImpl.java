@@ -27,89 +27,75 @@ import com.metamatrix.metamodels.wsdl.soap.SoapPackage;
 import com.metamatrix.metamodels.wsdl.soap.impl.SoapPackageImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Package</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class HttpPackageImpl extends EPackageImpl implements HttpPackage {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EClass httpAddressEClass = null;
+    private EClass httpAddressEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EClass httpBindingEClass = null;
+    private EClass httpBindingEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private EClass httpOperationEClass = null;
+    private EClass httpOperationEClass = null;
 
     /**
-     * Creates an instance of the model <b>Package</b>, registered with
-     * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
-     * package URI value.
-     * <p>Note: the correct way to create the package is via the static
-     * factory method {@link #init init()}, which also performs
-     * initialization of the package, or returns the registered package,
-     * if one already exists.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
+     * EPackage.Registry} by the package package URI value.
+     * <p>
+     * Note: the correct way to create the package is via the static factory method {@link #init init()}, which also performs
+     * initialization of the package, or returns the registered package, if one already exists. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see org.eclipse.emf.ecore.EPackage.Registry
      * @see com.metamatrix.metamodels.wsdl.http.HttpPackage#eNS_URI
      * @see #init()
      * @generated
      */
-	private HttpPackageImpl() {
+    private HttpPackageImpl() {
         super(eNS_URI, HttpFactory.eINSTANCE);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private static boolean isInited = false;
+    private static boolean isInited = false;
 
     /**
-     * Creates, registers, and initializes the <b>Package</b> for this
-     * model, and for any others upon which it depends.  Simple
-     * dependencies are satisfied by calling this method on all
-     * dependent packages before doing anything else.  This method drives
-     * initialization for interdependent packages directly, in parallel
-     * with this package, itself.
-     * <p>Of this package and its interdependencies, all packages which
-     * have not yet been registered by their URI values are first created
-     * and registered.  The packages are then initialized in two steps:
-     * meta-model objects for all of the packages are created before any
-     * are initialized, since one package's meta-model objects may refer to
-     * those of another.
-     * <p>Invocation of this method will not affect any packages that have
-     * already been initialized.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends. Simple
+     * dependencies are satisfied by calling this method on all dependent packages before doing anything else. This method drives
+     * initialization for interdependent packages directly, in parallel with this package, itself.
+     * <p>
+     * Of this package and its interdependencies, all packages which have not yet been registered by their URI values are first
+     * created and registered. The packages are then initialized in two steps: meta-model objects for all of the packages are
+     * created before any are initialized, since one package's meta-model objects may refer to those of another.
+     * <p>
+     * Invocation of this method will not affect any packages that have already been initialized. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #eNS_URI
      * @see #createPackageContents()
      * @see #initializePackageContents()
      * @generated
      */
-	public static HttpPackage init() {
+    public static HttpPackage init() {
         if (isInited) return (HttpPackage)EPackage.Registry.INSTANCE.getEPackage(HttpPackage.eNS_URI);
 
         // Obtain or create and register package
@@ -145,110 +131,109 @@ public class HttpPackageImpl extends EPackageImpl implements HttpPackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EClass getHttpAddress() {
+    public EClass getHttpAddress() {
         return httpAddressEClass;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getHttpAddress_Location() {
+    public EAttribute getHttpAddress_Location() {
         return (EAttribute)httpAddressEClass.getEStructuralFeatures().get(1);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getHttpAddress_Port() {
+    public EReference getHttpAddress_Port() {
         return (EReference)httpAddressEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EClass getHttpBinding() {
+    public EClass getHttpBinding() {
         return httpBindingEClass;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getHttpBinding_Verb() {
+    public EAttribute getHttpBinding_Verb() {
         return (EAttribute)httpBindingEClass.getEStructuralFeatures().get(1);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getHttpBinding_Binding() {
+    public EReference getHttpBinding_Binding() {
         return (EReference)httpBindingEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EClass getHttpOperation() {
+    public EClass getHttpOperation() {
         return httpOperationEClass;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EAttribute getHttpOperation_Location() {
+    public EAttribute getHttpOperation_Location() {
         return (EAttribute)httpOperationEClass.getEStructuralFeatures().get(1);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EReference getHttpOperation_BindingOperation() {
+    public EReference getHttpOperation_BindingOperation() {
         return (EReference)httpOperationEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public HttpFactory getHttpFactory() {
+    public HttpFactory getHttpFactory() {
         return (HttpFactory)getEFactoryInstance();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private boolean isCreated = false;
+    private boolean isCreated = false;
 
     /**
-     * Creates the meta-model objects for the package.  This method is
-     * guarded to have no affect on any invocation but its first.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Creates the meta-model objects for the package. This method is guarded to have no affect on any invocation but its first.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void createPackageContents() {
+    public void createPackageContents() {
         if (isCreated) return;
         isCreated = true;
 
@@ -267,20 +252,19 @@ public class HttpPackageImpl extends EPackageImpl implements HttpPackage {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	private boolean isInitialized = false;
+    private boolean isInitialized = false;
 
     /**
-     * Complete the initialization of the package and its meta-model.  This
-     * method is guarded to have no affect on any invocation but its first.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Complete the initialization of the package and its meta-model. This method is guarded to have no affect on any invocation
+     * but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void initializePackageContents() {
+    public void initializePackageContents() {
         if (isInitialized) return;
         isInitialized = true;
 
@@ -296,19 +280,36 @@ public class HttpPackageImpl extends EPackageImpl implements HttpPackage {
 
         // Initialize classes and features; add operations and parameters
         initEClass(httpAddressEClass, HttpAddress.class, "HttpAddress", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getHttpAddress_Port(), theWsdlPackage.getPort(), theWsdlPackage.getPort_HttpAddress(), "port", null, 1, 1, HttpAddress.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getHttpAddress_Location(), ecorePackage.getEString(), "location", null, 0, 1, HttpAddress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getHttpAddress_Port(),
+                       theWsdlPackage.getPort(),
+                       theWsdlPackage.getPort_HttpAddress(),
+                       "port", null, 1, 1, HttpAddress.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getHttpAddress_Location(),
+                       ecorePackage.getEString(),
+                       "location", null, 0, 1, HttpAddress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(httpBindingEClass, HttpBinding.class, "HttpBinding", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getHttpBinding_Binding(), theWsdlPackage.getBinding(), theWsdlPackage.getBinding_HttpBinding(), "binding", null, 1, 1, HttpBinding.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getHttpBinding_Verb(), ecorePackage.getEString(), "verb", null, 0, 1, HttpBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getHttpBinding_Binding(),
+                       theWsdlPackage.getBinding(),
+                       theWsdlPackage.getBinding_HttpBinding(),
+                       "binding", null, 1, 1, HttpBinding.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getHttpBinding_Verb(),
+                       ecorePackage.getEString(),
+                       "verb", null, 0, 1, HttpBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(httpOperationEClass, HttpOperation.class, "HttpOperation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getHttpOperation_BindingOperation(), theWsdlPackage.getBindingOperation(), theWsdlPackage.getBindingOperation_HttpOperation(), "bindingOperation", null, 1, 1, HttpOperation.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getHttpOperation_Location(), ecorePackage.getEString(), "location", null, 0, 1, HttpOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(httpOperationEClass,
+                   HttpOperation.class,
+                   "HttpOperation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getHttpOperation_BindingOperation(),
+                       theWsdlPackage.getBindingOperation(),
+                       theWsdlPackage.getBindingOperation_HttpOperation(),
+                       "bindingOperation", null, 1, 1, HttpOperation.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getHttpOperation_Location(),
+                       ecorePackage.getEString(),
+                       "location", null, 0, 1, HttpOperation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         // Create resource
         createResource(eNS_URI);
     }
 
-} //HttpPackageImpl
+} // HttpPackageImpl

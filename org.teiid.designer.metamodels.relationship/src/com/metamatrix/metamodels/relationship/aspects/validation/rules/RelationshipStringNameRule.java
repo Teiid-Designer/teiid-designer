@@ -23,21 +23,24 @@ public class RelationshipStringNameRule extends StringNameRule {
 
     /**
      * Construct an instance of RelationshipStringNameRule.
+     * 
      * @param invalidChars
      * @param featureID
      */
-    public RelationshipStringNameRule(char[] invalidChars, int featureID) {
+    public RelationshipStringNameRule( char[] invalidChars, // NO_UCD
+                                       int featureID ) { // NO_UCD
         super(invalidChars, featureID);
     }
 
     /**
      * Construct an instance of RelationshipStringNameRule.
+     * 
      * @param featureID
      */
-    public RelationshipStringNameRule(int featureID) {
+    public RelationshipStringNameRule( int featureID ) {
         super(featureID);
     }
-    
+
     /**
      * @see com.metamatrix.modeler.core.validation.rules.StringNameRule#validateCharacters()
      */
@@ -46,30 +49,30 @@ public class RelationshipStringNameRule extends StringNameRule {
         return false;
     }
 
-    
     /**
-     * This method groups siblings into the following domains, and chooses only those siblings that are in
-     * the same domain as the supplied object.
+     * This method groups siblings into the following domains, and chooses only those siblings that are in the same domain as the
+     * supplied object.
      * <ul>
-     *  <li>{@link Relationship} instance</li>
-     *  <li>{@link RelationshipType} instance</li>
-     *  <li>{@link RelationshipRole} instance</li> 
+     * <li>{@link Relationship} instance</li>
+     * <li>{@link RelationshipType} instance</li>
+     * <li>{@link RelationshipRole} instance</li>
      * </ul>
+     * 
      * @see com.metamatrix.modeler.core.validation.rules.StringNameRule#getSiblingsForUniquenessCheck(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    public List getSiblingsForUniquenessCheck(final EObject eObject) {
+    public List getSiblingsForUniquenessCheck( final EObject eObject ) {
         Object parent = eObject.eContainer();
-        if ( parent == null ) {
+        if (parent == null) {
             parent = eObject.eResource();
         }
-        if ( eObject instanceof Relationship ) {
+        if (eObject instanceof Relationship) {
             return RelationshipUtil.findRelationships(parent, ModelVisitorProcessor.DEPTH_ONE);
-        } else if ( eObject instanceof RelationshipType ) {
+        } else if (eObject instanceof RelationshipType) {
             return RelationshipUtil.findRelationshipTypes(parent, ModelVisitorProcessor.DEPTH_ONE);
-        } else if ( eObject instanceof RelationshipRole ) {
-			return RelationshipUtil.findRelationshipRoles(parent, ModelVisitorProcessor.DEPTH_ONE);
-		}
+        } else if (eObject instanceof RelationshipRole) {
+            return RelationshipUtil.findRelationshipRoles(parent, ModelVisitorProcessor.DEPTH_ONE);
+        }
 
         return super.getSiblingsForUniquenessCheck(eObject);
     }

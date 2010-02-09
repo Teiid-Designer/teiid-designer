@@ -21,147 +21,142 @@ import com.metamatrix.metamodels.wsdl.http.HttpBinding;
 import com.metamatrix.metamodels.wsdl.http.HttpPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Binding</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Binding</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.wsdl.http.impl.HttpBindingImpl#getBinding <em>Binding</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.http.impl.HttpBindingImpl#getVerb <em>Verb</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.http.impl.HttpBindingImpl#getBinding <em>Binding</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.http.impl.HttpBindingImpl#getVerb <em>Verb</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class HttpBindingImpl extends EObjectImpl implements HttpBinding {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getVerb() <em>Verb</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getVerb() <em>Verb</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getVerb()
      * @generated
      * @ordered
      */
-	protected static final String VERB_EDEFAULT = null;
+    protected static final String VERB_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getVerb() <em>Verb</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getVerb() <em>Verb</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getVerb()
      * @generated
      * @ordered
      */
-	protected String verb = VERB_EDEFAULT;
+    protected String verb = VERB_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected HttpBindingImpl() {
+    protected HttpBindingImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return HttpPackage.eINSTANCE.getHttpBinding();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getVerb() {
+    public String getVerb() {
         return verb;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setVerb(String newVerb) {
+    public void setVerb( String newVerb ) {
         String oldVerb = verb;
         verb = newVerb;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HttpPackage.HTTP_BINDING__VERB, oldVerb, verb));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, HttpPackage.HTTP_BINDING__VERB,
+                                                                   oldVerb, verb));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public Binding getBinding() {
+    public Binding getBinding() {
         if (eContainerFeatureID != HttpPackage.HTTP_BINDING__BINDING) return null;
         return (Binding)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setBinding(Binding newBinding) {
+    public void setBinding( Binding newBinding ) {
         if (newBinding != eContainer || (eContainerFeatureID != HttpPackage.HTTP_BINDING__BINDING && newBinding != null)) {
-            if (EcoreUtil.isAncestor(this, newBinding))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newBinding)) throw new IllegalArgumentException(
+                                                                                           "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newBinding != null)
-                msgs = ((InternalEObject)newBinding).eInverseAdd(this, WsdlPackage.BINDING__HTTP_BINDING, Binding.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newBinding != null) msgs = ((InternalEObject)newBinding).eInverseAdd(this,
+                                                                                     WsdlPackage.BINDING__HTTP_BINDING,
+                                                                                     Binding.class,
+                                                                                     msgs);
             msgs = eBasicSetContainer((InternalEObject)newBinding, HttpPackage.HTTP_BINDING__BINDING, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HttpPackage.HTTP_BINDING__BINDING, newBinding, newBinding));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          HttpPackage.HTTP_BINDING__BINDING, newBinding,
+                                                                          newBinding));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HttpPackage.HTTP_BINDING__BINDING:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, HttpPackage.HTTP_BINDING__BINDING, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HttpPackage.HTTP_BINDING__BINDING:
@@ -174,12 +169,12 @@ public class HttpBindingImpl extends EObjectImpl implements HttpBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case HttpPackage.HTTP_BINDING__BINDING:
@@ -192,12 +187,13 @@ public class HttpBindingImpl extends EObjectImpl implements HttpBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HttpPackage.HTTP_BINDING__BINDING:
                 return getBinding();
@@ -208,12 +204,13 @@ public class HttpBindingImpl extends EObjectImpl implements HttpBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HttpPackage.HTTP_BINDING__BINDING:
                 setBinding((Binding)newValue);
@@ -226,12 +223,12 @@ public class HttpBindingImpl extends EObjectImpl implements HttpBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HttpPackage.HTTP_BINDING__BINDING:
                 setBinding((Binding)null);
@@ -244,12 +241,12 @@ public class HttpBindingImpl extends EObjectImpl implements HttpBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HttpPackage.HTTP_BINDING__BINDING:
                 return getBinding() != null;
@@ -260,11 +257,11 @@ public class HttpBindingImpl extends EObjectImpl implements HttpBinding {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     public String toString() {
         if (eIsProxy()) return super.toString();
 
@@ -275,4 +272,4 @@ public class HttpBindingImpl extends EObjectImpl implements HttpBinding {
         return result.toString();
     }
 
-} //HttpBindingImpl
+} // HttpBindingImpl

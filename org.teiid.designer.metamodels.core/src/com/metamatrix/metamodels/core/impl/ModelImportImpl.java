@@ -52,12 +52,6 @@ import com.metamatrix.metamodels.core.ModelType;
  * @generated
  */
 public class ModelImportImpl extends EObjectImpl implements ModelImport {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->

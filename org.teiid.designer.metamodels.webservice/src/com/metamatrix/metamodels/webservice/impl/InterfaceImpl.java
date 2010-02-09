@@ -20,74 +20,70 @@ import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.metamodels.webservice.WebServicePackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Interface</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Interface</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.webservice.impl.InterfaceImpl#getOperations <em>Operations</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.webservice.impl.InterfaceImpl#getOperations <em>Operations</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class InterfaceImpl extends WebServiceComponentImpl implements Interface {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getOperations() <em>Operations</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getOperations() <em>Operations</em>}' containment reference list. <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
      * @see #getOperations()
      * @generated
      * @ordered
      */
-	protected EList operations = null;
+    protected EList operations = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected InterfaceImpl() {
+    protected InterfaceImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return WebServicePackage.eINSTANCE.getInterface();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getOperations() {
+    public EList getOperations() {
         if (operations == null) {
-            operations = new EObjectContainmentWithInverseEList(Operation.class, this, WebServicePackage.INTERFACE__OPERATIONS, WebServicePackage.OPERATION__INTERFACE);
+            operations = new EObjectContainmentWithInverseEList(Operation.class, this, WebServicePackage.INTERFACE__OPERATIONS,
+                                                                WebServicePackage.OPERATION__INTERFACE);
         }
         return operations;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WebServicePackage.INTERFACE__OPERATIONS:
@@ -96,18 +92,20 @@ public class InterfaceImpl extends WebServiceComponentImpl implements Interface 
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WebServicePackage.INTERFACE__OPERATIONS:
@@ -120,12 +118,13 @@ public class InterfaceImpl extends WebServiceComponentImpl implements Interface 
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.INTERFACE__NAME:
                 return getName();
@@ -136,12 +135,13 @@ public class InterfaceImpl extends WebServiceComponentImpl implements Interface 
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.INTERFACE__NAME:
                 setName((String)newValue);
@@ -155,12 +155,12 @@ public class InterfaceImpl extends WebServiceComponentImpl implements Interface 
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.INTERFACE__NAME:
                 setName(NAME_EDEFAULT);
@@ -173,12 +173,12 @@ public class InterfaceImpl extends WebServiceComponentImpl implements Interface 
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.INTERFACE__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -188,4 +188,4 @@ public class InterfaceImpl extends WebServiceComponentImpl implements Interface 
         return eDynamicIsSet(eFeature);
     }
 
-} //InterfaceImpl
+} // InterfaceImpl

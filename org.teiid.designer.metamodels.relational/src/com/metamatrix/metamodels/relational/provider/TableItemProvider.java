@@ -108,7 +108,7 @@ public class TableItemProvider extends ColumnSetItemProvider {
      * 
      * @generated
      */
-    protected void addSystemPropertyDescriptorGen( Object object ) {
+    protected void addSystemPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Table_system_feature"), //$NON-NLS-1$
@@ -144,7 +144,7 @@ public class TableItemProvider extends ColumnSetItemProvider {
      * 
      * @generated
      */
-    protected void addCardinalityPropertyDescriptorGen( Object object ) {
+    protected void addCardinalityPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Table_cardinality_feature"), //$NON-NLS-1$
@@ -180,7 +180,7 @@ public class TableItemProvider extends ColumnSetItemProvider {
      * 
      * @generated
      */
-    protected void addSupportsUpdatePropertyDescriptorGen( Object object ) {
+    protected void addSupportsUpdatePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Table_supportsUpdate_feature"), //$NON-NLS-1$
@@ -219,7 +219,7 @@ public class TableItemProvider extends ColumnSetItemProvider {
      * 
      * @generated
      */
-    protected void addMaterializedPropertyDescriptorGen( Object object ) {
+    protected void addMaterializedPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Table_materialized_feature"), //$NON-NLS-1$
@@ -267,7 +267,7 @@ public class TableItemProvider extends ColumnSetItemProvider {
      * 
      * @generated
      */
-    protected void addLogicalRelationshipsPropertyDescriptorGen( Object object ) {
+    protected void addLogicalRelationshipsPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Table_logicalRelationships_feature"), //$NON-NLS-1$

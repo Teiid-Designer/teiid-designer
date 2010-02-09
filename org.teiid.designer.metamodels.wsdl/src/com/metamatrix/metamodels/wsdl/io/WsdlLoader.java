@@ -1269,7 +1269,7 @@ public class WsdlLoader implements XMLLoad, WsdlConstants {
         errors.add(diag);
     }
 
-    protected void addWarning( final XMLResource resource,
+    protected void addWarning( final XMLResource resource, // NO_UCD
                                final String msg ) {
         final List warnings = resource.getWarnings();
         final WsdlDiagnostic diag = new WsdlDiagnostic(msg);

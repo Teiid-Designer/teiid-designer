@@ -25,146 +25,136 @@ import com.metamatrix.metamodels.wsdl.soap.SoapPackage;
 import com.metamatrix.metamodels.wsdl.soap.SoapUseType;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Fault</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Fault</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapFaultImpl#getBindingFault <em>Binding Fault</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapFaultImpl#getUse <em>Use</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapFaultImpl#getNamespace <em>Namespace</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapFaultImpl#getEncodingStyles <em>Encoding Styles</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapFaultImpl#getBindingFault <em>Binding Fault</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapFaultImpl#getUse <em>Use</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapFaultImpl#getNamespace <em>Namespace</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.soap.impl.SoapFaultImpl#getEncodingStyles <em>Encoding Styles</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class SoapFaultImpl extends EObjectImpl implements SoapFault {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getUse() <em>Use</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getUse() <em>Use</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getUse()
      * @generated
      * @ordered
      */
-	protected static final SoapUseType USE_EDEFAULT = SoapUseType.LITERAL_LITERAL;
+    protected static final SoapUseType USE_EDEFAULT = SoapUseType.LITERAL_LITERAL;
 
     /**
-     * The cached value of the '{@link #getUse() <em>Use</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getUse() <em>Use</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getUse()
      * @generated
      * @ordered
      */
-	protected SoapUseType use = USE_EDEFAULT;
+    protected SoapUseType use = USE_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getNamespace() <em>Namespace</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getNamespace() <em>Namespace</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getNamespace()
      * @generated
      * @ordered
      */
-	protected static final String NAMESPACE_EDEFAULT = null;
+    protected static final String NAMESPACE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getNamespace() <em>Namespace</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getNamespace() <em>Namespace</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getNamespace()
      * @generated
      * @ordered
      */
-	protected String namespace = NAMESPACE_EDEFAULT;
+    protected String namespace = NAMESPACE_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getEncodingStyles() <em>Encoding Styles</em>}' attribute list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getEncodingStyles() <em>Encoding Styles</em>}' attribute list. <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
      * @see #getEncodingStyles()
      * @generated
      * @ordered
      */
-	protected EList encodingStyles = null;
+    protected EList encodingStyles = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected SoapFaultImpl() {
+    protected SoapFaultImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return SoapPackage.eINSTANCE.getSoapFault();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public SoapUseType getUse() {
+    public SoapUseType getUse() {
         return use;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setUse(SoapUseType newUse) {
+    public void setUse( SoapUseType newUse ) {
         SoapUseType oldUse = use;
         use = newUse == null ? USE_EDEFAULT : newUse;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_FAULT__USE, oldUse, use));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_FAULT__USE, oldUse,
+                                                                   use));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getNamespace() {
+    public String getNamespace() {
         return namespace;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setNamespace(String newNamespace) {
+    public void setNamespace( String newNamespace ) {
         String oldNamespace = namespace;
         namespace = newNamespace;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_FAULT__NAMESPACE, oldNamespace, namespace));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_FAULT__NAMESPACE,
+                                                                   oldNamespace, namespace));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getEncodingStyles() {
+    public EList getEncodingStyles() {
         if (encodingStyles == null) {
             encodingStyles = new EDataTypeUniqueEList(String.class, this, SoapPackage.SOAP_FAULT__ENCODING_STYLES);
         }
@@ -172,65 +162,71 @@ public class SoapFaultImpl extends EObjectImpl implements SoapFault {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public BindingFault getBindingFault() {
+    public BindingFault getBindingFault() {
         if (eContainerFeatureID != SoapPackage.SOAP_FAULT__BINDING_FAULT) return null;
         return (BindingFault)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setBindingFault(BindingFault newBindingFault) {
-        if (newBindingFault != eContainer || (eContainerFeatureID != SoapPackage.SOAP_FAULT__BINDING_FAULT && newBindingFault != null)) {
-            if (EcoreUtil.isAncestor(this, newBindingFault))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setBindingFault( BindingFault newBindingFault ) {
+        if (newBindingFault != eContainer
+            || (eContainerFeatureID != SoapPackage.SOAP_FAULT__BINDING_FAULT && newBindingFault != null)) {
+            if (EcoreUtil.isAncestor(this, newBindingFault)) throw new IllegalArgumentException(
+                                                                                                "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newBindingFault != null)
-                msgs = ((InternalEObject)newBindingFault).eInverseAdd(this, WsdlPackage.BINDING_FAULT__SOAP_FAULT, BindingFault.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newBindingFault != null) msgs = ((InternalEObject)newBindingFault).eInverseAdd(this,
+                                                                                               WsdlPackage.BINDING_FAULT__SOAP_FAULT,
+                                                                                               BindingFault.class,
+                                                                                               msgs);
             msgs = eBasicSetContainer((InternalEObject)newBindingFault, SoapPackage.SOAP_FAULT__BINDING_FAULT, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SoapPackage.SOAP_FAULT__BINDING_FAULT, newBindingFault, newBindingFault));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          SoapPackage.SOAP_FAULT__BINDING_FAULT, newBindingFault,
+                                                                          newBindingFault));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case SoapPackage.SOAP_FAULT__BINDING_FAULT:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, SoapPackage.SOAP_FAULT__BINDING_FAULT, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case SoapPackage.SOAP_FAULT__BINDING_FAULT:
@@ -243,12 +239,12 @@ public class SoapFaultImpl extends EObjectImpl implements SoapFault {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case SoapPackage.SOAP_FAULT__BINDING_FAULT:
@@ -261,12 +257,13 @@ public class SoapFaultImpl extends EObjectImpl implements SoapFault {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_FAULT__BINDING_FAULT:
                 return getBindingFault();
@@ -281,12 +278,13 @@ public class SoapFaultImpl extends EObjectImpl implements SoapFault {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_FAULT__BINDING_FAULT:
                 setBindingFault((BindingFault)newValue);
@@ -306,12 +304,12 @@ public class SoapFaultImpl extends EObjectImpl implements SoapFault {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_FAULT__BINDING_FAULT:
                 setBindingFault((BindingFault)null);
@@ -330,12 +328,12 @@ public class SoapFaultImpl extends EObjectImpl implements SoapFault {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case SoapPackage.SOAP_FAULT__BINDING_FAULT:
                 return getBindingFault() != null;
@@ -350,11 +348,11 @@ public class SoapFaultImpl extends EObjectImpl implements SoapFault {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     public String toString() {
         if (eIsProxy()) return super.toString();
 
@@ -369,4 +367,4 @@ public class SoapFaultImpl extends EObjectImpl implements SoapFault {
         return result.toString();
     }
 
-} //SoapFaultImpl
+} // SoapFaultImpl

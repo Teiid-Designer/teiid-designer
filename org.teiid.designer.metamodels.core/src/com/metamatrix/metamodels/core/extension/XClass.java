@@ -23,12 +23,6 @@ import org.eclipse.emf.ecore.EClass;
  * @generated
  */
 public interface XClass extends EClass {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Returns the value of the '<em><b>Extended Class</b></em>' reference. <!-- begin-user-doc -->

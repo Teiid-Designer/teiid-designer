@@ -27,12 +27,6 @@ import com.metamatrix.metamodels.relationship.UriReference;
  * @generated
  */
 public class UriReferenceItemProvider extends PlaceholderReferenceItemProvider {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -88,7 +82,7 @@ public class UriReferenceItemProvider extends PlaceholderReferenceItemProvider {
      * 
      * @generated
      */
-    protected void addNamePropertyDescriptorGen( Object object ) {
+    protected void addNamePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_UriReference_name_feature"), //$NON-NLS-1$
@@ -124,7 +118,7 @@ public class UriReferenceItemProvider extends PlaceholderReferenceItemProvider {
      * 
      * @generated
      */
-    protected void addUriPropertyDescriptorGen( Object object ) {
+    protected void addUriPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_UriReference_uri_feature"), //$NON-NLS-1$
@@ -160,7 +154,7 @@ public class UriReferenceItemProvider extends PlaceholderReferenceItemProvider {
      * 
      * @generated
      */
-    protected void addResolvablePropertyDescriptorGen( Object object ) {
+    protected void addResolvablePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_UriReference_resolvable_feature"), //$NON-NLS-1$
@@ -196,7 +190,7 @@ public class UriReferenceItemProvider extends PlaceholderReferenceItemProvider {
      * 
      * @generated
      */
-    protected void addEncodingPropertyDescriptorGen( Object object ) {
+    protected void addEncodingPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_UriReference_encoding_feature"), //$NON-NLS-1$
@@ -232,7 +226,7 @@ public class UriReferenceItemProvider extends PlaceholderReferenceItemProvider {
      * 
      * @generated
      */
-    protected void addAbstractPropertyDescriptorGen( Object object ) {
+    protected void addAbstractPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_UriReference_abstract_feature"), //$NON-NLS-1$
@@ -268,7 +262,7 @@ public class UriReferenceItemProvider extends PlaceholderReferenceItemProvider {
      * 
      * @generated
      */
-    protected void addKeywordsPropertyDescriptorGen( Object object ) {
+    protected void addKeywordsPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_UriReference_keywords_feature"), //$NON-NLS-1$
@@ -304,7 +298,7 @@ public class UriReferenceItemProvider extends PlaceholderReferenceItemProvider {
      * 
      * @generated
      */
-    protected void addRelatedUrisPropertyDescriptorGen( Object object ) {
+    protected void addRelatedUrisPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_UriReference_relatedUris_feature"), //$NON-NLS-1$
@@ -337,7 +331,7 @@ public class UriReferenceItemProvider extends PlaceholderReferenceItemProvider {
      * 
      * @generated NOT
      */
-    protected void addPropertiesPropertyDescriptor( Object object ) {
+    protected void addPropertiesPropertyDescriptor( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(new ItemPropertyDescriptor(
                                                                ((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                getString("_UI_UriReference_properties_feature"), //$NON-NLS-1$

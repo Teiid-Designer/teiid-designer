@@ -28,12 +28,6 @@ import com.metamatrix.metamodels.transformation.TransformationPackage;
  * @generated
  */
 public class DataFlowMappingRootItemProvider extends TransformationMappingRootItemProvider {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -104,7 +98,7 @@ public class DataFlowMappingRootItemProvider extends TransformationMappingRootIt
      * 
      * @generated
      */
-    public Collection getChildrenFeaturesGen( Object object ) {
+    public Collection getChildrenFeaturesGen( Object object ) { // NO_UCD
         if (childrenFeatures == null) {
             super.getChildrenFeatures(object);
             childrenFeatures.add(TransformationPackage.eINSTANCE.getDataFlowMappingRoot_Nodes());

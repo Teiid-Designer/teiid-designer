@@ -26,7 +26,7 @@ public final class ModelType extends AbstractEnumerator {
      * 
      * @generated
      */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
+    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$ // NO_UCD
 
     /**
      * The '<em><b>PHYSICAL</b></em>' literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -305,7 +305,7 @@ public final class ModelType extends AbstractEnumerator {
      * 
      * @generated
      */
-    public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+    public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY)); // NO_UCD
 
     /**
      * Returns the '<em><b>Model Type</b></em>' literal with the specified name. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -327,7 +327,7 @@ public final class ModelType extends AbstractEnumerator {
      * 
      * @generated
      */
-    public static ModelType get( int value ) {
+    public static ModelType get( int value ) { // NO_UCD
         switch (value) {
             case PHYSICAL:
                 return PHYSICAL_LITERAL;
@@ -376,7 +376,7 @@ public final class ModelType extends AbstractEnumerator {
         return label == null || label.length() == 0 ? this.getName() : label;
     }
 
-    public static boolean isShredable( final int itemType ) {
+    public static boolean isShredable( final int itemType ) { // NO_UCD
         switch (itemType) {
             case ModelType.PHYSICAL:
                 return true;

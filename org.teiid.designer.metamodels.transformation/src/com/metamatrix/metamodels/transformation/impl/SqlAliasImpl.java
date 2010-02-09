@@ -21,32 +21,23 @@ import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Sql Alias</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Sql Alias</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.SqlAliasImpl#getAlias <em>Alias</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.SqlAliasImpl#getAliasedObject <em>Aliased Object</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.SqlAliasImpl#getSqlTransformation <em>Sql Transformation</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.SqlAliasImpl#getAlias <em>Alias</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.SqlAliasImpl#getAliasedObject <em>Aliased Object</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.SqlAliasImpl#getSqlTransformation <em>Sql Transformation</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getAlias() <em>Alias</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getAlias() <em>Alias</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getAlias()
      * @generated
      * @ordered
@@ -54,9 +45,8 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
     protected static final String ALIAS_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getAlias() <em>Alias</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getAlias() <em>Alias</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getAlias()
      * @generated
      * @ordered
@@ -64,9 +54,9 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
     protected String alias = ALIAS_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getAliasedObject() <em>Aliased Object</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getAliasedObject() <em>Aliased Object</em>}' reference. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getAliasedObject()
      * @generated
      * @ordered
@@ -74,8 +64,8 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
     protected EObject aliasedObject = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected SqlAliasImpl() {
@@ -83,8 +73,8 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -93,8 +83,8 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getAlias() {
@@ -102,20 +92,20 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setAlias(String newAlias) {
+    public void setAlias( String newAlias ) {
         String oldAlias = alias;
         alias = newAlias;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.SQL_ALIAS__ALIAS, oldAlias, alias));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.SQL_ALIAS__ALIAS, oldAlias, alias));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EObject getAliasedObject() {
@@ -123,16 +113,17 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
             EObject oldAliasedObject = aliasedObject;
             aliasedObject = eResolveProxy((InternalEObject)aliasedObject);
             if (aliasedObject != oldAliasedObject) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, TransformationPackage.SQL_ALIAS__ALIASED_OBJECT, oldAliasedObject, aliasedObject));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+                                                                           TransformationPackage.SQL_ALIAS__ALIASED_OBJECT,
+                                                                           oldAliasedObject, aliasedObject));
             }
         }
         return aliasedObject;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EObject basicGetAliasedObject() {
@@ -140,20 +131,21 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setAliasedObject(EObject newAliasedObject) {
+    public void setAliasedObject( EObject newAliasedObject ) {
         EObject oldAliasedObject = aliasedObject;
         aliasedObject = newAliasedObject;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.SQL_ALIAS__ALIASED_OBJECT, oldAliasedObject, aliasedObject));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.SQL_ALIAS__ALIASED_OBJECT,
+                                                                   oldAliasedObject, aliasedObject));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public SqlTransformation getSqlTransformation() {
@@ -162,55 +154,63 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setSqlTransformation(SqlTransformation newSqlTransformation) {
-        if (newSqlTransformation != eContainer || (eContainerFeatureID != TransformationPackage.SQL_ALIAS__SQL_TRANSFORMATION && newSqlTransformation != null)) {
-            if (EcoreUtil.isAncestor(this, newSqlTransformation))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setSqlTransformation( SqlTransformation newSqlTransformation ) {
+        if (newSqlTransformation != eContainer
+            || (eContainerFeatureID != TransformationPackage.SQL_ALIAS__SQL_TRANSFORMATION && newSqlTransformation != null)) {
+            if (EcoreUtil.isAncestor(this, newSqlTransformation)) throw new IllegalArgumentException(
+                                                                                                     "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newSqlTransformation != null)
-                msgs = ((InternalEObject)newSqlTransformation).eInverseAdd(this, TransformationPackage.SQL_TRANSFORMATION__ALIASES, SqlTransformation.class, msgs);
-            msgs = eBasicSetContainer((InternalEObject)newSqlTransformation, TransformationPackage.SQL_ALIAS__SQL_TRANSFORMATION, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newSqlTransformation != null) msgs = ((InternalEObject)newSqlTransformation).eInverseAdd(this,
+                                                                                                         TransformationPackage.SQL_TRANSFORMATION__ALIASES,
+                                                                                                         SqlTransformation.class,
+                                                                                                         msgs);
+            msgs = eBasicSetContainer((InternalEObject)newSqlTransformation,
+                                      TransformationPackage.SQL_ALIAS__SQL_TRANSFORMATION,
+                                      msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.SQL_ALIAS__SQL_TRANSFORMATION, newSqlTransformation, newSqlTransformation));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          TransformationPackage.SQL_ALIAS__SQL_TRANSFORMATION,
+                                                                          newSqlTransformation, newSqlTransformation));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.SQL_ALIAS__SQL_TRANSFORMATION:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.SQL_ALIAS__SQL_TRANSFORMATION, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.SQL_ALIAS__SQL_TRANSFORMATION:
@@ -223,16 +223,19 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.SQL_ALIAS__SQL_TRANSFORMATION:
-                    return eContainer.eInverseRemove(this, TransformationPackage.SQL_TRANSFORMATION__ALIASES, SqlTransformation.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.SQL_TRANSFORMATION__ALIASES,
+                                                     SqlTransformation.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -241,12 +244,13 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.SQL_ALIAS__ALIAS:
                 return getAlias();
@@ -260,12 +264,13 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.SQL_ALIAS__ALIAS:
                 setAlias((String)newValue);
@@ -281,12 +286,12 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.SQL_ALIAS__ALIAS:
                 setAlias(ALIAS_EDEFAULT);
@@ -302,12 +307,12 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.SQL_ALIAS__ALIAS:
                 return ALIAS_EDEFAULT == null ? alias != null : !ALIAS_EDEFAULT.equals(alias);
@@ -320,8 +325,8 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -335,4 +340,4 @@ public class SqlAliasImpl extends EObjectImpl implements SqlAlias {
         return result.toString();
     }
 
-} //SqlAliasImpl
+} // SqlAliasImpl

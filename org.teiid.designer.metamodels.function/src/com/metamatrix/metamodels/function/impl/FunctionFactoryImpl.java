@@ -134,7 +134,7 @@ public class FunctionFactoryImpl extends EFactoryImpl implements FunctionFactory
      * @generated
      */
     @Deprecated
-    public static FunctionPackage getPackage() {
+    public static FunctionPackage getPackage() { // NO_UCD
         return FunctionPackage.eINSTANCE;
     }
 

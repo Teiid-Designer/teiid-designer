@@ -52,7 +52,7 @@ public abstract class UmlEntityFinder implements ModelVisitor {
         }
     }
 
-    protected void found( final Collection entities ) {
+    protected void found( final Collection entities ) { // NO_UCD
         // Add only non-null, unique entries to the collection
         for (Iterator iter = entities.iterator(); iter.hasNext();) {
             final EObject entity = (EObject)iter.next();

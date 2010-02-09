@@ -158,7 +158,7 @@ public class IndexItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addColumnsPropertyDescriptorGen( Object object ) {
+    protected void addColumnsPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Index_columns_feature"), //$NON-NLS-1$

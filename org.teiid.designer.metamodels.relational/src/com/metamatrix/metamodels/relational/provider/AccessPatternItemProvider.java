@@ -83,7 +83,7 @@ public class AccessPatternItemProvider extends RelationalEntityItemProvider {
      * 
      * @generated
      */
-    protected void addColumnsPropertyDescriptorGen( Object object ) {
+    protected void addColumnsPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_AccessPattern_columns_feature"), //$NON-NLS-1$

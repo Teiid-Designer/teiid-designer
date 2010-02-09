@@ -18,11 +18,4 @@ import org.eclipse.emf.ecore.EEnumLiteral;
  */
 public interface XEnumLiteral extends EEnumLiteral {
 
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
-
 } // XEnumLiteral

@@ -34,430 +34,456 @@ import com.metamatrix.metamodels.wsdl.PortType;
 import com.metamatrix.metamodels.wsdl.WsdlPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Operation</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Operation</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getName <em>Name</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getDocumentation <em>Documentation</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getDeclaredNamespaces <em>Declared Namespaces</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getElements <em>Elements</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getParameterOrder <em>Parameter Order</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getPortType <em>Port Type</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getInput <em>Input</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getOutput <em>Output</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getFaults <em>Faults</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getName <em>Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getDocumentation <em>Documentation</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getDeclaredNamespaces <em>Declared Namespaces</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getElements <em>Elements</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getParameterOrder <em>Parameter Order</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getPortType <em>Port Type</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getInput <em>Input</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getOutput <em>Output</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.impl.OperationImpl#getFaults <em>Faults</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class OperationImpl extends EObjectImpl implements Operation {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
      */
-	protected static final String NAME_EDEFAULT = null;
+    protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
      */
-	protected String name = NAME_EDEFAULT;
+    protected String name = NAME_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' containment reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' containment reference. <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
      * @see #getDocumentation()
      * @generated
      * @ordered
      */
-	protected Documentation documentation = null;
+    protected Documentation documentation = null;
 
     /**
-     * The cached value of the '{@link #getDeclaredNamespaces() <em>Declared Namespaces</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getDeclaredNamespaces() <em>Declared Namespaces</em>}' containment reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getDeclaredNamespaces()
      * @generated
      * @ordered
      */
-	protected EList declaredNamespaces = null;
+    protected EList declaredNamespaces = null;
 
     /**
-     * The cached value of the '{@link #getElements() <em>Elements</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getElements() <em>Elements</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getElements()
      * @generated
      * @ordered
      */
-	protected EList elements = null;
+    protected EList elements = null;
 
     /**
-     * The default value of the '{@link #getParameterOrder() <em>Parameter Order</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getParameterOrder() <em>Parameter Order</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getParameterOrder()
      * @generated
      * @ordered
      */
-	protected static final String PARAMETER_ORDER_EDEFAULT = null;
+    protected static final String PARAMETER_ORDER_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getParameterOrder() <em>Parameter Order</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getParameterOrder() <em>Parameter Order</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getParameterOrder()
      * @generated
      * @ordered
      */
-	protected String parameterOrder = PARAMETER_ORDER_EDEFAULT;
+    protected String parameterOrder = PARAMETER_ORDER_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getInput() <em>Input</em>}' containment reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getInput() <em>Input</em>}' containment reference. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getInput()
      * @generated
      * @ordered
      */
-	protected Input input = null;
+    protected Input input = null;
 
     /**
-     * The cached value of the '{@link #getOutput() <em>Output</em>}' containment reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getOutput() <em>Output</em>}' containment reference. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getOutput()
      * @generated
      * @ordered
      */
-	protected Output output = null;
+    protected Output output = null;
 
     /**
-     * The cached value of the '{@link #getFaults() <em>Faults</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getFaults() <em>Faults</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getFaults()
      * @generated
      * @ordered
      */
-	protected EList faults = null;
+    protected EList faults = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected OperationImpl() {
+    protected OperationImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return WsdlPackage.eINSTANCE.getOperation();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public Documentation getDocumentation() {
+    public Documentation getDocumentation() {
         return documentation;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public NotificationChain basicSetDocumentation(Documentation newDocumentation, NotificationChain msgs) {
+    public NotificationChain basicSetDocumentation( Documentation newDocumentation,
+                                                    NotificationChain msgs ) {
         Documentation oldDocumentation = documentation;
         documentation = newDocumentation;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__DOCUMENTATION, oldDocumentation, newDocumentation);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__DOCUMENTATION,
+                                                                   oldDocumentation, newDocumentation);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setDocumentation(Documentation newDocumentation) {
+    public void setDocumentation( Documentation newDocumentation ) {
         if (newDocumentation != documentation) {
             NotificationChain msgs = null;
-            if (documentation != null)
-                msgs = ((InternalEObject)documentation).eInverseRemove(this, WsdlPackage.DOCUMENTATION__DOCUMENTED, Documentation.class, msgs);
-            if (newDocumentation != null)
-                msgs = ((InternalEObject)newDocumentation).eInverseAdd(this, WsdlPackage.DOCUMENTATION__DOCUMENTED, Documentation.class, msgs);
+            if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
+                                                                                              WsdlPackage.DOCUMENTATION__DOCUMENTED,
+                                                                                              Documentation.class,
+                                                                                              msgs);
+            if (newDocumentation != null) msgs = ((InternalEObject)newDocumentation).eInverseAdd(this,
+                                                                                                 WsdlPackage.DOCUMENTATION__DOCUMENTED,
+                                                                                                 Documentation.class,
+                                                                                                 msgs);
             msgs = basicSetDocumentation(newDocumentation, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__DOCUMENTATION, newDocumentation, newDocumentation));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          WsdlPackage.OPERATION__DOCUMENTATION, newDocumentation,
+                                                                          newDocumentation));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getDeclaredNamespaces() {
+    public EList getDeclaredNamespaces() {
         if (declaredNamespaces == null) {
-            declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this, WsdlPackage.OPERATION__DECLARED_NAMESPACES, WsdlPackage.NAMESPACE_DECLARATION__OWNER);
+            declaredNamespaces = new EObjectContainmentWithInverseEList(NamespaceDeclaration.class, this,
+                                                                        WsdlPackage.OPERATION__DECLARED_NAMESPACES,
+                                                                        WsdlPackage.NAMESPACE_DECLARATION__OWNER);
         }
         return declaredNamespaces;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getElements() {
+    public EList getElements() {
         if (elements == null) {
-            elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.OPERATION__ELEMENTS, WsdlPackage.ELEMENT__ELEMENT_OWNER);
+            elements = new EObjectContainmentWithInverseEList(Element.class, this, WsdlPackage.OPERATION__ELEMENTS,
+                                                              WsdlPackage.ELEMENT__ELEMENT_OWNER);
         }
         return elements;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getParameterOrder() {
+    public String getParameterOrder() {
         return parameterOrder;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setParameterOrder(String newParameterOrder) {
+    public void setParameterOrder( String newParameterOrder ) {
         String oldParameterOrder = parameterOrder;
         parameterOrder = newParameterOrder;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__PARAMETER_ORDER, oldParameterOrder, parameterOrder));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   WsdlPackage.OPERATION__PARAMETER_ORDER, oldParameterOrder,
+                                                                   parameterOrder));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getName() {
+    public String getName() {
         return name;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setName(String newName) {
+    public void setName( String newName ) {
         String oldName = name;
         name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__NAME, oldName, name));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__NAME, oldName,
+                                                                   name));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public PortType getPortType() {
+    public PortType getPortType() {
         if (eContainerFeatureID != WsdlPackage.OPERATION__PORT_TYPE) return null;
         return (PortType)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setPortType(PortType newPortType) {
+    public void setPortType( PortType newPortType ) {
         if (newPortType != eContainer || (eContainerFeatureID != WsdlPackage.OPERATION__PORT_TYPE && newPortType != null)) {
-            if (EcoreUtil.isAncestor(this, newPortType))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newPortType)) throw new IllegalArgumentException(
+                                                                                            "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newPortType != null)
-                msgs = ((InternalEObject)newPortType).eInverseAdd(this, WsdlPackage.PORT_TYPE__OPERATIONS, PortType.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newPortType != null) msgs = ((InternalEObject)newPortType).eInverseAdd(this,
+                                                                                       WsdlPackage.PORT_TYPE__OPERATIONS,
+                                                                                       PortType.class,
+                                                                                       msgs);
             msgs = eBasicSetContainer((InternalEObject)newPortType, WsdlPackage.OPERATION__PORT_TYPE, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__PORT_TYPE, newPortType, newPortType));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          WsdlPackage.OPERATION__PORT_TYPE, newPortType,
+                                                                          newPortType));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public Input getInput() {
+    public Input getInput() {
         return input;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public NotificationChain basicSetInput(Input newInput, NotificationChain msgs) {
+    public NotificationChain basicSetInput( Input newInput,
+                                            NotificationChain msgs ) {
         Input oldInput = input;
         input = newInput;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__INPUT, oldInput, newInput);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__INPUT,
+                                                                   oldInput, newInput);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setInput(Input newInput) {
+    public void setInput( Input newInput ) {
         if (newInput != input) {
             NotificationChain msgs = null;
-            if (input != null)
-                msgs = ((InternalEObject)input).eInverseRemove(this, WsdlPackage.INPUT__OPERATION, Input.class, msgs);
-            if (newInput != null)
-                msgs = ((InternalEObject)newInput).eInverseAdd(this, WsdlPackage.INPUT__OPERATION, Input.class, msgs);
+            if (input != null) msgs = ((InternalEObject)input).eInverseRemove(this,
+                                                                              WsdlPackage.INPUT__OPERATION,
+                                                                              Input.class,
+                                                                              msgs);
+            if (newInput != null) msgs = ((InternalEObject)newInput).eInverseAdd(this,
+                                                                                 WsdlPackage.INPUT__OPERATION,
+                                                                                 Input.class,
+                                                                                 msgs);
             msgs = basicSetInput(newInput, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__INPUT, newInput, newInput));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__INPUT,
+                                                                          newInput, newInput));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public Output getOutput() {
+    public Output getOutput() {
         return output;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public NotificationChain basicSetOutput(Output newOutput, NotificationChain msgs) {
+    public NotificationChain basicSetOutput( Output newOutput,
+                                             NotificationChain msgs ) {
         Output oldOutput = output;
         output = newOutput;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__OUTPUT, oldOutput, newOutput);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__OUTPUT,
+                                                                   oldOutput, newOutput);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setOutput(Output newOutput) {
+    public void setOutput( Output newOutput ) {
         if (newOutput != output) {
             NotificationChain msgs = null;
-            if (output != null)
-                msgs = ((InternalEObject)output).eInverseRemove(this, WsdlPackage.OUTPUT__OPERATION, Output.class, msgs);
-            if (newOutput != null)
-                msgs = ((InternalEObject)newOutput).eInverseAdd(this, WsdlPackage.OUTPUT__OPERATION, Output.class, msgs);
+            if (output != null) msgs = ((InternalEObject)output).eInverseRemove(this,
+                                                                                WsdlPackage.OUTPUT__OPERATION,
+                                                                                Output.class,
+                                                                                msgs);
+            if (newOutput != null) msgs = ((InternalEObject)newOutput).eInverseAdd(this,
+                                                                                   WsdlPackage.OUTPUT__OPERATION,
+                                                                                   Output.class,
+                                                                                   msgs);
             msgs = basicSetOutput(newOutput, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__OUTPUT, newOutput, newOutput));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, WsdlPackage.OPERATION__OUTPUT,
+                                                                          newOutput, newOutput));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getFaults() {
+    public EList getFaults() {
         if (faults == null) {
-            faults = new EObjectContainmentWithInverseEList(Fault.class, this, WsdlPackage.OPERATION__FAULTS, WsdlPackage.FAULT__OPERATION);
+            faults = new EObjectContainmentWithInverseEList(Fault.class, this, WsdlPackage.OPERATION__FAULTS,
+                                                            WsdlPackage.FAULT__OPERATION);
         }
         return faults;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public boolean isNameValid() {
+    public boolean isNameValid() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WsdlPackage.OPERATION__DOCUMENTATION:
-                    if (documentation != null)
-                        msgs = ((InternalEObject)documentation).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - WsdlPackage.OPERATION__DOCUMENTATION, null, msgs);
+                    if (documentation != null) msgs = ((InternalEObject)documentation).eInverseRemove(this,
+                                                                                                      EOPPOSITE_FEATURE_BASE
+                                                                                                      - WsdlPackage.OPERATION__DOCUMENTATION,
+                                                                                                      null,
+                                                                                                      msgs);
                     return basicSetDocumentation((Documentation)otherEnd, msgs);
                 case WsdlPackage.OPERATION__DECLARED_NAMESPACES:
                     return ((InternalEList)getDeclaredNamespaces()).basicAdd(otherEnd, msgs);
                 case WsdlPackage.OPERATION__ELEMENTS:
                     return ((InternalEList)getElements()).basicAdd(otherEnd, msgs);
                 case WsdlPackage.OPERATION__PORT_TYPE:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, WsdlPackage.OPERATION__PORT_TYPE, msgs);
                 case WsdlPackage.OPERATION__INPUT:
-                    if (input != null)
-                        msgs = ((InternalEObject)input).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - WsdlPackage.OPERATION__INPUT, null, msgs);
+                    if (input != null) msgs = ((InternalEObject)input).eInverseRemove(this,
+                                                                                      EOPPOSITE_FEATURE_BASE
+                                                                                      - WsdlPackage.OPERATION__INPUT,
+                                                                                      null,
+                                                                                      msgs);
                     return basicSetInput((Input)otherEnd, msgs);
                 case WsdlPackage.OPERATION__OUTPUT:
-                    if (output != null)
-                        msgs = ((InternalEObject)output).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - WsdlPackage.OPERATION__OUTPUT, null, msgs);
+                    if (output != null) msgs = ((InternalEObject)output).eInverseRemove(this,
+                                                                                        EOPPOSITE_FEATURE_BASE
+                                                                                        - WsdlPackage.OPERATION__OUTPUT,
+                                                                                        null,
+                                                                                        msgs);
                     return basicSetOutput((Output)otherEnd, msgs);
                 case WsdlPackage.OPERATION__FAULTS:
                     return ((InternalEList)getFaults()).basicAdd(otherEnd, msgs);
@@ -465,18 +491,20 @@ public class OperationImpl extends EObjectImpl implements Operation {
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WsdlPackage.OPERATION__DOCUMENTATION:
@@ -501,12 +529,12 @@ public class OperationImpl extends EObjectImpl implements Operation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case WsdlPackage.OPERATION__PORT_TYPE:
@@ -519,12 +547,13 @@ public class OperationImpl extends EObjectImpl implements Operation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.OPERATION__NAME:
                 return getName();
@@ -549,12 +578,13 @@ public class OperationImpl extends EObjectImpl implements Operation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.OPERATION__NAME:
                 setName((String)newValue);
@@ -591,12 +621,12 @@ public class OperationImpl extends EObjectImpl implements Operation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.OPERATION__NAME:
                 setName(NAME_EDEFAULT);
@@ -630,12 +660,12 @@ public class OperationImpl extends EObjectImpl implements Operation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WsdlPackage.OPERATION__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -660,77 +690,93 @@ public class OperationImpl extends EObjectImpl implements Operation {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public int eBaseStructuralFeatureID(int derivedFeatureID, Class baseClass) {
+    @Override
+    public int eBaseStructuralFeatureID( int derivedFeatureID,
+                                         Class baseClass ) {
         if (baseClass == Documented.class) {
             switch (derivedFeatureID) {
-                case WsdlPackage.OPERATION__DOCUMENTATION: return WsdlPackage.DOCUMENTED__DOCUMENTATION;
-                default: return -1;
+                case WsdlPackage.OPERATION__DOCUMENTATION:
+                    return WsdlPackage.DOCUMENTED__DOCUMENTATION;
+                default:
+                    return -1;
             }
         }
         if (baseClass == NamespaceDeclarationOwner.class) {
             switch (derivedFeatureID) {
-                case WsdlPackage.OPERATION__DECLARED_NAMESPACES: return WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES;
-                default: return -1;
+                case WsdlPackage.OPERATION__DECLARED_NAMESPACES:
+                    return WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES;
+                default:
+                    return -1;
             }
         }
         if (baseClass == ElementOwner.class) {
             switch (derivedFeatureID) {
-                case WsdlPackage.OPERATION__ELEMENTS: return WsdlPackage.ELEMENT_OWNER__ELEMENTS;
-                default: return -1;
+                case WsdlPackage.OPERATION__ELEMENTS:
+                    return WsdlPackage.ELEMENT_OWNER__ELEMENTS;
+                default:
+                    return -1;
             }
         }
         if (baseClass == ExtensibleDocumented.class) {
             switch (derivedFeatureID) {
-                default: return -1;
+                default:
+                    return -1;
             }
         }
         return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public int eDerivedStructuralFeatureID(int baseFeatureID, Class baseClass) {
+    @Override
+    public int eDerivedStructuralFeatureID( int baseFeatureID,
+                                            Class baseClass ) {
         if (baseClass == Documented.class) {
             switch (baseFeatureID) {
-                case WsdlPackage.DOCUMENTED__DOCUMENTATION: return WsdlPackage.OPERATION__DOCUMENTATION;
-                default: return -1;
+                case WsdlPackage.DOCUMENTED__DOCUMENTATION:
+                    return WsdlPackage.OPERATION__DOCUMENTATION;
+                default:
+                    return -1;
             }
         }
         if (baseClass == NamespaceDeclarationOwner.class) {
             switch (baseFeatureID) {
-                case WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES: return WsdlPackage.OPERATION__DECLARED_NAMESPACES;
-                default: return -1;
+                case WsdlPackage.NAMESPACE_DECLARATION_OWNER__DECLARED_NAMESPACES:
+                    return WsdlPackage.OPERATION__DECLARED_NAMESPACES;
+                default:
+                    return -1;
             }
         }
         if (baseClass == ElementOwner.class) {
             switch (baseFeatureID) {
-                case WsdlPackage.ELEMENT_OWNER__ELEMENTS: return WsdlPackage.OPERATION__ELEMENTS;
-                default: return -1;
+                case WsdlPackage.ELEMENT_OWNER__ELEMENTS:
+                    return WsdlPackage.OPERATION__ELEMENTS;
+                default:
+                    return -1;
             }
         }
         if (baseClass == ExtensibleDocumented.class) {
             switch (baseFeatureID) {
-                default: return -1;
+                default:
+                    return -1;
             }
         }
         return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     public String toString() {
         if (eIsProxy()) return super.toString();
 
@@ -743,4 +789,4 @@ public class OperationImpl extends EObjectImpl implements Operation {
         return result.toString();
     }
 
-} //OperationImpl
+} // OperationImpl

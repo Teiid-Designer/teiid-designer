@@ -60,7 +60,7 @@ public abstract class WebServiceComponentFinder implements ModelVisitor {
         }
     }
 
-    protected void found( final List entities ) {
+    protected void found( final List entities ) { // NO_UCD
         // if ( entities != null ) {
         // this.objects.addAll(entities);
         // }

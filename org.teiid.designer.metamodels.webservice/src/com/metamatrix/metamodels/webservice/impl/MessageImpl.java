@@ -22,333 +22,347 @@ import com.metamatrix.metamodels.webservice.SampleMessages;
 import com.metamatrix.metamodels.webservice.WebServicePackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Message</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Message</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.webservice.impl.MessageImpl#getContentElement <em>Content Element</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.webservice.impl.MessageImpl#getSamples <em>Samples</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.webservice.impl.MessageImpl#getContentComplexType <em>Content Complex Type</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.webservice.impl.MessageImpl#getContentSimpleType <em>Content Simple Type</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.webservice.impl.MessageImpl#getContentElement <em>Content Element</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.webservice.impl.MessageImpl#getSamples <em>Samples</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.webservice.impl.MessageImpl#getContentComplexType <em>Content Complex Type</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.webservice.impl.MessageImpl#getContentSimpleType <em>Content Simple Type</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public abstract class MessageImpl extends WebServiceComponentImpl implements Message {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getContentElement() <em>Content Element</em>}' reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getContentElement() <em>Content Element</em>}' reference. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getContentElement()
      * @generated
      * @ordered
      */
-	protected XSDElementDeclaration contentElement = null;
+    protected XSDElementDeclaration contentElement = null;
 
     /**
-     * The cached value of the '{@link #getSamples() <em>Samples</em>}' containment reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getSamples() <em>Samples</em>}' containment reference. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getSamples()
      * @generated
      * @ordered
      */
-	protected SampleMessages samples = null;
+    protected SampleMessages samples = null;
 
     /**
-     * The cached value of the '{@link #getContentComplexType() <em>Content Complex Type</em>}' reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getContentComplexType() <em>Content Complex Type</em>}' reference. <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
      * @see #getContentComplexType()
      * @generated
      * @ordered
      */
-	protected XSDComplexTypeDefinition contentComplexType = null;
+    protected XSDComplexTypeDefinition contentComplexType = null;
 
     /**
-     * The cached value of the '{@link #getContentSimpleType() <em>Content Simple Type</em>}' reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getContentSimpleType() <em>Content Simple Type</em>}' reference. <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
      * @see #getContentSimpleType()
      * @generated
      * @ordered
      */
-	protected XSDSimpleTypeDefinition contentSimpleType = null;
+    protected XSDSimpleTypeDefinition contentSimpleType = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected MessageImpl() {
+    protected MessageImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return WebServicePackage.eINSTANCE.getMessage();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public XSDElementDeclaration getContentElement() {
+    public XSDElementDeclaration getContentElement() {
         if (contentElement != null && contentElement.eIsProxy()) {
             XSDElementDeclaration oldContentElement = contentElement;
             contentElement = (XSDElementDeclaration)eResolveProxy((InternalEObject)contentElement);
             if (contentElement != oldContentElement) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, WebServicePackage.MESSAGE__CONTENT_ELEMENT, oldContentElement, contentElement));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+                                                                           WebServicePackage.MESSAGE__CONTENT_ELEMENT,
+                                                                           oldContentElement, contentElement));
             }
         }
         return contentElement;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public XSDElementDeclaration basicGetContentElement() {
+    public XSDElementDeclaration basicGetContentElement() {
         return contentElement;
     }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	public void setContentElement(XSDElementDeclaration newContentElement)
-	{
-		XSDElementDeclaration oldContentElement = contentElement;
-        if ( oldContentElement != newContentElement ) {
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
+     */
+    public void setContentElement( XSDElementDeclaration newContentElement ) {
+        XSDElementDeclaration oldContentElement = contentElement;
+        if (oldContentElement != newContentElement) {
             clearSampleFromXsd();
         }
-		contentElement = newContentElement;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.MESSAGE__CONTENT_ELEMENT, oldContentElement, contentElement));
-	}
-    
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public void setContentElementGen(XSDElementDeclaration newContentElement) {
-        XSDElementDeclaration oldContentElement = contentElement;
         contentElement = newContentElement;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.MESSAGE__CONTENT_ELEMENT, oldContentElement, contentElement));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   WebServicePackage.MESSAGE__CONTENT_ELEMENT, oldContentElement,
+                                                                   contentElement));
     }
 
-	/** 
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
+     * @generated
+     */
+    public void setContentElementGen( XSDElementDeclaration newContentElement ) {
+        XSDElementDeclaration oldContentElement = contentElement;
+        contentElement = newContentElement;
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   WebServicePackage.MESSAGE__CONTENT_ELEMENT, oldContentElement,
+                                                                   contentElement));
+    }
+
+    /**
      * @since 4.2
      */
     protected void clearSampleFromXsd() {
-        if ( samples != null ) {
+        if (samples != null) {
             final SampleFromXsd xsdSample = samples.getSampleFromXsd();
-            if ( xsdSample != null ) {
+            if (xsdSample != null) {
                 xsdSample.setSampleFragment(null);
             }
         }
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public SampleMessages getSamples() {
+    public SampleMessages getSamples() {
         return samples;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public NotificationChain basicSetSamples(SampleMessages newSamples, NotificationChain msgs) {
+    public NotificationChain basicSetSamples( SampleMessages newSamples,
+                                              NotificationChain msgs ) {
         SampleMessages oldSamples = samples;
         samples = newSamples;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WebServicePackage.MESSAGE__SAMPLES, oldSamples, newSamples);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, WebServicePackage.MESSAGE__SAMPLES,
+                                                                   oldSamples, newSamples);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setSamples(SampleMessages newSamples) {
+    public void setSamples( SampleMessages newSamples ) {
         if (newSamples != samples) {
             NotificationChain msgs = null;
-            if (samples != null)
-                msgs = ((InternalEObject)samples).eInverseRemove(this, WebServicePackage.SAMPLE_MESSAGES__MESSAGE, SampleMessages.class, msgs);
-            if (newSamples != null)
-                msgs = ((InternalEObject)newSamples).eInverseAdd(this, WebServicePackage.SAMPLE_MESSAGES__MESSAGE, SampleMessages.class, msgs);
+            if (samples != null) msgs = ((InternalEObject)samples).eInverseRemove(this,
+                                                                                  WebServicePackage.SAMPLE_MESSAGES__MESSAGE,
+                                                                                  SampleMessages.class,
+                                                                                  msgs);
+            if (newSamples != null) msgs = ((InternalEObject)newSamples).eInverseAdd(this,
+                                                                                     WebServicePackage.SAMPLE_MESSAGES__MESSAGE,
+                                                                                     SampleMessages.class,
+                                                                                     msgs);
             msgs = basicSetSamples(newSamples, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.MESSAGE__SAMPLES, newSamples, newSamples));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          WebServicePackage.MESSAGE__SAMPLES, newSamples,
+                                                                          newSamples));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public XSDComplexTypeDefinition getContentComplexType() {
+    public XSDComplexTypeDefinition getContentComplexType() {
         if (contentComplexType != null && contentComplexType.eIsProxy()) {
             XSDComplexTypeDefinition oldContentComplexType = contentComplexType;
             contentComplexType = (XSDComplexTypeDefinition)eResolveProxy((InternalEObject)contentComplexType);
             if (contentComplexType != oldContentComplexType) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, WebServicePackage.MESSAGE__CONTENT_COMPLEX_TYPE, oldContentComplexType, contentComplexType));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+                                                                           WebServicePackage.MESSAGE__CONTENT_COMPLEX_TYPE,
+                                                                           oldContentComplexType, contentComplexType));
             }
         }
         return contentComplexType;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public XSDComplexTypeDefinition basicGetContentComplexType() {
+    public XSDComplexTypeDefinition basicGetContentComplexType() {
         return contentComplexType;
     }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	public void setContentComplexType(XSDComplexTypeDefinition newContentComplexType) {
-		XSDComplexTypeDefinition oldContentComplexType = contentComplexType;
-        if ( oldContentComplexType != newContentComplexType ) {
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
+     */
+    public void setContentComplexType( XSDComplexTypeDefinition newContentComplexType ) {
+        XSDComplexTypeDefinition oldContentComplexType = contentComplexType;
+        if (oldContentComplexType != newContentComplexType) {
             clearSampleFromXsd();
         }
-		contentComplexType = newContentComplexType;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.MESSAGE__CONTENT_COMPLEX_TYPE, oldContentComplexType, contentComplexType));
-	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public void setContentComplexTypeGen(XSDComplexTypeDefinition newContentComplexType) {
-        XSDComplexTypeDefinition oldContentComplexType = contentComplexType;
         contentComplexType = newContentComplexType;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.MESSAGE__CONTENT_COMPLEX_TYPE, oldContentComplexType, contentComplexType));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   WebServicePackage.MESSAGE__CONTENT_COMPLEX_TYPE,
+                                                                   oldContentComplexType, contentComplexType));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public XSDSimpleTypeDefinition getContentSimpleType() {
+    public void setContentComplexTypeGen( XSDComplexTypeDefinition newContentComplexType ) {
+        XSDComplexTypeDefinition oldContentComplexType = contentComplexType;
+        contentComplexType = newContentComplexType;
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   WebServicePackage.MESSAGE__CONTENT_COMPLEX_TYPE,
+                                                                   oldContentComplexType, contentComplexType));
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    public XSDSimpleTypeDefinition getContentSimpleType() {
         if (contentSimpleType != null && contentSimpleType.eIsProxy()) {
             XSDSimpleTypeDefinition oldContentSimpleType = contentSimpleType;
             contentSimpleType = (XSDSimpleTypeDefinition)eResolveProxy((InternalEObject)contentSimpleType);
             if (contentSimpleType != oldContentSimpleType) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, WebServicePackage.MESSAGE__CONTENT_SIMPLE_TYPE, oldContentSimpleType, contentSimpleType));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+                                                                           WebServicePackage.MESSAGE__CONTENT_SIMPLE_TYPE,
+                                                                           oldContentSimpleType, contentSimpleType));
             }
         }
         return contentSimpleType;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public XSDSimpleTypeDefinition basicGetContentSimpleType() {
+    public XSDSimpleTypeDefinition basicGetContentSimpleType() {
         return contentSimpleType;
     }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	public void setContentSimpleType(XSDSimpleTypeDefinition newContentSimpleType) {
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
+     */
+    public void setContentSimpleType( XSDSimpleTypeDefinition newContentSimpleType ) {
         XSDSimpleTypeDefinition oldContentSimpleType = contentSimpleType;
-        if ( oldContentSimpleType != newContentSimpleType ) {
+        if (oldContentSimpleType != newContentSimpleType) {
             clearSampleFromXsd();
         }
-		contentSimpleType = newContentSimpleType;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.MESSAGE__CONTENT_SIMPLE_TYPE, oldContentSimpleType, contentSimpleType));
-	}
-    
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public void setContentSimpleTypeGen(XSDSimpleTypeDefinition newContentSimpleType) {
-        XSDSimpleTypeDefinition oldContentSimpleType = contentSimpleType;
         contentSimpleType = newContentSimpleType;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.MESSAGE__CONTENT_SIMPLE_TYPE, oldContentSimpleType, contentSimpleType));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   WebServicePackage.MESSAGE__CONTENT_SIMPLE_TYPE,
+                                                                   oldContentSimpleType, contentSimpleType));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public void setContentSimpleTypeGen( XSDSimpleTypeDefinition newContentSimpleType ) {
+        XSDSimpleTypeDefinition oldContentSimpleType = contentSimpleType;
+        contentSimpleType = newContentSimpleType;
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   WebServicePackage.MESSAGE__CONTENT_SIMPLE_TYPE,
+                                                                   oldContentSimpleType, contentSimpleType));
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WebServicePackage.MESSAGE__SAMPLES:
-                    if (samples != null)
-                        msgs = ((InternalEObject)samples).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - WebServicePackage.MESSAGE__SAMPLES, null, msgs);
+                    if (samples != null) msgs = ((InternalEObject)samples).eInverseRemove(this,
+                                                                                          EOPPOSITE_FEATURE_BASE
+                                                                                          - WebServicePackage.MESSAGE__SAMPLES,
+                                                                                          null,
+                                                                                          msgs);
                     return basicSetSamples((SampleMessages)otherEnd, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case WebServicePackage.MESSAGE__SAMPLES:
@@ -361,12 +375,13 @@ public abstract class MessageImpl extends WebServiceComponentImpl implements Mes
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.MESSAGE__NAME:
                 return getName();
@@ -386,12 +401,13 @@ public abstract class MessageImpl extends WebServiceComponentImpl implements Mes
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.MESSAGE__NAME:
                 setName((String)newValue);
@@ -413,12 +429,12 @@ public abstract class MessageImpl extends WebServiceComponentImpl implements Mes
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.MESSAGE__NAME:
                 setName(NAME_EDEFAULT);
@@ -440,12 +456,12 @@ public abstract class MessageImpl extends WebServiceComponentImpl implements Mes
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.MESSAGE__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -461,4 +477,4 @@ public abstract class MessageImpl extends WebServiceComponentImpl implements Mes
         return eDynamicIsSet(eFeature);
     }
 
-} //MessageImpl
+} // MessageImpl

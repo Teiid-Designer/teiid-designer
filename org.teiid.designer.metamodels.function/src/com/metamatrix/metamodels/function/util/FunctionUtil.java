@@ -20,19 +20,19 @@ public class FunctionUtil {
     private FunctionUtil() {
         super();
     }
-    
+
     public static String getSignature( final ScalarFunction function ) {
         final String name = function.getName();
         final StringBuffer sb = new StringBuffer();
         sb.append(name);
-        
+
         // Add the parameters ...
         sb.append('(');
         boolean isFirst = true;
         final Iterator iter = function.getInputParameters().iterator();
         while (iter.hasNext()) {
             final FunctionParameter param = (FunctionParameter)iter.next();
-            if ( !isFirst ) {
+            if (!isFirst) {
                 sb.append(',');
             }
             final String paramSig = getSignature(param);
@@ -40,10 +40,10 @@ public class FunctionUtil {
             isFirst = false;
         }
         sb.append(')');
-        
+
         // Add the return parameter ...
         final ReturnParameter returnParam = function.getReturnParameter();
-        if ( returnParam == null ) {
+        if (returnParam == null) {
             sb.append(':');
             sb.append("void"); //$NON-NLS-1$
         } else {
@@ -51,10 +51,10 @@ public class FunctionUtil {
             final String paramSig = getSignature(returnParam);
             sb.append(paramSig);
         }
-        
+
         return sb.toString();
     }
-    
+
     public static String getSignature( final FunctionParameter param ) {
         final String type = param.getType();
         return type;
@@ -65,20 +65,20 @@ public class FunctionUtil {
         return type;
     }
 
-    public static String getValidationSignature( final ScalarFunction function ) {
+    public static String getValidationSignature( final ScalarFunction function ) { // NO_UCD
         final String name = function.getInvocationClass();
         final StringBuffer sb = new StringBuffer();
         sb.append(name);
         sb.append('#');
         sb.append(function.getInvocationMethod());
-        
+
         // Add the parameters ...
         sb.append('(');
         boolean isFirst = true;
         final Iterator iter = function.getInputParameters().iterator();
         while (iter.hasNext()) {
             final FunctionParameter param = (FunctionParameter)iter.next();
-            if ( !isFirst ) {
+            if (!isFirst) {
                 sb.append(',');
             }
             final String paramSig = getValidationSignature(param);
@@ -86,10 +86,10 @@ public class FunctionUtil {
             isFirst = false;
         }
         sb.append(')');
-        
+
         // Add the return parameter ...
         final ReturnParameter returnParam = function.getReturnParameter();
-        if ( returnParam == null ) {
+        if (returnParam == null) {
             sb.append(':');
             sb.append("void"); //$NON-NLS-1$
         } else {
@@ -97,10 +97,10 @@ public class FunctionUtil {
             final String paramSig = getValidationSignature(returnParam);
             sb.append(paramSig);
         }
-        
+
         return sb.toString();
     }
-    
+
     public static String getValidationSignature( final FunctionParameter param ) {
         final String type = param.getType();
         return type;

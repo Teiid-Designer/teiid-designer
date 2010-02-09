@@ -19,124 +19,115 @@ import com.metamatrix.metamodels.webservice.aspects.validation.WebServiceCompone
 import com.metamatrix.modeler.core.validation.ValidationContext;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Component</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Component</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.webservice.impl.WebServiceComponentImpl#getName <em>Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.webservice.impl.WebServiceComponentImpl#getName <em>Name</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public abstract class WebServiceComponentImpl extends EObjectImpl implements WebServiceComponent {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
      */
-	protected static final String NAME_EDEFAULT = null;
+    protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
      */
-	protected String name = NAME_EDEFAULT;
+    protected String name = NAME_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected WebServiceComponentImpl() {
+    protected WebServiceComponentImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return WebServicePackage.eINSTANCE.getWebServiceComponent();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getName() {
+    public String getName() {
         return name;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setName(String newName) {
+    public void setName( String newName ) {
         String oldName = name;
         name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, WebServicePackage.WEB_SERVICE_COMPONENT__NAME, oldName, name));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   WebServicePackage.WEB_SERVICE_COMPONENT__NAME, oldName, name));
     }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	public IStatus isValid() {
-	    // construct a validation context into which we are the rules would write their results 
-	    final ValidationContext validationContext = new ValidationContext();
-
-	    // run the name validation rules
-	    // structural feature is
-	    final EStructuralFeature structuralFeature = eStaticClass().getEStructuralFeature(WebServicePackage.WEB_SERVICE_COMPONENT__NAME);
-	    // run the name rule
-	    WebServiceComponentAspect.NAME_RULE.validate(structuralFeature, this, this.eGet(structuralFeature), validationContext);
-	    // run the length rule
-	    WebServiceComponentAspect.LENGTH_RULE.validate(structuralFeature, this, this.eGet(structuralFeature), validationContext);	    
-
-	    return validationContext.getTargetStatus(this);
-	}
-    
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
-    public IStatus isValidGen() {
+    public IStatus isValid() {
+        // construct a validation context into which we are the rules would write their results
+        final ValidationContext validationContext = new ValidationContext();
+
+        // run the name validation rules
+        // structural feature is
+        final EStructuralFeature structuralFeature = eStaticClass().getEStructuralFeature(WebServicePackage.WEB_SERVICE_COMPONENT__NAME);
+        // run the name rule
+        WebServiceComponentAspect.NAME_RULE.validate(structuralFeature, this, this.eGet(structuralFeature), validationContext);
+        // run the length rule
+        WebServiceComponentAspect.LENGTH_RULE.validate(structuralFeature, this, this.eGet(structuralFeature), validationContext);
+
+        return validationContext.getTargetStatus(this);
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
+     */
+    public IStatus isValidGen() { // NO_UCD
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
         throw new UnsupportedOperationException();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.WEB_SERVICE_COMPONENT__NAME:
                 return getName();
@@ -145,12 +136,13 @@ public abstract class WebServiceComponentImpl extends EObjectImpl implements Web
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.WEB_SERVICE_COMPONENT__NAME:
                 setName((String)newValue);
@@ -160,12 +152,12 @@ public abstract class WebServiceComponentImpl extends EObjectImpl implements Web
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.WEB_SERVICE_COMPONENT__NAME:
                 setName(NAME_EDEFAULT);
@@ -175,12 +167,12 @@ public abstract class WebServiceComponentImpl extends EObjectImpl implements Web
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case WebServicePackage.WEB_SERVICE_COMPONENT__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -189,11 +181,11 @@ public abstract class WebServiceComponentImpl extends EObjectImpl implements Web
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     public String toString() {
         if (eIsProxy()) return super.toString();
 
@@ -204,4 +196,4 @@ public abstract class WebServiceComponentImpl extends EObjectImpl implements Web
         return result.toString();
     }
 
-} //WebServiceComponentImpl
+} // WebServiceComponentImpl

@@ -10,37 +10,27 @@ package com.metamatrix.metamodels.transformation;
 import org.eclipse.emf.mapping.MappingHelper;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>XQuery Transformation</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>XQuery Transformation</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.XQueryTransformation#getExpression <em>Expression</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.XQueryTransformation#getExpression <em>Expression</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see com.metamatrix.metamodels.transformation.TransformationPackage#getXQueryTransformation()
  * @model
  * @generated
  */
-public interface XQueryTransformation extends MappingHelper{
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
+public interface XQueryTransformation extends MappingHelper {
 
     /**
-     * Returns the value of the '<em><b>Expression</b></em>' attribute.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Expression</b></em>' attribute. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Expression</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Expression</em>' attribute isn't clear, there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Expression</em>' attribute.
      * @see #setExpression(String)
      * @see com.metamatrix.metamodels.transformation.TransformationPackage#getXQueryTransformation_Expression()
@@ -50,13 +40,13 @@ public interface XQueryTransformation extends MappingHelper{
     String getExpression();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.transformation.XQueryTransformation#getExpression <em>Expression</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.transformation.XQueryTransformation#getExpression
+     * <em>Expression</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Expression</em>' attribute.
      * @see #getExpression()
      * @generated
      */
-    void setExpression(String value);
+    void setExpression( String value );
 
 } // XQueryTransformation

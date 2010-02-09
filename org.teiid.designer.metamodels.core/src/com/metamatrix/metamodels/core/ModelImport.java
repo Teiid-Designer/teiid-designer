@@ -10,43 +10,33 @@ package com.metamatrix.metamodels.core;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Model Import</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Model Import</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.core.ModelImport#getName <em>Name</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.core.ModelImport#getPath <em>Path</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.core.ModelImport#getModelLocation <em>Model Location</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.core.ModelImport#getUuid <em>Uuid</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.core.ModelImport#getModelType <em>Model Type</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.core.ModelImport#getPrimaryMetamodelUri <em>Primary Metamodel Uri</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.core.ModelImport#getModel <em>Model</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.core.ModelImport#getName <em>Name</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.core.ModelImport#getPath <em>Path</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.core.ModelImport#getModelLocation <em>Model Location</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.core.ModelImport#getUuid <em>Uuid</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.core.ModelImport#getModelType <em>Model Type</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.core.ModelImport#getPrimaryMetamodelUri <em>Primary Metamodel Uri</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.core.ModelImport#getModel <em>Model</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see com.metamatrix.metamodels.core.CorePackage#getModelImport()
  * @model
  * @generated
  */
-public interface ModelImport extends EObject{
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
+public interface ModelImport extends EObject {
 
     /**
-     * Returns the value of the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Name</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Name</em>' attribute.
      * @see #setName(String)
      * @see com.metamatrix.metamodels.core.CorePackage#getModelImport_Name()
@@ -56,23 +46,22 @@ public interface ModelImport extends EObject{
     String getName();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.core.ModelImport#getName <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.core.ModelImport#getName <em>Name</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Name</em>' attribute.
      * @see #getName()
      * @generated
      */
-    void setName(String value);
+    void setName( String value );
 
     /**
-     * Returns the value of the '<em><b>Path</b></em>' attribute.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Path</b></em>' attribute. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Path</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Path</em>' attribute isn't clear, there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Path</em>' attribute.
      * @see com.metamatrix.metamodels.core.CorePackage#getModelImport_Path()
      * @model transient="true" changeable="false" volatile="true"
@@ -81,13 +70,12 @@ public interface ModelImport extends EObject{
     String getPath();
 
     /**
-     * Returns the value of the '<em><b>Model Location</b></em>' attribute.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Model Location</b></em>' attribute. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Model Location</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Model Location</em>' attribute isn't clear, there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Model Location</em>' attribute.
      * @see #setModelLocation(String)
      * @see com.metamatrix.metamodels.core.CorePackage#getModelImport_ModelLocation()
@@ -97,23 +85,22 @@ public interface ModelImport extends EObject{
     String getModelLocation();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.core.ModelImport#getModelLocation <em>Model Location</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.core.ModelImport#getModelLocation <em>Model Location</em>}'
+     * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Model Location</em>' attribute.
      * @see #getModelLocation()
      * @generated
      */
-    void setModelLocation(String value);
+    void setModelLocation( String value );
 
     /**
-     * Returns the value of the '<em><b>Uuid</b></em>' attribute.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Uuid</b></em>' attribute. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Uuid</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Uuid</em>' attribute isn't clear, there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Uuid</em>' attribute.
      * @see #setUuid(String)
      * @see com.metamatrix.metamodels.core.CorePackage#getModelImport_Uuid()
@@ -123,25 +110,23 @@ public interface ModelImport extends EObject{
     String getUuid();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.core.ModelImport#getUuid <em>Uuid</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.core.ModelImport#getUuid <em>Uuid</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Uuid</em>' attribute.
      * @see #getUuid()
      * @generated
      */
-    void setUuid(String value);
+    void setUuid( String value );
 
     /**
-     * Returns the value of the '<em><b>Model Type</b></em>' attribute.
-     * The default value is <code>"UNKNOWN"</code>.
-     * The literals are from the enumeration {@link com.metamatrix.metamodels.core.ModelType}.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Model Type</b></em>' attribute. The default value is <code>"UNKNOWN"</code>. The literals
+     * are from the enumeration {@link com.metamatrix.metamodels.core.ModelType}. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Model Type</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Model Type</em>' attribute isn't clear, there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Model Type</em>' attribute.
      * @see com.metamatrix.metamodels.core.ModelType
      * @see #setModelType(ModelType)
@@ -152,24 +137,24 @@ public interface ModelImport extends EObject{
     ModelType getModelType();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.core.ModelImport#getModelType <em>Model Type</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.core.ModelImport#getModelType <em>Model Type</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Model Type</em>' attribute.
      * @see com.metamatrix.metamodels.core.ModelType
      * @see #getModelType()
      * @generated
      */
-    void setModelType(ModelType value);
+    void setModelType( ModelType value );
 
     /**
-     * Returns the value of the '<em><b>Primary Metamodel Uri</b></em>' attribute.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Primary Metamodel Uri</b></em>' attribute. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Primary Metamodel Uri</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Primary Metamodel Uri</em>' attribute isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Primary Metamodel Uri</em>' attribute.
      * @see #setPrimaryMetamodelUri(String)
      * @see com.metamatrix.metamodels.core.CorePackage#getModelImport_PrimaryMetamodelUri()
@@ -179,24 +164,24 @@ public interface ModelImport extends EObject{
     String getPrimaryMetamodelUri();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.core.ModelImport#getPrimaryMetamodelUri <em>Primary Metamodel Uri</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.core.ModelImport#getPrimaryMetamodelUri
+     * <em>Primary Metamodel Uri</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Primary Metamodel Uri</em>' attribute.
      * @see #getPrimaryMetamodelUri()
      * @generated
      */
-    void setPrimaryMetamodelUri(String value);
+    void setPrimaryMetamodelUri( String value );
 
     /**
-     * Returns the value of the '<em><b>Model</b></em>' container reference.
-     * It is bidirectional and its opposite is '{@link com.metamatrix.metamodels.core.ModelAnnotation#getModelImports <em>Model Imports</em>}'.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Model</b></em>' container reference. It is bidirectional and its opposite is '
+     * {@link com.metamatrix.metamodels.core.ModelAnnotation#getModelImports <em>Model Imports</em>}'. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Model</em>' container reference isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Model</em>' container reference isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Model</em>' container reference.
      * @see #setModel(ModelAnnotation)
      * @see com.metamatrix.metamodels.core.CorePackage#getModelImport_Model()
@@ -208,12 +193,12 @@ public interface ModelImport extends EObject{
 
     /**
      * Sets the value of the '{@link com.metamatrix.metamodels.core.ModelImport#getModel <em>Model</em>}' container reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Model</em>' container reference.
      * @see #getModel()
      * @generated
      */
-    void setModel(ModelAnnotation value);
+    void setModel( ModelAnnotation value );
 
 } // ModelImport

@@ -29,12 +29,6 @@ import com.metamatrix.metamodels.wsdl.soap.SoapUseType;
  * @generated
  */
 public class SoapFactoryImpl extends EFactoryImpl implements SoapFactory {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -202,7 +196,7 @@ public class SoapFactoryImpl extends EFactoryImpl implements SoapFactory {
      * @generated
      */
     @Deprecated
-    public static SoapPackage getPackage() {
+    public static SoapPackage getPackage() { // NO_UCD
         return SoapPackage.eINSTANCE;
     }
 

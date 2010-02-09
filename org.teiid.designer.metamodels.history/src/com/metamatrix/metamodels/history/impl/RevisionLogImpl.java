@@ -19,30 +19,22 @@ import com.metamatrix.metamodels.history.Revision;
 import com.metamatrix.metamodels.history.RevisionLog;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Revision Log</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Revision Log</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.history.impl.RevisionLogImpl#getFirstRevision <em>First Revision</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.RevisionLogImpl#getFirstRevision <em>First Revision</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class RevisionLogImpl extends HistoryLogImpl implements RevisionLog {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getFirstRevision() <em>First Revision</em>}' containment reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getFirstRevision() <em>First Revision</em>}' containment reference. <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
+     * 
      * @see #getFirstRevision()
      * @generated
      * @ordered
@@ -50,8 +42,8 @@ public class RevisionLogImpl extends HistoryLogImpl implements RevisionLog {
     protected Revision firstRevision = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected RevisionLogImpl() {
@@ -59,8 +51,8 @@ public class RevisionLogImpl extends HistoryLogImpl implements RevisionLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -69,8 +61,8 @@ public class RevisionLogImpl extends HistoryLogImpl implements RevisionLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Revision getFirstRevision() {
@@ -78,72 +70,91 @@ public class RevisionLogImpl extends HistoryLogImpl implements RevisionLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public NotificationChain basicSetFirstRevision(Revision newFirstRevision, NotificationChain msgs) {
+    public NotificationChain basicSetFirstRevision( Revision newFirstRevision,
+                                                    NotificationChain msgs ) {
         Revision oldFirstRevision = firstRevision;
         firstRevision = newFirstRevision;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, HistoryPackage.REVISION_LOG__FIRST_REVISION, oldFirstRevision, newFirstRevision);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+                                                                   HistoryPackage.REVISION_LOG__FIRST_REVISION, oldFirstRevision,
+                                                                   newFirstRevision);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setFirstRevision(Revision newFirstRevision) {
+    public void setFirstRevision( Revision newFirstRevision ) {
         if (newFirstRevision != firstRevision) {
             NotificationChain msgs = null;
-            if (firstRevision != null)
-                msgs = ((InternalEObject)firstRevision).eInverseRemove(this, HistoryPackage.REVISION__HISTORY_LOG, Revision.class, msgs);
-            if (newFirstRevision != null)
-                msgs = ((InternalEObject)newFirstRevision).eInverseAdd(this, HistoryPackage.REVISION__HISTORY_LOG, Revision.class, msgs);
+            if (firstRevision != null) msgs = ((InternalEObject)firstRevision).eInverseRemove(this,
+                                                                                              HistoryPackage.REVISION__HISTORY_LOG,
+                                                                                              Revision.class,
+                                                                                              msgs);
+            if (newFirstRevision != null) msgs = ((InternalEObject)newFirstRevision).eInverseAdd(this,
+                                                                                                 HistoryPackage.REVISION__HISTORY_LOG,
+                                                                                                 Revision.class,
+                                                                                                 msgs);
             msgs = basicSetFirstRevision(newFirstRevision, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.REVISION_LOG__FIRST_REVISION, newFirstRevision, newFirstRevision));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          HistoryPackage.REVISION_LOG__FIRST_REVISION,
+                                                                          newFirstRevision, newFirstRevision));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HistoryPackage.REVISION_LOG__HISTORY_CRITERIA:
-                    if (historyCriteria != null)
-                        msgs = ((InternalEObject)historyCriteria).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - HistoryPackage.REVISION_LOG__HISTORY_CRITERIA, null, msgs);
+                    if (historyCriteria != null) msgs = ((InternalEObject)historyCriteria).eInverseRemove(this,
+                                                                                                          EOPPOSITE_FEATURE_BASE
+                                                                                                          - HistoryPackage.REVISION_LOG__HISTORY_CRITERIA,
+                                                                                                          null,
+                                                                                                          msgs);
                     return basicSetHistoryCriteria((HistoryCriteria)otherEnd, msgs);
                 case HistoryPackage.REVISION_LOG__FIRST_REVISION:
-                    if (firstRevision != null)
-                        msgs = ((InternalEObject)firstRevision).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - HistoryPackage.REVISION_LOG__FIRST_REVISION, null, msgs);
+                    if (firstRevision != null) msgs = ((InternalEObject)firstRevision).eInverseRemove(this,
+                                                                                                      EOPPOSITE_FEATURE_BASE
+                                                                                                      - HistoryPackage.REVISION_LOG__FIRST_REVISION,
+                                                                                                      null,
+                                                                                                      msgs);
                     return basicSetFirstRevision((Revision)otherEnd, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HistoryPackage.REVISION_LOG__HISTORY_CRITERIA:
@@ -158,12 +169,13 @@ public class RevisionLogImpl extends HistoryLogImpl implements RevisionLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.REVISION_LOG__HISTORY_CRITERIA:
                 return getHistoryCriteria();
@@ -178,12 +190,13 @@ public class RevisionLogImpl extends HistoryLogImpl implements RevisionLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.REVISION_LOG__HISTORY_CRITERIA:
                 setHistoryCriteria((HistoryCriteria)newValue);
@@ -202,12 +215,12 @@ public class RevisionLogImpl extends HistoryLogImpl implements RevisionLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.REVISION_LOG__HISTORY_CRITERIA:
                 setHistoryCriteria((HistoryCriteria)null);
@@ -226,12 +239,12 @@ public class RevisionLogImpl extends HistoryLogImpl implements RevisionLog {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.REVISION_LOG__HISTORY_CRITERIA:
                 return historyCriteria != null;
@@ -245,4 +258,4 @@ public class RevisionLogImpl extends HistoryLogImpl implements RevisionLog {
         return eDynamicIsSet(eFeature);
     }
 
-} //RevisionLogImpl
+} // RevisionLogImpl

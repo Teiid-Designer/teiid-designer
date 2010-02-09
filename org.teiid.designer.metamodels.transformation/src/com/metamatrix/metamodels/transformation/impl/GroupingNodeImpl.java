@@ -19,25 +19,17 @@ import com.metamatrix.metamodels.transformation.OperationNodeGroup;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Grouping Node</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Grouping Node</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected GroupingNodeImpl() {
@@ -45,8 +37,8 @@ public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -55,8 +47,8 @@ public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getGroupingColumns() {
@@ -67,6 +59,7 @@ public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode 
 
     /**
      * Min number of input dataflow nodes to this operation
+     * 
      * @generated NOT
      */
     @Override
@@ -76,6 +69,7 @@ public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode 
 
     /**
      * Max number of input dataflow nodes to this operation
+     * 
      * @generated NOT
      */
     @Override
@@ -85,6 +79,7 @@ public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode 
 
     /**
      * Min number of input dataflow nodes to this operation
+     * 
      * @generated NOT
      */
     @Override
@@ -94,6 +89,7 @@ public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode 
 
     /**
      * Max number of output dataflow nodes to this operation
+     * 
      * @generated NOT
      */
     @Override
@@ -102,17 +98,19 @@ public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.GROUPING_NODE__OWNER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.GROUPING_NODE__OWNER, msgs);
                 case TransformationPackage.GROUPING_NODE__INPUT_LINKS:
                     return ((InternalEList)getInputLinks()).basicAdd(otherEnd, msgs);
@@ -121,25 +119,26 @@ public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode 
                 case TransformationPackage.GROUPING_NODE__EXPRESSIONS:
                     return ((InternalEList)getExpressions()).basicAdd(otherEnd, msgs);
                 case TransformationPackage.GROUPING_NODE__NODE_GROUP:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.GROUPING_NODE__NODE_GROUP, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.GROUPING_NODE__OWNER:
@@ -160,18 +159,24 @@ public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.GROUPING_NODE__OWNER:
-                    return eContainer.eInverseRemove(this, TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES, DataFlowMappingRoot.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES,
+                                                     DataFlowMappingRoot.class,
+                                                     msgs);
                 case TransformationPackage.GROUPING_NODE__NODE_GROUP:
-                    return eContainer.eInverseRemove(this, TransformationPackage.OPERATION_NODE_GROUP__CONTENTS, OperationNodeGroup.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.OPERATION_NODE_GROUP__CONTENTS,
+                                                     OperationNodeGroup.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -180,12 +185,13 @@ public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.GROUPING_NODE__NAME:
                 return getName();
@@ -204,12 +210,13 @@ public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.GROUPING_NODE__NAME:
                 setName((String)newValue);
@@ -237,12 +244,12 @@ public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.GROUPING_NODE__NAME:
                 setName(NAME_EDEFAULT);
@@ -267,12 +274,12 @@ public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.GROUPING_NODE__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -290,4 +297,4 @@ public class GroupingNodeImpl extends OperationNodeImpl implements GroupingNode 
         return eDynamicIsSet(eFeature);
     }
 
-} //GroupingNodeImpl
+} // GroupingNodeImpl

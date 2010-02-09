@@ -37,12 +37,6 @@ import com.metamatrix.metamodels.webservice.WebServicePackage;
  * @generated
  */
 public class MessageItemProvider extends WebServiceComponentItemProvider {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -92,7 +86,7 @@ public class MessageItemProvider extends WebServiceComponentItemProvider {
      * 
      * @generated
      */
-    protected void addContentComplexTypePropertyDescriptor( Object object ) {
+    protected void addContentComplexTypePropertyDescriptor( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(new MessageItemPropertyDescriptor(
                                                                       ((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                       getResourceLocator(),
@@ -107,7 +101,7 @@ public class MessageItemProvider extends WebServiceComponentItemProvider {
      * 
      * @generated
      */
-    protected void addContentSimpleTypePropertyDescriptor( Object object ) {
+    protected void addContentSimpleTypePropertyDescriptor( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_Message_contentSimpleType_feature"), //$NON-NLS-1$

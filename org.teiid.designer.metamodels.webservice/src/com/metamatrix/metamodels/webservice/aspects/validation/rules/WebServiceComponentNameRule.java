@@ -54,7 +54,7 @@ public class WebServiceComponentNameRule extends StringNameRule {
      * @param featureID
      * @since 4.2
      */
-    public WebServiceComponentNameRule( final char[] invalidChars,
+    public WebServiceComponentNameRule( final char[] invalidChars, // NO_UCD
                                         final int featureID ) {
         super(invalidChars, featureID);
     }

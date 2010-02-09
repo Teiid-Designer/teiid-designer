@@ -97,7 +97,7 @@ public class Uml2DependencyDescriptor extends AbstractAssociationDescriptor {
      * @see com.metamatrix.modeler.internal.core.association.AbstractAssociationDescriptor#canCreate()
      */
     @Override
-    public boolean canCreate() {
+    public boolean canCreate() { // NO_UCD
         final List eObjects = this.getEObjects();
         return Uml2AssociationProvider.containsValidObjects(eObjects, Uml2AssociationProvider.VALID_CLASSES_TYPES);
     }

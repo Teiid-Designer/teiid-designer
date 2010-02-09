@@ -21,32 +21,24 @@ import com.metamatrix.metamodels.transformation.DataFlowNode;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Data Flow Link</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Data Flow Link</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowLinkImpl#getOutputNode <em>Output Node</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowLinkImpl#getInputNode <em>Input Node</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowLinkImpl#getOwner <em>Owner</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowLinkImpl#getOutputNode <em>Output Node</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowLinkImpl#getInputNode <em>Input Node</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowLinkImpl#getOwner <em>Owner</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getOutputNode() <em>Output Node</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getOutputNode() <em>Output Node</em>}' reference. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getOutputNode()
      * @generated
      * @ordered
@@ -54,9 +46,9 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
     protected DataFlowNode outputNode = null;
 
     /**
-     * The cached value of the '{@link #getInputNode() <em>Input Node</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getInputNode() <em>Input Node</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getInputNode()
      * @generated
      * @ordered
@@ -64,8 +56,8 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
     protected DataFlowNode inputNode = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected DataFlowLinkImpl() {
@@ -73,8 +65,8 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -83,8 +75,8 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public DataFlowNode getOutputNode() {
@@ -92,16 +84,17 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
             DataFlowNode oldOutputNode = outputNode;
             outputNode = (DataFlowNode)eResolveProxy((InternalEObject)outputNode);
             if (outputNode != oldOutputNode) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, TransformationPackage.DATA_FLOW_LINK__OUTPUT_NODE, oldOutputNode, outputNode));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+                                                                           TransformationPackage.DATA_FLOW_LINK__OUTPUT_NODE,
+                                                                           oldOutputNode, outputNode));
             }
         }
         return outputNode;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public DataFlowNode basicGetOutputNode() {
@@ -109,42 +102,50 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public NotificationChain basicSetOutputNode(DataFlowNode newOutputNode, NotificationChain msgs) {
+    public NotificationChain basicSetOutputNode( DataFlowNode newOutputNode,
+                                                 NotificationChain msgs ) {
         DataFlowNode oldOutputNode = outputNode;
         outputNode = newOutputNode;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TransformationPackage.DATA_FLOW_LINK__OUTPUT_NODE, oldOutputNode, newOutputNode);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.DATA_FLOW_LINK__OUTPUT_NODE,
+                                                                   oldOutputNode, newOutputNode);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setOutputNode(DataFlowNode newOutputNode) {
+    public void setOutputNode( DataFlowNode newOutputNode ) {
         if (newOutputNode != outputNode) {
             NotificationChain msgs = null;
-            if (outputNode != null)
-                msgs = ((InternalEObject)outputNode).eInverseRemove(this, TransformationPackage.DATA_FLOW_NODE__INPUT_LINKS, DataFlowNode.class, msgs);
-            if (newOutputNode != null)
-                msgs = ((InternalEObject)newOutputNode).eInverseAdd(this, TransformationPackage.DATA_FLOW_NODE__INPUT_LINKS, DataFlowNode.class, msgs);
+            if (outputNode != null) msgs = ((InternalEObject)outputNode).eInverseRemove(this,
+                                                                                        TransformationPackage.DATA_FLOW_NODE__INPUT_LINKS,
+                                                                                        DataFlowNode.class,
+                                                                                        msgs);
+            if (newOutputNode != null) msgs = ((InternalEObject)newOutputNode).eInverseAdd(this,
+                                                                                           TransformationPackage.DATA_FLOW_NODE__INPUT_LINKS,
+                                                                                           DataFlowNode.class,
+                                                                                           msgs);
             msgs = basicSetOutputNode(newOutputNode, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.DATA_FLOW_LINK__OUTPUT_NODE, newOutputNode, newOutputNode));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          TransformationPackage.DATA_FLOW_LINK__OUTPUT_NODE,
+                                                                          newOutputNode, newOutputNode));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public DataFlowNode getInputNode() {
@@ -152,16 +153,17 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
             DataFlowNode oldInputNode = inputNode;
             inputNode = (DataFlowNode)eResolveProxy((InternalEObject)inputNode);
             if (inputNode != oldInputNode) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, TransformationPackage.DATA_FLOW_LINK__INPUT_NODE, oldInputNode, inputNode));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+                                                                           TransformationPackage.DATA_FLOW_LINK__INPUT_NODE,
+                                                                           oldInputNode, inputNode));
             }
         }
         return inputNode;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public DataFlowNode basicGetInputNode() {
@@ -169,42 +171,50 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public NotificationChain basicSetInputNode(DataFlowNode newInputNode, NotificationChain msgs) {
+    public NotificationChain basicSetInputNode( DataFlowNode newInputNode,
+                                                NotificationChain msgs ) {
         DataFlowNode oldInputNode = inputNode;
         inputNode = newInputNode;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TransformationPackage.DATA_FLOW_LINK__INPUT_NODE, oldInputNode, newInputNode);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.DATA_FLOW_LINK__INPUT_NODE,
+                                                                   oldInputNode, newInputNode);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setInputNode(DataFlowNode newInputNode) {
+    public void setInputNode( DataFlowNode newInputNode ) {
         if (newInputNode != inputNode) {
             NotificationChain msgs = null;
-            if (inputNode != null)
-                msgs = ((InternalEObject)inputNode).eInverseRemove(this, TransformationPackage.DATA_FLOW_NODE__OUTPUT_LINKS, DataFlowNode.class, msgs);
-            if (newInputNode != null)
-                msgs = ((InternalEObject)newInputNode).eInverseAdd(this, TransformationPackage.DATA_FLOW_NODE__OUTPUT_LINKS, DataFlowNode.class, msgs);
+            if (inputNode != null) msgs = ((InternalEObject)inputNode).eInverseRemove(this,
+                                                                                      TransformationPackage.DATA_FLOW_NODE__OUTPUT_LINKS,
+                                                                                      DataFlowNode.class,
+                                                                                      msgs);
+            if (newInputNode != null) msgs = ((InternalEObject)newInputNode).eInverseAdd(this,
+                                                                                         TransformationPackage.DATA_FLOW_NODE__OUTPUT_LINKS,
+                                                                                         DataFlowNode.class,
+                                                                                         msgs);
             msgs = basicSetInputNode(newInputNode, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.DATA_FLOW_LINK__INPUT_NODE, newInputNode, newInputNode));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          TransformationPackage.DATA_FLOW_LINK__INPUT_NODE,
+                                                                          newInputNode, newInputNode));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public DataFlowMappingRoot getOwner() {
@@ -213,63 +223,72 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setOwner(DataFlowMappingRoot newOwner) {
+    public void setOwner( DataFlowMappingRoot newOwner ) {
         if (newOwner != eContainer || (eContainerFeatureID != TransformationPackage.DATA_FLOW_LINK__OWNER && newOwner != null)) {
-            if (EcoreUtil.isAncestor(this, newOwner))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newOwner)) throw new IllegalArgumentException(
+                                                                                         "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newOwner != null)
-                msgs = ((InternalEObject)newOwner).eInverseAdd(this, TransformationPackage.DATA_FLOW_MAPPING_ROOT__LINKS, DataFlowMappingRoot.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newOwner != null) msgs = ((InternalEObject)newOwner).eInverseAdd(this,
+                                                                                 TransformationPackage.DATA_FLOW_MAPPING_ROOT__LINKS,
+                                                                                 DataFlowMappingRoot.class,
+                                                                                 msgs);
             msgs = eBasicSetContainer((InternalEObject)newOwner, TransformationPackage.DATA_FLOW_LINK__OWNER, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.DATA_FLOW_LINK__OWNER, newOwner, newOwner));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          TransformationPackage.DATA_FLOW_LINK__OWNER, newOwner,
+                                                                          newOwner));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.DATA_FLOW_LINK__OUTPUT_NODE:
-                    if (outputNode != null)
-                        msgs = ((InternalEObject)outputNode).eInverseRemove(this, TransformationPackage.DATA_FLOW_NODE__INPUT_LINKS, DataFlowNode.class, msgs);
+                    if (outputNode != null) msgs = ((InternalEObject)outputNode).eInverseRemove(this,
+                                                                                                TransformationPackage.DATA_FLOW_NODE__INPUT_LINKS,
+                                                                                                DataFlowNode.class,
+                                                                                                msgs);
                     return basicSetOutputNode((DataFlowNode)otherEnd, msgs);
                 case TransformationPackage.DATA_FLOW_LINK__INPUT_NODE:
-                    if (inputNode != null)
-                        msgs = ((InternalEObject)inputNode).eInverseRemove(this, TransformationPackage.DATA_FLOW_NODE__OUTPUT_LINKS, DataFlowNode.class, msgs);
+                    if (inputNode != null) msgs = ((InternalEObject)inputNode).eInverseRemove(this,
+                                                                                              TransformationPackage.DATA_FLOW_NODE__OUTPUT_LINKS,
+                                                                                              DataFlowNode.class,
+                                                                                              msgs);
                     return basicSetInputNode((DataFlowNode)otherEnd, msgs);
                 case TransformationPackage.DATA_FLOW_LINK__OWNER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.DATA_FLOW_LINK__OWNER, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.DATA_FLOW_LINK__OUTPUT_NODE:
@@ -286,16 +305,19 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.DATA_FLOW_LINK__OWNER:
-                    return eContainer.eInverseRemove(this, TransformationPackage.DATA_FLOW_MAPPING_ROOT__LINKS, DataFlowMappingRoot.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.DATA_FLOW_MAPPING_ROOT__LINKS,
+                                                     DataFlowMappingRoot.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -304,12 +326,13 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.DATA_FLOW_LINK__OUTPUT_NODE:
                 if (resolve) return getOutputNode();
@@ -324,12 +347,13 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.DATA_FLOW_LINK__OUTPUT_NODE:
                 setOutputNode((DataFlowNode)newValue);
@@ -345,12 +369,12 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.DATA_FLOW_LINK__OUTPUT_NODE:
                 setOutputNode((DataFlowNode)null);
@@ -366,12 +390,12 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.DATA_FLOW_LINK__OUTPUT_NODE:
                 return outputNode != null;
@@ -383,4 +407,4 @@ public class DataFlowLinkImpl extends EObjectImpl implements DataFlowLink {
         return eDynamicIsSet(eFeature);
     }
 
-} //DataFlowLinkImpl
+} // DataFlowLinkImpl

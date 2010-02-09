@@ -37,13 +37,6 @@ import com.metamatrix.metamodels.core.CorePackage;
  */
 public class AnnotationContainerImpl extends EObjectImpl implements AnnotationContainer, InternalAnnotationContainer {
 
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
-
     private Map annotationByTarget = new HashMap();
 
     /**
@@ -119,7 +112,7 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
      * 
      * @generated
      */
-    public NotificationChain eInverseAddGen( InternalEObject otherEnd,
+    public NotificationChain eInverseAddGen( InternalEObject otherEnd, // NO_UCD
                                              int featureID,
                                              Class baseClass,
                                              NotificationChain msgs ) {
@@ -164,7 +157,7 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
      * 
      * @generated
      */
-    public NotificationChain eInverseRemoveGen( InternalEObject otherEnd,
+    public NotificationChain eInverseRemoveGen( InternalEObject otherEnd, // NO_UCD
                                                 int featureID,
                                                 Class baseClass,
                                                 NotificationChain msgs ) {
@@ -234,7 +227,7 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
      * 
      * @generated
      */
-    public void eUnsetGen( EStructuralFeature eFeature ) {
+    public void eUnsetGen( EStructuralFeature eFeature ) { // NO_UCD
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case CorePackage.ANNOTATION_CONTAINER__ANNOTATIONS:
                 getAnnotations().clear();
@@ -262,7 +255,7 @@ public class AnnotationContainerImpl extends EObjectImpl implements AnnotationCo
         return result;
     }
 
-    protected void doUpdateExistingAnnotation( final Annotation annotation,
+    protected void doUpdateExistingAnnotation( final Annotation annotation, // NO_UCD
                                                final EObject newTarget,
                                                final EObject oldTarget ) {
         if (oldTarget != null) {

@@ -62,12 +62,6 @@ import com.metamatrix.metamodels.core.util.UriValidator;
  * @generated
  */
 public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * The default value of the '{@link #getDescription() <em>Description</em>}' attribute. <!-- begin-user-doc --> <!--
@@ -846,7 +840,7 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public NotificationChain eInverseAddGen( InternalEObject otherEnd,
+    public NotificationChain eInverseAddGen( InternalEObject otherEnd, // NO_UCD
                                              int featureID,
                                              Class baseClass,
                                              NotificationChain msgs ) {
@@ -1067,7 +1061,7 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * 
      * @generated
      */
-    public void eUnsetGen( EStructuralFeature eFeature ) {
+    public void eUnsetGen( EStructuralFeature eFeature ) { // NO_UCD
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case CorePackage.MODEL_ANNOTATION__DESCRIPTION:
                 setDescription(DESCRIPTION_EDEFAULT);

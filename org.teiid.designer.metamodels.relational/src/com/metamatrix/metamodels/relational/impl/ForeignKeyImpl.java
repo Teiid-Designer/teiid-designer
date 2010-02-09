@@ -31,18 +31,19 @@ import com.metamatrix.metamodels.relational.UniqueKey;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.relational.impl.ForeignKeyImpl#getForeignKeyMultiplicity <em>Foreign Key Multiplicity</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relational.impl.ForeignKeyImpl#getPrimaryKeyMultiplicity <em>Primary Key Multiplicity</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relational.impl.ForeignKeyImpl#getColumns <em>Columns</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relational.impl.ForeignKeyImpl#getUniqueKey <em>Unique Key</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relational.impl.ForeignKeyImpl#getTable <em>Table</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relational.impl.ForeignKeyImpl#getForeignKeyMultiplicity <em>Foreign Key Multiplicity
+ * </em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relational.impl.ForeignKeyImpl#getPrimaryKeyMultiplicity <em>Primary Key Multiplicity
+ * </em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relational.impl.ForeignKeyImpl#getColumns <em>Columns</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relational.impl.ForeignKeyImpl#getUniqueKey <em>Unique Key</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relational.impl.ForeignKeyImpl#getTable <em>Table</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
-public class ForeignKeyImpl extends RelationshipImpl implements
-                                                    ForeignKey {
+public class ForeignKeyImpl extends RelationshipImpl implements ForeignKey {
 
     /**
      * The default value of the '{@link #getForeignKeyMultiplicity() <em>Foreign Key Multiplicity</em>}' attribute. <!--
@@ -59,7 +60,7 @@ public class ForeignKeyImpl extends RelationshipImpl implements
      * begin-user-doc --> <!-- end-user-doc -->
      * 
      * @see #getForeignKeyMultiplicity()
-     * @generated 
+     * @generated
      * @ordered
      */
     protected MultiplicityKind foreignKeyMultiplicity = FOREIGN_KEY_MULTIPLICITY_EDEFAULT;
@@ -99,11 +100,11 @@ public class ForeignKeyImpl extends RelationshipImpl implements
      * @see #getCascadeDeletes()
      * @generated @ordered
      */
-    protected CascadeDeletesType cascadeDeletes = CASCADE_DELETES_EDEFAULT;
+    protected CascadeDeletesType cascadeDeletes = CASCADE_DELETES_EDEFAULT; // NO_UCD
 
     /**
-     * The cached value of the '{@link #getColumns() <em>Columns</em>}' reference list. <!-- begin-user-doc --> <!--
-     * end-user-doc -->
+     * The cached value of the '{@link #getColumns() <em>Columns</em>}' reference list. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
      * 
      * @see #getColumns()
      * @generated @ordered
@@ -111,8 +112,8 @@ public class ForeignKeyImpl extends RelationshipImpl implements
     protected EList columns = null;
 
     /**
-     * The cached value of the '{@link #getUniqueKey() <em>Unique Key</em>}' reference. <!-- begin-user-doc --> <!--
-     * end-user-doc -->
+     * The cached value of the '{@link #getUniqueKey() <em>Unique Key</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
      * 
      * @see #getUniqueKey()
      * @generated @ordered
@@ -128,6 +129,7 @@ public class ForeignKeyImpl extends RelationshipImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected ForeignKeyImpl() {
@@ -136,6 +138,7 @@ public class ForeignKeyImpl extends RelationshipImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -145,6 +148,7 @@ public class ForeignKeyImpl extends RelationshipImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public MultiplicityKind getForeignKeyMultiplicity() {
@@ -153,17 +157,20 @@ public class ForeignKeyImpl extends RelationshipImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setForeignKeyMultiplicity(MultiplicityKind newForeignKeyMultiplicity) {
+    public void setForeignKeyMultiplicity( MultiplicityKind newForeignKeyMultiplicity ) {
         MultiplicityKind oldForeignKeyMultiplicity = foreignKeyMultiplicity;
         foreignKeyMultiplicity = newForeignKeyMultiplicity == null ? FOREIGN_KEY_MULTIPLICITY_EDEFAULT : newForeignKeyMultiplicity;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.FOREIGN_KEY__FOREIGN_KEY_MULTIPLICITY, oldForeignKeyMultiplicity, foreignKeyMultiplicity));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationalPackage.FOREIGN_KEY__FOREIGN_KEY_MULTIPLICITY,
+                                                                   oldForeignKeyMultiplicity, foreignKeyMultiplicity));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public MultiplicityKind getPrimaryKeyMultiplicity() {
@@ -172,28 +179,34 @@ public class ForeignKeyImpl extends RelationshipImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setPrimaryKeyMultiplicity(MultiplicityKind newPrimaryKeyMultiplicity) {
+    public void setPrimaryKeyMultiplicity( MultiplicityKind newPrimaryKeyMultiplicity ) {
         MultiplicityKind oldPrimaryKeyMultiplicity = primaryKeyMultiplicity;
         primaryKeyMultiplicity = newPrimaryKeyMultiplicity == null ? PRIMARY_KEY_MULTIPLICITY_EDEFAULT : newPrimaryKeyMultiplicity;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.FOREIGN_KEY__PRIMARY_KEY_MULTIPLICITY, oldPrimaryKeyMultiplicity, primaryKeyMultiplicity));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationalPackage.FOREIGN_KEY__PRIMARY_KEY_MULTIPLICITY,
+                                                                   oldPrimaryKeyMultiplicity, primaryKeyMultiplicity));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getColumns() {
         if (columns == null) {
-            columns = new EObjectWithInverseResolvingEList.ManyInverse(Column.class, this, RelationalPackage.FOREIGN_KEY__COLUMNS, RelationalPackage.COLUMN__FOREIGN_KEYS);
+            columns = new EObjectWithInverseResolvingEList.ManyInverse(Column.class, this,
+                                                                       RelationalPackage.FOREIGN_KEY__COLUMNS,
+                                                                       RelationalPackage.COLUMN__FOREIGN_KEYS);
         }
         return columns;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public UniqueKey getUniqueKey() {
@@ -201,8 +214,9 @@ public class ForeignKeyImpl extends RelationshipImpl implements
             UniqueKey oldUniqueKey = uniqueKey;
             uniqueKey = (UniqueKey)eResolveProxy((InternalEObject)uniqueKey);
             if (uniqueKey != oldUniqueKey) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, RelationalPackage.FOREIGN_KEY__UNIQUE_KEY, oldUniqueKey, uniqueKey));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+                                                                           RelationalPackage.FOREIGN_KEY__UNIQUE_KEY,
+                                                                           oldUniqueKey, uniqueKey));
             }
         }
         return uniqueKey;
@@ -210,6 +224,7 @@ public class ForeignKeyImpl extends RelationshipImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public UniqueKey basicGetUniqueKey() {
@@ -218,79 +233,98 @@ public class ForeignKeyImpl extends RelationshipImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public NotificationChain basicSetUniqueKey(UniqueKey newUniqueKey, NotificationChain msgs) {
+    public NotificationChain basicSetUniqueKey( UniqueKey newUniqueKey,
+                                                NotificationChain msgs ) {
         UniqueKey oldUniqueKey = uniqueKey;
         uniqueKey = newUniqueKey;
         boolean oldUniqueKeyESet = uniqueKeyESet;
         uniqueKeyESet = true;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, RelationalPackage.FOREIGN_KEY__UNIQUE_KEY, oldUniqueKey, newUniqueKey, !oldUniqueKeyESet);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+                                                                   RelationalPackage.FOREIGN_KEY__UNIQUE_KEY, oldUniqueKey,
+                                                                   newUniqueKey, !oldUniqueKeyESet);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setUniqueKey(UniqueKey newUniqueKey) {
+    public void setUniqueKey( UniqueKey newUniqueKey ) {
         if (newUniqueKey != uniqueKey) {
             NotificationChain msgs = null;
-            if (uniqueKey != null)
-                msgs = ((InternalEObject)uniqueKey).eInverseRemove(this, RelationalPackage.UNIQUE_KEY__FOREIGN_KEYS, UniqueKey.class, msgs);
-            if (newUniqueKey != null)
-                msgs = ((InternalEObject)newUniqueKey).eInverseAdd(this, RelationalPackage.UNIQUE_KEY__FOREIGN_KEYS, UniqueKey.class, msgs);
+            if (uniqueKey != null) msgs = ((InternalEObject)uniqueKey).eInverseRemove(this,
+                                                                                      RelationalPackage.UNIQUE_KEY__FOREIGN_KEYS,
+                                                                                      UniqueKey.class,
+                                                                                      msgs);
+            if (newUniqueKey != null) msgs = ((InternalEObject)newUniqueKey).eInverseAdd(this,
+                                                                                         RelationalPackage.UNIQUE_KEY__FOREIGN_KEYS,
+                                                                                         UniqueKey.class,
+                                                                                         msgs);
             msgs = basicSetUniqueKey(newUniqueKey, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else {
+        } else {
             boolean oldUniqueKeyESet = uniqueKeyESet;
             uniqueKeyESet = true;
-            if (eNotificationRequired())
-                eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.FOREIGN_KEY__UNIQUE_KEY, newUniqueKey, newUniqueKey, !oldUniqueKeyESet));
-    	}
+            if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                       RelationalPackage.FOREIGN_KEY__UNIQUE_KEY, newUniqueKey,
+                                                                       newUniqueKey, !oldUniqueKeyESet));
+        }
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public NotificationChain basicUnsetUniqueKey(NotificationChain msgs) {
+    public NotificationChain basicUnsetUniqueKey( NotificationChain msgs ) {
         UniqueKey oldUniqueKey = uniqueKey;
         uniqueKey = null;
         boolean oldUniqueKeyESet = uniqueKeyESet;
         uniqueKeyESet = false;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.UNSET, RelationalPackage.FOREIGN_KEY__UNIQUE_KEY, oldUniqueKey, null, oldUniqueKeyESet);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.UNSET,
+                                                                   RelationalPackage.FOREIGN_KEY__UNIQUE_KEY, oldUniqueKey, null,
+                                                                   oldUniqueKeyESet);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void unsetUniqueKey() {
         if (uniqueKey != null) {
             NotificationChain msgs = null;
-            msgs = ((InternalEObject)uniqueKey).eInverseRemove(this, RelationalPackage.UNIQUE_KEY__FOREIGN_KEYS, UniqueKey.class, msgs);
+            msgs = ((InternalEObject)uniqueKey).eInverseRemove(this,
+                                                               RelationalPackage.UNIQUE_KEY__FOREIGN_KEYS,
+                                                               UniqueKey.class,
+                                                               msgs);
             msgs = basicUnsetUniqueKey(msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else {
+        } else {
             boolean oldUniqueKeyESet = uniqueKeyESet;
             uniqueKeyESet = false;
-            if (eNotificationRequired())
-                eNotify(new ENotificationImpl(this, Notification.UNSET, RelationalPackage.FOREIGN_KEY__UNIQUE_KEY, null, null, oldUniqueKeyESet));
-    	}
+            if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.UNSET,
+                                                                       RelationalPackage.FOREIGN_KEY__UNIQUE_KEY, null, null,
+                                                                       oldUniqueKeyESet));
+        }
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isSetUniqueKey() {
@@ -299,6 +333,7 @@ public class ForeignKeyImpl extends RelationshipImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public BaseTable getTable() {
@@ -308,57 +343,67 @@ public class ForeignKeyImpl extends RelationshipImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setTable(BaseTable newTable) {
+    public void setTable( BaseTable newTable ) {
         if (newTable != eContainer || (eContainerFeatureID != RelationalPackage.FOREIGN_KEY__TABLE && newTable != null)) {
-            if (EcoreUtil.isAncestor(this, newTable))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newTable)) throw new IllegalArgumentException(
+                                                                                         "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newTable != null)
-                msgs = ((InternalEObject)newTable).eInverseAdd(this, RelationalPackage.BASE_TABLE__FOREIGN_KEYS, BaseTable.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newTable != null) msgs = ((InternalEObject)newTable).eInverseAdd(this,
+                                                                                 RelationalPackage.BASE_TABLE__FOREIGN_KEYS,
+                                                                                 BaseTable.class,
+                                                                                 msgs);
             msgs = eBasicSetContainer((InternalEObject)newTable, RelationalPackage.FOREIGN_KEY__TABLE, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.FOREIGN_KEY__TABLE, newTable, newTable));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          RelationalPackage.FOREIGN_KEY__TABLE, newTable,
+                                                                          newTable));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case RelationalPackage.FOREIGN_KEY__COLUMNS:
                     return ((InternalEList)getColumns()).basicAdd(otherEnd, msgs);
                 case RelationalPackage.FOREIGN_KEY__UNIQUE_KEY:
-                    if (uniqueKey != null)
-                        msgs = ((InternalEObject)uniqueKey).eInverseRemove(this, RelationalPackage.UNIQUE_KEY__FOREIGN_KEYS, UniqueKey.class, msgs);
+                    if (uniqueKey != null) msgs = ((InternalEObject)uniqueKey).eInverseRemove(this,
+                                                                                              RelationalPackage.UNIQUE_KEY__FOREIGN_KEYS,
+                                                                                              UniqueKey.class,
+                                                                                              msgs);
                     return basicSetUniqueKey((UniqueKey)otherEnd, msgs);
                 case RelationalPackage.FOREIGN_KEY__TABLE:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, RelationalPackage.FOREIGN_KEY__TABLE, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case RelationalPackage.FOREIGN_KEY__COLUMNS:
@@ -376,10 +421,11 @@ public class ForeignKeyImpl extends RelationshipImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case RelationalPackage.FOREIGN_KEY__TABLE:
@@ -393,10 +439,12 @@ public class ForeignKeyImpl extends RelationshipImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationalPackage.FOREIGN_KEY__NAME:
                 return getName();
@@ -419,10 +467,12 @@ public class ForeignKeyImpl extends RelationshipImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationalPackage.FOREIGN_KEY__NAME:
                 setName((String)newValue);
@@ -452,10 +502,11 @@ public class ForeignKeyImpl extends RelationshipImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationalPackage.FOREIGN_KEY__NAME:
                 setName(NAME_EDEFAULT);
@@ -484,10 +535,11 @@ public class ForeignKeyImpl extends RelationshipImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationalPackage.FOREIGN_KEY__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -509,6 +561,7 @@ public class ForeignKeyImpl extends RelationshipImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -524,4 +577,4 @@ public class ForeignKeyImpl extends RelationshipImpl implements
         return result.toString();
     }
 
-} //ForeignKeyImpl
+} // ForeignKeyImpl

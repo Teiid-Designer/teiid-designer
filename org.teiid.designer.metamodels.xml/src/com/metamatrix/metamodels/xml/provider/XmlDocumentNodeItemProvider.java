@@ -98,7 +98,7 @@ public class XmlDocumentNodeItemProvider extends XmlDocumentEntityItemProvider {
      * 
      * @generated
      */
-    protected void addNamePropertyDescriptorGen( Object object ) {
+    protected void addNamePropertyDescriptorGen( Object object ) {// NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_XmlDocumentNode_name_feature"), //$NON-NLS-1$
@@ -134,7 +134,7 @@ public class XmlDocumentNodeItemProvider extends XmlDocumentEntityItemProvider {
      * 
      * @generated
      */
-    protected void addExcludeFromDocumentPropertyDescriptorGen( Object object ) {
+    protected void addExcludeFromDocumentPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_XmlDocumentNode_excludeFromDocument_feature"), //$NON-NLS-1$
@@ -170,7 +170,7 @@ public class XmlDocumentNodeItemProvider extends XmlDocumentEntityItemProvider {
      * 
      * @generated
      */
-    protected void addMinOccursPropertyDescriptorGen( Object object ) {
+    protected void addMinOccursPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_XmlDocumentNode_minOccurs_feature"), //$NON-NLS-1$
@@ -206,7 +206,7 @@ public class XmlDocumentNodeItemProvider extends XmlDocumentEntityItemProvider {
      * 
      * @generated
      */
-    protected void addMaxOccursPropertyDescriptorGen( Object object ) {
+    protected void addMaxOccursPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_XmlDocumentNode_maxOccurs_feature"), //$NON-NLS-1$
@@ -242,7 +242,7 @@ public class XmlDocumentNodeItemProvider extends XmlDocumentEntityItemProvider {
      * 
      * @generated
      */
-    protected void addXsdComponentPropertyDescriptorGen( Object object ) {
+    protected void addXsdComponentPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_XmlDocumentNode_xsdComponent_feature"), //$NON-NLS-1$
@@ -291,7 +291,7 @@ public class XmlDocumentNodeItemProvider extends XmlDocumentEntityItemProvider {
      * 
      * @generated
      */
-    protected void addNamespacePropertyDescriptorGen( Object object ) {
+    protected void addNamespacePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_XmlDocumentNode_namespace_feature"), //$NON-NLS-1$

@@ -25,130 +25,131 @@ import com.metamatrix.metamodels.wsdl.mime.MimePackage;
 import com.metamatrix.metamodels.wsdl.mime.MimePart;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Part</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Part</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.wsdl.mime.impl.MimePartImpl#getMimeElements <em>Mime Elements</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.mime.impl.MimePartImpl#getMimeMultipartRelated <em>Mime Multipart Related</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.mime.impl.MimePartImpl#getMimeElements <em>Mime Elements</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.mime.impl.MimePartImpl#getMimeMultipartRelated <em>Mime Multipart Related</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class MimePartImpl extends EObjectImpl implements MimePart {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getMimeElements() <em>Mime Elements</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getMimeElements() <em>Mime Elements</em>}' containment reference list. <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
+     * 
      * @see #getMimeElements()
      * @generated
      * @ordered
      */
-	protected EList mimeElements = null;
+    protected EList mimeElements = null;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected MimePartImpl() {
+    protected MimePartImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return MimePackage.eINSTANCE.getMimePart();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public EList getMimeElements() {
+    public EList getMimeElements() {
         if (mimeElements == null) {
-            mimeElements = new EObjectContainmentWithInverseEList(MimeElement.class, this, MimePackage.MIME_PART__MIME_ELEMENTS, MimePackage.MIME_ELEMENT__MIME_ELEMENT_OWNER);
+            mimeElements = new EObjectContainmentWithInverseEList(MimeElement.class, this, MimePackage.MIME_PART__MIME_ELEMENTS,
+                                                                  MimePackage.MIME_ELEMENT__MIME_ELEMENT_OWNER);
         }
         return mimeElements;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public MimeMultipartRelated getMimeMultipartRelated() {
+    public MimeMultipartRelated getMimeMultipartRelated() {
         if (eContainerFeatureID != MimePackage.MIME_PART__MIME_MULTIPART_RELATED) return null;
         return (MimeMultipartRelated)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setMimeMultipartRelated(MimeMultipartRelated newMimeMultipartRelated) {
-        if (newMimeMultipartRelated != eContainer || (eContainerFeatureID != MimePackage.MIME_PART__MIME_MULTIPART_RELATED && newMimeMultipartRelated != null)) {
-            if (EcoreUtil.isAncestor(this, newMimeMultipartRelated))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setMimeMultipartRelated( MimeMultipartRelated newMimeMultipartRelated ) {
+        if (newMimeMultipartRelated != eContainer
+            || (eContainerFeatureID != MimePackage.MIME_PART__MIME_MULTIPART_RELATED && newMimeMultipartRelated != null)) {
+            if (EcoreUtil.isAncestor(this, newMimeMultipartRelated)) throw new IllegalArgumentException(
+                                                                                                        "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newMimeMultipartRelated != null)
-                msgs = ((InternalEObject)newMimeMultipartRelated).eInverseAdd(this, MimePackage.MIME_MULTIPART_RELATED__MIME_PARTS, MimeMultipartRelated.class, msgs);
-            msgs = eBasicSetContainer((InternalEObject)newMimeMultipartRelated, MimePackage.MIME_PART__MIME_MULTIPART_RELATED, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newMimeMultipartRelated != null) msgs = ((InternalEObject)newMimeMultipartRelated).eInverseAdd(this,
+                                                                                                               MimePackage.MIME_MULTIPART_RELATED__MIME_PARTS,
+                                                                                                               MimeMultipartRelated.class,
+                                                                                                               msgs);
+            msgs = eBasicSetContainer((InternalEObject)newMimeMultipartRelated,
+                                      MimePackage.MIME_PART__MIME_MULTIPART_RELATED,
+                                      msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, MimePackage.MIME_PART__MIME_MULTIPART_RELATED, newMimeMultipartRelated, newMimeMultipartRelated));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          MimePackage.MIME_PART__MIME_MULTIPART_RELATED,
+                                                                          newMimeMultipartRelated, newMimeMultipartRelated));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case MimePackage.MIME_PART__MIME_ELEMENTS:
                     return ((InternalEList)getMimeElements()).basicAdd(otherEnd, msgs);
                 case MimePackage.MIME_PART__MIME_MULTIPART_RELATED:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, MimePackage.MIME_PART__MIME_MULTIPART_RELATED, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case MimePackage.MIME_PART__MIME_ELEMENTS:
@@ -163,16 +164,19 @@ public class MimePartImpl extends EObjectImpl implements MimePart {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case MimePackage.MIME_PART__MIME_MULTIPART_RELATED:
-                    return eContainer.eInverseRemove(this, MimePackage.MIME_MULTIPART_RELATED__MIME_PARTS, MimeMultipartRelated.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     MimePackage.MIME_MULTIPART_RELATED__MIME_PARTS,
+                                                     MimeMultipartRelated.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -181,12 +185,13 @@ public class MimePartImpl extends EObjectImpl implements MimePart {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case MimePackage.MIME_PART__MIME_ELEMENTS:
                 return getMimeElements();
@@ -197,12 +202,13 @@ public class MimePartImpl extends EObjectImpl implements MimePart {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case MimePackage.MIME_PART__MIME_ELEMENTS:
                 getMimeElements().clear();
@@ -216,12 +222,12 @@ public class MimePartImpl extends EObjectImpl implements MimePart {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case MimePackage.MIME_PART__MIME_ELEMENTS:
                 getMimeElements().clear();
@@ -234,12 +240,12 @@ public class MimePartImpl extends EObjectImpl implements MimePart {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case MimePackage.MIME_PART__MIME_ELEMENTS:
                 return mimeElements != null && !mimeElements.isEmpty();
@@ -249,4 +255,4 @@ public class MimePartImpl extends EObjectImpl implements MimePart {
         return eDynamicIsSet(eFeature);
     }
 
-} //MimePartImpl
+} // MimePartImpl

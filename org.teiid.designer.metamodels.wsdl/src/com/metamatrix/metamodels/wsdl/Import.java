@@ -7,94 +7,82 @@
  */
 package com.metamatrix.metamodels.wsdl;
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Import</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Import</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.wsdl.Import#getNamespace <em>Namespace</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.Import#getLocation <em>Location</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.wsdl.Import#getDefinitions <em>Definitions</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.Import#getNamespace <em>Namespace</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.Import#getLocation <em>Location</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.wsdl.Import#getDefinitions <em>Definitions</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see com.metamatrix.metamodels.wsdl.WsdlPackage#getImport()
  * @model
  * @generated
  */
-public interface Import extends ExtensibleAttributesDocumented{
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
+public interface Import extends ExtensibleAttributesDocumented {
 
     /**
-     * Returns the value of the '<em><b>Namespace</b></em>' attribute.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Namespace</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
+     * Returns the value of the '<em><b>Namespace</b></em>' attribute. <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Namespace</em>' attribute isn't clear, there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Namespace</em>' attribute.
      * @see #setNamespace(String)
      * @see com.metamatrix.metamodels.wsdl.WsdlPackage#getImport_Namespace()
      * @model
      * @generated
      */
-	String getNamespace();
+    String getNamespace();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.wsdl.Import#getNamespace <em>Namespace</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.wsdl.Import#getNamespace <em>Namespace</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Namespace</em>' attribute.
      * @see #getNamespace()
      * @generated
      */
-	void setNamespace(String value);
+    void setNamespace( String value );
 
     /**
-     * Returns the value of the '<em><b>Location</b></em>' attribute.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Location</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
+     * Returns the value of the '<em><b>Location</b></em>' attribute. <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Location</em>' attribute isn't clear, there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Location</em>' attribute.
      * @see #setLocation(String)
      * @see com.metamatrix.metamodels.wsdl.WsdlPackage#getImport_Location()
      * @model
      * @generated
      */
-	String getLocation();
+    String getLocation();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.wsdl.Import#getLocation <em>Location</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.wsdl.Import#getLocation <em>Location</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Location</em>' attribute.
      * @see #getLocation()
      * @generated
      */
-	void setLocation(String value);
+    void setLocation( String value );
 
     /**
-     * Returns the value of the '<em><b>Definitions</b></em>' container reference.
-     * It is bidirectional and its opposite is '{@link com.metamatrix.metamodels.wsdl.Definitions#getImports <em>Imports</em>}'.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Definitions</em>' container reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
+     * Returns the value of the '<em><b>Definitions</b></em>' container reference. It is bidirectional and its opposite is '
+     * {@link com.metamatrix.metamodels.wsdl.Definitions#getImports <em>Imports</em>}'. <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Definitions</em>' container reference isn't clear, there really should be more of a description
+     * here...
+     * </p>
+     * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Definitions</em>' container reference.
      * @see #setDefinitions(Definitions)
      * @see com.metamatrix.metamodels.wsdl.WsdlPackage#getImport_Definitions()
@@ -102,16 +90,16 @@ public interface Import extends ExtensibleAttributesDocumented{
      * @model opposite="imports" required="true"
      * @generated
      */
-	Definitions getDefinitions();
+    Definitions getDefinitions();
 
     /**
-     * Sets the value of the '{@link com.metamatrix.metamodels.wsdl.Import#getDefinitions <em>Definitions</em>}' container reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * Sets the value of the '{@link com.metamatrix.metamodels.wsdl.Import#getDefinitions <em>Definitions</em>}' container
+     * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Definitions</em>' container reference.
      * @see #getDefinitions()
      * @generated
      */
-	void setDefinitions(Definitions value);
+    void setDefinitions( Definitions value );
 
 } // Import

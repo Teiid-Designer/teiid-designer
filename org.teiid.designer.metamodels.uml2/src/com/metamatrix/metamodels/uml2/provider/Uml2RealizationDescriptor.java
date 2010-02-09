@@ -39,7 +39,7 @@ public class Uml2RealizationDescriptor extends Uml2DependencyDescriptor {
      * 
      * @param eObjects
      */
-    public Uml2RealizationDescriptor( final List eObjects ) {
+    public Uml2RealizationDescriptor( final List eObjects ) { // NO_UCD
         super(eObjects);
         this.text = LABEL;
     }
@@ -93,7 +93,7 @@ public class Uml2RealizationDescriptor extends Uml2DependencyDescriptor {
      * @see com.metamatrix.modeler.internal.core.association.AbstractAssociationDescriptor#canCreate()
      */
     @Override
-    public boolean canCreate() {
+    public boolean canCreate() { // NO_UCD
         final List eObjects = this.getEObjects();
         return Uml2AssociationProvider.containsValidObjects(eObjects, Uml2AssociationProvider.VALID_CLASSES_TYPES);
     }

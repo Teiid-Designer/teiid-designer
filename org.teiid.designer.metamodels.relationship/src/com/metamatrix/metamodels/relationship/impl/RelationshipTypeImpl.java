@@ -42,45 +42,36 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Type</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Type</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#isDirected <em>Directed</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#isExclusive <em>Exclusive</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#isCrossModel <em>Cross Model</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#isAbstract <em>Abstract</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#isUserDefined <em>User Defined</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getStatus <em>Status</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getStereotype <em>Stereotype</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getConstraint <em>Constraint</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getLabel <em>Label</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getOppositeLabel <em>Opposite Label</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getRelationshipFeatures <em>Relationship Features</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getSuperType <em>Super Type</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getSubType <em>Sub Type</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getRoles <em>Roles</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getOwner <em>Owner</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#isDirected <em>Directed</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#isExclusive <em>Exclusive</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#isCrossModel <em>Cross Model</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#isAbstract <em>Abstract</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#isUserDefined <em>User Defined</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getStatus <em>Status</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getStereotype <em>Stereotype</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getConstraint <em>Constraint</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getLabel <em>Label</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getOppositeLabel <em>Opposite Label</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getRelationshipFeatures <em>Relationship Features
+ * </em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getSuperType <em>Super Type</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getSubType <em>Sub Type</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getRoles <em>Roles</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.relationship.impl.RelationshipTypeImpl#getOwner <em>Owner</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class RelationshipTypeImpl extends RelationshipEntityImpl implements RelationshipType {
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
-
-    /**
-     * The default value of the '{@link #isDirected() <em>Directed</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #isDirected() <em>Directed</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #isDirected()
      * @generated
      * @ordered
@@ -88,9 +79,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected static final boolean DIRECTED_EDEFAULT = true;
 
     /**
-     * The cached value of the '{@link #isDirected() <em>Directed</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isDirected() <em>Directed</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #isDirected()
      * @generated
      * @ordered
@@ -98,9 +88,9 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected boolean directed = DIRECTED_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isExclusive() <em>Exclusive</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #isExclusive() <em>Exclusive</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #isExclusive()
      * @generated
      * @ordered
@@ -108,9 +98,9 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected static final boolean EXCLUSIVE_EDEFAULT = true;
 
     /**
-     * The cached value of the '{@link #isExclusive() <em>Exclusive</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isExclusive() <em>Exclusive</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #isExclusive()
      * @generated
      * @ordered
@@ -118,9 +108,9 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected boolean exclusive = EXCLUSIVE_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isCrossModel() <em>Cross Model</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #isCrossModel() <em>Cross Model</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isCrossModel()
      * @generated
      * @ordered
@@ -128,9 +118,9 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected static final boolean CROSS_MODEL_EDEFAULT = true;
 
     /**
-     * The cached value of the '{@link #isCrossModel() <em>Cross Model</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isCrossModel() <em>Cross Model</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #isCrossModel()
      * @generated
      * @ordered
@@ -138,9 +128,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected boolean crossModel = CROSS_MODEL_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isAbstract() <em>Abstract</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #isAbstract() <em>Abstract</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #isAbstract()
      * @generated
      * @ordered
@@ -148,9 +137,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected static final boolean ABSTRACT_EDEFAULT = false;
 
     /**
-     * The cached value of the '{@link #isAbstract() <em>Abstract</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isAbstract() <em>Abstract</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #isAbstract()
      * @generated
      * @ordered
@@ -158,9 +146,9 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected boolean abstract_ = ABSTRACT_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isUserDefined() <em>User Defined</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #isUserDefined() <em>User Defined</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isUserDefined()
      * @generated
      * @ordered
@@ -168,9 +156,9 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected static final boolean USER_DEFINED_EDEFAULT = true;
 
     /**
-     * The cached value of the '{@link #isUserDefined() <em>User Defined</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isUserDefined() <em>User Defined</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isUserDefined()
      * @generated
      * @ordered
@@ -178,9 +166,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected boolean userDefined = USER_DEFINED_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getStatus() <em>Status</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getStatus()
      * @generated
      * @ordered
@@ -188,9 +175,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected static final RelationshipTypeStatus STATUS_EDEFAULT = RelationshipTypeStatus.STANDARD_LITERAL;
 
     /**
-     * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getStatus() <em>Status</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getStatus()
      * @generated
      * @ordered
@@ -198,9 +184,9 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected RelationshipTypeStatus status = STATUS_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getStereotype() <em>Stereotype</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getStereotype() <em>Stereotype</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getStereotype()
      * @generated
      * @ordered
@@ -208,9 +194,9 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected static final String STEREOTYPE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getStereotype() <em>Stereotype</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getStereotype() <em>Stereotype</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getStereotype()
      * @generated
      * @ordered
@@ -218,9 +204,9 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected String stereotype = STEREOTYPE_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getConstraint() <em>Constraint</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getConstraint() <em>Constraint</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getConstraint()
      * @generated
      * @ordered
@@ -228,9 +214,9 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected static final String CONSTRAINT_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getConstraint() <em>Constraint</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getConstraint() <em>Constraint</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getConstraint()
      * @generated
      * @ordered
@@ -238,9 +224,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected String constraint = CONSTRAINT_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getLabel() <em>Label</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getLabel() <em>Label</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getLabel()
      * @generated
      * @ordered
@@ -248,9 +233,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected static final String LABEL_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getLabel() <em>Label</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getLabel()
      * @generated
      * @ordered
@@ -258,9 +242,9 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected String label = LABEL_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getOppositeLabel() <em>Opposite Label</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getOppositeLabel() <em>Opposite Label</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getOppositeLabel()
      * @generated
      * @ordered
@@ -268,9 +252,9 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected static final String OPPOSITE_LABEL_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getOppositeLabel() <em>Opposite Label</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getOppositeLabel() <em>Opposite Label</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getOppositeLabel()
      * @generated
      * @ordered
@@ -278,9 +262,9 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected String oppositeLabel = OPPOSITE_LABEL_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getRelationshipFeatures() <em>Relationship Features</em>}' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getRelationshipFeatures() <em>Relationship Features</em>}' reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getRelationshipFeatures()
      * @generated
      * @ordered
@@ -288,9 +272,9 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected EList relationshipFeatures = null;
 
     /**
-     * The cached value of the '{@link #getSuperType() <em>Super Type</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getSuperType() <em>Super Type</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getSuperType()
      * @generated
      * @ordered
@@ -298,18 +282,17 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected RelationshipType superType = null;
 
     /**
-     * This is true if the Super Type reference has been set.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This is true if the Super Type reference has been set. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      * @ordered
      */
     protected boolean superTypeESet = false;
 
     /**
-     * The cached value of the '{@link #getSubType() <em>Sub Type</em>}' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getSubType() <em>Sub Type</em>}' reference list. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getSubType()
      * @generated
      * @ordered
@@ -317,9 +300,9 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected EList subType = null;
 
     /**
-     * The cached value of the '{@link #getRoles() <em>Roles</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getRoles() <em>Roles</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getRoles()
      * @generated
      * @ordered
@@ -327,8 +310,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     protected EList roles = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected RelationshipTypeImpl() {
@@ -336,8 +319,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -346,8 +329,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isDirected() {
@@ -355,20 +338,21 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setDirected(boolean newDirected) {
+    public void setDirected( boolean newDirected ) {
         boolean oldDirected = directed;
         directed = newDirected;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.RELATIONSHIP_TYPE__DIRECTED, oldDirected, directed));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.RELATIONSHIP_TYPE__DIRECTED, oldDirected,
+                                                                   directed));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isExclusive() {
@@ -376,20 +360,21 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setExclusive(boolean newExclusive) {
+    public void setExclusive( boolean newExclusive ) {
         boolean oldExclusive = exclusive;
         exclusive = newExclusive;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.RELATIONSHIP_TYPE__EXCLUSIVE, oldExclusive, exclusive));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.RELATIONSHIP_TYPE__EXCLUSIVE,
+                                                                   oldExclusive, exclusive));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isCrossModel() {
@@ -397,20 +382,21 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setCrossModel(boolean newCrossModel) {
+    public void setCrossModel( boolean newCrossModel ) {
         boolean oldCrossModel = crossModel;
         crossModel = newCrossModel;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.RELATIONSHIP_TYPE__CROSS_MODEL, oldCrossModel, crossModel));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.RELATIONSHIP_TYPE__CROSS_MODEL,
+                                                                   oldCrossModel, crossModel));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isAbstract() {
@@ -418,20 +404,21 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setAbstract(boolean newAbstract) {
+    public void setAbstract( boolean newAbstract ) {
         boolean oldAbstract = abstract_;
         abstract_ = newAbstract;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.RELATIONSHIP_TYPE__ABSTRACT, oldAbstract, abstract_));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.RELATIONSHIP_TYPE__ABSTRACT, oldAbstract,
+                                                                   abstract_));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isUserDefined() {
@@ -439,20 +426,21 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setUserDefined(boolean newUserDefined) {
+    public void setUserDefined( boolean newUserDefined ) {
         boolean oldUserDefined = userDefined;
         userDefined = newUserDefined;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.RELATIONSHIP_TYPE__USER_DEFINED, oldUserDefined, userDefined));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.RELATIONSHIP_TYPE__USER_DEFINED,
+                                                                   oldUserDefined, userDefined));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public RelationshipTypeStatus getStatus() {
@@ -460,20 +448,21 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setStatus(RelationshipTypeStatus newStatus) {
+    public void setStatus( RelationshipTypeStatus newStatus ) {
         RelationshipTypeStatus oldStatus = status;
         status = newStatus == null ? STATUS_EDEFAULT : newStatus;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.RELATIONSHIP_TYPE__STATUS, oldStatus, status));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.RELATIONSHIP_TYPE__STATUS, oldStatus,
+                                                                   status));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getStereotype() {
@@ -481,20 +470,21 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setStereotype(String newStereotype) {
+    public void setStereotype( String newStereotype ) {
         String oldStereotype = stereotype;
         stereotype = newStereotype;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.RELATIONSHIP_TYPE__STEREOTYPE, oldStereotype, stereotype));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.RELATIONSHIP_TYPE__STEREOTYPE,
+                                                                   oldStereotype, stereotype));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getConstraint() {
@@ -502,20 +492,21 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setConstraint(String newConstraint) {
+    public void setConstraint( String newConstraint ) {
         String oldConstraint = constraint;
         constraint = newConstraint;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.RELATIONSHIP_TYPE__CONSTRAINT, oldConstraint, constraint));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.RELATIONSHIP_TYPE__CONSTRAINT,
+                                                                   oldConstraint, constraint));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getLabel() {
@@ -523,20 +514,20 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setLabel(String newLabel) {
+    public void setLabel( String newLabel ) {
         String oldLabel = label;
         label = newLabel;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.RELATIONSHIP_TYPE__LABEL, oldLabel, label));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.RELATIONSHIP_TYPE__LABEL, oldLabel, label));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getOppositeLabel() {
@@ -544,32 +535,34 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setOppositeLabel(String newOppositeLabel) {
+    public void setOppositeLabel( String newOppositeLabel ) {
         String oldOppositeLabel = oppositeLabel;
         oppositeLabel = newOppositeLabel;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.RELATIONSHIP_TYPE__OPPOSITE_LABEL, oldOppositeLabel, oppositeLabel));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.RELATIONSHIP_TYPE__OPPOSITE_LABEL,
+                                                                   oldOppositeLabel, oppositeLabel));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getRelationshipFeatures() {
         if (relationshipFeatures == null) {
-            relationshipFeatures = new EObjectResolvingEList(EStructuralFeature.class, this, RelationshipPackage.RELATIONSHIP_TYPE__RELATIONSHIP_FEATURES);
+            relationshipFeatures = new EObjectResolvingEList(EStructuralFeature.class, this,
+                                                             RelationshipPackage.RELATIONSHIP_TYPE__RELATIONSHIP_FEATURES);
         }
         return relationshipFeatures;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public RelationshipType getSuperType() {
@@ -577,16 +570,17 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
             RelationshipType oldSuperType = superType;
             superType = (RelationshipType)eResolveProxy((InternalEObject)superType);
             if (superType != oldSuperType) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, RelationshipPackage.RELATIONSHIP_TYPE__SUPER_TYPE, oldSuperType, superType));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+                                                                           RelationshipPackage.RELATIONSHIP_TYPE__SUPER_TYPE,
+                                                                           oldSuperType, superType));
             }
         }
         return superType;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public RelationshipType basicGetSuperType() {
@@ -594,85 +588,99 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public NotificationChain basicSetSuperType(RelationshipType newSuperType, NotificationChain msgs) {
+    public NotificationChain basicSetSuperType( RelationshipType newSuperType,
+                                                NotificationChain msgs ) {
         RelationshipType oldSuperType = superType;
         superType = newSuperType;
         boolean oldSuperTypeESet = superTypeESet;
         superTypeESet = true;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, RelationshipPackage.RELATIONSHIP_TYPE__SUPER_TYPE, oldSuperType, newSuperType, !oldSuperTypeESet);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+                                                                   RelationshipPackage.RELATIONSHIP_TYPE__SUPER_TYPE,
+                                                                   oldSuperType, newSuperType, !oldSuperTypeESet);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setSuperType(RelationshipType newSuperType) {
+    public void setSuperType( RelationshipType newSuperType ) {
         if (newSuperType != superType) {
             NotificationChain msgs = null;
-            if (superType != null)
-                msgs = ((InternalEObject)superType).eInverseRemove(this, RelationshipPackage.RELATIONSHIP_TYPE__SUB_TYPE, RelationshipType.class, msgs);
-            if (newSuperType != null)
-                msgs = ((InternalEObject)newSuperType).eInverseAdd(this, RelationshipPackage.RELATIONSHIP_TYPE__SUB_TYPE, RelationshipType.class, msgs);
+            if (superType != null) msgs = ((InternalEObject)superType).eInverseRemove(this,
+                                                                                      RelationshipPackage.RELATIONSHIP_TYPE__SUB_TYPE,
+                                                                                      RelationshipType.class,
+                                                                                      msgs);
+            if (newSuperType != null) msgs = ((InternalEObject)newSuperType).eInverseAdd(this,
+                                                                                         RelationshipPackage.RELATIONSHIP_TYPE__SUB_TYPE,
+                                                                                         RelationshipType.class,
+                                                                                         msgs);
             msgs = basicSetSuperType(newSuperType, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else {
+        } else {
             boolean oldSuperTypeESet = superTypeESet;
             superTypeESet = true;
-            if (eNotificationRequired())
-                eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.RELATIONSHIP_TYPE__SUPER_TYPE, newSuperType, newSuperType, !oldSuperTypeESet));
-    	}
+            if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                       RelationshipPackage.RELATIONSHIP_TYPE__SUPER_TYPE,
+                                                                       newSuperType, newSuperType, !oldSuperTypeESet));
+        }
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public NotificationChain basicUnsetSuperType(NotificationChain msgs) {
+    public NotificationChain basicUnsetSuperType( NotificationChain msgs ) {
         RelationshipType oldSuperType = superType;
         superType = null;
         boolean oldSuperTypeESet = superTypeESet;
         superTypeESet = false;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.UNSET, RelationshipPackage.RELATIONSHIP_TYPE__SUPER_TYPE, oldSuperType, null, oldSuperTypeESet);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.UNSET,
+                                                                   RelationshipPackage.RELATIONSHIP_TYPE__SUPER_TYPE,
+                                                                   oldSuperType, null, oldSuperTypeESet);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void unsetSuperType() {
         if (superType != null) {
             NotificationChain msgs = null;
-            msgs = ((InternalEObject)superType).eInverseRemove(this, RelationshipPackage.RELATIONSHIP_TYPE__SUB_TYPE, RelationshipType.class, msgs);
+            msgs = ((InternalEObject)superType).eInverseRemove(this,
+                                                               RelationshipPackage.RELATIONSHIP_TYPE__SUB_TYPE,
+                                                               RelationshipType.class,
+                                                               msgs);
             msgs = basicUnsetSuperType(msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else {
+        } else {
             boolean oldSuperTypeESet = superTypeESet;
             superTypeESet = false;
-            if (eNotificationRequired())
-                eNotify(new ENotificationImpl(this, Notification.UNSET, RelationshipPackage.RELATIONSHIP_TYPE__SUPER_TYPE, null, null, oldSuperTypeESet));
-    	}
+            if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.UNSET,
+                                                                       RelationshipPackage.RELATIONSHIP_TYPE__SUPER_TYPE, null,
+                                                                       null, oldSuperTypeESet));
+        }
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isSetSuperType() {
@@ -680,32 +688,36 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getSubType() {
         if (subType == null) {
-            subType = new EObjectWithInverseResolvingEList(RelationshipType.class, this, RelationshipPackage.RELATIONSHIP_TYPE__SUB_TYPE, RelationshipPackage.RELATIONSHIP_TYPE__SUPER_TYPE);
+            subType = new EObjectWithInverseResolvingEList(RelationshipType.class, this,
+                                                           RelationshipPackage.RELATIONSHIP_TYPE__SUB_TYPE,
+                                                           RelationshipPackage.RELATIONSHIP_TYPE__SUPER_TYPE);
         }
         return subType;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getRoles() {
         if (roles == null) {
-            roles = new EObjectContainmentWithInverseEList(RelationshipRole.class, this, RelationshipPackage.RELATIONSHIP_TYPE__ROLES, RelationshipPackage.RELATIONSHIP_ROLE__RELATIONSHIP_TYPE);
+            roles = new EObjectContainmentWithInverseEList(RelationshipRole.class, this,
+                                                           RelationshipPackage.RELATIONSHIP_TYPE__ROLES,
+                                                           RelationshipPackage.RELATIONSHIP_ROLE__RELATIONSHIP_TYPE);
         }
         return roles;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public RelationshipFolder getOwner() {
@@ -714,44 +726,45 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setOwner(RelationshipFolder newOwner) {
+    public void setOwner( RelationshipFolder newOwner ) {
         if (newOwner != eContainer || (eContainerFeatureID != RelationshipPackage.RELATIONSHIP_TYPE__OWNER && newOwner != null)) {
-            if (EcoreUtil.isAncestor(this, newOwner))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newOwner)) throw new IllegalArgumentException(
+                                                                                         "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newOwner != null)
-                msgs = ((InternalEObject)newOwner).eInverseAdd(this, RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIP_TYPES, RelationshipFolder.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newOwner != null) msgs = ((InternalEObject)newOwner).eInverseAdd(this,
+                                                                                 RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIP_TYPES,
+                                                                                 RelationshipFolder.class,
+                                                                                 msgs);
             msgs = eBasicSetContainer((InternalEObject)newOwner, RelationshipPackage.RELATIONSHIP_TYPE__OWNER, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RelationshipPackage.RELATIONSHIP_TYPE__OWNER, newOwner, newOwner));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          RelationshipPackage.RELATIONSHIP_TYPE__OWNER, newOwner,
+                                                                          newOwner));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     public RelationshipRole getSourceRole() {
         final List roles = this.getRoles();
         final int numRoles = roles.size();
-        if ( numRoles < 1 ) {
+        if (numRoles < 1) {
             return null;
         }
-        final RelationshipRole role1 = (RelationshipRole) roles.get(0);
+        final RelationshipRole role1 = (RelationshipRole)roles.get(0);
         return role1;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public RelationshipRole getSourceRoleGen() {
@@ -761,23 +774,23 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     public RelationshipRole getTargetRole() {
         final List roles = this.getRoles();
         final int numRoles = roles.size();
-        if ( numRoles < 2 ) {
+        if (numRoles < 2) {
             return null;
         }
-        final RelationshipRole role1 = (RelationshipRole) roles.get(1);
+        final RelationshipRole role1 = (RelationshipRole)roles.get(1);
         return role1;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public RelationshipRole getTargetRoleGen() {
@@ -787,24 +800,24 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     public List getAllRelationshipFeatures() {
         // Short circuit ...
-        if ( this.superType == null ) {
+        if (this.superType == null) {
             return this.getRelationshipFeatures();
         }
         final List allFeatures = new ArrayList();
         final List path = new ArrayList();
-        doAddRelationshipFeatures(allFeatures,this,path);
+        doAddRelationshipFeatures(allFeatures, this, path);
         return allFeatures;
     }
-    
+
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public List getAllRelationshipFeaturesGen() {
@@ -815,77 +828,84 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
 
     /**
      * Recursive method that prevents processing loops in the supertype hierarchy.
+     * 
      * @param allFeatures
      * @param startingType
      * @param pathOfSupertypesAlreadyProcessed
      */
-    protected void doAddRelationshipFeatures( final List allFeatures, final RelationshipType startingType, 
+    protected void doAddRelationshipFeatures( final List allFeatures,
+                                              final RelationshipType startingType,
                                               final List pathOfSupertypesAlreadyProcessed ) {
-        if ( startingType == null ) {
+        if (startingType == null) {
             return;
         }
         // Stop if there is a loop in the supertype hierarchy ...
-        if ( pathOfSupertypesAlreadyProcessed.contains(startingType) ) {
+        if (pathOfSupertypesAlreadyProcessed.contains(startingType)) {
             return;
         }
         // Add the features of this object to the list ...
         pathOfSupertypesAlreadyProcessed.add(startingType);
         allFeatures.addAll(startingType.getRelationshipFeatures());
-        
+
         // Delegate to the startingType's method ...
-        doAddRelationshipFeatures(allFeatures,startingType.getSuperType(),pathOfSupertypesAlreadyProcessed);
+        doAddRelationshipFeatures(allFeatures, startingType.getSuperType(), pathOfSupertypesAlreadyProcessed);
     }
-    
-    protected boolean doDetectCycle( final RelationshipType type, final Set supertypesSeen ) {
+
+    protected boolean doDetectCycle( final RelationshipType type,
+                                     final Set supertypesSeen ) {
         final RelationshipType theSuperType = type.getSuperType();
-        if ( theSuperType == null ) {
-            return false;       // no cycle
+        if (theSuperType == null) {
+            return false; // no cycle
         }
         // Try to add to the set ...
         final boolean added = supertypesSeen.add(theSuperType);
-        if ( !added ) {
+        if (!added) {
             return true;
         }
         // Otherwise call recursively ...
-        return doDetectCycle(theSuperType,supertypesSeen);
+        return doDetectCycle(theSuperType, supertypesSeen);
     }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
+     */
+    @Override
     public IStatus isValid() {
-		
-		String typeName = this.getName();
-		// the relationship type should have a name
-		if(typeName == null || typeName.trim().length() == 0) {
-			return new Status(IStatus.ERROR, RelationshipMetamodelPlugin.PLUGIN_ID, 0, RelationshipMetamodelPlugin.Util.getString("RelationshipTypeImpl.The_relationship_type_does_not_have_a_name._1"), null); //$NON-NLS-1$
-		}
 
-		// validator to validate the names of 		
-		StringNameValidator validator = new StringNameValidator();
-		// validate the names of relation ship features
-		Iterator featureIter = this.getRelationshipFeatures().iterator();
-		while(featureIter.hasNext()) {
-			EStructuralFeature feature = (EStructuralFeature) featureIter.next();
-			String featureName = feature.getName();
-			String message = validator.checkValidName(featureName);
-			if(message != null) {
-				featureName = featureName != null ? featureName : RelationshipMetamodelPlugin.Util.getString("RelationshipTypeImpl.<<_Relationship_Type_Feature_>>_1"); //$NON-NLS-1$
-				String errorMessage = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeImpl.The_feature_{0}_on_the_relationship_type_{1}_or_its_super_type,_has_an_invalid_name___{2}._2", featureName, typeName, message); //$NON-NLS-1$
-				return new Status(IStatus.ERROR,  RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
-			}
-		}
-        
+        String typeName = this.getName();
+        // the relationship type should have a name
+        if (typeName == null || typeName.trim().length() == 0) {
+            return new Status(
+                              IStatus.ERROR,
+                              RelationshipMetamodelPlugin.PLUGIN_ID,
+                              0,
+                              RelationshipMetamodelPlugin.Util.getString("RelationshipTypeImpl.The_relationship_type_does_not_have_a_name._1"), null); //$NON-NLS-1$
+        }
+
+        // validator to validate the names of
+        StringNameValidator validator = new StringNameValidator();
+        // validate the names of relation ship features
+        Iterator featureIter = this.getRelationshipFeatures().iterator();
+        while (featureIter.hasNext()) {
+            EStructuralFeature feature = (EStructuralFeature)featureIter.next();
+            String featureName = feature.getName();
+            String message = validator.checkValidName(featureName);
+            if (message != null) {
+                featureName = featureName != null ? featureName : RelationshipMetamodelPlugin.Util.getString("RelationshipTypeImpl.<<_Relationship_Type_Feature_>>_1"); //$NON-NLS-1$
+                String errorMessage = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeImpl.The_feature_{0}_on_the_relationship_type_{1}_or_its_super_type,_has_an_invalid_name___{2}._2", featureName, typeName, message); //$NON-NLS-1$
+                return new Status(IStatus.ERROR, RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
+            }
+        }
+
         Collection statuses = new LinkedList();
 
         // Check the supertype hierarchy ...
-        if ( this.superType != null ) {
-            if ( this.superType.equals(this) ) {
+        if (this.superType != null) {
+            if (this.superType.equals(this)) {
                 String errorMessage = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeImpl.The_supertype_references_causes_a_cycle_1"); //$NON-NLS-1$
-                IStatus status = new Status(IStatus.ERROR,  RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
+                IStatus status = new Status(IStatus.ERROR, RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
                 statuses.add(status);
             } else {
                 // See if there is a cycle ...
@@ -893,127 +913,136 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
                 // Don't add this in case 'this' is a delegate of a proxy; instead, if there is a cycle
                 // this will stop when it gets to the supertype again
                 supertypesSeen.add(this.superType);
-                final boolean cycle = doDetectCycle(this.superType,supertypesSeen);
-                if ( cycle ) {
+                final boolean cycle = doDetectCycle(this.superType, supertypesSeen);
+                if (cycle) {
                     String errorMessage = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeImpl.The_supertype_hierarchy_has_a_cycle_2"); //$NON-NLS-1$
-                    IStatus status = new Status(IStatus.ERROR,  RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
+                    IStatus status = new Status(IStatus.ERROR, RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
                     statuses.add(status);
                 }
             }
         } else {
             // Only the Any built-in type doesn't have to have a supertype ...
             final boolean builtInAny = RelationshipTypeManager.getInstance().isBuiltInAnyRelationshipType(this);
-            if ( !builtInAny ) {
+            if (!builtInAny) {
                 String errorMessage = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeImpl.MissingSupertype"); //$NON-NLS-1$
-                IStatus status = new Status(IStatus.ERROR,  RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
+                IStatus status = new Status(IStatus.ERROR, RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
                 statuses.add(status);
             }
         }
 
-		// get all relationship features
-		List features = this.getAllRelationshipFeatures();
-		// validate the names of the relationship type features
-		// against each other ensure there are no duplicates
-		Map duplicateMap = validator.getDuplicateNamesMap(features);
-		// if there is at least one match, create a status
-		if(duplicateMap.size() > 0) {
-			Iterator keyIter = duplicateMap.keySet().iterator();
-			while(keyIter.hasNext()) {
-				EObject eObject = (EObject) keyIter.next();
-				final String name = ModelerCore.getModelEditor().getName(eObject);
-				Integer count = (Integer)duplicateMap.get(eObject);
-				// create a new status and update the list
-				IStatus status = new Status(IStatus.ERROR, RelationshipMetamodelPlugin.PLUGIN_ID, 0, RelationshipMetamodelPlugin.Util.getString("RelationshipTypeImpl.The_name_of_feature_{0}_on_the_relationship_type_{1}_or_one_of_its_super_types,_is_the_same_as_the_name_of_{2}_other_features._1", name, typeName, count), null); //$NON-NLS-1$
-				statuses.add(status);
-			}
-		}
-        
+        // get all relationship features
+        List features = this.getAllRelationshipFeatures();
+        // validate the names of the relationship type features
+        // against each other ensure there are no duplicates
+        Map duplicateMap = validator.getDuplicateNamesMap(features);
+        // if there is at least one match, create a status
+        if (duplicateMap.size() > 0) {
+            Iterator keyIter = duplicateMap.keySet().iterator();
+            while (keyIter.hasNext()) {
+                EObject eObject = (EObject)keyIter.next();
+                final String name = ModelerCore.getModelEditor().getName(eObject);
+                Integer count = (Integer)duplicateMap.get(eObject);
+                // create a new status and update the list
+                IStatus status = new Status(
+                                            IStatus.ERROR,
+                                            RelationshipMetamodelPlugin.PLUGIN_ID,
+                                            0,
+                                            RelationshipMetamodelPlugin.Util.getString("RelationshipTypeImpl.The_name_of_feature_{0}_on_the_relationship_type_{1}_or_one_of_its_super_types,_is_the_same_as_the_name_of_{2}_other_features._1", name, typeName, count), null); //$NON-NLS-1$
+                statuses.add(status);
+            }
+        }
+
         // validate the roles
         final EList roles = this.getRoles();
-        if(roles.size() != 2){
-            //Must have exactly two roles
+        if (roles.size() != 2) {
+            // Must have exactly two roles
             String errorMessage = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeImpl.Relationship_type_must_have_exactly_two_roles_1"); //$NON-NLS-1$
-            IStatus status = new Status(IStatus.ERROR,  RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
+            IStatus status = new Status(IStatus.ERROR, RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
             statuses.add(status);
-        }else{
-            //Both roles must have non-null, non-zero length, unique names
+        } else {
+            // Both roles must have non-null, non-zero length, unique names
             final RelationshipRole roleA = (RelationshipRole)roles.get(0);
             final String roleAName = roleA.getName();
-            if(roleAName == null || roleAName.trim().length() == 0){
+            if (roleAName == null || roleAName.trim().length() == 0) {
                 String errorMessage = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeImpl.Role_A_must_have_a_name_2"); //$NON-NLS-1$
-                IStatus status = new Status(IStatus.ERROR,  RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
+                IStatus status = new Status(IStatus.ERROR, RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
                 statuses.add(status);
             }
-                
+
             final RelationshipRole roleB = (RelationshipRole)roles.get(1);
             final String roleBName = roleB.getName();
-            if(roleBName == null || roleBName.trim().length() == 0){
+            if (roleBName == null || roleBName.trim().length() == 0) {
                 String errorMessage = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeImpl.Role_B_must_have_a_name_3"); //$NON-NLS-1$
-                IStatus status = new Status(IStatus.ERROR,  RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
+                IStatus status = new Status(IStatus.ERROR, RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
                 statuses.add(status);
             }
-            
-            if(roleAName != null && roleBName != null && roleAName.equalsIgnoreCase(roleBName) ){
+
+            if (roleAName != null && roleBName != null && roleAName.equalsIgnoreCase(roleBName)) {
                 String errorMessage = RelationshipMetamodelPlugin.Util.getString("RelationshipTypeImpl.Role_A_and_Role_B_may_not_have_the_same_case_insignificant_name_4"); //$NON-NLS-1$
-                IStatus status = new Status(IStatus.ERROR,  RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
+                IStatus status = new Status(IStatus.ERROR, RelationshipMetamodelPlugin.PLUGIN_ID, 0, errorMessage, null);
                 statuses.add(status);
             }
         }
-            
-		
-		// return a status using the collected statuses
-		if(statuses.isEmpty()) {
-			return new Status(IStatus.OK, RelationshipMetamodelPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
-		} else if(statuses.size() == 1) {
-			return (IStatus) statuses.iterator().next();
-		} else {
-			MultiStatus multistatus = new MultiStatus(RelationshipMetamodelPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
-			Iterator statusIter = statuses.iterator();
-			while(statusIter.hasNext()) {
-				multistatus.add((IStatus) statusIter.next());
-			}
 
-			return multistatus;
-		}		
-	}
+        // return a status using the collected statuses
+        if (statuses.isEmpty()) {
+            return new Status(IStatus.OK, RelationshipMetamodelPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
+        } else if (statuses.size() == 1) {
+            return (IStatus)statuses.iterator().next();
+        } else {
+            MultiStatus multistatus = new MultiStatus(RelationshipMetamodelPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
+            Iterator statusIter = statuses.iterator();
+            while (statusIter.hasNext()) {
+                multistatus.add((IStatus)statusIter.next());
+            }
+
+            return multistatus;
+        }
+    }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case RelationshipPackage.RELATIONSHIP_TYPE__SUPER_TYPE:
-                    if (superType != null)
-                        msgs = ((InternalEObject)superType).eInverseRemove(this, RelationshipPackage.RELATIONSHIP_TYPE__SUB_TYPE, RelationshipType.class, msgs);
+                    if (superType != null) msgs = ((InternalEObject)superType).eInverseRemove(this,
+                                                                                              RelationshipPackage.RELATIONSHIP_TYPE__SUB_TYPE,
+                                                                                              RelationshipType.class,
+                                                                                              msgs);
                     return basicSetSuperType((RelationshipType)otherEnd, msgs);
                 case RelationshipPackage.RELATIONSHIP_TYPE__SUB_TYPE:
                     return ((InternalEList)getSubType()).basicAdd(otherEnd, msgs);
                 case RelationshipPackage.RELATIONSHIP_TYPE__ROLES:
                     return ((InternalEList)getRoles()).basicAdd(otherEnd, msgs);
                 case RelationshipPackage.RELATIONSHIP_TYPE__OWNER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, RelationshipPackage.RELATIONSHIP_TYPE__OWNER, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case RelationshipPackage.RELATIONSHIP_TYPE__SUPER_TYPE:
@@ -1032,16 +1061,19 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case RelationshipPackage.RELATIONSHIP_TYPE__OWNER:
-                    return eContainer.eInverseRemove(this, RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIP_TYPES, RelationshipFolder.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     RelationshipPackage.RELATIONSHIP_FOLDER__OWNED_RELATIONSHIP_TYPES,
+                                                     RelationshipFolder.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -1050,12 +1082,13 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.RELATIONSHIP_TYPE__NAME:
                 return getName();
@@ -1095,12 +1128,13 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.RELATIONSHIP_TYPE__NAME:
                 setName((String)newValue);
@@ -1158,12 +1192,12 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.RELATIONSHIP_TYPE__NAME:
                 setName(NAME_EDEFAULT);
@@ -1218,12 +1252,12 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case RelationshipPackage.RELATIONSHIP_TYPE__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -1262,8 +1296,8 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -1295,4 +1329,4 @@ public class RelationshipTypeImpl extends RelationshipEntityImpl implements Rela
         return result.toString();
     }
 
-} //RelationshipTypeImpl
+} // RelationshipTypeImpl

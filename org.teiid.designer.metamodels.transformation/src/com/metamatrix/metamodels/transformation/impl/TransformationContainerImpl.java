@@ -21,30 +21,23 @@ import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Container</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Container</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.TransformationContainerImpl#getTransformationMappings <em>Transformation Mappings</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.TransformationContainerImpl#getTransformationMappings <em>
+ * Transformation Mappings</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class TransformationContainerImpl extends EObjectImpl implements TransformationContainer {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * The cached value of the '{@link #getTransformationMappings() <em>Transformation Mappings</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getTransformationMappings()
      * @generated
      * @ordered
@@ -52,8 +45,8 @@ public class TransformationContainerImpl extends EObjectImpl implements Transfor
     protected EList transformationMappings = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected TransformationContainerImpl() {
@@ -61,12 +54,13 @@ public class TransformationContainerImpl extends EObjectImpl implements Transfor
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TRANSFORMATION_CONTAINER__TRANSFORMATION_MAPPINGS:
                 return getTransformationMappings();
@@ -75,12 +69,15 @@ public class TransformationContainerImpl extends EObjectImpl implements Transfor
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.TRANSFORMATION_CONTAINER__TRANSFORMATION_MAPPINGS:
@@ -93,12 +90,12 @@ public class TransformationContainerImpl extends EObjectImpl implements Transfor
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TRANSFORMATION_CONTAINER__TRANSFORMATION_MAPPINGS:
                 return transformationMappings != null && !transformationMappings.isEmpty();
@@ -107,12 +104,13 @@ public class TransformationContainerImpl extends EObjectImpl implements Transfor
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TRANSFORMATION_CONTAINER__TRANSFORMATION_MAPPINGS:
                 getTransformationMappings().clear();
@@ -123,8 +121,8 @@ public class TransformationContainerImpl extends EObjectImpl implements Transfor
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -133,12 +131,12 @@ public class TransformationContainerImpl extends EObjectImpl implements Transfor
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.TRANSFORMATION_CONTAINER__TRANSFORMATION_MAPPINGS:
                 getTransformationMappings().clear();
@@ -148,15 +146,18 @@ public class TransformationContainerImpl extends EObjectImpl implements Transfor
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getTransformationMappings() {
         if (transformationMappings == null) {
-            transformationMappings = new EObjectContainmentEList(TransformationMappingRoot.class, this, TransformationPackage.TRANSFORMATION_CONTAINER__TRANSFORMATION_MAPPINGS);
+            transformationMappings = new EObjectContainmentEList(
+                                                                 TransformationMappingRoot.class,
+                                                                 this,
+                                                                 TransformationPackage.TRANSFORMATION_CONTAINER__TRANSFORMATION_MAPPINGS);
         }
         return transformationMappings;
     }
 
-} //TransformationContainerImpl
+} // TransformationContainerImpl

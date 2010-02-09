@@ -25,36 +25,28 @@ import com.metamatrix.metamodels.history.Revision;
 import com.metamatrix.metamodels.history.RevisionLog;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Revision</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Revision</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.history.impl.RevisionImpl#getHistoryLog <em>History Log</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.RevisionImpl#getBranch <em>Branch</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.RevisionImpl#getLabel <em>Label</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.RevisionImpl#getNextRevision <em>Next Revision</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.RevisionImpl#getPreviousRevision <em>Previous Revision</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.RevisionImpl#getComment <em>Comment</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.RevisionImpl#getVersion <em>Version</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.RevisionImpl#getHistoryLog <em>History Log</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.RevisionImpl#getBranch <em>Branch</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.RevisionImpl#getLabel <em>Label</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.RevisionImpl#getNextRevision <em>Next Revision</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.RevisionImpl#getPreviousRevision <em>Previous Revision</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.RevisionImpl#getComment <em>Comment</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.RevisionImpl#getVersion <em>Version</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getBranch() <em>Branch</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getBranch() <em>Branch</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getBranch()
      * @generated
      * @ordered
@@ -62,9 +54,9 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     protected EList branch = null;
 
     /**
-     * The cached value of the '{@link #getLabel() <em>Label</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getLabel() <em>Label</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getLabel()
      * @generated
      * @ordered
@@ -72,9 +64,9 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     protected EList label = null;
 
     /**
-     * The cached value of the '{@link #getNextRevision() <em>Next Revision</em>}' containment reference.
-     * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getNextRevision() <em>Next Revision</em>}' containment reference. <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * 
      * @see #getNextRevision()
      * @generated
      * @ordered
@@ -82,9 +74,8 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     protected Revision nextRevision = null;
 
     /**
-     * The default value of the '{@link #getComment() <em>Comment</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getComment() <em>Comment</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getComment()
      * @generated
      * @ordered
@@ -92,9 +83,8 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     protected static final String COMMENT_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getComment() <em>Comment</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getComment() <em>Comment</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getComment()
      * @generated
      * @ordered
@@ -102,9 +92,8 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     protected String comment = COMMENT_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getVersion() <em>Version</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getVersion() <em>Version</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getVersion()
      * @generated
      * @ordered
@@ -112,9 +101,8 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     protected static final String VERSION_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getVersion() <em>Version</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getVersion() <em>Version</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getVersion()
      * @generated
      * @ordered
@@ -122,8 +110,8 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     protected String version = VERSION_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected RevisionImpl() {
@@ -131,8 +119,8 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -141,8 +129,8 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getComment() {
@@ -150,20 +138,20 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setComment(String newComment) {
+    public void setComment( String newComment ) {
         String oldComment = comment;
         comment = newComment;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.REVISION__COMMENT, oldComment, comment));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.REVISION__COMMENT,
+                                                                   oldComment, comment));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getVersion() {
@@ -171,20 +159,20 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setVersion(String newVersion) {
+    public void setVersion( String newVersion ) {
         String oldVersion = version;
         version = newVersion;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.REVISION__VERSION, oldVersion, version));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.REVISION__VERSION,
+                                                                   oldVersion, version));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public RevisionLog getHistoryLog() {
@@ -193,53 +181,56 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setHistoryLog(RevisionLog newHistoryLog) {
+    public void setHistoryLog( RevisionLog newHistoryLog ) {
         if (newHistoryLog != eContainer || (eContainerFeatureID != HistoryPackage.REVISION__HISTORY_LOG && newHistoryLog != null)) {
-            if (EcoreUtil.isAncestor(this, newHistoryLog))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newHistoryLog)) throw new IllegalArgumentException(
+                                                                                              "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newHistoryLog != null)
-                msgs = ((InternalEObject)newHistoryLog).eInverseAdd(this, HistoryPackage.REVISION_LOG__FIRST_REVISION, RevisionLog.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newHistoryLog != null) msgs = ((InternalEObject)newHistoryLog).eInverseAdd(this,
+                                                                                           HistoryPackage.REVISION_LOG__FIRST_REVISION,
+                                                                                           RevisionLog.class,
+                                                                                           msgs);
             msgs = eBasicSetContainer((InternalEObject)newHistoryLog, HistoryPackage.REVISION__HISTORY_LOG, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.REVISION__HISTORY_LOG, newHistoryLog, newHistoryLog));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          HistoryPackage.REVISION__HISTORY_LOG, newHistoryLog,
+                                                                          newHistoryLog));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getBranch() {
         if (branch == null) {
-            branch = new EObjectContainmentWithInverseEList(Branch.class, this, HistoryPackage.REVISION__BRANCH, HistoryPackage.BRANCH__PREVIOUS_REVISION);
+            branch = new EObjectContainmentWithInverseEList(Branch.class, this, HistoryPackage.REVISION__BRANCH,
+                                                            HistoryPackage.BRANCH__PREVIOUS_REVISION);
         }
         return branch;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getLabel() {
         if (label == null) {
-            label = new EObjectContainmentWithInverseEList(Label.class, this, HistoryPackage.REVISION__LABEL, HistoryPackage.LABEL__REVISION);
+            label = new EObjectContainmentWithInverseEList(Label.class, this, HistoryPackage.REVISION__LABEL,
+                                                           HistoryPackage.LABEL__REVISION);
         }
         return label;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Revision getNextRevision() {
@@ -247,42 +238,50 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public NotificationChain basicSetNextRevision(Revision newNextRevision, NotificationChain msgs) {
+    public NotificationChain basicSetNextRevision( Revision newNextRevision,
+                                                   NotificationChain msgs ) {
         Revision oldNextRevision = nextRevision;
         nextRevision = newNextRevision;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, HistoryPackage.REVISION__NEXT_REVISION, oldNextRevision, newNextRevision);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+                                                                   HistoryPackage.REVISION__NEXT_REVISION, oldNextRevision,
+                                                                   newNextRevision);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setNextRevision(Revision newNextRevision) {
+    public void setNextRevision( Revision newNextRevision ) {
         if (newNextRevision != nextRevision) {
             NotificationChain msgs = null;
-            if (nextRevision != null)
-                msgs = ((InternalEObject)nextRevision).eInverseRemove(this, HistoryPackage.REVISION__PREVIOUS_REVISION, Revision.class, msgs);
-            if (newNextRevision != null)
-                msgs = ((InternalEObject)newNextRevision).eInverseAdd(this, HistoryPackage.REVISION__PREVIOUS_REVISION, Revision.class, msgs);
+            if (nextRevision != null) msgs = ((InternalEObject)nextRevision).eInverseRemove(this,
+                                                                                            HistoryPackage.REVISION__PREVIOUS_REVISION,
+                                                                                            Revision.class,
+                                                                                            msgs);
+            if (newNextRevision != null) msgs = ((InternalEObject)newNextRevision).eInverseAdd(this,
+                                                                                               HistoryPackage.REVISION__PREVIOUS_REVISION,
+                                                                                               Revision.class,
+                                                                                               msgs);
             msgs = basicSetNextRevision(newNextRevision, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.REVISION__NEXT_REVISION, newNextRevision, newNextRevision));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          HistoryPackage.REVISION__NEXT_REVISION,
+                                                                          newNextRevision, newNextRevision));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Revision getPreviousRevision() {
@@ -291,67 +290,75 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setPreviousRevision(Revision newPreviousRevision) {
-        if (newPreviousRevision != eContainer || (eContainerFeatureID != HistoryPackage.REVISION__PREVIOUS_REVISION && newPreviousRevision != null)) {
-            if (EcoreUtil.isAncestor(this, newPreviousRevision))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setPreviousRevision( Revision newPreviousRevision ) {
+        if (newPreviousRevision != eContainer
+            || (eContainerFeatureID != HistoryPackage.REVISION__PREVIOUS_REVISION && newPreviousRevision != null)) {
+            if (EcoreUtil.isAncestor(this, newPreviousRevision)) throw new IllegalArgumentException(
+                                                                                                    "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newPreviousRevision != null)
-                msgs = ((InternalEObject)newPreviousRevision).eInverseAdd(this, HistoryPackage.REVISION__NEXT_REVISION, Revision.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newPreviousRevision != null) msgs = ((InternalEObject)newPreviousRevision).eInverseAdd(this,
+                                                                                                       HistoryPackage.REVISION__NEXT_REVISION,
+                                                                                                       Revision.class,
+                                                                                                       msgs);
             msgs = eBasicSetContainer((InternalEObject)newPreviousRevision, HistoryPackage.REVISION__PREVIOUS_REVISION, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.REVISION__PREVIOUS_REVISION, newPreviousRevision, newPreviousRevision));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          HistoryPackage.REVISION__PREVIOUS_REVISION,
+                                                                          newPreviousRevision, newPreviousRevision));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HistoryPackage.REVISION__HISTORY_LOG:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, HistoryPackage.REVISION__HISTORY_LOG, msgs);
                 case HistoryPackage.REVISION__BRANCH:
                     return ((InternalEList)getBranch()).basicAdd(otherEnd, msgs);
                 case HistoryPackage.REVISION__LABEL:
                     return ((InternalEList)getLabel()).basicAdd(otherEnd, msgs);
                 case HistoryPackage.REVISION__NEXT_REVISION:
-                    if (nextRevision != null)
-                        msgs = ((InternalEObject)nextRevision).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - HistoryPackage.REVISION__NEXT_REVISION, null, msgs);
+                    if (nextRevision != null) msgs = ((InternalEObject)nextRevision).eInverseRemove(this,
+                                                                                                    EOPPOSITE_FEATURE_BASE
+                                                                                                    - HistoryPackage.REVISION__NEXT_REVISION,
+                                                                                                    null,
+                                                                                                    msgs);
                     return basicSetNextRevision((Revision)otherEnd, msgs);
                 case HistoryPackage.REVISION__PREVIOUS_REVISION:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, HistoryPackage.REVISION__PREVIOUS_REVISION, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HistoryPackage.REVISION__HISTORY_LOG:
@@ -372,12 +379,12 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case HistoryPackage.REVISION__HISTORY_LOG:
@@ -392,12 +399,13 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.REVISION__TIMESTAMP:
                 return getTimestamp();
@@ -422,12 +430,13 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.REVISION__TIMESTAMP:
                 setTimestamp((String)newValue);
@@ -463,12 +472,12 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.REVISION__TIMESTAMP:
                 setTimestamp(TIMESTAMP_EDEFAULT);
@@ -502,12 +511,12 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.REVISION__TIMESTAMP:
                 return TIMESTAMP_EDEFAULT == null ? timestamp != null : !TIMESTAMP_EDEFAULT.equals(timestamp);
@@ -532,8 +541,8 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -549,4 +558,4 @@ public class RevisionImpl extends HistoryLogEntryImpl implements Revision {
         return result.toString();
     }
 
-} //RevisionImpl
+} // RevisionImpl

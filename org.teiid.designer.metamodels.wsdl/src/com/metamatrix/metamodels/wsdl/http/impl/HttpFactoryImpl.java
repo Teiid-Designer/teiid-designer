@@ -22,12 +22,6 @@ import com.metamatrix.metamodels.wsdl.http.HttpPackage;
  * @generated
  */
 public class HttpFactoryImpl extends EFactoryImpl implements HttpFactory {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -103,7 +97,7 @@ public class HttpFactoryImpl extends EFactoryImpl implements HttpFactory {
      * @generated
      */
     @Deprecated
-    public static HttpPackage getPackage() {
+    public static HttpPackage getPackage() { // NO_UCD
         return HttpPackage.eINSTANCE;
     }
 

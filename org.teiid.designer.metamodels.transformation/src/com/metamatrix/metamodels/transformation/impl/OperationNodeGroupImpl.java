@@ -28,30 +28,22 @@ import com.metamatrix.metamodels.transformation.OperationNodeGroup;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Operation Node Group</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Operation Node Group</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.OperationNodeGroupImpl#getContents <em>Contents</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.OperationNodeGroupImpl#getContents <em>Contents</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements OperationNodeGroup {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getContents() <em>Contents</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getContents() <em>Contents</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getContents()
      * @generated
      * @ordered
@@ -59,8 +51,8 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
     protected EList contents = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected OperationNodeGroupImpl() {
@@ -68,8 +60,8 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -78,20 +70,22 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getContents() {
         if (contents == null) {
-            contents = new EObjectContainmentWithInverseEList(AbstractOperationNode.class, this, TransformationPackage.OPERATION_NODE_GROUP__CONTENTS, TransformationPackage.ABSTRACT_OPERATION_NODE__NODE_GROUP);
+            contents = new EObjectContainmentWithInverseEList(AbstractOperationNode.class, this,
+                                                              TransformationPackage.OPERATION_NODE_GROUP__CONTENTS,
+                                                              TransformationPackage.ABSTRACT_OPERATION_NODE__NODE_GROUP);
         }
         return contents;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     public List getAllContents() {
@@ -101,19 +95,19 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     @Override
     public EList getInputLinks() {
         final EList result = new BasicEList();
-        
+
         // Iterate over all operation nodes referenced within this group
         final List allContents = getAllContents();
         for (final Iterator iter = allContents.iterator(); iter.hasNext();) {
             final OperationNode node = (OperationNode)iter.next();
-            
+
             // Any dataflow node that is linked to one of the operation nodes
             // within this group but is external to the group is one of the input
             // links we want to return
@@ -125,24 +119,24 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
                 }
             } // for
         } // for
-        
+
         return result;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     @Override
     public EList getOutputLinks() {
         final EList result = new BasicEList();
-        
+
         // Iterate over all operation nodes referenced within this group
         final List allContents = getAllContents();
         for (final Iterator iter = allContents.iterator(); iter.hasNext();) {
             final OperationNode node = (OperationNode)iter.next();
-            
+
             // Any dataflow node that is linked to one of the operation nodes
             // within this group but is external to the group is one of the output
             // links we want to return
@@ -154,22 +148,24 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
                 }
             } // for
         } // for
-        
+
         return result;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.OPERATION_NODE_GROUP__OWNER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.OPERATION_NODE_GROUP__OWNER, msgs);
                 case TransformationPackage.OPERATION_NODE_GROUP__INPUT_LINKS:
                     return ((InternalEList)getInputLinks()).basicAdd(otherEnd, msgs);
@@ -178,8 +174,7 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
                 case TransformationPackage.OPERATION_NODE_GROUP__EXPRESSIONS:
                     return ((InternalEList)getExpressions()).basicAdd(otherEnd, msgs);
                 case TransformationPackage.OPERATION_NODE_GROUP__NODE_GROUP:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.OPERATION_NODE_GROUP__NODE_GROUP, msgs);
                 case TransformationPackage.OPERATION_NODE_GROUP__CONTENTS:
                     return ((InternalEList)getContents()).basicAdd(otherEnd, msgs);
@@ -187,18 +182,20 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.OPERATION_NODE_GROUP__OWNER:
@@ -221,18 +218,24 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.OPERATION_NODE_GROUP__OWNER:
-                    return eContainer.eInverseRemove(this, TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES, DataFlowMappingRoot.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES,
+                                                     DataFlowMappingRoot.class,
+                                                     msgs);
                 case TransformationPackage.OPERATION_NODE_GROUP__NODE_GROUP:
-                    return eContainer.eInverseRemove(this, TransformationPackage.OPERATION_NODE_GROUP__CONTENTS, OperationNodeGroup.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.OPERATION_NODE_GROUP__CONTENTS,
+                                                     OperationNodeGroup.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -241,12 +244,13 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.OPERATION_NODE_GROUP__NAME:
                 return getName();
@@ -267,12 +271,13 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.OPERATION_NODE_GROUP__NAME:
                 setName((String)newValue);
@@ -304,12 +309,12 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.OPERATION_NODE_GROUP__NAME:
                 setName(NAME_EDEFAULT);
@@ -337,12 +342,12 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.OPERATION_NODE_GROUP__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -362,16 +367,17 @@ public class OperationNodeGroupImpl extends AbstractOperationNodeImpl implements
         return eDynamicIsSet(eFeature);
     }
 
-    private void addOperationNodesToList(final List nodes, final List result) {
+    private void addOperationNodesToList( final List nodes,
+                                          final List result ) {
         for (final Iterator iter = nodes.iterator(); iter.hasNext();) {
             final DataFlowNode node = (DataFlowNode)iter.next();
             if (node instanceof OperationNode && !result.contains(node)) {
                 result.add(node);
-            } else if (node instanceof OperationNodeGroup ) {
+            } else if (node instanceof OperationNodeGroup) {
                 OperationNodeGroup nodeGroup = (OperationNodeGroup)node;
                 addOperationNodesToList(nodeGroup.getContents(), result);
             }
         } // for
     }
 
-} //OperationNodeGroupImpl
+} // OperationNodeGroupImpl

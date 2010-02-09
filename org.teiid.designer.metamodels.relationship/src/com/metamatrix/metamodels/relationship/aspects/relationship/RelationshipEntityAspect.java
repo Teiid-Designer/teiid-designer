@@ -24,7 +24,7 @@ public abstract class RelationshipEntityAspect extends AbstractRelationshipMetam
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.core.relationship.metamodel.aspect.relationship.RelationshipMetamodelAspect#getName(org.eclipse.emf.ecore.EObject)
      */
-    public String getName( EObject eObject ) {
+    public String getName( EObject eObject ) { // NO_UCD
         ArgCheck.isInstanceOf(RelationshipEntity.class, eObject);
         RelationshipEntity relationshipEntity = (RelationshipEntity)eObject;
         return relationshipEntity.getName();

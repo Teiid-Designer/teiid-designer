@@ -22,30 +22,21 @@ import com.metamatrix.metamodels.transformation.OperationNodeGroup;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Join Node</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Join Node</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.JoinNodeImpl#getType <em>Type</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.JoinNodeImpl#getType <em>Type</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getType() <em>Type</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getType() <em>Type</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getType()
      * @generated
      * @ordered
@@ -53,9 +44,8 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
     protected static final JoinType TYPE_EDEFAULT = JoinType.INNER_LITERAL;
 
     /**
-     * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getType() <em>Type</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getType()
      * @generated
      * @ordered
@@ -63,8 +53,8 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
     protected JoinType type = TYPE_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected JoinNodeImpl() {
@@ -72,8 +62,8 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -82,8 +72,8 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public JoinType getType() {
@@ -91,20 +81,20 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setType(JoinType newType) {
+    public void setType( JoinType newType ) {
         JoinType oldType = type;
         type = newType == null ? TYPE_EDEFAULT : newType;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.JOIN_NODE__TYPE, oldType, type));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.JOIN_NODE__TYPE,
+                                                                   oldType, type));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getCriteria() {
@@ -115,6 +105,7 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
 
     /**
      * Min number of input dataflow nodes to this operation
+     * 
      * @generated NOT
      */
     @Override
@@ -124,6 +115,7 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
 
     /**
      * Max number of input dataflow nodes to this operation
+     * 
      * @generated NOT
      */
     @Override
@@ -133,6 +125,7 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
 
     /**
      * Min number of input dataflow nodes to this operation
+     * 
      * @generated NOT
      */
     @Override
@@ -142,6 +135,7 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
 
     /**
      * Max number of output dataflow nodes to this operation
+     * 
      * @generated NOT
      */
     @Override
@@ -150,17 +144,19 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.JOIN_NODE__OWNER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.JOIN_NODE__OWNER, msgs);
                 case TransformationPackage.JOIN_NODE__INPUT_LINKS:
                     return ((InternalEList)getInputLinks()).basicAdd(otherEnd, msgs);
@@ -169,25 +165,26 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
                 case TransformationPackage.JOIN_NODE__EXPRESSIONS:
                     return ((InternalEList)getExpressions()).basicAdd(otherEnd, msgs);
                 case TransformationPackage.JOIN_NODE__NODE_GROUP:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.JOIN_NODE__NODE_GROUP, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.JOIN_NODE__OWNER:
@@ -208,18 +205,24 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.JOIN_NODE__OWNER:
-                    return eContainer.eInverseRemove(this, TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES, DataFlowMappingRoot.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES,
+                                                     DataFlowMappingRoot.class,
+                                                     msgs);
                 case TransformationPackage.JOIN_NODE__NODE_GROUP:
-                    return eContainer.eInverseRemove(this, TransformationPackage.OPERATION_NODE_GROUP__CONTENTS, OperationNodeGroup.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.OPERATION_NODE_GROUP__CONTENTS,
+                                                     OperationNodeGroup.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -228,12 +231,13 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.JOIN_NODE__NAME:
                 return getName();
@@ -254,12 +258,13 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.JOIN_NODE__NAME:
                 setName((String)newValue);
@@ -290,12 +295,12 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.JOIN_NODE__NAME:
                 setName(NAME_EDEFAULT);
@@ -323,12 +328,12 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.JOIN_NODE__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -349,8 +354,8 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -364,4 +369,4 @@ public class JoinNodeImpl extends OperationNodeImpl implements JoinNode {
         return result.toString();
     }
 
-} //JoinNodeImpl
+} // JoinNodeImpl

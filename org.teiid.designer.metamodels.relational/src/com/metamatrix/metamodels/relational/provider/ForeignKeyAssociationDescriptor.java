@@ -124,7 +124,7 @@ public class ForeignKeyAssociationDescriptor extends AbstractAssociationDescript
      * @see com.metamatrix.modeler.internal.core.association.AbstractAssociationDescriptor#canCreate()
      */
     @Override
-    public boolean canCreate() {
+    public boolean canCreate() { // NO_UCD
         final List eObjects = this.getEObjects();
         return ForeignKeyAssociationProvider.containsValidObjects(eObjects, ForeignKeyAssociationProvider.VALID_CLASSES_TYPES);
     }

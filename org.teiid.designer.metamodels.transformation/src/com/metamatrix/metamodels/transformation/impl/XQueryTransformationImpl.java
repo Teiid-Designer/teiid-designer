@@ -24,30 +24,22 @@ import com.metamatrix.metamodels.transformation.TransformationPackage;
 import com.metamatrix.metamodels.transformation.XQueryTransformation;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>XQuery Transformation</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>XQuery Transformation</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.XQueryTransformationImpl#getExpression <em>Expression</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.XQueryTransformationImpl#getExpression <em>Expression</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class XQueryTransformationImpl extends MappingHelperImpl implements XQueryTransformation {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getExpression() <em>Expression</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getExpression() <em>Expression</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getExpression()
      * @generated
      * @ordered
@@ -55,9 +47,9 @@ public class XQueryTransformationImpl extends MappingHelperImpl implements XQuer
     protected static final String EXPRESSION_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getExpression() <em>Expression</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getExpression() <em>Expression</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getExpression()
      * @generated
      * @ordered
@@ -65,8 +57,8 @@ public class XQueryTransformationImpl extends MappingHelperImpl implements XQuer
     protected String expression = EXPRESSION_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected XQueryTransformationImpl() {
@@ -74,8 +66,8 @@ public class XQueryTransformationImpl extends MappingHelperImpl implements XQuer
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -84,8 +76,8 @@ public class XQueryTransformationImpl extends MappingHelperImpl implements XQuer
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getExpression() {
@@ -93,33 +85,35 @@ public class XQueryTransformationImpl extends MappingHelperImpl implements XQuer
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setExpression(String newExpression) {
+    public void setExpression( String newExpression ) {
         String oldExpression = expression;
         expression = newExpression;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.XQUERY_TRANSFORMATION__EXPRESSION, oldExpression, expression));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   TransformationPackage.XQUERY_TRANSFORMATION__EXPRESSION,
+                                                                   oldExpression, expression));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.XQUERY_TRANSFORMATION__MAPPER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.XQUERY_TRANSFORMATION__MAPPER, msgs);
                 case TransformationPackage.XQUERY_TRANSFORMATION__NESTED_IN:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.XQUERY_TRANSFORMATION__NESTED_IN, msgs);
                 case TransformationPackage.XQUERY_TRANSFORMATION__NESTED:
                     return ((InternalEList)getNested()).basicAdd(otherEnd, msgs);
@@ -127,18 +121,20 @@ public class XQueryTransformationImpl extends MappingHelperImpl implements XQuer
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.XQUERY_TRANSFORMATION__MAPPER:
@@ -155,12 +151,12 @@ public class XQueryTransformationImpl extends MappingHelperImpl implements XQuer
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.XQUERY_TRANSFORMATION__MAPPER:
@@ -175,12 +171,13 @@ public class XQueryTransformationImpl extends MappingHelperImpl implements XQuer
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.XQUERY_TRANSFORMATION__MAPPER:
                 return getMapper();
@@ -198,12 +195,13 @@ public class XQueryTransformationImpl extends MappingHelperImpl implements XQuer
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.XQUERY_TRANSFORMATION__MAPPER:
                 setMapper((Mapping)newValue);
@@ -226,12 +224,12 @@ public class XQueryTransformationImpl extends MappingHelperImpl implements XQuer
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.XQUERY_TRANSFORMATION__MAPPER:
                 setMapper((Mapping)null);
@@ -253,12 +251,12 @@ public class XQueryTransformationImpl extends MappingHelperImpl implements XQuer
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.XQUERY_TRANSFORMATION__MAPPER:
                 return getMapper() != null;
@@ -275,8 +273,8 @@ public class XQueryTransformationImpl extends MappingHelperImpl implements XQuer
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -290,4 +288,4 @@ public class XQueryTransformationImpl extends MappingHelperImpl implements XQuer
         return result.toString();
     }
 
-} //XQueryTransformationImpl
+} // XQueryTransformationImpl

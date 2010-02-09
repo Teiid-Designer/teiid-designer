@@ -70,7 +70,7 @@ public class DependencyFactoryImpl extends EFactoryImpl implements DependencyFac
      * @generated
      */
     @Deprecated
-    public static DependencyPackage getPackage() {
+    public static DependencyPackage getPackage() { // NO_UCD
         return DependencyPackage.eINSTANCE;
     }
 

@@ -26,31 +26,23 @@ import com.metamatrix.metamodels.transformation.OperationNodeGroup;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Abstract Operation Node</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Abstract Operation Node</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.AbstractOperationNodeImpl#getExpressions <em>Expressions</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.AbstractOperationNodeImpl#getNodeGroup <em>Node Group</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.AbstractOperationNodeImpl#getExpressions <em>Expressions</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.AbstractOperationNodeImpl#getNodeGroup <em>Node Group</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl implements AbstractOperationNode {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getExpressions() <em>Expressions</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getExpressions() <em>Expressions</em>}' containment reference list. <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
+     * 
      * @see #getExpressions()
      * @generated
      * @ordered
@@ -58,8 +50,8 @@ public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl impleme
     protected EList expressions = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected AbstractOperationNodeImpl() {
@@ -67,8 +59,8 @@ public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl impleme
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -77,20 +69,22 @@ public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl impleme
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getExpressions() {
         if (expressions == null) {
-            expressions = new EObjectContainmentWithInverseEList(Expression.class, this, TransformationPackage.ABSTRACT_OPERATION_NODE__EXPRESSIONS, TransformationPackage.EXPRESSION__OWNER);
+            expressions = new EObjectContainmentWithInverseEList(Expression.class, this,
+                                                                 TransformationPackage.ABSTRACT_OPERATION_NODE__EXPRESSIONS,
+                                                                 TransformationPackage.EXPRESSION__OWNER);
         }
         return expressions;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public OperationNodeGroup getNodeGroup() {
@@ -99,38 +93,46 @@ public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl impleme
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setNodeGroup(OperationNodeGroup newNodeGroup) {
-        if (newNodeGroup != eContainer || (eContainerFeatureID != TransformationPackage.ABSTRACT_OPERATION_NODE__NODE_GROUP && newNodeGroup != null)) {
-            if (EcoreUtil.isAncestor(this, newNodeGroup))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setNodeGroup( OperationNodeGroup newNodeGroup ) {
+        if (newNodeGroup != eContainer
+            || (eContainerFeatureID != TransformationPackage.ABSTRACT_OPERATION_NODE__NODE_GROUP && newNodeGroup != null)) {
+            if (EcoreUtil.isAncestor(this, newNodeGroup)) throw new IllegalArgumentException(
+                                                                                             "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newNodeGroup != null)
-                msgs = ((InternalEObject)newNodeGroup).eInverseAdd(this, TransformationPackage.OPERATION_NODE_GROUP__CONTENTS, OperationNodeGroup.class, msgs);
-            msgs = eBasicSetContainer((InternalEObject)newNodeGroup, TransformationPackage.ABSTRACT_OPERATION_NODE__NODE_GROUP, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newNodeGroup != null) msgs = ((InternalEObject)newNodeGroup).eInverseAdd(this,
+                                                                                         TransformationPackage.OPERATION_NODE_GROUP__CONTENTS,
+                                                                                         OperationNodeGroup.class,
+                                                                                         msgs);
+            msgs = eBasicSetContainer((InternalEObject)newNodeGroup,
+                                      TransformationPackage.ABSTRACT_OPERATION_NODE__NODE_GROUP,
+                                      msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.ABSTRACT_OPERATION_NODE__NODE_GROUP, newNodeGroup, newNodeGroup));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(
+                                                                          this,
+                                                                          Notification.SET,
+                                                                          TransformationPackage.ABSTRACT_OPERATION_NODE__NODE_GROUP,
+                                                                          newNodeGroup, newNodeGroup));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.ABSTRACT_OPERATION_NODE__OWNER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.ABSTRACT_OPERATION_NODE__OWNER, msgs);
                 case TransformationPackage.ABSTRACT_OPERATION_NODE__INPUT_LINKS:
                     return ((InternalEList)getInputLinks()).basicAdd(otherEnd, msgs);
@@ -139,25 +141,26 @@ public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl impleme
                 case TransformationPackage.ABSTRACT_OPERATION_NODE__EXPRESSIONS:
                     return ((InternalEList)getExpressions()).basicAdd(otherEnd, msgs);
                 case TransformationPackage.ABSTRACT_OPERATION_NODE__NODE_GROUP:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.ABSTRACT_OPERATION_NODE__NODE_GROUP, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.ABSTRACT_OPERATION_NODE__OWNER:
@@ -178,18 +181,24 @@ public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl impleme
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.ABSTRACT_OPERATION_NODE__OWNER:
-                    return eContainer.eInverseRemove(this, TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES, DataFlowMappingRoot.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES,
+                                                     DataFlowMappingRoot.class,
+                                                     msgs);
                 case TransformationPackage.ABSTRACT_OPERATION_NODE__NODE_GROUP:
-                    return eContainer.eInverseRemove(this, TransformationPackage.OPERATION_NODE_GROUP__CONTENTS, OperationNodeGroup.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     TransformationPackage.OPERATION_NODE_GROUP__CONTENTS,
+                                                     OperationNodeGroup.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -198,12 +207,13 @@ public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl impleme
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.ABSTRACT_OPERATION_NODE__NAME:
                 return getName();
@@ -222,12 +232,13 @@ public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl impleme
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.ABSTRACT_OPERATION_NODE__NAME:
                 setName((String)newValue);
@@ -255,12 +266,12 @@ public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl impleme
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.ABSTRACT_OPERATION_NODE__NAME:
                 setName(NAME_EDEFAULT);
@@ -285,12 +296,12 @@ public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl impleme
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.ABSTRACT_OPERATION_NODE__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -309,35 +320,41 @@ public abstract class AbstractOperationNodeImpl extends DataFlowNodeImpl impleme
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public int eBaseStructuralFeatureID(int derivedFeatureID, Class baseClass) {
+    public int eBaseStructuralFeatureID( int derivedFeatureID,
+                                         Class baseClass ) {
         if (baseClass == ExpressionOwner.class) {
             switch (derivedFeatureID) {
-                case TransformationPackage.ABSTRACT_OPERATION_NODE__EXPRESSIONS: return TransformationPackage.EXPRESSION_OWNER__EXPRESSIONS;
-                default: return -1;
+                case TransformationPackage.ABSTRACT_OPERATION_NODE__EXPRESSIONS:
+                    return TransformationPackage.EXPRESSION_OWNER__EXPRESSIONS;
+                default:
+                    return -1;
             }
         }
         return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public int eDerivedStructuralFeatureID(int baseFeatureID, Class baseClass) {
+    public int eDerivedStructuralFeatureID( int baseFeatureID,
+                                            Class baseClass ) {
         if (baseClass == ExpressionOwner.class) {
             switch (baseFeatureID) {
-                case TransformationPackage.EXPRESSION_OWNER__EXPRESSIONS: return TransformationPackage.ABSTRACT_OPERATION_NODE__EXPRESSIONS;
-                default: return -1;
+                case TransformationPackage.EXPRESSION_OWNER__EXPRESSIONS:
+                    return TransformationPackage.ABSTRACT_OPERATION_NODE__EXPRESSIONS;
+                default:
+                    return -1;
             }
         }
         return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
     }
 
-} //AbstractOperationNodeImpl
+} // AbstractOperationNodeImpl

@@ -203,7 +203,7 @@ public class PrimitiveTypeManager {
      * @param name
      * @return
      */
-    public EObject getBuiltInTypeForPrimitiveType( final PrimitiveType type ) {
+    public EObject getBuiltInTypeForPrimitiveType( final PrimitiveType type ) { // NO_UCD
         ArgCheck.isNotNull(type);
         final String typeName = type.getName();
         if (this.hasPrimitiveType(typeName)) {

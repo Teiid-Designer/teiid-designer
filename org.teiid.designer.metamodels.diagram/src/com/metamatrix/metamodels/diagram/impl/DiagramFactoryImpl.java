@@ -161,7 +161,7 @@ public class DiagramFactoryImpl extends EFactoryImpl implements DiagramFactory {
      * @generated
      */
     @Deprecated
-    public static DiagramPackage getPackage() {
+    public static DiagramPackage getPackage() { // NO_UCD
         return DiagramPackage.eINSTANCE;
     }
 

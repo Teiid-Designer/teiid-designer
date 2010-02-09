@@ -20,35 +20,27 @@ import com.metamatrix.metamodels.history.HistoryLog;
 import com.metamatrix.metamodels.history.HistoryPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Criteria</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Criteria</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.history.impl.HistoryCriteriaImpl#getHistoryLog <em>History Log</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.HistoryCriteriaImpl#getFromDate <em>From Date</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.HistoryCriteriaImpl#getToDate <em>To Date</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.HistoryCriteriaImpl#getUser <em>User</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.HistoryCriteriaImpl#isIncludeLabels <em>Include Labels</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.HistoryCriteriaImpl#isOnlyLabels <em>Only Labels</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.HistoryCriteriaImpl#getHistoryLog <em>History Log</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.HistoryCriteriaImpl#getFromDate <em>From Date</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.HistoryCriteriaImpl#getToDate <em>To Date</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.HistoryCriteriaImpl#getUser <em>User</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.HistoryCriteriaImpl#isIncludeLabels <em>Include Labels</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.HistoryCriteriaImpl#isOnlyLabels <em>Only Labels</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getFromDate() <em>From Date</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getFromDate() <em>From Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getFromDate()
      * @generated
      * @ordered
@@ -56,9 +48,9 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     protected static final String FROM_DATE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getFromDate() <em>From Date</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getFromDate() <em>From Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getFromDate()
      * @generated
      * @ordered
@@ -66,9 +58,8 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     protected String fromDate = FROM_DATE_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getToDate() <em>To Date</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getToDate() <em>To Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getToDate()
      * @generated
      * @ordered
@@ -76,9 +67,8 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     protected static final String TO_DATE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getToDate() <em>To Date</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getToDate() <em>To Date</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getToDate()
      * @generated
      * @ordered
@@ -86,9 +76,8 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     protected String toDate = TO_DATE_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getUser() <em>User</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getUser() <em>User</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getUser()
      * @generated
      * @ordered
@@ -96,9 +85,8 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     protected static final String USER_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getUser() <em>User</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getUser() <em>User</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getUser()
      * @generated
      * @ordered
@@ -106,9 +94,9 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     protected String user = USER_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isIncludeLabels() <em>Include Labels</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #isIncludeLabels() <em>Include Labels</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isIncludeLabels()
      * @generated
      * @ordered
@@ -116,9 +104,9 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     protected static final boolean INCLUDE_LABELS_EDEFAULT = false;
 
     /**
-     * The cached value of the '{@link #isIncludeLabels() <em>Include Labels</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isIncludeLabels() <em>Include Labels</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isIncludeLabels()
      * @generated
      * @ordered
@@ -126,9 +114,9 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     protected boolean includeLabels = INCLUDE_LABELS_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isOnlyLabels() <em>Only Labels</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #isOnlyLabels() <em>Only Labels</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #isOnlyLabels()
      * @generated
      * @ordered
@@ -136,9 +124,9 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     protected static final boolean ONLY_LABELS_EDEFAULT = false;
 
     /**
-     * The cached value of the '{@link #isOnlyLabels() <em>Only Labels</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #isOnlyLabels() <em>Only Labels</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #isOnlyLabels()
      * @generated
      * @ordered
@@ -146,8 +134,8 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     protected boolean onlyLabels = ONLY_LABELS_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected HistoryCriteriaImpl() {
@@ -155,8 +143,8 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -165,8 +153,8 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getFromDate() {
@@ -174,20 +162,21 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setFromDate(String newFromDate) {
+    public void setFromDate( String newFromDate ) {
         String oldFromDate = fromDate;
         fromDate = newFromDate;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.HISTORY_CRITERIA__FROM_DATE, oldFromDate, fromDate));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   HistoryPackage.HISTORY_CRITERIA__FROM_DATE, oldFromDate,
+                                                                   fromDate));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getToDate() {
@@ -195,20 +184,20 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setToDate(String newToDate) {
+    public void setToDate( String newToDate ) {
         String oldToDate = toDate;
         toDate = newToDate;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.HISTORY_CRITERIA__TO_DATE, oldToDate, toDate));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   HistoryPackage.HISTORY_CRITERIA__TO_DATE, oldToDate, toDate));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getUser() {
@@ -216,20 +205,20 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setUser(String newUser) {
+    public void setUser( String newUser ) {
         String oldUser = user;
         user = newUser;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.HISTORY_CRITERIA__USER, oldUser, user));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.HISTORY_CRITERIA__USER,
+                                                                   oldUser, user));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isIncludeLabels() {
@@ -237,20 +226,21 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setIncludeLabels(boolean newIncludeLabels) {
+    public void setIncludeLabels( boolean newIncludeLabels ) {
         boolean oldIncludeLabels = includeLabels;
         includeLabels = newIncludeLabels;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.HISTORY_CRITERIA__INCLUDE_LABELS, oldIncludeLabels, includeLabels));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   HistoryPackage.HISTORY_CRITERIA__INCLUDE_LABELS,
+                                                                   oldIncludeLabels, includeLabels));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isOnlyLabels() {
@@ -258,20 +248,21 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setOnlyLabels(boolean newOnlyLabels) {
+    public void setOnlyLabels( boolean newOnlyLabels ) {
         boolean oldOnlyLabels = onlyLabels;
         onlyLabels = newOnlyLabels;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.HISTORY_CRITERIA__ONLY_LABELS, oldOnlyLabels, onlyLabels));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   HistoryPackage.HISTORY_CRITERIA__ONLY_LABELS, oldOnlyLabels,
+                                                                   onlyLabels));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public HistoryLog getHistoryLog() {
@@ -280,55 +271,61 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setHistoryLog(HistoryLog newHistoryLog) {
-        if (newHistoryLog != eContainer || (eContainerFeatureID != HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG && newHistoryLog != null)) {
-            if (EcoreUtil.isAncestor(this, newHistoryLog))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setHistoryLog( HistoryLog newHistoryLog ) {
+        if (newHistoryLog != eContainer
+            || (eContainerFeatureID != HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG && newHistoryLog != null)) {
+            if (EcoreUtil.isAncestor(this, newHistoryLog)) throw new IllegalArgumentException(
+                                                                                              "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newHistoryLog != null)
-                msgs = ((InternalEObject)newHistoryLog).eInverseAdd(this, HistoryPackage.HISTORY_LOG__HISTORY_CRITERIA, HistoryLog.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newHistoryLog != null) msgs = ((InternalEObject)newHistoryLog).eInverseAdd(this,
+                                                                                           HistoryPackage.HISTORY_LOG__HISTORY_CRITERIA,
+                                                                                           HistoryLog.class,
+                                                                                           msgs);
             msgs = eBasicSetContainer((InternalEObject)newHistoryLog, HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG, newHistoryLog, newHistoryLog));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG,
+                                                                          newHistoryLog, newHistoryLog));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG:
@@ -341,12 +338,12 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG:
@@ -359,12 +356,13 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG:
                 return getHistoryLog();
@@ -383,12 +381,13 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG:
                 setHistoryLog((HistoryLog)newValue);
@@ -413,12 +412,12 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG:
                 setHistoryLog((HistoryLog)null);
@@ -443,12 +442,12 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.HISTORY_CRITERIA__HISTORY_LOG:
                 return getHistoryLog() != null;
@@ -467,8 +466,8 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -490,4 +489,4 @@ public class HistoryCriteriaImpl extends EObjectImpl implements HistoryCriteria 
         return result.toString();
     }
 
-} //HistoryCriteriaImpl
+} // HistoryCriteriaImpl

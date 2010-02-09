@@ -751,7 +751,7 @@ public class XsdUtil {
      * @param propName
      * @param propValue
      */
-    public static void addApplicationInfoTag( final XSDConcreteComponent comp,
+    public static void addApplicationInfoTag( final XSDConcreteComponent comp, // NO_UCD
                                               final String propName,
                                               final String propValue ) {
         if (comp == null || propName == null) {
@@ -779,7 +779,7 @@ public class XsdUtil {
      * @param key
      * @return
      */
-    public static String getAppInfoAttributeValue( final XSDConcreteComponent comp,
+    public static String getAppInfoAttributeValue( final XSDConcreteComponent comp, // NO_UCD
                                                    final String key ) {
         final XSDAnnotation annotation = getAnnotation(comp);
         if (annotation == null || annotation.getApplicationInformation().isEmpty()) {
@@ -849,7 +849,7 @@ public class XsdUtil {
      * @param modelGroup the model group
      * @return true if the model group is not null and is a <code>sequence</code>; false otherwise
      */
-    public static boolean isSequence( final XSDModelGroup modelGroup ) {
+    public static boolean isSequence( final XSDModelGroup modelGroup ) { // NO_UCD
         if (modelGroup != null) {
             final XSDCompositor compositor = modelGroup.getCompositor();
             return XSDCompositor.SEQUENCE == compositor.getValue();
@@ -877,7 +877,7 @@ public class XsdUtil {
      * @param modelGroup the model group
      * @return true if the model group is not null and is an <code>all</code>; false otherwise
      */
-    public static boolean isAll( final XSDModelGroup modelGroup ) {
+    public static boolean isAll( final XSDModelGroup modelGroup ) { // NO_UCD
         if (modelGroup != null) {
             final XSDCompositor compositor = modelGroup.getCompositor();
             return XSDCompositor.ALL == compositor.getValue();
@@ -885,7 +885,7 @@ public class XsdUtil {
         return false;
     }
 
-    public static boolean isWritable( final XSDComponent component ) {
+    public static boolean isWritable( final XSDComponent component ) { // NO_UCD
         if (component == null) {
             return false;
         }
@@ -1321,7 +1321,7 @@ public class XsdUtil {
      * @param element the element declaration; may not be null
      * @return the built-in datatype of the (resolved) element, or null if there is no type.
      */
-    public static XSDSimpleTypeDefinition getBuiltInDatatype( final XSDElementDeclaration element ) {
+    public static XSDSimpleTypeDefinition getBuiltInDatatype( final XSDElementDeclaration element ) { // NO_UCD
         XSDTypeDefinition type = getType(element);
         return getBuiltInDatatype(type);
     }
@@ -1332,7 +1332,7 @@ public class XsdUtil {
      * @param xsdComponent the component for which the datatype is to be returned
      * @return the built-in datatype or null if there is none.
      */
-    public static XSDSimpleTypeDefinition getBuiltInDatatype( final XSDComponent xsdComponent ) {
+    public static XSDSimpleTypeDefinition getBuiltInDatatype( final XSDComponent xsdComponent ) { // NO_UCD
         XSDTypeDefinition type = getType(xsdComponent);
         return getBuiltInDatatype(type);
     }
@@ -1365,7 +1365,7 @@ public class XsdUtil {
      * @param xsdTypeDefinition a simple or complex type definition.
      * @return whether the type definition is one of the flavours of the ur-type.
      */
-    public static boolean isURType( final XSDTypeDefinition xsdType ) {
+    public static boolean isURType( final XSDTypeDefinition xsdType ) { // NO_UCD
         if (xsdType != null) {
             return XSDConstants.isURType(xsdType);
         }
@@ -1454,7 +1454,7 @@ public class XsdUtil {
      * @see #getMaxOccursLiteral(XSDComponent)
      * @since 4.2
      */
-    public static int getMinOccursLiteral( final XSDComponent component ) {
+    public static int getMinOccursLiteral( final XSDComponent component ) { // NO_UCD
         if (component instanceof XSDElementDeclaration) {
             final XSDElementDeclaration element = (XSDElementDeclaration)component;
             // Get the container ...

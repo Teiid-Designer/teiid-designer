@@ -31,32 +31,25 @@ import com.metamatrix.metamodels.transformation.OperationNodeGroup;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Data Flow Mapping Root</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Data Flow Mapping Root</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowMappingRootImpl#isAllowsOptimization <em>Allows Optimization</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowMappingRootImpl#getNodes <em>Nodes</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowMappingRootImpl#getLinks <em>Links</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowMappingRootImpl#isAllowsOptimization <em>Allows Optimization
+ * </em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowMappingRootImpl#getNodes <em>Nodes</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.DataFlowMappingRootImpl#getLinks <em>Links</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class DataFlowMappingRootImpl extends TransformationMappingRootImpl implements DataFlowMappingRoot {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #isAllowsOptimization() <em>Allows Optimization</em>}' attribute.
-     * <!-- begin-user-doc -->
+     * The default value of the '{@link #isAllowsOptimization() <em>Allows Optimization</em>}' attribute. <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * 
      * @see #isAllowsOptimization()
      * @generated
      * @ordered
@@ -64,9 +57,9 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     protected static final boolean ALLOWS_OPTIMIZATION_EDEFAULT = false;
 
     /**
-     * The cached value of the '{@link #isAllowsOptimization() <em>Allows Optimization</em>}' attribute.
-     * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isAllowsOptimization() <em>Allows Optimization</em>}' attribute. <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * 
      * @see #isAllowsOptimization()
      * @generated
      * @ordered
@@ -74,9 +67,9 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     protected boolean allowsOptimization = ALLOWS_OPTIMIZATION_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getNodes() <em>Nodes</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getNodes() <em>Nodes</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getNodes()
      * @generated
      * @ordered
@@ -84,9 +77,9 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     protected EList nodes = null;
 
     /**
-     * The cached value of the '{@link #getLinks() <em>Links</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getLinks() <em>Links</em>}' containment reference list. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getLinks()
      * @generated
      * @ordered
@@ -94,8 +87,8 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     protected EList links = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected DataFlowMappingRootImpl() {
@@ -103,8 +96,8 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -113,8 +106,8 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public boolean isAllowsOptimization() {
@@ -122,44 +115,51 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setAllowsOptimization(boolean newAllowsOptimization) {
+    public void setAllowsOptimization( boolean newAllowsOptimization ) {
         boolean oldAllowsOptimization = allowsOptimization;
         allowsOptimization = newAllowsOptimization;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, TransformationPackage.DATA_FLOW_MAPPING_ROOT__ALLOWS_OPTIMIZATION, oldAllowsOptimization, allowsOptimization));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(
+                                                                   this,
+                                                                   Notification.SET,
+                                                                   TransformationPackage.DATA_FLOW_MAPPING_ROOT__ALLOWS_OPTIMIZATION,
+                                                                   oldAllowsOptimization, allowsOptimization));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getNodes() {
         if (nodes == null) {
-            nodes = new EObjectContainmentWithInverseEList(DataFlowNode.class, this, TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES, TransformationPackage.DATA_FLOW_NODE__OWNER);
+            nodes = new EObjectContainmentWithInverseEList(DataFlowNode.class, this,
+                                                           TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES,
+                                                           TransformationPackage.DATA_FLOW_NODE__OWNER);
         }
         return nodes;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getLinks() {
         if (links == null) {
-            links = new EObjectContainmentWithInverseEList(DataFlowLink.class, this, TransformationPackage.DATA_FLOW_MAPPING_ROOT__LINKS, TransformationPackage.DATA_FLOW_LINK__OWNER);
+            links = new EObjectContainmentWithInverseEList(DataFlowLink.class, this,
+                                                           TransformationPackage.DATA_FLOW_MAPPING_ROOT__LINKS,
+                                                           TransformationPackage.DATA_FLOW_LINK__OWNER);
         }
         return links;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     public List getSourceNodes() {
@@ -169,8 +169,8 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     public List getTargetNodes() {
@@ -180,8 +180,8 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getResultantSql() {
@@ -191,23 +191,28 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.DATA_FLOW_MAPPING_ROOT__HELPER:
-                    if (helper != null)
-                        msgs = ((InternalEObject)helper).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TransformationPackage.DATA_FLOW_MAPPING_ROOT__HELPER, null, msgs);
+                    if (helper != null) msgs = ((InternalEObject)helper).eInverseRemove(this,
+                                                                                        EOPPOSITE_FEATURE_BASE
+                                                                                        - TransformationPackage.DATA_FLOW_MAPPING_ROOT__HELPER,
+                                                                                        null,
+                                                                                        msgs);
                     return basicSetHelper((MappingHelper)otherEnd, msgs);
                 case TransformationPackage.DATA_FLOW_MAPPING_ROOT__NESTED:
                     return ((InternalEList)getNested()).basicAdd(otherEnd, msgs);
                 case TransformationPackage.DATA_FLOW_MAPPING_ROOT__NESTED_IN:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, TransformationPackage.DATA_FLOW_MAPPING_ROOT__NESTED_IN, msgs);
                 case TransformationPackage.DATA_FLOW_MAPPING_ROOT__NODES:
                     return ((InternalEList)getNodes()).basicAdd(otherEnd, msgs);
@@ -217,18 +222,20 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.DATA_FLOW_MAPPING_ROOT__HELPER:
@@ -249,12 +256,12 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case TransformationPackage.DATA_FLOW_MAPPING_ROOT__NESTED_IN:
@@ -267,12 +274,13 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.DATA_FLOW_MAPPING_ROOT__HELPER:
                 return getHelper();
@@ -307,12 +315,13 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.DATA_FLOW_MAPPING_ROOT__HELPER:
                 setHelper((MappingHelper)newValue);
@@ -363,12 +372,12 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.DATA_FLOW_MAPPING_ROOT__HELPER:
                 setHelper((MappingHelper)null);
@@ -414,12 +423,12 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.DATA_FLOW_MAPPING_ROOT__HELPER:
                 return helper != null;
@@ -452,8 +461,8 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -467,7 +476,9 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
         return result.toString();
     }
 
-    protected void addNodeTypeToList(final List nodes, final int theClassifierID, final List result) {
+    protected void addNodeTypeToList( final List nodes,
+                                      final int theClassifierID,
+                                      final List result ) {
         for (final Iterator iter = nodes.iterator(); iter.hasNext();) {
             final DataFlowNode node = (DataFlowNode)iter.next();
             if (node != null) {
@@ -479,8 +490,8 @@ public class DataFlowMappingRootImpl extends TransformationMappingRootImpl imple
                     OperationNodeGroup operationNodeGroup = (OperationNodeGroup)node;
                     addNodeTypeToList(operationNodeGroup.getContents(), theClassifierID, result);
                 }
-            } 
+            }
         } // for
     }
 
-} //DataFlowMappingRootImpl
+} // DataFlowMappingRootImpl

@@ -24,12 +24,6 @@ import com.metamatrix.metamodels.history.LabelLog;
  * @generated
  */
 public class LabelLogItemProvider extends HistoryLogItemProvider {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -97,7 +91,7 @@ public class LabelLogItemProvider extends HistoryLogItemProvider {
      * 
      * @generated
      */
-    public String getTextGen( Object object ) {
+    public String getTextGen( Object object ) { // NO_UCD
         String label = ((LabelLog)object).getName();
         return label == null || label.length() == 0 ? getString("_UI_LabelLog_type") : //$NON-NLS-1$
         getString("_UI_LabelLog_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$

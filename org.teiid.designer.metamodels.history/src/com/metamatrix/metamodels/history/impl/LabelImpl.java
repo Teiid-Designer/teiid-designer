@@ -20,32 +20,23 @@ import com.metamatrix.metamodels.history.LabelLog;
 import com.metamatrix.metamodels.history.Revision;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Label</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Label</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.history.impl.LabelImpl#getRevision <em>Revision</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.LabelImpl#getHistoryLog <em>History Log</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.LabelImpl#getTag <em>Tag</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.LabelImpl#getRevision <em>Revision</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.LabelImpl#getHistoryLog <em>History Log</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.LabelImpl#getTag <em>Tag</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class LabelImpl extends HistoryLogEntryImpl implements Label {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getTag() <em>Tag</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getTag() <em>Tag</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getTag()
      * @generated
      * @ordered
@@ -53,9 +44,8 @@ public class LabelImpl extends HistoryLogEntryImpl implements Label {
     protected static final String TAG_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getTag() <em>Tag</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getTag() <em>Tag</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getTag()
      * @generated
      * @ordered
@@ -63,8 +53,8 @@ public class LabelImpl extends HistoryLogEntryImpl implements Label {
     protected String tag = TAG_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected LabelImpl() {
@@ -72,8 +62,8 @@ public class LabelImpl extends HistoryLogEntryImpl implements Label {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -82,8 +72,8 @@ public class LabelImpl extends HistoryLogEntryImpl implements Label {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getTag() {
@@ -91,20 +81,19 @@ public class LabelImpl extends HistoryLogEntryImpl implements Label {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setTag(String newTag) {
+    public void setTag( String newTag ) {
         String oldTag = tag;
         tag = newTag;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.LABEL__TAG, oldTag, tag));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.LABEL__TAG, oldTag, tag));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Revision getRevision() {
@@ -113,29 +102,29 @@ public class LabelImpl extends HistoryLogEntryImpl implements Label {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setRevision(Revision newRevision) {
+    public void setRevision( Revision newRevision ) {
         if (newRevision != eContainer || (eContainerFeatureID != HistoryPackage.LABEL__REVISION && newRevision != null)) {
-            if (EcoreUtil.isAncestor(this, newRevision))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newRevision)) throw new IllegalArgumentException(
+                                                                                            "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newRevision != null)
-                msgs = ((InternalEObject)newRevision).eInverseAdd(this, HistoryPackage.REVISION__LABEL, Revision.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newRevision != null) msgs = ((InternalEObject)newRevision).eInverseAdd(this,
+                                                                                       HistoryPackage.REVISION__LABEL,
+                                                                                       Revision.class,
+                                                                                       msgs);
             msgs = eBasicSetContainer((InternalEObject)newRevision, HistoryPackage.LABEL__REVISION, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.LABEL__REVISION, newRevision, newRevision));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.LABEL__REVISION,
+                                                                          newRevision, newRevision));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public LabelLog getHistoryLog() {
@@ -144,59 +133,63 @@ public class LabelImpl extends HistoryLogEntryImpl implements Label {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setHistoryLog(LabelLog newHistoryLog) {
+    public void setHistoryLog( LabelLog newHistoryLog ) {
         if (newHistoryLog != eContainer || (eContainerFeatureID != HistoryPackage.LABEL__HISTORY_LOG && newHistoryLog != null)) {
-            if (EcoreUtil.isAncestor(this, newHistoryLog))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+            if (EcoreUtil.isAncestor(this, newHistoryLog)) throw new IllegalArgumentException(
+                                                                                              "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newHistoryLog != null)
-                msgs = ((InternalEObject)newHistoryLog).eInverseAdd(this, HistoryPackage.LABEL_LOG__LABELS, LabelLog.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newHistoryLog != null) msgs = ((InternalEObject)newHistoryLog).eInverseAdd(this,
+                                                                                           HistoryPackage.LABEL_LOG__LABELS,
+                                                                                           LabelLog.class,
+                                                                                           msgs);
             msgs = eBasicSetContainer((InternalEObject)newHistoryLog, HistoryPackage.LABEL__HISTORY_LOG, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.LABEL__HISTORY_LOG, newHistoryLog, newHistoryLog));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          HistoryPackage.LABEL__HISTORY_LOG, newHistoryLog,
+                                                                          newHistoryLog));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HistoryPackage.LABEL__REVISION:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, HistoryPackage.LABEL__REVISION, msgs);
                 case HistoryPackage.LABEL__HISTORY_LOG:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, HistoryPackage.LABEL__HISTORY_LOG, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case HistoryPackage.LABEL__REVISION:
@@ -211,12 +204,12 @@ public class LabelImpl extends HistoryLogEntryImpl implements Label {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case HistoryPackage.LABEL__REVISION:
@@ -231,12 +224,13 @@ public class LabelImpl extends HistoryLogEntryImpl implements Label {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.LABEL__TIMESTAMP:
                 return getTimestamp();
@@ -253,12 +247,13 @@ public class LabelImpl extends HistoryLogEntryImpl implements Label {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.LABEL__TIMESTAMP:
                 setTimestamp((String)newValue);
@@ -280,12 +275,12 @@ public class LabelImpl extends HistoryLogEntryImpl implements Label {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.LABEL__TIMESTAMP:
                 setTimestamp(TIMESTAMP_EDEFAULT);
@@ -307,12 +302,12 @@ public class LabelImpl extends HistoryLogEntryImpl implements Label {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.LABEL__TIMESTAMP:
                 return TIMESTAMP_EDEFAULT == null ? timestamp != null : !TIMESTAMP_EDEFAULT.equals(timestamp);
@@ -329,8 +324,8 @@ public class LabelImpl extends HistoryLogEntryImpl implements Label {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -344,4 +339,4 @@ public class LabelImpl extends HistoryLogEntryImpl implements Label {
         return result.toString();
     }
 
-} //LabelImpl
+} // LabelImpl

@@ -68,12 +68,6 @@ import com.metamatrix.metamodels.transformation.provider.TransformationItemProvi
  * @generated
  */
 public class TransformationFactoryImpl extends EFactoryImpl implements TransformationFactory {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -255,7 +249,7 @@ public class TransformationFactoryImpl extends EFactoryImpl implements Transform
      * 
      * @generated
      */
-    public FragmentMappingRoot createFragmentMappingRootGen() {
+    public FragmentMappingRoot createFragmentMappingRootGen() { // NO_UCD
         FragmentMappingRootImpl fragmentMappingRoot = new FragmentMappingRootImpl();
         return fragmentMappingRoot;
     }
@@ -276,7 +270,7 @@ public class TransformationFactoryImpl extends EFactoryImpl implements Transform
      * 
      * @generated
      */
-    public TreeMappingRoot createTreeMappingRootGen() {
+    public TreeMappingRoot createTreeMappingRootGen() { // NO_UCD
         TreeMappingRootImpl treeMappingRoot = new TreeMappingRootImpl();
         return treeMappingRoot;
     }
@@ -597,7 +591,7 @@ public class TransformationFactoryImpl extends EFactoryImpl implements Transform
      * 
      * @generated
      */
-    public SqlTransformationMappingRoot createSqlTransformationMappingRootGen() {
+    public SqlTransformationMappingRoot createSqlTransformationMappingRootGen() { // NO_UCD
         SqlTransformationMappingRootImpl sqlTransformationMappingRoot = new SqlTransformationMappingRootImpl();
         return sqlTransformationMappingRoot;
     }
@@ -618,7 +612,7 @@ public class TransformationFactoryImpl extends EFactoryImpl implements Transform
      * @generated
      */
     @Deprecated
-    public static TransformationPackage getPackage() {
+    public static TransformationPackage getPackage() { // NO_UCD
         return TransformationPackage.eINSTANCE;
     }
 

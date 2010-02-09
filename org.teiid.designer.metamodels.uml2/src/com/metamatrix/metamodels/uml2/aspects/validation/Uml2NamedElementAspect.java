@@ -13,35 +13,30 @@ import com.metamatrix.modeler.core.metamodel.core.aspects.validation.AbstractVal
 import com.metamatrix.modeler.core.validation.ValidationRule;
 import com.metamatrix.modeler.core.validation.ValidationRuleSet;
 
-
-/** 
- * This Validation aspect was created to validate any UML2 metaclass entities that
- * implement, either directly or indirectly, the org.eclipse.uml2.NamedElement interface.
- * 
- * Previous to the implementation of this class, no checking was done to validate that 
+/**
+ * This Validation aspect was created to validate any UML2 metaclass entities that implement, either directly or indirectly, the
+ * org.eclipse.uml2.NamedElement interface. Previous to the implementation of this class, no checking was done to validate that
  * sibling UML entities had unique names.
  */
 public class Uml2NamedElementAspect extends AbstractValidationAspect {
 
-    public static final ValidationRule NAME_RULE = new Uml2StringNameRule();
+    public static final ValidationRule NAME_RULE = new Uml2StringNameRule(); // NO_UCD
 
-
-    /** 
+    /**
      * @param entity
      * @since 4.3
      */
-    public Uml2NamedElementAspect(MetamodelEntity entity) {
+    public Uml2NamedElementAspect( MetamodelEntity entity ) {
         super(entity);
     }
-
 
     /**
      * Get all the validation rules for uml2 entity.
      */
     @Override
     public ValidationRuleSet getValidationRules() {
-        //addRule(NAME_RULE);
-        return super.getValidationRules();      
+        // addRule(NAME_RULE);
+        return super.getValidationRules();
     }
-    
+
 }

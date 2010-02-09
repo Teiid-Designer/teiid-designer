@@ -16,31 +16,23 @@ import com.metamatrix.metamodels.history.HistoryLogEntry;
 import com.metamatrix.metamodels.history.HistoryPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Log Entry</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Log Entry</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.history.impl.HistoryLogEntryImpl#getTimestamp <em>Timestamp</em>}</li>
- *   <li>{@link com.metamatrix.metamodels.history.impl.HistoryLogEntryImpl#getUser <em>User</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.HistoryLogEntryImpl#getTimestamp <em>Timestamp</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.history.impl.HistoryLogEntryImpl#getUser <em>User</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public abstract class HistoryLogEntryImpl extends EObjectImpl implements HistoryLogEntry {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getTimestamp()
      * @generated
      * @ordered
@@ -48,9 +40,9 @@ public abstract class HistoryLogEntryImpl extends EObjectImpl implements History
     protected static final String TIMESTAMP_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getTimestamp() <em>Timestamp</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getTimestamp()
      * @generated
      * @ordered
@@ -58,9 +50,8 @@ public abstract class HistoryLogEntryImpl extends EObjectImpl implements History
     protected String timestamp = TIMESTAMP_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getUser() <em>User</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getUser() <em>User</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getUser()
      * @generated
      * @ordered
@@ -68,9 +59,8 @@ public abstract class HistoryLogEntryImpl extends EObjectImpl implements History
     protected static final String USER_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getUser() <em>User</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getUser() <em>User</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getUser()
      * @generated
      * @ordered
@@ -78,8 +68,8 @@ public abstract class HistoryLogEntryImpl extends EObjectImpl implements History
     protected String user = USER_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected HistoryLogEntryImpl() {
@@ -87,8 +77,8 @@ public abstract class HistoryLogEntryImpl extends EObjectImpl implements History
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -97,8 +87,8 @@ public abstract class HistoryLogEntryImpl extends EObjectImpl implements History
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getTimestamp() {
@@ -106,20 +96,21 @@ public abstract class HistoryLogEntryImpl extends EObjectImpl implements History
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setTimestamp(String newTimestamp) {
+    public void setTimestamp( String newTimestamp ) {
         String oldTimestamp = timestamp;
         timestamp = newTimestamp;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.HISTORY_LOG_ENTRY__TIMESTAMP, oldTimestamp, timestamp));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   HistoryPackage.HISTORY_LOG_ENTRY__TIMESTAMP, oldTimestamp,
+                                                                   timestamp));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getUser() {
@@ -127,24 +118,25 @@ public abstract class HistoryLogEntryImpl extends EObjectImpl implements History
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setUser(String newUser) {
+    public void setUser( String newUser ) {
         String oldUser = user;
         user = newUser;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, HistoryPackage.HISTORY_LOG_ENTRY__USER, oldUser, user));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   HistoryPackage.HISTORY_LOG_ENTRY__USER, oldUser, user));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.HISTORY_LOG_ENTRY__TIMESTAMP:
                 return getTimestamp();
@@ -155,12 +147,13 @@ public abstract class HistoryLogEntryImpl extends EObjectImpl implements History
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.HISTORY_LOG_ENTRY__TIMESTAMP:
                 setTimestamp((String)newValue);
@@ -173,12 +166,12 @@ public abstract class HistoryLogEntryImpl extends EObjectImpl implements History
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.HISTORY_LOG_ENTRY__TIMESTAMP:
                 setTimestamp(TIMESTAMP_EDEFAULT);
@@ -191,12 +184,12 @@ public abstract class HistoryLogEntryImpl extends EObjectImpl implements History
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case HistoryPackage.HISTORY_LOG_ENTRY__TIMESTAMP:
                 return TIMESTAMP_EDEFAULT == null ? timestamp != null : !TIMESTAMP_EDEFAULT.equals(timestamp);
@@ -207,8 +200,8 @@ public abstract class HistoryLogEntryImpl extends EObjectImpl implements History
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -224,4 +217,4 @@ public abstract class HistoryLogEntryImpl extends EObjectImpl implements History
         return result.toString();
     }
 
-} //HistoryLogEntryImpl
+} // HistoryLogEntryImpl

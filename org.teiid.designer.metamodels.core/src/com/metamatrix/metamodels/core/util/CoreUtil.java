@@ -21,14 +21,14 @@ public class CoreUtil {
 
     /**
      * Construct an instance of CoreUtil.
-     * 
      */
     private CoreUtil() {
         super();
     }
 
-    public static void removePropertyDescriptor( final List descriptors, final EStructuralFeature[] features ) {
-        if ( features == null || features.length == 0 || descriptors == null ) {
+    public static void removePropertyDescriptor( final List descriptors,
+                                                 final EStructuralFeature[] features ) {
+        if (features == null || features.length == 0 || descriptors == null) {
             return;
         }
         final Set featureSet = new HashSet();
@@ -36,30 +36,32 @@ public class CoreUtil {
             final EStructuralFeature feature = features[i];
             featureSet.add(feature);
         }
-        removePropertyDescriptor(descriptors,featureSet);
+        removePropertyDescriptor(descriptors, featureSet);
     }
 
-    public static void removePropertyDescriptor( final List descriptors, final Set features ) {
-        if ( features == null || features.size() == 0 || descriptors == null ) {
+    public static void removePropertyDescriptor( final List descriptors,
+                                                 final Set features ) {
+        if (features == null || features.size() == 0 || descriptors == null) {
             return;
         }
         final Iterator iter = descriptors.iterator();
         while (iter.hasNext()) {
             final ItemPropertyDescriptor desc = (ItemPropertyDescriptor)iter.next();
-            if ( features.contains(desc.getFeature(null)) ) {
+            if (features.contains(desc.getFeature(null))) {
                 iter.remove();
             }
         }
     }
 
-    public static void removePropertyDescriptor( final List descriptors, final EStructuralFeature feature ) {
-        if ( feature == null || descriptors == null ) {
+    public static void removePropertyDescriptor( final List descriptors,
+                                                 final EStructuralFeature feature ) { // NO_UCD
+        if (feature == null || descriptors == null) {
             return;
         }
         final Iterator iter = descriptors.iterator();
         while (iter.hasNext()) {
             final ItemPropertyDescriptor desc = (ItemPropertyDescriptor)iter.next();
-            if ( feature.equals(desc.getFeature(null)) ) {
+            if (feature.equals(desc.getFeature(null))) {
                 iter.remove();
             }
         }

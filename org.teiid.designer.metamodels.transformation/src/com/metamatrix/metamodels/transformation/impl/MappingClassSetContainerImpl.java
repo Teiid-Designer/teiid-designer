@@ -21,30 +21,24 @@ import com.metamatrix.metamodels.transformation.MappingClassSetContainer;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Mapping Class Set Container</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Mapping Class Set Container</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassSetContainerImpl#getMappingClassSets <em>Mapping Class Sets</em>}</li>
+ * <li>{@link com.metamatrix.metamodels.transformation.impl.MappingClassSetContainerImpl#getMappingClassSets <em>Mapping Class
+ * Sets</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class MappingClassSetContainerImpl extends EObjectImpl implements MappingClassSetContainer {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The cached value of the '{@link #getMappingClassSets() <em>Mapping Class Sets</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getMappingClassSets() <em>Mapping Class Sets</em>}' containment reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getMappingClassSets()
      * @generated
      * @ordered
@@ -52,8 +46,8 @@ public class MappingClassSetContainerImpl extends EObjectImpl implements Mapping
     protected EList mappingClassSets = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MappingClassSetContainerImpl() {
@@ -61,8 +55,8 @@ public class MappingClassSetContainerImpl extends EObjectImpl implements Mapping
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -71,24 +65,28 @@ public class MappingClassSetContainerImpl extends EObjectImpl implements Mapping
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList getMappingClassSets() {
         if (mappingClassSets == null) {
-            mappingClassSets = new EObjectContainmentEList(MappingClassSet.class, this, TransformationPackage.MAPPING_CLASS_SET_CONTAINER__MAPPING_CLASS_SETS);
+            mappingClassSets = new EObjectContainmentEList(MappingClassSet.class, this,
+                                                           TransformationPackage.MAPPING_CLASS_SET_CONTAINER__MAPPING_CLASS_SETS);
         }
         return mappingClassSets;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case TransformationPackage.MAPPING_CLASS_SET_CONTAINER__MAPPING_CLASS_SETS:
@@ -101,12 +99,13 @@ public class MappingClassSetContainerImpl extends EObjectImpl implements Mapping
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS_SET_CONTAINER__MAPPING_CLASS_SETS:
                 return getMappingClassSets();
@@ -115,12 +114,13 @@ public class MappingClassSetContainerImpl extends EObjectImpl implements Mapping
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS_SET_CONTAINER__MAPPING_CLASS_SETS:
                 getMappingClassSets().clear();
@@ -131,12 +131,12 @@ public class MappingClassSetContainerImpl extends EObjectImpl implements Mapping
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS_SET_CONTAINER__MAPPING_CLASS_SETS:
                 getMappingClassSets().clear();
@@ -146,12 +146,12 @@ public class MappingClassSetContainerImpl extends EObjectImpl implements Mapping
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case TransformationPackage.MAPPING_CLASS_SET_CONTAINER__MAPPING_CLASS_SETS:
                 return mappingClassSets != null && !mappingClassSets.isEmpty();
@@ -159,4 +159,4 @@ public class MappingClassSetContainerImpl extends EObjectImpl implements Mapping
         return eDynamicIsSet(eFeature);
     }
 
-} //MappingClassSetContainerImpl
+} // MappingClassSetContainerImpl

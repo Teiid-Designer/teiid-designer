@@ -65,316 +65,307 @@ import com.metamatrix.metamodels.transformation.XQueryTransformation;
 import com.metamatrix.metamodels.transformation.XQueryTransformationMappingRoot;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Package</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class TransformationPackageImpl extends EPackageImpl implements TransformationPackage {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass transformationContainerEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass sqlTransformationEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass transformationMappingRootEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass fragmentMappingRootEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass treeMappingRootEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass mappingClassEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass mappingClassColumnEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass mappingClassObjectEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass stagingTableEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass mappingClassSetEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass mappingClassSetContainerEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass inputParameterEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass inputSetEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass inputBindingEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass dataFlowMappingRootEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass dataFlowNodeEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass dataFlowLinkEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass expressionEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass targetNodeEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass sourceNodeEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass abstractOperationNodeEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass operationNodeGroupEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass operationNodeEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass joinNodeEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass unionNodeEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass projectionNodeEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass filterNodeEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass groupingNodeEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass dupRemovalNodeEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass sortNodeEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass sqlNodeEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass expressionOwnerEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass xQueryTransformationMappingRootEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass xQueryTransformationEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EEnum recursionErrorModeEEnum = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EEnum joinTypeEEnum = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EEnum sortDirectionEEnum = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EDataType listEDataType = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass transformationMappingEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass sqlAliasEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private EClass sqlTransformationMappingRootEClass = null;
 
     /**
-     * Creates an instance of the model <b>Package</b>, registered with
-     * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
-     * package URI value.
-     * <p>Note: the correct way to create the package is via the static
-     * factory method {@link #init init()}, which also performs
-     * initialization of the package, or returns the registered package,
-     * if one already exists.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
+     * EPackage.Registry} by the package package URI value.
+     * <p>
+     * Note: the correct way to create the package is via the static factory method {@link #init init()}, which also performs
+     * initialization of the package, or returns the registered package, if one already exists. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see org.eclipse.emf.ecore.EPackage.Registry
      * @see com.metamatrix.metamodels.transformation.TransformationPackage#eNS_URI
      * @see #init()
@@ -385,29 +376,24 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private static boolean isInited = false;
 
     /**
-     * Creates, registers, and initializes the <b>Package</b> for this
-     * model, and for any others upon which it depends.  Simple
-     * dependencies are satisfied by calling this method on all
-     * dependent packages before doing anything else.  This method drives
-     * initialization for interdependent packages directly, in parallel
-     * with this package, itself.
-     * <p>Of this package and its interdependencies, all packages which
-     * have not yet been registered by their URI values are first created
-     * and registered.  The packages are then initialized in two steps:
-     * meta-model objects for all of the packages are created before any
-     * are initialized, since one package's meta-model objects may refer to
-     * those of another.
-     * <p>Invocation of this method will not affect any packages that have
-     * already been initialized.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends. Simple
+     * dependencies are satisfied by calling this method on all dependent packages before doing anything else. This method drives
+     * initialization for interdependent packages directly, in parallel with this package, itself.
+     * <p>
+     * Of this package and its interdependencies, all packages which have not yet been registered by their URI values are first
+     * created and registered. The packages are then initialized in two steps: meta-model objects for all of the packages are
+     * created before any are initialized, since one package's meta-model objects may refer to those of another.
+     * <p>
+     * Invocation of this method will not affect any packages that have already been initialized. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #eNS_URI
      * @see #createPackageContents()
      * @see #initializePackageContents()
@@ -440,8 +426,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getTransformationContainer() {
@@ -449,8 +435,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getTransformationContainer_TransformationMappings() {
@@ -458,8 +444,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getSqlTransformation() {
@@ -467,8 +453,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getSqlTransformation_SelectSql() {
@@ -476,8 +462,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getSqlTransformation_InsertSql() {
@@ -485,8 +471,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getSqlTransformation_UpdateSql() {
@@ -494,8 +480,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getSqlTransformation_DeleteSql() {
@@ -503,8 +489,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getSqlTransformation_InsertAllowed() {
@@ -512,8 +498,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getSqlTransformation_UpdateAllowed() {
@@ -521,8 +507,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getSqlTransformation_DeleteAllowed() {
@@ -530,8 +516,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getSqlTransformation_OutputLocked() {
@@ -539,8 +525,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getSqlTransformation_InsertSqlDefault() {
@@ -548,8 +534,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getSqlTransformation_UpdateSqlDefault() {
@@ -557,8 +543,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getSqlTransformation_DeleteSqlDefault() {
@@ -566,8 +552,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getSqlTransformation_Aliases() {
@@ -575,8 +561,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getTransformationMappingRoot() {
@@ -584,8 +570,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getTransformationMappingRoot_Target() {
@@ -593,8 +579,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getFragmentMappingRoot() {
@@ -602,8 +588,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getTreeMappingRoot() {
@@ -611,8 +597,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getMappingClass() {
@@ -620,8 +606,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getMappingClass_Recursive() {
@@ -629,8 +615,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getMappingClass_RecursionAllowed() {
@@ -638,8 +624,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getMappingClass_RecursionCriteria() {
@@ -647,8 +633,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getMappingClass_RecursionLimit() {
@@ -656,8 +642,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getMappingClass_RecursionLimitErrorMode() {
@@ -665,8 +651,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getMappingClass_Columns() {
@@ -674,8 +660,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getMappingClass_MappingClassSet() {
@@ -683,8 +669,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getMappingClass_InputSet() {
@@ -692,8 +678,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getMappingClassColumn() {
@@ -701,8 +687,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getMappingClassColumn_Type() {
@@ -710,8 +696,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getMappingClassColumn_MappingClass() {
@@ -719,8 +705,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getMappingClassObject() {
@@ -728,8 +714,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getMappingClassObject_Name() {
@@ -737,8 +723,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getStagingTable() {
@@ -746,8 +732,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getMappingClassSet() {
@@ -755,8 +741,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getMappingClassSet_MappingClasses() {
@@ -764,8 +750,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getMappingClassSet_Target() {
@@ -773,8 +759,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getMappingClassSet_InputBinding() {
@@ -782,8 +768,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getMappingClassSetContainer() {
@@ -791,8 +777,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getMappingClassSetContainer_MappingClassSets() {
@@ -800,8 +786,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getInputParameter() {
@@ -809,8 +795,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getInputParameter_Name() {
@@ -818,8 +804,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getInputParameter_InputSet() {
@@ -827,8 +813,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getInputParameter_Type() {
@@ -836,8 +822,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getInputSet() {
@@ -845,8 +831,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getInputSet_MappingClass() {
@@ -854,8 +840,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getInputSet_InputParameters() {
@@ -863,8 +849,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getInputBinding() {
@@ -872,8 +858,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getInputBinding_MappingClassSet() {
@@ -881,8 +867,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getInputBinding_InputParameter() {
@@ -890,8 +876,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getInputBinding_MappingClassColumn() {
@@ -899,8 +885,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getDataFlowMappingRoot() {
@@ -908,8 +894,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getDataFlowMappingRoot_AllowsOptimization() {
@@ -917,8 +903,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getDataFlowMappingRoot_Nodes() {
@@ -926,8 +912,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getDataFlowMappingRoot_Links() {
@@ -935,8 +921,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getDataFlowNode() {
@@ -944,8 +930,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getDataFlowNode_Name() {
@@ -953,8 +939,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getDataFlowNode_Owner() {
@@ -962,8 +948,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getDataFlowNode_InputLinks() {
@@ -971,8 +957,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getDataFlowNode_OutputLinks() {
@@ -980,8 +966,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getDataFlowLink() {
@@ -989,8 +975,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getDataFlowLink_OutputNode() {
@@ -998,8 +984,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getDataFlowLink_InputNode() {
@@ -1007,8 +993,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getDataFlowLink_Owner() {
@@ -1016,8 +1002,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getExpression() {
@@ -1025,8 +1011,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getExpression_Value() {
@@ -1034,8 +1020,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getExpression_Owner() {
@@ -1043,8 +1029,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getTargetNode() {
@@ -1052,8 +1038,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getTargetNode_Target() {
@@ -1061,8 +1047,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getSourceNode() {
@@ -1070,8 +1056,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getSourceNode_Source() {
@@ -1079,8 +1065,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getAbstractOperationNode() {
@@ -1088,8 +1074,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getAbstractOperationNode_NodeGroup() {
@@ -1097,8 +1083,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getOperationNodeGroup() {
@@ -1106,8 +1092,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getOperationNodeGroup_Contents() {
@@ -1115,8 +1101,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getOperationNode() {
@@ -1124,8 +1110,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getJoinNode() {
@@ -1133,8 +1119,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getJoinNode_Type() {
@@ -1142,8 +1128,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getUnionNode() {
@@ -1151,8 +1137,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getProjectionNode() {
@@ -1160,8 +1146,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getFilterNode() {
@@ -1169,8 +1155,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getGroupingNode() {
@@ -1178,8 +1164,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getDupRemovalNode() {
@@ -1187,8 +1173,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getSortNode() {
@@ -1196,8 +1182,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getSqlNode() {
@@ -1205,8 +1191,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getExpressionOwner() {
@@ -1214,8 +1200,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getExpressionOwner_Expressions() {
@@ -1223,8 +1209,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getXQueryTransformationMappingRoot() {
@@ -1232,8 +1218,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getXQueryTransformation() {
@@ -1241,8 +1227,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getXQueryTransformation_Expression() {
@@ -1250,8 +1236,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EEnum getRecursionErrorMode() {
@@ -1259,8 +1245,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EEnum getJoinType() {
@@ -1268,8 +1254,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EEnum getSortDirection() {
@@ -1277,8 +1263,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EDataType getList() {
@@ -1286,8 +1272,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getTransformationMapping() {
@@ -1295,8 +1281,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getSqlAlias() {
@@ -1304,8 +1290,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EAttribute getSqlAlias_Alias() {
@@ -1313,8 +1299,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getSqlAlias_AliasedObject() {
@@ -1322,8 +1308,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EReference getSqlAlias_SqlTransformation() {
@@ -1331,8 +1317,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EClass getSqlTransformationMappingRoot() {
@@ -1340,8 +1326,8 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public TransformationFactory getTransformationFactory() {
@@ -1349,17 +1335,16 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private boolean isCreated = false;
 
     /**
-     * Creates the meta-model objects for the package.  This method is
-     * guarded to have no affect on any invocation but its first.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Creates the meta-model objects for the package. This method is guarded to have no affect on any invocation but its first.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void createPackageContents() {
@@ -1510,17 +1495,16 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     private boolean isInitialized = false;
 
     /**
-     * Complete the initialization of the package and its meta-model.  This
-     * method is guarded to have no affect on any invocation but its first.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Complete the initialization of the package and its meta-model. This method is guarded to have no affect on any invocation
+     * but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void initializePackageContents() {
@@ -1565,84 +1549,225 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
         xQueryTransformationEClass.getESuperTypes().add(theMappingPackage.getMappingHelper());
 
         // Initialize classes and features; add operations and parameters
-        initEClass(transformationContainerEClass, TransformationContainer.class, "TransformationContainer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getTransformationContainer_TransformationMappings(), this.getTransformationMappingRoot(), null, "transformationMappings", null, 0, -1, TransformationContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(transformationContainerEClass,
+                   TransformationContainer.class,
+                   "TransformationContainer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getTransformationContainer_TransformationMappings(),
+                       this.getTransformationMappingRoot(),
+                       null,
+                       "transformationMappings", null, 0, -1, TransformationContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(sqlTransformationEClass, SqlTransformation.class, "SqlTransformation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEAttribute(getSqlTransformation_SelectSql(), ecorePackage.getEString(), "selectSql", null, 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSqlTransformation_InsertSql(), ecorePackage.getEString(), "insertSql", null, 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSqlTransformation_UpdateSql(), ecorePackage.getEString(), "updateSql", null, 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSqlTransformation_DeleteSql(), ecorePackage.getEString(), "deleteSql", null, 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getSqlTransformation_InsertAllowed(), ecorePackage.getEBoolean(), "insertAllowed", "true", 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getSqlTransformation_UpdateAllowed(), ecorePackage.getEBoolean(), "updateAllowed", "true", 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getSqlTransformation_DeleteAllowed(), ecorePackage.getEBoolean(), "deleteAllowed", "true", 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getSqlTransformation_OutputLocked(), ecorePackage.getEBoolean(), "outputLocked", "false", 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getSqlTransformation_InsertSqlDefault(), ecorePackage.getEBoolean(), "insertSqlDefault", "true", 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getSqlTransformation_UpdateSqlDefault(), ecorePackage.getEBoolean(), "updateSqlDefault", "true", 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getSqlTransformation_DeleteSqlDefault(), ecorePackage.getEBoolean(), "deleteSqlDefault", "true", 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEReference(getSqlTransformation_Aliases(), this.getSqlAlias(), this.getSqlAlias_SqlTransformation(), "aliases", null, 0, -1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(sqlTransformationEClass,
+                   SqlTransformation.class,
+                   "SqlTransformation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEAttribute(getSqlTransformation_SelectSql(),
+                       ecorePackage.getEString(),
+                       "selectSql", null, 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSqlTransformation_InsertSql(),
+                       ecorePackage.getEString(),
+                       "insertSql", null, 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSqlTransformation_UpdateSql(),
+                       ecorePackage.getEString(),
+                       "updateSql", null, 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSqlTransformation_DeleteSql(),
+                       ecorePackage.getEString(),
+                       "deleteSql", null, 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSqlTransformation_InsertAllowed(),
+                       ecorePackage.getEBoolean(),
+                       "insertAllowed", "true", 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getSqlTransformation_UpdateAllowed(),
+                       ecorePackage.getEBoolean(),
+                       "updateAllowed", "true", 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getSqlTransformation_DeleteAllowed(),
+                       ecorePackage.getEBoolean(),
+                       "deleteAllowed", "true", 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getSqlTransformation_OutputLocked(),
+                       ecorePackage.getEBoolean(),
+                       "outputLocked", "false", 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getSqlTransformation_InsertSqlDefault(),
+                       ecorePackage.getEBoolean(),
+                       "insertSqlDefault", "true", 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getSqlTransformation_UpdateSqlDefault(),
+                       ecorePackage.getEBoolean(),
+                       "updateSqlDefault", "true", 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getSqlTransformation_DeleteSqlDefault(),
+                       ecorePackage.getEBoolean(),
+                       "deleteSqlDefault", "true", 0, 1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEReference(getSqlTransformation_Aliases(),
+                       this.getSqlAlias(),
+                       this.getSqlAlias_SqlTransformation(),
+                       "aliases", null, 0, -1, SqlTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(transformationMappingRootEClass, TransformationMappingRoot.class, "TransformationMappingRoot", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getTransformationMappingRoot_Target(), theEcorePackage.getEObject(), null, "target", null, 0, 1, TransformationMappingRoot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(transformationMappingRootEClass,
+                   TransformationMappingRoot.class,
+                   "TransformationMappingRoot", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getTransformationMappingRoot_Target(),
+                       theEcorePackage.getEObject(),
+                       null,
+                       "target", null, 0, 1, TransformationMappingRoot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(transformationMappingEClass, TransformationMapping.class, "TransformationMapping", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEClass(transformationMappingEClass,
+                   TransformationMapping.class,
+                   "TransformationMapping", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
         initEClass(sqlAliasEClass, SqlAlias.class, "SqlAlias", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEAttribute(getSqlAlias_Alias(), ecorePackage.getEString(), "alias", null, 0, 1, SqlAlias.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getSqlAlias_AliasedObject(), theEcorePackage.getEObject(), null, "aliasedObject", null, 1, 1, SqlAlias.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getSqlAlias_SqlTransformation(), this.getSqlTransformation(), this.getSqlTransformation_Aliases(), "sqlTransformation", null, 0, 1, SqlAlias.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getSqlAlias_Alias(),
+                       ecorePackage.getEString(),
+                       "alias", null, 0, 1, SqlAlias.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getSqlAlias_AliasedObject(),
+                       theEcorePackage.getEObject(),
+                       null,
+                       "aliasedObject", null, 1, 1, SqlAlias.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getSqlAlias_SqlTransformation(),
+                       this.getSqlTransformation(),
+                       this.getSqlTransformation_Aliases(),
+                       "sqlTransformation", null, 0, 1, SqlAlias.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(sqlTransformationMappingRootEClass, SqlTransformationMappingRoot.class, "SqlTransformationMappingRoot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEClass(sqlTransformationMappingRootEClass,
+                   SqlTransformationMappingRoot.class,
+                   "SqlTransformationMappingRoot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-        initEClass(fragmentMappingRootEClass, FragmentMappingRoot.class, "FragmentMappingRoot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEClass(fragmentMappingRootEClass,
+                   FragmentMappingRoot.class,
+                   "FragmentMappingRoot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-        initEClass(treeMappingRootEClass, TreeMappingRoot.class, "TreeMappingRoot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEClass(treeMappingRootEClass,
+                   TreeMappingRoot.class,
+                   "TreeMappingRoot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-        initEClass(mappingClassEClass, MappingClass.class, "MappingClass", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEAttribute(getMappingClass_Recursive(), ecorePackage.getEBoolean(), "recursive", "false", 0, 1, MappingClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getMappingClass_RecursionAllowed(), ecorePackage.getEBoolean(), "recursionAllowed", "false", 0, 1, MappingClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getMappingClass_RecursionCriteria(), ecorePackage.getEString(), "recursionCriteria", null, 0, 1, MappingClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEAttribute(getMappingClass_RecursionLimit(), ecorePackage.getEInt(), "recursionLimit", "5", 0, 1, MappingClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEAttribute(getMappingClass_RecursionLimitErrorMode(), this.getRecursionErrorMode(), "recursionLimitErrorMode", "THROW", 0, 1, MappingClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEReference(getMappingClass_Columns(), this.getMappingClassColumn(), this.getMappingClassColumn_MappingClass(), "columns", null, 1, -1, MappingClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getMappingClass_MappingClassSet(), this.getMappingClassSet(), this.getMappingClassSet_MappingClasses(), "mappingClassSet", null, 0, 1, MappingClass.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getMappingClass_InputSet(), this.getInputSet(), this.getInputSet_MappingClass(), "inputSet", null, 0, 1, MappingClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(mappingClassEClass,
+                   MappingClass.class,
+                   "MappingClass", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEAttribute(getMappingClass_Recursive(),
+                       ecorePackage.getEBoolean(),
+                       "recursive", "false", 0, 1, MappingClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getMappingClass_RecursionAllowed(),
+                       ecorePackage.getEBoolean(),
+                       "recursionAllowed", "false", 0, 1, MappingClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getMappingClass_RecursionCriteria(),
+                       ecorePackage.getEString(),
+                       "recursionCriteria", null, 0, 1, MappingClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getMappingClass_RecursionLimit(),
+                       ecorePackage.getEInt(),
+                       "recursionLimit", "5", 0, 1, MappingClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEAttribute(getMappingClass_RecursionLimitErrorMode(),
+                       this.getRecursionErrorMode(),
+                       "recursionLimitErrorMode", "THROW", 0, 1, MappingClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEReference(getMappingClass_Columns(),
+                       this.getMappingClassColumn(),
+                       this.getMappingClassColumn_MappingClass(),
+                       "columns", null, 1, -1, MappingClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getMappingClass_MappingClassSet(),
+                       this.getMappingClassSet(),
+                       this.getMappingClassSet_MappingClasses(),
+                       "mappingClassSet", null, 0, 1, MappingClass.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getMappingClass_InputSet(),
+                       this.getInputSet(),
+                       this.getInputSet_MappingClass(),
+                       "inputSet", null, 0, 1, MappingClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(mappingClassColumnEClass, MappingClassColumn.class, "MappingClassColumn", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getMappingClassColumn_MappingClass(), this.getMappingClass(), this.getMappingClass_Columns(), "mappingClass", null, 1, 1, MappingClassColumn.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getMappingClassColumn_Type(), theEcorePackage.getEObject(), null, "type", null, 1, 1, MappingClassColumn.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(mappingClassColumnEClass,
+                   MappingClassColumn.class,
+                   "MappingClassColumn", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getMappingClassColumn_MappingClass(),
+                       this.getMappingClass(),
+                       this.getMappingClass_Columns(),
+                       "mappingClass", null, 1, 1, MappingClassColumn.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getMappingClassColumn_Type(),
+                       theEcorePackage.getEObject(),
+                       null,
+                       "type", null, 1, 1, MappingClassColumn.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(mappingClassObjectEClass, MappingClassObject.class, "MappingClassObject", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEAttribute(getMappingClassObject_Name(), ecorePackage.getEString(), "name", null, 0, 1, MappingClassObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(mappingClassObjectEClass,
+                   MappingClassObject.class,
+                   "MappingClassObject", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEAttribute(getMappingClassObject_Name(),
+                       ecorePackage.getEString(),
+                       "name", null, 0, 1, MappingClassObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(stagingTableEClass, StagingTable.class, "StagingTable", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEClass(stagingTableEClass,
+                   StagingTable.class,
+                   "StagingTable", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-        initEClass(mappingClassSetEClass, MappingClassSet.class, "MappingClassSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getMappingClassSet_MappingClasses(), this.getMappingClass(), this.getMappingClass_MappingClassSet(), "mappingClasses", null, 0, -1, MappingClassSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getMappingClassSet_Target(), theEcorePackage.getEObject(), null, "target", null, 0, 1, MappingClassSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getMappingClassSet_InputBinding(), this.getInputBinding(), this.getInputBinding_MappingClassSet(), "inputBinding", null, 0, -1, MappingClassSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(mappingClassSetEClass,
+                   MappingClassSet.class,
+                   "MappingClassSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getMappingClassSet_MappingClasses(),
+                       this.getMappingClass(),
+                       this.getMappingClass_MappingClassSet(),
+                       "mappingClasses", null, 0, -1, MappingClassSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getMappingClassSet_Target(),
+                       theEcorePackage.getEObject(),
+                       null,
+                       "target", null, 0, 1, MappingClassSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getMappingClassSet_InputBinding(),
+                       this.getInputBinding(),
+                       this.getInputBinding_MappingClassSet(),
+                       "inputBinding", null, 0, -1, MappingClassSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(mappingClassSetContainerEClass, MappingClassSetContainer.class, "MappingClassSetContainer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getMappingClassSetContainer_MappingClassSets(), this.getMappingClassSet(), null, "mappingClassSets", null, 0, -1, MappingClassSetContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(mappingClassSetContainerEClass,
+                   MappingClassSetContainer.class,
+                   "MappingClassSetContainer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getMappingClassSetContainer_MappingClassSets(),
+                       this.getMappingClassSet(),
+                       null,
+                       "mappingClassSets", null, 0, -1, MappingClassSetContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(inputParameterEClass, InputParameter.class, "InputParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEAttribute(getInputParameter_Name(), ecorePackage.getEString(), "name", null, 0, 1, InputParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getInputParameter_InputSet(), this.getInputSet(), this.getInputSet_InputParameters(), "inputSet", null, 1, 1, InputParameter.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getInputParameter_Type(), theEcorePackage.getEObject(), null, "type", null, 1, 1, InputParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(inputParameterEClass,
+                   InputParameter.class,
+                   "InputParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEAttribute(getInputParameter_Name(),
+                       ecorePackage.getEString(),
+                       "name", null, 0, 1, InputParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getInputParameter_InputSet(),
+                       this.getInputSet(),
+                       this.getInputSet_InputParameters(),
+                       "inputSet", null, 1, 1, InputParameter.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getInputParameter_Type(),
+                       theEcorePackage.getEObject(),
+                       null,
+                       "type", null, 1, 1, InputParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(inputSetEClass, InputSet.class, "InputSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getInputSet_MappingClass(), this.getMappingClass(), this.getMappingClass_InputSet(), "mappingClass", null, 1, 1, InputSet.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getInputSet_InputParameters(), this.getInputParameter(), this.getInputParameter_InputSet(), "inputParameters", null, 0, -1, InputSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getInputSet_MappingClass(),
+                       this.getMappingClass(),
+                       this.getMappingClass_InputSet(),
+                       "mappingClass", null, 1, 1, InputSet.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getInputSet_InputParameters(),
+                       this.getInputParameter(),
+                       this.getInputParameter_InputSet(),
+                       "inputParameters", null, 0, -1, InputSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(inputBindingEClass, InputBinding.class, "InputBinding", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getInputBinding_MappingClassSet(), this.getMappingClassSet(), this.getMappingClassSet_InputBinding(), "mappingClassSet", null, 1, 1, InputBinding.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getInputBinding_InputParameter(), this.getInputParameter(), null, "inputParameter", null, 1, 1, InputBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getInputBinding_MappingClassColumn(), this.getMappingClassColumn(), null, "mappingClassColumn", null, 1, 1, InputBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(inputBindingEClass,
+                   InputBinding.class,
+                   "InputBinding", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getInputBinding_MappingClassSet(),
+                       this.getMappingClassSet(),
+                       this.getMappingClassSet_InputBinding(),
+                       "mappingClassSet", null, 1, 1, InputBinding.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getInputBinding_InputParameter(),
+                       this.getInputParameter(),
+                       null,
+                       "inputParameter", null, 1, 1, InputBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getInputBinding_MappingClassColumn(),
+                       this.getMappingClassColumn(),
+                       null,
+                       "mappingClassColumn", null, 1, 1, InputBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(dataFlowMappingRootEClass, DataFlowMappingRoot.class, "DataFlowMappingRoot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEAttribute(getDataFlowMappingRoot_AllowsOptimization(), ecorePackage.getEBoolean(), "allowsOptimization", "false", 0, 1, DataFlowMappingRoot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-        initEReference(getDataFlowMappingRoot_Nodes(), this.getDataFlowNode(), this.getDataFlowNode_Owner(), "nodes", null, 1, -1, DataFlowMappingRoot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getDataFlowMappingRoot_Links(), this.getDataFlowLink(), this.getDataFlowLink_Owner(), "links", null, 1, -1, DataFlowMappingRoot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(dataFlowMappingRootEClass,
+                   DataFlowMappingRoot.class,
+                   "DataFlowMappingRoot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEAttribute(getDataFlowMappingRoot_AllowsOptimization(),
+                       ecorePackage.getEBoolean(),
+                       "allowsOptimization", "false", 0, 1, DataFlowMappingRoot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+        initEReference(getDataFlowMappingRoot_Nodes(),
+                       this.getDataFlowNode(),
+                       this.getDataFlowNode_Owner(),
+                       "nodes", null, 1, -1, DataFlowMappingRoot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getDataFlowMappingRoot_Links(),
+                       this.getDataFlowLink(),
+                       this.getDataFlowLink_Owner(),
+                       "links", null, 1, -1, DataFlowMappingRoot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         addEOperation(dataFlowMappingRootEClass, this.getList(), "getSourceNodes"); //$NON-NLS-1$
 
@@ -1650,11 +1775,24 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 
         addEOperation(dataFlowMappingRootEClass, ecorePackage.getEString(), "getResultantSql"); //$NON-NLS-1$
 
-        initEClass(dataFlowNodeEClass, DataFlowNode.class, "DataFlowNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEAttribute(getDataFlowNode_Name(), ecorePackage.getEString(), "name", null, 0, 1, DataFlowNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getDataFlowNode_Owner(), this.getDataFlowMappingRoot(), this.getDataFlowMappingRoot_Nodes(), "owner", null, 0, 1, DataFlowNode.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getDataFlowNode_InputLinks(), this.getDataFlowLink(), this.getDataFlowLink_OutputNode(), "inputLinks", null, 0, -1, DataFlowNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getDataFlowNode_OutputLinks(), this.getDataFlowLink(), this.getDataFlowLink_InputNode(), "outputLinks", null, 0, -1, DataFlowNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(dataFlowNodeEClass,
+                   DataFlowNode.class,
+                   "DataFlowNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEAttribute(getDataFlowNode_Name(),
+                       ecorePackage.getEString(),
+                       "name", null, 0, 1, DataFlowNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getDataFlowNode_Owner(),
+                       this.getDataFlowMappingRoot(),
+                       this.getDataFlowMappingRoot_Nodes(),
+                       "owner", null, 0, 1, DataFlowNode.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getDataFlowNode_InputLinks(),
+                       this.getDataFlowLink(),
+                       this.getDataFlowLink_OutputNode(),
+                       "inputLinks", null, 0, -1, DataFlowNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getDataFlowNode_OutputLinks(),
+                       this.getDataFlowLink(),
+                       this.getDataFlowLink_InputNode(),
+                       "outputLinks", null, 0, -1, DataFlowNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         addEOperation(dataFlowNodeEClass, this.getList(), "getInputNodes"); //$NON-NLS-1$
 
@@ -1664,30 +1802,64 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 
         addEOperation(dataFlowNodeEClass, ecorePackage.getEString(), "getSqlString"); //$NON-NLS-1$
 
-        initEClass(dataFlowLinkEClass, DataFlowLink.class, "DataFlowLink", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getDataFlowLink_OutputNode(), this.getDataFlowNode(), this.getDataFlowNode_InputLinks(), "outputNode", null, 1, 1, DataFlowLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getDataFlowLink_InputNode(), this.getDataFlowNode(), this.getDataFlowNode_OutputLinks(), "inputNode", null, 1, 1, DataFlowLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getDataFlowLink_Owner(), this.getDataFlowMappingRoot(), this.getDataFlowMappingRoot_Links(), "owner", null, 0, 1, DataFlowLink.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(dataFlowLinkEClass,
+                   DataFlowLink.class,
+                   "DataFlowLink", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getDataFlowLink_OutputNode(),
+                       this.getDataFlowNode(),
+                       this.getDataFlowNode_InputLinks(),
+                       "outputNode", null, 1, 1, DataFlowLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getDataFlowLink_InputNode(),
+                       this.getDataFlowNode(),
+                       this.getDataFlowNode_OutputLinks(),
+                       "inputNode", null, 1, 1, DataFlowLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getDataFlowLink_Owner(),
+                       this.getDataFlowMappingRoot(),
+                       this.getDataFlowMappingRoot_Links(),
+                       "owner", null, 0, 1, DataFlowLink.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(expressionEClass, Expression.class, "Expression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEAttribute(getExpression_Value(), ecorePackage.getEString(), "value", null, 0, 1, Expression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-        initEReference(getExpression_Owner(), this.getExpressionOwner(), this.getExpressionOwner_Expressions(), "owner", null, 0, 1, Expression.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getExpression_Value(),
+                       ecorePackage.getEString(),
+                       "value", null, 0, 1, Expression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getExpression_Owner(),
+                       this.getExpressionOwner(),
+                       this.getExpressionOwner_Expressions(),
+                       "owner", null, 0, 1, Expression.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(targetNodeEClass, TargetNode.class, "TargetNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getTargetNode_Target(), theEcorePackage.getEObject(), null, "target", null, 0, 1, TargetNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getTargetNode_Target(),
+                       theEcorePackage.getEObject(),
+                       null,
+                       "target", null, 0, 1, TargetNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(sourceNodeEClass, SourceNode.class, "SourceNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getSourceNode_Source(), theEcorePackage.getEObject(), null, "source", null, 0, 1, SourceNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getSourceNode_Source(),
+                       theEcorePackage.getEObject(),
+                       null,
+                       "source", null, 0, 1, SourceNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(abstractOperationNodeEClass, AbstractOperationNode.class, "AbstractOperationNode", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getAbstractOperationNode_NodeGroup(), this.getOperationNodeGroup(), this.getOperationNodeGroup_Contents(), "nodeGroup", null, 0, 1, AbstractOperationNode.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(abstractOperationNodeEClass,
+                   AbstractOperationNode.class,
+                   "AbstractOperationNode", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getAbstractOperationNode_NodeGroup(),
+                       this.getOperationNodeGroup(),
+                       this.getOperationNodeGroup_Contents(),
+                       "nodeGroup", null, 0, 1, AbstractOperationNode.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(operationNodeGroupEClass, OperationNodeGroup.class, "OperationNodeGroup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getOperationNodeGroup_Contents(), this.getAbstractOperationNode(), this.getAbstractOperationNode_NodeGroup(), "contents", null, 0, -1, OperationNodeGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(operationNodeGroupEClass,
+                   OperationNodeGroup.class,
+                   "OperationNodeGroup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getOperationNodeGroup_Contents(),
+                       this.getAbstractOperationNode(),
+                       this.getAbstractOperationNode_NodeGroup(),
+                       "contents", null, 0, -1, OperationNodeGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         addEOperation(operationNodeGroupEClass, this.getList(), "getAllContents"); //$NON-NLS-1$
 
-        initEClass(operationNodeEClass, OperationNode.class, "OperationNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEClass(operationNodeEClass,
+                   OperationNode.class,
+                   "OperationNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
         addEOperation(operationNodeEClass, ecorePackage.getEInt(), "getMinInputs"); //$NON-NLS-1$
 
@@ -1698,23 +1870,31 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
         addEOperation(operationNodeEClass, ecorePackage.getEInt(), "getMaxOutputs"); //$NON-NLS-1$
 
         initEClass(joinNodeEClass, JoinNode.class, "JoinNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEAttribute(getJoinNode_Type(), this.getJoinType(), "type", null, 0, 1, JoinNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEAttribute(getJoinNode_Type(),
+                       this.getJoinType(),
+                       "type", null, 0, 1, JoinNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         addEOperation(joinNodeEClass, ecorePackage.getEString(), "getCriteria"); //$NON-NLS-1$
 
         initEClass(unionNodeEClass, UnionNode.class, "UnionNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-        initEClass(projectionNodeEClass, ProjectionNode.class, "ProjectionNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEClass(projectionNodeEClass,
+                   ProjectionNode.class,
+                   "ProjectionNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
         initEClass(filterNodeEClass, FilterNode.class, "FilterNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
         addEOperation(filterNodeEClass, ecorePackage.getEString(), "getCriteria"); //$NON-NLS-1$
 
-        initEClass(groupingNodeEClass, GroupingNode.class, "GroupingNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEClass(groupingNodeEClass,
+                   GroupingNode.class,
+                   "GroupingNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
         addEOperation(groupingNodeEClass, ecorePackage.getEString(), "getGroupingColumns"); //$NON-NLS-1$
 
-        initEClass(dupRemovalNodeEClass, DupRemovalNode.class, "DupRemovalNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEClass(dupRemovalNodeEClass,
+                   DupRemovalNode.class,
+                   "DupRemovalNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
         addEOperation(dupRemovalNodeEClass, ecorePackage.getEString(), "getDistinct"); //$NON-NLS-1$
 
@@ -1724,13 +1904,24 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
 
         initEClass(sqlNodeEClass, SqlNode.class, "SqlNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-        initEClass(expressionOwnerEClass, ExpressionOwner.class, "ExpressionOwner", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEReference(getExpressionOwner_Expressions(), this.getExpression(), this.getExpression_Owner(), "expressions", null, 1, -1, ExpressionOwner.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(expressionOwnerEClass,
+                   ExpressionOwner.class,
+                   "ExpressionOwner", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEReference(getExpressionOwner_Expressions(),
+                       this.getExpression(),
+                       this.getExpression_Owner(),
+                       "expressions", null, 1, -1, ExpressionOwner.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-        initEClass(xQueryTransformationMappingRootEClass, XQueryTransformationMappingRoot.class, "XQueryTransformationMappingRoot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEClass(xQueryTransformationMappingRootEClass,
+                   XQueryTransformationMappingRoot.class,
+                   "XQueryTransformationMappingRoot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-        initEClass(xQueryTransformationEClass, XQueryTransformation.class, "XQueryTransformation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-        initEAttribute(getXQueryTransformation_Expression(), ecorePackage.getEString(), "expression", null, 0, 1, XQueryTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEClass(xQueryTransformationEClass,
+                   XQueryTransformation.class,
+                   "XQueryTransformation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+        initEAttribute(getXQueryTransformation_Expression(),
+                       ecorePackage.getEString(),
+                       "expression", null, 0, 1, XQueryTransformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         // Initialize enums and add enum literals
         initEEnum(recursionErrorModeEEnum, RecursionErrorMode.class, "RecursionErrorMode"); //$NON-NLS-1$
@@ -1756,4 +1947,4 @@ public class TransformationPackageImpl extends EPackageImpl implements Transform
         createResource(eNS_URI);
     }
 
-} //TransformationPackageImpl
+} // TransformationPackageImpl

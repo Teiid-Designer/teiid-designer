@@ -27,12 +27,6 @@ import com.metamatrix.metamodels.relationship.RelationshipType;
  * @generated
  */
 public class RelationshipRoleItemProvider extends RelationshipEntityItemProvider {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -91,7 +85,7 @@ public class RelationshipRoleItemProvider extends RelationshipEntityItemProvider
      * 
      * @generated
      */
-    protected void addStereotypePropertyDescriptorGen( Object object ) {
+    protected void addStereotypePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_RelationshipRole_stereotype_feature"), //$NON-NLS-1$
@@ -127,7 +121,7 @@ public class RelationshipRoleItemProvider extends RelationshipEntityItemProvider
      * 
      * @generated
      */
-    protected void addOrderedPropertyDescriptorGen( Object object ) {
+    protected void addOrderedPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_RelationshipRole_ordered_feature"), //$NON-NLS-1$
@@ -163,7 +157,7 @@ public class RelationshipRoleItemProvider extends RelationshipEntityItemProvider
      * 
      * @generated
      */
-    protected void addUniquePropertyDescriptorGen( Object object ) {
+    protected void addUniquePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_RelationshipRole_unique_feature"), //$NON-NLS-1$
@@ -199,7 +193,7 @@ public class RelationshipRoleItemProvider extends RelationshipEntityItemProvider
      * 
      * @generated
      */
-    protected void addNavigablePropertyDescriptorGen( Object object ) {
+    protected void addNavigablePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_RelationshipRole_navigable_feature"), //$NON-NLS-1$
@@ -235,7 +229,7 @@ public class RelationshipRoleItemProvider extends RelationshipEntityItemProvider
      * 
      * @generated
      */
-    protected void addLowerBoundPropertyDescriptorGen( Object object ) {
+    protected void addLowerBoundPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_RelationshipRole_lowerBound_feature"), //$NON-NLS-1$
@@ -271,7 +265,7 @@ public class RelationshipRoleItemProvider extends RelationshipEntityItemProvider
      * 
      * @generated
      */
-    protected void addUpperBoundPropertyDescriptorGen( Object object ) {
+    protected void addUpperBoundPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_RelationshipRole_upperBound_feature"), //$NON-NLS-1$
@@ -307,7 +301,7 @@ public class RelationshipRoleItemProvider extends RelationshipEntityItemProvider
      * 
      * @generated
      */
-    protected void addConstraintPropertyDescriptorGen( Object object ) {
+    protected void addConstraintPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_RelationshipRole_constraint_feature"), //$NON-NLS-1$
@@ -343,7 +337,7 @@ public class RelationshipRoleItemProvider extends RelationshipEntityItemProvider
      * 
      * @generated
      */
-    protected void addIncludeTypesPropertyDescriptorGen( Object object ) {
+    protected void addIncludeTypesPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_RelationshipRole_includeTypes_feature"), //$NON-NLS-1$
@@ -379,7 +373,7 @@ public class RelationshipRoleItemProvider extends RelationshipEntityItemProvider
      * 
      * @generated
      */
-    protected void addExcludeTypesPropertyDescriptorGen( Object object ) {
+    protected void addExcludeTypesPropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_RelationshipRole_excludeTypes_feature"), //$NON-NLS-1$
@@ -415,7 +409,7 @@ public class RelationshipRoleItemProvider extends RelationshipEntityItemProvider
      * 
      * @generated
      */
-    protected void addOppositeRolePropertyDescriptorGen( Object object ) {
+    protected void addOppositeRolePropertyDescriptorGen( Object object ) { // NO_UCD
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_RelationshipRole_oppositeRole_feature"), //$NON-NLS-1$
@@ -445,7 +439,7 @@ public class RelationshipRoleItemProvider extends RelationshipEntityItemProvider
      * 
      * @generated
      */
-    public Object getImageGen( Object object ) {
+    public Object getImageGen( Object object ) { // NO_UCD
         return getResourceLocator().getImage("full/obj16/RelationshipRole"); //$NON-NLS-1$
     }
 
@@ -478,7 +472,7 @@ public class RelationshipRoleItemProvider extends RelationshipEntityItemProvider
      * 
      * @generated
      */
-    public String getTextGen( Object object ) {
+    public String getTextGen( Object object ) { // NO_UCD
         String label = ((RelationshipRole)object).getName();
         return label == null || label.length() == 0 ? getString("_UI_RelationshipRole_type") : //$NON-NLS-1$
         getString("_UI_RelationshipRole_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
