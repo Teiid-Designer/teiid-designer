@@ -237,10 +237,6 @@ public class RelationalModelSelectorDialog extends ModelWorkspaceDialog implemen
         updateStatus(status);
     }
 
-    protected void registerControls() {
-        getTreeViewer().addSelectionChangedListener(this);
-    }
-
     @Override
     public void selectionChanged( SelectionChangedEvent event ) {
         super.selectionChanged(event);

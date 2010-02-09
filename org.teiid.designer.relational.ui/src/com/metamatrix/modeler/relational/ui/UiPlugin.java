@@ -7,8 +7,6 @@
  */
 package com.metamatrix.modeler.relational.ui;
 
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
@@ -38,12 +36,6 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants {
 		return UiPlugin.plugin;
 	}
 
-	/**
-	 * Returns the workspace instance.
-	 */
-	public static IWorkspace getWorkspace() {
-		return ResourcesPlugin.getWorkspace();
-	} 
     /** 
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
      * @since 4.3.2

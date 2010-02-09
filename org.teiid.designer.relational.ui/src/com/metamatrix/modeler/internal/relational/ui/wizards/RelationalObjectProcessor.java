@@ -72,8 +72,8 @@ public class RelationalObjectProcessor extends AbstractObjectProcessor {
     public static final int VIEW = RelationalRowFactory.VIEW;
     public static final int INDEX = RelationalRowFactory.INDEX;
     public static final int COLUMN = RelationalRowFactory.COLUMN;
-    public static final int UNIQUE_KEY = RelationalRowFactory.UNIQUE_KEY;
-    public static final int PRIMARY_KEY = RelationalRowFactory.PRIMARY_KEY;
+    
+    
 
     //============================================================================================================================
     // Static Methods

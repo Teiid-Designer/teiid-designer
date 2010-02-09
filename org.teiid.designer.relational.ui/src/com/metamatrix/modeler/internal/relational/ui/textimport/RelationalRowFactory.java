@@ -8,15 +8,11 @@
 package com.metamatrix.modeler.internal.relational.ui.textimport;
 
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.metamodels.relational.RelationalFactory;
 import com.metamatrix.metamodels.relational.util.RelationalTypeMappingImpl;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.types.DatatypeManager;
-import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 import com.metamatrix.modeler.tools.textimport.ui.wizards.IRowObject;
 
 /**
@@ -25,7 +21,7 @@ import com.metamatrix.modeler.tools.textimport.ui.wizards.IRowObject;
 public class RelationalRowFactory {
     private static final String NUMBER = "NUMBER"; //$NON-NLS-1$
     public static final int UNKNOWN = -1;
-    public static final int RESOURCE = 1;
+    
     public static final int CATALOG = 2;
     public static final int SCHEMA = 3;
     public static final int BASE_TABLE = 10;
@@ -48,9 +44,6 @@ public class RelationalRowFactory {
     private static final AllRelationalModelProcessor processor = new AllRelationalModelProcessor(
                                                                                                  RelationalFactory.eINSTANCE,
                                                                                                  RelationalTypeMappingImpl.getInstance());
-    private static final StringNameValidator nameValidator = new StringNameValidator();
-    List dataTypesList = new ArrayList();
-    final static DatatypeManager datatypeManager = ModelerCore.getWorkspaceDatatypeManager();
 
     /**
      * @since 4.2
@@ -141,14 +134,6 @@ public class RelationalRowFactory {
 
         return bidt;
 
-    }
-
-    public static String createValidName( final String input,
-                                          final boolean performValidityCheck ) {
-        String validName = nameValidator.createValidName(input, performValidityCheck);
-        if (validName != null) return validName;
-
-        return input;
     }
 
 }

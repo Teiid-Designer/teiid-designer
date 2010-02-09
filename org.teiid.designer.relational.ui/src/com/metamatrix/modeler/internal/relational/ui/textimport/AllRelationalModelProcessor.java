@@ -25,22 +25,6 @@ public class AllRelationalModelProcessor extends RelationalModelProcessorImpl {
     private static final String TIMESTAMP_TYPE_NAME = "TIMESTAMP("; //$NON-NLS-1$
     private static final String NUMBER_TYPE_NAME = "NUMBER"; //$NON-NLS-1$
     private static final String REF_CURSOR = "REF CURSOR"; //$NON-NLS-1$
-
-    /**
-     * Construct an instance of OracleModelProcessor.
-     * 
-     */
-    public AllRelationalModelProcessor() {
-        super();
-    }
-
-    /**
-     * Construct an instance of OracleModelProcessor.
-     * @param factory
-     */
-    public AllRelationalModelProcessor(final RelationalFactory factory) {
-        super(factory);
-    }
     
     /**
      * Construct an instance of OracleModelProcessor.
