@@ -70,8 +70,7 @@ import com.metamatrix.ui.table.CtrlClickListener;
  */
 
 public class NewModelWizardMetamodelPage extends WizardPage
-    implements InternalUiConstants.Widgets, UiConstants, UiConstants.ProductInfo, UiConstants.ProductInfo.Capabilities,
-    IModelerProductContexts {
+    implements InternalUiConstants.Widgets, UiConstants, IModelerProductContexts {
 
     protected final static String CHOOSE_A_METAMODEL = UiConstants.Util.getString("NewModelWizard.chooseAMetamodel"); //$NON-NLS-1$
     protected final static String CHOOSE_A_MODEL_TYPE = UiConstants.Util.getString("NewModelWizard.chooseAModelType"); //$NON-NLS-1$

@@ -72,7 +72,6 @@ import com.metamatrix.modeler.jdbc.relational.impl.RelationalModelProcessorImpl;
 import com.metamatrix.modeler.jdbc.ui.ModelerJdbcUiConstants;
 import com.metamatrix.modeler.jdbc.ui.wizards.IJdbcImportInfoProvider;
 import com.metamatrix.modeler.jdbc.ui.wizards.IJdbcImportPostProcessor;
-import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
@@ -83,8 +82,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
  * @since 4.0
  */
 public class JdbcImportWizard extends AbstractWizard
-    implements IDifferencingWizard, IJdbcImportInfoProvider, ModelerJdbcUiConstants, ModelerJdbcUiConstants.Images,
-    UiConstants.ProductInfo, UiConstants.ProductInfo.Capabilities {
+    implements IDifferencingWizard, IJdbcImportInfoProvider, ModelerJdbcUiConstants, ModelerJdbcUiConstants.Images {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(JdbcImportWizard.class);
 

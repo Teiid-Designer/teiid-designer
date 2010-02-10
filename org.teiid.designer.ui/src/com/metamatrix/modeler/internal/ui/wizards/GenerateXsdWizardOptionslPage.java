@@ -69,7 +69,7 @@ import com.metamatrix.ui.internal.widget.StatusLabel;
  */
 
 public class GenerateXsdWizardOptionslPage extends WizardPage
-    implements InternalUiConstants.Widgets, UiConstants, UiConstants.ProductInfo, UiConstants.ProductInfo.Capabilities {
+    implements InternalUiConstants.Widgets, UiConstants {
 
     private static final String XSD_EXT = ".xsd"; //$NON-NLS-1$
     private static final String XMI_EXT = ".xmi"; //$NON-NLS-1$

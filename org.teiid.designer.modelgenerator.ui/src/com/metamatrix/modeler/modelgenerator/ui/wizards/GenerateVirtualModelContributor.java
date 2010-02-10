@@ -17,7 +17,6 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.modelgenerator.ui.ModelGeneratorUiConstants;
-import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.wizards.INewModelWizardContributor;
 
 /**
@@ -25,8 +24,7 @@ import com.metamatrix.modeler.ui.wizards.INewModelWizardContributor;
  * a virtual model from a UML model.
  */
 public class GenerateVirtualModelContributor implements INewModelWizardContributor, 
-                                                        ModelGeneratorUiConstants,
-                                                        UiConstants.ProductInfo.Capabilities {
+                                                        ModelGeneratorUiConstants {
 
     //============================================================================================================================
     // Variables

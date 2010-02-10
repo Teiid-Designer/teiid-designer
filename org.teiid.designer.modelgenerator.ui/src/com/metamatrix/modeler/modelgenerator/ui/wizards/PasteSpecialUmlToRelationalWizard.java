@@ -23,7 +23,6 @@ import com.metamatrix.modeler.core.workspace.ModelProject;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.modelgenerator.ui.ModelGeneratorUiConstants;
 import com.metamatrix.modeler.modelgenerator.ui.ModelerModelGeneratorUiPlugin;
-import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
@@ -32,8 +31,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
  * @since 4.0
  */
 public final class PasteSpecialUmlToRelationalWizard extends AbstractWizard
-    implements INewWizard, InternalUiConstants.Widgets, StringUtil.Constants, ModelGeneratorUiConstants,
-    UiConstants.ProductInfo.Capabilities {
+    implements INewWizard, InternalUiConstants.Widgets, StringUtil.Constants, ModelGeneratorUiConstants {
 
     private static final String TITLE = Util.getString("PasteSpecialUmlToRelationalWizard.title"); //$NON-NLS-1$
 

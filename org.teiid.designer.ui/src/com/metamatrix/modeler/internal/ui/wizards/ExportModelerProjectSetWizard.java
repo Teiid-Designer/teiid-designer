@@ -72,7 +72,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 
 public final class ExportModelerProjectSetWizard extends AbstractWizard
     implements FileUtils.Constants, IExportWizard, InternalUiConstants.Widgets, PluginConstants.Images, StringUtil.Constants,
-    UiConstants, UiConstants.ProductInfo, UiConstants.ProductInfo.Capabilities {
+    UiConstants {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ExportModelerProjectSetWizard.class);
 

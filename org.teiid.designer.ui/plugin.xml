@@ -30,7 +30,6 @@
    <extension-point id="modelResourceAction" 			name="%modelResourceAction" 			schema="schema/modelResourceAction.exsd"/>
    <extension-point id="modelObjectSpecialAction" 		name="%modelObjectSpecialAction" 		schema="schema/modelObjectSpecialAction.exsd"/>
    <extension-point id="generalPreferenceContributor" 	name="%generalPreferenceContributor" 	schema="schema/generalPreferenceContributor.exsd"/>
-   <extension-point id="vetoableShutdownListener" 		name="%vetoableShutdownListener" 		schema="schema/vetoableShutdownListener.exsd"/>
 
 <!-- Model Project Nature -->
    <extension

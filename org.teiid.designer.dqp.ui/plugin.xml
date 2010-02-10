@@ -94,14 +94,6 @@
             name="com.metamatrix.modeler.internal.dqp.ui.jdbc.SqlResultSetProcessor">
         </class>
   </extension>
-<!-- Shutdown listener to alert user of VDB validation issues *** ONLY DIMENSION DESIGNER *** -->
-   <extension
-         id="dqpUiShutdownListener"
-         point="org.teiid.designer.ui.vetoableShutdownListener">
-      <class
-            name="com.metamatrix.modeler.dqp.ui.DqpUiShutdownListener">
-      </class>
-   </extension>
 <!-- Action to open the log file for a given Connection in SQLExplorer -->   
    <extension
         id="staledVDBChecker"

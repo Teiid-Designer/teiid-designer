@@ -76,7 +76,7 @@ import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
  * @since 4.0
  */
 public final class VdbEditor extends MultiPageEditorPart
-    implements IResourceChangeListener, VdbUiConstants, VdbUiConstants.ExtensionPoints, UiConstants.ProductInfo.Capabilities,
+    implements IResourceChangeListener, VdbUiConstants, VdbUiConstants.ExtensionPoints,
     IRevertable, IGotoMarker, ITextEditorExtension2 {
 
     static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(VdbEditor.class);

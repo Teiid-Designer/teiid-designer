@@ -22,7 +22,6 @@ public class FormUtil {
     //
     public static final String HTML_BEGIN = "<form><p>"; //$NON-NLS-1$
     public static final String HTML_END = "</p></form>"; //$NON-NLS-1$
-    public static final String HTML_NEWLINE = "<br/>"; //$NON-NLS-1$
 
     //
     // Utility Methods:

@@ -87,9 +87,6 @@ public interface UiConstants {
         String SYSTEM_CATALOG_VIEW = "views.systemModelView"; //$NON-NLS-1$
         String ECLIPSE_CHEAT_SHEET_VIEW = "org.eclipse.ui.cheatsheets.views.CheatSheetView";//$NON-NLS-1$
 
-        // Preference Pages
-        String MODELER_PREFERENCE_PAGE = PACKAGE_ID + "modelerPreferencePage"; //$NON-NLS-1$
-
         // Model Editor Pages
         String TABLE_EDITOR = "tableEditorPage"; //$NON-NLS-1$
         String TEXT_EDITOR = "textEditorPage"; //$NON-NLS-1$
@@ -178,13 +175,6 @@ public interface UiConstants {
             String ICON = "icon"; //$NON-NLS-1$
             String NAME = "name"; //$NON-NLS-1$
             String ID_ID = "id"; //$NON-NLS-1$
-
-            interface ContributionIds {
-                String JDBC = "com.metamatrix.modeler.internal.jdbc.ui.wizards.jdbcImportWizard"; //$NON-NLS-1$
-                String TEXT = "com.metamatrix.modeler.tools.textimport.ui.wizards.ImportTextWizard"; //$NON-NLS-1$
-                String XSD = "com.metamatrix.modeler.internal.xsd.ui.wizards.xsdFileSystemImportWizard"; //$NON-NLS-1$
-                String WSDL = "com.metamatrix.modeler.internal.webservice.ui.wizard.wsdlFileSystemImportWizard"; //$NON-NLS-1$
-            }
         }
 
         /** Constants for the ModelEditorPage extension point */
@@ -325,47 +315,6 @@ public interface UiConstants {
             String PREFERENCE_ID_ATTRIBUTE = "id"; //$NON-NLS-1$
             String PREFERENCE_CATEGORY_ID_ATTRIBUTE = "categoryId"; //$NON-NLS-1$
             String PREFERENCE_CONTRIBUTOR_CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
-        }
-
-        interface VetoableShutdownListener {
-            String ID = "vetoableShutdownListener"; //$NON-NLS-1$
-            String CLASS_ELEMENT = "class"; //$NON-NLS-1$
-            String CLASS_ATTRIBUTE = "name"; //$NON-NLS-1$
-        }
-    }
-
-    // ============================================================================================================================
-    // Product Capabilities constants
-
-    interface ProductInfo {
-        String PRODUCT = "Modeler"; //$NON-NLS-1$
-        String VERSION = "5.5"; //$NON-NLS-1$
-        String DELIMETER = "/"; //$NON-NLS-1$
-
-        interface Capabilities {
-            String VIRTUAL_MODELING = "Views"; //$NON-NLS-1$
-            String RELATIONAL_VIRTUAL_MODELING = VIRTUAL_MODELING + DELIMETER + "Relational"; //$NON-NLS-1$
-            String XML_VIRTUAL_MODELING = VIRTUAL_MODELING + DELIMETER + "XML"; //$NON-NLS-1$
-
-            String IMPORT = "Importer"; //$NON-NLS-1$
-            String JDBC_IMPORT = IMPORT + DELIMETER + "JDBC"; //$NON-NLS-1$
-            String RATIONAL_ROSE_IMPORT = IMPORT + DELIMETER + "Rational Rose"; //$NON-NLS-1$
-            String ERWIN_IMPORT = IMPORT + DELIMETER + "ERwin"; //$NON-NLS-1$
-
-            String EXPORT = "Exporter"; //$NON-NLS-1$
-            String RDBMS_EXPORT = EXPORT + DELIMETER + "RDBMS"; //$NON-NLS-1$
-
-            String MODELGEN = "Models"; //$NON-NLS-1$
-            String RELATIONAL_MODELGEN = MODELGEN + DELIMETER + "Relational"; //$NON-NLS-1$
-            String RELATIONAL_FROM_UML_MODELGEN = MODELGEN + DELIMETER + "UML"; //$NON-NLS-1$
-
-            String REPOSITORY = "Repository"; //$NON-NLS-1$
-
-            String PRODUCT_DQP = "Query Engine"; //$NON-NLS-1$
-            String CONNECTOR = "Connector"; //$NON-NLS-1$
-            String CONNECTOR_JDBC = CONNECTOR + DELIMETER + "JDBC"; //$NON-NLS-1$
-            String CONNECTOR_TEXT = CONNECTOR + DELIMETER + "TEXT"; //$NON-NLS-1$
-            String CONNECTOR_LIBRADOS = CONNECTOR + DELIMETER + "LIBRADOS"; //$NON-NLS-1$
         }
     }
 

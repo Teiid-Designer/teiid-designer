@@ -57,7 +57,6 @@ public class TreeViewerWizardPanel extends Composite implements UiConstants {
     private TreeViewer treeViewer;
     private MetamodelDescriptor metamodelDescriptor;
     private ModelResource selectorDialogResult = null;
-    boolean listenForCheckboxChanges = true;
     protected boolean targetIsVirtual;
     private boolean firstTimeVisible = true;
     private boolean copyEntire;
@@ -81,10 +80,6 @@ public class TreeViewerWizardPanel extends Composite implements UiConstants {
 
     public IStructuralCopyTreePopulator getTreePopulator() {
         return populator;
-    }
-
-    public void enableCheckboxChangeListener( boolean flag ) {
-        this.listenForCheckboxChanges = flag;
     }
 
     private void initialize() {

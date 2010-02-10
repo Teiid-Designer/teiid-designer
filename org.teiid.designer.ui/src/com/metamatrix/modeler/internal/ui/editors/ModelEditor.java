@@ -117,7 +117,7 @@ import com.metamatrix.ui.print.IPrintable;
 public class ModelEditor extends MultiPageModelEditor
     implements IEditorActionExporter, INavigationLocationProvider, INotifyChangedListener, ITextEditorExtension2,
     UiConstants.ExtensionPoints.ModelEditorPage, IResourceChangeListener, INavigationSupported, IInitializationCompleteListener,
-    IInlineRenameable, UiConstants, UiConstants.ProductInfo.Capabilities {
+    IInlineRenameable, UiConstants {
 
     static final String PREFIX = I18nUtil.getPropertyPrefix(ModelEditor.class);
 

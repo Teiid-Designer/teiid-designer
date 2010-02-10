@@ -34,10 +34,6 @@ public class UserDefinedPropertySource implements IPropertySource {
         this.tags = ModelerCore.getModelEditor().getTags(object);
     }
 
-    public boolean isUserDefinedProperty(Object id) {
-        return id instanceof EStringToStringMapEntryImpl;
-    }
-
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertySource#getEditableValue()
      */

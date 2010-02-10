@@ -13,7 +13,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -39,7 +38,6 @@ import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditorProjectListener;
 import com.metamatrix.modeler.internal.ui.favorites.EObjectModelerCache;
-import com.metamatrix.modeler.internal.ui.settings.ModelerDialogSettingsInitializer;
 import com.metamatrix.modeler.internal.ui.table.EObjectPropertiesOrderPreferences;
 import com.metamatrix.modeler.internal.ui.undo.ModelerUndoManager;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerNotificationHelper;
@@ -58,8 +56,7 @@ import com.metamatrix.ui.internal.util.UiUtil;
  * @since 4.0
  */
 public final class UiPlugin extends AbstractUiPlugin
-    implements Debug, PluginConstants, UiConstants, UiConstants.ProductInfo, UiConstants.ProductInfo.Capabilities,
-    IModelerProductContexts {
+    implements Debug, PluginConstants, UiConstants, IModelerProductContexts {
 
     // The shared instance.
     private static UiPlugin plugin;
@@ -71,30 +68,6 @@ public final class UiPlugin extends AbstractUiPlugin
      */
     public static UiPlugin getDefault() {
         return UiPlugin.plugin;
-    }
-
-    public static MultiStatus createMultiStatus( final String desc ) {
-        return new MultiStatus(PLUGIN_ID, 0, desc, null);
-    }
-
-    public static void addStatus( final MultiStatus parent,
-                                  final String msg,
-                                  final int severity,
-                                  final Throwable throwable ) {
-        if (parent != null) {
-            final Status child = new Status(severity, PLUGIN_ID, 0, msg, throwable);
-            parent.add(child);
-        }
-    }
-
-    public static void addStatus( final MultiStatus parent,
-                                  final String msg,
-                                  final int severity ) {
-        if (parent != null) {
-            final Status child = new Status(severity, PLUGIN_ID, 0, msg, null);
-            parent.add(child);
-        }
-
     }
 
     // This plugin's EventBroker.
@@ -286,16 +259,10 @@ public final class UiPlugin extends AbstractUiPlugin
         // Store default preference values if necessary
         storeDefaultPreferenceValues();
         initializeModelTableColumnUtilsFromPreferenceStore();
-        initializeDialogSettings();
     }
 
     private void initializeModelTableColumnUtilsFromPreferenceStore() {
         getEObjectPropertiesOrderPreferences().initializeFromString(getPreferenceStore().getString(UiConstants.TableEditorAttributes.COLUMN_ORDER));
-    }
-
-    private void initializeDialogSettings() {
-        ModelerDialogSettingsInitializer initializer = new ModelerDialogSettingsInitializer();
-        initializer.initialize();
     }
 
     /**

@@ -90,7 +90,6 @@ import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
 public class ImportModelerProjectSetMainPage extends WizardDataTransferPage implements UiConstants {
 
     static final String DOT_PROJECT = ".project"; //$NON-NLS-1$
-    protected static final int BUFFER_SIZE = 1024;
     protected static final int BUFFER = 2048;
 
     // dialog store id constants

@@ -28,8 +28,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
  * @since 4.0
  */
 public class ImportModelerProjectSetWizard extends AbstractWizard
-    implements IImportWizard, PluginConstants.Images, StringUtil.Constants, UiConstants, UiConstants.ProductInfo,
-    UiConstants.ProductInfo.Capabilities {
+    implements IImportWizard, PluginConstants.Images, StringUtil.Constants, UiConstants {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ImportModelerProjectSetWizard.class);
 

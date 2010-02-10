@@ -59,8 +59,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
  * @since 4.0
  */
 public final class NewVdbWizard extends AbstractWizard
-    implements INewWizard, InternalUiConstants.Widgets, StringUtil.Constants, UiConstants, UiConstants.ProductInfo,
-    UiConstants.ProductInfo.Capabilities {
+    implements INewWizard, InternalUiConstants.Widgets, StringUtil.Constants, UiConstants {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(NewVdbWizard.class);
 
