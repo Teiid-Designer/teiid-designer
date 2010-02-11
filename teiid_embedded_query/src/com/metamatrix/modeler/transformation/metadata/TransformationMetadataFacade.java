@@ -46,6 +46,7 @@ import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord.MetadataRecor
 import com.metamatrix.modeler.core.metadata.runtime.ProcedureRecord.ProcedureRecordProperties;
 import com.metamatrix.modeler.core.metadata.runtime.TableRecord.TableRecordProperties;
 import com.metamatrix.modeler.internal.transformation.util.UuidUtil;
+import com.metamatrix.query.function.FunctionLibrary;
 import com.metamatrix.query.mapping.relational.QueryNode;
 import com.metamatrix.query.mapping.xml.MappingDocument;
 import com.metamatrix.query.mapping.xml.MappingNode;
@@ -1079,6 +1080,16 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     @Override
     public boolean isScalarGroup( Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
         return this.metadata.isScalarGroup(groupID);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getFunctionLibrary()
+     */
+    @Override
+    public FunctionLibrary getFunctionLibrary() {
+        return null;
     }
 
 }
