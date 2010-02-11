@@ -9,12 +9,15 @@ package com.metamatrix.query.internal.ui.builder.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.function.FunctionForm;
 import com.metamatrix.query.function.FunctionLibrary;
-import com.metamatrix.query.function.FunctionLibraryManager;
+import com.metamatrix.query.function.FunctionTree;
+import com.metamatrix.query.function.SystemFunctionManager;
+import com.metamatrix.query.function.UDFSource;
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
 import com.metamatrix.query.sql.LanguageObject;
 import com.metamatrix.query.sql.symbol.Constant;
@@ -100,7 +103,8 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
         // not sure if users can dynamically add categories.
         // make this construct categories each time this method is called
         categories = null;
-        funcLib = FunctionLibraryManager.getFunctionLibrary();
+        funcLib = new FunctionLibrary(SystemFunctionManager.getSystemFunctions(),
+                                      new FunctionTree(new UDFSource(Collections.EMPTY_LIST)));
         List list = funcLib.getFunctionCategories();
 
         if ((list != null) && !list.isEmpty()) {

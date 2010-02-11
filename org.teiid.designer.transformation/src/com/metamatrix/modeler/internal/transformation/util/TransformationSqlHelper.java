@@ -49,6 +49,9 @@ import com.metamatrix.modeler.transformation.validation.SqlTransformationResult;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 import com.metamatrix.query.function.FunctionDescriptor;
 import com.metamatrix.query.function.FunctionLibrary;
+import com.metamatrix.query.function.FunctionTree;
+import com.metamatrix.query.function.SystemFunctionManager;
+import com.metamatrix.query.function.UDFSource;
 import com.metamatrix.query.metadata.QueryMetadataInterface;
 import com.metamatrix.query.metadata.StoredProcedureInfo;
 import com.metamatrix.query.metadata.TempMetadataID;
@@ -3244,7 +3247,8 @@ public class TransformationSqlHelper implements SqlConstants {
                                           Expression expression ) {
         Class originalType = DataTypeManager.getDataTypeClass(originalTypeName);
 
-        FunctionLibrary library = FunctionLibraryManager.getFunctionLibrary();
+        FunctionLibrary library = new FunctionLibrary(SystemFunctionManager.getSystemFunctions(),
+                                                      new FunctionTree(new UDFSource(Collections.EMPTY_LIST)));
         FunctionDescriptor fd = library.findFunction(FunctionLibrary.CONVERT, new Class[] {originalType,
             DataTypeManager.DefaultDataClasses.STRING});
 

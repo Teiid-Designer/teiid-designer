@@ -49,7 +49,10 @@ import com.metamatrix.modeler.transformation.metadata.QueryMetadataContext;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFacade;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
 import com.metamatrix.modeler.transformation.metadata.VdbMetadata;
+import com.metamatrix.modeler.transformation.udf.UdfManager;
 import com.metamatrix.query.analysis.AnalysisRecord;
+import com.metamatrix.query.function.FunctionLibrary;
+import com.metamatrix.query.metadata.BasicQueryMetadataWrapper;
 import com.metamatrix.query.metadata.QueryMetadataInterface;
 import com.metamatrix.query.parser.QueryParser;
 import com.metamatrix.query.report.ReportItem;
@@ -411,11 +414,20 @@ public class TransformationValidator implements QueryValidator {
         return result;
     }
 
+    public QueryMetadataInterface getQueryMetadata() {
+        return new BasicQueryMetadataWrapper(getDirectQueryMetadata()) {
+            @Override
+            public FunctionLibrary getFunctionLibrary() {
+                return UdfManager.INSTANCE.getFunctionLibrary();
+            }
+        };
+    }
+
     /**
      * Return the {@link com.metamatrix.query.metadata.QueryMetadataInterface} instance to use for query validation and
      * resolution.
      */
-    public QueryMetadataInterface getQueryMetadata() {
+    private QueryMetadataInterface getDirectQueryMetadata() {
         if (this.metadata == null && this.mappingRoot.eResource() != null) {
             TransformationMetadataFactory factory = TransformationMetadataFactory.getInstance();
             final boolean useServerMetadata = (this.validationContext != null && this.validationContext.useServerIndexes());
@@ -570,7 +582,7 @@ public class TransformationValidator implements QueryValidator {
         IStatus status = null;
 
         ArgCheck.isNotNull(command);
-		String commandSQL = command.toString();
+        String commandSQL = command.toString();
         // ------------------------------------------------------------
         // Resolve the Command
         // ------------------------------------------------------------
@@ -587,10 +599,10 @@ public class TransformationValidator implements QueryValidator {
             status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
         }
 
-		if(status!=null && status.getSeverity()==IStatus.ERROR) {
-			return new SqlTransformationResult(parseSQL(commandSQL).getCommand(), status);
-		}
-			
+        if (status != null && status.getSeverity() == IStatus.ERROR) {
+            return new SqlTransformationResult(parseSQL(commandSQL).getCommand(), status);
+        }
+
         SqlTransformationResult resolverResult = new SqlTransformationResult(command, status);
         // set the external metadata on the resolverResult
         resolverResult.setExternalMetadataMap(externalMetadata);

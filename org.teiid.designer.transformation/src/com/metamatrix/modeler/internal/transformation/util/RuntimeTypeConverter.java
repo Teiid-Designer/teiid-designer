@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.internal.transformation.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.common.types.DataTypeManager;
@@ -18,7 +19,9 @@ import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.query.function.FunctionDescriptor;
 import com.metamatrix.query.function.FunctionLibrary;
-import com.metamatrix.query.function.FunctionLibraryManager;
+import com.metamatrix.query.function.FunctionTree;
+import com.metamatrix.query.function.SystemFunctionManager;
+import com.metamatrix.query.function.UDFSource;
 import com.metamatrix.query.sql.symbol.Constant;
 import com.metamatrix.query.sql.symbol.Expression;
 import com.metamatrix.query.sql.symbol.Function;
@@ -477,7 +480,8 @@ public class RuntimeTypeConverter {
                                               String theNewTypeName ) {
         Class originalType = DataTypeManager.getDataTypeClass(theOriginalTypeName);
 
-        FunctionLibrary library = FunctionLibraryManager.getFunctionLibrary();
+        FunctionLibrary library = new FunctionLibrary(SystemFunctionManager.getSystemFunctions(),
+                                                      new FunctionTree(new UDFSource(Collections.EMPTY_LIST)));
         FunctionDescriptor fd = library.findFunction(FunctionLibrary.CONVERT, new Class[] {originalType,
             DataTypeManager.DefaultDataClasses.STRING});
 

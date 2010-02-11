@@ -11,9 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -49,7 +51,12 @@ import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.udf.UdfModelEvent.Type;
+import com.metamatrix.query.function.FunctionLibrary;
+import com.metamatrix.query.function.FunctionTree;
+import com.metamatrix.query.function.SystemFunctionManager;
 import com.metamatrix.query.function.UDFSource;
+import com.metamatrix.query.function.metadata.FunctionMetadataReader;
+import com.metamatrix.query.function.metadata.FunctionMethod;
 
 public final class UdfManager implements IResourceChangeListener {
 
@@ -76,6 +83,8 @@ public final class UdfManager implements IResourceChangeListener {
     // ===========================================================================================================================
 
     public static final UdfManager INSTANCE = new UdfManager();
+
+    private FunctionLibrary functionLibrary;
 
     // ===========================================================================================================================
     // Fields
@@ -147,6 +156,10 @@ public final class UdfManager implements IResourceChangeListener {
     private UdfManager() {
         this.changeListeners = new ListenerList(ListenerList.IDENTITY);
         this.functionModels = new HashMap<URL, UDFSource>();
+    }
+
+    public Set<URL> getUDFs() {
+        return this.functionModels.keySet();
     }
 
     // ===========================================================================================================================
@@ -387,38 +400,38 @@ public final class UdfManager implements IResourceChangeListener {
         UDFSource udfSource = this.functionModels.get(url);
         boolean remove = (udfSource != null);
         boolean add = !event.isDeleted();
-        
+
         // code FunctionLibraryManager-related code that is commented out below will be needed later when the
         // query code is forked from Teiid and becomes Designer responsibility. The FunctionLibraryManager (FLM) is the
         // UDF registry and is used during model validation. Currently one FLM is being shared
         // by Teiid and Designer and when Designer informs Teiid of UDF model changes Teiid informs the FLM.
         if (remove) {
             this.functionModels.remove(url);
-//
-//            final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
-//
-//            try {
-//                FunctionLibraryManager.deregisterSource(udfSource);
-//            } finally {
-//                if (startedTxn) {
-//                    ModelerCore.commitTxn();
-//                }
-//            }
+            //
+            // final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
+            //
+            // try {
+            // FunctionLibraryManager.deregisterSource(udfSource);
+            // } finally {
+            // if (startedTxn) {
+            // ModelerCore.commitTxn();
+            // }
+            // }
         }
 
         if (add) {
-//            final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
-//
+            // final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
+            //
             try {
-                udfSource = new UDFSource(url);
-//                FunctionLibraryManager.registerSource(udfSource);
-                this.functionModels.put(url, udfSource);
+                // udfSource = new UDFSource(url);
+                // FunctionLibraryManager.registerSource(udfSource);
+                this.functionModels.put(url, null);
             } catch (Exception e) {
                 TransformationPlugin.Util.log(e);
-//            } finally {
-//                if (startedTxn) {
-//                    ModelerCore.commitTxn();
-//                }
+                // } finally {
+                // if (startedTxn) {
+                // ModelerCore.commitTxn();
+                // }
             }
         }
     }
@@ -531,5 +544,24 @@ public final class UdfManager implements IResourceChangeListener {
      */
     public void shutdown() {
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
+    }
+
+    public FunctionLibrary getFunctionLibrary() {
+        if (functionLibrary == null) {
+            Set<URL> urls = UdfManager.INSTANCE.getUDFs();
+            List<FunctionMethod> methods = new ArrayList<FunctionMethod>();
+            if (!urls.isEmpty()) {
+                for (URL url : urls) {
+                    try {
+                        methods.addAll(FunctionMetadataReader.loadFunctionMethods(url.openStream()));
+                    } catch (IOException e) {
+                        //
+                    }
+                }
+            }
+            functionLibrary = new FunctionLibrary(SystemFunctionManager.getSystemFunctions(),
+                                                  new FunctionTree(new UDFSource(methods)));
+        }
+        return functionLibrary;
     }
 }
