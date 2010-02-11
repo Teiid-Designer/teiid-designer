@@ -22,10 +22,10 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
+import com.metamatrix.modeler.core.validation.ProblemMarker;
+import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.vdb.edit.manifest.ManifestFactory;
 import com.metamatrix.vdb.edit.manifest.ManifestPackage;
-import com.metamatrix.vdb.edit.manifest.ProblemMarker;
-import com.metamatrix.vdb.edit.manifest.Severity;
 
 /**
  * This is the item provider adapter for a {@link com.metamatrix.vdb.edit.manifest.ProblemMarker} object.

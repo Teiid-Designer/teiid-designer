@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
+import com.metamatrix.modeler.core.validation.ProblemMarker;
+import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.vdb.edit.manifest.ManifestFactory;
 import com.metamatrix.vdb.edit.manifest.ManifestPackage;
 import com.metamatrix.vdb.edit.manifest.ModelAccessibility;
@@ -19,8 +21,6 @@ import com.metamatrix.vdb.edit.manifest.ModelReference;
 import com.metamatrix.vdb.edit.manifest.ModelSource;
 import com.metamatrix.vdb.edit.manifest.ModelSourceProperty;
 import com.metamatrix.vdb.edit.manifest.NonModelReference;
-import com.metamatrix.vdb.edit.manifest.ProblemMarker;
-import com.metamatrix.vdb.edit.manifest.Severity;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 import com.metamatrix.vdb.edit.manifest.WsdlOptions;
 
@@ -30,12 +30,6 @@ import com.metamatrix.vdb.edit.manifest.WsdlOptions;
  * @generated
  */
 public class ManifestFactoryImpl extends EFactoryImpl implements ManifestFactory {
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
      * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->

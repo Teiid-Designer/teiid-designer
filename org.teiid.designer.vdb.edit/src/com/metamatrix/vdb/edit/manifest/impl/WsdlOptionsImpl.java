@@ -20,189 +20,189 @@ import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 import com.metamatrix.vdb.edit.manifest.WsdlOptions;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Wsdl Options</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Wsdl Options</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.vdb.edit.manifest.impl.WsdlOptionsImpl#getTargetNamespaceUri <em>Target Namespace Uri</em>}</li>
- *   <li>{@link com.metamatrix.vdb.edit.manifest.impl.WsdlOptionsImpl#getDefaultNamespaceUri <em>Default Namespace Uri</em>}</li>
- *   <li>{@link com.metamatrix.vdb.edit.manifest.impl.WsdlOptionsImpl#getVirtualDatabase <em>Virtual Database</em>}</li>
+ * <li>{@link com.metamatrix.vdb.edit.manifest.impl.WsdlOptionsImpl#getTargetNamespaceUri <em>Target Namespace Uri</em>}</li>
+ * <li>{@link com.metamatrix.vdb.edit.manifest.impl.WsdlOptionsImpl#getDefaultNamespaceUri <em>Default Namespace Uri</em>}</li>
+ * <li>{@link com.metamatrix.vdb.edit.manifest.impl.WsdlOptionsImpl#getVirtualDatabase <em>Virtual Database</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class WsdlOptionsImpl extends EObjectImpl implements WsdlOptions {
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getTargetNamespaceUri() <em>Target Namespace Uri</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getTargetNamespaceUri() <em>Target Namespace Uri</em>}' attribute. <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
+     * 
      * @see #getTargetNamespaceUri()
      * @generated
      * @ordered
      */
-	protected static final String TARGET_NAMESPACE_URI_EDEFAULT = null;
+    protected static final String TARGET_NAMESPACE_URI_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getTargetNamespaceUri() <em>Target Namespace Uri</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getTargetNamespaceUri() <em>Target Namespace Uri</em>}' attribute. <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * 
      * @see #getTargetNamespaceUri()
      * @generated
      * @ordered
      */
-	protected String targetNamespaceUri = TARGET_NAMESPACE_URI_EDEFAULT;
+    protected String targetNamespaceUri = TARGET_NAMESPACE_URI_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getDefaultNamespaceUri() <em>Default Namespace Uri</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getDefaultNamespaceUri() <em>Default Namespace Uri</em>}' attribute. <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
+     * 
      * @see #getDefaultNamespaceUri()
      * @generated
      * @ordered
      */
-	protected static final String DEFAULT_NAMESPACE_URI_EDEFAULT = null;
+    protected static final String DEFAULT_NAMESPACE_URI_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getDefaultNamespaceUri() <em>Default Namespace Uri</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The cached value of the '{@link #getDefaultNamespaceUri() <em>Default Namespace Uri</em>}' attribute. <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
+     * 
      * @see #getDefaultNamespaceUri()
      * @generated
      * @ordered
      */
-	protected String defaultNamespaceUri = DEFAULT_NAMESPACE_URI_EDEFAULT;
+    protected String defaultNamespaceUri = DEFAULT_NAMESPACE_URI_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	protected WsdlOptionsImpl() {
+    protected WsdlOptionsImpl() {
         super();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     protected EClass eStaticClass() {
         return ManifestPackage.eINSTANCE.getWsdlOptions();
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getTargetNamespaceUri() {
+    public String getTargetNamespaceUri() {
         return targetNamespaceUri;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setTargetNamespaceUri(String newTargetNamespaceUri) {
+    public void setTargetNamespaceUri( String newTargetNamespaceUri ) {
         String oldTargetNamespaceUri = targetNamespaceUri;
         targetNamespaceUri = newTargetNamespaceUri;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ManifestPackage.WSDL_OPTIONS__TARGET_NAMESPACE_URI, oldTargetNamespaceUri, targetNamespaceUri));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   ManifestPackage.WSDL_OPTIONS__TARGET_NAMESPACE_URI,
+                                                                   oldTargetNamespaceUri, targetNamespaceUri));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public String getDefaultNamespaceUri() {
+    public String getDefaultNamespaceUri() {
         return defaultNamespaceUri;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setDefaultNamespaceUri(String newDefaultNamespaceUri) {
+    public void setDefaultNamespaceUri( String newDefaultNamespaceUri ) {
         String oldDefaultNamespaceUri = defaultNamespaceUri;
         defaultNamespaceUri = newDefaultNamespaceUri;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ManifestPackage.WSDL_OPTIONS__DEFAULT_NAMESPACE_URI, oldDefaultNamespaceUri, defaultNamespaceUri));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   ManifestPackage.WSDL_OPTIONS__DEFAULT_NAMESPACE_URI,
+                                                                   oldDefaultNamespaceUri, defaultNamespaceUri));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public VirtualDatabase getVirtualDatabase() {
+    public VirtualDatabase getVirtualDatabase() {
         if (eContainerFeatureID != ManifestPackage.WSDL_OPTIONS__VIRTUAL_DATABASE) return null;
         return (VirtualDatabase)eContainer;
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setVirtualDatabase(VirtualDatabase newVirtualDatabase) {
-        if (newVirtualDatabase != eContainer || (eContainerFeatureID != ManifestPackage.WSDL_OPTIONS__VIRTUAL_DATABASE && newVirtualDatabase != null)) {
-            if (EcoreUtil.isAncestor(this, newVirtualDatabase))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setVirtualDatabase( VirtualDatabase newVirtualDatabase ) {
+        if (newVirtualDatabase != eContainer
+            || (eContainerFeatureID != ManifestPackage.WSDL_OPTIONS__VIRTUAL_DATABASE && newVirtualDatabase != null)) {
+            if (EcoreUtil.isAncestor(this, newVirtualDatabase)) throw new IllegalArgumentException(
+                                                                                                   "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newVirtualDatabase != null)
-                msgs = ((InternalEObject)newVirtualDatabase).eInverseAdd(this, ManifestPackage.VIRTUAL_DATABASE__WSDL_OPTIONS, VirtualDatabase.class, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newVirtualDatabase != null) msgs = ((InternalEObject)newVirtualDatabase).eInverseAdd(this,
+                                                                                                     ManifestPackage.VIRTUAL_DATABASE__WSDL_OPTIONS,
+                                                                                                     VirtualDatabase.class,
+                                                                                                     msgs);
             msgs = eBasicSetContainer((InternalEObject)newVirtualDatabase, ManifestPackage.WSDL_OPTIONS__VIRTUAL_DATABASE, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ManifestPackage.WSDL_OPTIONS__VIRTUAL_DATABASE, newVirtualDatabase, newVirtualDatabase));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          ManifestPackage.WSDL_OPTIONS__VIRTUAL_DATABASE,
+                                                                          newVirtualDatabase, newVirtualDatabase));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case ManifestPackage.WSDL_OPTIONS__VIRTUAL_DATABASE:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, ManifestPackage.WSDL_OPTIONS__VIRTUAL_DATABASE, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case ManifestPackage.WSDL_OPTIONS__VIRTUAL_DATABASE:
@@ -215,16 +215,19 @@ public class WsdlOptionsImpl extends EObjectImpl implements WsdlOptions {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case ManifestPackage.WSDL_OPTIONS__VIRTUAL_DATABASE:
-                    return eContainer.eInverseRemove(this, ManifestPackage.VIRTUAL_DATABASE__WSDL_OPTIONS, VirtualDatabase.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     ManifestPackage.VIRTUAL_DATABASE__WSDL_OPTIONS,
+                                                     VirtualDatabase.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -233,12 +236,13 @@ public class WsdlOptionsImpl extends EObjectImpl implements WsdlOptions {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    @Override
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case ManifestPackage.WSDL_OPTIONS__TARGET_NAMESPACE_URI:
                 return getTargetNamespaceUri();
@@ -251,12 +255,13 @@ public class WsdlOptionsImpl extends EObjectImpl implements WsdlOptions {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    @Override
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case ManifestPackage.WSDL_OPTIONS__TARGET_NAMESPACE_URI:
                 setTargetNamespaceUri((String)newValue);
@@ -272,12 +277,12 @@ public class WsdlOptionsImpl extends EObjectImpl implements WsdlOptions {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public void eUnset(EStructuralFeature eFeature) {
+    @Override
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case ManifestPackage.WSDL_OPTIONS__TARGET_NAMESPACE_URI:
                 setTargetNamespaceUri(TARGET_NAMESPACE_URI_EDEFAULT);
@@ -293,12 +298,12 @@ public class WsdlOptionsImpl extends EObjectImpl implements WsdlOptions {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    @Override
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case ManifestPackage.WSDL_OPTIONS__TARGET_NAMESPACE_URI:
                 return TARGET_NAMESPACE_URI_EDEFAULT == null ? targetNamespaceUri != null : !TARGET_NAMESPACE_URI_EDEFAULT.equals(targetNamespaceUri);
@@ -311,11 +316,11 @@ public class WsdlOptionsImpl extends EObjectImpl implements WsdlOptions {
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	@Override
+    @Override
     public String toString() {
         if (eIsProxy()) return super.toString();
 
@@ -328,4 +333,4 @@ public class WsdlOptionsImpl extends EObjectImpl implements WsdlOptions {
         return result.toString();
     }
 
-} //WsdlOptionsImpl
+} // WsdlOptionsImpl

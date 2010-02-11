@@ -59,6 +59,9 @@ import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlModelSourceAspect;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
+import com.metamatrix.modeler.core.validation.ProblemMarker;
+import com.metamatrix.modeler.core.validation.ProblemMarkerContainer;
+import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.vdb.edit.VdbArtifactGenerator;
 import com.metamatrix.vdb.edit.VdbContextEditor;
@@ -75,9 +78,6 @@ import com.metamatrix.vdb.edit.manifest.ModelReference;
 import com.metamatrix.vdb.edit.manifest.ModelSource;
 import com.metamatrix.vdb.edit.manifest.ModelSourceProperty;
 import com.metamatrix.vdb.edit.manifest.NonModelReference;
-import com.metamatrix.vdb.edit.manifest.ProblemMarker;
-import com.metamatrix.vdb.edit.manifest.ProblemMarkerContainer;
-import com.metamatrix.vdb.edit.manifest.Severity;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 
 /**

@@ -67,6 +67,7 @@ import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.util.EnhancedStringTokenizer;
+import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.modeler.internal.core.resource.EResourceImpl;
 import com.metamatrix.vdb.edit.VdbContext;
 import com.metamatrix.vdb.edit.VdbEditPlugin;
@@ -74,7 +75,6 @@ import com.metamatrix.vdb.edit.manifest.ManifestFactory;
 import com.metamatrix.vdb.edit.manifest.ManifestPackage;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 import com.metamatrix.vdb.edit.manifest.NonModelReference;
-import com.metamatrix.vdb.edit.manifest.Severity;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 import com.metamatrix.vdb.edit.manifest.impl.ManifestPackageImpl;
 

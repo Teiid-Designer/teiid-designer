@@ -11,40 +11,31 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Model Source</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Model Source</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.metamatrix.vdb.edit.manifest.ModelSource#getProperties <em>Properties</em>}</li>
- *   <li>{@link com.metamatrix.vdb.edit.manifest.ModelSource#getModel <em>Model</em>}</li>
+ * <li>{@link com.metamatrix.vdb.edit.manifest.ModelSource#getProperties <em>Properties</em>}</li>
+ * <li>{@link com.metamatrix.vdb.edit.manifest.ModelSource#getModel <em>Model</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see com.metamatrix.vdb.edit.manifest.ManifestPackage#getModelSource()
  * @model
  * @generated
  */
-public interface ModelSource extends EObject{
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
+public interface ModelSource extends EObject {
 
     /**
-     * Returns the value of the '<em><b>Properties</b></em>' containment reference list.
-     * The list contents are of type {@link com.metamatrix.vdb.edit.manifest.ModelSourceProperty}.
-     * It is bidirectional and its opposite is '{@link com.metamatrix.vdb.edit.manifest.ModelSourceProperty#getSource <em>Source</em>}'.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Properties</b></em>' containment reference list. The list contents are of type
+     * {@link com.metamatrix.vdb.edit.manifest.ModelSourceProperty}. It is bidirectional and its opposite is '
+     * {@link com.metamatrix.vdb.edit.manifest.ModelSourceProperty#getSource <em>Source</em>}'. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Properties</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Properties</em>' containment reference list isn't clear, there really should be more of a
+     * description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Properties</em>' containment reference list.
      * @see com.metamatrix.vdb.edit.manifest.ManifestPackage#getModelSource_Properties()
      * @see com.metamatrix.vdb.edit.manifest.ModelSourceProperty#getSource
@@ -54,14 +45,14 @@ public interface ModelSource extends EObject{
     EList getProperties();
 
     /**
-     * Returns the value of the '<em><b>Model</b></em>' container reference.
-     * It is bidirectional and its opposite is '{@link com.metamatrix.vdb.edit.manifest.ModelReference#getModelSource <em>Model Source</em>}'.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Model</b></em>' container reference. It is bidirectional and its opposite is '
+     * {@link com.metamatrix.vdb.edit.manifest.ModelReference#getModelSource <em>Model Source</em>}'. <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Model</em>' container reference isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Model</em>' container reference isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Model</em>' container reference.
      * @see #setModel(ModelReference)
      * @see com.metamatrix.vdb.edit.manifest.ManifestPackage#getModelSource_Model()
@@ -73,12 +64,12 @@ public interface ModelSource extends EObject{
 
     /**
      * Sets the value of the '{@link com.metamatrix.vdb.edit.manifest.ModelSource#getModel <em>Model</em>}' container reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Model</em>' container reference.
      * @see #getModel()
      * @generated
      */
-    void setModel(ModelReference value);
+    void setModel( ModelReference value );
 
 } // ModelSource

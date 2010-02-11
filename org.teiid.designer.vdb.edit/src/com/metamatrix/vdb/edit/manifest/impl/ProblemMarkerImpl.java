@@ -19,10 +19,10 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
+import com.metamatrix.modeler.core.validation.ProblemMarker;
+import com.metamatrix.modeler.core.validation.ProblemMarkerContainer;
+import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.vdb.edit.manifest.ManifestPackage;
-import com.metamatrix.vdb.edit.manifest.ProblemMarker;
-import com.metamatrix.vdb.edit.manifest.ProblemMarkerContainer;
-import com.metamatrix.vdb.edit.manifest.Severity;
 
 /**
  * <!-- begin-user-doc -->

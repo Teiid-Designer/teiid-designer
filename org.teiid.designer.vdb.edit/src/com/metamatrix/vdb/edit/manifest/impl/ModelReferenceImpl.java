@@ -27,13 +27,13 @@ import com.metamatrix.metamodels.core.CorePackage;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.core.impl.ModelImportImpl;
+import com.metamatrix.modeler.core.validation.ProblemMarker;
+import com.metamatrix.modeler.core.validation.ProblemMarkerContainer;
+import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.vdb.edit.manifest.ManifestPackage;
 import com.metamatrix.vdb.edit.manifest.ModelAccessibility;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 import com.metamatrix.vdb.edit.manifest.ModelSource;
-import com.metamatrix.vdb.edit.manifest.ProblemMarker;
-import com.metamatrix.vdb.edit.manifest.ProblemMarkerContainer;
-import com.metamatrix.vdb.edit.manifest.Severity;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 
 /**

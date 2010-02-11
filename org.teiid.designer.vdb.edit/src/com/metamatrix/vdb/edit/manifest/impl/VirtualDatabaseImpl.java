@@ -21,11 +21,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import com.metamatrix.core.util.DateUtil;
+import com.metamatrix.modeler.core.validation.ProblemMarkerContainer;
+import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.vdb.edit.manifest.ManifestPackage;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 import com.metamatrix.vdb.edit.manifest.NonModelReference;
-import com.metamatrix.vdb.edit.manifest.ProblemMarkerContainer;
-import com.metamatrix.vdb.edit.manifest.Severity;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 import com.metamatrix.vdb.edit.manifest.WsdlOptions;
 

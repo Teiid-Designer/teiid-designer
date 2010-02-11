@@ -18,10 +18,10 @@ import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.util.ModelContents;
+import com.metamatrix.modeler.core.validation.ProblemMarker;
+import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.vdb.edit.VdbGenerationContext;
-import com.metamatrix.vdb.edit.manifest.ProblemMarker;
-import com.metamatrix.vdb.edit.manifest.Severity;
 
 
 /**

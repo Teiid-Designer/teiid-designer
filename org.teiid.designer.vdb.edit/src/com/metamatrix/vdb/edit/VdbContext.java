@@ -17,9 +17,9 @@ import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.util.TempDirectory;
 import com.metamatrix.internal.core.xml.vdb.VdbHeader;
+import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 import com.metamatrix.vdb.edit.manifest.NonModelReference;
-import com.metamatrix.vdb.edit.manifest.Severity;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 
 /**

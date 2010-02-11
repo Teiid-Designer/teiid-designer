@@ -14,10 +14,10 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import com.metamatrix.modeler.core.compare.EObjectMatcherFactory;
+import com.metamatrix.modeler.core.validation.ProblemMarkerContainer;
 import com.metamatrix.vdb.edit.manifest.ManifestPackage;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 import com.metamatrix.vdb.edit.manifest.ModelSource;
-import com.metamatrix.vdb.edit.manifest.ProblemMarkerContainer;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 
 

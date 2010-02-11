@@ -28,70 +28,83 @@ public class VdbEditException extends ModelerCoreException {
 
     /**
      * Construct an instance of VdbEditException.
+     * 
      * @param status
      */
-    public VdbEditException(IStatus status) {
+    public VdbEditException( IStatus status ) {
         this.status = status;
     }
 
     /**
      * Construct an instance of VdbEditException.
+     * 
      * @param exception
      */
-    public VdbEditException(CoreException exception) {
+    public VdbEditException( CoreException exception ) {
         super(exception);
     }
 
     /**
      * Construct an instance of VdbEditException.
+     * 
      * @param message
      */
-    public VdbEditException(String message) {
+    public VdbEditException( String message ) {
         super(message);
     }
 
     /**
      * Construct an instance of VdbEditException.
+     * 
      * @param code
      * @param message
      */
-    public VdbEditException(int code, String message) {
+    public VdbEditException( int code,
+                             String message ) {
         this.status = new Status(IStatus.ERROR, "vdb.edit", code, message, null); //$NON-NLS-1$
     }
 
     /**
      * Construct an instance of VdbEditException.
+     * 
      * @param e
      */
-    public VdbEditException(Throwable e) {
+    public VdbEditException( Throwable e ) {
         super(e);
     }
 
     /**
      * Construct an instance of VdbEditException.
+     * 
      * @param e
      * @param message
      */
-    public VdbEditException(Throwable e, String message) {
+    public VdbEditException( Throwable e,
+                             String message ) {
         this.status = new Status(IStatus.ERROR, "vdb.edit", 0, message, e); //$NON-NLS-1$
     }
 
     /**
      * Construct an instance of VdbEditException.
+     * 
      * @param e
      * @param code
      */
-    public VdbEditException(Throwable e, int code) {
+    public VdbEditException( Throwable e,
+                             int code ) {
         this.status = new Status(IStatus.ERROR, "vdb.edit", code, e.getMessage(), e); //$NON-NLS-1$
     }
 
     /**
      * Construct an instance of VdbEditException.
+     * 
      * @param e
      * @param code
      * @param message
      */
-    public VdbEditException(Throwable e, int code, String message) {
+    public VdbEditException( Throwable e,
+                             int code,
+                             String message ) {
         this.status = new Status(IStatus.ERROR, "vdb.edit", code, message, e); //$NON-NLS-1$
     }
 }

@@ -18,8 +18,8 @@ import org.eclipse.emf.mapping.MappingFactory;
 import com.metamatrix.core.util.HashCodeUtil;
 import com.metamatrix.modeler.core.compare.AbstractEObjectMatcher;
 import com.metamatrix.modeler.core.compare.TwoPhaseEObjectMatcher;
-import com.metamatrix.vdb.edit.manifest.ProblemMarker;
-import com.metamatrix.vdb.edit.manifest.Severity;
+import com.metamatrix.modeler.core.validation.ProblemMarker;
+import com.metamatrix.modeler.core.validation.Severity;
 
 
 /** 

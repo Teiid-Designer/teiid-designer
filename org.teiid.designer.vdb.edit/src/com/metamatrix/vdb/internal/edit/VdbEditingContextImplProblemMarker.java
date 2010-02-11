@@ -9,11 +9,11 @@ package com.metamatrix.vdb.internal.edit;
 
 import org.eclipse.core.runtime.IStatus;
 import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.modeler.core.validation.ProblemMarker;
+import com.metamatrix.modeler.core.validation.ProblemMarkerContainer;
+import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.vdb.edit.manifest.ManifestFactory;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
-import com.metamatrix.vdb.edit.manifest.ProblemMarker;
-import com.metamatrix.vdb.edit.manifest.ProblemMarkerContainer;
-import com.metamatrix.vdb.edit.manifest.Severity;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 
 /** 

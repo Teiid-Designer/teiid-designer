@@ -11,13 +11,13 @@ import java.util.List;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.metamodels.core.ModelImport;
+import com.metamatrix.modeler.core.validation.ProblemMarker;
+import com.metamatrix.modeler.core.validation.ProblemMarkerContainer;
 import com.metamatrix.vdb.edit.manifest.ManifestPackage;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 import com.metamatrix.vdb.edit.manifest.ModelSource;
 import com.metamatrix.vdb.edit.manifest.ModelSourceProperty;
 import com.metamatrix.vdb.edit.manifest.NonModelReference;
-import com.metamatrix.vdb.edit.manifest.ProblemMarker;
-import com.metamatrix.vdb.edit.manifest.ProblemMarkerContainer;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 import com.metamatrix.vdb.edit.manifest.WsdlOptions;
 

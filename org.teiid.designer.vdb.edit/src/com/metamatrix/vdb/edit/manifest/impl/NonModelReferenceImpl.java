@@ -26,34 +26,25 @@ import com.metamatrix.vdb.edit.manifest.NonModelReference;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Non Model Reference</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Non Model Reference</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.metamatrix.vdb.edit.manifest.impl.NonModelReferenceImpl#getName <em>Name</em>}</li>
- *   <li>{@link com.metamatrix.vdb.edit.manifest.impl.NonModelReferenceImpl#getPath <em>Path</em>}</li>
- *   <li>{@link com.metamatrix.vdb.edit.manifest.impl.NonModelReferenceImpl#getChecksum <em>Checksum</em>}</li>
- *   <li>{@link com.metamatrix.vdb.edit.manifest.impl.NonModelReferenceImpl#getProperties <em>Properties</em>}</li>
- *   <li>{@link com.metamatrix.vdb.edit.manifest.impl.NonModelReferenceImpl#getVirtualDatabase <em>Virtual Database</em>}</li>
+ * <li>{@link com.metamatrix.vdb.edit.manifest.impl.NonModelReferenceImpl#getName <em>Name</em>}</li>
+ * <li>{@link com.metamatrix.vdb.edit.manifest.impl.NonModelReferenceImpl#getPath <em>Path</em>}</li>
+ * <li>{@link com.metamatrix.vdb.edit.manifest.impl.NonModelReferenceImpl#getChecksum <em>Checksum</em>}</li>
+ * <li>{@link com.metamatrix.vdb.edit.manifest.impl.NonModelReferenceImpl#getProperties <em>Properties</em>}</li>
+ * <li>{@link com.metamatrix.vdb.edit.manifest.impl.NonModelReferenceImpl#getVirtualDatabase <em>Virtual Database</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class NonModelReferenceImpl extends EObjectImpl implements NonModelReference {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = "See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing."; //$NON-NLS-1$
 
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -61,9 +52,8 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -71,9 +61,8 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     protected String name = NAME_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getPath() <em>Path</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getPath() <em>Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getPath()
      * @generated
      * @ordered
@@ -81,9 +70,8 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     protected static final String PATH_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getPath() <em>Path</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getPath() <em>Path</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getPath()
      * @generated
      * @ordered
@@ -91,9 +79,9 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     protected String path = PATH_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getChecksum() <em>Checksum</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getChecksum() <em>Checksum</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getChecksum()
      * @generated
      * @ordered
@@ -101,9 +89,8 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     protected static final long CHECKSUM_EDEFAULT = 0L;
 
     /**
-     * The cached value of the '{@link #getChecksum() <em>Checksum</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getChecksum() <em>Checksum</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getChecksum()
      * @generated
      * @ordered
@@ -111,9 +98,8 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     protected long checksum = CHECKSUM_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getProperties() <em>Properties</em>}' map.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getProperties() <em>Properties</em>}' map. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getProperties()
      * @generated
      * @ordered
@@ -121,8 +107,8 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     protected EMap properties = null;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected NonModelReferenceImpl() {
@@ -130,8 +116,8 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -140,8 +126,8 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getName() {
@@ -149,20 +135,20 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setName(String newName) {
+    public void setName( String newName ) {
         String oldName = name;
         name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ManifestPackage.NON_MODEL_REFERENCE__NAME, oldName, name));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   ManifestPackage.NON_MODEL_REFERENCE__NAME, oldName, name));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getPath() {
@@ -170,20 +156,20 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setPath(String newPath) {
+    public void setPath( String newPath ) {
         String oldPath = path;
         path = newPath;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ManifestPackage.NON_MODEL_REFERENCE__PATH, oldPath, path));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   ManifestPackage.NON_MODEL_REFERENCE__PATH, oldPath, path));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public long getChecksum() {
@@ -191,32 +177,34 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setChecksum(long newChecksum) {
+    public void setChecksum( long newChecksum ) {
         long oldChecksum = checksum;
         checksum = newChecksum;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ManifestPackage.NON_MODEL_REFERENCE__CHECKSUM, oldChecksum, checksum));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                   ManifestPackage.NON_MODEL_REFERENCE__CHECKSUM, oldChecksum,
+                                                                   checksum));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EMap getProperties() {
         if (properties == null) {
-            properties = new EcoreEMap(EcorePackage.eINSTANCE.getEStringToStringMapEntry(), EStringToStringMapEntryImpl.class, this, ManifestPackage.NON_MODEL_REFERENCE__PROPERTIES);
+            properties = new EcoreEMap(EcorePackage.eINSTANCE.getEStringToStringMapEntry(), EStringToStringMapEntryImpl.class,
+                                       this, ManifestPackage.NON_MODEL_REFERENCE__PROPERTIES);
         }
         return properties;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public VirtualDatabase getVirtualDatabase() {
@@ -225,55 +213,63 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    public void setVirtualDatabase(VirtualDatabase newVirtualDatabase) {
-        if (newVirtualDatabase != eContainer || (eContainerFeatureID != ManifestPackage.NON_MODEL_REFERENCE__VIRTUAL_DATABASE && newVirtualDatabase != null)) {
-            if (EcoreUtil.isAncestor(this, newVirtualDatabase))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setVirtualDatabase( VirtualDatabase newVirtualDatabase ) {
+        if (newVirtualDatabase != eContainer
+            || (eContainerFeatureID != ManifestPackage.NON_MODEL_REFERENCE__VIRTUAL_DATABASE && newVirtualDatabase != null)) {
+            if (EcoreUtil.isAncestor(this, newVirtualDatabase)) throw new IllegalArgumentException(
+                                                                                                   "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newVirtualDatabase != null)
-                msgs = ((InternalEObject)newVirtualDatabase).eInverseAdd(this, ManifestPackage.VIRTUAL_DATABASE__NON_MODELS, VirtualDatabase.class, msgs);
-            msgs = eBasicSetContainer((InternalEObject)newVirtualDatabase, ManifestPackage.NON_MODEL_REFERENCE__VIRTUAL_DATABASE, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newVirtualDatabase != null) msgs = ((InternalEObject)newVirtualDatabase).eInverseAdd(this,
+                                                                                                     ManifestPackage.VIRTUAL_DATABASE__NON_MODELS,
+                                                                                                     VirtualDatabase.class,
+                                                                                                     msgs);
+            msgs = eBasicSetContainer((InternalEObject)newVirtualDatabase,
+                                      ManifestPackage.NON_MODEL_REFERENCE__VIRTUAL_DATABASE,
+                                      msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ManifestPackage.NON_MODEL_REFERENCE__VIRTUAL_DATABASE, newVirtualDatabase, newVirtualDatabase));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          ManifestPackage.NON_MODEL_REFERENCE__VIRTUAL_DATABASE,
+                                                                          newVirtualDatabase, newVirtualDatabase));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case ManifestPackage.NON_MODEL_REFERENCE__VIRTUAL_DATABASE:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, ManifestPackage.NON_MODEL_REFERENCE__VIRTUAL_DATABASE, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case ManifestPackage.NON_MODEL_REFERENCE__PROPERTIES:
@@ -288,16 +284,19 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case ManifestPackage.NON_MODEL_REFERENCE__VIRTUAL_DATABASE:
-                    return eContainer.eInverseRemove(this, ManifestPackage.VIRTUAL_DATABASE__NON_MODELS, VirtualDatabase.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     ManifestPackage.VIRTUAL_DATABASE__NON_MODELS,
+                                                     VirtualDatabase.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -306,12 +305,13 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case ManifestPackage.NON_MODEL_REFERENCE__NAME:
                 return getName();
@@ -328,12 +328,13 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case ManifestPackage.NON_MODEL_REFERENCE__NAME:
                 setName((String)newValue);
@@ -356,12 +357,12 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case ManifestPackage.NON_MODEL_REFERENCE__NAME:
                 setName(NAME_EDEFAULT);
@@ -383,12 +384,12 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case ManifestPackage.NON_MODEL_REFERENCE__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
@@ -405,8 +406,8 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -424,4 +425,4 @@ public class NonModelReferenceImpl extends EObjectImpl implements NonModelRefere
         return result.toString();
     }
 
-} //NonModelReferenceImpl
+} // NonModelReferenceImpl
