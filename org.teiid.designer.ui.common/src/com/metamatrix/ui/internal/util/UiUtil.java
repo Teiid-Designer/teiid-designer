@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -457,7 +456,8 @@ public final class UiUtil implements UiConstants {
      * <ul>
      * <li>It equals the specified default value and the current preference value is not zero (i.e., does not represent the
      * default value). In this case, the value will be removed from the specified preference store.</li>
-     * <li>It does not equal the specified default value and does not equal the current preference value.</li> </ul>>
+     * <li>It does not equal the specified default value and does not equal the current preference value.</li>
+     * </ul>>
      * 
      * @param preference
      * @param value
