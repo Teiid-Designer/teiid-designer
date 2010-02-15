@@ -14,7 +14,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.teiid.designer.core,
  org.teiid.core.designer,
  teiid_embedded_query,
- org.teiid.designer.vdb.edit,
  org.teiid.designer.schema.tools,
  org.teiid.designer.compare,
  org.apache.commons.logging;bundle-version="1.0.4"

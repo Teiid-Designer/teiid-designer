@@ -995,9 +995,6 @@ public class RelationshipPanel extends Composite
         // recreate the editor
         reEditor = RelationshipPlugin.createEditor(rRelationshipObject);
 
-        // listen to EObject changes
-        ModelUtilities.addNotifyChangedListener(this);
-
         // create the editor for the business object
         reEditor = RelationshipPlugin.createEditor(rRelationshipObject);
 

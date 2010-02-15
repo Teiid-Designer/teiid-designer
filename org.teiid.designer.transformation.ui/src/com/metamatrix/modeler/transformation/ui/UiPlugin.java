@@ -14,6 +14,7 @@ import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.ui.util.TransformationNotificationListener;
 import com.metamatrix.ui.AbstractUiPlugin;
 import com.metamatrix.ui.PreferenceKeyAndDefaultValue;
@@ -44,7 +45,9 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants {
 
     private TransformationNotificationListener notificationListener = new TransformationNotificationListener();
 
-    private void init() {
+    private void init() throws Exception {
+        // make sure Transformation plugin is also started
+        TransformationPlugin.getDefault();
         ModelUtilities.addNotifyChangedListener(notificationListener);
     }
 

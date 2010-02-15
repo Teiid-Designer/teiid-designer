@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
@@ -76,7 +75,7 @@ public abstract class ModelUtilities implements UiConstants {
     private static ModelObjectAdapterFactoryContentProvider modelContentProvider;
     private static AdapterFactoryLabelProvider emfLabelProvider;
     private static AdapterFactoryItemDelegator emfItemDelegator;
-    private static ContainerNotificationManager notificationMgr;
+    // private static ContainerNotificationManager notificationMgr;
     private static ModelObjectPropertySourceProvider propertySourceProvider;
     private static ILabelProvider labelProvider;
     private static ModelFileCache modelFileCache = new ModelFileCache();
@@ -464,21 +463,11 @@ public abstract class ModelUtilities implements UiConstants {
      * it will become a memory leak.... heap hog, or whatever you want to call it.
      */
     public static void addNotifyChangedListener( INotifyChangedListener listener ) {
-        Container container = null;
 
         try {
-            container = getWorkspaceContainer();
+            getWorkspaceContainer().getChangeNotifier().addListener(listener);
         } catch (CoreException e) {
             e.printStackTrace(System.err);
-        }
-
-        if (container != null) {
-            if (notificationMgr == null) {
-                notificationMgr = new ContainerNotificationManager();
-                container.getChangeNotifier().addListener(notificationMgr);
-            }
-
-            notificationMgr.addNotifyChangedListener(listener);
         }
     }
 
@@ -488,16 +477,10 @@ public abstract class ModelUtilities implements UiConstants {
      * also or it will become a memory leak.... heap hog, or whatever you want to call it.
      */
     public static void removeNotifyChangedListener( INotifyChangedListener listener ) {
-        Container container = null;
-
         try {
-            container = getWorkspaceContainer();
+            getWorkspaceContainer().getChangeNotifier().removeListener(listener);
         } catch (Exception e) {
             e.printStackTrace(System.err);
-        }
-
-        if ((container != null) && (notificationMgr != null)) {
-            notificationMgr.removeNotifyChangedListener(listener);
         }
     }
 
@@ -1706,63 +1689,6 @@ public abstract class ModelUtilities implements UiConstants {
                                           final boolean force,
                                           final Object source ) throws Exception {
         modelResource.save(monitor, force);
-    }
-
-    /**
-     * The <code>ContainerNotificationManager</code> manages workspace listeners.
-     */
-    static class ContainerNotificationManager implements INotifyChangedListener {
-        /** Collection of notification listeners. */
-        private List listeners = new ArrayList();
-
-        /**
-         * Adds the specified listener to the collection receiving workspace container notifications.
-         * 
-         * @param theListener the listener being added
-         */
-        public void addNotifyChangedListener( INotifyChangedListener theListener ) {
-            if (!listeners.contains(theListener)) {
-                listeners.add(theListener);
-            }
-        }
-
-        /* (non-Javadoc)
-         * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
-         */
-        public void notifyChanged( Notification theNotification ) {
-            fireNotification(theNotification);
-        }
-
-        /**
-         * Notifies all registered listeners of the specified notification.
-         * 
-         * @param theNotification the notification being processed
-         */
-        private void fireNotification( Notification theNotification ) {
-            List tempListenerList = new ArrayList(listeners);
-
-            for (int size = tempListenerList.size(), i = 0; i < size; i++) {
-                INotifyChangedListener l = (INotifyChangedListener)tempListenerList.get(i);
-
-                // We need to be sure that the listener is still around.
-                // listener.notifyChanaged() may result in calling removeListener() method and
-                // decrease the size of the listener list.
-
-                if (listeners.contains(l)) {
-                    l.notifyChanged(theNotification);
-                }
-            }
-        }
-
-        /**
-         * Removes the specified listener from the collection receiving workspace container notifications.
-         * 
-         * @param theListener the listener being removed
-         */
-        public void removeNotifyChangedListener( INotifyChangedListener theListener ) {
-            listeners.remove(theListener);
-        }
-
     }
 
     private static class FileResourceCollectorVisitor implements IResourceVisitor {
