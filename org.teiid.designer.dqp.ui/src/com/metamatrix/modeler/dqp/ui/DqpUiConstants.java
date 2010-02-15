@@ -11,7 +11,6 @@ import java.util.ResourceBundle;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 
-
 /**
  * @since 4.3
  */
@@ -20,18 +19,19 @@ public interface DqpUiConstants {
 
     /**
      * The identifier of the containing plugin.
+     * 
      * @since 4.3
      */
-    
+
     String PLUGIN_ID = "org.teiid.designer.dqp.ui"; //$NON-NLS-1$
-    
+
     String PACKAGE_ID = DqpUiConstants.class.getPackage().getName();
-    
+
     //String EXT_PREFIX = "com.metamatrix.modeler.dqp.ui";  //$NON-NLS-1$
-    
 
     /**
      * Provides access to the plug-in's log, internationalized properties, and debugger.
+     * 
      * @since 4.3
      */
     PluginUtil UTIL = new PluginUtilImpl(PLUGIN_ID, PC.I18N_NAME, ResourceBundle.getBundle(PC.I18N_NAME));
@@ -74,46 +74,43 @@ public interface DqpUiConstants {
     /**
      * import types
      */
-    public static final int IMPORT_CONFIG            = 0;
+    public static final int IMPORT_CONFIG = 0;
     public static final int IMPORT_CONNECTOR_BINDING = 1;
-    public static final int IMPORT_CONNECTOR_TYPE    = 2;
-    public static final int IMPORT_FUNCTION_MOD      = 3;
-    public static final int IMPORT_CONNECTOR_MOD     = 4;
+    public static final int IMPORT_CONNECTOR_TYPE = 2;
+    public static final int IMPORT_FUNCTION_MOD = 3;
+    public static final int IMPORT_CONNECTOR_MOD = 4;
 
-    public static final String[][] IMPORT_FILE_NAMES = new String[][] {
-        {"Configurations (*.cfg)", "Configurations (*.xml)"},           //$NON-NLS-1$ //$NON-NLS-2$
-        {"Connector Bindings (*.cdk)", "Connector Bindings (*.xml)"},   ////$NON-NLS-1$ //$NON-NLS-2$
+    public static final String[][] IMPORT_FILE_NAMES = new String[][] { {"Configurations (*.cfg)", "Configurations (*.xml)"}, //$NON-NLS-1$ //$NON-NLS-2$
+        {"Connector Bindings (*.cdk)", "Connector Bindings (*.xml)"}, ////$NON-NLS-1$ //$NON-NLS-2$
         {"Connector Types Archive (*.caf)", "Connector Types (*.cdk)"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"Function Modules (*.jar)" , "Function Modules (*.zip)"},      //$NON-NLS-1$ //$NON-NLS-2$
-        {"Connector Modules (*.jar)"}      //$NON-NLS-1$
+        {"Function Modules (*.jar)", "Function Modules (*.zip)"}, //$NON-NLS-1$ //$NON-NLS-2$
+        {"Connector Modules (*.jar)"} //$NON-NLS-1$
     };
 
-    public static final String[][] IMPORT_FILE_EXTENSIONS = new String[][] {
-        {"*.cfg", "*.xml"}, //$NON-NLS-1$ //$NON-NLS-2$
+    public static final String[][] IMPORT_FILE_EXTENSIONS = new String[][] { {"*.cfg", "*.xml"}, //$NON-NLS-1$ //$NON-NLS-2$
         {"*.cdk", "*.xml"}, //$NON-NLS-1$ //$NON-NLS-2$
         {"*.caf", "*.cdk"}, //$NON-NLS-1$ //$NON-NLS-2$
         {"*.jar", "*.zip"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"*.jar"}  //$NON-NLS-1$
+        {"*.jar"} //$NON-NLS-1$
     };
 
-    public static final String[][] IMPORT_FILE_NAMES_NEW = new String[][] {
-        {"Configurations (*.cfg)", "Configurations (*.xml)"},           //$NON-NLS-1$ //$NON-NLS-2$
-        {"Connector Bindings (*.cdk)"},   ////$NON-NLS-1$
+    public static final String[][] IMPORT_FILE_NAMES_NEW = new String[][] { {"Configurations (*.cfg)", "Configurations (*.xml)"}, //$NON-NLS-1$ //$NON-NLS-2$
+        {"Connector Bindings (*.cdk)"}, ////$NON-NLS-1$
         {"Connector Types Archive (*.caf)", "Connector Types (*.cdk)"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"Function Modules (*.jar)" , "Function Modules (*.zip)"},      //$NON-NLS-1$ //$NON-NLS-2$
-        {"Extension Modules (*.jar)"}      //$NON-NLS-1$
+        {"Function Modules (*.jar)", "Function Modules (*.zip)"}, //$NON-NLS-1$ //$NON-NLS-2$
+        {"Extension Modules (*.jar)"} //$NON-NLS-1$
     };
 
-    public static final String[][] IMPORT_FILE_EXTENSIONS_NEW = new String[][] {
-        {"*.cfg", "*.xml"}, //$NON-NLS-1$ //$NON-NLS-2$
+    public static final String[][] IMPORT_FILE_EXTENSIONS_NEW = new String[][] { {"*.cfg", "*.xml"}, //$NON-NLS-1$ //$NON-NLS-2$
         {"*.cdk"}, //$NON-NLS-1$
         {"*.caf"}, //$NON-NLS-1$ 
         {"*.jar", "*.zip"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"*.jar"}  //$NON-NLS-1$
+        {"*.jar"} //$NON-NLS-1$
     };
 
     /**
      * Private constants used by other constants within this class.
+     * 
      * @since 4.3
      */
     class PC {
@@ -162,51 +159,39 @@ public interface DqpUiConstants {
         public static final String CONNECTOR_JAR_ICON = PC.OBJ16 + "connectorJar.gif"; //$NON-NLS-1$
         public static final String CONNECTOR_ZIP_ICON = PC.OBJ16 + "connectorZip.gif"; //$NON-NLS-1$
 
-        public static final String CONNECTOR_ICON              = PC.OBJ16 + "connector.gif"; //$NON-NLS-1$
-        public static final String SOURCE_BINDING_ICON         = PC.OBJ16 + "sourceBinding.gif"; //$NON-NLS-1$
-        public static final String SOURCE_UNBINDING_ICON       = PC.OBJ16 + "sourceBinding.gif"; //$NON-NLS-1$
-        public static final String SOURCE_MODEL_ICON           = PC.OBJ16 + "Model.gif"; //$NON-NLS-1$
-        public static final String SOURCE_CONNECTOR_BINDING_ICON   = PC.OBJ16 + "sourceModelBinding.png"; //$NON-NLS-1$
-        public static final String IMPORT_WIZ_ICON             = PC.CTOOL16 + "import_wiz.gif"; //$NON-NLS-1$
-        public static final String IMPORT_CONNECTORS_ICON      = PC.CTOOL16 + "import_connectors.png"; //$NON-NLS-1$
-        public static final String EXPORT_CONNECTORS_ICON      = PC.CTOOL16 + "export_connectors.png"; //$NON-NLS-1$
-        public static final String NEW_BINDING_ICON            = PC.CTOOL16 + "new_binding.png"; //$NON-NLS-1$
+        public static final String CONNECTOR_ICON = PC.OBJ16 + "connector.gif"; //$NON-NLS-1$
+        public static final String SOURCE_BINDING_ICON = PC.OBJ16 + "sourceBinding.gif"; //$NON-NLS-1$
+        public static final String SOURCE_UNBINDING_ICON = PC.OBJ16 + "sourceBinding.gif"; //$NON-NLS-1$
+        public static final String SOURCE_MODEL_ICON = PC.OBJ16 + "Model.gif"; //$NON-NLS-1$
+        public static final String SOURCE_CONNECTOR_BINDING_ICON = PC.OBJ16 + "sourceModelBinding.png"; //$NON-NLS-1$
+        public static final String IMPORT_WIZ_ICON = PC.CTOOL16 + "import_wiz.gif"; //$NON-NLS-1$
+        public static final String IMPORT_CONNECTORS_ICON = PC.CTOOL16 + "import_connectors.png"; //$NON-NLS-1$
+        public static final String EXPORT_CONNECTORS_ICON = PC.CTOOL16 + "export_connectors.png"; //$NON-NLS-1$
+        public static final String NEW_BINDING_ICON = PC.CTOOL16 + "new_binding.png"; //$NON-NLS-1$
 
-        public static final String PREVIEW_DATA_ICON      = PC.CTOOL16 + "previewData.gif"; //$NON-NLS-1$
-        public static final String SHOW_HIDE_CONNECTORS_ICON   = PC.CTOOL16 + "showHideConnectors.png"; //$NON-NLS-1$
-        public static final String COLLAPSE_ALL_ICON           = PC.CTOOL16 + "collapseall.gif"; //$NON-NLS-1$
-        public static final String UDF_JAR_ICON                = PC.OBJ16 + "UdfJar.png"; //$NON-NLS-1$
-        public static final String UDF_JAR_FOLDER_ICON         = PC.OBJ16 + "UdfJarsFolder.png"; //$NON-NLS-1$
-        public static final String ADD_UDF_JAR_ICON            = PC.CTOOL16 + "add_udf_jar.png"; //$NON-NLS-1$
-        
-        public static final String IMPORT_CONNECTORS_WIZBAN    = PC.WIZBAN + "import_connectors.jpg"; //$NON-NLS-1$
-        public static final String EXPORT_CONNECTORS_WIZBAN    = PC.WIZBAN + "export_connectors.jpg"; //$NON-NLS-1$
-        
-        String UDF_EXPORT_WIZBAN = PC.WIZBAN + "ExportUDFWizban.png"; //$NON-NLS-1$
-        String UDF_IMPORT_WIZBAN = PC.WIZBAN + "ImportUDFWizban.png"; //$NON-NLS-1$
+        public static final String PREVIEW_DATA_ICON = PC.CTOOL16 + "previewData.gif"; //$NON-NLS-1$
+        public static final String SHOW_HIDE_CONNECTORS_ICON = PC.CTOOL16 + "showHideConnectors.png"; //$NON-NLS-1$
+        public static final String COLLAPSE_ALL_ICON = PC.CTOOL16 + "collapseall.gif"; //$NON-NLS-1$
+
+        public static final String IMPORT_CONNECTORS_WIZBAN = PC.WIZBAN + "import_connectors.jpg"; //$NON-NLS-1$
+        public static final String EXPORT_CONNECTORS_WIZBAN = PC.WIZBAN + "export_connectors.jpg"; //$NON-NLS-1$
     }
 
     interface Extensions {
         // Connector Bindings VDB Editor Page
-        String CONNECTOR_BINDINGS_VDB_EDITOR_PAGE_ID = /*EXT_PREFIX + DOT + */ "connectorBindingsEditorpart"; //$NON-NLS-1$;
+        String CONNECTOR_BINDINGS_VDB_EDITOR_PAGE_ID = /*EXT_PREFIX + DOT + */"connectorBindingsEditorpart"; //$NON-NLS-1$;
 
-        String XML_DOC_SQL_RESULTS_VIEW = /*EXT_PREFIX + DOT + */ "xmlDocumentSqlResultsView"; //$NON-NLS-1$
+        String XML_DOC_SQL_RESULTS_VIEW = /*EXT_PREFIX + DOT + */"xmlDocumentSqlResultsView"; //$NON-NLS-1$
 
-        String XML_DOC_RESULTSET_PROCESSOR = /*EXT_PREFIX + DOT + */ "xmlDocumentResultSetProcessor"; //$NON-NLS-1$
+        String XML_DOC_RESULTSET_PROCESSOR = /*EXT_PREFIX + DOT + */"xmlDocumentResultSetProcessor"; //$NON-NLS-1$
 
-        String SQL_RESULTS_VIEW = /*EXT_PREFIX + DOT + */ "sqlResultsView"; //$NON-NLS-1$
+        String SQL_RESULTS_VIEW = /*EXT_PREFIX + DOT + */"sqlResultsView"; //$NON-NLS-1$
 
-        String SQL_RESULTSET_PROCESSOR = /*EXT_PREFIX + DOT + */ "sqlResultSetProcessor"; //$NON-NLS-1$
+        String SQL_RESULTSET_PROCESSOR = /*EXT_PREFIX + DOT + */"sqlResultSetProcessor"; //$NON-NLS-1$
 
-        String CONNECTORS_VIEW_ID = /*PLUGIN_ID + DOT + */ "connectorsView"; //$NON-NLS-1$
+        String CONNECTORS_VIEW_ID = /*PLUGIN_ID + DOT + */"connectorsView"; //$NON-NLS-1$
 
-        String PREVIEW_DATA_VIEW =  /*PLUGIN_ID + DOT + */  "previewDataView"; //$NON-NLS-1$
-
-        String UDF_MODEL_VIEW =  /*PLUGIN_ID + DOT + */ "udfModelView"; //$NON-NLS-1$
-
-        String UDF_MODEL_EXPORTER =  /*PLUGIN_ID + DOT + */ "udfModelExportWizard"; //$NON-NLS-1$
-
-        String UDF_MODEL_IMPORTER =  /*PLUGIN_ID + DOT + */ "udfModelImportWizard"; //$NON-NLS-1$
+        String PREVIEW_DATA_VIEW = /*PLUGIN_ID + DOT + */"previewDataView"; //$NON-NLS-1$
     }
 
     interface ExtensionPoints {
@@ -221,17 +206,20 @@ public interface DqpUiConstants {
 
     /**
      * Constants used to access plugin preference values.
+     * 
      * @since 5.0
      */
     interface Preferences {
         /**
          * General preference that will limit the number of rows returned on a Preview Query
+         * 
          * @since 5.0
          */
         String ID_PREVIEW_ROW_LIMIT = "generalPreference.previewRowLimit"; //$NON-NLS-1$
 
         /**
          * General preference that will limit the number of preview results shown.
+         * 
          * @since 5.5.3
          */
         String ID_PREVIEW_RESULTS_LIMIT = "generalPreference.previewResultsLimit"; //$NON-NLS-1$

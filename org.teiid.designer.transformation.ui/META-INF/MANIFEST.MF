@@ -19,7 +19,6 @@ Export-Package: com.metamatrix.modeler.transformation.ui,
  com.metamatrix.modeler.transformation.ui.reconciler.datatype,
  com.metamatrix.modeler.transformation.ui.search,
  com.metamatrix.modeler.transformation.ui.textimport,
- com.metamatrix.modeler.transformation.ui.udf,
  com.metamatrix.modeler.transformation.ui.util,
  com.metamatrix.modeler.transformation.ui.wizards,
  com.metamatrix.modeler.transformation.ui.workspace

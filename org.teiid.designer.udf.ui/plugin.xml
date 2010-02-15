@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+  <extension
+        point="org.eclipse.ui.views">
+<!-- User Defined Function (UDF) view -->
+      <view
+            name="%udfModelView"
+            icon="platform:/plugin/org.teiid.designer.ui/icons/full/obj16/FunctionModel.gif"
+            category="com.metamatrix.modeler.ui"
+            class="org.teiid.designer.udf.ui.UdfModelView"
+            id="udfModelView">
+      </view>
+  </extension>
+   <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->
+   <extension
+         id="udfModelViewContributor"
+         name="%udfModelViewContributor.name"
+         point="org.teiid.designer.ui.modelerPerspectiveContributor">
+      <class
+        name="org.teiid.designer.udf.ui.UdfViewPerspectiveContributor">
+      </class>
+   </extension>
+<!-- Eclipse Import Wizards -->
+    <extension
+        point="org.eclipse.ui.importWizards">
+
+        <!-- UDF Model Import Wizard -->
+        <wizard
+            name="%importUdfModelWizard.name"
+            icon="icons/full/ctool16/importUDFModel.gif"
+            category="com.metamatrix.modeler.ui"
+            class="org.teiid.designer.udf.ui.UdfModelImportWizard"
+            id="udfModelImportWizard">
+            <description>
+                %importUdfModelWizard.description
+            </description>
+        </wizard>
+    </extension>
+<!-- Eclipse Export Wizards -->
+    <extension
+        point="org.eclipse.ui.exportWizards">
+        
+        <!-- UDF Model Export Wizard -->
+        <wizard
+            name="%exportUdfModelWizard.name"
+            icon="icons/full/ctool16/exportUDFModel.gif"
+            category="com.metamatrix.modeler.ui"
+            class="org.teiid.designer.udf.ui.UdfModelExportWizard"
+            id="udfModelExportWizard">
+            <description>
+                %exportUdfModelWizard.description
+            </description>
+        </wizard>
+    </extension>
+</plugin>

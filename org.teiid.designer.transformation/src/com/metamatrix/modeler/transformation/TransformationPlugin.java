@@ -13,7 +13,6 @@ import java.util.ResourceBundle;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.util.PluginUtilImpl;
-import com.metamatrix.modeler.transformation.udf.UdfManager;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -86,15 +85,6 @@ public class TransformationPlugin extends Plugin {
     public void start( final BundleContext context ) throws Exception {
         super.start(context);
         Util.initializePlatformLogger(this);
-
-        // initialize the use of user-defined functions
-        UdfManager.INSTANCE.initialize();
-    }
-
-    @Override
-    public void stop( BundleContext context ) throws Exception {
-        UdfManager.INSTANCE.shutdown();
-        super.stop(context);
     }
 
     protected File getFile( final URL url ) {

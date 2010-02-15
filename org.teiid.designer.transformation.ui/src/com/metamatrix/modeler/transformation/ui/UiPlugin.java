@@ -45,8 +45,7 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants {
 
     private TransformationNotificationListener notificationListener = new TransformationNotificationListener();
 
-    private void init() throws Exception {
-        // make sure Transformation plugin is also started
+    private void init() {
         TransformationPlugin.getDefault();
         ModelUtilities.addNotifyChangedListener(notificationListener);
     }

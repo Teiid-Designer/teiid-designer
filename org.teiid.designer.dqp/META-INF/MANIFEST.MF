@@ -13,8 +13,7 @@ Export-Package: com.metamatrix.modeler.dqp,
  com.metamatrix.modeler.dqp.internal.config,
  com.metamatrix.modeler.dqp.internal.execution,
  com.metamatrix.modeler.dqp.internal.workspace,
- com.metamatrix.modeler.dqp.util,
- com.metamatrix.modeler.dqp.workspace.udf
+ com.metamatrix.modeler.dqp.util
 Require-Bundle: org.eclipse.core.runtime,
  org.jdom;bundle-version="1.0",
  teiid_embedded_query,

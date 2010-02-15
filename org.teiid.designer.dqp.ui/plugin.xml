@@ -29,14 +29,6 @@
             class="com.metamatrix.modeler.internal.dqp.ui.views.PreviewDataView"
             id="previewDataView">
       </view>
-<!-- User Defined Function (UDF) view -->
-      <view
-            name="%udfModelView"
-            icon="platform:/plugin/org.teiid.designer.ui/icons/full/obj16/FunctionModel.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.dqp.ui.workspace.udf.UdfModelView"
-            id="udfModelView">
-      </view>
 <!-- XmlDocumentSqlResultsView -->
       <view
             name="%xmlDocumentSqlResultsView.name"
@@ -140,16 +132,6 @@
         name="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorsPerspectiveContributor">
       </class>
    </extension>
-   <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->
-   <extension
-         id="udfModelViewContributor"
-         name="%udfModelViewContributor.name"
-         point="org.teiid.designer.ui.modelerPerspectiveContributor">
-      <class
-        name="com.metamatrix.modeler.internal.dqp.ui.workspace.udf.UdfViewPerspectiveContributor">
-      </class>
-   </extension>
-   
    <extension
         id="BindToConnectorAction"
         name="%bindToConnectorAction.name"
@@ -183,23 +165,6 @@
          point="org.teiid.designer.ui.extendedModelLabelProvider">
       <class
             name="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorBindingModelLabelProvider">
-      </class>
-   </extension>
-   
-   <extension
-         id="udfModelJarsContentProvider"
-         name="Udf Jars Content Provider"
-         point="org.teiid.designer.ui.extendedModelContentProvider">
-      <class
-            name="com.metamatrix.modeler.internal.dqp.ui.workspace.udf.UdfJarContentProvider">
-      </class>
-   </extension>
-   <extension
-         id="udfModelJarsLabelProvider"
-         name="Udf Jars  Label Provider"
-         point="org.teiid.designer.ui.extendedModelLabelProvider">
-      <class
-            name="com.metamatrix.modeler.internal.dqp.ui.workspace.udf.UdfJarLabelProvider">
       </class>
    </extension>
    
@@ -245,38 +210,4 @@
          label="%previewTableDataContextAction.label">
       </specialAction>
    </extension>
-
-<!-- Eclipse Import Wizards -->
-    <extension
-        point="org.eclipse.ui.importWizards">
-
-        <!-- UDF Model Import Wizard -->
-        <wizard
-            name="%importUdfModelWizard.name"
-            icon="icons/full/ctool16/importUDFModel.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.dqp.ui.workspace.udf.UdfModelImportWizard"
-            id="udfModelImportWizard">
-            <description>
-                %importUdfModelWizard.description
-            </description>
-        </wizard>
-    </extension>
-   
-<!-- Eclipse Export Wizards -->
-    <extension
-        point="org.eclipse.ui.exportWizards">
-        
-        <!-- UDF Model Export Wizard -->
-        <wizard
-            name="%exportUdfModelWizard.name"
-            icon="icons/full/ctool16/exportUDFModel.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.dqp.ui.workspace.udf.UdfModelExportWizard"
-            id="udfModelExportWizard">
-            <description>
-                %exportUdfModelWizard.description
-            </description>
-        </wizard>
-    </extension>
 </plugin>
