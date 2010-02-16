@@ -9,7 +9,7 @@
 <feature
       id="org.teiid.designer"
       label="%featureName"
-      version="7.0.0.v20100201"
+      version="7.0.0.v20100215"
       provider-name="%providerName"
       image="feature.gif">
 
@@ -115,14 +115,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-<!--
-   <plugin
-         id="org.teiid.designer.vdb.edit"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
--->
+
    <plugin
          id="org.teiid.designer.metamodels.dependency"
          download-size="0"
@@ -331,42 +324,14 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-<!--
-   <plugin
-         id="org.teiid.designer.vdb.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
--->
+
    <plugin
          id="net.sf.saxon"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-<!--
-   <plugin
-         id="org.teiid.designer.dqp"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
-   <plugin
-         id="org.teiid.designer.dqp.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="net.sourceforge.sqlexplorer"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
--->
    <plugin
          id="org.teiid.designer.tools.textimport.ui"
          download-size="0"
@@ -415,14 +380,14 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-<!--
+
    <plugin
          id="org.teiid.designer.modelgenerator.xml"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
--->
+
    <plugin
          id="org.teiid.designer.metamodels.builder"
          download-size="0"
@@ -436,7 +401,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-<!--
+
    <plugin
          id="org.teiid.designer.modelgenerator.wsdl"
          download-size="0"
@@ -450,7 +415,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
--->
+
    <plugin
          id="org.teiid.designer.schema.tools"
          download-size="0"
@@ -485,7 +450,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-<!--
+
    <plugin
          id="org.teiid.designer.modelgenerator.salesforce"
          download-size="0"
@@ -499,7 +464,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
--->
+
    <plugin
          id="teiid_embedded_query"
          download-size="0"
@@ -519,5 +484,19 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.teiid.designer.udf"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.udf.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
