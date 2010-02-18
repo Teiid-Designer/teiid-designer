@@ -50,7 +50,6 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.vdb.ui.editor.IVdbEditorPage;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.edit.loader.VDBConstants;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
@@ -93,7 +92,6 @@ public class ConnectorBindingsEditorPart extends EditorPart implements IChangeLi
     protected File vdbFile;
 
     protected VdbEditingContext vdbContext;
-    protected VdbContextEditor vdbContextEditor;
 
     private boolean executionPropsChanged;
 
@@ -164,8 +162,6 @@ public class ConnectorBindingsEditorPart extends EditorPart implements IChangeLi
         String txnAutoWrap = null;
         if (this.vdbContext != null) {
             txnAutoWrap = this.vdbContext.getExecutionProperties().getProperty(VDBConstants.VDBElementNames.ExecutionProperties.Properties.TXN_AUTO_WRAP);
-        } else if (vdbContextEditor != null) {
-            txnAutoWrap = this.vdbContextEditor.getExecutionProperties().getProperty(VDBConstants.VDBElementNames.ExecutionProperties.Properties.TXN_AUTO_WRAP);
         }
 
         // Init the combo box (If not already set, use the default)
@@ -197,18 +193,11 @@ public class ConnectorBindingsEditorPart extends EditorPart implements IChangeLi
             txtInstructions.setText(getString("editInstructionsMsg")); //$NON-NLS-1$
             txtInstructions.setBackground(UiUtil.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
             txtInstructions.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        } else if (vdbContextEditor != null && !vdbContextEditor.isReadOnly()) {
-            StyledText txtInstructions = new StyledText(group, SWT.WRAP | SWT.READ_ONLY | SWT.MULTI);
-            txtInstructions.setText(getString("editInstructionsMsg")); //$NON-NLS-1$
-            txtInstructions.setBackground(UiUtil.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-            txtInstructions.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         }
 
         this.pnlBindings = null;
         if (this.vdbContext != null) {
             this.pnlBindings = new ConnectorBindingsPanel(group, this.vdbFile, this.vdbContext);
-        } else if (this.vdbContextEditor != null) {
-            this.pnlBindings = new ConnectorBindingsPanel(group, this.vdbFile, this.vdbContextEditor);
         }
 
         // ========= GUI finish-up:
@@ -306,9 +295,6 @@ public class ConnectorBindingsEditorPart extends EditorPart implements IChangeLi
         if (this.vdbContext != null) {
             this.vdbContext.setExecutionProperty(VDBConstants.VDBElementNames.ExecutionProperties.Properties.TXN_AUTO_WRAP,
                                                  txnAutowrapStr);
-        } else if (this.vdbContextEditor != null) {
-            this.vdbContextEditor.setExecutionProperty(VDBConstants.VDBElementNames.ExecutionProperties.Properties.TXN_AUTO_WRAP,
-                                                       txnAutowrapStr);
         }
         executionPropsChanged = true;
         this.pnlBindings.setFocus();
@@ -367,8 +353,6 @@ public class ConnectorBindingsEditorPart extends EditorPart implements IChangeLi
 
         if (this.vdbContext != null) {
             this.vdbContext.removeChangeListener(this.changeListener);
-        } else if (this.vdbContextEditor != null) {
-            this.vdbContextEditor.removeChangeListener(this.changeListener);
         }
     }
 
@@ -399,7 +383,6 @@ public class ConnectorBindingsEditorPart extends EditorPart implements IChangeLi
         Assertion.isInstanceOf(theEditingContext, InternalVdbEditingContext.class, getString("vdbStateError")); //$NON-NLS-1$
 
         this.vdbContext = theEditingContext;
-        this.vdbContextEditor = null;
         // setup to listen for changes to context so that we can update the execution state.
         this.changeListener = new IChangeListener() {
             public void stateChanged( IChangeNotifier theSource ) {
@@ -411,22 +394,6 @@ public class ConnectorBindingsEditorPart extends EditorPart implements IChangeLi
         this.executor = new VdbExecutor(this.vdbContext, getValidator());
     }
 
-    public void setVdbEditingContext( VdbContextEditor theEditingContext ) {
-        Assertion.isNotNull(theEditingContext);
-
-        this.vdbContext = null;
-        this.vdbContextEditor = theEditingContext;
-        // setup to listen for changes to context so that we can update the execution state.
-        this.changeListener = new IChangeListener() {
-            public void stateChanged( IChangeNotifier theSource ) {
-                updateExecutionStatus();
-            }
-        };
-        this.vdbContextEditor.addChangeListener(this.changeListener);
-
-        this.executor = new VdbExecutor(this.vdbContextEditor, getValidator());
-    }
-
     /**
      * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
      * @since 4.3
@@ -436,8 +403,6 @@ public class ConnectorBindingsEditorPart extends EditorPart implements IChangeLi
             this.dirty = true;
             if (this.vdbContext != null) {
                 this.vdbContext.setModified();
-            } else if (this.vdbContextEditor != null) {
-                this.vdbContextEditor.setSaveIsRequired();
             }
             firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);
         }
@@ -449,9 +414,7 @@ public class ConnectorBindingsEditorPart extends EditorPart implements IChangeLi
         if (!btnExecute.isDisposed()) {
 
             // remove change listener so we don't update after VDB is closed
-            if ((this.vdbContextEditor != null) && !this.vdbContextEditor.isOpen()) {
-                this.vdbContextEditor.removeChangeListener(this.changeListener);
-            } else if ((this.vdbContext != null) && !this.vdbContext.isOpen()) {
+            if ((this.vdbContext != null) && !this.vdbContext.isOpen()) {
                 this.vdbContext.removeChangeListener(this.changeListener);
             }
 

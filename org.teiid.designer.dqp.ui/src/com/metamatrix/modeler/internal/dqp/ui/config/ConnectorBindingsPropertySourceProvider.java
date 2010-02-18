@@ -12,9 +12,8 @@ import java.util.Iterator;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 import com.metamatrix.vdb.internal.runtime.model.BasicVDBModelDefn;
 
@@ -24,8 +23,7 @@ import com.metamatrix.vdb.internal.runtime.model.BasicVDBModelDefn;
  */
 public class ConnectorBindingsPropertySourceProvider implements IPropertySourceProvider {
     
-    private InternalVdbEditingContext vdbContext;
-    private VdbContextEditor vdbContextEditor;
+    private final InternalVdbEditingContext vdbContext;
     private boolean editable = false;
     private ArrayList<IPropertyChangeListener> listenerList = new ArrayList<IPropertyChangeListener>();
     private boolean showExpertProps = false;
@@ -36,11 +34,6 @@ public class ConnectorBindingsPropertySourceProvider implements IPropertySourceP
      */
     public ConnectorBindingsPropertySourceProvider(InternalVdbEditingContext theContext) {
         this.vdbContext = theContext;
-        this.vdbContextEditor = null;
-    }
-    public ConnectorBindingsPropertySourceProvider(VdbContextEditor theContext) {
-        this.vdbContext = null;
-        this.vdbContextEditor = theContext;
     }
 
     public ConnectorBindingsPropertySourceProvider() {
@@ -76,13 +69,7 @@ public class ConnectorBindingsPropertySourceProvider implements IPropertySourceP
      */
     public IPropertySource getPropertySource(Object object) {
         if ( object instanceof BasicVDBModelDefn ) {
-            ConnectorBinding binding = null;
-            if (this.vdbContext != null) {
-                binding = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext).getFirstConnectorBinding((BasicVDBModelDefn) object);
-            } else if (this.vdbContextEditor != null) {
-                binding = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContextEditor).getFirstConnectorBinding((BasicVDBModelDefn) object);
-            }
-            
+            ConnectorBinding binding = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext).getFirstConnectorBinding((BasicVDBModelDefn) object);
             ConnectorBindingsPropertySource source = new ConnectorBindingsPropertySource(binding);
             source.setEditable(editable);
             source.setProvider(this);

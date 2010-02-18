@@ -33,8 +33,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.common.namedobject.BaseID;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
@@ -46,7 +46,6 @@ import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.modeler.internal.dqp.ui.config.ConnectorBindingsPropertySourceProvider;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 
 /**
@@ -62,10 +61,9 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
     private Text nameField;
     private Combo typeCombo;
     private PropertySheetPage propertyPage;
-    private InternalVdbEditingContext vdbContext;
-    private VdbContextEditor vdbContextEditor;
+    private final InternalVdbEditingContext vdbContext;
     BaseID currentTypeID;
-    ComponentType currentType;
+    ConnectorType currentType;
 
     private ConnectorBinding binding;
     private String originalName;
@@ -83,13 +81,13 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
      */
     public NewConnectorBindingPanel( Composite parent,
                                      String name,
-                                     ComponentType type,
+                                     ConnectorType type,
                                      InternalVdbEditingContext theContext ) {
         super(parent);
         this.currentType = type;
         this.originalName = name;
         this.vdbContext = theContext;
-        this.vdbContextEditor = null;
+
 
         // register to receive configuration changes
         this.configListener = new IChangeListener() {
@@ -97,28 +95,7 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
                 handleConfigurationChanged();
             }
         };
-        DqpPlugin.getInstance().getConfigurationManager().addChangeListener(this.configListener);
-
-        buildControls();
-    }
-
-    public NewConnectorBindingPanel( Composite parent,
-                                     String name,
-                                     ComponentType type,
-                                     VdbContextEditor theContext ) {
-        super(parent);
-        this.currentType = type;
-        this.originalName = name;
-        this.vdbContext = null;
-        this.vdbContextEditor = theContext;
-
-        // register to receive configuration changes
-        this.configListener = new IChangeListener() {
-            public void stateChanged( IChangeNotifier theSource ) {
-                handleConfigurationChanged();
-            }
-        };
-        DqpPlugin.getInstance().getConfigurationManager().addChangeListener(this.configListener);
+        DqpPlugin.getInstance().getAdmin().addChangeListener(this.configListener);
 
         buildControls();
     }
@@ -335,7 +312,7 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
         int index = this.typeCombo.getSelectionIndex();
 
         if (index != -1) {
-            this.currentType = (ComponentType)this.componentTypes.get(sortedTypes.get(index));
+            this.currentType = (ConnectorType)this.componentTypes.get(sortedTypes.get(index));
 
             if ((this.currentTypeID == null) || !(this.currentTypeID == this.currentType.getID())) {
                 this.currentTypeID = this.currentType.getID();
@@ -374,7 +351,7 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
                 public void run() {
                     if (!combo.isDisposed()) {
                         WidgetUtil.setComboItems(combo, NewConnectorBindingPanel.this.sortedTypes, null, false, selection);
-                        ComponentType type = (ComponentType)NewConnectorBindingPanel.this.componentTypes.get(selection);
+                        ConnectorType type = (ConnectorType)NewConnectorBindingPanel.this.componentTypes.get(selection);
                         if (type != null) {
                             NewConnectorBindingPanel.this.currentType = type;
                             NewConnectorBindingPanel.this.currentTypeID = type.getID();
@@ -393,7 +370,7 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
      * @since 5.0
      */
     void handleDispose() {
-        DqpPlugin.getInstance().getConfigurationManager().removeChangeListener(this.configListener);
+        DqpPlugin.getInstance().getAdmin().removeChangeListener(this.configListener);
     }
 
     private void loadConnectorTypes() {
@@ -449,23 +426,11 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
     }
 
     private VdbDefnHelper getVdbDefnHelper() {
-        VdbDefnHelper helper = null;
-        if (this.vdbContext != null) {
-            helper = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext);
-        } else if (this.vdbContextEditor != null) {
-            helper = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContextEditor);
-        }
-        return helper;
+        return DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext);
     }
 
     private ConnectorBindingsPropertySourceProvider getConnectorBindingsPropertySourceProvider() {
-        ConnectorBindingsPropertySourceProvider sourceProvider = null;
-        if (this.vdbContext != null) {
-            sourceProvider = new ConnectorBindingsPropertySourceProvider(this.vdbContext);
-        } else if (this.vdbContextEditor != null) {
-            sourceProvider = new ConnectorBindingsPropertySourceProvider(this.vdbContextEditor);
-        }
-        return sourceProvider;
+        return new ConnectorBindingsPropertySourceProvider(this.vdbContext);
     }
 
 }

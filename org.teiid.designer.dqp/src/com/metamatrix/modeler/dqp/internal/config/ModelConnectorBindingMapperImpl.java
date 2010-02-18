@@ -16,20 +16,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ComponentTypeDefn;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.api.ConnectorBindingType;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.runtime.ServerAdmin;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
-import com.metamatrix.modeler.dqp.config.ConfigurationManager;
 import com.metamatrix.modeler.dqp.config.ModelConnectorBindingMapper;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
@@ -42,14 +40,13 @@ import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMapper {
 
     private final InternalVdbEditingContext context;
-    private final VdbContextEditor contextEditor;
     // modelreference -> Collection(ConnectorBinding)
     private Map modelConnectorBindingMatches;
     // modelreference -> Collection(ConnectorType)
     private Map modelConnectorTypeMatches;
     // modelreference -> ConnectorBinding
     private Map modelConnectorBindings;
-    private ConfigurationManager manager;
+    private ServerAdmin manager;
     
     //Used to enable Unit Testing.
     public static boolean HEADLESS = false;
@@ -66,15 +63,6 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
             theContext.open();
         }
         this.context = (InternalVdbEditingContext)theContext; // safe to cast
-        this.contextEditor = null;
-    }
-    public ModelConnectorBindingMapperImpl(final VdbContextEditor theContext) throws Exception {
-        ArgCheck.isNotNull(theContext);
-        if(!theContext.isOpen()) {
-            theContext.open(new NullProgressMonitor());
-        }
-        this.context = null;
-        this.contextEditor = theContext; 
     }
 
     /** 
@@ -160,28 +148,6 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
         return (ConnectorBinding) bindingMap.get(modelReference);
     }
 
-    /** 
-     * @see com.metamatrix.modeler.dqp.config.ModelConnectorBindingMapper#setConnectorBinding(com.metamatrix.vdb.edit.manifest.ModelReference, com.metamatrix.common.config.api.ConnectorBinding)
-     * @since 4.3
-     */
-    public void setConnectorBinding(ModelReference modelReference, ConnectorBinding binding) {
-        if(modelReference.getModelType() != ModelType.PHYSICAL_LITERAL) {
-            return;
-        }        
-        Map bindingMap = getAllConnectorBindings();
-        bindingMap.put(modelReference, binding);
-    }
-
-    /**
-     * @see com.metamatrix.modeler.dqp.config.ModelConnectorBindingMapper#createConnectorBinding(com.metamatrix.vdb.edit.manifest.ModelReference, com.metamatrix.common.config.api.ConnectorBindingType)
-     * @since 4.3
-     */
-    public ConnectorBinding createConnectorBinding(ModelReference modelReference,
-                                                   ConnectorBindingType connectorBindingType,
-                                                   String theName) throws Exception {
-        return getConfigurationManager().createConnectorBinding(modelReference, connectorBindingType, theName);
-    }
-
     /**
      * Populate the the map of modelreferences to the connector bindings that
      * have matching connection properties. 
@@ -248,51 +214,39 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
         for(final Iterator iter1 = bindings.iterator(); iter1.hasNext();) {
             ConnectorBinding binding = (ConnectorBinding) iter1.next();
             
-            ComponentType type = DqpPlugin.getInstance().getConfigurationManager().getConnectorType(binding.getComponentTypeID());
+            ConnectorType type = DqpPlugin.getInstance().getAdmin().getConnectorType(binding);
             
-            String driverClassName = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
+            String driverClassName = binding.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
             
             if( driverClassName == null ) {
                 // if no value set see if the type has a default value
-                ComponentTypeDefn defn = type.getComponentTypeDefinition(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
+                PropertyDefinition defn = type.getPropertyDefinition(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
 
-                if ((defn != null) && defn.getPropertyDefinition().hasDefaultValue()) {
-                    Object defaultValue = defn.getPropertyDefinition().getDefaultValue();
-                    
-                    if (defaultValue != null) {
-                    	driverClassName = defaultValue.toString();
-                    }
+                if ((defn != null) && defn.getDefaultValue() != null) {
+                    driverClassName = defn.getDefaultValue().toString();
                 }
             }
             
-            String url = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
+            String url = binding.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
             
             if( url == null ) {
                 // if no value set see if the type has a default value
-                ComponentTypeDefn defn = type.getComponentTypeDefinition(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
+                PropertyDefinition defn = type.getPropertyDefinition(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
 
-                if ((defn != null) && defn.getPropertyDefinition().hasDefaultValue()) {
-                    Object defaultValue = defn.getPropertyDefinition().getDefaultValue();
-                    
-                    if (defaultValue != null) {
-                    	url = defaultValue.toString();
-                    }
+                if ((defn != null) && defn.getDefaultValue() != null) {
+                   	url = defn.getDefaultValue().toString();
                 }
             }
             
-            String user = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
+            String user = binding.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
             
             
             if( user == null ) {
                 // if no value set see if the type has a default value
-                ComponentTypeDefn defn = type.getComponentTypeDefinition(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
+                PropertyDefinition defn = type.getPropertyDefinition(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
 
-                if ((defn != null) && defn.getPropertyDefinition().hasDefaultValue()) {
-                    Object defaultValue = defn.getPropertyDefinition().getDefaultValue();
-                    
-                    if (defaultValue != null) {
-                    	user = defaultValue.toString();
-                    }
+                if ((defn != null) && defn.getDefaultValue() != null) {
+                    user = defn.getDefaultValue().toString();
                 }
             }
             
@@ -357,7 +311,7 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
             Collection types = getConfigurationManager().getConnectorTypes();
             // for each binding get properties
             for(final Iterator iter1 = types.iterator(); iter1.hasNext();) {
-                ConnectorBindingType connectorType = (ConnectorBindingType) iter1.next();
+                ConnectorType connectorType = (ConnectorType) iter1.next();
                 Properties connectorTypeProps = connectorType.getDefaultPropertyValues();
                 String driverClassName = connectorTypeProps.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
                 if(StringUtil.isEmpty(driverClassName)) {
@@ -379,33 +333,17 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
      * @since 4.3
      */
     private Collection getModelReferences() {
-        VirtualDatabase virtualDatabase = null;
-        if (this.context != null) {
-            virtualDatabase = this.context.getVirtualDatabase();
-        } else if (this.contextEditor != null) {
-            virtualDatabase = this.contextEditor.getVirtualDatabase();
-        }
-        return virtualDatabase.getModels();
+        return this.context.getVirtualDatabase().getModels();
     }
     
     private ModelReference getModelReference(final String modelPath) {
-        ModelReference reference = null;
-        if (this.context != null) {
-            reference = this.context.getModelReference(modelPath);
-        } else if (this.contextEditor != null) {
-            reference = this.contextEditor.getModelReference(modelPath);
-        }
-        return reference;
+        return this.context.getModelReference(modelPath);
     }
     
     private VdbDefnHelper getVdbDefnHelper() {
         VdbDefnHelper helper = null;
         if(!HEADLESS) {
-	        if (this.context != null) {
-	            helper = DqpPlugin.getInstance().getVdbDefnHelper(this.context);
-	        } else if (this.contextEditor != null) {
-	            helper = DqpPlugin.getInstance().getVdbDefnHelper(this.contextEditor);
-	        }
+            helper = DqpPlugin.getInstance().getVdbDefnHelper(this.context);
         }
         return helper;
     }
@@ -417,7 +355,7 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
      * @since 4.3
      */
     private ConfigurationManager getConfigurationManager() {
-        return (this.manager != null) ? this.manager : DqpPlugin.getInstance().getConfigurationManager();
+        return (this.manager != null) ? this.manager : DqpPlugin.getInstance().getAdmin();
     }
 
     /**

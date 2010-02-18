@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
 import org.eclipse.swt.widgets.Display;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.ui.internal.util.UiUtil;
@@ -45,7 +45,7 @@ public class DeleteConnectorBindingAction extends ConfigurationManagerAction {
                     ConnectorBinding theBinding = (ConnectorBinding)selectedObjects[i];
                     if( theBinding != null ) {
                         try {
-                            getConfigurationManager().removeBinding(theBinding);
+                            getAdmin().removeBinding(theBinding);
                         } catch (final Exception error) {
                             UiUtil.runInSwtThread(new Runnable() {
                                 

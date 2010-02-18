@@ -17,10 +17,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ComponentTypeDefn;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.util.crypto.CryptoUtil;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.common.vdb.api.VDBDefn;
 import com.metamatrix.core.modeler.util.ArgCheck;
@@ -29,15 +28,14 @@ import com.metamatrix.core.util.AutoMultiStatus;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metamodels.core.ModelType;
+import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.config.VdbDefnHelper;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.vdb.edit.ClosePreventionVetoableChangeListener;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditPlugin;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
-import com.metamatrix.vdb.edit.manifest.Severity;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 
@@ -178,67 +176,6 @@ public class VdbExecutionValidatorImpl implements com.metamatrix.modeler.dqp.exe
         // return what we have built:
         return status;
     }
-    
-    /**
-     * Validate the vdb given the vdb context editor
-     * @param context The context editor for vdb containing the definition file.
-     * @return The validation status for the vdb indication if its ready for execution.
-     * @since 4.3
-     */
-    public IStatus validateVdb(final VdbContextEditor context) {
-        return validateVdb(context, true);
-    }
-
-    /**
-     * Validate the vdb given the vdb editing context. 
-     * @param context The editing context for vdb containing the definition file.
-     * @return The validation status for the vdb indication if its ready for execution.
-     * @since 4.3
-     */
-    public IStatus validateVdb(final VdbContextEditor context, boolean addSyncWarning) {
-        final AutoMultiStatus status = new AutoMultiStatus(OK_STATUS);
-        
-        boolean validatorOpenedContext = false;
-        try {
-            if(!context.isOpen()) {
-                context.open(new NullProgressMonitor());
-                validatorOpenedContext = true;
-            }            
-            context.addVetoableChangeListener(veto);
-
-            // check save state:
-            if(context.isSaveRequired()) {
-                status.add(STATUS_UNEXECUTABLE_ERROR);
-            } // endif
-
-            // use the helper to determine if we have the def file:
-            VdbDefnHelper helper = getHelper(context);
-            VDBDefn defFile = helper.getVdbDefn();
-
-            // must have a defn for this class to function
-            Assertion.isNotNull(defFile, DqpPlugin.Util.getStringOrKey(VdbDefnHelper.PREFIX + "nullVdbDefn")); //$NON-NLS-1$
-
-            // get the vdb definition file
-            status.merge(validateVdbModels(context.getVirtualDatabase(), defFile));
-
-        } catch(Exception e) {
-            String message = (e.getMessage() != null) ? e.getMessage() : StringUtil.Constants.EMPTY_STRING;
-            status.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, EXECPTION_ERROR_CODE, message, e));
-        } finally {
-            context.removeVetoableChangeListener(veto);
-            if (validatorOpenedContext) {
-                try {
-                    context.close(new NullProgressMonitor());
-                    context.dispose();
-                } catch (IOException err) {
-                    VdbEditPlugin.Util.log(err);
-                }
-            }
-        }
-
-        // return what we have built:
-        return status;
-    }
 
     /**
      * Validate a vdb to check if it is ready for execution. Checks if the physical models
@@ -287,39 +224,16 @@ public class VdbExecutionValidatorImpl implements com.metamatrix.modeler.dqp.exe
                     ConnectorBinding binding = ModelerDqpUtils.getFirstConnectorBinding(model, vdbDefn);
                     // can't assume we get a binding because we no longer stop on the first error:
                     if (binding != null) {
-                        ComponentType type = ModelerDqpUtils.getConnectorType(binding);
+                        ConnectorType type = ModelerDqpUtils.getConnectorType(binding);
                         if (type != null) {
-                            Collection typeDefs = type.getComponentTypeDefinitions();
-                            Iterator typeDefItr = typeDefs.iterator();
+                            for (PropertyDefinition typeDefn : type.getPropertyDefinitions()) {
 
-                            while (typeDefItr.hasNext()) {
-                                ComponentTypeDefn typeDefn = (ComponentTypeDefn) typeDefItr.next();
-
-                                if (typeDefn.getPropertyDefinition().isMasked()) {
-                                    String id = typeDefn.getPropertyDefinition().getName();
-                                    String value = binding.getProperty(id);
-
-                                    // if values exists see if it can be decrypted
-                                    if (!StringUtil.isEmpty(value)) {
-                                    	if (!CryptoUtil.canDecrypt(value)) {
-                                            vdbStatus.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID,
-                                                    DECRYPTION_ERROR_CODE, getString("decryptionProblem", //$NON-NLS-1$
-                                                            new Object[] { id, binding.getName() }), null));
-                                        }
-                                    } else if( typeDefn.isRequired() ) {
-                                        vdbStatus.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID,
-                                                                 BINDING_PROPERTY_ERROR_CODE, getString("bindingPropertyError", //$NON-NLS-1$
-                                                                         new Object[] { id, binding.getName() }), null));
-                                        //System.out.println("  Missing Required C-Binding Property: " + id);
-                                    }
-                                }
-                                // BML TODO:  waiting on Jeff C
-                                else if( typeDefn.isRequired() ) {
-                                    String id = typeDefn.getPropertyDefinition().getName();
-                                    String value = binding.getProperty(id);
+                                if( typeDefn.isRequired() ) {
+                                    String id = typeDefn.getName();
+                                    String value = binding.getPropertyValue(id);
                                     
                                     // look at type for default values as connectors inherit default values
-                                    if ((value == null || StringUtil.isEmpty(value)) && !typeDefn.getPropertyDefinition().hasDefaultValue()) {
+                                    if ((value == null || StringUtil.isEmpty(value)) && typeDefn.getDefaultValue() == null) {
                                         vdbStatus.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID,
                                                                  BINDING_PROPERTY_ERROR_CODE, getString("bindingPropertyError", //$NON-NLS-1$
                                                                          new Object[] { id, binding.getName() }), null));
@@ -344,9 +258,6 @@ public class VdbExecutionValidatorImpl implements com.metamatrix.modeler.dqp.exe
      * @since 4.3
      */
     private VdbDefnHelper getHelper(InternalVdbEditingContext context) throws Exception {
-        return DqpPlugin.getInstance().getVdbDefnHelper(context);
-    }
-    private VdbDefnHelper getHelper(VdbContextEditor context) throws Exception {
         return DqpPlugin.getInstance().getVdbDefnHelper(context);
     }
 

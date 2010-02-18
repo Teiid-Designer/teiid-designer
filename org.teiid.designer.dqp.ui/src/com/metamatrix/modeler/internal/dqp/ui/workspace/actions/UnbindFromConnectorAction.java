@@ -64,7 +64,7 @@ public class UnbindFromConnectorAction extends SortableSelectionAction implement
                 try {
                     modelResource = ModelUtilities.getModelResource(((IFile) selectedObj), false);
                     if( modelResource != null ) {
-                        DqpPlugin.getWorkspaceConfig().removeSourceBinding(modelResource);
+                        DqpPlugin.getInstance().getWorkspaceConfig().removeSourceBinding(modelResource);
                     }
                 } catch (ModelWorkspaceException e) {
                     UTIL.log(e);
@@ -107,7 +107,7 @@ public class UnbindFromConnectorAction extends SortableSelectionAction implement
                             UTIL.log(theException);
                         }
                         
-                        if( modelResource == null || DqpPlugin.getWorkspaceConfig().getBindingsForModel(modelResource.getItemName()).isEmpty() ) {
+                        if( modelResource == null || DqpPlugin.getInstance().getWorkspaceConfig().getBindingsForModel(modelResource.getItemName()).isEmpty() ) {
                             result = false;
                         }
                     }

@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorsViewTreeProvider;
@@ -65,7 +65,7 @@ public class SelectConnectorBindingDialog extends ElementTreeSelectionDialog imp
         
 
         // use default root        
-        setInput( DqpPlugin.getWorkspaceConfig() );   
+        setInput( DqpPlugin.getInstance().getWorkspaceConfig() );   
         
     }
 

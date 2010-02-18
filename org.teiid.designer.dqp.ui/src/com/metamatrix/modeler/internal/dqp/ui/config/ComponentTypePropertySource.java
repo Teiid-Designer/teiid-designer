@@ -8,38 +8,28 @@
 package com.metamatrix.modeler.internal.dqp.ui.config;
 
 import java.util.Collection;
-import java.util.Iterator;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
-import org.teiid.connector.api.ConnectorPropertyNames;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ComponentTypeDefn;
-import com.metamatrix.common.config.api.ConfigurationObjectEditor;
-import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
-
+import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.designer.runtime.ConnectorType;
 
 /**
  * @since 4.2
  */
-public class ComponentTypePropertySource implements
-                                        IPropertySource {
+public class ComponentTypePropertySource implements IPropertySource {
     private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
-    private ComponentType componentType;
+    private final ConnectorType connectorType;
 
     private boolean editable;
 
-//    private ConfigurationObjectEditor editor;
-
     /**
-     *
      * @since 4.2
      */
-    public ComponentTypePropertySource(ComponentType type, ConfigurationObjectEditor editor) {
-        this.componentType = type;
-//        this.editor = editor;
+    public ComponentTypePropertySource( ConnectorType type ) {
+        this.connectorType = type;
     }
 
     /**
@@ -55,16 +45,23 @@ public class ComponentTypePropertySource implements
      * @since 4.2
      */
     public IPropertyDescriptor[] getPropertyDescriptors() {
-        Collection properties = componentType.getComponentTypeDefinitions();
-        IPropertyDescriptor[] result = new IPropertyDescriptor[properties.size()];
-        int index = 0;
-        for ( Iterator iter = componentType.getComponentTypeDefinitions().iterator() ; iter.hasNext() ; ) {
-            ComponentTypeDefn propertyDefn = (ComponentTypeDefn) iter.next();
 
+        Collection<PropertyDefinition> propDefns;
+
+        try {
+            propDefns = this.connectorType.getPropertyDefinitions();
+        } catch (Exception e) {
+            // TODO log
+            return new IPropertyDescriptor[0];
+        }
+
+        IPropertyDescriptor[] result = new IPropertyDescriptor[propDefns.size()];
+        int index = 0;
+        for (PropertyDefinition propertyDefn : propDefns) {
             if (this.editable) {
-                result[index++] = new TextPropertyDescriptor(propertyDefn, propertyDefn.getPropertyDefinition().getDisplayName());
+                result[index++] = new TextPropertyDescriptor(propertyDefn, propertyDefn.getDisplayName());
             } else {
-                result[index++] = new PropertyDescriptor(propertyDefn, propertyDefn.getPropertyDefinition().getDisplayName());
+                result[index++] = new PropertyDescriptor(propertyDefn, propertyDefn.getDisplayName());
             }
         }
         return result;
@@ -74,15 +71,11 @@ public class ComponentTypePropertySource implements
      * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
      * @since 4.2
      */
-    public Object getPropertyValue(Object id) {
-        String defID = ((ComponentTypeDefn)id).getName();
-        String defValue = componentType.getDefaultValue(defID);
+    public Object getPropertyValue( Object id ) {
+        Object defValue = ((PropertyDefinition)id).getDefaultValue();
 
-
-        if ( defValue == null ) {
+        if (defValue == null) {
             defValue = EMPTY_STRING;
-        } else if (ConnectorPropertyNames.CONNECTOR_TYPE_CLASSPATH.equals(defID)) {
-            defValue = ModelerDqpUtils.getConnectorClasspathDisplayValue(defValue);
         }
 
         return defValue;
@@ -92,7 +85,7 @@ public class ComponentTypePropertySource implements
      * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
      * @since 4.2
      */
-    public boolean isPropertySet(Object id) {
+    public boolean isPropertySet( Object id ) {
         return false;
     }
 
@@ -100,10 +93,10 @@ public class ComponentTypePropertySource implements
      * @see org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java.lang.Object)
      * @since 4.2
      */
-    public void resetPropertyValue(Object id) {
+    public void resetPropertyValue( Object id ) {
     }
 
-    public void setEditable(boolean editable) {
+    public void setEditable( boolean editable ) {
         this.editable = editable;
     }
 
@@ -111,8 +104,8 @@ public class ComponentTypePropertySource implements
      * @see org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.lang.Object, java.lang.Object)
      * @since 4.2
      */
-    public void setPropertyValue(Object id,
-                                 Object value) {
+    public void setPropertyValue( Object id,
+                                  Object value ) {
     }
 
 }

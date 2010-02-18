@@ -38,10 +38,8 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ComponentTypeID;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.model.BasicConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
@@ -63,7 +61,7 @@ public class ExistingConnectorBindingPanel extends BaseNewConnectorBindingPanel 
 
     TreeViewer treeViewer;
     ConnectorBindingsTreeProvider treeProvider;
-    private ComponentType currentType;
+    private ConnectorType currentType;
     private ConnectorBinding currentBinding;
     private boolean hasInitialized = false;
     private IAction importBindingsAction;
@@ -76,7 +74,7 @@ public class ExistingConnectorBindingPanel extends BaseNewConnectorBindingPanel 
      * @since 4.2
      */
     public ExistingConnectorBindingPanel( Composite parent,
-                                          ComponentType type,
+                                          ConnectorType type,
                                           ConnectorBinding binding ) {
         super(parent);
         this.currentType = type;
@@ -129,7 +127,7 @@ public class ExistingConnectorBindingPanel extends BaseNewConnectorBindingPanel 
         treeViewer.setContentProvider(treeProvider);
         treeViewer.setLabelProvider(treeProvider);
 
-        treeViewer.setInput(DqpPlugin.getInstance().getConfigurationManager());
+        treeViewer.setInput(DqpPlugin.getInstance().getAdmin());
         treeViewer.expandToLevel(2);
 
         GridData gd = new GridData(GridData.FILL_BOTH);
@@ -163,7 +161,7 @@ public class ExistingConnectorBindingPanel extends BaseNewConnectorBindingPanel 
                 handleConfigChanged();
             }
         };
-        DqpPlugin.getInstance().getConfigurationManager().addChangeListener(configListener);
+        DqpPlugin.getInstance().getAdmin().addChangeListener(configListener);
 
         // add dispose listener because when I overrode dispose() it never got called
         addDisposeListener(new DisposeListener() {
@@ -298,7 +296,7 @@ public class ExistingConnectorBindingPanel extends BaseNewConnectorBindingPanel 
      * @since 5.0
      */
     void handleDispose() {
-        DqpPlugin.getInstance().getConfigurationManager().removeChangeListener(this.configListener);
+        DqpPlugin.getInstance().getAdmin().removeChangeListener(this.configListener);
     }
 
     @Override
@@ -340,13 +338,10 @@ public class ExistingConnectorBindingPanel extends BaseNewConnectorBindingPanel 
                 for (int i = 0; i < selList.length; i++) {
                     try {
                         if (selList[i] instanceof ConnectorBinding) {
-                            DqpPlugin.getInstance().getConfigurationManager().removeBinding((BasicConnectorBinding)selList[i]);
-                        } else if (selList[i] instanceof ComponentTypeID) {
-                            ComponentType type = DqpPlugin.getInstance().getConfigurationManager().getConnectorType(selList[i]);
-                            if (type != null) {
-                                DqpPlugin.getInstance().getConfigurationManager().removeConnectorType(type);
-                            }
-                        }
+                            DqpPlugin.getInstance().getAdmin().removeBinding((ConnectorBinding)selList[i]);
+                        } else if (selList[i] instanceof ConnectorType) {
+                            DqpPlugin.getInstance().getAdmin().removeConnectorType((ConnectorType)selList[i]);
+                    }
                     } catch (Exception error) {
                         DqpUiPlugin.showErrorDialog(getShell(), error);
                     }

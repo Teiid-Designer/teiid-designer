@@ -24,22 +24,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.common.config.api.ComponentTypeID;
-import com.metamatrix.common.config.api.ConfigurationObjectEditor;
-import com.metamatrix.common.config.api.ConnectorArchive;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.api.ConnectorBindingType;
-import com.metamatrix.common.config.api.ExtensionModule;
-import com.metamatrix.common.config.model.BasicConfigurationObjectEditor;
-import com.metamatrix.common.config.util.ConfigObjectsNotResolvableException;
-import com.metamatrix.common.config.util.InvalidConfigurationElementException;
-import com.metamatrix.common.config.xml.XMLConfigurationImportExportUtility;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.runtime.ServerAdmin;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.TempDirectory;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.config.ConfigurationManager;
-import com.metamatrix.modeler.dqp.internal.config.DqpExtensionsHandler;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 
@@ -93,18 +84,16 @@ public class ConnectorImportHelper implements DqpUiConstants {
     private boolean initDefaultSelections = true;
 
     // Collections of import file connector and connector types
-    private Collection<ConnectorBindingType> allImportFileConnectorTypes;
+    private Collection<ConnectorType> allImportFileConnectorTypes;
     private Collection<ConnectorBinding> allImportFileConnectors;
     private Collection<String> requiredExtJars;
 
     // Map of Connector and Connector Types to integer status
-    private Map<ConnectorBindingType, Integer> allImportFileConnTypeAndStatusMap;
+    private Map<ConnectorType, Integer> allImportFileConnTypeAndStatusMap;
     private Map<ConnectorBinding, Integer> allImportFileConnAndStatusMap;
 
     // Map of Standard workspace Connector Type name to connector type
-    private Map<String, ConnectorBindingType> workspaceConfigStandardTypeMap;
-
-    private ExtensionJarImportHelper extJarHelper;
+    private Map<String, ConnectorType> workspaceConfigStandardTypeMap;
 
     /**
      * Helper method to get string from the i18n.properties file
@@ -138,7 +127,6 @@ public class ConnectorImportHelper implements DqpUiConstants {
         this.allImportFileConnAndStatusMap = Collections.emptyMap();
 
         this.workspaceConfigStandardTypeMap = Collections.emptyMap();
-        this.extJarHelper = new ExtensionJarImportHelper();
     }
 
     /**
@@ -149,11 +137,11 @@ public class ConnectorImportHelper implements DqpUiConstants {
      * @return <code>true</code> if a matching connector type already exists in the configuration
      * @since 5.5.3
      */
-    public boolean existsInWorkspaceConfig( ConnectorBindingType connType ) {
+    public boolean existsInWorkspaceConfig( ConnectorType connType ) {
         boolean existsInConfig = false;
-        Collection<ConnectorBindingType> workspaceTypes = getAllWorkspaceConfigConnectorTypes();
-        for (Iterator<ConnectorBindingType> wIter = workspaceTypes.iterator(); wIter.hasNext();) {
-            ConnectorBindingType wType = wIter.next();
+        Collection<ConnectorType> workspaceTypes = getAllWorkspaceConfigConnectorTypes();
+        for (Iterator<ConnectorType> wIter = workspaceTypes.iterator(); wIter.hasNext();) {
+            ConnectorType wType = wIter.next();
             if (connType.getFullName().equalsIgnoreCase(wType.getFullName())) {
                 existsInConfig = true;
                 break;
@@ -174,7 +162,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
         Collection<ConnectorBinding> workspaceConns = getAllWorkspaceConfigConnectors();
         for (Iterator<ConnectorBinding> wIter = workspaceConns.iterator(); wIter.hasNext();) {
             ConnectorBinding wConn = wIter.next();
-            if (connector.getFullName().equalsIgnoreCase(wConn.getFullName())) {
+            if (connector.getName().equalsIgnoreCase(wConn.getName())) {
                 existsInConfig = true;
                 break;
             }
@@ -210,13 +198,13 @@ public class ConnectorImportHelper implements DqpUiConstants {
      * @return all connector types that require the supplied jarName; never null.
      * @since 5.5.3
      */
-    public Collection<ConnectorBindingType> getConnectorTypesRequiringExtensionJarName( String extJarName,
+    public Collection<ConnectorType> getConnectorTypesRequiringExtensionJarName( String extJarName,
                                                                                         boolean limitToSelected ) {
-        Collection<ConnectorBindingType> connectorTypes = new ArrayList<ConnectorBindingType>();
+        Collection<ConnectorType> connectorTypes = new ArrayList<ConnectorType>();
 
         // Iterate the connector types
-        for (Iterator<ConnectorBindingType> ctIter = this.allImportFileConnectorTypes.iterator(); ctIter.hasNext();) {
-            ConnectorBindingType cType = ctIter.next();
+        for (Iterator<ConnectorType> ctIter = this.allImportFileConnectorTypes.iterator(); ctIter.hasNext();) {
+            ConnectorType cType = ctIter.next();
             Collection<String> rqdJars = ModelerDqpUtils.getRequiredExtensionJarNames(cType);
             // Check if supplied jarName is in the required list
             if (rqdJars.contains(extJarName)) {
@@ -266,7 +254,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
      * @return the connector types available to be imported from the connector file; never null.
      * @since 5.5.3
      */
-    public Collection<ConnectorBindingType> getAllImportFileConnectorTypes() {
+    public Collection<ConnectorType> getAllImportFileConnectorTypes() {
         if (this.allImportFileConnectorTypes != null) {
             return this.allImportFileConnectorTypes;
         }
@@ -281,12 +269,12 @@ public class ConnectorImportHelper implements DqpUiConstants {
      * @return the non-standard connector types available to be imported from the connector file; never null.
      * @since 5.5.3
      */
-    public Collection<ConnectorBindingType> getAllNonStandardImportFileConnectorTypes() {
-        Collection<ConnectorBindingType> nonStandardImportTypes = new ArrayList<ConnectorBindingType>();
+    public Collection<ConnectorType> getAllNonStandardImportFileConnectorTypes() {
+        Collection<ConnectorType> nonStandardImportTypes = new ArrayList<ConnectorType>();
         Set<String> wsStandardBindingNames = this.workspaceConfigStandardTypeMap.keySet();
         if (this.allImportFileConnectorTypes != null) {
-            for (Iterator<ConnectorBindingType> iter = this.allImportFileConnectorTypes.iterator(); iter.hasNext();) {
-                ConnectorBindingType connType = iter.next();
+            for (Iterator<ConnectorType> iter = this.allImportFileConnectorTypes.iterator(); iter.hasNext();) {
+                ConnectorType connType = iter.next();
                 // Check import type name vs list of standard ws bindings
                 String importTypeName = connType.getFullName();
                 if (!wsStandardBindingNames.contains(importTypeName)) {
@@ -318,10 +306,10 @@ public class ConnectorImportHelper implements DqpUiConstants {
      * @return the connector types available from the connector file and selected for import; never null.
      * @since 5.5.3
      */
-    public Collection<ConnectorBindingType> getSelectedImportFileConnectorTypes() {
-        Collection<ConnectorBindingType> selectedTypes = new ArrayList<ConnectorBindingType>();
-        for (Iterator<ConnectorBindingType> keyIter = allImportFileConnTypeAndStatusMap.keySet().iterator(); keyIter.hasNext();) {
-            ConnectorBindingType connType = keyIter.next();
+    public Collection<ConnectorType> getSelectedImportFileConnectorTypes() {
+        Collection<ConnectorType> selectedTypes = new ArrayList<ConnectorType>();
+        for (Iterator<ConnectorType> keyIter = allImportFileConnTypeAndStatusMap.keySet().iterator(); keyIter.hasNext();) {
+            ConnectorType connType = keyIter.next();
             int connTypeStatus = allImportFileConnTypeAndStatusMap.get(connType).intValue();
 
             if (connTypeStatus == SELECTED_FOR_IMPORT) {
@@ -362,7 +350,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
         Collection<ConnectorBinding> availableConnectors = new ArrayList<ConnectorBinding>();
 
         // Get the selected Connector Types
-        Collection<ConnectorBindingType> selectedTypes = getSelectedImportFileConnectorTypes();
+        Collection<ConnectorType> selectedTypes = getSelectedImportFileConnectorTypes();
 
         // Iterate the list of all connectors. Include only those that have one of the selected types.
         for (Iterator<ConnectorBinding> cIter = this.allImportFileConnectors.iterator(); cIter.hasNext();) {
@@ -383,7 +371,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
      * @since 5.5.3
      */
     private boolean isConnectorTypeMatch( ConnectorBinding conn,
-                                          Collection<ConnectorBindingType> connTypes ) {
+                                          Collection<ConnectorType> connTypes ) {
         boolean isTypeMatch = false;
 
         // connector type name
@@ -391,8 +379,8 @@ public class ConnectorImportHelper implements DqpUiConstants {
 
         // Iterate thru the supplied connector types. If the type of the supplied connector
         // matches any of the types in the list, it is a match
-        for (Iterator<ConnectorBindingType> ctIter = connTypes.iterator(); ctIter.hasNext();) {
-            ConnectorBindingType cType = ctIter.next();
+        for (Iterator<ConnectorType> ctIter = connTypes.iterator(); ctIter.hasNext();) {
+            ConnectorType cType = ctIter.next();
             if (cType.getName().equals(connTypeName)) {
                 isTypeMatch = true;
                 break;
@@ -408,7 +396,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
      * @return the import status of the specified connector type; never null.
      * @since 5.5.3
      */
-    public IStatus getStatus( ConnectorBindingType connType ) {
+    public IStatus getStatus( ConnectorType connType ) {
 
         String typeName = connType.getFullName();
         // Make sure connType is in the map. If not found, this is an error.
@@ -489,7 +477,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
         }
 
         // Import type will replace existing workspace connector.
-        ConnectorBindingType importType = getImportFileType(connector.getComponentTypeID().getFullName());
+        ConnectorType importType = getImportFileType(connector.getComponentTypeID().getFullName());
         String msg = null;
 
         if (isSelectedForImport(importType)) {
@@ -505,10 +493,10 @@ public class ConnectorImportHelper implements DqpUiConstants {
      * @param typeName the name of the type from the import file being requested
      * @return the type (never <code>null</code>)
      */
-    private ConnectorBindingType getImportFileType( String typeName ) {
-        ConnectorBindingType result = null;
+    private ConnectorType getImportFileType( String typeName ) {
+        ConnectorType result = null;
 
-        for (ConnectorBindingType type : this.allImportFileConnectorTypes) {
+        for (ConnectorType type : this.allImportFileConnectorTypes) {
             if (type.getFullName().equals(typeName)) {
                 result = type;
                 break;
@@ -527,11 +515,11 @@ public class ConnectorImportHelper implements DqpUiConstants {
      * @since 5.5.3
      */
     public Collection<IStatus> getAllSelectedConnectorTypeStatus() {
-        Collection<ConnectorBindingType> selectedImportTypes = getSelectedImportFileConnectorTypes();
+        Collection<ConnectorType> selectedImportTypes = getSelectedImportFileConnectorTypes();
         Collection<IStatus> allStatus = new ArrayList<IStatus>(selectedImportTypes.size());
 
-        for (Iterator<ConnectorBindingType> iter = selectedImportTypes.iterator(); iter.hasNext();) {
-            ConnectorBindingType type = iter.next();
+        for (Iterator<ConnectorType> iter = selectedImportTypes.iterator(); iter.hasNext();) {
+            ConnectorType type = iter.next();
             allStatus.add(getStatus(type));
         }
 
@@ -585,7 +573,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
      * @return the extension jar path for the connector type
      * @since 5.5.3
      */
-    public String getExtensionJarPath( ConnectorBindingType connType ) {
+    public String getExtensionJarPath( ConnectorType connType ) {
         StringBuffer sb = new StringBuffer();
         Iterator<String> iter = ModelerDqpUtils.getRequiredExtensionJarNames(connType).iterator();
         while (iter.hasNext()) {
@@ -654,7 +642,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
      * @return <code>true</code> if the connector type is selected for import
      * @since 5.5.3
      */
-    public boolean isSelectedForImport( ConnectorBindingType connType ) {
+    public boolean isSelectedForImport( ConnectorType connType ) {
         if (!this.allImportFileConnTypeAndStatusMap.containsKey(connType)) {
             return false;
         }
@@ -672,11 +660,11 @@ public class ConnectorImportHelper implements DqpUiConstants {
      * @return <code>true</code> if the connector type is a standard type.
      * @since 5.5.3
      */
-    public boolean isStandardType( ConnectorBindingType connType ) {
+    public boolean isStandardType( ConnectorType connType ) {
         if (!this.allImportFileConnTypeAndStatusMap.containsKey(connType)) {
             return false;
         }
-        return getConfigurationManager().isStandardComponentType(connType);
+        return getAdmin().isStandardComponentType(connType);
     }
 
     /**
@@ -769,7 +757,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
      * @param shouldImport a flag indicating if the specified connector type should be imported
      * @since 5.5.3
      */
-    public void setImportStatus( ConnectorBindingType connectorType,
+    public void setImportStatus( ConnectorType connectorType,
                                  boolean shouldImport ) {
         if (!this.allImportFileConnTypeAndStatusMap.containsKey(connectorType)) {
             throw new IllegalArgumentException();
@@ -882,7 +870,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
 
         // For CAF import, the file must contain at least one non-standard type
         if (this.connectorFileType == CAF_FILE) {
-            Collection<ConnectorBindingType> nonStdTypes = getAllNonStandardImportFileConnectorTypes();
+            Collection<ConnectorType> nonStdTypes = getAllNonStandardImportFileConnectorTypes();
             if (nonStdTypes.isEmpty()) {
                 return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, IStatus.ERROR,
                                   getString("importFileCAFHasAllStandard.msg"), null); //$NON-NLS-1$
@@ -960,8 +948,8 @@ public class ConnectorImportHelper implements DqpUiConstants {
      * @return the ConfigurationManager
      * @since 5.5.3
      */
-    private ConfigurationManager getConfigurationManager() {
-        return DqpPlugin.getInstance().getConfigurationManager();
+    private ServerAdmin getConfigurationManager() {
+        return DqpPlugin.getInstance().getAdmin();
     }
 
     /**
@@ -970,10 +958,10 @@ public class ConnectorImportHelper implements DqpUiConstants {
      * @return the connector types which exist in the workspace configuration
      * @since 5.5.3
      */
-    public Collection<ConnectorBindingType> getAllWorkspaceConfigConnectorTypes() {
-        // Collection<ConnectorBindingType> types = getConfigurationManager().getConnectorTypes();
+    public Collection<ConnectorType> getAllWorkspaceConfigConnectorTypes() {
+        // Collection<ConnectorType> types = getConfigurationManager().getConnectorTypes();
         // for(Iterator iter = types.iterator(); iter.hasNext();) {
-        // ConnectorBindingType type = (ConnectorBindingType)iter.next();
+        // ConnectorType type = (ConnectorType)iter.next();
         // boolean isStandard = getConfigurationManager().isStandardComponentType(type);
         // }
         // return types;
@@ -1031,9 +1019,9 @@ public class ConnectorImportHelper implements DqpUiConstants {
         }
 
         // Init the import selection map (Selection Status initialized to false)
-        this.allImportFileConnTypeAndStatusMap = new HashMap<ConnectorBindingType, Integer>();
-        for (Iterator<ConnectorBindingType> ctIter = allImportFileConnectorTypes.iterator(); ctIter.hasNext();) {
-            ConnectorBindingType connType = ctIter.next();
+        this.allImportFileConnTypeAndStatusMap = new HashMap<ConnectorType, Integer>();
+        for (Iterator<ConnectorType> ctIter = allImportFileConnectorTypes.iterator(); ctIter.hasNext();) {
+            ConnectorType connType = ctIter.next();
             this.allImportFileConnTypeAndStatusMap.put(connType, new Integer(NOT_SELECTED_FOR_IMPORT));
         }
         // Import was successful
@@ -1064,8 +1052,8 @@ public class ConnectorImportHelper implements DqpUiConstants {
                 // CAF File
             } else if (this.connectorFileType == CAF_FILE) {
                 ConnectorArchive archive = util.importConnectorArchive(stream, new BasicConfigurationObjectEditor());
-                ConnectorBindingType[] cTypes = archive.getConnectorTypes();
-                allImportFileConnectorTypes = new ArrayList<ConnectorBindingType>(cTypes.length);
+                ConnectorType[] cTypes = archive.getConnectorTypes();
+                allImportFileConnectorTypes = new ArrayList<ConnectorType>(cTypes.length);
                 for (int i = 0; i < cTypes.length; i++) {
                     allImportFileConnectorTypes.add(cTypes[i]);
                 }
@@ -1151,10 +1139,10 @@ public class ConnectorImportHelper implements DqpUiConstants {
     private void initWorkspaceStandardTypesMap() {
         this.workspaceConfigStandardTypeMap = new HashMap();
         // Get all connector types in workspace, iterate to find standard type
-        Collection<ConnectorBindingType> types = getConfigurationManager().getConnectorTypes();
+        Collection<ConnectorType> types = getAdmin().getConnectorTypes();
         for (Iterator iter = types.iterator(); iter.hasNext();) {
-            ConnectorBindingType type = (ConnectorBindingType)iter.next();
-            boolean isStandard = getConfigurationManager().isStandardComponentType(type);
+            ConnectorType type = (ConnectorType)iter.next();
+            boolean isStandard = getAdmin().isStandardComponentType(type);
             if (isStandard) {
                 this.workspaceConfigStandardTypeMap.put(type.getFullName(), type);
             }
@@ -1186,9 +1174,9 @@ public class ConnectorImportHelper implements DqpUiConstants {
      */
     private boolean nameMatchesWorkspaceType( String name ) {
         boolean matches = false;
-        Collection<ConnectorBindingType> types = getConfigurationManager().getConnectorTypes();
+        Collection<ConnectorType> types = getConfigurationManager().getConnectorTypes();
         for (Iterator iter = types.iterator(); iter.hasNext();) {
-            ConnectorBindingType type = (ConnectorBindingType)iter.next();
+            ConnectorType type = (ConnectorType)iter.next();
             if (type.getFullName().equalsIgnoreCase(name)) {
                 matches = true;
                 break;
@@ -1249,7 +1237,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
 
         // Iterate the connector types, if no conflicts, mark for import
         for (Iterator ctIter = this.allImportFileConnectorTypes.iterator(); ctIter.hasNext();) {
-            ConnectorBindingType cType = (ConnectorBindingType)ctIter.next();
+            ConnectorType cType = (ConnectorType)ctIter.next();
             if (!existsInWorkspaceConfig(cType)) {
                 this.allImportFileConnTypeAndStatusMap.put(cType, new Integer(SELECTED_FOR_IMPORT));
             } else {
@@ -1283,7 +1271,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
 
         // Iterate the connector types and gather up the ext jars
         for (Iterator ctIter = this.allImportFileConnectorTypes.iterator(); ctIter.hasNext();) {
-            ConnectorBindingType cType = (ConnectorBindingType)ctIter.next();
+            ConnectorType cType = (ConnectorType)ctIter.next();
             if (isSelectedForImport(cType)) {
                 Collection cTypeModules = ModelerDqpUtils.getRequiredExtensionJarNames(cType);
                 for (Iterator jarIter = cTypeModules.iterator(); jarIter.hasNext();) {
@@ -1313,7 +1301,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
 
     }
 
-    private IStatus importConnectorTypes( List<ConnectorBindingType> types,
+    private IStatus importConnectorTypes( List<ConnectorType> types,
                                           Set<String> copiedJars,
                                           IProgressMonitor monitor ) {
         ConfigurationManager configMgr = getConfigurationManager();
@@ -1324,14 +1312,14 @@ public class ConnectorImportHelper implements DqpUiConstants {
 
         // process types and their required jars
         for (int i = 0; i < numTypes; ++i) {
-            ConnectorBindingType newType = types.get(i);
+            ConnectorType newType = types.get(i);
 
             // process jars first so that if a jar cannot be copied we won't add the type
             JarCopyMgr copyMgr = new JarCopyMgr(ModelerDqpUtils.getRequiredExtensionJarNames(newType));
             IStatus jarStatus = copyMgr.copy(copiedJars);
 
             if (jarStatus.isOK()) {
-                ConnectorBindingType existingType = null;
+                ConnectorType existingType = null;
                 Collection existingBindings = null;
                 boolean existingTypeRemoved = false;
 
@@ -1340,7 +1328,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
 
                     // save existing type and bindings in case we have to recover
                     if (statusCode == StatusCodes.UPDATE) {
-                        existingType = (ConnectorBindingType)configMgr.getComponentType(newType.getName());
+                        existingType = (ConnectorType)configMgr.getComponentType(newType.getName());
                         existingBindings = configMgr.getBindingsForType(existingType.getID());
 
                         // removing type removes all bindings associated with that type
@@ -1741,7 +1729,7 @@ public class ConnectorImportHelper implements DqpUiConstants {
         assert (getImportStatus().getSeverity() != IStatus.ERROR);
 
         Set<String> copiedJars = new HashSet<String>();
-        List<ConnectorBindingType> types = new ArrayList<ConnectorBindingType>(getSelectedImportFileConnectorTypes());
+        List<ConnectorType> types = new ArrayList<ConnectorType>(getSelectedImportFileConnectorTypes());
         List<ConnectorBinding> bindings = new ArrayList<ConnectorBinding>(getSelectedImportFileConnectors());
 
         // set the total work in the monitor

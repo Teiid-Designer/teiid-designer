@@ -8,32 +8,23 @@
 package com.metamatrix.modeler.dqp;
 
 import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
-import com.metamatrix.common.config.api.ConfigurationObjectEditor;
+import org.teiid.designer.runtime.ServerRegistry;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
-import com.metamatrix.modeler.dqp.config.ConfigurationManager;
-import com.metamatrix.modeler.dqp.internal.config.ConfigFileManager;
-import com.metamatrix.modeler.dqp.internal.config.ConfigurationManagerImpl;
-import com.metamatrix.modeler.dqp.internal.config.DqpExtensionsHandler;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.dqp.internal.config.VdbDefnHelper;
 import com.metamatrix.modeler.dqp.internal.workspace.WorkspaceConfigurationManager;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 
@@ -42,20 +33,22 @@ import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
  */
 public class DqpPlugin extends Plugin {
 
+    /**
+     * This plugin's identifier.
+     */
     public static final String PLUGIN_ID = "org.teiid.designer.dqp"; //$NON-NLS-1$
 
+    /**
+     * The package identifier.
+     */
     public static final String PACKAGE_ID = DqpPlugin.class.getPackage().getName();
 
+    /**
+     * The name of the I18n properties file.
+     */
     private static final String I18N_NAME = PACKAGE_ID + ".i18n"; //$NON-NLS-1$
 
-    public static final String WORKSPACE_DEFN_FILE_NAME = "WorkspaceBindings.def"; //$NON-NLS-1$
-
-    //private static final String ADMIN_VDB = "Admin.vdb"; //$NON-NLS-1$
-    private static final String WORKSPACE_PROPERTIES = "workspace.properties"; //$NON-NLS-1$
-
-    public static final String UDF_JAR_MAPPER_FILE_NAME = "udfJarMappings.properties"; //$NON-NLS-1$
-
-    public static final String SVN_DIR_NAME = ".svn"; //$NON-NLS-1$
+    public static final String SOURCE_BINDINGS_FILE_NAME = "SourceBindings.xml"; //$NON-NLS-1$
 
     /**
      * Provides access to the plugin's log and to it's resources.
@@ -64,11 +57,18 @@ public class DqpPlugin extends Plugin {
      */
     public static PluginUtil Util = new PluginUtilImpl(PLUGIN_ID, I18N_NAME, ResourceBundle.getBundle(I18N_NAME));
 
+    /**
+     * The shared instance.
+     */
     private static DqpPlugin plugin;
-    private ConfigurationManager manager;
-    private DqpExtensionsHandler extensionsHandler;
 
-    private static WorkspaceConfigurationManager workspaceConfig;
+    /**
+     * @return DqpPlugin
+     * @since 4.3
+     */
+    public static DqpPlugin getInstance() {
+        return plugin;
+    }
 
     // listener for context changes (specifically closed contexts)
     private IChangeListener changeListener = new IChangeListener() {
@@ -78,11 +78,30 @@ public class DqpPlugin extends Plugin {
     };
 
     /**
+     * The Teiid server registry.
+     */
+    private ServerRegistry serverRegistry;
+
+    /**
+     * The manager of the source bindings.
+     */
+    private WorkspaceConfigurationManager workspaceConfig; // TODO change name to SourceBindingsManager and refactor binding
+                                                           // utility methods to ServerAdmin
+
+    /**
      * Collection of {@link VdbDefnHelper}s for a given {@link InternalVdbEditingContext}. Important to make sure only one context
      * and one helper is constructed for a given VDB. Made protected for testing purposes. Key=InternalVdbEditingContext,
      * value=VdbDefnHelper
      */
     private Map vdbHelperMap = new HashMap();
+
+    /**
+     * @return
+     * @since 5.0
+     */
+    public WorkspaceConfigurationManager getWorkspaceConfig() {
+        return this.workspaceConfig;
+    }
 
     /**
      * <p>
@@ -96,61 +115,12 @@ public class DqpPlugin extends Plugin {
         super.start(context);
         plugin = this;
 
-        // initialize logger
+        // initialize logger first so that other methods can use logger
         ((PluginUtilImpl)Util).initializePlatformLogger(this);
 
-        // this method may result in errors or messages that need to get logged, therefore, MUST be called AFTER
-        // "initializePlatformLogger()"
-        initialize();
-    }
-
-    private void initialize() throws Exception {
         try {
-            IPath configLocation = DqpPath.getRuntimeConfigPath();
-
-            // create required directories for running the DQP
-            IPath configurationXmlFileLocation = DqpPath.getRuntimeConnectorsPath();
-            DqpPath.getLogPath();
-            
-            // ensure that the configuration files have been loaded to the state location
-            File configurationFile = new File(configurationXmlFileLocation.toFile(), ConfigFileManager.CONFIG_FILE_NAME);
-            if (!configurationFile.exists()) {
-                File originalFile = DqpPath.getInstallConfigPath().append(ConfigFileManager.CONFIG_FILE_NAME).toFile();
-                if (!originalFile.exists()) {
-                    throw new Exception(Util.getString(I18nUtil.getPropertyPrefix(DqpPlugin.class) + "missingConfigFile", //$NON-NLS-1$
-                                                       originalFile.getAbsolutePath()));
-                }
-                FileUtils.copy(originalFile.getAbsolutePath(), configurationFile.getAbsolutePath());
-            }
-
-            SvnFilenameFilter filter = new SvnFilenameFilter();
-
-            File configFolder = configLocation.toFile();
-            if (configFolder.exists()) {
-            	FileUtils.removeChildrenRecursively(configFolder);
-            }
-            FileUtils.copyRecursively(DqpPath.getInstallConfigPath().toFile(), configFolder, filter, false);
-
-            // init configuration manager
-            manager = new ConfigurationManagerImpl(configurationXmlFileLocation);
-
-            // copy the workspace.properties each if time eclipse starts as we may
-            // have modified the properties file
-            File src = DqpPath.getInstallDqpPath().append(WORKSPACE_PROPERTIES).toFile();
-
-            // Put workspace.properties at root of dqp state location
-            File target = new File(DqpPath.getRuntimePath().toFile(), WORKSPACE_PROPERTIES);
-
-            if (target.exists()) {
-                target.delete();
-            }
-            FileUtils.copy(src.getAbsolutePath(), target.getAbsolutePath());
-
-            // initialize the workspace configuration
+            initializeServerRegistry();
             initializeWorkspaceConfig();
-
-            // make call to copy embedded teiid extensions & lib jars
-            initializeEmbedded(filter);
         } catch (Exception e) {
             if (e instanceof CoreException) {
                 throw (CoreException)e;
@@ -158,42 +128,6 @@ public class DqpPlugin extends Plugin {
 
             throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, e.getLocalizedMessage(), e));
         }
-    }
-
-    /**
-     * @return DqpPlugin
-     * @since 4.3
-     */
-    public static DqpPlugin getInstance() {
-        return plugin;
-    }
-
-    public ConfigurationManager getConfigurationManager() {
-        return manager;
-    }
-
-    public DqpExtensionsHandler getExtensionsHandler() {
-        if (this.extensionsHandler == null) {
-            this.extensionsHandler = new DqpExtensionsHandler();
-        }
-
-        return this.extensionsHandler;
-    }
-
-    /**
-     * @return
-     * @since 5.0
-     */
-    public static WorkspaceConfigurationManager getWorkspaceConfig() {
-        return workspaceConfig;
-    }
-
-    /**
-     * @return ConfigurationObjectEditor
-     * @since 4.3
-     */
-    public ConfigurationObjectEditor getConfigurationObjectEditor() {
-        return manager.getBasicConfigurationObjectEditor();
     }
 
     /**
@@ -216,25 +150,6 @@ public class DqpPlugin extends Plugin {
     }
 
     /**
-     * Obtains the <code>VdbDefnHelper</code> for the specified <code>InternalVdbEditingContext</code>.
-     * 
-     * @param theContext the context whose helper is being requested
-     * @return the helper
-     * @since 4.3
-     */
-    public VdbDefnHelper getVdbDefnHelper( VdbContextEditor theContext ) {
-        VdbDefnHelper result = (VdbDefnHelper)this.vdbHelperMap.get(theContext);
-
-        if (result == null) {
-            theContext.addChangeListener(this.changeListener);
-            result = new VdbDefnHelper(theContext.getVdbFile(), theContext);
-            this.vdbHelperMap.put(theContext, result);
-        }
-
-        return result;
-    }
-
-    /**
      * Cleans up the map of context helpers.
      * 
      * @param theContext the context whose state has changed
@@ -243,98 +158,54 @@ public class DqpPlugin extends Plugin {
     void handleContextChanged( IChangeNotifier theContext ) {
         if (this.vdbHelperMap.get(theContext) != null) {
             // only care if the context is now closed
-            if (theContext instanceof VdbEditingContext) {
-                if (!((VdbEditingContext)theContext).isOpen()) {
-                    this.vdbHelperMap.remove(theContext);
-                    theContext.removeChangeListener(this.changeListener);
-                }
-            } else if (theContext instanceof VdbContextEditor) {
-                if (!((VdbContextEditor)theContext).isOpen()) {
-                    this.vdbHelperMap.remove(theContext);
-                    theContext.removeChangeListener(this.changeListener);
-                }
+            if (!((VdbEditingContext)theContext).isOpen()) {
+                this.vdbHelperMap.remove(theContext);
+                theContext.removeChangeListener(this.changeListener);
             }
+        }
+    }
+
+    private void initializeServerRegistry() throws CoreException {
+        this.serverRegistry = new ServerRegistry(DqpPath.getRuntimePath().toFile().getAbsolutePath());
+
+        // restore registry
+        IStatus status = this.serverRegistry.restoreState();
+
+        if (!status.isOK()) {
+            Util.log(status);
+        }
+
+        if (status.getSeverity() == IStatus.ERROR) {
+            throw new CoreException(status);
         }
     }
 
     private void initializeWorkspaceConfig() {
+        // TODO rewrite
         File workspaceDefnDirectory = DqpPath.getWorkspaceDefnPath().toFile();
         assert (workspaceDefnDirectory.exists() && workspaceDefnDirectory.isDirectory());
 
         // Check for config file
-        String configFilePath = workspaceDefnDirectory.getAbsolutePath() + File.separator + WORKSPACE_DEFN_FILE_NAME;
+        String configFilePath = workspaceDefnDirectory.getAbsolutePath() + File.separator + SOURCE_BINDINGS_FILE_NAME;
         File configFile = new File(configFilePath);
-        workspaceConfig = new WorkspaceConfigurationManager(configFile);
+        this.workspaceConfig = new WorkspaceConfigurationManager(configFile);
         if (!configFile.exists()) {
             try {
-                workspaceConfig.save();
+                this.workspaceConfig.save();
             } catch (Exception theException) {
                 String msg = Util.getString(I18nUtil.getPropertyPrefix(DqpPlugin.class) + "problemSavingWorkspaceDefnFile", //$NON-NLS-1$
-                                            WORKSPACE_DEFN_FILE_NAME);
+                                            SOURCE_BINDINGS_FILE_NAME);
                 Util.log(IStatus.ERROR, theException, msg);
             }
         } else {
             try {
-                workspaceConfig.load();
+                this.workspaceConfig.load();
             } catch (Exception theException) {
                 String msg = Util.getString(I18nUtil.getPropertyPrefix(DqpPlugin.class) + "problemLoadingWorkspaceDefnFile", //$NON-NLS-1$
-                                            WORKSPACE_DEFN_FILE_NAME);
+                                            SOURCE_BINDINGS_FILE_NAME);
                 Util.log(IStatus.ERROR, theException, msg);
             }
         }
     }
 
-    private void initializeEmbedded( FilenameFilter filter ) throws IOException, Exception {
-
-        IPath runtimeDqpWorkspacePath = DqpPath.getRuntimePath();
-
-        IPath embeddedExtensionsInstallPath = DqpPath.getInstallExtensionsPath();
-
-        IPath embeddedLibsInstallPath = DqpPath.getInstallLibPath();
-
-        // If extensions folder already exists delete contents
-        File runtimeDqpWorkspaceFolder = runtimeDqpWorkspacePath.toFile();
-
-        File runtimeExtensionsPath = DqpPath.getRuntimeExtensionsPath().toFile();
-        if (runtimeExtensionsPath.exists()) {
-            FileUtils.removeChildrenRecursively(runtimeExtensionsPath);
-        }
-
-        File runtimeLibsPath = DqpPath.getRuntimeLibsPath().toFile();
-        if (runtimeLibsPath.exists()) {
-            FileUtils.removeChildrenRecursively(runtimeLibsPath);
-        }
-
-        FileUtils.copyDirectoriesRecursively(embeddedExtensionsInstallPath.toFile(), runtimeDqpWorkspaceFolder, filter);
-
-        FileUtils.copyDirectoriesRecursively(embeddedLibsInstallPath.toFile(), runtimeDqpWorkspaceFolder, filter);
-    }
-
-    /**
-     * <strong>Method to facilitate testing. Should not be considered part of the public API.</strong>
-     * 
-     * @param theContext the context who's existing in the helper map is being requested
-     * @return <code>true</code> if contained in map; <code>false</code> otherwise.
-     */
-    public boolean testVdbContextHelperMapContains( VdbEditingContext theContext ) {
-        return this.vdbHelperMap.containsKey(theContext);
-    }
-
-    /*
-     * Inner class which filters .svn folders if they exist. Should only be applicable for running
-     * from IDE at development/debug time. Should not matter if running from kitted Designer.
-     */
-    class SvnFilenameFilter implements FilenameFilter {
-
-        @Override
-        public boolean accept( File dir,
-                               String name ) {
-            if (name != null && name.equalsIgnoreCase(SVN_DIR_NAME)) {
-                return false;
-            }
-
-            return true;
-        }
-
-    }
 }

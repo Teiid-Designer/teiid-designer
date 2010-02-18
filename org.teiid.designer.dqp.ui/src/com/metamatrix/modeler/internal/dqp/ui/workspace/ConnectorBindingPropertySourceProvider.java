@@ -16,12 +16,11 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ComponentTypeID;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.runtime.ServerAdmin;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceModelInfo;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
@@ -39,13 +38,14 @@ public class ConnectorBindingPropertySourceProvider implements IPropertySourcePr
 
     private ArrayList<IPropertyChangeListener> listenerList = new ArrayList<IPropertyChangeListener>();
     private boolean showExpertProps = false;
+    private final ServerAdmin admin;
 
     /**
      *
      * @since 4.2
      */
-    public ConnectorBindingPropertySourceProvider() {
-
+    public ConnectorBindingPropertySourceProvider(ServerAdmin admin) {
+        this.admin = admin;
     }
 
     /**
@@ -88,14 +88,12 @@ public class ConnectorBindingPropertySourceProvider implements IPropertySourcePr
      */
     public IPropertySource getPropertySource(Object object) {
         if ( object instanceof ConnectorBinding ) {
-            ConnectorBindingPropertySource source = new ConnectorBindingPropertySource((ConnectorBinding) object);
+            ConnectorBindingPropertySource source = new ConnectorBindingPropertySource((ConnectorBinding) object, this.admin);
             source.setEditable(this.connectorBindingsEditable);
             source.setProvider(this);
             return source;
-        } else  if ( object instanceof ComponentTypeID ) {
-            ComponentType compType =
-                DqpPlugin.getInstance().getConfigurationManager().getComponentType(((ComponentTypeID)object).getFullName());
-            ComponentTypePropertySource source = new ComponentTypePropertySource(compType, null);
+        } else  if ( object instanceof ConnectorType ) {
+            ComponentTypePropertySource source = new ComponentTypePropertySource((ConnectorType)object);
             source.setEditable(this.componentTypesEditable);
             return source;
         } else if( object instanceof SourceModelInfo ) {

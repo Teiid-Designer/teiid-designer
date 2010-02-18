@@ -19,8 +19,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import com.metamatrix.common.config.api.ComponentTypeID;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.runtime.ServerAdmin;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
@@ -41,12 +42,16 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
 
     private NewConnectorBindingPanel pnlBindings;
 
-    private ComponentTypeID initialConnectorType;
+    private ConnectorType initialConnectorType;
 
     private Collection changeListenerList = new ArrayList(2);
 
-    public NewConnectorBindingDialog( Shell theParentShell ) {
+    private final ServerAdmin admin;
+
+    public NewConnectorBindingDialog( Shell theParentShell,
+                                      ServerAdmin admin ) {
         super(theParentShell, DqpUiPlugin.getDefault());
+        this.admin = admin;
     }
 
     @Override
@@ -61,9 +66,9 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
         gd.heightHint = HEIGHT;
         mainComposite.setLayoutData(gd);
 
-        this.pnlBindings = new NewConnectorBindingPanel(mainComposite);
+        this.pnlBindings = new NewConnectorBindingPanel(mainComposite, this.admin);
         this.pnlBindings.addChangeListener(this);
-        //this.pnlBindings.setSaveOnChange(true);
+        // this.pnlBindings.setSaveOnChange(true);
         this.pnlBindings.setFocus();
         if (initialConnectorType != null) {
             pnlBindings.setConnectorType(initialConnectorType);
@@ -138,9 +143,6 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
     @Override
     protected void okPressed() {
         this.pnlBindings.save();
-        
-        this.pnlBindings.internalDispose();
-        
         super.okPressed();
     }
 
@@ -148,7 +150,7 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
         return this.pnlBindings.getConnectorBinding();
     }
 
-    public void setConnectorType( ComponentTypeID type ) {
+    public void setConnectorType( ConnectorType type ) {
         initialConnectorType = type;
     }
 }

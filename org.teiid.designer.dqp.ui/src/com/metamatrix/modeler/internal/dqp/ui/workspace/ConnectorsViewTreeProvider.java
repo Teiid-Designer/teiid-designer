@@ -14,9 +14,8 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ComponentTypeID;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceModelInfo;
 import com.metamatrix.modeler.dqp.internal.workspace.WorkspaceConfigurationManager;
@@ -75,11 +74,9 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
             return modelInfos.toArray();
         } else if( parentElement instanceof SourceModelInfo ) {
             return new Object[0];
-        } else if ( parentElement instanceof ComponentType ) {
-            Object id = ((ComponentType) parentElement).getID();
+        } else if ( parentElement instanceof ConnectorType ) {
+            Object id = ((ConnectorType) parentElement).getName();
             return workspaceConfig.getConfigurationManager().getBindingsForType(id).toArray();
-        } else if ( parentElement instanceof ComponentTypeID ) {
-            return workspaceConfig.getConfigurationManager().getBindingsForType(parentElement).toArray();
         }
         
         return this.workspaceConfig.getConnectorBindings().toArray();
@@ -109,10 +106,7 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
         if ( element instanceof ConnectorBinding ) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_BINDING_ICON);
         }
-        if ( element instanceof ComponentType ) {
-            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_TYPE_ICON);
-        }
-        if ( element instanceof ComponentTypeID ) {
+        if ( element instanceof ConnectorType ) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_TYPE_ICON);
         }
         
@@ -128,13 +122,10 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
      */
     public String getText(Object element) {
         if ( element instanceof ConnectorBinding ) {
-            return ((ConnectorBinding) element).getFullName();
+            return ((ConnectorBinding) element).getName();
         }
-        if ( element instanceof ComponentType ) {
-            return ((ComponentType) element).getFullName();
-        }
-        if ( element instanceof ComponentTypeID ) {
-            return element.toString();
+        if ( element instanceof ConnectorType ) {
+            return ((ConnectorType) element).getName();
         }
         if ( element instanceof SourceModelInfo ) {
             SourceModelInfo mInfo = (SourceModelInfo)element;

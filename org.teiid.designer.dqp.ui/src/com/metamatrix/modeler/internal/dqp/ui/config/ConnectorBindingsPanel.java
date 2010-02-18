@@ -45,8 +45,9 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetSorter;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.runtime.ServerAdmin;
 import com.metamatrix.common.vdb.api.VDBDefn;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
@@ -61,7 +62,6 @@ import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.modeler.internal.dqp.ui.dialogs.NewConnectorBindingDialog;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditPlugin;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
@@ -91,8 +91,7 @@ public final class ConnectorBindingsPanel extends Composite
 
     private boolean saveOnChange;
 
-    private InternalVdbEditingContext vdbContext;
-    private VdbContextEditor vdbContextEditor;
+    private final InternalVdbEditingContext vdbContext;
 
     private Button btnEdit;
 
@@ -122,37 +121,9 @@ public final class ConnectorBindingsPanel extends Composite
 
         this.vdbContext = (InternalVdbEditingContext)theVdbContext;
         this.vdbContext.addChangeListener(this);
-        this.vdbContextEditor = null;
         this.listeners = new ListenerList(ListenerList.IDENTITY);
 
         this.labelProvider = new VdbDefinitionLabelProvider(this.vdbContext);
-
-        setLayout(new GridLayout());
-        setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        createContents();
-
-        // Set initial selection if table contains one or more entries
-
-        if (table.getItemCount() > 0) {
-            getViewer().setSelection(new StructuredSelection(table.getItem(0).getData()));
-        }
-    }
-
-    public ConnectorBindingsPanel( Composite theParent,
-                                   File theVdb,
-                                   VdbContextEditor theVdbContext ) throws IllegalStateException {
-        super(theParent, SWT.NONE);
-
-        Assertion.isNotNull(theVdb);
-        Assertion.isNotNull(theVdbContext);
-
-        this.vdbContext = null;
-        this.vdbContextEditor = theVdbContext;
-        this.vdbContextEditor.addChangeListener(this);
-        this.listeners = new ListenerList(ListenerList.IDENTITY);
-
-        this.labelProvider = new VdbDefinitionLabelProvider(this.vdbContextEditor);
 
         setLayout(new GridLayout());
         setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -387,11 +358,7 @@ public final class ConnectorBindingsPanel extends Composite
         this.propertyPage.createControl(c);
         this.propertyPage.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        if (this.vdbContext != null) {
-            sourceProvider = new ConnectorBindingsPropertySourceProvider(this.vdbContext);
-        } else if (this.vdbContextEditor != null) {
-            sourceProvider = new ConnectorBindingsPropertySourceProvider(this.vdbContextEditor);
-        }
+        sourceProvider = new ConnectorBindingsPropertySourceProvider(this.vdbContext);
         sourceProvider.addPropertyChangeListener(this);
         sourceProvider.setEditable(true);
         this.propertyPage.setPropertySourceProvider(sourceProvider);
@@ -406,12 +373,7 @@ public final class ConnectorBindingsPanel extends Composite
     }
 
     private VdbDefnHelper getVdbDefnHelper() {
-        if (this.vdbContext != null) {
-            return DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext);
-        } else if (this.vdbContextEditor != null) {
-            return DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContextEditor);
-        }
-        return null;
+        return DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext);
     }
 
     private TableViewer getViewer() {
@@ -459,6 +421,11 @@ public final class ConnectorBindingsPanel extends Composite
             }
         }
     }
+    
+    private ServerAdmin getAdmin() {
+        // TODO implement
+        return null;
+    }
 
     void handleEditBinding() {
         if (resetForReadOnly()) {
@@ -474,12 +441,7 @@ public final class ConnectorBindingsPanel extends Composite
                 ConnectorBinding binding = getVdbDefnHelper().getFirstConnectorBinding(modelDefn);
                 String name = ModelerDqpUtils.createNewBindingName(modelDefn);
 
-                NewConnectorBindingDialog dialog = null;
-                if (this.vdbContext != null) {
-                    dialog = new NewConnectorBindingDialog(getShell(), binding, name, this.vdbContext, modelDefn);
-                } else if (this.vdbContextEditor != null) {
-                    dialog = new NewConnectorBindingDialog(getShell(), binding, name, this.vdbContextEditor, modelDefn);
-                }
+                NewConnectorBindingDialog dialog = new NewConnectorBindingDialog(getShell(), binding, name, this.vdbContext, modelDefn);
                 dialog.open();
 
                 if (dialog.getReturnCode() == Window.OK) {
@@ -494,7 +456,7 @@ public final class ConnectorBindingsPanel extends Composite
                         if (newValue == null) {
                             changed = true;
                         } else {
-                            changed = !oldValue.getID().equals(newValue.getID());
+                            changed = !oldValue.getName().equals(newValue.getName());
                         }
                     }
 
@@ -508,10 +470,10 @@ public final class ConnectorBindingsPanel extends Composite
                             if (newValue != null) {
                                 // add binding to configuration if it doesn't already exist
                                 if (ModelerDqpUtils.isUniqueBindingName(newValue.getName())) {
-                                    DqpPlugin.getInstance().getConfigurationManager().addBinding(newValue);
+                                    getAdmin().addConnectorBinding(newValue);
                                 }
 
-                                ComponentType type = ModelerDqpUtils.getConnectorType(newValue);
+                                ConnectorType type = ModelerDqpUtils.getConnectorType(newValue);
                                 getVdbDefnHelper().setConnectorBinding(modelDefn, newValue, type);
                             }
 
@@ -671,11 +633,7 @@ public final class ConnectorBindingsPanel extends Composite
      * @since 5.5
      */
     public void internalDispose() {
-        if (this.vdbContext != null) {
-            this.vdbContext.removeChangeListener(this);
-        } else if (this.vdbContextEditor != null) {
-            this.vdbContextEditor.removeChangeListener(this);
-        }
+        this.vdbContext.removeChangeListener(this);
     }
 
     /**
@@ -691,9 +649,7 @@ public final class ConnectorBindingsPanel extends Composite
     private void updateState( boolean theUpdateDefnFlag ) {
         Object input = null;
 
-        if ((this.vdbContext != null && this.vdbContext.isOpen())
-            || (this.vdbContextEditor != null && this.vdbContextEditor.isOpen())
-        /*&& (this.vdbContext.getVirtualDatabase().getSeverity().getValue() != Severity.ERROR)*/) {
+        if (this.vdbContext != null && this.vdbContext.isOpen()) {
 
             try {
                 VdbDefnHelper helper = getVdbDefnHelper();
@@ -703,11 +659,7 @@ public final class ConnectorBindingsPanel extends Composite
 
                     if (VdbEditPlugin.shouldAutoBind() && helper.autoAssignBindings() && !isSaveOnChange()) {
                         this.hasChanges = true;
-                        if (this.vdbContext != null) {
-                            this.vdbContext.setModified();
-                        } else if (this.vdbContextEditor != null) {
-                            this.vdbContextEditor.setSaveIsRequired();
-                        }
+                        this.vdbContext.setModified();
 
                         // tell user something was changed
                         getDisplay().asyncExec(new Runnable() {

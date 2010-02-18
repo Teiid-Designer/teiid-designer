@@ -12,104 +12,97 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ComponentTypeID;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.runtime.ServerAdmin;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.dqp.config.ConfigurationManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
-
-/** 
+/**
  * @since 4.2
  */
-public class ConnectorBindingsTreeProvider implements DqpUiConstants,
-                                                      ITreeContentProvider,
-                                                      ILabelProvider {
+public class ConnectorBindingsTreeProvider implements DqpUiConstants, ITreeContentProvider, ILabelProvider {
 
-//    private ConnectorBindingsManager bindingsManager;
-    private ConfigurationManager configManager;
-    
-    /** 
+    // private ConnectorBindingsManager bindingsManager;
+    private ServerAdmin admin;
+
+    /**
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      * @since 4.2
      */
-    public Object[] getChildren(Object parentElement) {
-        if ( parentElement instanceof ComponentType ) {
-            Object id = ((ComponentType) parentElement).getID();
-            return this.configManager.getBindingsForType(id).toArray();
-        } else if ( parentElement instanceof ComponentTypeID ) {
-            return this.configManager.getBindingsForType(parentElement).toArray();
+    public Object[] getChildren( Object parentElement ) {
+        if (parentElement instanceof ConnectorType) {
+            return this.admin.getConnectorBindings((ConnectorType)parentElement).toArray();
         }
+
         return new Object[0];
     }
 
-    /** 
+    /**
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      * @since 4.2
      */
-    public Object getParent(Object element) {
+    public Object getParent( Object element ) {
         return null;
     }
 
-    /** 
+    /**
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      * @since 4.2
      */
-    public boolean hasChildren(Object element) {
+    public boolean hasChildren( Object element ) {
         return getChildren(element).length > 0;
     }
 
-    /** 
+    /**
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      * @since 4.2
      */
-    public Image getImage(Object element) {
-        if ( element instanceof ConnectorBinding ) {
+    public Image getImage( Object element ) {
+        if (element instanceof ConnectorBinding) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_BINDING_ICON);
         }
-        if ( element instanceof ComponentType ) {
+        if (element instanceof ConnectorType) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_TYPE_ICON);
         }
-        if ( element instanceof ComponentTypeID ) {
-            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_TYPE_ICON);
-        }
+
         return null;
     }
 
-    /** 
+    /**
      * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
      * @since 4.2
      */
-    public String getText(Object element) {
-        if ( element instanceof ConnectorBinding ) {
-            return ((ConnectorBinding) element).getFullName();
+    public String getText( Object element ) {
+        if (element instanceof ConnectorBinding) {
+            return ((ConnectorBinding)element).getName();
         }
-        if ( element instanceof ComponentType ) {
-            return ((ComponentType) element).getFullName();
+        if (element instanceof ConnectorType) {
+            return ((ConnectorType)element).getName();
         }
-        if ( element instanceof ComponentTypeID ) {
+        if (element instanceof ComponentTypeID) {
             return element.toString();
         }
-        if ( element instanceof String ) {
-            return (String) element;
+        if (element instanceof String) {
+            return (String)element;
         }
-        return UTIL.getString(I18nUtil.getPropertyPrefix(ConnectorBindingsTreeProvider.class),
-                              new Object[] {element.toString(), element.getClass().getName()});
+        return UTIL.getString(I18nUtil.getPropertyPrefix(ConnectorBindingsTreeProvider.class), new Object[] {element.toString(),
+            element.getClass().getName()});
     }
-    
+
     /**
-     * Indicates if at least one binding is loaded in the configuration. 
+     * Indicates if at least one binding is loaded in the configuration.
+     * 
      * @return <code>true</code> if configuration contains at least one binding; <code>false</code>.
      * @since 4.3
      */
     public boolean containsBindings() {
         boolean result = false;
-        
-        if (this.configManager != null) {
-            Object[] types = getElements(this.configManager);
-            
+
+        if (this.admin != null) {
+            Object[] types = getElements(this.admin);
+
             if ((types != null) && (types.length != 0)) {
                 for (int i = 0; i < types.length; ++i) {
                     if (hasChildren(types[i])) {
@@ -119,59 +112,60 @@ public class ConnectorBindingsTreeProvider implements DqpUiConstants,
                 }
             }
         }
-        
+
         return result;
     }
 
-    /** 
+    /**
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      * @since 4.2
      */
-    public Object[] getElements(Object inputElement) {
-        if ( inputElement instanceof ConfigurationManager) {
-            configManager = (ConfigurationManager) inputElement;
-            return configManager.getConnectorTypeIds().toArray();
+    public Object[] getElements( Object inputElement ) {
+        if (inputElement instanceof ServerAdmin) {
+            this.admin = (ServerAdmin)inputElement;
+            return this.admin.getConnectorTypeIds().toArray();
         }
         return new Object[0];
     }
 
-    /** 
+    /**
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      * @since 4.2
      */
     public void dispose() {
     }
 
-    /** 
-     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+    /**
+     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+     *      java.lang.Object)
      * @since 4.2
      */
-    public void inputChanged(Viewer viewer,
-                             Object oldInput,
-                             Object newInput) {
+    public void inputChanged( Viewer viewer,
+                              Object oldInput,
+                              Object newInput ) {
     }
 
-    /** 
+    /**
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      * @since 4.2
      */
-    public void addListener(ILabelProviderListener listener) {
+    public void addListener( ILabelProviderListener listener ) {
     }
 
-    /** 
+    /**
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
      * @since 4.2
      */
-    public boolean isLabelProperty(Object element,
-                                   String property) {
+    public boolean isLabelProperty( Object element,
+                                    String property ) {
         return false;
     }
 
-    /** 
+    /**
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      * @since 4.2
      */
-    public void removeListener(ILabelProviderListener listener) {
+    public void removeListener( ILabelProviderListener listener ) {
     }
 
 }

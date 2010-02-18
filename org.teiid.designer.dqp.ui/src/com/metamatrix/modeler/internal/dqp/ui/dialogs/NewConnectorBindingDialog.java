@@ -27,11 +27,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ComponentTypeDefn;
-import com.metamatrix.common.config.api.ComponentTypeID;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.api.ConnectorBindingType;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.runtime.ServerAdmin;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
@@ -43,7 +41,6 @@ import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.widget.ExtendedTitleAreaDialog;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.edit.manifest.ModelSource;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
@@ -58,12 +55,11 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
     private static final int MAPPING_TAB = 2;
     private static final String PREFIX = I18nUtil.getPropertyPrefix(NewConnectorBindingDialog.class);
 
-    TabFolder tabPane;
-    private ComponentTypeID currentTypeID;
-    private ComponentType currentType;
-    private InternalVdbEditingContext vdbContext;
-    private VdbContextEditor vdbContextEditor;
+    private TabFolder tabPane;
+    private ConnectorType currentType;
+    private final InternalVdbEditingContext vdbContext;
     private ModelInfo modelInfo;
+    private final ServerAdmin admin;
 
     private ConnectorBinding binding;
     private String connectorBindingName;
@@ -93,39 +89,14 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
                                       ConnectorBinding binding,
                                       String connectorBindingName,
                                       VdbEditingContext theVdbContext,
-                                      ModelInfo theModelInfo ) {
+                                      ModelInfo theModelInfo,
+                                      ServerAdmin admin ) {
         super(theParentShell, DqpUiPlugin.getDefault());
         this.binding = binding;
-
-        if (this.binding != null) {
-            this.currentTypeID = binding.getComponentTypeID();
-        }
-
         this.connectorBindingName = connectorBindingName;
         this.vdbContext = (InternalVdbEditingContext)theVdbContext; // safe to cast
-        this.vdbContextEditor = null;
         this.modelInfo = theModelInfo;
-
-        // set initial size
-        setInitialSizeRelativeToScreen(50, 75);
-    }
-
-    public NewConnectorBindingDialog( Shell theParentShell,
-                                      ConnectorBinding binding,
-                                      String connectorBindingName,
-                                      VdbContextEditor theVdbContext,
-                                      ModelInfo theModelInfo ) {
-        super(theParentShell, DqpUiPlugin.getDefault());
-        this.binding = binding;
-
-        if (this.binding != null) {
-            this.currentTypeID = binding.getComponentTypeID();
-        }
-
-        this.connectorBindingName = connectorBindingName;
-        this.vdbContext = null;
-        this.vdbContextEditor = theVdbContext;
-        this.modelInfo = theModelInfo;
+        this.admin = admin;
 
         // set initial size
         setInitialSizeRelativeToScreen(50, 75);
@@ -148,10 +119,11 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
                     DqpUiPlugin.showErrorDialog(getShell(), error);
                     return false;
                 }
-                this.currentType = ModelerDqpUtils.getConnectorType(this.binding);
-
-                if ((pnl instanceof ImportSourceMappingPanel) && (((ImportSourceMappingPanel)pnl).isNewBindingState())) {
-                    setConnectorBindingPassword(((ImportSourceMappingPanel)pnl).getPassword());
+                try {
+                    this.currentType = this.admin.getConnectorType(this.binding);
+                } catch (Exception error) {
+                    DqpUiPlugin.showErrorDialog(getShell(), error);
+                    return false;
                 }
             }
         } else {
@@ -185,7 +157,7 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
     protected Control createDialogArea( Composite parent ) {
         if (this.currentTypeID != null) {
             Map types = ModelerDqpUtils.getConnectorTypes();
-            this.currentType = (ConnectorBindingType)types.get(this.currentTypeID.getName());
+            this.currentType = (ConnectorType)types.get(this.currentTypeID.getName());
         }
 
         Composite composite = (Composite)super.createDialogArea(parent);
@@ -204,38 +176,18 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
         // Construct tab controls
         //
 
-        this.newBindingPanel = null;
-        if (this.vdbContext != null) {
-            this.newBindingPanel = new NewConnectorBindingPanel(this.tabPane, this.connectorBindingName, getComponentType(),
+        this.newBindingPanel = new NewConnectorBindingPanel(this.tabPane, this.connectorBindingName, getConnectorType(),
                                                                 this.vdbContext);
-        } else if (this.vdbContextEditor != null) {
-            this.newBindingPanel = new NewConnectorBindingPanel(this.tabPane, this.connectorBindingName, getComponentType(),
-                                                                this.vdbContextEditor);
-        }
         this.newBindingPanel.addChangeListener(this);
 
-        this.existingBindingPanel = new ExistingConnectorBindingPanel(this.tabPane, getComponentType(), getConnectorBinding());
+        this.existingBindingPanel = new ExistingConnectorBindingPanel(this.tabPane, getConnectorType(), getConnectorBinding());
         this.existingBindingPanel.addChangeListener(this);
 
         // add import source panel if needed
-        ModelSource importSource = null;
-        if (this.vdbContext != null) {
-            importSource = ModelerDqpUtils.getModelImportSource(this.vdbContext, this.modelInfo);
-        } else if (this.vdbContextEditor != null) {
-            importSource = ModelerDqpUtils.getModelImportSource(this.vdbContextEditor, this.modelInfo);
-        }
+        ModelSource importSource = ModelerDqpUtils.getModelImportSource(this.vdbContext, this.modelInfo);
 
         if (importSource != null) {
-            if (this.vdbContext != null) {
-                this.importSourcePanel = new ImportSourceMappingPanel(this.tabPane, this.vdbContext, this.modelInfo, importSource);
-            } else if (this.vdbContextEditor != null) {
-                this.importSourcePanel = new ImportSourceMappingPanel(this.tabPane, this.vdbContextEditor, this.modelInfo,
-                                                                      importSource);
-            } else {
-                // should be caught by testing so no internationalization being done
-                Assertion.failed("Both InternalVdbEditingContext and VdbContextEditor should NOT be null"); //$NON-NLS-1$
-            }
-
+            this.importSourcePanel = new ImportSourceMappingPanel(this.tabPane, this.vdbContext, this.modelInfo, importSource);
             this.importSourcePanel.addChangeListener(this);
         }
 
@@ -276,7 +228,7 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
         return composite;
     }
 
-    public ComponentType getComponentType() {
+    public ConnectorType getConnectorType() {
         return this.currentType;
     }
 
@@ -306,50 +258,6 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
                 }
             });
         }
-    }
-
-    private IStatus setConnectorBindingPassword( String thePassword ) {
-        IStatus result = null;
-        ComponentTypeDefn pswdDefn = null;
-        Collection defns = this.currentType.getComponentTypeDefinitions();
-
-        if ((defns != null) && !defns.isEmpty()) {
-            Iterator itr = defns.iterator();
-
-            // loop through properties looking for masked ones. if we find only one assume it is the password.
-            // if one find none or multiple this means we can't set the password so tell the user.
-            while (itr.hasNext()) {
-                ComponentTypeDefn defn = (ComponentTypeDefn)itr.next();
-
-                if (defn.getPropertyDefinition().isMasked()) {
-                    if (pswdDefn == null) {
-                        pswdDefn = defn;
-                    } else {
-                        // set status to multiple masked properties found
-                        result = new Status(IStatus.WARNING, PLUGIN_ID, IStatus.OK, getString("multipleMaskedProperties"), null); //$NON-NLS-1$
-                        break;
-                    }
-                }
-            }
-
-            if (pswdDefn == null) {
-                // set status to indicate no masked property found
-                result = new Status(IStatus.WARNING, PLUGIN_ID, IStatus.OK, getString("noPswdProperty"), null); //$NON-NLS-1$
-            }
-        }
-
-        if (result == null) {
-            // set property and return OK status
-            DqpPlugin.getInstance().getConfigurationObjectEditor().setProperty(getConnectorBinding(),
-                                                                               pswdDefn.getPropertyDefinition().getName(),
-                                                                               ModelerDqpUtils.encryptValue(thePassword));
-            result = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$
-        }
-
-        // ErrorDialog only displays if not IStatus.OK
-        ErrorDialog.openError(null, getString("pswdProblemDialog.title"), getString("pswdProblemDialog.msg"), result); //$NON-NLS-1$ //$NON-NLS-2$
-
-        return result;
     }
 
     void setSelectedPanel( BaseNewConnectorBindingPanel thePanel ) {

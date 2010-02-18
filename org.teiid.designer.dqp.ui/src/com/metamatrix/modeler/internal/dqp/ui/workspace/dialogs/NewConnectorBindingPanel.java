@@ -10,6 +10,7 @@ package com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TreeSet;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
@@ -42,15 +43,12 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetSorter;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ComponentTypeID;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.namedobject.BaseID;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.runtime.ServerAdmin;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.config.ConfigurationManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorBindingPropertySourceProvider;
@@ -74,13 +72,10 @@ public class NewConnectorBindingPanel extends Composite
 
     private ListenerList changeListeners;
 
-    Map componentTypes;
-    List sortedTypes;
+    private Map componentTypes;
+    private List sortedTypes;
     private Combo typeCombo;
-    BaseID currentTypeID;
-    ComponentType currentType;
-
-    private IChangeListener configListener;
+    private ConnectorType currentType;
 
     private Text bindingNameText;
 
@@ -92,14 +87,14 @@ public class NewConnectorBindingPanel extends Composite
 
     private ConnectorBinding connectorBinding;
 
-    private ConfigurationManager configManager;
+    private final ServerAdmin admin;
 
-    public NewConnectorBindingPanel( Composite theParent ) throws IllegalStateException {
+    public NewConnectorBindingPanel( Composite theParent, ServerAdmin admin ) throws IllegalStateException {
         super(theParent, SWT.NONE);
 
         this.changeListeners = new ListenerList(ListenerList.IDENTITY);
 
-        configManager = DqpPlugin.getInstance().getConfigurationManager();
+        this.admin = admin;
 
         createContents(this);
 
@@ -108,7 +103,7 @@ public class NewConnectorBindingPanel extends Composite
         // When Type changes, New Binding is created because properties may be different
         connectorTypeChanged();
 
-        propertyPage.selectionChanged(null, new StructuredSelection(connectorBinding));
+        this.propertyPage.selectionChanged(null, new StructuredSelection(connectorBinding));
     }
 
     /**
@@ -274,7 +269,7 @@ public class NewConnectorBindingPanel extends Composite
         this.propertyPage.createControl(propertyGroup);
         this.propertyPage.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        sourceProvider = new ConnectorBindingPropertySourceProvider();
+        sourceProvider = new ConnectorBindingPropertySourceProvider(this.admin);
 
         sourceProvider.addPropertyChangeListener(this);
         sourceProvider.setEditable(true);
@@ -302,11 +297,18 @@ public class NewConnectorBindingPanel extends Composite
         return this.connectorBinding;
     }
     
+    private Properties getProperties() {
+        // TODO implement
+        return null;
+    }
+    
     private void createConnectorBinding() {
         // bindings must have a type
+        // TODO can't actually create a binding here because user can cancel out of dialog
         if (this.currentType != null) {
             try {
-            	this.connectorBinding = configManager.createConnectorBinding(this.currentType, getNewBindingName(), false);
+                this.admin.addConnectorBinding(getNewBindingName(), this.currentType.getName(), getProperties());
+                this.connectorBinding = this.admin.getConnectorBinding(getNewBindingName());
 	        } catch (Exception theException) {
 	            DqpUiConstants.UTIL.log(theException);
 	            theException.printStackTrace();
@@ -325,11 +327,7 @@ public class NewConnectorBindingPanel extends Composite
         int index = this.typeCombo.getSelectionIndex();
 
         if (index != -1) {
-            this.currentType = (ComponentType)this.componentTypes.get(sortedTypes.get(index));
-
-            if ((this.currentTypeID == null) || !(this.currentTypeID == this.currentType.getID())) {
-                this.currentTypeID = this.currentType.getID();
-            }
+            this.currentType = (ConnectorType)this.componentTypes.get(sortedTypes.get(index));
         }
 
         // If Component Type is changed, we need to create a new binding
@@ -351,10 +349,9 @@ public class NewConnectorBindingPanel extends Composite
                 public void run() {
                     if (!combo.isDisposed()) {
                         WidgetUtil.setComboItems(combo, NewConnectorBindingPanel.this.sortedTypes, null, false, selection);
-                        ComponentType type = (ComponentType)NewConnectorBindingPanel.this.componentTypes.get(selection);
+                        ConnectorType type = (ConnectorType)NewConnectorBindingPanel.this.componentTypes.get(selection);
                         if (type != null) {
                             NewConnectorBindingPanel.this.currentType = type;
-                            NewConnectorBindingPanel.this.currentTypeID = type.getID();
                         }
 
                         connectorTypeChanged();
@@ -473,7 +470,7 @@ public class NewConnectorBindingPanel extends Composite
     public void save() {
     	// Copy the connector binding so we get the new name
     	try {
-			DqpPlugin.getInstance().getConfigurationManager().createConnectorBinding(this.connectorBinding, getNewBindingName());
+            this.admin.addConnectorBinding(getNewBindingName(), this.currentType.getName(), getProperties());
 		} catch (Exception theException) {
 			DqpUiConstants.UTIL.log(theException);
            
@@ -506,18 +503,6 @@ public class NewConnectorBindingPanel extends Composite
         Color bkg = UiUtil.getSystemColor(colorCode);
         propertyPage.getControl().setBackground(bkg);
     }
-
-    /**
-     * The normal dispose() method was not getting called when the bindings editor was closed. Needed a way to remove listeners.
-     * @throws Exception 
-     * 
-     * @since 5.5
-     */
-    public void internalDispose() {
-
-        
-        DqpPlugin.getInstance().getConfigurationManager().removeChangeListener(this.configListener);
-    }
     
     /**
      * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
@@ -533,11 +518,11 @@ public class NewConnectorBindingPanel extends Composite
 
     }
 
-    public int getComponentTypeComboIndex( ComponentTypeID typeID ) {
+    public int getComponentTypeComboIndex( ConnectorType type ) {
         String[] items = typeCombo.getItems();
 
         for (int i = 0; i < items.length; i++) {
-            if (items[i].equals(typeID.getName())) {
+            if (items[i].equals(type.getName())) {
                 return i;
             }
         }
@@ -545,8 +530,8 @@ public class NewConnectorBindingPanel extends Composite
         return -1;
     }
 
-    public void setConnectorType( ComponentTypeID typeID ) {
-        int typeIndex = getComponentTypeComboIndex(typeID);
+    public void setConnectorType( ConnectorType type ) {
+        int typeIndex = getComponentTypeComboIndex(type);
         if (typeIndex > -1) {
             typeCombo.select(typeIndex);
             connectorTypeChanged(); // needed to get the property page to update

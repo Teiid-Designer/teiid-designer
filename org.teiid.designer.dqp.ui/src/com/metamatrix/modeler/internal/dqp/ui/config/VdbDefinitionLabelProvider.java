@@ -10,12 +10,11 @@ package com.metamatrix.modeler.internal.dqp.ui.config;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 import com.metamatrix.vdb.internal.runtime.model.BasicVDBModelDefn;
 
@@ -45,16 +44,10 @@ public class VdbDefinitionLabelProvider implements DqpUiConstants,
     private static final Image CONNECTOR_ICON = DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_ICON);
 
     
-    private InternalVdbEditingContext vdbContext;
-    private VdbContextEditor vdbContextEditor;
+    private final InternalVdbEditingContext vdbContext;
     
     public VdbDefinitionLabelProvider(InternalVdbEditingContext theContext) {
         this.vdbContext = theContext;
-        this.vdbContextEditor = null;
-    }
-    public VdbDefinitionLabelProvider(VdbContextEditor theContext) {
-        this.vdbContext = null;
-        this.vdbContextEditor = theContext;
     }
 
     /** 
@@ -81,12 +74,7 @@ public class VdbDefinitionLabelProvider implements DqpUiConstants,
                 return element.toString();
             case 1:
                 if ( element instanceof BasicVDBModelDefn ) {
-                    ConnectorBinding binding = null;
-                    if (this.vdbContext != null) {
-                        binding = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext).getFirstConnectorBinding((BasicVDBModelDefn) element);
-                    } else if (this.vdbContextEditor != null) {
-                        binding = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContextEditor).getFirstConnectorBinding((BasicVDBModelDefn) element);
-                    }
+                    ConnectorBinding binding = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext).getFirstConnectorBinding((BasicVDBModelDefn) element);
                     return getText(binding);
                 }
                 return element.toString();
@@ -97,9 +85,7 @@ public class VdbDefinitionLabelProvider implements DqpUiConstants,
 
     public String getText(ConnectorBinding binding) { 
         if ( binding == null ) {
-            if (this.vdbContext != null && this.vdbContext.isReadOnly()) {
-                return getString("none.ReadOnly"); //$NON-NLS-1$
-            } else if (this.vdbContextEditor != null && this.vdbContextEditor.isReadOnly()) {
+            if (this.vdbContext.isReadOnly()) {
                 return getString("none.ReadOnly"); //$NON-NLS-1$
             }
             return getString("none.Modifiable"); //$NON-NLS-1$                            

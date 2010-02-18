@@ -51,10 +51,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ComponentTypeID;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.model.BasicConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
@@ -127,7 +125,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
 
     private IPropertySourceProvider propertySourceProvider;
 
-    private WorkspaceConfigurationManager workspaceConfig = DqpPlugin.getWorkspaceConfig();
+    private WorkspaceConfigurationManager workspaceConfig = DqpPlugin.getInstance().getWorkspaceConfig();
 
     class NameSorter extends ViewerSorter {
     }
@@ -205,7 +203,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
                 handleConfigurationChanged();
             }
         };
-        DqpPlugin.getInstance().getConfigurationManager().addChangeListener(this.configListener);
+        DqpPlugin.getInstance().getAdmin().addChangeListener(this.configListener);
         workspaceConfig.addChangeListener(this.configListener);
 
         // hook up our status bar manager for EObjects
@@ -326,8 +324,8 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
                             Object data = item.getData();
                             if (data != null) {
                                 String tooltip = StringUtil.Constants.EMPTY_STRING;
-                                if (data instanceof BasicConnectorBinding) {
-                                    tooltip = getConnectorBindingToolTip((BasicConnectorBinding)data);
+                                if (data instanceof ConnectorBinding) {
+                                    tooltip = getConnectorBindingToolTip((ConnectorBinding)data);
                                 } else {
                                     tooltip = data.toString();
                                 }
@@ -363,7 +361,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
         viewer.getTree().addListener(SWT.MouseHover, treeListener);
     }
 
-    String getConnectorBindingToolTip( BasicConnectorBinding binding ) {
+    String getConnectorBindingToolTip( ConnectorBinding binding ) {
         Object params = new Object[] {binding.getName(), binding.getDeployedName(), binding.getConnectorClass(),
             binding.getComponentTypeID(), binding.getConfigurationID(), binding.getID(), binding.isEssential()};
         return DqpUiConstants.UTIL.getString(PREFIX + "bindingToolTip", params); //$NON-NLS-1$
@@ -420,7 +418,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
                 manager.add(new Separator());
                 manager.add(importConnectorsAction);
                 manager.add(exportConnectorsAction);
-            } else if (selection instanceof ComponentTypeID || selection instanceof ComponentType) {
+            } else if (selection instanceof ConnectorType) {
                 manager.add(newConnectorBindingAction);
                 manager.add(new Separator());
                 manager.add(deleteConnectorsAction);
@@ -600,7 +598,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
     @Override
     public void dispose() {
         if (this.configListener != null) {
-            DqpPlugin.getInstance().getConfigurationManager().removeChangeListener(this.configListener);
+            DqpPlugin.getInstance().getAdmin().removeChangeListener(this.configListener);
             this.workspaceConfig.removeChangeListener(this.configListener);
         }
 

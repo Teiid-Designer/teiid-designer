@@ -12,7 +12,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.part.PluginDropAdapter;
 import org.eclipse.ui.part.ResourceTransfer;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -54,7 +54,7 @@ public class ConnectorsViewDropAdapter extends PluginDropAdapter {
 
             ModelResource mr = ModelerCore.getModelWorkspace().findModelResource(resources[0]);
             if( mr != null && ModelIdentifier.isPhysicalModelType(mr)) {
-                DqpPlugin.getWorkspaceConfig().createSourceBinding(mr, theTargetBinding);
+                DqpPlugin.getInstance().getWorkspaceConfig().createSourceBinding(mr, theTargetBinding);
                 theTargetBinding = null;
                 currentTransfer = null;
                 return true;

@@ -12,8 +12,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 
 /**
@@ -52,9 +52,9 @@ public class StatusBarUpdater implements DqpUiConstants,
             } 
             Object elem= selection.getFirstElement();
             if (elem instanceof ConnectorBinding) {
-                return ((ConnectorBinding) elem).getFullName();
-            } else if (elem instanceof ComponentType) {
-                return ((ComponentType) elem).getFullName();
+                return ((ConnectorBinding) elem).getName();
+            } else if (elem instanceof ConnectorType) {
+                return ((ConnectorType) elem).getName();
             }
             
             return elem.getClass().getName();

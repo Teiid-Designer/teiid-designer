@@ -24,12 +24,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ConfigurationModelContainer;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.api.ConnectorBindingType;
-import com.metamatrix.common.config.model.BasicConnectorBinding;
-import com.metamatrix.common.config.util.ConfigurationPropertyNames;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.common.vdb.api.VDBDefn;
 import com.metamatrix.core.util.Assertion;
@@ -41,7 +37,6 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.config.ModelConnectorBindingMapper;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.edit.loader.VDBReader;
 import com.metamatrix.vdb.edit.loader.VDBWriter;
@@ -93,26 +88,6 @@ public class VdbDefnHelper {
         return null;
     }
 
-    public static ModelReference findModelReference( VdbContextEditor context,
-                                                     ModelInfo model ) {
-        for (Iterator iter = context.getVirtualDatabase().getModels().iterator(); iter.hasNext();) {
-            ModelReference ref = (ModelReference)iter.next();
-            String refName = ref.getName();
-            int index = StringUtil.indexOfIgnoreCase(refName, ModelerCore.MODEL_FILE_EXTENSION);
-
-            // if needed strip off model extension
-            if (index != -1) {
-                refName = refName.substring(0, index);
-            }
-
-            if (refName.equals(model.getName())) {
-                return ref;
-            }
-        }
-
-        return null;
-    }
-
     public static File getVdbDefinitionFile( VdbEditingContext theContext ) {
         File defnFile = null;
         if (theContext != null) {
@@ -130,55 +105,8 @@ public class VdbDefnHelper {
         return defnFile;
     }
 
-    public static File getVdbDefinitionFile( VdbContextEditor theContext ) {
-        File defnFile = null;
-        if (theContext != null) {
-            try {
-                if (!theContext.isOpen()) {
-                    theContext.open(new NullProgressMonitor());
-                }
-            } catch (Exception e) {
-                DqpPlugin.Util.log(IStatus.ERROR, e.getLocalizedMessage());
-                return null;
-            }
-
-            File tempDirFolder = new File(theContext.getTempDirectory().getPath());
-            defnFile = new File(tempDirFolder, VdbConstants.DEF_FILE_NAME);
-
-            // If the .DEF file does not already exists in the temp directory then get from the VDB
-            if (!defnFile.exists()) {
-                InputStream is = null;
-                try {
-                    File vdbFile = theContext.getVdbFile();
-
-                    // can't create a zip file from an empty VDB because an exception is thrown
-                    if (vdbFile.exists() && (vdbFile.length() != 0)) {
-                        ZipFile archive = new ZipFile(vdbFile);
-                        ZipEntry entry = archive.getEntry(VdbConstants.DEF_FILE_NAME);
-                        if (entry != null) {
-                            is = archive.getInputStream(entry);
-                            FileUtils.write(is, defnFile);
-                        }
-                    }
-                } catch (IOException e) {
-                    defnFile = null;
-                    DqpPlugin.Util.log(IStatus.ERROR, e.getLocalizedMessage());
-                } finally {
-                    if (is != null) {
-                        try {
-                            is.close();
-                        } catch (IOException ignored) {
-                        }
-                    }
-                }
-            }
-        }
-        return defnFile;
-    }
-
     private File vdbFile;
-    private InternalVdbEditingContext vdbContext;
-    private VdbContextEditor vdbContextEditor;
+    private final InternalVdbEditingContext vdbContext;
     private VDBDefn vdbDefn;
 
     public VdbDefnHelper( File theVdb,
@@ -187,19 +115,6 @@ public class VdbDefnHelper {
         Assertion.isNotNull(theEditingContext);
 
         this.vdbContext = theEditingContext;
-        this.vdbContextEditor = null;
-        this.vdbFile = theVdb;
-
-        getOrCreateVdbDefnFile();
-    }
-
-    public VdbDefnHelper( File theVdb,
-                          VdbContextEditor theEditingContext ) {
-        Assertion.isNotNull(theVdb);
-        Assertion.isNotNull(theEditingContext);
-
-        this.vdbContext = null;
-        this.vdbContextEditor = theEditingContext;
         this.vdbFile = theVdb;
 
         getOrCreateVdbDefnFile();
@@ -216,8 +131,8 @@ public class VdbDefnHelper {
         this.vdbDefn = vdbDefn;
     }
 
-    public ConnectorBindingType[] findConnectorBindingTypeMatches( ModelInfo theModelInfo ) {
-        ConnectorBindingType[] result = null;
+    public ConnectorType[] findConnectorTypeMatches( ModelInfo theModelInfo ) {
+        ConnectorType[] result = null;
         ModelReference modelRef = getModelReference(theModelInfo);
 
         if (modelRef != null) {
@@ -226,7 +141,7 @@ public class VdbDefnHelper {
                 Collection temp = mapper.findConnectorTypeMatches(modelRef);
 
                 if ((temp != null) && !temp.isEmpty()) {
-                    temp.toArray(result = new ConnectorBindingType[temp.size()]);
+                    temp.toArray(result = new ConnectorType[temp.size()]);
                 }
             } catch (Exception theException) {
                 result = null;
@@ -236,7 +151,7 @@ public class VdbDefnHelper {
         }
 
         if (result == null) {
-            result = new ConnectorBindingType[0];
+            result = new ConnectorType[0];
         }
 
         return result;
@@ -288,13 +203,8 @@ public class VdbDefnHelper {
 
         if (defnFile != null) {
             try {
-                ConfigurationModelContainer cmc = DqpPlugin.getInstance().getConfigurationManager().getDefaultConfig().getCMContainerImpl();
-                this.vdbDefn = null;
-                if (this.vdbContext != null) {
-                    this.vdbDefn = VDBReader.loadVDBDefn((VdbEditingContextImpl)this.vdbContext, false, cmc);
-                } else if (this.vdbContextEditor != null) {
-                    this.vdbDefn = VDBReader.loadVDBDefn(this.vdbContextEditor, false, cmc);
-                }
+                ConfigurationModelContainer cmc = DqpPlugin.getInstance().getAdmin().getDefaultConfig().getCMContainerImpl();
+                this.vdbDefn = VDBReader.loadVDBDefn((VdbEditingContextImpl)this.vdbContext, false, cmc);
             } catch (Exception theException) {
                 theException.printStackTrace();
                 DqpPlugin.Util.log(theException);
@@ -305,12 +215,7 @@ public class VdbDefnHelper {
         if (this.vdbDefn == null) {
             // need to create VDB Defn
             try {
-                this.vdbDefn = null;
-                if (this.vdbContext != null) {
-                    this.vdbDefn = VDBReader.loadVDBDefn((VdbEditingContextImpl)this.vdbContext, false);
-                } else if (this.vdbContextEditor != null) {
-                    this.vdbDefn = VDBReader.loadVDBDefn(this.vdbContextEditor, false);
-                }
+                this.vdbDefn = VDBReader.loadVDBDefn((VdbEditingContextImpl)this.vdbContext, false);
             } catch (Exception theException) {
                 theException.printStackTrace();
                 DqpPlugin.Util.log(theException);
@@ -491,10 +396,10 @@ public class VdbDefnHelper {
         return result;
     }
 
-    public ConnectorBinding createConnectorBinding( ComponentType ctConnector,
+    public ConnectorBinding createConnectorBinding( ConnectorType ctConnector,
                                                     String sConnBindName,
                                                     boolean theAddToConfigurationFlag ) throws Exception {
-        return DqpPlugin.getInstance().getConfigurationManager().createConnectorBinding(ctConnector,
+        return DqpPlugin.getInstance().getAdmin().createConnectorBinding(ctConnector,
                                                                                         sConnBindName,
                                                                                         theAddToConfigurationFlag);
     }
@@ -509,7 +414,7 @@ public class VdbDefnHelper {
      */
     public ConnectorBinding createConnectorBinding( ConnectorBinding theSourceBinding,
                                                     String theNewBindingName ) throws Exception {
-        return DqpPlugin.getInstance().getConfigurationManager().createConnectorBinding(theSourceBinding, theNewBindingName);
+        return DqpPlugin.getInstance().getAdmin().createConnectorBinding(theSourceBinding, theNewBindingName);
     }
 
     public void removeConnectorBinding( ModelInfo modelDefn,
@@ -521,18 +426,18 @@ public class VdbDefnHelper {
     // TODO: this needs to work for single bindings, but I don't see a way to remove a binding from basicDefn.
     public void setConnectorBinding( ModelInfo modelDefn,
                                      ConnectorBinding binding,
-                                     ComponentType type ) {
+                                     ConnectorType type ) {
         BasicVDBDefn basicDefn = (BasicVDBDefn)vdbDefn;
 
-        BasicConnectorBinding clonedBinding = (BasicConnectorBinding)binding;
+        ConnectorBinding clonedBinding = (ConnectorBinding)binding;
         // don't remove from VDBDefn as this would remove all mappings to this binding
         // calling add will replace existing binding of that name with this one.
         // then make sure defn has type
 
-        clonedBinding = (BasicConnectorBinding)binding.clone();
+        clonedBinding = (ConnectorBinding)binding.clone();
 
         // add a deploy name to all the connector bindings going into the VDBS
-        clonedBinding.setDeployedName(basicDefn.getName() + "_" + basicDefn.getVersion() + "." + binding.getFullName()); //$NON-NLS-1$ //$NON-NLS-2$ 
+        clonedBinding.setDeployedName(basicDefn.getName() + "_" + basicDefn.getVersion() + "." + binding.getName()); //$NON-NLS-1$ //$NON-NLS-2$ 
         basicDefn.addConnectorBinding(modelDefn.getName(), clonedBinding);
         basicDefn.addConnectorType(type);
     }
@@ -624,62 +529,28 @@ public class VdbDefnHelper {
                                getVdbDefn(),
                                HEADER_PROPERTIES);
         IPath archivePath = new Path(VdbConstants.DEF_FILE_NAME);
-        if (this.vdbContext != null) {
-            this.vdbContext.refreshNonModel(null,
-                                            DqpPath.getRuntimeConfigPath().append(VdbConstants.DEF_FILE_NAME).toFile(),
-                                            archivePath);
-        } else if (this.vdbContextEditor != null) {
-            File sourceDirectory = DqpPath.getRuntimeConfigPath().toFile();
-            File sourceDefnFile = new File(sourceDirectory, VdbConstants.DEF_FILE_NAME);
-            File targetDirectory = new File(this.vdbContextEditor.getTempDirectory().getPath());
-            File targetDefnFile = new File(targetDirectory, VdbConstants.DEF_FILE_NAME);
-            if (sourceDefnFile.exists()) {
-                FileUtils.copy(sourceDefnFile.getAbsolutePath(), targetDefnFile.getAbsolutePath(), true);
-            }
-        }
+        this.vdbContext.refreshNonModel(null,
+                                        DqpPath.getRuntimeConfigPath().append(VdbConstants.DEF_FILE_NAME).toFile(),
+                                        archivePath);
 
         return wasSaved;
     }
 
     private ModelConnectorBindingMapper getModelConnectorBindingMapper() throws Exception {
-        ModelConnectorBindingMapper mapper = null;
-        if (this.vdbContext != null) {
-            mapper = new ModelConnectorBindingMapperImpl(this.vdbContext);
-        } else if (this.vdbContextEditor != null) {
-            mapper = new ModelConnectorBindingMapperImpl(this.vdbContextEditor);
-        }
-        return mapper;
+        return new ModelConnectorBindingMapperImpl(this.vdbContext);
     }
 
     private ModelReference getModelReference( ModelInfo theModelInfo ) {
-        ModelReference modelRef = null;
-        if (this.vdbContext != null) {
-            modelRef = VdbDefnHelper.findModelReference(this.vdbContext, theModelInfo);
-        } else if (this.vdbContextEditor != null) {
-            modelRef = VdbDefnHelper.findModelReference(this.vdbContextEditor, theModelInfo);
-        }
-        return modelRef;
+        return VdbDefnHelper.findModelReference(this.vdbContext, theModelInfo);
     }
 
     private VirtualDatabase getVirtualDatabase() {
-        VirtualDatabase vdb = null;
-        if (this.vdbContext != null) {
-            vdb = this.vdbContext.getVirtualDatabase();
-        } else if (this.vdbContextEditor != null) {
-            vdb = this.vdbContextEditor.getVirtualDatabase();
-        }
-        return vdb;
+        return this.vdbContext.getVirtualDatabase();
     }
 
     private void assertContextIsOpen() throws Exception {
-        if (this.vdbContext != null) {
-            if (!this.vdbContext.isOpen()) {
-                this.vdbContext.open();
-            }
-        } else if (this.vdbContextEditor != null) {
-            if (!this.vdbContextEditor.isOpen()) {
-                this.vdbContextEditor.open(new NullProgressMonitor());
-            }
+        if (!this.vdbContext.isOpen()) {
+            this.vdbContext.open();
         }
     }
 
@@ -690,13 +561,7 @@ public class VdbDefnHelper {
             DqpPlugin.Util.log(IStatus.ERROR, e.getLocalizedMessage());
             return null;
         }
-        File defnFile = null;
-        if (this.vdbContext != null) {
-            defnFile = VdbDefnHelper.getVdbDefinitionFile(this.vdbContext);
-        } else if (this.vdbContextEditor != null) {
-            defnFile = VdbDefnHelper.getVdbDefinitionFile(this.vdbContextEditor);
-        }
-        return defnFile;
+        return VdbDefnHelper.getVdbDefinitionFile(this.vdbContext);
     }
 
 }

@@ -52,6 +52,7 @@ import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.actions.RedoAction;
@@ -68,7 +69,6 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.vdb.edit.ClosePreventionVetoableChangeListener;
 import com.metamatrix.vdb.edit.VdbEditPlugin;
 import com.metamatrix.vdb.edit.VdbEditingContext;
-import com.metamatrix.vdb.edit.manifest.Severity;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 

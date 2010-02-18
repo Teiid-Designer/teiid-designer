@@ -31,7 +31,7 @@ public class DqpRefactorResourceListener implements
      * @since 5.0
      */
     public void notifyRefactored(RefactorResourceEvent theEvent) {
-        DqpPlugin.getWorkspaceConfig().notifyRefactored(theEvent);
+        DqpPlugin.getInstance().getWorkspaceConfig().notifyRefactored(theEvent);
     }
 
 }

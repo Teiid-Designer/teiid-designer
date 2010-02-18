@@ -9,28 +9,16 @@ package com.metamatrix.modeler.internal.dqp.ui.config;
 
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ConfigurationObjectEditor;
+import org.teiid.designer.runtime.ConnectorType;
 
-
-/** 
+/**
  * @since 4.2
  */
 public class ComponentTypePropertySourceProvider implements IPropertySourceProvider {
 
-    private ConfigurationObjectEditor editor;
-    
-    /** 
-     * 
-     * @since 4.2
-     */
-    public ComponentTypePropertySourceProvider(ConfigurationObjectEditor editor) {
-        this.editor = editor;
-    }
-    
-    public IPropertySource getPropertySource(Object object) {
-        if ( object instanceof ComponentType ) {
-            return new ComponentTypePropertySource((ComponentType) object, editor);
+    public IPropertySource getPropertySource( Object object ) {
+        if (object instanceof ConnectorType) {
+            return new ComponentTypePropertySource((ConnectorType)object);
         }
         return null;
     }

@@ -17,13 +17,10 @@ import net.sourceforge.sqlexplorer.sessiontree.model.SessionTreeNode;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.teiid.designer.udf.UdfManager;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.connection.IVdbConnectionMgr;
-import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditPlugin;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
@@ -67,22 +64,6 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants,
      * @since 5.0
      */
     public boolean closeConnection(VdbEditingContext theVdbContext) {
-        boolean result = true;
-        Object connection = getConnection(theVdbContext);
-        
-        if (connection != null) {
-            Assertion.isInstanceOf(connection, SessionTreeNode.class, connection.getClass().getName());
-            result = closeConnectionImpl((SessionTreeNode)connection);
-        }
-        
-        return result;
-    }
-
-    /**
-     * @see com.metamatrix.modeler.dqp.ui.connection.IVdbConnectionMgr#closeConnection(com.metamatrix.vdb.edit.VdbContextEditor)
-     * @since 5.0
-     */
-    public boolean closeConnection(VdbContextEditor theVdbContext) {
         boolean result = true;
         Object connection = getConnection(theVdbContext);
         
@@ -155,25 +136,6 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants,
 
         return result;
     }
-    private SessionTreeNode getConnection(VdbContextEditor theVdbContext) {
-        SessionTreeNode result = null;
-        SessionTreeNode[] connections = getAllConnections();
-        
-        if (connections.length != 0) {
-            String vdbPath = getVdbPath(theVdbContext);
-
-            for (int i = 0; i < connections.length; ++i) {
-                // we ensure alias name is not null when we create alias
-                // we also ensure VDB has a name
-                if (getConnectionName(connections[i]).equals(vdbPath)) {
-                    result = connections[i];
-                    break;
-                }
-            }
-        }
-
-        return result;
-    }
     
     /** 
      * @see com.metamatrix.modeler.dqp.ui.connection.IVdbConnectionMgr#getConnectionName(java.lang.Object)
@@ -203,28 +165,6 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants,
         
         return result;
     }
-    
-    /**
-     * @see com.metamatrix.modeler.dqp.ui.connection.IVdbConnectionMgr#getVdbContextEditor(java.lang.Object)
-     * @since 5.0
-     */
-    public VdbContextEditor getVdbContextEditor(Object theConnection) {
-        Assertion.isInstanceOf(theConnection, SessionTreeNode.class, theConnection.getClass().getName());
-        
-        VdbContextEditor result = null;
-        String connectionName = getConnectionName(theConnection);
-        
-        // find the associated VDB context for the connection
-        try {
-            final IPath pathToVdbFile = new Path(connectionName);
-            final IPath vdbWorkingPath = new Path(VdbEditPlugin.getVdbWorkingDirectory().getAbsolutePath());
-            result = VdbEditPlugin.createSharedWsVdbContextEditor(pathToVdbFile, vdbWorkingPath);
-        } catch (CoreException theException) {
-            UTIL.log(theException);
-        }
-        
-        return result;
-    }
 
     /**
      * Obtains the time the resource of the VDB context was last saved.
@@ -234,10 +174,6 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants,
      */
     private long getVdbLastSavedTime(InternalVdbEditingContext theVdbContext) {
         File file = theVdbContext.getPathToVdb().toFile();
-        return file.lastModified();
-    }
-    private long getVdbLastSavedTime(VdbContextEditor theVdbContext) {
-        File file = theVdbContext.getVdbFile();
         return file.lastModified();
     }
     
@@ -251,10 +187,6 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants,
     private String getVdbPath(VdbEditingContext theVdbContext) {
         Assertion.isInstanceOf(theVdbContext, InternalVdbEditingContext.class, theVdbContext.getClass().getName());
         return ((InternalVdbEditingContext)theVdbContext).getPathToVdb().toOSString();
-    }
-    private String getVdbPath(VdbContextEditor theVdbContext) {
-        Assertion.isNotNull(theVdbContext);
-        return theVdbContext.getVdbFile().getAbsolutePath();
     }
     
     /**
@@ -273,18 +205,10 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants,
      */
     public boolean isConnectionOpen(Object theConnection) {
         boolean result = false;
-        if( ProductCustomizerMgr.getInstance().getProductCharacteristics().isHiddenProjectCentric()) {
-            VdbContextEditor context = getVdbContextEditor(theConnection);
-            
-            if (context != null) {
-                result = isVdbConnectionOpen(context);
-            }
-        } else {
-            VdbEditingContext context = getVdbEditingContext(theConnection);
-            
-            if (context != null) {
-                result = isVdbConnectionOpen(context);
-            }
+        VdbEditingContext context = getVdbEditingContext(theConnection);
+        
+        if (context != null) {
+            result = isVdbConnectionOpen(context);
         }
         
         return result;
@@ -307,24 +231,6 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants,
         
         return result;
     }
-
-    /**
-     * @see com.metamatrix.modeler.dqp.ui.connection.IVdbConnectionMgr#isVdbConnectionOpen(com.metamatrix.vdb.edit.VdbContextEditor)
-     * @since 5.0
-     */
-    public boolean isVdbConnectionOpen(VdbContextEditor theVdbContext) {
-        boolean result = false;
-        Object conn = getConnection(theVdbContext);
-        
-        if (conn != null) {
-            Assertion.isInstanceOf(conn, SessionTreeNode.class, conn.getClass().getName());
-            SessionTreeNode connection = (SessionTreeNode)conn;
-            
-            result = !isConnectionClosed(connection);
-        }
-        
-        return result;
-    }
     
     /** 
      * @see com.metamatrix.modeler.dqp.ui.connection.IVdbConnectionMgr#isConnectionStale(java.lang.Object)
@@ -332,19 +238,10 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants,
      */
     public boolean isConnectionStale(Object theConnection) {
         boolean result = false;
-        if( ProductCustomizerMgr.getInstance().getProductCharacteristics().isHiddenProjectCentric()) {
-            VdbContextEditor context = getVdbContextEditor(theConnection);
-            
-            if (context != null) {
-                result = isVdbConnectionStale(context);
-            }
-        } else {
-            VdbEditingContext context = getVdbEditingContext(theConnection);
-            
-            if (context != null) {
-                result = isVdbConnectionStale(context);
-            }
-            
+        VdbEditingContext context = getVdbEditingContext(theConnection);
+        
+        if (context != null) {
+            result = isVdbConnectionStale(context);
         }
 
         return result;
@@ -375,50 +272,16 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants,
         
         return result;
     }
-
-    /**
-     * @see com.metamatrix.modeler.dqp.ui.connection.IVdbConnectionMgr#isVdbConnectionStale(com.metamatrix.vdb.edit.VdbContextEditor)
-     * @since 5.0
-     */
-    public boolean isVdbConnectionStale(VdbContextEditor theVdbContext) {
-        boolean result = false;
-        Object temp = getConnection(theVdbContext);
-        
-        if (temp != null) {
-            Assertion.isInstanceOf(temp, SessionTreeNode.class, temp.getClass().getName());
-            SessionTreeNode connection = (SessionTreeNode)temp;
-            
-            if (!isConnectionClosed(connection)) {
-                Date connTime = connection.getConnection().getTimeOpened();
-                
-                if (connTime != null) {
-                    long vdbTime = getVdbLastSavedTime(theVdbContext);
-                    result = (connTime.getTime() < vdbTime);
-                }
-            }
-        }
-        
-        return result;
-    }
     
     public boolean isExtensionModuleStale(Object theConnection) {
         boolean result = false;
         Object temp = null;
-        if( ProductCustomizerMgr.getInstance().getProductCharacteristics().isHiddenProjectCentric()) {
-            VdbContextEditor context = getVdbContextEditor(theConnection);
-            
-            if (context != null) {
-                temp = getConnection(context);
-            }
+        VdbEditingContext context = getVdbEditingContext(theConnection);
         
-        } else {
-            VdbEditingContext context = getVdbEditingContext(theConnection);
-            
-            if (context != null) {
-                temp = getConnection(context);
-            }
-            
+        if (context != null) {
+            temp = getConnection(context);
         }
+            
         if (temp != null) {
             Assertion.isInstanceOf(temp, SessionTreeNode.class, temp.getClass().getName());
             SessionTreeNode connection = (SessionTreeNode)temp;

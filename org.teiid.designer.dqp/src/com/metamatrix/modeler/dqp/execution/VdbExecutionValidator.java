@@ -11,7 +11,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.common.vdb.api.VDBDefn;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 
@@ -45,14 +44,6 @@ public interface VdbExecutionValidator {
      * @since 4.3
      */
     IStatus validateVdb(final VdbEditingContext context);
-    
-    /**
-     * Validate the vdb given the vdb editing context. 
-     * @param context The editing context for vdb containing the definition file.
-     * @return The validation status for the vdb indication if its ready for execution.
-     * @since 4.3
-     */
-    IStatus validateVdb(final VdbContextEditor context);
 
     /**
      * Validate a vdb to check if it is ready for execution. Checks if the physical models

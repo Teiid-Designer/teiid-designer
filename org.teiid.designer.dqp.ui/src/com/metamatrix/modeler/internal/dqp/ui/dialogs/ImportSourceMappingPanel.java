@@ -36,8 +36,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.api.ConnectorBindingType;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
@@ -52,7 +52,6 @@ import com.metamatrix.modeler.internal.dqp.ui.views.ConnectorBindingsTreeProvide
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.widget.DefaultContentProvider;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 import com.metamatrix.vdb.edit.manifest.ModelSource;
 import com.metamatrix.vdb.edit.manifest.ModelSourceProperty;
@@ -87,9 +86,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
 
     private String pswd;
 
-    private InternalVdbEditingContext vdbContext;
-
-    private VdbContextEditor vdbContextEditor;
+    private final InternalVdbEditingContext vdbContext;
 
     private Button btnExistingBinding;
 
@@ -128,7 +125,6 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         ArgCheck.isNotNull(theImportSource);
 
         this.vdbContext = theContext;
-        this.vdbContextEditor = null;
         this.modelInfo = theModelInfo;
         this.importSource = theImportSource;
 
@@ -138,32 +134,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         createContents();
 
         // register to receive notice of configuration changes
-        DqpPlugin.getInstance().getConfigurationManager().addChangeListener(this);
-    }
-
-    public ImportSourceMappingPanel( Composite theParent,
-                                     VdbContextEditor theContext,
-                                     ModelInfo theModelInfo,
-                                     ModelSource theImportSource ) {
-        super(theParent);
-
-        ArgCheck.isNotNull(theParent);
-        ArgCheck.isNotNull(theContext);
-        ArgCheck.isNotNull(theModelInfo);
-        ArgCheck.isNotNull(theImportSource);
-
-        this.vdbContext = null;
-        this.vdbContextEditor = theContext;
-        this.modelInfo = theModelInfo;
-        this.importSource = theImportSource;
-
-        setLayout(new GridLayout(1, false));
-        setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        createContents();
-
-        // register to receive notice of configuration changes
-        DqpPlugin.getInstance().getConfigurationManager().addChangeListener(this);
+        DqpPlugin.getInstance().getAdmin().addChangeListener(this);
     }
 
     private void createContents() {
@@ -461,7 +432,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
                 IStructuredSelection selection = (IStructuredSelection)this.connectorTypesViewer.getSelection();
                 ModelReference modelRef = getModelReference();
                 result = this.mapper.createConnectorBinding(modelRef,
-                                                            (ConnectorBindingType)selection.getFirstElement(),
+                                                            (ConnectorType)selection.getFirstElement(),
                                                             getNewBindingName());
             }
         }
@@ -470,13 +441,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
     }
 
     private ModelReference getModelReference() {
-        ModelReference modelRef = null;
-        if (this.vdbContext != null) {
-            modelRef = VdbDefnHelper.findModelReference(this.vdbContext, this.modelInfo);
-        } else if (this.vdbContextEditor != null) {
-            modelRef = VdbDefnHelper.findModelReference(this.vdbContextEditor, this.modelInfo);
-        }
-        return modelRef;
+        return VdbDefnHelper.findModelReference(this.vdbContext, this.modelInfo);
     }
 
     Object[] getConnectorTypes() {
@@ -566,13 +531,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
      * @since 5.0
      */
     private VdbDefnHelper getVdbDefnHelper() {
-        VdbDefnHelper helper = null;
-        if (this.vdbContext != null) {
-            helper = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext);
-        } else if (this.vdbContextEditor != null) {
-            helper = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContextEditor);
-        }
-        return helper;
+        return DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext);
     }
 
     /**
@@ -636,7 +595,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
      * @since 5.0
      */
     void handleDispose() {
-        DqpPlugin.getInstance().getConfigurationManager().removeChangeListener(this);
+        DqpPlugin.getInstance().getAdmin().removeChangeListener(this);
     }
 
     void handlePasswordChanged() {
@@ -713,12 +672,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
 
         // reload the state
         try {
-            this.mapper = null;
-            if (this.vdbContext != null) {
-                this.mapper = new ModelConnectorBindingMapperImpl(this.vdbContext);
-            } else if (this.vdbContextEditor != null) {
-                this.mapper = new ModelConnectorBindingMapperImpl(this.vdbContextEditor);
-            }
+            this.mapper = new ModelConnectorBindingMapperImpl(this.vdbContext);
             ModelReference modelRef = getModelReference();
 
             // get matching bindings

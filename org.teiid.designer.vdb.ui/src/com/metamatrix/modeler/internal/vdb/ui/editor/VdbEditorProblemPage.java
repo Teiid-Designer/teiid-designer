@@ -29,6 +29,7 @@ import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.EditorPart;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.modeler.core.validation.ProblemMarker;
 import com.metamatrix.modeler.ui.editors.IRevertable;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.ui.UiConstants.Images;
@@ -37,7 +38,6 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.widget.AbstractTableLabelProvider;
 import com.metamatrix.ui.table.TableViewerSorter;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
-import com.metamatrix.vdb.edit.manifest.ProblemMarker;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 
 /**

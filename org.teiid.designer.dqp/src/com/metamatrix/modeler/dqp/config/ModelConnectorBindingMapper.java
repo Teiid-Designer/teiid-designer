@@ -9,8 +9,8 @@ package com.metamatrix.modeler.dqp.config;
 
 import java.util.Collection;
 import java.util.Map;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.api.ConnectorBindingType;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 
 /**
@@ -85,15 +85,15 @@ public interface ModelConnectorBindingMapper {
     /**
      * Create a connector binding reading the properties on the modelReference and given the
      * connector binding type. This method will return a null if the driverClass specified on the
-     * connectorBindingType does not match the one on the modelReference.
+     * ConnectorType does not match the one on the modelReference.
      * @param modelReference The modelReference whose JDBC import properties are to be read.
-     * @param connectorBindingType The type of the connector binding to create
+     * @param ConnectorType The type of the connector binding to create
      * @param theName the name the new binding should be called
      * @return ConnectorBinding The connector binding with properties on the modelReference.
      * @since 4.3
      */
     ConnectorBinding createConnectorBinding(ModelReference modelReference,
-                                            ConnectorBindingType connectorBindingType,
+                                            ConnectorType ConnectorType,
                                             String theName) throws Exception;
 
 }

@@ -14,7 +14,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -29,7 +28,6 @@ import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import com.metamatrix.core.PluginUtil;
@@ -40,13 +38,9 @@ import com.metamatrix.core.plugin.PluginUtilities;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
-import com.metamatrix.vdb.internal.edit.RuntimeIndexArtifactGenerator;
-import com.metamatrix.vdb.internal.edit.SharedWsVdbContextEditor;
-import com.metamatrix.vdb.internal.edit.SharedWsVdbContextValidator;
 import com.metamatrix.vdb.internal.edit.VdbContextImpl;
 import com.metamatrix.vdb.internal.edit.VdbEditingContextImpl;
 import com.metamatrix.vdb.internal.edit.WsVdbInputResourceFinder;
-import com.metamatrix.vdb.internal.edit.WsdlArtifactGenerator;
 
 public class VdbEditPlugin extends Plugin {
 
@@ -322,50 +316,6 @@ public class VdbEditPlugin extends Plugin {
                 vdbWorkingFolder.mkdirs();
             }
             context = new VdbContextImpl(vdbFile, vdbWorkingFolder);
-
-            vdbContextCache.put(key, context);
-            context.addChangeListener(vdbContextChangeListener);
-            fireVdbContextCreated(context);
-        }
-
-        return context;
-    }
-
-    /**
-     * Create a new editing context for the VDB given by the supplied path.
-     * 
-     * @param pathToVdbFile the path to the VDB file; may not be null
-     * @return the new editing context
-     */
-    public static VdbContextEditor createSharedWsVdbContextEditor( final IPath pathToVdbFile,
-                                                                   final IPath vdbWorkingPath ) throws CoreException {
-        ArgCheck.isNotNull(pathToVdbFile);
-
-        String key = pathToVdbFile.makeAbsolute().toString();
-        VdbContextEditor context = (VdbContextEditor)vdbContextCache.get(key);
-        if (context == null || !context.isOpen()) {
-
-            final File vdbFile = pathToVdbFile.toFile();
-            final File vdbWorkingFolder = vdbWorkingPath.toFile();
-            if (!vdbWorkingFolder.exists()) {
-                vdbWorkingFolder.mkdirs();
-            }
-            final ResourceSet sharedContainer = ModelerCore.getModelContainer();
-            context = new SharedWsVdbContextEditor(vdbFile, vdbWorkingFolder, sharedContainer);
-
-            // Add the VdbContextValidator instance to use
-            context.setVdbContextValidator(new SharedWsVdbContextValidator());
-
-            // Add any contributed artifact generators to the context
-            final List contributedGenerators = getVdbArtifactGenerators();
-            for (final Iterator i = contributedGenerators.iterator(); i.hasNext();) {
-                final VdbArtifactGenerator generator = (VdbArtifactGenerator)i.next();
-                context.addArtifactGenerator(generator);
-            }
-
-            // Add the necessary "internal" artifact generators to the context
-            context.addArtifactGenerator(new WsdlArtifactGenerator());
-            context.addArtifactGenerator(new RuntimeIndexArtifactGenerator());
 
             vdbContextCache.put(key, context);
             context.addChangeListener(vdbContextChangeListener);

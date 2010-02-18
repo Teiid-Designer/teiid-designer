@@ -32,7 +32,8 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetSorter;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ServerAdmin;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
@@ -68,15 +69,18 @@ public class EditConnectorBindingPanel extends Composite
     private ConnectorBindingPropertySourceProvider sourceProvider;
 
     private ConnectorBinding connectorBinding;
+    
+    private final ServerAdmin admin;
 
     public EditConnectorBindingPanel( Composite theParent,
-                                      ConnectorBinding connectorBinding ) throws IllegalStateException {
+                                      ConnectorBinding connectorBinding,
+                                      ServerAdmin admin ) throws IllegalStateException {
         super(theParent, SWT.NONE);
 
         this.connectorBinding = connectorBinding;
-
         this.changeListeners = new ListenerList(ListenerList.IDENTITY);
-
+        this.admin = admin;
+        
         createContents(this);
     }
 
@@ -217,7 +221,7 @@ public class EditConnectorBindingPanel extends Composite
         this.propertyPage.createControl(propertyGroup);
         this.propertyPage.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        sourceProvider = new ConnectorBindingPropertySourceProvider();
+        sourceProvider = new ConnectorBindingPropertySourceProvider(this.admin);
 
         sourceProvider.addPropertyChangeListener(this);
         sourceProvider.setEditable(true);

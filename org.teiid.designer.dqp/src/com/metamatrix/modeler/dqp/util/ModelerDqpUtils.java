@@ -17,18 +17,11 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.connector.api.ConnectorPropertyNames;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ComponentTypeDefn;
-import com.metamatrix.common.config.api.ComponentTypeID;
-import com.metamatrix.common.config.api.ConfigurationModelContainer;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.api.ConnectorBindingType;
-import com.metamatrix.common.config.api.ConnectorBindingType.Attributes;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.runtime.ServerAdmin;
 import com.metamatrix.common.object.PropertyDefinition;
 import com.metamatrix.common.object.PropertyType;
-import com.metamatrix.common.util.crypto.CryptoException;
-import com.metamatrix.common.util.crypto.CryptoUtil;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.common.vdb.api.VDBDefn;
 import com.metamatrix.core.modeler.util.ArgCheck;
@@ -39,8 +32,6 @@ import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
-import com.metamatrix.modeler.dqp.config.ConfigurationManager;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 import com.metamatrix.vdb.edit.manifest.ModelSource;
@@ -119,17 +110,6 @@ public final class ModelerDqpUtils {
     }
 
     /**
-     * Obtains the connector type for the specified connector binding.
-     * 
-     * @param theBinding the non-<code>null</code> binding whose connector type is being requested
-     * @return the binding or <code>null</code>
-     * @since 4.3
-     */
-    public static ComponentType getConnectorType( ConnectorBinding theBinding ) {
-        return DqpPlugin.getInstance().getConfigurationManager().getConnectorType(theBinding.getComponentTypeID());
-    }
-
-    /**
      * Obtains a connector binding name based on a <code>ModelInfo</code> object.
      * 
      * @param theModelInfo the model info object which will be used to construct a name
@@ -149,43 +129,6 @@ public final class ModelerDqpUtils {
      */
     public static String createNewBindingName( String name ) {
         return DqpPlugin.Util.getString(PREFIX + "newConnectorName", name); //$NON-NLS-1$
-    }
-
-    /**
-     * Encrypts the value.
-     * 
-     * @param theValue the value being encrypted
-     * @return the encrypted value
-     * @since 5.0
-     */
-    public static String encryptValue( String theValue ) {
-        String result = null;
-        try {
-            if ((theValue != null) && (theValue.length() > 0)) {
-                result = CryptoUtil.getEncryptor().encrypt(theValue);
-            }
-        } catch (CryptoException theException) {
-            DqpPlugin.Util.log(theException);
-        }
-        return result;
-    }
-
-    /**
-     * Obtains all the {@link ConnectorBindingType}s loaded in the current configuration.
-     * 
-     * @return a map keyed by type name with a value of the type (never <code>null</code>)
-     * @since 4.3
-     */
-    public static Map getConnectorTypes() {
-        Map result = new HashMap();
-        Collection types = DqpPlugin.getInstance().getConfigurationManager().getConnectorTypes();
-
-        for (Iterator iter = types.iterator(); iter.hasNext();) {
-            Object type = iter.next();
-            result.put(((ConnectorBindingType)type).getID().getName(), type);
-        }
-
-        return result;
     }
 
     /**
@@ -252,29 +195,6 @@ public final class ModelerDqpUtils {
         return result;
     }
 
-    public static ModelSource getModelImportSource( VdbContextEditor theContext,
-                                                    ModelInfo theModel ) {
-        ArgCheck.isNotNull(theContext);
-        ArgCheck.isNotNull(theModel);
-
-        ModelSource result = null;
-        List modelRefs = theContext.getVirtualDatabase().getModels();
-
-        // no need to check if modelRefs is null as ELists are never null
-        if (!modelRefs.isEmpty()) {
-            for (int size = modelRefs.size(), i = 0; i < size; ++i) {
-                ModelReference modelRef = (ModelReference)modelRefs.get(i);
-
-                if (FileUtils.getFilenameWithoutExtension(modelRef.getName()).equals(theModel.getName())) {
-                    result = modelRef.getModelSource();
-                    break;
-                }
-            }
-        }
-
-        return result;
-    }
-
     /**
      * Get a <code>Map</code> of property name to values for JDBC connection properties stored on a model reference on the vdb
      * manifest model.
@@ -311,144 +231,6 @@ public final class ModelerDqpUtils {
         }
 
         return result;
-    }
-
-    /**
-     * Obtains the {@link ComponentTypeDefn} with the specified name from the specified type.
-     * 
-     * @param theId the ID of the type
-     * @param thePropertyName the property whose type definition is being requested
-     * @return the type definitions or <code>null</code> if none exist
-     * @since 5.0
-     */
-    public static ComponentTypeDefn getComponentTypeDefinition( ComponentTypeID theId,
-                                                                String thePropertyName ) {
-        ConfigurationManager configMgr = DqpPlugin.getInstance().getConfigurationManager();
-        ConfigurationModelContainer container = configMgr.getDefaultConfig().getCMContainerImpl();
-        return container.getComponentTypeDefinition(theId, thePropertyName);
-    }
-    
-    /**
-     * 
-     * @param classpath
-     * @return
-     */
-    public static String getConnectorClasspathDisplayValue(String classpath) {
-        List<String> jarNames = new ArrayList<String>(getJarNames(classpath));
-        StringBuilder sb = new StringBuilder();
-
-        for (int size = jarNames.size(), i = 0; i < size; ++i) {
-            sb.append(jarNames.get(i));
-
-            if (i < (size - 1)) {
-                sb.append("; "); //$NON-NLS-1$
-            }
-        }
-
-        return sb.toString();
-    }
-    
-    /**
-     * Adds the extension jar protocol and jar separators.
-     * 
-     * @param jarNames the jar names to include in the connector class path (can be <code>null</code>)
-     * @return the connector class path property value (never <code>null</code>)
-     * @since 6.0.0
-     */
-    public static String getConnectorClassPathPropertValue( List<String> jarNames ) {
-        if ((jarNames == null) || jarNames.isEmpty()) {
-            return StringUtil.Constants.EMPTY_STRING;
-        }
-
-        String protocol = Attributes.MM_JAR_PROTOCOL + ':';
-        StringBuilder classPath = new StringBuilder(protocol);
-
-        for (int size = jarNames.size(), i = 0; i < size; ++i) {
-            classPath.append(jarNames.get(i));
-
-            if (i < (size - 1)) {
-                classPath.append(';').append(protocol);
-            }
-        }
-
-        return classPath.toString();
-    }
-
-    /**
-     * Get the collection of extension jar names that are required by the supplied connector (may not be <code>null</code>)
-     * 
-     * @param conn the connector whose required jar names are being requested
-     * @return the required jar names (never <code>null</code>)
-     * @since 6.0.0
-     */
-    public static Collection<String> getRequiredExtensionJarNames( ConnectorBinding conn ) {
-        return getJarNames(conn.getProperty(ConnectorPropertyNames.CONNECTOR_CLASSPATH));
-    }
-
-    /**
-     * Get the collection of extension jar names that are required by the supplied connector type
-     * 
-     * @param connectorBindingType the connector type whose required jar names are being requested (may not be <code>null</code>)
-     * @return the required jar names  (never <code>null</code>)
-     * @since 6.0.0
-     */
-    public static Collection<String> getRequiredExtensionJarNames( ComponentType connectorBindingType ) {
-        return getJarNames(connectorBindingType.getDefaultValue(ConnectorPropertyNames.CONNECTOR_TYPE_CLASSPATH));
-    }
-    
-    /**
-     * @param classPath the connector classpath being parsed to find the jar file names (can be <code>null</code>)
-     * @return a collection of jar names (never <code>null</code>)
-     * @since 6.0.0
-     */
-    public static Collection<String> getJarNames(String classPath) {
-        Collection<String> jarNames = null;
-
-        if (classPath == null) {
-            jarNames = Collections.emptyList();
-        } else {
-            jarNames = new ArrayList<String>();
-            StringTokenizer st = new StringTokenizer(classPath, ";"); //$NON-NLS-1$
-
-            while (st.hasMoreTokens()) {
-                String path = st.nextToken().trim();
-                int idx = path.indexOf(Attributes.MM_JAR_PROTOCOL);
-
-                if (idx != -1) {
-                    path = path.substring(idx + Attributes.MM_JAR_PROTOCOL.length() + 1);
-                }
-
-                jarNames.add(path);
-            }
-        }
-
-        return jarNames;
-    }
-
-    /**
-     * Indicates if the specified name would be a unique name in the current configuration. Another method is provided to check
-     * uniqueness in both the configuration and in the VDB.
-     * 
-     * @param theProposedName the proposed new binding name
-     * @return <code>true</code> if unique; <code>false</code> otherwise.
-     * @since 4.3
-     * @see #isUniqueBindingName(String, VDBDefn)
-     */
-    public static boolean isUniqueBindingName( String theProposedName ) {
-        return (DqpPlugin.getInstance().getConfigurationManager().getBinding(theProposedName) == null);
-    }
-
-    /**
-     * Indicates if the specified name would be a unique name in the current configuration and in the bindings established in the
-     * <code>VDBDefn</code>.
-     * 
-     * @param theProposedName the proposed new binding name
-     * @return <code>true</code> if unique; <code>false</code> otherwise.
-     * @since 4.3
-     */
-    public static boolean isUniqueBindingName( String theProposedName,
-                                               VDBDefn theDefn ) {
-        return (isUniqueBindingName(theProposedName) && (theDefn.getConnectorBindingByName(theProposedName) == null));
     }
 
     /**
@@ -500,131 +282,14 @@ public final class ModelerDqpUtils {
     }
 
     /**
-     * Indicates if the specified {@link ConnectorBindingType} is a valid connector type for the Modeler DQP.
+     * Indicates if the specified {@link ConnectorType} is a valid connector type for the Modeler DQP.
      * 
      * @param theConnectorType the connector type being checked
      * @return <code>true</code> if valid; <code>false</code> otherwise.
      * @throws NullPointerException if theConnectorType is <code>null</code>
      * @since 4.3
      */
-    public static boolean isValidConnectorType( ConnectorBindingType theConnectorType ) {
+    public static boolean isValidConnectorType( ConnectorType theConnectorType ) {
         return theConnectorType.isDeployable();
-    }
-
-    /**
-     * @param theBinding the connector binding whose password is being changed
-     * @param thePassword the new password
-     * @return a list of errors thrown by property/configuration listeners after the property was successfully set
-     * @throws Exception if the property was not set
-     */
-    public static Exception[] setConnectorBindingPassword( ConnectorBinding theBinding,
-                                                           String thePassword ) throws Exception {
-        Collection defns = getConnectorType(theBinding).getComponentTypeDefinitions();
-        Object propId = null;
-
-        if ((defns != null) && !defns.isEmpty()) {
-            Iterator itr = defns.iterator();
-
-            while (itr.hasNext()) {
-                ComponentTypeDefn defn = (ComponentTypeDefn)itr.next();
-
-                if (defn.getPropertyDefinition().isMasked()) {
-                    propId = defn.getPropertyDefinition().getName();
-                    break;
-                }
-            }
-        }
-
-        if (propId != null) {
-            return setPropertyValue(theBinding, propId, thePassword);
-        }
-
-        // could not find a masked property definition
-        throw new Exception(DqpPlugin.Util.getString(PREFIX + "unableToFindPasswordPropertyDefinition")); //$NON-NLS-1$
-    }
-
-    /**
-     * Sets a connector binding property.
-     * 
-     * @param theBinding the binding whose property is being set (may not be <code>null</code>)
-     * @param thePropertyId the property ID
-     * @param theNewValue the new property value
-     * @return a list of errors thrown by property/configuration listeners after the property was successfully set
-     * @throws Exception if the property was not set
-     * @since 5.0
-     */
-    public static Exception[] setPropertyValue( ConnectorBinding theBinding,
-                                                Object thePropertyId,
-                                                Object theNewValue ) throws Exception {
-        ComponentType type = getConnectorType(theBinding);
-
-        if (type == null) {
-            throw new Exception(DqpPlugin.Util.getString(PREFIX + "unableToFindConnectorType", theBinding.getComponentTypeID())); //$NON-NLS-1$
-        }
-    
-        Assertion.isInstanceOf(thePropertyId, String.class, thePropertyId.getClass().getName());
-        Assertion.isInstanceOf(theNewValue, String.class, theNewValue.getClass().getName());
-        Assertion.isInstanceOf(type.getID(), ComponentTypeID.class, type.getID().getClass().getName());
-
-        String value = (String)theNewValue;
-        ComponentTypeDefn typeDefn = type.getComponentTypeDefinition((String)thePropertyId);
-
-        // if not found search parents for it
-        if (typeDefn == null) {
-            typeDefn = getComponentTypeDefinition((ComponentTypeID)type.getID(), (String)thePropertyId);
-        }
-
-        if (typeDefn == null) {
-            throw new Exception(DqpPlugin.Util.getString(PREFIX + "unableToFindTypeDefinition", thePropertyId)); //$NON-NLS-1$
-        }
-
-        PropertyDefinition propDefn = typeDefn.getPropertyDefinition();
-        PropertyType propType = typeDefn.getPropertyType();
-        boolean result = true;
-
-        // validate proposed new value
-        if (propDefn.isMasked()) {
-            value = ModelerDqpUtils.encryptValue(value);
-
-            if (value == null) {
-                value = ""; //$NON-NLS-1$
-            }
-        } else {
-            result = propType.isValidValue(value);
-
-            if (propDefn.isConstrainedToAllowedValues()) {
-                List values = propDefn.getAllowedValues();
-
-                if (values != null && !values.isEmpty()) {
-                    result = false;
-                    for (int size = values.size(), i = 0; i < size; ++i) {
-                        if (value.equals(values.get(i))) {
-                            result = true;
-                            break;
-                        }
-                    }
-                } else {
-                    // if there are no allowed values, this is an illegal state for the property defn
-                    // but we need to allow the user to continue - just log it.
-                    Object[] msgArray = new Object[] {propDefn.getName(), type.getName()};
-                    DqpPlugin.Util.log(IStatus.WARNING,
-                                       DqpPlugin.Util.getString(PREFIX + "noAllowedValuesWarning", msgArray)); //$NON-NLS-1$
-                }
-            }
-            
-            if (propDefn.hasDefaultValue() && propDefn.getDefaultValue().equals(value)) {
-                result = false;
-                // need to remove property from connector if connector has this property
-            }
-        }
-        
-        if (result) {
-            // set the property
-            return DqpPlugin.getInstance().getConfigurationManager().setConnectorPropertyValue(theBinding,
-                                                                                               (String)thePropertyId,
-                                                                                               value);
-        }
-        
-        throw new Exception(DqpPlugin.Util.getString(PREFIX + "invalidPropertyValue", theNewValue, thePropertyId)); //$NON-NLS-1$
     }
 }

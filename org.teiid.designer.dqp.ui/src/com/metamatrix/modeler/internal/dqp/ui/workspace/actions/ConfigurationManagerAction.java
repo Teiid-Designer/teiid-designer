@@ -8,14 +8,15 @@
 package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
 import java.util.List;
+import org.apache.log4j.lf5.viewer.configure.ConfigurationManager;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.teiid.designer.runtime.ServerAdmin;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.config.ConfigurationManager;
 import com.metamatrix.modeler.dqp.internal.workspace.WorkspaceConfigurationManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -26,7 +27,7 @@ import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
  */
 public abstract class ConfigurationManagerAction extends Action implements ISelectionChangedListener {
 
-    private static ConfigurationManager configManager;
+    private static ServerAdmin admin;
     private static WorkspaceConfigurationManager workspaceConfig;
     
     /** The current selection or <code>null</code>. */
@@ -71,11 +72,11 @@ public abstract class ConfigurationManagerAction extends Action implements ISele
         super(theText, theStyle);
     }
 
-    public ConfigurationManager getConfigurationManager() {
-        if( configManager ==  null) {
-            configManager = DqpPlugin.getInstance().getConfigurationManager();
+    public ServerAdmin getAdmin() {
+        if( this.admin ==  null) {
+            this.admin = DqpPlugin.getInstance().getServerAdmin();
         }
-        return configManager;
+        return this.admin;
     }
     
     /**
@@ -84,9 +85,9 @@ public abstract class ConfigurationManagerAction extends Action implements ISele
      * @since 5.0
      */
     public void save() {
-        if( configManager != null ) {
+        if( admin != null ) {
             try {
-                configManager.saveConfig();
+                admin.saveConfig();
             } catch (Exception theException) {
                 DqpUiConstants.UTIL.log(IStatus.ERROR, theException.getMessage());
             }
@@ -102,7 +103,7 @@ public abstract class ConfigurationManagerAction extends Action implements ISele
     
     public WorkspaceConfigurationManager getWorkspaceConfig() {
         if(workspaceConfig == null) {
-            workspaceConfig = DqpPlugin.getWorkspaceConfig();
+            workspaceConfig = DqpPlugin.getInstance().getWorkspaceConfig();
         }
         return workspaceConfig;
     }

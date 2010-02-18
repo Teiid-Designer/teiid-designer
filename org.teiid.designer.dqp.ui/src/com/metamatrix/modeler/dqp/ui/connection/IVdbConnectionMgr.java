@@ -7,7 +7,6 @@
  */
 package com.metamatrix.modeler.dqp.ui.connection;
 
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 
 /**
@@ -32,15 +31,6 @@ public interface IVdbConnectionMgr {
     boolean closeConnection( VdbEditingContext theVdbContext );
 
     /**
-     * Closes the connection for the specified <code>VdbContextEditor</code>.
-     * 
-     * @param theVdbContext the context whose connection is being closed
-     * @return <code>true</code> if connection successfully closed or if no connection was open; <code>false</code> otherwise.
-     * @since 5.0
-     */
-    boolean closeConnection( VdbContextEditor theVdbContext );
-
-    /**
      * Obtains the name of the specified connection.
      * 
      * @param theConnection the connection whose name is being requested
@@ -57,15 +47,6 @@ public interface IVdbConnectionMgr {
      * @since 5.0.1
      */
     VdbEditingContext getVdbEditingContext( Object theConnection );
-
-    /**
-     * Obtains the <code>VdbContextEditor</code> for the specified connection.
-     * 
-     * @param theConnection the connection whose VDB context is being requested
-     * @return the context or <code>null</code> if not found
-     * @since 5.0.1
-     */
-    VdbContextEditor getVdbContextEditor( Object theConnection );
 
     /**
      * Indicates if the specified connection is open.
@@ -92,19 +73,8 @@ public interface IVdbConnectionMgr {
      * @param theVdbContext the context being checked
      * @return <code>true</code> if a connection is open; <code>false</code> otherwise.
      * @since 5.0
-     * @deprecated use method that takes VdbContextEditor as the argument
      */
-    @Deprecated
     boolean isVdbConnectionOpen( VdbEditingContext theVdbContext );
-
-    /**
-     * Indicates if a connection for the specified <code>VdbContextEditor</code> is open.
-     * 
-     * @param theVdbContext the context being checked
-     * @return <code>true</code> if a connection is open; <code>false</code> otherwise.
-     * @since 5.0
-     */
-    boolean isVdbConnectionOpen( VdbContextEditor theVdbContext );
 
     /**
      * Indicates if the current connection for the specified <code>VdbEditingContext</code> does not represent the latest VDB
@@ -114,21 +84,8 @@ public interface IVdbConnectionMgr {
      * @return <code>true</code> if the connection is stale; <code>false</code> if no connection exists or connection is
      *         up-to-date.
      * @since 5.0
-     * @deprecated use method that takes VdbContextEditor as the argument
      */
-    @Deprecated
     boolean isVdbConnectionStale( VdbEditingContext theVdbContext );
-
-    /**
-     * Indicates if the current connection for the specified <code>VdbContextEditor</code> does not represent the latest VDB
-     * state.
-     * 
-     * @param theVdbContext the context whose connection is being checked
-     * @return <code>true</code> if the connection is stale; <code>false</code> if no connection exists or connection is
-     *         up-to-date.
-     * @since 5.0
-     */
-    boolean isVdbConnectionStale( VdbContextEditor theVdbContext );
 
     /**
      * Indicates if any of the extension module is stale for the specified connection.

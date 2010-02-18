@@ -27,10 +27,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
-import com.metamatrix.common.config.api.Configuration;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.api.ConnectorBindingType;
-import com.metamatrix.common.config.model.BasicConfigurationObjectEditor;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.runtime.ServerAdmin;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
@@ -43,7 +42,6 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceNotification;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceNotificationListener;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
-import com.metamatrix.modeler.dqp.config.ConfigurationManager;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
@@ -69,7 +67,7 @@ public class WorkspaceConfigurationManager
 
     private Properties headerProps;
 
-    ConfigurationManager configMgr = DqpPlugin.getInstance().getConfigurationManager();
+    private ServerAdmin configMgr = DqpPlugin.getInstance().getAdmin();
 
     private WorkspaceDefnReaderWriter defReaderWriter = new WorkspaceDefnReaderWriter();
 
@@ -477,7 +475,7 @@ public class WorkspaceConfigurationManager
      */
     public String createConnectorBindingName( String modelName ) {
         String newBindingName = ModelerDqpUtils.createNewBindingName(modelName);
-        WorkspaceConfigurationManager wsConfigMgr = DqpPlugin.getWorkspaceConfig();
+        WorkspaceConfigurationManager wsConfigMgr = DqpPlugin.getInstance().getWorkspaceConfig();
 
         if (!wsConfigMgr.isUniqueBindingName(newBindingName)) {
             StringBuffer temp = new StringBuffer(newBindingName);
@@ -500,12 +498,12 @@ public class WorkspaceConfigurationManager
         return newBindingName.toString();
     }
 
-    public Collection<ConnectorBindingType> findMatchingConnectorBindingTypes( JdbcSource jdbcSource,
+    public Collection<ConnectorType> findMatchingConnectorTypes( JdbcSource jdbcSource,
                                                                                boolean useDefaultConnectorType ) {
-        Collection<ConnectorBindingType> matches = new ArrayList<ConnectorBindingType>();
+        Collection<ConnectorType> matches = new ArrayList<ConnectorType>();
 
         for (Iterator itr = this.configMgr.getConnectorTypes().iterator(); itr.hasNext();) {
-            ConnectorBindingType bindingType = (ConnectorBindingType)itr.next();
+            ConnectorType bindingType = (ConnectorType)itr.next();
             Properties connectorTypeProps = bindingType.getDefaultPropertyValues();
             String driverClassName = connectorTypeProps.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
 
@@ -520,7 +518,7 @@ public class WorkspaceConfigurationManager
             matches.add(bindingType);
         }
         if (matches.isEmpty() && useDefaultConnectorType) {
-            ConnectorBindingType bindingType = getDefaultJdbcConnectorBindingType();
+            ConnectorType bindingType = getDefaultJdbcConnectorType();
             if (bindingType != null) {
                 matches.add(bindingType);
             }
@@ -530,9 +528,9 @@ public class WorkspaceConfigurationManager
         return matches;
     }
 
-    private ConnectorBindingType getDefaultJdbcConnectorBindingType() {
+    private ConnectorType getDefaultJdbcConnectorType() {
         for (Iterator itr = this.configMgr.getConnectorTypes().iterator(); itr.hasNext();) {
-            ConnectorBindingType bindingType = (ConnectorBindingType)itr.next();
+            ConnectorType bindingType = (ConnectorType)itr.next();
             Properties connectorTypeProps = bindingType.getDefaultPropertyValues();
             String driverClassName = connectorTypeProps.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
 
@@ -549,7 +547,7 @@ public class WorkspaceConfigurationManager
 
         for (Iterator itr = getConnectorBindings().iterator(); itr.hasNext();) {
             ConnectorBinding binding = (ConnectorBinding)itr.next();
-            ConnectorBindingType bindingType = (ConnectorBindingType)this.configMgr.getComponentType(binding);
+            ConnectorType bindingType = (ConnectorType)this.configMgr.getComponentType(binding);
             Properties connectorTypeProps = bindingType.getDefaultPropertyValues();
             String driverClassName = connectorTypeProps.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
             String url = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);

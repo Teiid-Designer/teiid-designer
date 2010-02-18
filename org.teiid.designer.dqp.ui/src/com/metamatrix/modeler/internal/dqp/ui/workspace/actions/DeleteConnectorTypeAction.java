@@ -15,12 +15,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import org.eclipse.swt.widgets.Display;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ComponentTypeID;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.api.ConnectorBindingType;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.internal.config.DqpExtensionsHandler;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants.Images;
@@ -59,10 +56,10 @@ public class DeleteConnectorTypeAction  extends ConfigurationManagerAction {
                 for( int i=0; i<selectedObjects.length; i++ ) {
                     if( selectedObjects[i] instanceof ComponentTypeID ) {
                         ComponentTypeID theTypeID = (ComponentTypeID)selectedObjects[i];
-                        ComponentType theType = DqpPlugin.getInstance().getConfigurationManager().getComponentType(theTypeID.getName());
+                        ConnectorType theType = DqpPlugin.getInstance().getAdmin().getComponentType(theTypeID.getName());
                         if( theType != null ) {
                             try {
-                                getConfigurationManager().removeConnectorType(theType);
+                                getAdmin().removeConnectorType(theType);
                                 success = true;
                             } catch (final Exception error) {
                                 success = false;
@@ -117,8 +114,8 @@ public class DeleteConnectorTypeAction  extends ConfigurationManagerAction {
     			// If any of the objects are non-standard, quit false
     			if( obj instanceof ComponentTypeID ) {
     				ComponentTypeID typeID = (ComponentTypeID)obj;
-    				ComponentType theType = DqpPlugin.getInstance().getConfigurationManager().getComponentType(typeID.getName());
-    				boolean isStandard = DqpPlugin.getInstance().getConfigurationManager().isStandardComponentType(theType);
+    				ConnectorType theType = DqpPlugin.getInstance().getAdmin().getComponentType(typeID.getName());
+    				boolean isStandard = DqpPlugin.getInstance().getAdmin().isStandardComponentType(theType);
     				if(isStandard) {
     					result = false;
     					break;
@@ -211,7 +208,7 @@ public class DeleteConnectorTypeAction  extends ConfigurationManagerAction {
 
 		// Iterate all type ids in the workspace, looking for selected
      	// if not selected, add to unselected list
-     	Collection<ComponentTypeID> allTypeIDs = DqpPlugin.getInstance().getConfigurationManager().getConnectorTypeIds();
+     	Collection<ComponentTypeID> allTypeIDs = DqpPlugin.getInstance().getAdmin().getConnectorTypeIds();
      	for(Iterator<ComponentTypeID> tIter = allTypeIDs.iterator(); tIter.hasNext();) {
      		ComponentTypeID typeID = tIter.next();
      		boolean found = false;
@@ -248,8 +245,8 @@ public class DeleteConnectorTypeAction  extends ConfigurationManagerAction {
          for( int i=0; i<componentTypeIDs.length; i++ ) {
              if( componentTypeIDs[i] instanceof ComponentTypeID ) {
                  ComponentTypeID theTypeID = (ComponentTypeID)componentTypeIDs[i];
-                 ComponentType theType = DqpPlugin.getInstance().getConfigurationManager().getConnectorType(theTypeID);
-                 if(theType instanceof ConnectorBindingType) {
+                 ConnectorType theType = DqpPlugin.getInstance().getAdmin().getConnectorType(theTypeID);
+                 if(theType instanceof ConnectorType) {
                      Collection<String> typeJars = ModelerDqpUtils.getRequiredExtensionJarNames(theType);
                      jarNames.addAll(typeJars);
                  }
@@ -276,7 +273,7 @@ public class DeleteConnectorTypeAction  extends ConfigurationManagerAction {
     	 Set<ConnectorBinding> conns = new HashSet<ConnectorBinding>();
 
     	 // Get collection of all connectors, keep connectors that have matching types
-    	 Collection<ConnectorBinding> allConns = DqpPlugin.getInstance().getConfigurationManager().getConnectorBindings();
+    	 Collection<ConnectorBinding> allConns = DqpPlugin.getInstance().getAdmin().getConnectorBindings();
     	 for(Iterator<ConnectorBinding> cIter = allConns.iterator(); cIter.hasNext();) {
     		 ConnectorBinding conn = cIter.next();
     		 // If connector binding type matches one of the supplied types, add it to set

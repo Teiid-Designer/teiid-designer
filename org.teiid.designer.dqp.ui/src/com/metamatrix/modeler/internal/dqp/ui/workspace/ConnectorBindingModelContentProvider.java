@@ -12,7 +12,7 @@ import java.util.Collection;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -65,8 +65,8 @@ public class ConnectorBindingModelContentProvider implements ITreeContentProvide
             // check if ConnectorBinding exists for model??
             ModelResource mr = ModelUtilities.getModelResource(parentElement);
             if( mr != null ) {
-                if( DqpPlugin.getWorkspaceConfig().modelIsMappedToSource(mr) ) {
-                    Object[] cb = DqpPlugin.getWorkspaceConfig().getBindingsForModel(mr.getItemName()).toArray();
+                if( DqpPlugin.getInstance().getWorkspaceConfig().modelIsMappedToSource(mr) ) {
+                    Object[] cb = DqpPlugin.getInstance().getWorkspaceConfig().getBindingsForModel(mr.getItemName()).toArray();
                     Collection<ConnectorBindingSourceWrapper> wrappedCBs = new ArrayList<ConnectorBindingSourceWrapper>();
                     for( int i=0; i<cb.length; i++ ) {
                         wrappedCBs.add(new ConnectorBindingSourceWrapper((ConnectorBinding)cb[i], (JdbcSource)parentElement));

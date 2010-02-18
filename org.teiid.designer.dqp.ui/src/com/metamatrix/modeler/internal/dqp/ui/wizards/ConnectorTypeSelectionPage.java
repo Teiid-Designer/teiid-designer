@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import com.metamatrix.common.config.api.ConnectorBindingType;
+import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -311,13 +311,13 @@ public final class ConnectorTypeSelectionPage extends WizardPage {
         // user checked/unchecked connector type - update import status in business object
         TableItem tableItem = (TableItem)event.item;
         if (event.detail == SWT.CHECK) {
-            ConnectorBindingType type = (ConnectorBindingType)tableItem.getData();
+            ConnectorType type = (ConnectorType)tableItem.getData();
             this.helper.setImportStatus(type, tableItem.getChecked());
         }
 
         // Update details panel and page status
         IStructuredSelection selection = (IStructuredSelection)this.viewer.getSelection();
-        ConnectorBindingType selectedType = (ConnectorBindingType)selection.getFirstElement();
+        ConnectorType selectedType = (ConnectorType)selection.getFirstElement();
         // update details panel and page state
         this.detailsArea.setStatus(this.helper.getStatus(selectedType));
         updateState();
@@ -335,7 +335,7 @@ public final class ConnectorTypeSelectionPage extends WizardPage {
 
         // update checkboxes
         for (TableItem item : this.viewer.getTable().getItems()) {
-            ConnectorBindingType type = (ConnectorBindingType)item.getData();
+            ConnectorType type = (ConnectorType)item.getData();
             item.setChecked(this.helper.isSelectedForImport(type));
         }
 
@@ -473,7 +473,7 @@ public final class ConnectorTypeSelectionPage extends WizardPage {
         public Image getColumnImage( Object element,
                                      int columnIndex ) {
             if (columnIndex == ColumnIndexes.STATUS) {
-                ConnectorBindingType type = (ConnectorBindingType)element;
+                ConnectorType type = (ConnectorType)element;
                 IStatus status = accessHelper().getStatus(type);
                 return WidgetUtil.getStatusImage(status);
             }
@@ -488,7 +488,7 @@ public final class ConnectorTypeSelectionPage extends WizardPage {
          */
         public String getColumnText( Object element,
                                      int columnIndex ) {
-            ConnectorBindingType type = (ConnectorBindingType)element;
+            ConnectorType type = (ConnectorType)element;
 
             if (columnIndex == ColumnIndexes.NAME) {
                 return type.getFullName();

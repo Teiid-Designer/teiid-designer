@@ -28,7 +28,6 @@ import net.sourceforge.squirrel_sql.fw.sql.SQLDriverManager;
 import net.sourceforge.squirrel_sql.fw.util.DuplicateObjectException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.ui.IWorkbenchPage;
@@ -36,7 +35,6 @@ import org.eclipse.ui.PlatformUI;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.AdminObject;
-import org.teiid.adminapi.AdminOptions;
 import org.teiid.adminapi.VDB;
 import com.metamatrix.common.vdb.api.VDBDefn;
 import com.metamatrix.core.modeler.util.ArgCheck;
@@ -51,7 +49,6 @@ import com.metamatrix.modeler.dqp.internal.config.VdbDefnHelper;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.workspace.QueryClient;
 import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 
@@ -73,8 +70,7 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
     public static final int LICENSE_PROBLEM_CODE = 30160037; // see com.metatmatrix.license.util.ErrorMessageKeys
     private static final IStatus SUCCESS = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK, getString("executionSuccess"), null); //$NON-NLS-1$
 
-    private InternalVdbEditingContext context;
-    private VdbContextEditor contextEditor;
+    private final InternalVdbEditingContext context;
     private VdbExecutionValidator validator;
     private SQLConnection sqlConnection;
 
@@ -96,18 +92,6 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
         Assertion.assertTrue(context instanceof InternalVdbEditingContext);
         ArgCheck.isNotNull(validator);
         this.context = (InternalVdbEditingContext)context;
-        this.contextEditor = null;
-        this.validator = validator;
-        // initialize the context
-        init();
-    }
-
-    public VdbExecutor( final VdbContextEditor context,
-                        final VdbExecutionValidator validator ) {
-        ArgCheck.isNotNull(context);
-        ArgCheck.isNotNull(validator);
-        this.context = null;
-        this.contextEditor = context;
         this.validator = validator;
         // initialize the context
         init();
@@ -115,12 +99,9 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
 
     private void init() {
         try {
-            if (this.context != null && !this.context.isOpen()) {
+            if (!this.context.isOpen()) {
                 this.context.setLoadModelsOnOpen(false);
                 this.context.open();
-            }
-            if (this.contextEditor != null && !this.contextEditor.isOpen()) {
-                this.contextEditor.open(new NullProgressMonitor());
             }
 
             this.timestamp = getVdbFile().lastModified();
@@ -136,13 +117,7 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
      * @since 4.3
      */
     public IStatus canExecute() {
-        IStatus status = null;
-        if (this.context != null) {
-            status = validator.validateVdb(this.context);
-        } else if (this.contextEditor != null) {
-            status = validator.validateVdb(this.contextEditor);
-        }
-        return status;
+        return validator.validateVdb(this.context);
     }
 
     /**
@@ -154,23 +129,11 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
      * @since 4.3
      */
     public IStatus checkVdbModelState( final VDBDefn defn ) {
-        IStatus status = null;
-        if (this.context != null) {
-            status = validator.validateVdbModels(this.context.getVirtualDatabase(), defn);
-        } else if (this.contextEditor != null) {
-            status = validator.validateVdbModels(this.contextEditor.getVirtualDatabase(), defn);
-        }
-        return status;
+        return validator.validateVdbModels(this.context.getVirtualDatabase(), defn);
     }
 
     private File getVdbFile() {
-        File file = null;
-        if (this.context != null) {
-            file = this.context.getPathToVdb().toFile();
-        } else if (this.contextEditor != null) {
-            file = this.contextEditor.getVdbFile();
-        }
-        return file;
+        return this.context.getPathToVdb().toFile();
     }
 
     private ISQLAlias getSqlAlias( String theName ) {
@@ -206,12 +169,7 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
         IStatus result = SUCCESS;
 
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
-        VdbDefnHelper helper = null;
-        if (this.context != null) {
-            helper = DqpPlugin.getInstance().getVdbDefnHelper(this.context);
-        } else if (this.contextEditor != null) {
-            helper = DqpPlugin.getInstance().getVdbDefnHelper(this.contextEditor);
-        }
+        VdbDefnHelper helper = DqpPlugin.getInstance().getVdbDefnHelper(this.context);
         VDBDefn defn = helper.getVdbDefn();
         String vdbName = defn.getName();
         String vdbVersion = defn.getVersion();
@@ -391,11 +349,7 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
     }
 
     private Properties getExecutionProperties() {
-        Properties executionProps = null;
-        if (context != null) {
-            executionProps = context.getExecutionProperties();
-        }
-        return executionProps;
+        return context.getExecutionProperties();
     }
 
     public void closeAllConnections() {

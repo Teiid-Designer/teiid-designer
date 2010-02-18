@@ -9,7 +9,7 @@ package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
@@ -44,7 +44,7 @@ public class CloneConnectorBindingAction extends ConfigurationManagerAction {
         
         if( theBinding != null ) {
             try {
-                theBinding = DqpPlugin.getWorkspaceConfig().
+                theBinding = DqpPlugin.getInstance().getWorkspaceConfig().
                 cloneConnectorBinding(theBinding, 
                                       generateUniqueBindingName(theBinding.getName()), 
                                       false);
@@ -61,7 +61,7 @@ public class CloneConnectorBindingAction extends ConfigurationManagerAction {
                             if( newBinding != null ) {
                                 //System.out.println("  NewConnectorBindingAction.run() NEW BINDING = " + newBinding.getName());
                                 try {
-                                    getConfigurationManager().createConnectorBinding(newBinding, getNewConnectorBindingName());
+                                    getAdmin().addConnectorBinding(newBinding, getNewConnectorBindingName());
                                 } catch (Exception error) {
                                     DqpUiPlugin.showErrorDialog(getShell(), error);
                                     return false;

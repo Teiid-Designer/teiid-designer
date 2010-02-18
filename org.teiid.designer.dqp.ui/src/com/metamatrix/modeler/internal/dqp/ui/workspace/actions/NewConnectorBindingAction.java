@@ -8,9 +8,8 @@
 package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
 import org.eclipse.jface.window.Window;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ComponentTypeID;
-import com.metamatrix.common.config.api.ConnectorBinding;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
@@ -47,8 +46,8 @@ public class NewConnectorBindingAction extends ConfigurationManagerAction {
 
         NewConnectorBindingDialog dialog = new NewConnectorBindingDialog(UiUtil.getWorkbenchShellOnlyIfUiThread());
         Object selectedObject = getSelectedObject();
-        if( selectedObject instanceof ComponentTypeID ) {
-            dialog.setConnectorType((ComponentTypeID)selectedObject);
+        if( selectedObject instanceof ConnectorType ) {
+            dialog.setConnectorType((ConnectorType)selectedObject);
         }
         dialog.open();
         
@@ -66,13 +65,12 @@ public class NewConnectorBindingAction extends ConfigurationManagerAction {
      */
     @Override
     protected void setEnablement() {
-        boolean result = getConfigurationManager().getConnectorTypes().size() > 0;
+        boolean result = getAdmin().getConnectorTypes().size() > 0;
         if( !isMultiSelection() && !isEmptySelection() ) {
             Object selectedObject = getSelectedObject();
             result = false;
             if( selectedObject instanceof ConnectorBinding 
-                || selectedObject instanceof ComponentType 
-                || selectedObject instanceof ComponentTypeID) {
+                || selectedObject instanceof ConnectorType) {
                 result = true;
             }
         }

@@ -17,16 +17,13 @@ import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.config.api.ConnectorBindingType;
-import com.metamatrix.common.config.util.ConfigurationPropertyNames;
-import com.metamatrix.common.config.xml.XMLConfigurationImportExportUtility;
 import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.internal.config.DqpExtensionsHandler;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.internal.ui.actions.workers.ExportTextToFileWorker;
@@ -181,11 +178,11 @@ public class ExportConnectorBindingsAction extends ConfigurationManagerAction im
 
         List<String> result = new ArrayList<String>();
         DqpExtensionsHandler handler = DqpPlugin.getInstance().getExtensionsHandler();
-        Set<ConnectorBindingType> types = new HashSet<ConnectorBindingType>(bindings.size());
+        Set<ConnectorType> types = new HashSet<ConnectorType>(bindings.size());
         Set<String> requiredJars = new HashSet<String>();
 
         for (ConnectorBinding binding : bindings) {
-            ConnectorBindingType type = (ConnectorBindingType)this.getConfigurationManager().getConnectorType(binding.getComponentTypeID());
+            ConnectorType type = (ConnectorType)this.getAdmin().getConnectorType(binding.getComponentTypeID());
             types.add(type);
 
             // get the required jars from the binding or from the type
@@ -210,7 +207,7 @@ public class ExportConnectorBindingsAction extends ConfigurationManagerAction im
             ByteArrayOutputStream bos = new ByteArrayOutputStream(1024);
             exporter.exportConnectorBindings(bos,
                                              bindings.toArray(new ConnectorBinding[bindings.size()]),
-                                             types.toArray(new ConnectorBindingType[types.size()]),
+                                             types.toArray(new ConnectorType[types.size()]),
                                              getPropertiesForExporting());
             String contents = bos.toString();
             bos.close();

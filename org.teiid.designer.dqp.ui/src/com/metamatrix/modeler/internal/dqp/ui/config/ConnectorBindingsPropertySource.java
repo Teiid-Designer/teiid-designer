@@ -12,42 +12,23 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.Window;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
-import com.metamatrix.common.config.api.ComponentType;
-import com.metamatrix.common.config.api.ComponentTypeDefn;
-import com.metamatrix.common.config.api.ComponentTypeID;
-import com.metamatrix.common.config.api.ConfigurationModelContainer;
-import com.metamatrix.common.config.api.ConnectorBinding;
-import com.metamatrix.common.object.PropertyDefinition;
-import com.metamatrix.common.util.crypto.CryptoException;
-import com.metamatrix.common.util.crypto.CryptoUtil;
-import com.metamatrix.core.util.Assertion;
+import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.runtime.ServerAdmin;
 import com.metamatrix.core.util.StringUtil;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
-import com.metamatrix.modeler.dqp.config.ConfigurationManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.ui.internal.util.UiUtil;
-import com.metamatrix.ui.internal.util.WidgetFactory;
 
 /**
  * @since 4.2
@@ -55,24 +36,28 @@ import com.metamatrix.ui.internal.util.WidgetFactory;
 public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropertySource {
 
     private ConnectorBinding binding;
-    private ComponentType type;
+    private ConnectorType type;
 
     private boolean isEditable = false;
     private ConnectorBindingsPropertySourceProvider provider;
+    private final ServerAdmin admin;
 
     /**
      * @since 4.2
      */
-    public ConnectorBindingsPropertySource( ConnectorBinding binding ) {
+    public ConnectorBindingsPropertySource( ConnectorBinding binding,
+                                            ServerAdmin admin ) {
         this.binding = binding;
+        this.admin = admin;
+
         if (binding != null) {
-            this.type = DqpPlugin.getInstance().getConfigurationManager().getConnectorType(binding.getComponentTypeID());
+            this.type = this.admin.getConnectorType(binding);
 
             // we should always find a type
             if (this.type == null) {
-                UTIL.log(IStatus.ERROR, UTIL.getString("ConnectorBindingsPropertySource.bindingTypeNotFound", //$NON-NLS-1$
-                                                       new Object[] {this.binding.getFullName(),
-                                                           this.binding.getComponentTypeID()}));
+                DqpUiConstants.UTIL.log(IStatus.ERROR,
+                                        DqpUiConstants.UTIL.getString("ConnectorBindingsPropertySource.bindingTypeNotFound", //$NON-NLS-1$
+                                                                      this.binding.getName()));
             }
         }
     }
@@ -94,25 +79,6 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
     }
 
     /**
-     * Obtains all the {@link ComponentTypeDefn}s for the current binding type.
-     * 
-     * @return the definitions or <code>null</code> if no current binding
-     * @since 5.0
-     */
-    private Collection getAllComponentTypeDefinitions() {
-        Collection result = null;
-
-        if (this.type != null) {
-            ConfigurationManager configMgr = DqpPlugin.getInstance().getConfigurationManager();
-            ConfigurationModelContainer container = configMgr.getDefaultConfig().getCMContainerImpl();
-            Assertion.isInstanceOf(this.type.getID(), ComponentTypeID.class, this.type.getID().getClass().getName());
-            result = container.getAllComponentTypeDefinitions((ComponentTypeID)this.type.getID());
-        }
-
-        return result;
-    }
-
-    /**
      * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
      * @since 4.2
      */
@@ -122,21 +88,24 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
         // don't return any descriptors if no binding or no type. this prevents the
         // set and get property methods from being called.
         if ((this.binding != null) && (this.type != null)) {
-            Collection typeDefs = getAllComponentTypeDefinitions();
+            Collection<PropertyDefinition> typeDefs;
+            try {
+                typeDefs = this.type.getPropertyDefinitions();
+            } catch (Exception e) {
+                // TODO log
+                return new IPropertyDescriptor[0];
+            }
 
             if ((typeDefs != null) && !typeDefs.isEmpty()) {
                 boolean showExpertProps = this.provider.isShowingExpertProperties();
                 Collection temp = new ArrayList(typeDefs.size());
-                Iterator iter = typeDefs.iterator();
 
-                while (iter.hasNext()) {
-                    ComponentTypeDefn typeDefn = (ComponentTypeDefn)iter.next();
-                    PropertyDefinition propDefn = typeDefn.getPropertyDefinition();
+                for (PropertyDefinition propDefn : typeDefs) {
                     String id = propDefn.getName();
                     String displayName = propDefn.getDisplayName();
 
                     // don't add if an expert or readonly property and expert properties are not being shown
-                    if ((propDefn.isExpert() || !propDefn.isModifiable()) && !showExpertProps) {
+                    if ((propDefn.isAdvanced() || !propDefn.isModifiable()) && !showExpertProps) {
                         continue;
                     }
 
@@ -144,12 +113,8 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
                     Object descriptor = null;
 
                     // make sure readonly definitions are not modifiable
-                    if (isEditable && propDefn.isModifiable()) {
-                        if (propDefn.isMasked()) {
-                            descriptor = new ConnectorBindingPasswordDescriptor(id, displayName);
-                        } else {
-                            descriptor = new TextPropertyDescriptor(id, displayName);
-                        }
+                    if (this.isEditable && propDefn.isModifiable()) {
+                        descriptor = new TextPropertyDescriptor(id, displayName);
                     } else {
                         descriptor = new PropertyDescriptor(id, displayName);
                     }
@@ -186,40 +151,7 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
      * @since 4.2
      */
     public Object getPropertyValue( Object id ) {
-        String result = binding.getProperty((String)id);
-        if (result != null) {
-            ComponentTypeDefn defn = type.getComponentTypeDefinition((String)id);
-            if (defn != null && defn.getPropertyDefinition().isMasked()) {
-                try {
-                    result = getPasswordDisplay(result);
-                } catch (CryptoException theException) {
-
-                    result = "*****"; //$NON-NLS-1$
-                    // defect 18986 - can't prompt for password change if not editable
-                    if (this.isEditable) {
-                        ResetPasswordDialog dialog = new ResetPasswordDialog();
-                        dialog.open();
-                        if (dialog.getReturnCode() == Window.OK) {
-                            setPropertyValue(id, dialog.getPassword());
-                            result = (String)getPropertyValue(id);
-                        }
-                    }
-                }
-            }
-        }
-
-        // if no value set see if the type has a default value
-        if (result == null) {
-            ComponentTypeDefn defn = type.getComponentTypeDefinition((String)id);
-
-            if ((defn != null) && defn.getPropertyDefinition().hasDefaultValue()) {
-                Object defaultValue = defn.getPropertyDefinition().getDefaultValue();
-                
-                if (defaultValue != null) {
-                    result = defaultValue.toString();
-                }
-            }
-        }
+        String result = binding.getPropertyValue((String)id);
 
         if (result == null) {
             result = StringUtil.Constants.EMPTY_STRING;
@@ -264,97 +196,6 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
 
     public ConnectorBinding getConnectorBinding() {
         return this.binding;
-    }
-
-    private String getPasswordDisplay( String encryptedValue ) throws CryptoException {
-        String result = encryptedValue;
-
-        if ((encryptedValue != null) && (encryptedValue.length() > 0)) {
-            StringBuffer temp = new StringBuffer();
-            int numChars = CryptoUtil.getDecryptor().decrypt(encryptedValue).length();
-
-            while (temp.length() < numChars) {
-                temp.append('*');
-            }
-
-            result = temp.toString();
-        }
-
-        return result;
-    }
-
-    ConnectorBinding getBinding() {
-        return this.binding;
-    }
-
-    private class ResetPasswordDialog extends MessageDialog {
-        String pwd = ""; //$NON-NLS-1$
-
-        public ResetPasswordDialog() {
-            super(UiUtil.getWorkbenchShellOnlyIfUiThread(), UTIL.getStringOrKey("ResetPasswordDialog.title"), //$NON-NLS-1$
-                  null, "", // message is set later //$NON-NLS-1$
-                  ERROR, new String[] {
-                      UTIL.getStringOrKey("ResetPasswordDialog.btnReset"), UTIL.getStringOrKey("ResetPasswordDialog.btnCancel")}, //$NON-NLS-1$ //$NON-NLS-2$
-                  0);
-            setReturnCode(CANCEL);
-        }
-
-        /**
-         * @see org.eclipse.jface.dialogs.MessageDialog#createButton(org.eclipse.swt.widgets.Composite, int, java.lang.String,
-         *      boolean)
-         * @since 4.3
-         */
-        @Override
-        protected Button createButton( Composite theParent,
-                                       int theId,
-                                       String theLabel,
-                                       boolean theDefaultButton ) {
-            Button btn = super.createButton(theParent, theId, theLabel, theDefaultButton);
-
-            if (theLabel.equals(UTIL.getStringOrKey("ResetPasswordDialog.btnReset"))) { //$NON-NLS-1$
-                btn.setToolTipText(UTIL.getStringOrKey("ResetPasswordDialog.btnReset.tip")); //$NON-NLS-1$
-            } else if (theLabel.equals(UTIL.getStringOrKey("ResetPasswordDialog.btnCancel"))) { //$NON-NLS-1$
-                btn.setToolTipText(UTIL.getStringOrKey("ResetPasswordDialog.btnCancel.tip")); //$NON-NLS-1$
-            }
-
-            return btn;
-        }
-
-        /**
-         * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
-         * @since 4.3
-         */
-        @Override
-        protected Control createCustomArea( Composite theParent ) {
-            Composite pnl = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH, 1, 2);
-            WidgetFactory.createLabel(pnl, UTIL.getStringOrKey("ResetPasswordDialog.lblPwd")); //$NON-NLS-1$
-
-            Text txtPwd = WidgetFactory.createPasswordField(pnl, GridData.FILL_HORIZONTAL, 1);
-            txtPwd.addModifyListener(new ModifyListener() {
-                public void modifyText( ModifyEvent theEvent ) {
-                    ResetPasswordDialog.this.pwd = ((Text)theEvent.widget).getText();
-                }
-            });
-
-            // set dialog message now because it was too hard to do it in constructor
-            ConnectorBinding binding = getBinding();
-            String[] params = new String[3];
-            params[0] = binding.getFullName();
-            params[1] = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
-            params[2] = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
-
-            this.messageLabel.setText(UTIL.getString("ResetPasswordDialog.msg", (Object[])params)); //$NON-NLS-1$
-
-            return pnl;
-        }
-
-        public String getPassword() {
-            if (getReturnCode() == OK) {
-                return this.pwd;
-            }
-
-            throw new IllegalStateException(UTIL.getStringOrKey("ResetPasswordDialog.illegalStateMsg")); //$NON-NLS-1$
-        }
     }
 
     /**
