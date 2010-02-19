@@ -65,7 +65,6 @@ import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.internal.dqp.ui.wizards.ConnectorImportWizard;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.CloneConnectorBindingAction;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.DeleteConnectorBindingAction;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.DeleteConnectorTypeAction;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.DeleteSourceBindingAction;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.EditConnectorBindingAction;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.ExportConnectorBindingsAction;
@@ -112,7 +111,6 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
     private DeleteConnectorBindingAction deleteConnectorBindingAction;
     private CloneConnectorBindingAction cloneConnectorBindingAction;
     private DeleteSourceBindingAction deleteSourceBindingAction;
-    private DeleteConnectorTypeAction deleteConnectorsAction;
     private Action openModelAction;
     private IAction collapseAllAction;
 
@@ -421,8 +419,6 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
             } else if (selection instanceof ConnectorType) {
                 manager.add(newConnectorBindingAction);
                 manager.add(new Separator());
-                manager.add(deleteConnectorsAction);
-                manager.add(new Separator());
                 manager.add(importConnectorsAction);
                 manager.add(exportConnectorsAction);
             } else {
@@ -471,9 +467,6 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
 
         deleteSourceBindingAction = new DeleteSourceBindingAction();
         viewer.addSelectionChangedListener(deleteSourceBindingAction);
-
-        deleteConnectorsAction = new DeleteConnectorTypeAction();
-        viewer.addSelectionChangedListener(deleteConnectorsAction);
 
         exportConnectorsAction = new ExportConnectorBindingsAction();
         viewer.addSelectionChangedListener(exportConnectorsAction);
