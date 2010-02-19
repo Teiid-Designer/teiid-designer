@@ -275,7 +275,7 @@ public class VDBReader {
     }
 
     /**
-     * Create a {@link VDBDefn VDBDefn} from the specified <code>vdbFile</code> archive file. Load the VDBDefn withe model
+     * Create a {@link VDBDefn VDBDefn} from the specified <code>vdbFile</code> archive file. Load the VDBDefn with the model
      * information from the <code>vdbFile</code>. This process will not fail if the {@link VdbConstants#DEF_FILE_NAME} is not
      * contained in the archive file.
      * 

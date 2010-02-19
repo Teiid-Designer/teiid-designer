@@ -2063,64 +2063,6 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
     }
 
     /**
-     * This will add the vdb configuration def file. It will replace it if it already exists
-     * 
-     * @see com.metamatrix.vdb.edit.VdbEditingContext#addNonModel(org.eclipse.core.runtime.IProgressMonitor, java.io.File,
-     *      org.eclipse.core.runtime.IPath)
-     * @since 5.0
-     */
-    public NonModelReference addConfigurationDefinition( final IProgressMonitor monitor,
-                                                         final InputStream vdbDefInputStream,
-                                                         final IPath pathInArchive ) throws VdbEditException {
-        ArgCheck.isNotNull(vdbDefInputStream);
-        ArgCheck.isNotNull(pathInArchive);
-        assertIsOpen();
-        assertModelsLoaded();
-
-        // See if there is already a non-model reference with this file name ...
-        final IPath path = (pathInArchive.segmentCount() > 1 ? pathInArchive.makeAbsolute() : pathInArchive);
-        final String pathString = path.toString();
-        final String fileName = path.lastSegment();
-
-        if (monitor != null) {
-            String taskName = VdbEditPlugin.Util.getString("VdbEditingContextImpl.Adding_model_to_vdb", fileName); //$NON-NLS-1$
-            monitor.setTaskName(taskName);
-            monitor.worked(1);
-        }
-
-        // if the vdb def already exist, then remove before adding
-        final NonModelReference existing = this.getNonModelReferenceByFileName(fileName);
-        if (existing != null) {
-            IStatus status = removeNonModel(pathInArchive);
-
-            if (status.getSeverity() == IStatus.ERROR) {
-                throw new VdbEditException(
-                                           VdbEditPlugin.Util.getString("VdbEditingContextImpl.nonModel_with_path_not_removed=Non-model file with path {0} couldn't be removedr", //$NON-NLS-1$
-                                                                        pathInArchive.makeAbsolute().toFile().getAbsolutePath()));
-            }
-        }
-
-        // Setup in temporary directory
-        try {
-            this.addToTempDirectory(vdbDefInputStream, pathString);
-        } catch (IOException theException) {
-            final Object[] params = new Object[] {fileName};
-            final String msg = VdbEditPlugin.Util.getString("VdbEditingContextImpl.errorAddingResourceToTempDirectory", params); //$NON-NLS-1$
-            final IStatus estatus = new Status(IStatus.ERROR, VdbEditPlugin.PLUGIN_ID, IStatus.OK, msg, theException);
-            throw new VdbEditException(estatus);
-        }
-
-        // Create the new object ...
-        final NonModelReference nonModelRef = this.getManifestFactory().createNonModelReference();
-        nonModelRef.setPath(pathString);
-        nonModelRef.setName(path.lastSegment());
-        nonModelRef.setChecksum(this.getCheckSum(vdbDefInputStream));
-        nonModelRef.setVirtualDatabase(this.getVirtualDatabase());
-
-        return nonModelRef;
-    }
-
-    /**
      * @see com.metamatrix.vdb.edit.VdbEditingContext#addModel(org.eclipse.core.runtime.IProgressMonitor,
      *      org.eclipse.core.runtime.IPath, boolean)
      */
@@ -5087,18 +5029,6 @@ public class VdbEditingContextImpl implements VdbEditingContext, InternalVdbEdit
             VdbEditPlugin.Util.log(IStatus.ERROR, err, msg);
         }
         return 0;
-    }
-
-    private long getCheckSum( final InputStream is ) {
-
-        try {
-            return ChecksumUtil.computeChecksum(is).getValue();
-        } catch (Throwable err) {
-            final String msg = VdbEditPlugin.Util.getString("VdbEditingContextImpl.unexpectedException"); //$NON-NLS-1$
-            VdbEditPlugin.Util.log(IStatus.ERROR, err, msg);
-        }
-        return 0;
-
     }
 
     /**

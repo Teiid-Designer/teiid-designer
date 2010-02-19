@@ -7,127 +7,26 @@
  */
 package com.metamatrix.vdb.edit.loader;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
-import java.util.Random;
 import org.jdom.Document;
 import org.jdom.Element;
-import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.common.vdb.api.DEFReaderWriter;
 import com.metamatrix.common.vdb.api.VDBDefn;
 import com.metamatrix.common.vdb.api.VDBStream;
 import com.metamatrix.common.xml.XMLReaderWriterImpl;
 import com.metamatrix.core.MetaMatrixRuntimeException;
 import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.FileUtil;
 import com.metamatrix.core.util.FileUtils;
-import com.metamatrix.core.util.TempDirectory;
-import com.metamatrix.core.util.ZipFileUtil;
-import com.metamatrix.core.vdb.VdbConstants;
 import com.metamatrix.vdb.edit.VdbEditPlugin;
 import com.metamatrix.vdb.runtime.BasicVDBDefn;
 
 public class VDBWriter {
 
-    private static final Random random = new Random(System.currentTimeMillis());
-
-    private TempDirectory tempVDBFiles = null;
-
     private VDBWriter() {
-
-    }
-
-    /**
-     * Export the vdb archive file the vdbArchiveFileName location. The VDBDefn will be added to the vdb archive. The headerProps
-     * are optional, and provides the ability for the application exporting the vdb to add their own properties to the header
-     * section in the xml formatted .DEF file.
-     * 
-     * @param vdbDefn to be added to the archive
-     * @param headerProps, optional and nullable
-     * @throws Exception
-     * @since 4.2
-     */
-    public static void exportVDBArchive( OutputStream vdbArchive,
-                                         VDBDefn vdbDefn,
-                                         Properties headerProps ) throws Exception {
-        if (vdbDefn == null) {
-            ArgCheck.isNotNull(vdbDefn, VdbEditPlugin.Util.getString("VDBWriter.Invalid_VDB_defintion")); //$NON-NLS-1$
-        }
-
-        byte[] vdbContents = vdbDefn.getVDBStream().toByteArray();
-        if (vdbContents == null || vdbContents.length == 0) {
-            ArgCheck.isNotNull(vdbDefn, VdbEditPlugin.Util.getString("VDBWriter.Invalid_VDB_archive")); //$NON-NLS-1$
-        }
-        VDBWriter writer = new VDBWriter();
-        try {
-
-            writer.exportToOutputStream(vdbArchive, vdbDefn, headerProps);
-        } finally {
-            writer.cleanupTempFiles();
-        }
-
-    }
-
-    /**
-     * Export the vdb archive file the vdbArchiveFileName location. The VDBDefn will be added to the vdb archive. The headerProps
-     * are optional, and provides the ability for the application exporting the vdb to add their own properties to the header
-     * section in the xml formatted .DEF file.
-     * 
-     * @param vdbDefn to be added to the archive
-     * @param headerProps, optional and nullable
-     * @throws Exception
-     * @since 4.2
-     */
-    public static void exportVDBArchive( String vdbArchiveFileName,
-                                         VDBDefn vdbDefn,
-                                         Properties headerProps ) throws Exception {
-        if (vdbDefn == null) {
-            ArgCheck.isNotNull(vdbDefn, VdbEditPlugin.Util.getString("VDBWriter.Invalid_VDB_defintion")); //$NON-NLS-1$
-        }
-
-        VDBStream vdbContents = vdbDefn.getVDBStream();
-        if (vdbContents == null) {
-            ArgCheck.isNotNull(vdbDefn, VdbEditPlugin.Util.getString("VDBWriter.Invalid_VDB_archive")); //$NON-NLS-1$
-        }
-
-        writeVDBArchive(null, vdbArchiveFileName, vdbContents);
-
-        addVDBDefnToArchive(vdbDefn, vdbArchiveFileName, headerProps);
-    }
-
-    /**
-     * Add the VDBDefn to the specified vdb archive file. The headerProps are optional, and provides the ability for the
-     * application exporting the vdb to add their own properties to the header section in the xml formatted .DEF file.
-     * 
-     * @param vdbDefn VDBDefn that will be loaded into the VDB Archive
-     * @param vdbArchiveFileName is an existing .VDB file
-     * @param headerProps, optional and nullable
-     * @throws Exception
-     * @since 4.2
-     */
-    static void addVDBDefnToArchive( VDBDefn vdbDefn,
-                                     String vdbArchiveFileName,
-                                     Properties headerProps ) throws Exception {
-        if (vdbDefn == null) {
-            ArgCheck.isNotNull(vdbDefn, VdbEditPlugin.Util.getString("VDBWriter.Invalid_VDB_defintion")); //$NON-NLS-1$
-        }
-
-        if (vdbArchiveFileName == null || vdbArchiveFileName.trim().length() == 0) {
-            ArgCheck.isNotNull(vdbDefn, VdbEditPlugin.Util.getString("VDBWriter.Invalid_VDB_archive_filename")); //$NON-NLS-1$
-        }
-
-        VDBWriter writer = new VDBWriter();
-        try {
-
-            writer.addDefnToVDBArchive(vdbDefn, vdbArchiveFileName, headerProps);
-
-        } finally {
-            writer.cleanupTempFiles();
-        }
 
     }
 
@@ -268,123 +167,5 @@ public class VDBWriter {
         DEFReaderWriter writer = new DEFReaderWriter();
         writer.write(outputStream, (BasicVDBDefn)vdbDefn, headerProps);
         outputStream.close();
-    }
-
-    /**
-     * Call this to add the VDBDefn to the vdbarchive
-     * 
-     * @param vdbDefn
-     * @param vdbArchiveFile
-     * @param headerProps
-     * @throws IOException
-     * @throws Exception
-     * @since 4.2
-     */
-    private void addDefnToVDBArchive( VDBDefn vdbDefn,
-                                      String vdbArchiveFile,
-                                      Properties headerProps ) throws IOException, Exception {
-        createTempDir();
-
-        File arc = new File(vdbArchiveFile);
-
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        writeVDBDefnToOutputStream(bos, vdbDefn, arc.getName(), headerProps);
-        byte[] contents = bos.toByteArray();
-        bos.close();
-
-        File defnFile = writeTempFile(contents, VdbConstants.DEF_FILE_NAME);
-
-        File existingDefFile = VDBReader.getVDBDefFile(vdbArchiveFile);
-
-        if (existingDefFile != null) {
-            ZipFileUtil.remove(vdbArchiveFile, existingDefFile.getName(), true);
-        }
-
-        boolean added = ZipFileUtil.add(vdbArchiveFile, defnFile.getName(), defnFile.getAbsolutePath());
-        if (!added) {
-            throw new MetaMatrixComponentException(VdbEditPlugin.Util.getString("VDBWriter.Unable_to_add_vdbdefn_to_archive")); //$NON-NLS-1$    
-        }
-
-        // write dataroles file to archive
-        char[] dataRoleContents = vdbDefn.getDataRoles();
-        if (dataRoleContents != null && dataRoleContents.length > 0) {
-            // First check for existing file and remove
-            File existingRolesFile = VDBReader.getDataRolesFile(vdbArchiveFile);
-            if (existingRolesFile != null) {
-                ZipFileUtil.remove(vdbArchiveFile, existingRolesFile.getName(), true);
-            }
-
-            File dataRolesFile = writeTempFile(dataRoleContents, VdbConstants.DATA_ROLES_FILE);
-            added = ZipFileUtil.add(vdbArchiveFile, dataRolesFile.getName(), dataRolesFile.getAbsolutePath());
-            if (!added) {
-                throw new MetaMatrixComponentException(VdbEditPlugin.Util.getString("VDBWriter.Unable_to_add_roles_to_archive")); //$NON-NLS-1$    
-            }
-        }
-    }
-
-    private void exportToOutputStream( OutputStream vdbArchiveOS,
-                                       VDBDefn vdbDefn,
-                                       Properties headerProps ) throws IOException, Exception {
-        createTempDir();
-
-        // write it out so that the defn can be added
-        File archiveFile = writeTempFile(vdbDefn.getVDBStream().toByteArray(),
-                                         vdbDefn.getFileName() != null ? vdbDefn.getFileName() : (vdbDefn.getName() + ".vdb"));//$NON-NLS-1$
-
-        // add the defn to the archive
-        addDefnToVDBArchive(vdbDefn, archiveFile.getAbsolutePath(), headerProps);
-
-        FileUtils.write(archiveFile, vdbArchiveOS);
-
-    }
-
-    private void createTempDir() throws MetaMatrixComponentException {
-        if (tempVDBFiles != null) {
-            return;
-        }
-        try {
-            // must write the vdbFile to the filesystem because
-            // the vdbcontexteditor only takes a filename, not an
-            // inputstream or other type.
-            tempVDBFiles = new TempDirectory(System.currentTimeMillis(), random.nextLong());
-            tempVDBFiles.create();
-        } catch (Exception e) {
-            throw new MetaMatrixComponentException(e);
-        }
-
-    }
-
-    private File writeTempFile( byte[] contents,
-                                String fileName ) throws MetaMatrixComponentException {
-
-        File tempFile = null;
-        try {
-            tempFile = new File(tempVDBFiles.getPath(), fileName);
-            new FileUtil(tempFile.getAbsolutePath()).writeBytes(contents);
-        } catch (Exception e) {
-            throw new MetaMatrixComponentException(e);
-        }
-        return tempFile;
-
-    }
-
-    private File writeTempFile( char[] contents,
-                                String fileName ) throws MetaMatrixComponentException {
-
-        File tempFile = null;
-        try {
-            tempFile = new File(tempVDBFiles.getPath(), fileName);
-            new FileUtil(tempFile.getAbsolutePath()).write(new String(contents));
-        } catch (Exception e) {
-            throw new MetaMatrixComponentException(e);
-        }
-        return tempFile;
-    }
-
-    private void cleanupTempFiles() {
-        if (tempVDBFiles != null) {
-            tempVDBFiles.remove();
-            tempVDBFiles = null;
-        }
     }
 }
