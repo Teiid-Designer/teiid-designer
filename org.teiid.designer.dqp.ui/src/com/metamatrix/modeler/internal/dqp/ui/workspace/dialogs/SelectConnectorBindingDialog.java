@@ -23,94 +23,95 @@ import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorsViewTreeProvider;
 
-
-/** 
+/**
  * @since 5.0
  */
 public class SelectConnectorBindingDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
 
     private static final String DEFAULT_TITLE = DqpUiConstants.UTIL.getString("SelectConnectorBindingDialog.title"); //$NON-NLS-1$
-    
 
     private Connector selectedConnectorBinding;
 
-    
     /**
-     * Construct an instance of ModelWorkspaceDialog.  This constructor defaults to the resource root.
+     * Construct an instance of ModelWorkspaceDialog. This constructor defaults to the resource root.
+     * 
      * @param parent
      */
     public SelectConnectorBindingDialog( Shell parent ) {
-        
-        this(parent, DEFAULT_TITLE, new ConnectorsViewTreeProvider(false), new ConnectorsViewTreeProvider(false) );
+
+        this(parent, DEFAULT_TITLE, new ConnectorsViewTreeProvider(false), new ConnectorsViewTreeProvider(false));
     }
 
     /**
-     * Construct an instance of ModelWorkspaceDialog.  This constructor defaults to the resource root.
+     * Construct an instance of ModelWorkspaceDialog. This constructor defaults to the resource root.
+     * 
      * @param parent
      * @param labelProvider an ILabelProvider for the tree
      * @param contentProvider an ITreeContentProvider for the tree
      */
-    public SelectConnectorBindingDialog( Shell parent, String title, ILabelProvider labelProvider, ITreeContentProvider contentProvider) {
-        super( parent, labelProvider, contentProvider );
-                
+    public SelectConnectorBindingDialog( Shell parent,
+                                         String title,
+                                         ILabelProvider labelProvider,
+                                         ITreeContentProvider contentProvider ) {
+        super(parent, labelProvider, contentProvider);
+
         init(title);
     }
 
-    protected void init(String title) {
-        setTitle( DEFAULT_TITLE );
-
+    protected void init( String title ) {
+        setTitle(DEFAULT_TITLE);
 
         // default to EObject validator
-        //super.setValidator( new EObjectSelectionValidator() );
-        
+        // super.setValidator( new EObjectSelectionValidator() );
 
-        // use default root        
-        setInput( DqpPlugin.getInstance().getWorkspaceConfig() );   
-        
+        // use default root
+        setInput(DqpPlugin.getInstance().getServerRegistry().getServers());
+
     }
 
     /**
      * Adds a ViewerFilter to this dialog's TreeViewer
+     * 
      * @param filter
      */
-    public void addViewerFilter(ViewerFilter filter) { 
+    public void addViewerFilter( ViewerFilter filter ) {
         super.getTreeViewer().addFilter(filter);
     }
-    
+
     /**
      * Sets the Validator for this dialog's TreeViewer
+     * 
      * @param filter
      */
     @Override
     public void setValidator( ISelectionStatusValidator validator ) {
-        super.setValidator( validator );
+        super.setValidator(validator);
     }
 
-    
     /* (non-Javadoc)
      * @see org.eclipse.ui.dialogs.ElementTreeSelectionDialog#createTreeViewer(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected TreeViewer createTreeViewer(Composite parent) {
+    protected TreeViewer createTreeViewer( Composite parent ) {
         TreeViewer result = super.createTreeViewer(parent);
 
         result.expandToLevel(2);
-        
-        getTreeViewer().addSelectionChangedListener( this );
-        
+
+        getTreeViewer().addSelectionChangedListener(this);
+
         return result;
         // listen to selection in the tree
-        
+
     }
-    
-    public void selectionChanged(SelectionChangedEvent event) {
-        IStructuredSelection sel = (IStructuredSelection)getTreeViewer().getSelection();        
-                
-        if ( sel.getFirstElement() instanceof Connector ) {
-            selectedConnectorBinding = (Connector)sel.getFirstElement();              
-        }   
+
+    public void selectionChanged( SelectionChangedEvent event ) {
+        IStructuredSelection sel = (IStructuredSelection)getTreeViewer().getSelection();
+
+        if (sel.getFirstElement() instanceof Connector) {
+            selectedConnectorBinding = (Connector)sel.getFirstElement();
+        }
     }
-    
+
     public Connector getSelectedConnector() {
         return selectedConnectorBinding;
     }

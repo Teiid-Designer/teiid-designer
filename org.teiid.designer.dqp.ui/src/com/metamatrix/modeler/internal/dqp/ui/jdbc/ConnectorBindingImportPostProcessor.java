@@ -7,13 +7,9 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.jdbc;
 
-import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -23,14 +19,12 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.dialogs.ListDialog;
-import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
-import com.metamatrix.modeler.dqp.internal.workspace.WorkspaceConfigurationManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
@@ -42,11 +36,9 @@ import com.metamatrix.ui.internal.util.UiUtil;
 /**
  * @since 5.5.3
  */
-public class ConnectorBindingImportPostProcessor implements
-                                                DqpUiConstants,
-                                                IJdbcImportPostProcessor {
-	
-	boolean useDefaultConnectorType = false;
+public class ConnectorBindingImportPostProcessor implements DqpUiConstants, IJdbcImportPostProcessor {
+
+    boolean useDefaultConnectorType = false;
 
     // ===========================================================================================================================
     // Methods
@@ -60,7 +52,7 @@ public class ConnectorBindingImportPostProcessor implements
      * @since 6.0.0
      */
     private Connector createConnector( String modelName,
-                                                     JdbcSource jdbcSource ) throws Exception {
+                                       JdbcSource jdbcSource ) throws Exception {
         ConnectorType bindingType = null;
         WorkspaceConfigurationManager wsConfigMgr = DqpPlugin.getInstance().getWorkspaceConfig();
         final String bindingName = wsConfigMgr.createConnectorBindingName(modelName);
@@ -97,35 +89,36 @@ public class ConnectorBindingImportPostProcessor implements
             bindingType = chosenType[0];
         } else {
             // no type found
-        	// Log as Warning
+            // Log as Warning
             String key = I18nUtil.getPropertyPrefix(ConnectorBindingImportPostProcessor.class) + "missingConnectorType.log.msg"; //$NON-NLS-1$
             final String msg = UTIL.getString(key, new Object[] {modelName, jdbcSource.getDriverClass()});
             UTIL.log(IStatus.WARNING, msg);
-            
-            // Present message in dialog to user because expected result is binding 
-            final String dialogMsg = UTIL.getString(I18nUtil.getPropertyPrefix(ConnectorBindingImportPostProcessor.class) 
-            		+ "missingConnectorType.dialog.msg", new Object[] {jdbcSource.getDriverClass(), modelName}); //$NON-NLS-1$
-            final String dialogTitle = UTIL.getString(I18nUtil.getPropertyPrefix(ConnectorBindingImportPostProcessor.class) 
-            		+ "missingConnectorType.dialog.title"); //$NON-NLS-1$
-            
+
+            // Present message in dialog to user because expected result is binding
+            final String dialogMsg = UTIL.getString(I18nUtil.getPropertyPrefix(ConnectorBindingImportPostProcessor.class)
+                                                    + "missingConnectorType.dialog.msg", new Object[] {jdbcSource.getDriverClass(), modelName}); //$NON-NLS-1$
+            final String dialogTitle = UTIL.getString(I18nUtil.getPropertyPrefix(ConnectorBindingImportPostProcessor.class)
+                                                      + "missingConnectorType.dialog.title"); //$NON-NLS-1$
+
             UiUtil.runInSwtThread(new Runnable() {
 
                 @Override
                 public void run() {
-                	useDefaultConnectorType = MessageDialog.openQuestion(Display.getDefault().getActiveShell(), dialogTitle, dialogMsg);
+                    useDefaultConnectorType = MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
+                                                                         dialogTitle,
+                                                                         dialogMsg);
                 }
             }, false);
-            
+
         }
 
-        if( useDefaultConnectorType ) {
-        	Collection<ConnectorType> matchedConnectorTypes = wsConfigMgr.findMatchingConnectorTypes(jdbcSource, true);
-        	if( matchedConnectorTypes.size() == 1 ) {
-        		bindingType = matchedConnectorTypes.iterator().next();
-        	}
+        if (useDefaultConnectorType) {
+            Collection<ConnectorType> matchedConnectorTypes = wsConfigMgr.findMatchingConnectorTypes(jdbcSource, true);
+            if (matchedConnectorTypes.size() == 1) {
+                bindingType = matchedConnectorTypes.iterator().next();
+            }
         }
-        
-        
+
         // create the binding if we have a type
         if (bindingType != null) {
             return DqpPlugin.getInstance().getAdmin().createConnector(bindingType, bindingName, false);
@@ -141,7 +134,7 @@ public class ConnectorBindingImportPostProcessor implements
      */
     public void postProcess( final IJdbcImportInfoProvider infoProvider ) throws Exception {
         Connector binding = null;
-        
+
         final WorkspaceConfigurationManager wsConfigMgr = DqpPlugin.getInstance().getWorkspaceConfig();
         String modelName = infoProvider.getModelName();
 
@@ -153,23 +146,23 @@ public class ConnectorBindingImportPostProcessor implements
         }
 
         // see if model already has an assigned binding
-        Collection<Connector> bindings = wsConfigMgr.getBindingsForModel(modelName);
+        Collection<Connector> bindings = DqpPlugin.getInstance().getSourceBindingsManager().getConnectorsForModel(modelName);
 
         // if model does not have a connector binding we need to find/create one
         if (bindings.isEmpty()) {
             JdbcSource jdbcSource = infoProvider.getSource();
             Collection<Connector> matchingBindings = wsConfigMgr.findMatchingConnectors(jdbcSource);
-            
+
             if (matchingBindings.isEmpty()) {
                 Connector newBinding = createConnector(modelName, jdbcSource);
 
                 // No binding, return
                 // This could happen if a driver class doesn't match any existing connector type driver classes
-                
-                if( newBinding == null ) {
-                	return;
+
+                if (newBinding == null) {
+                    return;
                 }
-                
+
                 // If a new binding was created we need to set its URL, user, and password properties and create a
                 // source binding.
 
@@ -186,8 +179,8 @@ public class ConnectorBindingImportPostProcessor implements
             }
 
             // create source binding
-            wsConfigMgr.createSourceBinding(infoProvider.getModelResource(), binding);
-            
+            DqpPlugin.getInstance().getSourceBindingsManager().createSourceBinding(infoProvider.getModelResource(), binding);
+
             // make sure ModelExplorer tree shows the new connector binding
             ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();
         }
@@ -212,7 +205,7 @@ public class ConnectorBindingImportPostProcessor implements
             temp = ModelerDqpUtils.setPropertyValue(newConnector,
                                                     JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL,
                                                     jdbcSource.getUrl());
-            
+
             // include any errors
             if (!ArrayUtil.isNullOrEmpty(temp)) {
                 errors.addAll(Arrays.asList(temp));
@@ -226,7 +219,7 @@ public class ConnectorBindingImportPostProcessor implements
             temp = ModelerDqpUtils.setPropertyValue(newConnector,
                                                     JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER,
                                                     jdbcSource.getUsername());
-            
+
             // include any errors
             if (!ArrayUtil.isNullOrEmpty(temp)) {
                 errors.addAll(Arrays.asList(temp));
@@ -238,7 +231,7 @@ public class ConnectorBindingImportPostProcessor implements
         // set password
         try {
             temp = ModelerDqpUtils.setConnectorBindingPassword(newConnector, infoProvider.getPassword());
-            
+
             // include any errors
             if (!ArrayUtil.isNullOrEmpty(temp)) {
                 errors.addAll(Arrays.asList(temp));
@@ -246,7 +239,7 @@ public class ConnectorBindingImportPostProcessor implements
         } catch (Exception e) {
             errors.add(e);
         }
-        
+
         return errors;
     }
 
@@ -254,8 +247,7 @@ public class ConnectorBindingImportPostProcessor implements
     // Inner Class
     // ===========================================================================================================================
 
-    private class ConnectorTypeSelectionDialog extends ListDialog implements
-                                                                 IStructuredContentProvider {
+    private class ConnectorTypeSelectionDialog extends ListDialog implements IStructuredContentProvider {
 
         // =======================================================================================================================
         // Fields (ConnectorTypeSelectionDialog)
@@ -275,9 +267,7 @@ public class ConnectorBindingImportPostProcessor implements
             setShellStyle(getShellStyle() | SWT.RESIZE);
             setLabelProvider(new LabelProvider());
             setContentProvider(this);
-            setInitialSelections(new Object[] {
-                this.types[0]
-            });
+            setInitialSelections(new Object[] {this.types[0]});
             setInput(this.types);
 
             String prefix = I18nUtil.getPropertyPrefix(ConnectorBindingImportPostProcessor.class);

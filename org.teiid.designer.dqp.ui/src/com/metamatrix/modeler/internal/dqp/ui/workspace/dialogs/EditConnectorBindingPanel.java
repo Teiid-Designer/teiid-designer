@@ -75,7 +75,7 @@ public class EditConnectorBindingPanel extends Composite
 
         this.connectorBinding = connector;
         this.changeListeners = new ListenerList(ListenerList.IDENTITY);
-        
+
         createContents(this);
     }
 
@@ -216,7 +216,7 @@ public class EditConnectorBindingPanel extends Composite
         this.propertyPage.createControl(propertyGroup);
         this.propertyPage.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        sourceProvider = new ConnectorBindingPropertySourceProvider(this.connectorBinding.getType().getAdmin());
+        sourceProvider = new ConnectorBindingPropertySourceProvider();
 
         sourceProvider.addPropertyChangeListener(this);
         sourceProvider.setEditable(true);

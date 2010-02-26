@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
-import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.designer.runtime.Connector;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -18,39 +17,36 @@ import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.CloneConnectorBindingDialog;
 import com.metamatrix.ui.internal.util.UiUtil;
 
-
-/** 
+/**
  * @since 5.0
  */
 public class CloneConnectorBindingAction extends ConfigurationManagerAction {
 
-    /** 
-     * 
+    /**
      * @since 5.0
      */
     public CloneConnectorBindingAction() {
         super(DqpUiConstants.UTIL.getString("CloneConnectorBindingAction.label")); //$NON-NLS-1$
     }
-    
+
     /**
-     *  
      * @see org.eclipse.jface.action.IAction#run()
      * @since 5.0
      */
     @Override
     public void run() {
-        //System.out.println("  CloneConnectorBindingAction.run()   ====>>> ");
+        // System.out.println("  CloneConnectorBindingAction.run()   ====>>> ");
         // Get Selection
         Connector theBinding = (Connector)getSelectedObject();
-        
-        if( theBinding != null ) {
+
+        if (theBinding != null) {
             try {
-                theBinding = DqpPlugin.getInstance().getWorkspaceConfig().
-                cloneConnector(theBinding, 
-                                      generateUniqueBindingName(theBinding.getName()));
-                CloneConnectorBindingDialog dialog = new CloneConnectorBindingDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(), theBinding) {
-                    
-                    /** 
+                theBinding = DqpPlugin.getInstance().getWorkspaceConfig().cloneConnector(theBinding,
+                                                                                         generateUniqueBindingName(theBinding.getName()));
+                CloneConnectorBindingDialog dialog = new CloneConnectorBindingDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(),
+                                                                                     theBinding) {
+
+                    /**
                      * @see com.metamatrix.ui.internal.widget.ExtendedTitleAreaDialog#close()
                      * @since 5.5.3
                      */
@@ -58,8 +54,8 @@ public class CloneConnectorBindingAction extends ConfigurationManagerAction {
                     public boolean close() {
                         if (getReturnCode() == Window.OK) {
                             Connector newBinding = getNewConnector();
-                            if( newBinding != null ) {
-                                //System.out.println("  NewConnectorBindingAction.run() ADD BINDING = " + newBinding.getName());
+                            if (newBinding != null) {
+                                // System.out.println("  NewConnectorBindingAction.run() ADD BINDING = " + newBinding.getName());
                                 try {
                                     getAdmin().addConnectorBinding(newBinding, getNewConnectorBindingName());
                                 } catch (Exception error) {
@@ -71,7 +67,7 @@ public class CloneConnectorBindingAction extends ConfigurationManagerAction {
                         return super.close();
                     }
                 };
-    
+
                 dialog.open();
             } catch (final Exception error) {
                 UiUtil.runInSwtThread(new Runnable() {
@@ -83,15 +79,15 @@ public class CloneConnectorBindingAction extends ConfigurationManagerAction {
             }
         }
     }
-    
-    private String generateUniqueBindingName(String originalName) {
+
+    private String generateUniqueBindingName( String originalName ) {
         String proposedName = originalName;
 
         boolean validName = false;
         int iVersion = 1;
-        
-        while(!validName) { 
-            
+
+        while (!validName) {
+
             if (!ModelerDqpUtils.isUniqueBindingName(proposedName)) {
                 proposedName = originalName + "_" + iVersion; //$NON-NLS-1$
                 iVersion++;
@@ -99,25 +95,24 @@ public class CloneConnectorBindingAction extends ConfigurationManagerAction {
                 validName = true;
             }
         }
-        
+
         return proposedName;
     }
 
     /**
-     *  
      * @see com.metamatrix.modeler.internal.dqp.ui.workspace.actions.ConfigurationManagerAction#setEnablement()
      * @since 5.0
      */
     @Override
     protected void setEnablement() {
         boolean result = false;
-        if( !isMultiSelection() && !isEmptySelection() ) {
+        if (!isMultiSelection() && !isEmptySelection()) {
             Object selectedObject = getSelectedObject();
-            if( selectedObject instanceof Connector) {
+            if (selectedObject instanceof Connector) {
                 result = true;
             }
         }
-        
+
         setEnabled(result);
     }
 }

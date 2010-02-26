@@ -12,11 +12,11 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
-import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
@@ -126,7 +126,14 @@ public class ConnectorBindingsTreeProvider implements DqpUiConstants, ITreeConte
     public Object[] getElements( Object inputElement ) {
         if (inputElement instanceof ExecutionAdmin) {
             this.admin = (ExecutionAdmin)inputElement;
-            return this.admin.getConnectorTypeIds().toArray();
+            Object[] types = null;
+            try {
+                types = this.admin.getConnectorTypes().toArray();
+            } catch (Exception e) {
+                DqpPlugin.Util.log(e);
+                return new Object[0];
+            }
+            return types;
         }
         return new Object[0];
     }

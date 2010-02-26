@@ -18,12 +18,10 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 
-
-/** 
- * Provides simple DROP capability to the ConnectorsView.
+/**
+ * Provides simple DROP capability to the ConnectorsView. performDrop() locates the ModelResource for the selected/dragged
+ * IResource and creates a source binding object using the drop target ConnectorBinding.
  * 
- * performDrop() locates the ModelResource for the selected/dragged IResource and creates a source binding object using the drop
- * target ConnectorBinding.
  * @since 5.0
  */
 public class ConnectorsViewDropAdapter extends PluginDropAdapter {
@@ -32,29 +30,28 @@ public class ConnectorsViewDropAdapter extends PluginDropAdapter {
      */
     private TransferData currentTransfer;
     private Connector theTargetBinding;
-    
-    /** 
+
+    /**
      * @param theViewer
      * @since 5.0
      */
-    public ConnectorsViewDropAdapter(StructuredViewer theViewer) {
+    public ConnectorsViewDropAdapter( StructuredViewer theViewer ) {
         super(theViewer);
     }
 
     /**
-     *  
      * @see org.eclipse.jface.viewers.ViewerDropAdapter#performDrop(java.lang.Object)
      * @since 5.0
      */
     @Override
-    public boolean performDrop(Object theData) {
-        //System.out.println("ConnectorsViewDropAdapter.performDrop()  theData = " + theData.getClass().toString());
-        if( theData instanceof IResource[] ) {
+    public boolean performDrop( Object theData ) {
+        // System.out.println("ConnectorsViewDropAdapter.performDrop()  theData = " + theData.getClass().toString());
+        if (theData instanceof IResource[]) {
             IResource[] resources = (IResource[])theData;
 
             ModelResource mr = ModelerCore.getModelWorkspace().findModelResource(resources[0]);
-            if( mr != null && ModelIdentifier.isPhysicalModelType(mr)) {
-                DqpPlugin.getInstance().getWorkspaceConfig().createSourceBinding(mr, theTargetBinding);
+            if (mr != null && ModelIdentifier.isPhysicalModelType(mr)) {
+                DqpPlugin.getInstance().getSourceBindingsManager().createSourceBinding(mr, theTargetBinding);
                 theTargetBinding = null;
                 currentTransfer = null;
                 return true;
@@ -64,23 +61,23 @@ public class ConnectorsViewDropAdapter extends PluginDropAdapter {
     }
 
     /**
-     *  
      * @see org.eclipse.jface.viewers.ViewerDropAdapter#validateDrop(java.lang.Object, int, org.eclipse.swt.dnd.TransferData)
      * @since 5.0
      */
     @Override
-    public boolean validateDrop(Object theTarget,
-                                int theOperation,
-                                TransferData theTransferType) {
+    public boolean validateDrop( Object theTarget,
+                                 int theOperation,
+                                 TransferData theTransferType ) {
 
-       currentTransfer = theTransferType;
-       if (theTarget instanceof Connector && currentTransfer != null && ResourceTransfer.getInstance().isSupportedType(currentTransfer)) {
-           //plugin cannot be loaded without the plugin data
-           theTargetBinding = (Connector)theTarget;
-           return true;
-       }
-       theTargetBinding = null;
-       return false;
+        currentTransfer = theTransferType;
+        if (theTarget instanceof Connector && currentTransfer != null
+            && ResourceTransfer.getInstance().isSupportedType(currentTransfer)) {
+            // plugin cannot be loaded without the plugin data
+            theTargetBinding = (Connector)theTarget;
+            return true;
+        }
+        theTargetBinding = null;
+        return false;
     }
 
 }

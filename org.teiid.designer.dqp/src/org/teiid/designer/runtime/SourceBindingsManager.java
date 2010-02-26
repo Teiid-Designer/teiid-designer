@@ -13,7 +13,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Properties;
 import org.eclipse.core.internal.resources.WorkspaceRoot;
@@ -63,7 +62,7 @@ public class SourceBindingsManager
     private Properties headerProps;
 
     private final ServerManager serverManager;
-    
+
     private BasicWorkspaceDefn workspaceDefn;
 
     private WorkspaceDefnReaderWriter defReaderWriter = new WorkspaceDefnReaderWriter();
@@ -131,25 +130,9 @@ public class SourceBindingsManager
      * @since 5.0
      */
     public Collection<Connector> getConnectorsForModel( String modelName ) {
-        Collection<Connector> connectors = Collections.emptyList();
-        ModelInfo modelInfo = getWorkspaceDefn().getModel(modelName);
+        SourceModelInfo modelInfo = getWorkspaceDefn().getModel(modelName);
 
-        if (modelInfo != null && modelInfo.getConnectorBindingNames() != null) {
-            Object[] names = modelInfo.getConnectorBindingNames().toArray();
-            connectors = new ArrayList<Connector>(names.length);
-            String name = null;
-            Connector connector = null;
-
-            for (int i = 0; i < names.length; i++) {
-                name = (String)names[i];
-                connector = this.executionAdmin.getConnector(name);
-
-                if (connector != null) {
-                    connectors.add(connector);
-                }
-            }
-        }
-        return connectors;
+        return modelInfo.getConnectors();
     }
 
     /**
@@ -189,7 +172,7 @@ public class SourceBindingsManager
      * @since 5.0
      */
     public SourceModelInfo getSourceModelInfo( String modelName ) {
-        return (SourceModelInfo)getWorkspaceDefn().getModel(modelName);
+        return getWorkspaceDefn().getModel(modelName);
     }
 
     /**
@@ -215,6 +198,9 @@ public class SourceBindingsManager
     public void load() throws IOException, Exception {
         if (this.defnFile.exists() && this.defnFile.length() > 0) {
             workspaceDefn = defReaderWriter.read(new FileInputStream(this.defnFile));
+        } else {
+            save();
+            workspaceDefn = defReaderWriter.read(new FileInputStream(this.defnFile));
         }
     }
 
@@ -227,7 +213,7 @@ public class SourceBindingsManager
      * @since 5.0
      */
     public boolean modelIsMappedToSource( ModelResource modelResource ) {
-        ModelInfo modelInfo = getWorkspaceDefn().getModel(modelResource.getItemName());
+        SourceModelInfo modelInfo = getWorkspaceDefn().getModel(modelResource.getItemName());
         return modelInfo != null;
     }
 

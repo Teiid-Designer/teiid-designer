@@ -22,12 +22,10 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.ui.internal.util.UiUtil;
 
 /**
@@ -35,29 +33,26 @@ import com.metamatrix.ui.internal.util.UiUtil;
  */
 public class ConnectorBindingPropertySource implements IPropertySource {
 
-    private Connector binding;
+    private Connector connector;
     private ConnectorType type;
 
     private boolean isEditable = false;
     private ConnectorBindingPropertySourceProvider provider;
-    private final ExecutionAdmin admin;
 
     /**
      * @since 4.2
      */
-    public ConnectorBindingPropertySource( Connector connector,
-                                           ExecutionAdmin admin ) {
-        this.binding = connector;
-        this.admin = admin;
+    public ConnectorBindingPropertySource( Connector connector ) {
+        this.connector = connector;
 
         if (connector != null) {
-            this.type = this.admin.getConnectorType(connector);
+            this.type = connector.getType();
 
             // we should always find a type
             if (this.type == null) {
                 DqpUiConstants.UTIL.log(IStatus.ERROR,
                                         DqpUiConstants.UTIL.getString("ConnectorBindingsPropertySource.bindingTypeNotFound", //$NON-NLS-1$
-                                                                      this.binding.getName()));
+                                                                      this.connector.getName()));
             }
         }
     }
@@ -75,7 +70,7 @@ public class ConnectorBindingPropertySource implements IPropertySource {
      * @since 4.2
      */
     public Object getEditableValue() {
-        return this.binding;
+        return this.connector;
     }
 
     /**
@@ -87,7 +82,7 @@ public class ConnectorBindingPropertySource implements IPropertySource {
 
         // don't return any descriptors if no binding or no type. this prevents the
         // set and get property methods from being called.
-        if ((this.binding != null) && (this.type != null)) {
+        if ((this.connector != null) && (this.type != null)) {
             Collection<PropertyDefinition> typeDefs;
             try {
                 typeDefs = this.type.getPropertyDefinitions();
@@ -151,7 +146,7 @@ public class ConnectorBindingPropertySource implements IPropertySource {
      * @since 4.2
      */
     public Object getPropertyValue( Object id ) {
-        String result = binding.getPropertyValue((String)id);
+        String result = connector.getPropertyValue((String)id);
 
         if (result == null) {
             result = StringUtil.Constants.EMPTY_STRING;
@@ -182,8 +177,8 @@ public class ConnectorBindingPropertySource implements IPropertySource {
     public void setPropertyValue( Object id,
                                   Object value ) {
         try {
-            ModelerDqpUtils.setPropertyValue(this.binding, id, value);
-            this.provider.propertyChanged(this.binding);
+            this.connector.setPropertyValue((String)id, (String)value);
+            this.provider.propertyChanged(this.connector);
         } catch (final Exception error) {
             UiUtil.runInSwtThread(new Runnable() {
 
@@ -195,7 +190,7 @@ public class ConnectorBindingPropertySource implements IPropertySource {
     }
 
     public Connector getConnector() {
-        return this.binding;
+        return this.connector;
     }
 
     /**

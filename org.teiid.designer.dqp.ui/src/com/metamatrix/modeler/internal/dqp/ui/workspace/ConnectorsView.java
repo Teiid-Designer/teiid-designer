@@ -7,7 +7,7 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace;
 
-import java.util.List;
+import java.util.Collection;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
@@ -52,15 +52,15 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.IExecutionConfigurationListener;
+import org.teiid.designer.runtime.SourceBindingsManager;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceModelInfo;
-import com.metamatrix.modeler.dqp.internal.workspace.WorkspaceConfigurationManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.CloneConnectorBindingAction;
@@ -118,7 +118,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
 
     private IPropertySourceProvider propertySourceProvider;
 
-    private WorkspaceConfigurationManager workspaceConfig = DqpPlugin.getInstance().getWorkspaceConfig();
+    private SourceBindingsManager sourceBindingsManager = DqpPlugin.getInstance().getSourceBindingsManager();
 
     class NameSorter extends ViewerSorter {
     }
@@ -172,7 +172,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         hookToolTips();
 
         viewer.setSorter(new NameSorter());
-        viewer.setInput(workspaceConfig);
+        viewer.setInput(DqpPlugin.getInstance().getServerRegistry().getServers());
         viewer.expandToLevel(2);
 
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -197,7 +197,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
             }
         };
         DqpPlugin.getInstance().getServerRegistry().addListener(this);
-        workspaceConfig.addChangeListener(this.configListener);
+        sourceBindingsManager.addChangeListener(this.configListener);
 
         // hook up our status bar manager for EObjects
         IStatusLineManager slManager = getViewSite().getActionBars().getStatusLineManager();
@@ -357,9 +357,9 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
     String getConnectorToolTip( Connector connector ) {
         // TODO fix this
         return connector.getName();
-//        Object params = new Object[] {binding.getName(), binding.getDeployedName(), binding.getConnectorClass(),
-//            binding.getComponentTypeID(), binding.getConfigurationID(), binding.getID(), binding.isEssential()};
-//        return DqpUiConstants.UTIL.getString(PREFIX + "bindingToolTip", params); //$NON-NLS-1$
+        // Object params = new Object[] {binding.getName(), binding.getDeployedName(), binding.getConnectorClass(),
+        // binding.getComponentTypeID(), binding.getConfigurationID(), binding.getID(), binding.isEssential()};
+        //        return DqpUiConstants.UTIL.getString(PREFIX + "bindingToolTip", params); //$NON-NLS-1$
     }
 
     private void hookContextMenu() {
@@ -563,8 +563,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         DqpPlugin.getInstance().getServerRegistry().removeListener(this);
 
         if (this.configListener != null) {
-            DqpPlugin.getInstance().getAdmin().removeChangeListener(this.configListener);
-            this.workspaceConfig.removeChangeListener(this.configListener);
+            this.sourceBindingsManager.removeChangeListener(this.configListener);
         }
 
         super.dispose();
@@ -591,7 +590,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
             if (sel.size() == 1) {
                 Object selObj = sel.getFirstElement();
                 if (selObj instanceof IResource && ModelUtilities.isModelFile((IResource)selObj)) {
-                    SourceModelInfo modelInfo = workspaceConfig.getSourceModelInfo(((IResource)selObj).getName());
+                    SourceModelInfo modelInfo = sourceBindingsManager.getSourceModelInfo(((IResource)selObj).getName());
                     if (modelInfo != null) {
                         viewer.setSelection(new StructuredSelection(modelInfo), true);
                     }
@@ -620,16 +619,15 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                 if (nElements == 1) {
                     Object elem = selection.getFirstElement();
                     if (elem instanceof Connector) {
-                        return DqpUiConstants.UTIL.getString(PREFIX + CONNECTOR_BINDING_STATUS_LABEL,
-                                                             ((Connector)elem).getName());
+                        return DqpUiConstants.UTIL.getString(PREFIX + CONNECTOR_BINDING_STATUS_LABEL, ((Connector)elem).getName());
                     } else if (elem instanceof SourceModelInfo) {
                         // Check for Connector Bindings
                         SourceModelInfo smi = (SourceModelInfo)elem;
-                        List cbNames = smi.getConnectorBindingNames();
-                        if (cbNames.isEmpty()) {
+                        Collection<Connector> connectors = smi.getConnectors();
+                        if (connectors.isEmpty()) {
                             return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_NONE, smi.getName());
-                        } else if (cbNames.size() == 1) {
-                            String firstConnectorName = (String)cbNames.get(0);
+                        } else if (connectors.size() == 1) {
+                            String firstConnectorName = connectors.iterator().next().getName();
                             return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_OK,
                                                                  smi.getName(),
                                                                  firstConnectorName);
@@ -650,7 +648,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.teiid.designer.runtime.IExecutionConfigurationListener#configurationChanged(org.teiid.designer.runtime.ExecutionConfigurationEvent)
      */
     @Override

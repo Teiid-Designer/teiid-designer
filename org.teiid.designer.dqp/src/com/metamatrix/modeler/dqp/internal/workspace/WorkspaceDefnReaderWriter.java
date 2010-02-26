@@ -10,9 +10,6 @@ package com.metamatrix.modeler.dqp.internal.workspace;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -20,9 +17,11 @@ import java.util.Properties;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import com.metamatrix.common.vdb.api.ModelInfo;
+import org.teiid.designer.runtime.Connector;
+import org.teiid.designer.runtime.Server;
 import com.metamatrix.common.xml.XMLReaderWriter;
 import com.metamatrix.common.xml.XMLReaderWriterImpl;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 
 public class WorkspaceDefnReaderWriter {
     private static final String UNKNOWN = "Unknown"; //$NON-NLS-1$
@@ -72,14 +71,6 @@ public class WorkspaceDefnReaderWriter {
         header.setProperty(Header.MODIFICATION_TIME, modificationTime != null ? modificationTime : UNKNOWN);
         workspaceDefn.setHeaderProperties(header);
 
-        // now place them in the defn too
-        workspaceDefn.setCreatedBy(headElement.getChildText(Header.USER_CREATED_BY));
-
-        try {
-            workspaceDefn.setDateCreated(new SimpleDateFormat().parse(headElement.getChildText(Header.MODIFICATION_TIME)));
-        } catch (ParseException e) {
-            workspaceDefn.setDateCreated(Calendar.getInstance().getTime());
-        }
     }
 
     private void loadModelsSection( BasicWorkspaceDefn workspaceDefn,
@@ -96,13 +87,25 @@ public class WorkspaceDefnReaderWriter {
         SourceModelInfo model = new SourceModelInfo(props.getProperty(Model.NAME));
         model.setUuid(props.getProperty(Model.UUID));
         model.setContainerPath(props.getProperty(Model.PATH));
-        model.enableMutliSourceBindings(Boolean.parseBoolean(props.getProperty(Model.MULTI_SOURCE_ENABLED)));
 
         Element cbElement = modelElement.getChild(Model.CONNECTOR_BINDINGS_ELEMENT);
         if (cbElement != null) {
             Collection<Element> bindingElements = cbElement.getChildren(Model.CONNECTOR);
             for (Element bindingElement : bindingElements) {
-                model.addConnectorBindingByName(bindingElement.getAttributeValue(Model.CONNECTOR_ATTRIBUTE_NAME));
+                // Find Connector, if Not, then create OffLineConnector
+                String name = bindingElement.getAttributeValue(Model.CONNECTOR_ATTRIBUTE_NAME);
+                String serverUrl = bindingElement.getAttributeValue(Model.CONNECTOR_SERVER_URL);
+                Server server = DqpPlugin.getInstance().getServerRegistry().getServer(serverUrl);
+
+                if (server != null) {
+                    // Find connector with "name".
+                    Connector connector = server.getAdmin().getConnector(name);
+                    if (connector != null) {
+                        model.addConnector(connector);
+                    }
+                } else {
+                    Connector connector = new OffLineConnector(name, serverUrl);
+                }
             }
         }
         return model;
@@ -148,8 +151,8 @@ public class WorkspaceDefnReaderWriter {
         rootElement.addContent(createHeaderElement(headerProperties));
 
         // write the model elements
-        Collection<ModelInfo> models = def.getModels();
-        for (ModelInfo model : models) {
+        Collection<SourceModelInfo> models = def.getModels();
+        for (SourceModelInfo model : models) {
             rootElement.addContent(createModel(model));
         }
 
@@ -170,22 +173,22 @@ public class WorkspaceDefnReaderWriter {
         return headerElement;
     }
 
-    private Element createModel( ModelInfo model ) {
+    private Element createModel( SourceModelInfo model ) {
         Element modelElement = new Element(Model.ELEMENT);
         boolean valid = addPropertyElement(modelElement, Model.NAME, model.getName());
         if (valid) {
-            addPropertyElement(modelElement, Model.PATH, ((SourceModelInfo)model).getContainerPath());
+            addPropertyElement(modelElement, Model.PATH, model.getContainerPath());
             addPropertyElement(modelElement, Model.UUID, model.getUUID());
-            addPropertyElement(modelElement, Model.MULTI_SOURCE_ENABLED, Boolean.toString(model.isMultiSourceBindingEnabled()));
 
-            List<String> bindings = model.getConnectorBindingNames();
-            if (bindings != null && !bindings.isEmpty()) {
+            Collection<Connector> connectors = model.getConnectors();
+
+            if (connectors != null && connectors.isEmpty()) {
                 Element cbsElement = new Element(Model.CONNECTOR_BINDINGS_ELEMENT);
-                for (String cbName : bindings) {
-                    Element connector = new Element(Model.CONNECTOR);
-                    connector.setAttribute(Model.CONNECTOR_ATTRIBUTE_NAME, cbName);
-                    connector.setAttribute(Model.CONNECTOR_ATTRIBUTE_NAME, cbName);
-                    cbsElement.addContent(connector);
+                for (Connector connector : connectors) {
+                    Element connElement = new Element(Model.CONNECTOR);
+                    connElement.setAttribute(Model.CONNECTOR_ATTRIBUTE_NAME, connector.getName());
+                    connElement.setAttribute(Model.CONNECTOR_SERVER_URL, connector.getType().getAdmin().getServer().getUrl());
+                    cbsElement.addContent(connElement);
                 }
                 modelElement.addContent(cbsElement);
             }

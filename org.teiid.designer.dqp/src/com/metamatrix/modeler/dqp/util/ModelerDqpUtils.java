@@ -7,25 +7,18 @@
  */
 package com.metamatrix.modeler.dqp.util;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.designer.runtime.Connector;
-import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.ExecutionAdmin;
-import com.metamatrix.common.object.PropertyDefinition;
-import com.metamatrix.common.object.PropertyType;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.common.vdb.api.VDBDefn;
 import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
@@ -116,8 +109,8 @@ public final class ModelerDqpUtils {
      * @return the name
      * @since 4.3
      */
-    public static String createNewBindingName( ModelInfo theModelInfo ) {
-        return createNewBindingName(theModelInfo.getName());
+    public static String createNewConnectorName( ModelInfo theModelInfo ) {
+        return createNewConnectorName(theModelInfo.getName());
     }
 
     /**
@@ -127,7 +120,7 @@ public final class ModelerDqpUtils {
      * @return the binding name
      * @since 5.5.3
      */
-    public static String createNewBindingName( String name ) {
+    public static String createNewConnectorName( String name ) {
         return DqpPlugin.Util.getString(PREFIX + "newConnectorName", name); //$NON-NLS-1$
     }
 
@@ -141,7 +134,7 @@ public final class ModelerDqpUtils {
      * @since 4.3
      */
     public static Connector getFirstConnector( ModelInfo theModel,
-                                                             VDBDefn theDefn ) {
+                                               VDBDefn theDefn ) {
         ArgCheck.isNotNull(theModel);
         ArgCheck.isNotNull(theDefn);
 
@@ -153,7 +146,7 @@ public final class ModelerDqpUtils {
             if ((bindingNames != null) && !bindingNames.isEmpty()) {
                 String cbname = (String)bindingNames.iterator().next();
 
-                Connector connector = theDefn.getConnectorBindingByName(cbname);
+                Connector connector = theDefn.getConnectorBindings().get(cbname);
                 if (connector != null) {
                     result = connector;
                 }

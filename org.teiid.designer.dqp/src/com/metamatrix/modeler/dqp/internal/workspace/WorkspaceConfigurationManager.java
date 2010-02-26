@@ -30,6 +30,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
+import com.metamatrix.common.config.model.BasicConfigurationObjectEditor;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
@@ -175,7 +176,7 @@ public class WorkspaceConfigurationManager
             for (int i = 0; i < names.length; i++) {
                 name = (String)names[i];
                 connector = this.executionAdmin.getConnector(name);
-                
+
                 if (connector != null) {
                     connectors.add(connector);
                 }
@@ -229,9 +230,9 @@ public class WorkspaceConfigurationManager
      * @since 5.0
      */
     public void createSourceBinding( ModelResource modelResource,
-                                     Connector binding ) {
+                                     Connector connector ) {
         SourceModelInfo modelInfo = new SourceModelInfo(modelResource.getItemName());
-        modelInfo.addConnectorBindingByName(binding.getName());
+        modelInfo.addConnector(connector);
         try {
             modelInfo.setUuid(modelResource.getUuid());
             modelInfo.setContainerPath(modelResource.getParent().getPath().makeRelative().toString());
@@ -351,7 +352,7 @@ public class WorkspaceConfigurationManager
     }
 
     public Collection getModelsForBinding( String connectorBindingName ) {
-        return getWorkspaceDefn().getModelsForBinding(connectorBindingName);
+        return getWorkspaceDefn().getModelsForConnectorName(connectorBindingName);
     }
 
     /**
@@ -434,23 +435,22 @@ public class WorkspaceConfigurationManager
      * @since 5.0
      */
     public void stateChanged( IChangeNotifier theSource ) {
-        // Need to check all source bindings and remove any "stale" ones. Basicaly
-        if (theSource == this.executionAdmin) {
-            // Need to check if any connector bindings have been removed.
-            Collection staleModelInfos = new ArrayList();
-            Collection allModelInfos = new ArrayList(workspaceDefn.getModels());
+        // Need to check all source bindings and remove any "stale" ones. Basically
 
-            for (Iterator iter = allModelInfos.iterator(); iter.hasNext();) {
-                SourceModelInfo nextModelInfo = (SourceModelInfo)iter.next();
-                Collection bindingNames = nextModelInfo.getConnectorBindingNames();
-                if (!allBindingsExist(bindingNames)) {
-                    staleModelInfos.add(nextModelInfo);
-                }
-            }
+        // Need to check if any connector bindings have been removed.
+        Collection staleModelInfos = new ArrayList();
+        Collection allModelInfos = new ArrayList(workspaceDefn.getModels());
 
-            if (!staleModelInfos.isEmpty()) {
-                removeSourceBindings(staleModelInfos);
+        for (Iterator iter = allModelInfos.iterator(); iter.hasNext();) {
+            SourceModelInfo nextModelInfo = (SourceModelInfo)iter.next();
+            Collection bindingNames = nextModelInfo.getConnectorBindingNames();
+            if (!allBindingsExist(bindingNames)) {
+                staleModelInfos.add(nextModelInfo);
             }
+        }
+
+        if (!staleModelInfos.isEmpty()) {
+            removeSourceBindings(staleModelInfos);
         }
     }
 
@@ -460,7 +460,7 @@ public class WorkspaceConfigurationManager
     private boolean allBindingsExist( Collection bindingNames ) {
         for (Iterator iter = bindingNames.iterator(); iter.hasNext();) {
             String nextName = (String)iter.next();
-            if (this.executionAdmin.getBinding(nextName) == null) {
+            if (this.executionAdmin.getConnector(nextName) == null) {
                 return false;
             }
         }
@@ -473,7 +473,7 @@ public class WorkspaceConfigurationManager
      * @since 5.5.3
      */
     public String createConnectorBindingName( String modelName ) {
-        String newBindingName = ModelerDqpUtils.createNewBindingName(modelName);
+        String newBindingName = ModelerDqpUtils.createNewConnectorName(modelName);
         WorkspaceConfigurationManager wsConfigMgr = DqpPlugin.getInstance().getWorkspaceConfig();
 
         if (!wsConfigMgr.isUniqueBindingName(newBindingName)) {
@@ -498,12 +498,12 @@ public class WorkspaceConfigurationManager
     }
 
     public Collection<ConnectorType> findMatchingConnectorTypes( JdbcSource jdbcSource,
-                                                                               boolean useDefaultConnectorType ) {
+                                                                 boolean useDefaultConnectorType ) {
         Collection<ConnectorType> matches = new ArrayList<ConnectorType>();
 
-        for (Iterator itr = this.executionAdmin.getConnectorTypes().iterator(); itr.hasNext();) {
-            ConnectorType bindingType = (ConnectorType)itr.next();
-            Properties connectorTypeProps = bindingType.getDefaultPropertyValues();
+        for (ConnectorType connectorType : this.executionAdmin.getConnectorTypes()) {
+
+            Properties connectorTypeProps = connectorType.getDefaultPropertyValues();
             String driverClassName = connectorTypeProps.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
 
             if (StringUtil.isEmpty(driverClassName)) {
@@ -514,7 +514,7 @@ public class WorkspaceConfigurationManager
                 continue;
             }
 
-            matches.add(bindingType);
+            matches.add(connectorType);
         }
         if (matches.isEmpty() && useDefaultConnectorType) {
             ConnectorType bindingType = getDefaultJdbcConnectorType();
@@ -545,12 +545,12 @@ public class WorkspaceConfigurationManager
         Collection<Connector> matches = new ArrayList<Connector>();
 
         for (Iterator itr = getConnectorBindings().iterator(); itr.hasNext();) {
-            Connector binding = (Connector)itr.next();
-            ConnectorType bindingType = (ConnectorType)this.executionAdmin.getComponentType(binding);
-            Properties connectorTypeProps = bindingType.getDefaultPropertyValues();
-            String driverClassName = connectorTypeProps.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
-            String url = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
-            String user = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
+            Connector connector = (Connector)itr.next();
+            ConnectorType bindingType = connector.getType();
+            // TODO We have no idea what property key values will be needed to find the following info.
+            String driverClassName = connector.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
+            String url = connector.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
+            String user = connector.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
 
             if (StringUtil.isEmpty(driverClassName) || StringUtil.isEmpty(url)) {
                 continue;
@@ -574,7 +574,7 @@ public class WorkspaceConfigurationManager
                 continue;
             }
 
-            matches.add(binding);
+            matches.add(connector);
         }
 
         return matches;

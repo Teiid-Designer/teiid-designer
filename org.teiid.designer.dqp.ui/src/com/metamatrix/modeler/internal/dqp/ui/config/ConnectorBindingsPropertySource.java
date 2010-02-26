@@ -19,11 +19,9 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
-import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -41,18 +39,15 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
 
     private boolean isEditable = false;
     private ConnectorBindingsPropertySourceProvider provider;
-    private final ExecutionAdmin admin;
 
     /**
      * @since 4.2
      */
-    public ConnectorBindingsPropertySource( Connector connector,
-                                            ExecutionAdmin admin ) {
+    public ConnectorBindingsPropertySource( Connector connector ) {
         this.connector = connector;
-        this.admin = admin;
 
         if (connector != null) {
-            this.type = this.admin.getConnectorType(connector);
+            this.type = connector.getType();
 
             // we should always find a type
             if (this.type == null) {

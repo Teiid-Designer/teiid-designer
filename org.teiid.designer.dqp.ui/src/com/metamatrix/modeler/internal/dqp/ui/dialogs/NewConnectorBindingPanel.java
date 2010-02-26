@@ -33,7 +33,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.common.namedobject.BaseID;
@@ -88,7 +87,6 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
         this.currentType = type;
         this.originalName = name;
         this.vdbContext = theContext;
-
 
         // register to receive configuration changes
         this.configListener = new IChangeListener() {
@@ -314,10 +312,6 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
 
         if (index != -1) {
             this.currentType = (ConnectorType)this.componentTypes.get(sortedTypes.get(index));
-
-            if ((this.currentTypeID == null) || !(this.currentTypeID == this.currentType.getID())) {
-                this.currentTypeID = this.currentType.getID();
-            }
         }
 
         // getting the binding will cause a new binding to be created
@@ -355,7 +349,6 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
                         ConnectorType type = (ConnectorType)NewConnectorBindingPanel.this.componentTypes.get(selection);
                         if (type != null) {
                             NewConnectorBindingPanel.this.currentType = type;
-                            NewConnectorBindingPanel.this.currentTypeID = type.getID();
                         }
 
                         connectorTypeChanged();

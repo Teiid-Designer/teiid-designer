@@ -45,7 +45,6 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetSorter;
-import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
@@ -422,7 +421,7 @@ public final class ConnectorBindingsPanel extends Composite
             }
         }
     }
-    
+
     private ExecutionAdmin getAdmin() {
         // TODO implement
         return null;
@@ -440,9 +439,10 @@ public final class ConnectorBindingsPanel extends Composite
             if ((obj != null) && (obj instanceof BasicVDBModelDefn)) {
                 BasicVDBModelDefn modelDefn = (BasicVDBModelDefn)obj;
                 Connector connector = getVdbDefnHelper().getFirstConnector(modelDefn);
-                String name = ModelerDqpUtils.createNewBindingName(modelDefn);
+                String name = ModelerDqpUtils.createNewConnectorName(modelDefn);
 
-                NewConnectorBindingDialog dialog = new NewConnectorBindingDialog(getShell(), connector, name, this.vdbContext, modelDefn);
+                NewConnectorBindingDialog dialog = new NewConnectorBindingDialog(getShell(), connector, name, this.vdbContext,
+                                                                                 modelDefn);
                 dialog.open();
 
                 if (dialog.getReturnCode() == Window.OK) {
@@ -474,7 +474,7 @@ public final class ConnectorBindingsPanel extends Composite
                                     getAdmin().addConnectorBinding(newValue);
                                 }
 
-                                ConnectorType type = ModelerDqpUtils.getConnectorType(newValue);
+                                ConnectorType type = newValue.getType();
                                 getVdbDefnHelper().setConnector(modelDefn, newValue, type);
                             }
 

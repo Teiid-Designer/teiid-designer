@@ -51,7 +51,7 @@ public class ExistingConnectorBindingPanel extends BaseNewConnectorBindingPanel 
     TreeViewer treeViewer;
     ConnectorBindingsTreeProvider treeProvider;
     private ConnectorType currentType;
-    private Connector currentBinding;
+    private Connector currentConnector;
     private boolean hasInitialized = false;
     private Action deleteAction;
 
@@ -66,7 +66,7 @@ public class ExistingConnectorBindingPanel extends BaseNewConnectorBindingPanel 
                                           Connector connector ) {
         super(parent);
         this.currentType = type;
-        this.currentBinding = connector;
+        this.currentConnector = connector;
 
         buildControls();
     }
@@ -107,7 +107,7 @@ public class ExistingConnectorBindingPanel extends BaseNewConnectorBindingPanel 
         treeViewer.setContentProvider(treeProvider);
         treeViewer.setLabelProvider(treeProvider);
 
-        treeViewer.setInput(DqpPlugin.getInstance().getAdmin());
+        treeViewer.setInput(DqpPlugin.getInstance().getServerRegistry().getServers());
         treeViewer.expandToLevel(2);
 
         GridData gd = new GridData(GridData.FILL_BOTH);
@@ -129,8 +129,8 @@ public class ExistingConnectorBindingPanel extends BaseNewConnectorBindingPanel 
             }
         });
 
-        if (this.currentBinding != null) {
-            this.treeViewer.setSelection(new StructuredSelection(this.currentBinding));
+        if (this.currentConnector != null) {
+            this.treeViewer.setSelection(new StructuredSelection(this.currentConnector));
         }
 
         // register to receive configuration changes
@@ -246,10 +246,10 @@ public class ExistingConnectorBindingPanel extends BaseNewConnectorBindingPanel 
 
     void initDisplay() {
         hasInitialized = true;
-        if (currentBinding != null) {
+        if (currentConnector != null) {
             // make sure the type gets revealed.
-            treeViewer.reveal(currentBinding.getComponentTypeID());
-            treeViewer.setSelection(new StructuredSelection(currentBinding), true);
+            treeViewer.reveal(currentConnector.getType());
+            treeViewer.setSelection(new StructuredSelection(currentConnector), true);
         } else if (currentType != null) {
             treeViewer.setSelection(new StructuredSelection(currentType), true);
         }
@@ -269,7 +269,8 @@ public class ExistingConnectorBindingPanel extends BaseNewConnectorBindingPanel 
                 for (int i = 0; i < selList.length; i++) {
                     try {
                         if (selList[i] instanceof Connector) {
-                            DqpPlugin.getInstance().getAdmin().removeBinding((Connector)selList[i]);
+                            Connector connector = (Connector)selList[i];
+                            connector.getType().getAdmin().removeConnector(connector);
                         }
                     } catch (Exception error) {
                         DqpUiPlugin.showErrorDialog(getShell(), error);

@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.SourceBindingsManager;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
@@ -24,7 +25,6 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.dqp.internal.config.VdbDefnHelper;
-import com.metamatrix.modeler.dqp.internal.workspace.WorkspaceConfigurationManager;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 
@@ -85,8 +85,8 @@ public class DqpPlugin extends Plugin {
     /**
      * The manager of the source bindings.
      */
-    private WorkspaceConfigurationManager workspaceConfig; // TODO change name to SourceBindingsManager and refactor binding
-                                                           // utility methods to ExecutionAdmin
+    private SourceBindingsManager sourceBindingsManager; // TODO change name to SourceBindingsManager and refactor binding
+    // utility methods to ExecutionAdmin
 
     /**
      * Collection of {@link VdbDefnHelper}s for a given {@link InternalVdbEditingContext}. Important to make sure only one context
@@ -106,8 +106,8 @@ public class DqpPlugin extends Plugin {
      * @return
      * @since 5.0
      */
-    public WorkspaceConfigurationManager getWorkspaceConfig() {
-        return this.workspaceConfig;
+    public SourceBindingsManager getSourceBindingsManager() {
+        return this.sourceBindingsManager;
     }
 
     /**
@@ -195,23 +195,14 @@ public class DqpPlugin extends Plugin {
         // Check for config file
         String configFilePath = workspaceDefnDirectory.getAbsolutePath() + File.separator + SOURCE_BINDINGS_FILE_NAME;
         File configFile = new File(configFilePath);
-        this.workspaceConfig = new WorkspaceConfigurationManager(configFile);
-        if (!configFile.exists()) {
-            try {
-                this.workspaceConfig.save();
-            } catch (Exception theException) {
-                String msg = Util.getString(I18nUtil.getPropertyPrefix(DqpPlugin.class) + "problemSavingWorkspaceDefnFile", //$NON-NLS-1$
-                                            SOURCE_BINDINGS_FILE_NAME);
-                Util.log(IStatus.ERROR, theException, msg);
-            }
-        } else {
-            try {
-                this.workspaceConfig.load();
-            } catch (Exception theException) {
-                String msg = Util.getString(I18nUtil.getPropertyPrefix(DqpPlugin.class) + "problemLoadingWorkspaceDefnFile", //$NON-NLS-1$
-                                            SOURCE_BINDINGS_FILE_NAME);
-                Util.log(IStatus.ERROR, theException, msg);
-            }
+        this.sourceBindingsManager = new SourceBindingsManager(this.serverRegistry, configFile);
+
+        try {
+            this.sourceBindingsManager.load(); // Load will create file if it does not exist yet
+        } catch (Exception theException) {
+            String msg = Util.getString(I18nUtil.getPropertyPrefix(DqpPlugin.class) + "problemLoadingWorkspaceDefnFile", //$NON-NLS-1$
+                                        SOURCE_BINDINGS_FILE_NAME);
+            Util.log(IStatus.ERROR, theException, msg);
         }
     }
 

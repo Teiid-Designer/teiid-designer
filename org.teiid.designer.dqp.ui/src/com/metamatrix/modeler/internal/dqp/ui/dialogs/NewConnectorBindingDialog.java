@@ -7,7 +7,6 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.dialogs;
 
-import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.window.Window;
@@ -83,14 +82,13 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
                                       Connector connector,
                                       String connectorBindingName,
                                       VdbEditingContext theVdbContext,
-                                      ModelInfo theModelInfo,
-                                      ExecutionAdmin admin ) {
+                                      ModelInfo theModelInfo ) {
         super(theParentShell, DqpUiPlugin.getDefault());
         this.connector = connector;
         this.connectorBindingName = connectorBindingName;
         this.vdbContext = (InternalVdbEditingContext)theVdbContext; // safe to cast
         this.modelInfo = theModelInfo;
-        this.admin = admin;
+        this.admin = connector.getType().getAdmin();
 
         // set initial size
         setInitialSizeRelativeToScreen(50, 75);
@@ -149,10 +147,6 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
 
     @Override
     protected Control createDialogArea( Composite parent ) {
-        if (this.currentTypeID != null) {
-            Map types = ModelerDqpUtils.getConnectorTypes();
-            this.currentType = (ConnectorType)types.get(this.currentTypeID.getName());
-        }
 
         Composite composite = (Composite)super.createDialogArea(parent);
 
@@ -171,7 +165,7 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
         //
 
         this.newBindingPanel = new NewConnectorBindingPanel(this.tabPane, this.connectorBindingName, getConnectorType(),
-                                                                this.vdbContext);
+                                                            this.vdbContext);
         this.newBindingPanel.addChangeListener(this);
 
         this.existingBindingPanel = new ExistingConnectorBindingPanel(this.tabPane, getConnectorType(), getConnector());

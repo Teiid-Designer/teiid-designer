@@ -642,7 +642,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
     private void populateBindingName() {
         // if needed repopulate the name to the default name
         if (getNewBindingName().length() == 0) {
-            this.txtBindingName.setText(ModelerDqpUtils.createNewBindingName(this.modelInfo));
+            this.txtBindingName.setText(ModelerDqpUtils.createNewConnectorName(this.modelInfo));
         }
 
     }
