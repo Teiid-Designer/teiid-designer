@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorsViewTreeProvider;
@@ -32,7 +32,7 @@ public class SelectConnectorBindingDialog extends ElementTreeSelectionDialog imp
     private static final String DEFAULT_TITLE = DqpUiConstants.UTIL.getString("SelectConnectorBindingDialog.title"); //$NON-NLS-1$
     
 
-    private ConnectorBinding selectedConnectorBinding;
+    private Connector selectedConnectorBinding;
 
     
     /**
@@ -106,12 +106,12 @@ public class SelectConnectorBindingDialog extends ElementTreeSelectionDialog imp
     public void selectionChanged(SelectionChangedEvent event) {
         IStructuredSelection sel = (IStructuredSelection)getTreeViewer().getSelection();        
                 
-        if ( sel.getFirstElement() instanceof ConnectorBinding ) {
-            selectedConnectorBinding = (ConnectorBinding)sel.getFirstElement();              
+        if ( sel.getFirstElement() instanceof Connector ) {
+            selectedConnectorBinding = (Connector)sel.getFirstElement();              
         }   
     }
     
-    public ConnectorBinding getSelectedConnectorBinding() {
+    public Connector getSelectedConnector() {
         return selectedConnectorBinding;
     }
 }

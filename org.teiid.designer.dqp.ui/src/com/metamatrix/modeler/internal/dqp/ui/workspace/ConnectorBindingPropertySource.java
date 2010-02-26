@@ -19,10 +19,10 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
-import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.ServerAdmin;
+import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -35,23 +35,23 @@ import com.metamatrix.ui.internal.util.UiUtil;
  */
 public class ConnectorBindingPropertySource implements IPropertySource {
 
-    private ConnectorBinding binding;
+    private Connector binding;
     private ConnectorType type;
 
     private boolean isEditable = false;
     private ConnectorBindingPropertySourceProvider provider;
-    private final ServerAdmin admin;
+    private final ExecutionAdmin admin;
 
     /**
      * @since 4.2
      */
-    public ConnectorBindingPropertySource( ConnectorBinding binding,
-                                           ServerAdmin admin ) {
-        this.binding = binding;
+    public ConnectorBindingPropertySource( Connector connector,
+                                           ExecutionAdmin admin ) {
+        this.binding = connector;
         this.admin = admin;
 
-        if (binding != null) {
-            this.type = this.admin.getConnectorType(binding);
+        if (connector != null) {
+            this.type = this.admin.getConnectorType(connector);
 
             // we should always find a type
             if (this.type == null) {
@@ -194,7 +194,7 @@ public class ConnectorBindingPropertySource implements IPropertySource {
         }
     }
 
-    public ConnectorBinding getConnectorBinding() {
+    public Connector getConnector() {
         return this.binding;
     }
 

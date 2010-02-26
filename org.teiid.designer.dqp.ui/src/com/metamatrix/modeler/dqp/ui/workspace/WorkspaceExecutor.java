@@ -31,6 +31,7 @@ import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.AdminObject;
 import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.adminapi.ProcessObject;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.common.types.DataTypeManager;
 import com.metamatrix.core.modeler.util.FileUtils;
@@ -51,15 +52,12 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
  */
 public class WorkspaceExecutor extends QueryClient {
 
-    static final String PREFIX = I18nUtil.getPropertyPrefix(WorkspaceExecutor.class);
-
-    static final String DEBUG_CONTEXT = WorkspaceExecutor.class.getSimpleName();
-    // private static final String PREFIX = I18nUtil.getPropertyPrefix(WorkspaceExecutor.class);
+    private static final String PREFIX = I18nUtil.getPropertyPrefix(WorkspaceExecutor.class);
     private static WorkspaceExecutor _INSTANCE = new WorkspaceExecutor();
 
     boolean started;
     private WorkspaceInfoImpl workspaceInfo = new WorkspaceInfoImpl();
-    Connection adminConnection;
+    private Connection adminConnection;
 
     /**
      * The current JDBC statement or <code>null</code>
@@ -113,20 +111,6 @@ public class WorkspaceExecutor extends QueryClient {
                 // register workspaceinfo with the dqp and workspace will supply the rest.
                 this.adminConnection = getAdminConnection();
                 WorkspaceInfoHolder.setInfo(this.workspaceInfo);
-
-                ConfigurationManager config = DqpPlugin.getInstance().getAdmin();
-                Collection<ConnectorBinding> bindings = config.getConnectorBindings();
-                startConnnectorBindings(bindings);
-
-                // add a change listener with configuration as bindings are added or removed keep them in sync
-                DqpPlugin.getInstance().getAdmin().addConfigurationChangeListener(new BindingListener());
-
-                UDFListener udfListener = new UDFListener();
-                DqpPlugin.getInstance().getExtensionsHandler().addChangeListener(udfListener);
-                UdfManager.INSTANCE.addChangeListener(udfListener);
-
-                // tell embedded to load initial UDF model. The UDF model at startup should always be a valid one.
-                reloadUdfModel();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -220,233 +204,8 @@ public class WorkspaceExecutor extends QueryClient {
         return false;
     }
 
-    private void startConnnectorBindings( Collection<ConnectorBinding> bindings ) throws SQLException {
-        if (bindings != null && !bindings.isEmpty()) {
-            for (ConnectorBinding binding : bindings) {
-                try {
-                    startConnectorBinding(binding);
-                } catch (AdminException e) {
-                    String msg = UTIL.getString(PREFIX + "errorStartingBinding", binding.getFullName()); //$NON-NLS-1$
-                    UTIL.log(IStatus.ERROR, e, msg);
-                }
-            }
-        }
-    }
-
-    /**
-     * Start the given connector binding
-     */
-    private void startConnectorBinding( ConnectorBinding binding ) throws SQLException, AdminException {
-        Admin admin = this.adminConnection.getAdminAPI();
-        org.teiid.adminapi.ConnectorBinding existing = findDeployedBinding(admin, binding.getFullName());
-
-        if (existing != null) {
-            admin.startConnectorBinding(existing.getIdentifier());
-        }
-    }
-
-    private org.teiid.adminapi.ConnectorBinding findDeployedBinding( Admin admin,
-                                                  String bindingName ) throws AdminException {
-        Collection deployedBindings = admin.getConnectorBindings(AdminObject.WILDCARD);
-        if (deployedBindings != null && !deployedBindings.isEmpty()) {
-            for (Iterator i = deployedBindings.iterator(); i.hasNext();) {
-                org.teiid.adminapi.ConnectorBinding existing = (org.teiid.adminapi.ConnectorBinding)i.next();
-                if (existing.getName().equals(bindingName)) {
-                    return existing;
-                }
-            }
-        }
-        return null;
-    }
-
-    private ConnectorType findDeployedConnectorType( Admin admin,
-                                                     String typeName ) throws AdminException {
-        Collection deployedTypes = admin.getConnectorTypes(AdminObject.WILDCARD);
-        if (deployedTypes != null && !deployedTypes.isEmpty()) {
-            for (Iterator i = deployedTypes.iterator(); i.hasNext();) {
-                ConnectorType existing = (ConnectorType)i.next();
-                if (existing.getName().equals(typeName)) {
-                    return existing;
-                }
-            }
-        }
-        return null;
-    }
-
-    void removeConnectorBinding( String bindingName ) throws AdminException, SQLException {
-        // if we already have this binding then remove it first.
-        Admin admin = this.adminConnection.getAdminAPI();
-        org.teiid.adminapi.ConnectorBinding existing = findDeployedBinding(admin, bindingName);
-        if (existing != null) {
-            admin.stopConnectorBinding(existing.getIdentifier(), true);
-            admin.deleteConnectorBinding(existing.getIdentifier());
-        }
-    }
-
-    void removeConnectorType( String typeName ) throws AdminException, SQLException {
-        // if we already have this binding then remove it first.
-        Admin admin = this.adminConnection.getAdminAPI();
-        ConnectorType existing = findDeployedConnectorType(admin, typeName);
-        if (existing != null) {
-            admin.deleteConnectorType(existing.getIdentifier());
-        }
-    }
-
-    /**
-     * Look up and add and start the given connector binding
-     */
-    void addConnectorBinding( ConnectorBinding binding ) throws AdminException, SQLException {
-        Admin admin = this.adminConnection.getAdminAPI();
-
-        // if we already have this binding then remove it first.
-        removeConnectorBinding(binding.getFullName());
-
-        // if not started means that we did not find the binding in the configuration,
-        // so let's add and then start it
-        // add and start the new one.
-        org.teiid.adminapi.ConnectorBinding added = admin.addConnectorBinding(binding.getFullName(),
-                                                                              binding.getComponentTypeID().getName(),
-                                                                              binding.getProperties(),
-                                                                              new AdminOptions(
-                                                                                               AdminOptions.OnConflict.OVERWRITE
-                                                                                               | AdminOptions.BINDINGS_IGNORE_DECRYPT_ERROR));
-        admin.startConnectorBinding(added.getIdentifier());
-    }
-
-    /**
-     * Look up and add and start the given connector binding
-     */
-    void addConnectorType( ConnectorType type ) throws AdminException, SQLException, IOException {
-        Admin admin = this.adminConnection.getAdminAPI();
-
-        // if we already have this binding then remove it first.
-        removeConnectorType(type.getFullName());
-
-        XMLConfigurationImportExportUtility exporter = new XMLConfigurationImportExportUtility();
-        ByteArrayOutputStream bos = new ByteArrayOutputStream(1024);
-        exporter.exportComponentType(bos, type, null);
-
-        char[] typeContents = new String(bos.toByteArray()).toCharArray();
-
-        // if not started means that we did not find the binding in the configuration,
-        // so let's add and then start it
-        // add and start the new one.
-        admin.addConnectorType(type.getFullName(), typeContents);
-    }
-
     public boolean modelHasConnectorBinding( String modelName ) {
         return !this.workspaceInfo.getBinding(modelName).isEmpty();
-    }
-
-    private String buildUDFClasspath() {
-        // Get UDF jar files from extension handler
-        List<File> udfJarFiles = DqpPlugin.getInstance().getExtensionsHandler().getUdfJarFiles();
-
-        StringBuffer udfClasspath = new StringBuffer();
-        for (File udfJar : udfJarFiles) {
-            udfClasspath.append("extensionjar:").append(udfJar.getName()).append(";"); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        return udfClasspath.toString();
-    }
-
-    void reloadUdfModel() throws Exception {
-        Admin admin = adminConnection.getAdminAPI();
-        Collection processes = admin.getProcesses(null);
-        String processIdentifier = ((ProcessObject)processes.toArray()[0]).getIdentifier();
-        admin.setProcessProperty(processIdentifier, "dqp.extension.CommonClasspath", buildUDFClasspath()); //SystemProperty("dqp.extension.CommonClasspath", buildUDFClasspath()); //$NON-NLS-1$
-        admin.extensionModuleModified(null); // reloads the UDF from the extension modules
-    }
-
-    final class UDFListener implements UdfModelListener {
-        private void udfChanged() {
-            IFile udfModel = UdfWorkspaceManager.getUdfModel();
-
-            try {
-                File file = udfModel.getLocation().toFile();
-
-                // should always have a udf model file
-                if ((file == null) || !file.exists()) {
-                    String msg = UTIL.getString(PREFIX + "dqpErrorProcessingUdfChange"); //$NON-NLS-1$
-                    IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, msg);
-                    throw new CoreException(status);
-                }
-
-                // copy file over to UDF runtime directory for embedded to pick up
-                FileUtils.copyFile(UdfManager.INSTANCE.getUdfModelPath().toFile().getAbsolutePath(),
-                                   DqpPath.getRuntimeUdfsPath().toFile().getAbsolutePath(),
-                                   UdfManager.UDF_MODEL_NAME);
-
-                // inform embedded
-                reloadUdfModel();
-            } catch (Exception e) {
-                String msg = UTIL.getString(PREFIX + "dqpErrorProcessingUdfChange"); //$NON-NLS-1$
-                UTIL.log(IStatus.ERROR, e, msg);
-                WidgetUtil.showError(msg);
-            }
-        }
-
-        @Override
-        public void processEvent( UdfModelEvent event ) {
-            udfChanged();
-        }
-    }
-
-    final class BindingListener implements IConfigurationChangeListener {
-
-        public void stateChanged( ConfigurationChangeEvent event ) throws Exception {
-            ConfigurationManager config = DqpPlugin.getInstance().getAdmin();
-
-            // we only care about bindings - so do not edit types
-            if (event.isConnectorBindingEvent()) {
-                if (event.isMultipleUpdate()) {
-                    String[] bindings = event.getObjectNames();
-                    for (int i = 0; i < bindings.length; i++) {
-                        handleConnectorBindingEvent(event, config, bindings[i]);
-                    }
-                } else {
-                    handleConnectorBindingEvent(event, config, event.getObjectName());
-                }
-            }
-
-            if (event.isConnectorTypeEvent()) {
-                if (event.isMultipleUpdate()) {
-                    String[] types = event.getObjectNames();
-                    for (int i = 0; i < types.length; i++) {
-                        handleConnectorTypeEvent(event, config, types[i]);
-                    }
-                } else {
-                    handleConnectorTypeEvent(event, config, event.getObjectName());
-                }
-            }
-        }
-
-        private void handleConnectorBindingEvent( ConfigurationChangeEvent event,
-                                                  ConfigurationManager config,
-                                                  String bindingName ) throws AdminException, SQLException {
-            if (event.isAdded()) {
-                ConnectorBinding binding = config.getBinding(bindingName);
-                addConnectorBinding(binding);
-            } else if (event.isRemoved()) {
-                removeConnectorBinding(bindingName);
-            } else if (event.isChanged() || event.isReplaced()) {
-                ConnectorBinding binding = config.getBinding(bindingName);
-                addConnectorBinding(binding);
-            }
-        }
-
-        private void handleConnectorTypeEvent( ConfigurationChangeEvent event,
-                                               ConfigurationManager config,
-                                               String typeName ) throws AdminException, SQLException, IOException {
-            if (event.isAdded()) {
-                ConnectorType type = (ConnectorType)config.getComponentType(typeName);
-                addConnectorType(type);
-            } else if (event.isRemoved()) {
-                removeConnectorType(typeName);
-            } else if (event.isChanged() || event.isReplaced()) {
-                ConnectorType type = (ConnectorType)config.getComponentType(typeName);
-                addConnectorType(type);
-            }
-        }
     }
 
     static class WorkspaceInfoImpl implements WorkspaceInfo {
@@ -461,8 +220,8 @@ public class WorkspaceExecutor extends QueryClient {
             }
             Collection c = DqpPlugin.getInstance().getWorkspaceConfig().getBindingsForModel(modelName);
             for (Iterator i = c.iterator(); i.hasNext();) {
-                ConnectorBinding binding = (ConnectorBinding)i.next();
-                names.add(binding.getFullName());
+                Connector connector = (Connector)i.next();
+                names.add(connector.getName());
             }
             return names;
         }

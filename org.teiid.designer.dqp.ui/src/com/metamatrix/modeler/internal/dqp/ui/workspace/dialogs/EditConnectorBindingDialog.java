@@ -19,8 +19,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.adminapi.ConnectorBinding;
-import org.teiid.designer.runtime.ServerAdmin;
+import org.teiid.designer.runtime.Connector;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
@@ -41,14 +40,14 @@ public class EditConnectorBindingDialog extends ExtendedTitleAreaDialog implemen
 
     private EditConnectorBindingPanel pnlBindings;
 
-    private ConnectorBinding connectorBinding;
+    private Connector connectorBinding;
 
     private Collection<IChangeListener> changeListenerList = new ArrayList<IChangeListener>(2);
 
     public EditConnectorBindingDialog( Shell theParentShell,
-                                       ConnectorBinding binding ) {
+                                       Connector connector ) {
         super(theParentShell, DqpUiPlugin.getDefault());
-        this.connectorBinding = binding;
+        this.connectorBinding = connector;
     }
 
     @Override

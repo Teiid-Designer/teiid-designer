@@ -12,7 +12,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.part.PluginDropAdapter;
 import org.eclipse.ui.part.ResourceTransfer;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -31,7 +31,7 @@ public class ConnectorsViewDropAdapter extends PluginDropAdapter {
      * The current transfer data, or <code>null</code> if none.
      */
     private TransferData currentTransfer;
-    private ConnectorBinding theTargetBinding;
+    private Connector theTargetBinding;
     
     /** 
      * @param theViewer
@@ -74,9 +74,9 @@ public class ConnectorsViewDropAdapter extends PluginDropAdapter {
                                 TransferData theTransferType) {
 
        currentTransfer = theTransferType;
-       if (theTarget instanceof ConnectorBinding && currentTransfer != null && ResourceTransfer.getInstance().isSupportedType(currentTransfer)) {
+       if (theTarget instanceof Connector && currentTransfer != null && ResourceTransfer.getInstance().isSupportedType(currentTransfer)) {
            //plugin cannot be loaded without the plugin data
-           theTargetBinding = (ConnectorBinding)theTarget;
+           theTargetBinding = (Connector)theTarget;
            return true;
        }
        theTargetBinding = null;

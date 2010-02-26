@@ -184,6 +184,7 @@ public class WorkspaceDefnReaderWriter {
                 for (String cbName : bindings) {
                     Element connector = new Element(Model.CONNECTOR);
                     connector.setAttribute(Model.CONNECTOR_ATTRIBUTE_NAME, cbName);
+                    connector.setAttribute(Model.CONNECTOR_ATTRIBUTE_NAME, cbName);
                     cbsElement.addContent(connector);
                 }
                 modelElement.addContent(cbsElement);
@@ -234,5 +235,6 @@ public class WorkspaceDefnReaderWriter {
         public static final String CONNECTOR_BINDINGS_ELEMENT = "ConnectorBindings"; //$NON-NLS-1$
         public static final String CONNECTOR = "Connector"; //$NON-NLS-1$
         public static final String CONNECTOR_ATTRIBUTE_NAME = "Name"; //$NON-NLS-1$
+        public static final String CONNECTOR_SERVER_URL = "ServerURL"; //$NON-NLS-1$
     }
 }

@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerRegistry;
+import org.teiid.designer.runtime.ServerManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 /**
@@ -38,7 +38,7 @@ public final class ServerWizard extends Wizard {
     /**
      * The manager in charge of the server registry.
      */
-    private final ServerRegistry serverManager;
+    private final ServerManager serverManager;
 
     // ===========================================================================================================================
     // Constructors
@@ -49,7 +49,7 @@ public final class ServerWizard extends Wizard {
      * 
      * @param serverManager the server manager in charge of the server registry (never <code>null</code>)
      */
-    public ServerWizard( ServerRegistry serverManager ) {
+    public ServerWizard( ServerManager serverManager ) {
         this.page = new ServerPage();
         this.serverManager = serverManager;
 
@@ -63,7 +63,7 @@ public final class ServerWizard extends Wizard {
      * @param serverManager the server manager in charge of the server registry (never <code>null</code>)
      * @param server the server whose properties are being edited (never <code>null</code>)
      */
-    public ServerWizard( ServerRegistry serverManager,
+    public ServerWizard( ServerManager serverManager,
                          Server server ) {
         this.page = new ServerPage(server);
         this.serverManager = serverManager;
@@ -88,7 +88,7 @@ public final class ServerWizard extends Wizard {
     /**
      * @return the server manager (never <code>null</code>)
      */
-    protected ServerRegistry getServerManager() {
+    protected ServerManager getServerManager() {
         return this.serverManager;
     }
 

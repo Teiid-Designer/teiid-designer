@@ -60,7 +60,7 @@ public class ConnectorBindingModelLabelProvider extends LabelProvider {
     @Override
     public String getText(Object element) {
         if (element instanceof ConnectorBindingSourceWrapper) {
-            return ((ConnectorBindingSourceWrapper)element).getConnectorBinding().getName();
+            return ((ConnectorBindingSourceWrapper)element).getConnector().getName();
         }
 
         // must return null to indicate we can't process that element type

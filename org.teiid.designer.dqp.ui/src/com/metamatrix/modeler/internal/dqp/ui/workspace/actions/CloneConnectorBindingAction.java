@@ -10,6 +10,7 @@ package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
@@ -40,14 +41,13 @@ public class CloneConnectorBindingAction extends ConfigurationManagerAction {
     public void run() {
         //System.out.println("  CloneConnectorBindingAction.run()   ====>>> ");
         // Get Selection
-        ConnectorBinding theBinding = (ConnectorBinding)getSelectedObject();
+        Connector theBinding = (Connector)getSelectedObject();
         
         if( theBinding != null ) {
             try {
                 theBinding = DqpPlugin.getInstance().getWorkspaceConfig().
-                cloneConnectorBinding(theBinding, 
-                                      generateUniqueBindingName(theBinding.getName()), 
-                                      false);
+                cloneConnector(theBinding, 
+                                      generateUniqueBindingName(theBinding.getName()));
                 CloneConnectorBindingDialog dialog = new CloneConnectorBindingDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(), theBinding) {
                     
                     /** 
@@ -57,9 +57,9 @@ public class CloneConnectorBindingAction extends ConfigurationManagerAction {
                     @Override
                     public boolean close() {
                         if (getReturnCode() == Window.OK) {
-                            ConnectorBinding newBinding = getNewConnectorBinding();
+                            Connector newBinding = getNewConnector();
                             if( newBinding != null ) {
-                                //System.out.println("  NewConnectorBindingAction.run() NEW BINDING = " + newBinding.getName());
+                                //System.out.println("  NewConnectorBindingAction.run() ADD BINDING = " + newBinding.getName());
                                 try {
                                     getAdmin().addConnectorBinding(newBinding, getNewConnectorBindingName());
                                 } catch (Exception error) {
@@ -113,7 +113,7 @@ public class CloneConnectorBindingAction extends ConfigurationManagerAction {
         boolean result = false;
         if( !isMultiSelection() && !isEmptySelection() ) {
             Object selectedObject = getSelectedObject();
-            if( selectedObject instanceof ConnectorBinding) {
+            if( selectedObject instanceof Connector) {
                 result = true;
             }
         }

@@ -23,47 +23,28 @@
  */
 package org.teiid.designer.runtime;
 
-import java.util.Collection;
-import org.teiid.adminapi.PropertyDefinition;
-
 /**
  *
  */
-public final class ConnectorType {
-
-    private final Collection<PropertyDefinition> propDefs;
-    private final String name;
-    private final ExecutionAdmin admin;
-
-    public ConnectorType( String name,
-                          Collection<PropertyDefinition> propDefs,
-                          ExecutionAdmin admin ) {
-        this.name = name;
-        this.propDefs = propDefs;
-        this.admin = admin;
-    }
+public interface EventManager {
 
     /**
-     * @return admin
+     * Listeners already registered will not be added again. The new listener will receive events for all existing servers.
+     * 
+     * @param listener the listener being register to receive events (never <code>null</code>)
+     * @return <code>true</code> if listener was added
      */
-    public ExecutionAdmin getAdmin() {
-        return this.admin;
-    }
+    boolean addListener( IExecutionConfigurationListener listener );
 
-    public String getName() {
-        return this.name;
-    }
+    /**
+     * @param event the event the registry listeners are to process
+     */
+    void notifyListeners( ExecutionConfigurationEvent event );
 
-    public Collection<PropertyDefinition> getPropertyDefinitions() {
-        return this.propDefs;
-    }
+    /**
+     * @param listener the listener being unregistered and will no longer receive events (never <code>null</code>)
+     * @return <code>true</code> if listener was removed
+     */
+    boolean removeListener( IExecutionConfigurationListener listener );
 
-    public PropertyDefinition getPropertyDefinition(String name) {
-        for (PropertyDefinition propDef : this.propDefs) {
-            if (propDef.getName().equals(name))
-                return propDef;
-        }
-        return null;
-    }
-    
 }

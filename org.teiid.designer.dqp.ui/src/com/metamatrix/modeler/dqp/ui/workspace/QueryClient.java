@@ -12,15 +12,11 @@ import java.sql.SQLException;
 import java.util.Properties;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.teiid.adminapi.AdminException;
-import org.teiid.adminapi.LogConfiguration;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.jdbc.EmbeddedDriver;
 import com.metamatrix.jdbc.api.Connection;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.vdb.edit.loader.VDBConstants;
 
@@ -47,11 +43,11 @@ public class QueryClient {
                 props.setProperty("user", "admin"); //$NON-NLS-1$ //$NON-NLS-2$
                 props.setProperty("password", "teiid"); //$NON-NLS-1$ //$NON-NLS-2$
                 this.adminConnection = (com.metamatrix.jdbc.api.Connection)driver.connect(url, props);
-
-                // wire the logging so that the messages are flown into designer
-                this.adminConnection.getAdminAPI().setLogListener(new DesignerLogger());
-            } catch (AdminException e) {
-                throw new RuntimeException(e);
+//
+//                // wire the logging so that the messages are flown into designer
+//                this.adminConnection.getAdminAPI().setLogListener(new DesignerLogger());
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
             } finally {
                 Thread.currentThread().setContextClassLoader(current);
             }
@@ -104,32 +100,32 @@ public class QueryClient {
 
         return sb.toString();
     }
-
-    static class DesignerLogger implements EmbeddedLogger {
-
-        @Override
-        public void log( int logLevel,
-                         long timestamp,
-                         String componentName,
-                         String threadName,
-                         String message,
-                         Throwable throwable ) {
-            switch (logLevel) {
-                case LogConfiguration.NONE:
-                    break;
-                case LogConfiguration.CRITICAL:
-                case LogConfiguration.ERROR:
-                    DqpUiConstants.UTIL.log(new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, IStatus.OK, message, throwable));
-                    break;
-                case LogConfiguration.WARNING:
-                    DqpUiConstants.UTIL.log(new Status(IStatus.WARNING, DqpUiConstants.PLUGIN_ID, IStatus.OK, message, throwable));
-                    break;
-                case LogConfiguration.INFO:
-                case LogConfiguration.DETAIL:
-                case LogConfiguration.TRACE:
-                    DqpUiConstants.UTIL.log(new Status(IStatus.INFO, DqpUiConstants.PLUGIN_ID, IStatus.OK, message, throwable));
-                    break;
-            }
-        }
-    }
+//
+//    static class DesignerLogger implements EmbeddedLogger {
+//
+//        @Override
+//        public void log( int logLevel,
+//                         long timestamp,
+//                         String componentName,
+//                         String threadName,
+//                         String message,
+//                         Throwable throwable ) {
+//            switch (logLevel) {
+//                case LogConfiguration.NONE:
+//                    break;
+//                case LogConfiguration.CRITICAL:
+//                case LogConfiguration.ERROR:
+//                    DqpUiConstants.UTIL.log(new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, IStatus.OK, message, throwable));
+//                    break;
+//                case LogConfiguration.WARNING:
+//                    DqpUiConstants.UTIL.log(new Status(IStatus.WARNING, DqpUiConstants.PLUGIN_ID, IStatus.OK, message, throwable));
+//                    break;
+//                case LogConfiguration.INFO:
+//                case LogConfiguration.DETAIL:
+//                case LogConfiguration.TRACE:
+//                    DqpUiConstants.UTIL.log(new Status(IStatus.INFO, DqpUiConstants.PLUGIN_ID, IStatus.OK, message, throwable));
+//                    break;
+//            }
+//        }
+//    }
 }

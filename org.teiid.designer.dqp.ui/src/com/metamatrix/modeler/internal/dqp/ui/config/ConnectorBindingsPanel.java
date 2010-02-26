@@ -46,8 +46,9 @@ import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetSorter;
 import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.ServerAdmin;
+import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.common.vdb.api.VDBDefn;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
@@ -407,9 +408,9 @@ public final class ConnectorBindingsPanel extends Composite
 
             if ((obj != null) && (obj instanceof BasicVDBModelDefn)) {
                 BasicVDBModelDefn modelDefn = (BasicVDBModelDefn)obj;
-                ConnectorBinding existingBinding = getVdbDefnHelper().getFirstConnectorBinding(modelDefn);
+                Connector existingBinding = getVdbDefnHelper().getFirstConnector(modelDefn);
                 if (existingBinding != null) {
-                    getVdbDefnHelper().removeConnectorBinding(modelDefn, existingBinding);
+                    getVdbDefnHelper().removeConnector(modelDefn, existingBinding);
 
                     getPropertyPage().selectionChanged(null, new StructuredSelection());
 
@@ -422,7 +423,7 @@ public final class ConnectorBindingsPanel extends Composite
         }
     }
     
-    private ServerAdmin getAdmin() {
+    private ExecutionAdmin getAdmin() {
         // TODO implement
         return null;
     }
@@ -438,16 +439,16 @@ public final class ConnectorBindingsPanel extends Composite
 
             if ((obj != null) && (obj instanceof BasicVDBModelDefn)) {
                 BasicVDBModelDefn modelDefn = (BasicVDBModelDefn)obj;
-                ConnectorBinding binding = getVdbDefnHelper().getFirstConnectorBinding(modelDefn);
+                Connector connector = getVdbDefnHelper().getFirstConnector(modelDefn);
                 String name = ModelerDqpUtils.createNewBindingName(modelDefn);
 
-                NewConnectorBindingDialog dialog = new NewConnectorBindingDialog(getShell(), binding, name, this.vdbContext, modelDefn);
+                NewConnectorBindingDialog dialog = new NewConnectorBindingDialog(getShell(), connector, name, this.vdbContext, modelDefn);
                 dialog.open();
 
                 if (dialog.getReturnCode() == Window.OK) {
                     boolean changed = false;
-                    ConnectorBinding newValue = dialog.getConnectorBinding();
-                    ConnectorBinding oldValue = getVdbDefnHelper().getFirstConnectorBinding(modelDefn);
+                    Connector newValue = dialog.getConnector();
+                    Connector oldValue = getVdbDefnHelper().getFirstConnector(modelDefn);
 
                     // if a different instance of a binding is the new value then the New Binding Dialog was OK'd
                     if (oldValue == null) {
@@ -464,7 +465,7 @@ public final class ConnectorBindingsPanel extends Composite
                     try {
                         if (changed) {
                             if (oldValue != null) {
-                                getVdbDefnHelper().removeConnectorBinding(modelDefn, oldValue);
+                                getVdbDefnHelper().removeConnector(modelDefn, oldValue);
                             }
 
                             if (newValue != null) {
@@ -474,7 +475,7 @@ public final class ConnectorBindingsPanel extends Composite
                                 }
 
                                 ConnectorType type = ModelerDqpUtils.getConnectorType(newValue);
-                                getVdbDefnHelper().setConnectorBinding(modelDefn, newValue, type);
+                                getVdbDefnHelper().setConnector(modelDefn, newValue, type);
                             }
 
                             getViewer().refresh(modelDefn, true);

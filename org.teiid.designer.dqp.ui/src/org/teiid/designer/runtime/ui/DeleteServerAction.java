@@ -18,7 +18,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerRegistry;
+import org.teiid.designer.runtime.ServerManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 /**
@@ -33,7 +33,7 @@ public final class DeleteServerAction extends BaseSelectionListenerAction {
     /**
      * The server manager used to delete servers.
      */
-    private final ServerRegistry serverManager;
+    private final ServerManager serverManager;
 
     /**
      * The servers being deleted (never <code>null</code>).
@@ -54,7 +54,7 @@ public final class DeleteServerAction extends BaseSelectionListenerAction {
      * @param serverManager the server manager to use when deleting servers
      */
     public DeleteServerAction( Shell shell,
-                               ServerRegistry serverManager ) {
+                               ServerManager serverManager ) {
         super(UTIL.getString("deleteServerActionText.text()"));
         setToolTipText(UTIL.getString("deleteServerActionToolTip.text()"));
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DELETE_SERVER_IMAGE));

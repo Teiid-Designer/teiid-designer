@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.common.namedobject.BaseID;
 import com.metamatrix.core.event.IChangeListener;
@@ -65,7 +66,7 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
     BaseID currentTypeID;
     ConnectorType currentType;
 
-    private ConnectorBinding binding;
+    private Connector binding;
     private String originalName;
 
     private IChangeListener configListener;
@@ -145,12 +146,12 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
     }
 
     /**
-     * @see com.metamatrix.modeler.internal.dqp.ui.dialogs.BaseNewConnectorBindingPanel#getConnectorBinding()
+     * @see com.metamatrix.modeler.internal.dqp.ui.dialogs.BaseNewConnectorBindingPanel#getConnector()
      * @since 5.0
      */
     @Override
-    public ConnectorBinding getConnectorBinding() {
-        return getConnectorBinding(true);
+    public Connector getConnector() {
+        return getConnector(true);
     }
 
     /**
@@ -160,8 +161,8 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
      * @return the binding
      * @since 5.0
      */
-    private ConnectorBinding getConnectorBinding( boolean theAddToConfigurationFlag ) {
-        ConnectorBinding result = null;
+    private Connector getConnector( boolean theAddToConfigurationFlag ) {
+        Connector result = null;
         boolean createBinding = false;
         boolean useExisting = false;
 
@@ -195,7 +196,7 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
                 // create from existing binding
                 try {
                     VdbDefnHelper helper = getVdbDefnHelper();
-                    this.binding = helper.createConnectorBinding(this.binding, getNewBindingName());
+                    this.binding = helper.createConnector(this.binding, getNewBindingName());
                     result = this.binding;
                 } catch (Exception theException) {
                     UTIL.log(theException);
@@ -207,7 +208,7 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
                 // create new binding
                 try {
                     VdbDefnHelper helper = getVdbDefnHelper();
-                    this.binding = helper.createConnectorBinding(this.currentType, getNewBindingName(), theAddToConfigurationFlag);
+                    this.binding = helper.createConnector(this.currentType, getNewBindingName(), theAddToConfigurationFlag);
                     result = this.binding;
                 } catch (Exception theException) {
                     UTIL.log(theException);
@@ -320,7 +321,7 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
         }
 
         // getting the binding will cause a new binding to be created
-        getConnectorBinding(false);
+        getConnector(false);
 
         refreshPropertyPage();
 
@@ -331,7 +332,7 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
         boolean noCurrentBinding = (this.binding == null);
 
         // call this method to get a binding created if one is needed
-        if ((getConnectorBinding(false) != null) && noCurrentBinding) {
+        if ((getConnector(false) != null) && noCurrentBinding) {
             // need to refresh properties panel if binding created after name change
             refreshPropertyPage();
         }

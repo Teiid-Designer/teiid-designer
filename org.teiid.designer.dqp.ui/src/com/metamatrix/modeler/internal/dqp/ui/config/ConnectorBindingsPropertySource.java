@@ -21,8 +21,9 @@ import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.ServerAdmin;
+import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -35,29 +36,29 @@ import com.metamatrix.ui.internal.util.UiUtil;
  */
 public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropertySource {
 
-    private ConnectorBinding binding;
+    private Connector connector;
     private ConnectorType type;
 
     private boolean isEditable = false;
     private ConnectorBindingsPropertySourceProvider provider;
-    private final ServerAdmin admin;
+    private final ExecutionAdmin admin;
 
     /**
      * @since 4.2
      */
-    public ConnectorBindingsPropertySource( ConnectorBinding binding,
-                                            ServerAdmin admin ) {
-        this.binding = binding;
+    public ConnectorBindingsPropertySource( Connector connector,
+                                            ExecutionAdmin admin ) {
+        this.connector = connector;
         this.admin = admin;
 
-        if (binding != null) {
-            this.type = this.admin.getConnectorType(binding);
+        if (connector != null) {
+            this.type = this.admin.getConnectorType(connector);
 
             // we should always find a type
             if (this.type == null) {
                 DqpUiConstants.UTIL.log(IStatus.ERROR,
                                         DqpUiConstants.UTIL.getString("ConnectorBindingsPropertySource.bindingTypeNotFound", //$NON-NLS-1$
-                                                                      this.binding.getName()));
+                                                                      this.connector.getName()));
             }
         }
     }
@@ -75,7 +76,7 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
      * @since 4.2
      */
     public Object getEditableValue() {
-        return this.binding;
+        return this.connector;
     }
 
     /**
@@ -85,9 +86,9 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
     public IPropertyDescriptor[] getPropertyDescriptors() {
         IPropertyDescriptor[] result = new IPropertyDescriptor[0];
 
-        // don't return any descriptors if no binding or no type. this prevents the
+        // don't return any descriptors if no connector or no type. this prevents the
         // set and get property methods from being called.
-        if ((this.binding != null) && (this.type != null)) {
+        if ((this.connector != null) && (this.type != null)) {
             Collection<PropertyDefinition> typeDefs;
             try {
                 typeDefs = this.type.getPropertyDefinitions();
@@ -151,7 +152,7 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
      * @since 4.2
      */
     public Object getPropertyValue( Object id ) {
-        String result = binding.getPropertyValue((String)id);
+        String result = connector.getPropertyValue((String)id);
 
         if (result == null) {
             result = StringUtil.Constants.EMPTY_STRING;
@@ -182,8 +183,8 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
     public void setPropertyValue( Object id,
                                   Object value ) {
         try {
-            ModelerDqpUtils.setPropertyValue(getConnectorBinding(), id, value);
-            this.provider.propertyChanged(this.binding);
+            ModelerDqpUtils.setPropertyValue(getConnector(), id, value);
+            this.provider.propertyChanged(this.connector);
         } catch (final Exception error) {
             UiUtil.runInSwtThread(new Runnable() {
 
@@ -194,8 +195,8 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
         }
     }
 
-    public ConnectorBinding getConnectorBinding() {
-        return this.binding;
+    public Connector getConnector() {
+        return this.connector;
     }
 
     /**

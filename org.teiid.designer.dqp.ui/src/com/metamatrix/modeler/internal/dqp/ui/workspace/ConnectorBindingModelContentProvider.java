@@ -12,7 +12,7 @@ import java.util.Collection;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -69,7 +69,7 @@ public class ConnectorBindingModelContentProvider implements ITreeContentProvide
                     Object[] cb = DqpPlugin.getInstance().getWorkspaceConfig().getBindingsForModel(mr.getItemName()).toArray();
                     Collection<ConnectorBindingSourceWrapper> wrappedCBs = new ArrayList<ConnectorBindingSourceWrapper>();
                     for( int i=0; i<cb.length; i++ ) {
-                        wrappedCBs.add(new ConnectorBindingSourceWrapper((ConnectorBinding)cb[i], (JdbcSource)parentElement));
+                        wrappedCBs.add(new ConnectorBindingSourceWrapper((Connector)cb[i], (JdbcSource)parentElement));
                     }
                     children = wrappedCBs.toArray();
                 }

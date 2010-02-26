@@ -18,8 +18,9 @@ import java.util.Properties;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.ServerAdmin;
+import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
@@ -46,7 +47,7 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
     private Map modelConnectorTypeMatches;
     // modelreference -> ConnectorBinding
     private Map modelConnectorBindings;
-    private ServerAdmin manager;
+    private ExecutionAdmin manager;
     
     //Used to enable Unit Testing.
     public static boolean HEADLESS = false;
@@ -95,9 +96,9 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
                 List bindingNames = m.getConnectorBindingNames();
                 if (bindingNames != null && bindingNames.size() > 0) {
                     String bindingName = (String) bindingNames.iterator().next();
-                    ConnectorBinding binding = helper.getVdbDefn().getConnectorBindingByName(bindingName);
-                    if (binding != null) {
-                        this.modelConnectorBindings.put(reference, binding);
+                    Connector connector = helper.getVdbDefn().getConnectorBindingByName(bindingName);
+                    if (connector != null) {
+                        this.modelConnectorBindings.put(reference, connector);
                     }
                     
                 }
@@ -137,15 +138,15 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
     }
 
     /** 
-     * @see com.metamatrix.modeler.dqp.config.ModelConnectorBindingMapper#getConnectorBinding(com.metamatrix.vdb.edit.manifest.ModelReference)
+     * @see com.metamatrix.modeler.dqp.config.ModelConnectorBindingMapper#getConnector(com.metamatrix.vdb.edit.manifest.ModelReference)
      * @since 4.3
      */
-    public ConnectorBinding getConnectorBinding(ModelReference modelReference) {
+    public Connector getConnector(ModelReference modelReference) {
         if(modelReference.getModelType() != ModelType.PHYSICAL_LITERAL) {
             return null;
         }
         Map bindingMap = getAllConnectorBindings();
-        return (ConnectorBinding) bindingMap.get(modelReference);
+        return (Connector) bindingMap.get(modelReference);
     }
 
     /**
@@ -212,11 +213,11 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
         Collection bindingMatches = new ArrayList();
         // for each binding get properties
         for(final Iterator iter1 = bindings.iterator(); iter1.hasNext();) {
-            ConnectorBinding binding = (ConnectorBinding) iter1.next();
+            Connector connector = (Connector) iter1.next();
             
-            ConnectorType type = DqpPlugin.getInstance().getAdmin().getConnectorType(binding);
+            ConnectorType type = DqpPlugin.getInstance().getAdmin().getConnectorType(connector);
             
-            String driverClassName = binding.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
+            String driverClassName = connector.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
             
             if( driverClassName == null ) {
                 // if no value set see if the type has a default value
@@ -227,7 +228,7 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
                 }
             }
             
-            String url = binding.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
+            String url = connector.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
             
             if( url == null ) {
                 // if no value set see if the type has a default value
@@ -238,7 +239,7 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
                 }
             }
             
-            String user = binding.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
+            String user = connector.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
             
             
             if( user == null ) {
@@ -270,7 +271,7 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
                 continue;
             }
 
-            bindingMatches.add(binding);
+            bindingMatches.add(connector);
         }
         return bindingMatches;
     }

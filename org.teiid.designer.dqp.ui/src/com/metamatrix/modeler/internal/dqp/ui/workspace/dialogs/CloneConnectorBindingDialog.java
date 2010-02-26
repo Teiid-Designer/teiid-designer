@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
@@ -40,14 +40,14 @@ public class CloneConnectorBindingDialog extends ExtendedTitleAreaDialog impleme
 
     private CloneConnectorBindingPanel pnlBindings;
 
-    private ConnectorBinding originalConnectorBinding;
+    private Connector originalConnectorBinding;
 
     private Collection<IChangeListener> changeListenerList = new ArrayList<IChangeListener>(2);
 
     public CloneConnectorBindingDialog( Shell theParentShell,
-                                        ConnectorBinding initialConnectorBinding ) {
+                                        Connector initialConnector ) {
         super(theParentShell, DqpUiPlugin.getDefault());
-        this.originalConnectorBinding = initialConnectorBinding;
+        this.originalConnectorBinding = initialConnector;
     }
 
     @Override
@@ -136,8 +136,8 @@ public class CloneConnectorBindingDialog extends ExtendedTitleAreaDialog impleme
         super.okPressed();
     }
 
-    public ConnectorBinding getNewConnectorBinding() {
-        return this.pnlBindings.getNewConnectorBinding();
+    public Connector getNewConnector() {
+        return this.pnlBindings.getNewConnector();
     }
 
     public String getNewConnectorBindingName() {

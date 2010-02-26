@@ -30,7 +30,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.jdom.Element;
+import org.teiid.adminapi.ConnectorBinding;
 import com.metamatrix.api.exception.MetaMatrixComponentException;
+import com.metamatrix.common.config.api.ConfigurationModelContainer;
+import com.metamatrix.common.config.api.ConnectorBindingType;
 import com.metamatrix.common.util.ByteArrayHelper;
 import com.metamatrix.common.util.WSDLServletUtil;
 import com.metamatrix.common.vdb.api.ModelInfo;
@@ -50,7 +53,6 @@ import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.modeler.internal.core.index.IndexUtil;
 import com.metamatrix.vdb.edit.VdbContext;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditPlugin;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
@@ -445,28 +447,6 @@ public class VDBReader {
      * @since 4.2
      */
     public static VDBDefn loadVDBDefn( VdbEditingContextImpl contextEditor,
-                                       boolean closeEditor,
-                                       ConfigurationModelContainer configModelContainer ) throws Exception {
-
-        VDBReader factory = new VDBReader(configModelContainer);
-
-        try {
-            VDBDefn defn = factory.createVDBDefnFromEditor(contextEditor);
-
-            return defn;
-
-        } catch (MetaMatrixCoreException mmc) {
-            throw mmc;
-
-        } catch (Exception e) {
-            throw new MetaMatrixRuntimeException(e);
-        } finally {
-            factory.cleanup(closeEditor);
-        }
-
-    }
-
-    public static VDBDefn loadVDBDefn( VdbContextEditor contextEditor,
                                        boolean closeEditor,
                                        ConfigurationModelContainer configModelContainer ) throws Exception {
 

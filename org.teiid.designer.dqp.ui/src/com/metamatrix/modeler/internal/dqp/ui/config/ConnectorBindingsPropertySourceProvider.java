@@ -13,6 +13,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 import com.metamatrix.vdb.internal.runtime.model.BasicVDBModelDefn;
@@ -35,9 +36,6 @@ public class ConnectorBindingsPropertySourceProvider implements IPropertySourceP
     public ConnectorBindingsPropertySourceProvider(InternalVdbEditingContext theContext) {
         this.vdbContext = theContext;
     }
-
-    public ConnectorBindingsPropertySourceProvider() {
-    }
     
     public void setEditable(boolean isEditable) {
         this.editable = isEditable;
@@ -57,7 +55,7 @@ public class ConnectorBindingsPropertySourceProvider implements IPropertySourceP
         listenerList.remove(listener);
     }
 
-    void propertyChanged(ConnectorBinding binding) {
+    void propertyChanged(Connector binding) {
         for ( Iterator<IPropertyChangeListener> iter = listenerList.iterator() ; iter.hasNext() ; ) {
             iter.next().propertyChange(null);
         }
@@ -69,13 +67,13 @@ public class ConnectorBindingsPropertySourceProvider implements IPropertySourceP
      */
     public IPropertySource getPropertySource(Object object) {
         if ( object instanceof BasicVDBModelDefn ) {
-            ConnectorBinding binding = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext).getFirstConnectorBinding((BasicVDBModelDefn) object);
+            Connector binding = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext).getFirstConnector((BasicVDBModelDefn) object);
             ConnectorBindingsPropertySource source = new ConnectorBindingsPropertySource(binding);
             source.setEditable(editable);
             source.setProvider(this);
             return source;
-        } else if ( object instanceof ConnectorBinding ) {
-            ConnectorBindingsPropertySource source = new ConnectorBindingsPropertySource((ConnectorBinding) object);
+        } else if ( object instanceof Connector ) {
+            ConnectorBindingsPropertySource source = new ConnectorBindingsPropertySource((Connector) object);
             source.setEditable(editable);
             source.setProvider(this);
             return source;

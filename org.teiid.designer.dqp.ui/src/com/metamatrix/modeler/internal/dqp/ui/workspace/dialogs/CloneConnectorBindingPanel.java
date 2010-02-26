@@ -19,7 +19,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
@@ -46,17 +46,17 @@ public class CloneConnectorBindingPanel extends Composite implements ControlList
 
     private String currentBindingName;
 
-    private ConnectorBinding newConnectorBinding;
+    private Connector newConnectorBinding;
 
     public CloneConnectorBindingPanel( Composite theParent,
-                                       ConnectorBinding connectorBinding ) {
+                                       Connector connector ) {
         super(theParent, SWT.NONE);
 
         this.changeListeners = new ListenerList(ListenerList.IDENTITY);
 
         // Clone the binding
 
-        newConnectorBinding = connectorBinding;
+        newConnectorBinding = connector;
 
         createContents(this);
 
@@ -139,7 +139,7 @@ public class CloneConnectorBindingPanel extends Composite implements ControlList
         fireChangeEvent();
     }
 
-    public ConnectorBinding getNewConnectorBinding() {
+    public Connector getNewConnector() {
         return this.newConnectorBinding;
     }
 

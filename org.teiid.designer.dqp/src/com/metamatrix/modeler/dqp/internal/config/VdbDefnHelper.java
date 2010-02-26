@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.common.vdb.api.VDBDefn;
@@ -158,14 +159,14 @@ public class VdbDefnHelper {
     }
 
     /**
-     * Obtains a collection of {@link ConnectorBinding}s that match the import source.
+     * Obtains a collection of {@link Connector}s that match the import source.
      * 
      * @param theModelInfo the model info
      * @return the matching bindings (never <code>null</code>)
      * @since 4.3
      */
-    public ConnectorBinding[] findConnectorBindingMatches( ModelInfo theModelInfo ) {
-        ConnectorBinding[] result = null;
+    public Connector[] findConnectorMatches( ModelInfo theModelInfo ) {
+        Connector[] result = null;
         ModelReference modelRef = getModelReference(theModelInfo);
 
         if (modelRef != null) {
@@ -175,7 +176,7 @@ public class VdbDefnHelper {
                 Collection temp = mapper.findConnectorBindingMatches(modelRef);
 
                 if ((temp != null) && !temp.isEmpty()) {
-                    result = (ConnectorBinding[])temp.toArray(new ConnectorBinding[temp.size()]);
+                    result = (Connector[])temp.toArray(new Connector[temp.size()]);
                 }
             } catch (Exception theException) {
                 result = null;
@@ -185,7 +186,7 @@ public class VdbDefnHelper {
         }
 
         if (result == null) {
-            result = new ConnectorBinding[0];
+            result = new Connector[0];
         }
 
         return result;
@@ -359,8 +360,8 @@ public class VdbDefnHelper {
         return wasUpdated;
     }
 
-    public ConnectorBinding getFirstConnectorBinding( ModelInfo modelDefn ) {
-        ConnectorBinding result = null;
+    public Connector getFirstConnector( ModelInfo modelDefn ) {
+        Connector result = null;
         ModelInfo model = this.vdbDefn.getModel(modelDefn.getName());
         if (model != null) {
             List cbNames = model.getConnectorBindingNames();
@@ -372,7 +373,7 @@ public class VdbDefnHelper {
         return result;
     }
 
-    protected Collection getConnectorBindings( ModelInfo modelDefn ) {
+    protected Collection getConnectors( ModelInfo modelDefn ) {
         List result = Collections.EMPTY_LIST;
         ModelInfo model = this.vdbDefn.getModel(modelDefn.getName());
         List cbnames = model.getConnectorBindingNames();
@@ -381,10 +382,10 @@ public class VdbDefnHelper {
             result = new ArrayList();
 
             for (int size = cbnames.size(), i = 0; i < size; ++i) {
-                ConnectorBinding binding = this.vdbDefn.getConnectorBindingByName((String)cbnames.get(i));
+                Connector connector = this.vdbDefn.getConnectorBindingByName((String)cbnames.get(i));
 
-                if (binding != null) {
-                    result.add(binding);
+                if (connector != null) {
+                    result.add(connector);
                 } else {
                     // should not happen
                     String msg = DqpPlugin.Util.getString("VdbDefnHelper.noBindingForUuid", cbnames.get(i)); //$NON-NLS-1$
@@ -396,45 +397,43 @@ public class VdbDefnHelper {
         return result;
     }
 
-    public ConnectorBinding createConnectorBinding( ConnectorType ctConnector,
-                                                    String sConnBindName,
+    public Connector createConnector( ConnectorType connectorType,
+                                                    String sourceConnectorName,
                                                     boolean theAddToConfigurationFlag ) throws Exception {
-        return DqpPlugin.getInstance().getAdmin().createConnectorBinding(ctConnector,
-                                                                                        sConnBindName,
+        return DqpPlugin.getInstance().getAdmin().createConnector(connectorType,
+                                                                                        sourceConnectorName,
                                                                                         theAddToConfigurationFlag);
     }
 
     /**
      * Creates a new binding from an existing one.
      * 
-     * @param theSourceBinding the binding whose properties are being copied
-     * @param theNewBindingName the new binding name
+     * @param theSourceConnector the binding whose properties are being copied
+     * @param theNewConnectorName the new binding name
      * @return the new binding
      * @since 4.3
      */
-    public ConnectorBinding createConnectorBinding( ConnectorBinding theSourceBinding,
-                                                    String theNewBindingName ) throws Exception {
-        return DqpPlugin.getInstance().getAdmin().createConnectorBinding(theSourceBinding, theNewBindingName);
+    public Connector createConnector( Connector theSourceConnector,
+                                                    String theNewConnectorName ) throws Exception {
+        return DqpPlugin.getInstance().getAdmin().createConnector(theSourceConnector, theNewConnectorName);
     }
 
-    public void removeConnectorBinding( ModelInfo modelDefn,
-                                        ConnectorBinding binding ) {
+    public void removeConnector( ModelInfo modelDefn,
+                                        Connector connector ) {
         BasicVDBDefn basicDefn = (BasicVDBDefn)vdbDefn;
-        basicDefn.removeConnectorBinding(modelDefn.getName(), binding.getName());
+        basicDefn.removeConnectorBinding(modelDefn.getName(), connector.getName());
     }
 
     // TODO: this needs to work for single bindings, but I don't see a way to remove a binding from basicDefn.
-    public void setConnectorBinding( ModelInfo modelDefn,
-                                     ConnectorBinding binding,
+    public void setConnector( ModelInfo modelDefn,
+                                     Connector binding,
                                      ConnectorType type ) {
         BasicVDBDefn basicDefn = (BasicVDBDefn)vdbDefn;
-
-        ConnectorBinding clonedBinding = (ConnectorBinding)binding;
         // don't remove from VDBDefn as this would remove all mappings to this binding
         // calling add will replace existing binding of that name with this one.
         // then make sure defn has type
 
-        clonedBinding = (ConnectorBinding)binding.clone();
+        Connector clonedBinding = (Connector)binding.clone();
 
         // add a deploy name to all the connector bindings going into the VDBS
         clonedBinding.setDeployedName(basicDefn.getName() + "_" + basicDefn.getVersion() + "." + binding.getName()); //$NON-NLS-1$ //$NON-NLS-2$ 
@@ -448,7 +447,7 @@ public class VdbDefnHelper {
     }
 
     /**
-     * Assigns a {@link ConnectorBinding} to a model if no binding currently exists and there is a exactly one matching binding
+     * Assigns a {@link Connector} to a model if no binding currently exists and there is a exactly one matching binding
      * available. A binding matches when it has the same driver class, user, and URL as the import source. If there is no import
      * source or more than one matching binding no assignment is made.
      * 
@@ -478,11 +477,11 @@ public class VdbDefnHelper {
 
                             // if no bindings have been assigned then find any matches
                             if ((bindingNames == null) || bindingNames.isEmpty()) {
-                                ConnectorBinding[] bindings = findConnectorBindingMatches(info);
+                                Connector[] connectors = findConnectorMatches(info);
 
                                 // assign the first match
-                                if ((bindings != null) && (bindings.length == 1)) {
-                                    setConnectorBinding(info, bindings[0], ModelerDqpUtils.getConnectorType(bindings[0]));
+                                if ((connectors != null) && (connectors.length == 1)) {
+                                    setConnector(info, connectors[0], ModelerDqpUtils.getConnectorType(connectors[0]));
                                     result = true;
                                 }
                             }

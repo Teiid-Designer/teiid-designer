@@ -11,6 +11,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -74,7 +75,7 @@ public class VdbDefinitionLabelProvider implements DqpUiConstants,
                 return element.toString();
             case 1:
                 if ( element instanceof BasicVDBModelDefn ) {
-                    ConnectorBinding binding = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext).getFirstConnectorBinding((BasicVDBModelDefn) element);
+                    Connector binding = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext).getFirstConnector((BasicVDBModelDefn) element);
                     return getText(binding);
                 }
                 return element.toString();
@@ -83,7 +84,7 @@ public class VdbDefinitionLabelProvider implements DqpUiConstants,
         return ""; //$NON-NLS-1$
     }
 
-    public String getText(ConnectorBinding binding) { 
+    public String getText(Connector binding) { 
         if ( binding == null ) {
             if (this.vdbContext.isReadOnly()) {
                 return getString("none.ReadOnly"); //$NON-NLS-1$

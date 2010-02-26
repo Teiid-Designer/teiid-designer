@@ -19,9 +19,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.ServerAdmin;
+import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
@@ -46,10 +46,10 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
 
     private Collection changeListenerList = new ArrayList(2);
 
-    private final ServerAdmin admin;
+    private final ExecutionAdmin admin;
 
     public NewConnectorBindingDialog( Shell theParentShell,
-                                      ServerAdmin admin ) {
+                                      ExecutionAdmin admin ) {
         super(theParentShell, DqpUiPlugin.getDefault());
         this.admin = admin;
     }
@@ -146,8 +146,8 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
         super.okPressed();
     }
 
-    public ConnectorBinding getNewConnectorBinding() {
-        return this.pnlBindings.getConnectorBinding();
+    public Connector getNewConnector() {
+        return this.pnlBindings.getConnector();
     }
 
     public void setConnectorType( ConnectorType type ) {

@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceModelInfo;
@@ -59,8 +59,8 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
      */
     public Object[] getChildren(Object parentElement) {
 
-        if( parentElement instanceof ConnectorBinding ) {
-            ConnectorBinding binding = (ConnectorBinding)parentElement;
+        if( parentElement instanceof Connector ) {
+            Connector binding = (Connector)parentElement;
             Collection modelInfos = Collections.EMPTY_LIST; 
             
             if( showModelMappings && workspaceConfig != null ) {
@@ -103,7 +103,7 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
      * @since 4.2
      */
     public Image getImage(Object element) {
-        if ( element instanceof ConnectorBinding ) {
+        if ( element instanceof Connector ) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_BINDING_ICON);
         }
         if ( element instanceof ConnectorType ) {
@@ -121,8 +121,8 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
      * @since 4.2
      */
     public String getText(Object element) {
-        if ( element instanceof ConnectorBinding ) {
-            return ((ConnectorBinding) element).getName();
+        if ( element instanceof Connector ) {
+            return ((Connector) element).getName();
         }
         if ( element instanceof ConnectorType ) {
             return ((ConnectorType) element).getName();

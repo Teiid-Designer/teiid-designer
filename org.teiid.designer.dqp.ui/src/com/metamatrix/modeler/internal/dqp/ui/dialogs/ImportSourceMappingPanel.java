@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.core.event.IChangeListener;
@@ -415,18 +416,18 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
     }
 
     /**
-     * @see com.metamatrix.modeler.internal.dqp.ui.dialogs.BaseNewConnectorBindingPanel#getConnectorBinding()
+     * @see com.metamatrix.modeler.internal.dqp.ui.dialogs.BaseNewConnectorBindingPanel#getConnector()
      * @since 4.3
      */
     @Override
-    public ConnectorBinding getConnectorBinding() throws Exception {
-        ConnectorBinding result = null;
+    public Connector getConnector() throws Exception {
+        Connector result = null;
         IStatus status = getStatus();
 
         if (status.getSeverity() != IStatus.ERROR) {
             if (this.btnExistingBinding.getSelection() && (this.matchingBindings != null) && !this.matchingBindings.isEmpty()) {
                 IStructuredSelection selection = (IStructuredSelection)this.bindingsViewer.getSelection();
-                result = (ConnectorBinding)selection.getFirstElement();
+                result = (Connector)selection.getFirstElement();
             } else if (this.btnCreateFromType.getSelection() && (this.matchingConnectorTypes != null)
                        && !this.matchingConnectorTypes.isEmpty()) {
                 IStructuredSelection selection = (IStructuredSelection)this.connectorTypesViewer.getSelection();

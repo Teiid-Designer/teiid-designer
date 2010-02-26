@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.ServerManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 /**
@@ -323,7 +324,7 @@ public final class ServerPage extends WizardPage {
      */
     public Server getServer() {
         if (this.status.getSeverity() != IStatus.ERROR) {
-            return new Server(this.url, this.user, this.password, this.savePassword);
+            return new Server(this.url, this.user, this.password, this.savePassword, getServerManager());
         }
 
         // should never be called if error status

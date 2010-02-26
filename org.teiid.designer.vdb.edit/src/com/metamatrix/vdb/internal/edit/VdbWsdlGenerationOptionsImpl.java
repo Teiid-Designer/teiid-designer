@@ -48,7 +48,6 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.webservice.IWsdlGenerator;
 import com.metamatrix.modeler.webservice.WebServicePlugin;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditException;
 import com.metamatrix.vdb.edit.VdbEditPlugin;
 import com.metamatrix.vdb.edit.VdbWsdlGenerationOptions;
@@ -63,7 +62,6 @@ import com.metamatrix.vdb.edit.manifest.WsdlOptions;
 public class VdbWsdlGenerationOptionsImpl implements VdbWsdlGenerationOptions {
 
     private final VdbEditingContextImpl context;
-    private final VdbContextEditor contextEditor;
 
     /**
      * @since 4.2
@@ -72,14 +70,6 @@ public class VdbWsdlGenerationOptionsImpl implements VdbWsdlGenerationOptions {
         super();
         ArgCheck.isNotNull(context);
         this.context = context;
-        this.contextEditor = null;
-    }
-
-    public VdbWsdlGenerationOptionsImpl( final VdbContextEditor context ) {
-        super();
-        ArgCheck.isNotNull(context);
-        this.context = null;
-        this.contextEditor = context;
     }
 
     /**
@@ -491,37 +481,16 @@ public class VdbWsdlGenerationOptionsImpl implements VdbWsdlGenerationOptions {
     }
 
     private VirtualDatabase getVirtualDatabase() {
-        VirtualDatabase vdb = null;
-        if (this.context != null) {
-            vdb = this.context.getVirtualDatabase();
-        } else if (this.contextEditor != null) {
-            vdb = this.contextEditor.getVirtualDatabase();
-        }
-        return vdb;
+        return this.context.getVirtualDatabase();
     }
 
     private File getTempDirectoryFolder() {
-        File tempDirFolder = null;
-        if (this.context != null) {
-            tempDirFolder = new File(this.context.getTempDirectory().getPath());
-        } else if (this.contextEditor != null) {
-            tempDirFolder = new File(this.contextEditor.getTempDirectory().getPath());
-        }
-        return tempDirFolder;
+        return new File(this.context.getTempDirectory().getPath());
     }
 
     private Resource getResource( final ModelReference modelRef ) {
         ArgCheck.isNotNull(modelRef);
-        Resource resource = null;
-        if (this.context != null) {
-            resource = this.context.findInternalResource(modelRef.getModelLocation());
-        } else if (this.contextEditor != null) {
-            File tempDirFolder = new File(this.contextEditor.getTempDirectory().getPath());
-            File modelFile = new File(tempDirFolder, modelRef.getModelLocation());
-            org.eclipse.emf.common.util.URI modelFileUri = org.eclipse.emf.common.util.URI.createFileURI(modelFile.getAbsolutePath());
-            resource = this.contextEditor.getVdbResourceSet().getResource(modelFileUri, true);
-        }
-        return resource;
+        return this.context.findInternalResource(modelRef.getModelLocation());
     }
 
     protected String getPathRelativeToFolder( final File parentFolder,

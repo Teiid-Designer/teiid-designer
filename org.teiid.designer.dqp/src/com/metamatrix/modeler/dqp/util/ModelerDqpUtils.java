@@ -17,9 +17,9 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.ServerAdmin;
+import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.common.object.PropertyDefinition;
 import com.metamatrix.common.object.PropertyType;
 import com.metamatrix.common.vdb.api.ModelInfo;
@@ -140,12 +140,12 @@ public final class ModelerDqpUtils {
      * @throws IllegalArgumentException if an input parameter is <code>null</code>
      * @since 4.3
      */
-    public static ConnectorBinding getFirstConnectorBinding( ModelInfo theModel,
+    public static Connector getFirstConnector( ModelInfo theModel,
                                                              VDBDefn theDefn ) {
         ArgCheck.isNotNull(theModel);
         ArgCheck.isNotNull(theDefn);
 
-        ConnectorBinding result = null;
+        Connector result = null;
 
         if (theModel.requiresConnectorBinding()) {
             Collection bindingNames = theModel.getConnectorBindingNames();
@@ -153,9 +153,9 @@ public final class ModelerDqpUtils {
             if ((bindingNames != null) && !bindingNames.isEmpty()) {
                 String cbname = (String)bindingNames.iterator().next();
 
-                ConnectorBinding binding = theDefn.getConnectorBindingByName(cbname);
-                if (binding != null) {
-                    result = binding;
+                Connector connector = theDefn.getConnectorBindingByName(cbname);
+                if (connector != null) {
+                    result = connector;
                 }
             }
         }
@@ -281,15 +281,4 @@ public final class ModelerDqpUtils {
         return new Status(severity, DqpPlugin.PLUGIN_ID, code, msg, null);
     }
 
-    /**
-     * Indicates if the specified {@link ConnectorType} is a valid connector type for the Modeler DQP.
-     * 
-     * @param theConnectorType the connector type being checked
-     * @return <code>true</code> if valid; <code>false</code> otherwise.
-     * @throws NullPointerException if theConnectorType is <code>null</code>
-     * @since 4.3
-     */
-    public static boolean isValidConnectorType( ConnectorType theConnectorType ) {
-        return theConnectorType.isDeployable();
-    }
 }

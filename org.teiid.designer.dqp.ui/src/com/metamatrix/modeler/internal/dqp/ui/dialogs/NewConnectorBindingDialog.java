@@ -7,12 +7,8 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.dialogs;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -27,15 +23,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.ServerAdmin;
+import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
@@ -59,9 +53,9 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
     private ConnectorType currentType;
     private final InternalVdbEditingContext vdbContext;
     private ModelInfo modelInfo;
-    private final ServerAdmin admin;
+    private final ExecutionAdmin admin;
 
-    private ConnectorBinding binding;
+    private Connector connector;
     private String connectorBindingName;
 
     private BaseNewConnectorBindingPanel newBindingPanel;
@@ -79,20 +73,20 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
      * 
      * @param theParentShell the shell
      * @param vdbDefnHelper the helper
-     * @param binding the existing binding or <code>null</code>
-     * @param connectorBindingName the binding name if a new binding is created
+     * @param connector the existing connector or <code>null</code>
+     * @param connectorBindingName the connector name if a new connector is created
      * @param theVdbContext the context
      * @param theModelInfo the model info
      * @since 4.3
      */
     public NewConnectorBindingDialog( Shell theParentShell,
-                                      ConnectorBinding binding,
+                                      Connector connector,
                                       String connectorBindingName,
                                       VdbEditingContext theVdbContext,
                                       ModelInfo theModelInfo,
-                                      ServerAdmin admin ) {
+                                      ExecutionAdmin admin ) {
         super(theParentShell, DqpUiPlugin.getDefault());
-        this.binding = binding;
+        this.connector = connector;
         this.connectorBindingName = connectorBindingName;
         this.vdbContext = (InternalVdbEditingContext)theVdbContext; // safe to cast
         this.modelInfo = theModelInfo;
@@ -114,20 +108,20 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
             if (tabs.length != 0) {
                 BaseNewConnectorBindingPanel pnl = (BaseNewConnectorBindingPanel)tabs[0].getControl();
                 try {
-                    this.binding = pnl.getConnectorBinding();
+                    this.connector = pnl.getConnector();
                 } catch (Exception error) {
                     DqpUiPlugin.showErrorDialog(getShell(), error);
                     return false;
                 }
                 try {
-                    this.currentType = this.admin.getConnectorType(this.binding);
+                    this.currentType = this.connector.getType();
                 } catch (Exception error) {
                     DqpUiPlugin.showErrorDialog(getShell(), error);
                     return false;
                 }
             }
         } else {
-            this.binding = null;
+            this.connector = null;
             this.currentType = null;
         }
 
@@ -180,7 +174,7 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
                                                                 this.vdbContext);
         this.newBindingPanel.addChangeListener(this);
 
-        this.existingBindingPanel = new ExistingConnectorBindingPanel(this.tabPane, getConnectorType(), getConnectorBinding());
+        this.existingBindingPanel = new ExistingConnectorBindingPanel(this.tabPane, getConnectorType(), getConnector());
         this.existingBindingPanel.addChangeListener(this);
 
         // add import source panel if needed
@@ -216,7 +210,7 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
         // initialize selected tab
         int tabIndex = NEW_TAB;
 
-        if ((this.binding == null) || !((ExistingConnectorBindingPanel)this.existingBindingPanel).hasLoadedBindings()) {
+        if ((this.connector == null) || !((ExistingConnectorBindingPanel)this.existingBindingPanel).hasLoadedBindings()) {
             tabIndex = (importSource == null) ? NEW_TAB : MAPPING_TAB;
         } else {
             this.selectedPanel = this.existingBindingPanel;
@@ -232,8 +226,8 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
         return this.currentType;
     }
 
-    public ConnectorBinding getConnectorBinding() {
-        return this.binding;
+    public Connector getConnector() {
+        return this.connector;
     }
 
     BaseNewConnectorBindingPanel getSelectedPanel() {

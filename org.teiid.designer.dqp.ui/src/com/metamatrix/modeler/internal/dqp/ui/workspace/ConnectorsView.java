@@ -28,7 +28,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -51,8 +50,10 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.runtime.IExecutionConfigurationListener;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
@@ -62,12 +63,10 @@ import com.metamatrix.modeler.dqp.internal.workspace.SourceModelInfo;
 import com.metamatrix.modeler.dqp.internal.workspace.WorkspaceConfigurationManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.dqp.ui.wizards.ConnectorImportWizard;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.CloneConnectorBindingAction;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.DeleteConnectorBindingAction;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.DeleteSourceBindingAction;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.EditConnectorBindingAction;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.ExportConnectorBindingsAction;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.NewConnectorBindingAction;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -81,12 +80,10 @@ import com.metamatrix.ui.internal.widget.Label;
  * The ConnectorsView provides a tree view of workpace connector bindings which are stored in a configuration.xml file and
  * corresponding model-to-connector mappings in a WorkspaceBindings.def file.
  */
-public class ConnectorsView extends ViewPart implements ISelectionListener {
+public class ConnectorsView extends ViewPart implements ISelectionListener, IExecutionConfigurationListener {
 
     static final String PREFIX = I18nUtil.getPropertyPrefix(ConnectorsView.class);
     private static final String OPEN_ACTION_LABEL = getString("openAction.text"); //$NON-NLS-1$
-    private static final String IMPORT_CONNECTORS_ACTION_LABEL = getString("importConnectorsAction.text"); //$NON-NLS-1$
-    private static final String IMPORT_CONNECTORS_ACTION_TOOLTIP = getString("importConnectorsAction.tooltip"); //$NON-NLS-1$
     private static final String SOURCE_BINDING_STATUS_OK = "statusBarUpdater.statusLabel"; //$NON-NLS-1$
     private static final String SOURCE_BINDING_STATUS_MULTIPLE = "statusBarUpdater.statusLabelMultipleConnectors"; //$NON-NLS-1$
     private static final String SOURCE_BINDING_STATUS_NONE = "statusBarUpdater.statusLabelNotBound"; //$NON-NLS-1$
@@ -102,8 +99,6 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
 
     TreeViewer viewer;
     ConnectorsViewTreeProvider treeProvider;
-    private Action importConnectorsAction;
-    private ExportConnectorBindingsAction exportConnectorsAction;
 
     Action showConnectorTypesToggleAction;
     private EditConnectorBindingAction editConnectorBindingAction;
@@ -201,7 +196,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
                 handleConfigurationChanged();
             }
         };
-        DqpPlugin.getInstance().getAdmin().addChangeListener(this.configListener);
+        DqpPlugin.getInstance().getServerRegistry().addListener(this);
         workspaceConfig.addChangeListener(this.configListener);
 
         // hook up our status bar manager for EObjects
@@ -322,8 +317,8 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
                             Object data = item.getData();
                             if (data != null) {
                                 String tooltip = StringUtil.Constants.EMPTY_STRING;
-                                if (data instanceof ConnectorBinding) {
-                                    tooltip = getConnectorBindingToolTip((ConnectorBinding)data);
+                                if (data instanceof Connector) {
+                                    tooltip = getConnectorToolTip((Connector)data);
                                 } else {
                                     tooltip = data.toString();
                                 }
@@ -359,10 +354,12 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
         viewer.getTree().addListener(SWT.MouseHover, treeListener);
     }
 
-    String getConnectorBindingToolTip( ConnectorBinding binding ) {
-        Object params = new Object[] {binding.getName(), binding.getDeployedName(), binding.getConnectorClass(),
-            binding.getComponentTypeID(), binding.getConfigurationID(), binding.getID(), binding.isEssential()};
-        return DqpUiConstants.UTIL.getString(PREFIX + "bindingToolTip", params); //$NON-NLS-1$
+    String getConnectorToolTip( Connector connector ) {
+        // TODO fix this
+        return connector.getName();
+//        Object params = new Object[] {binding.getName(), binding.getDeployedName(), binding.getConnectorClass(),
+//            binding.getComponentTypeID(), binding.getConfigurationID(), binding.getID(), binding.isEssential()};
+//        return DqpUiConstants.UTIL.getString(PREFIX + "bindingToolTip", params); //$NON-NLS-1$
     }
 
     private void hookContextMenu() {
@@ -406,21 +403,15 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
     void fillContextMenu( IMenuManager manager ) {
         Object selection = getSelectedObject();
         if (selection != null) {
-            if (selection instanceof ConnectorBinding) {
+            if (selection instanceof Connector) {
                 manager.add(newConnectorBindingAction);
                 manager.add(new Separator());
                 manager.add(editConnectorBindingAction);
                 manager.add(cloneConnectorBindingAction);
                 manager.add(new Separator());
                 manager.add(deleteConnectorBindingAction);
-                manager.add(new Separator());
-                manager.add(importConnectorsAction);
-                manager.add(exportConnectorsAction);
             } else if (selection instanceof ConnectorType) {
                 manager.add(newConnectorBindingAction);
-                manager.add(new Separator());
-                manager.add(importConnectorsAction);
-                manager.add(exportConnectorsAction);
             } else {
                 manager.add(deleteSourceBindingAction);
                 manager.add(new Separator());
@@ -429,9 +420,6 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
         } else {
             newConnectorBindingAction.checkEnablement();
             manager.add(newConnectorBindingAction);
-            manager.add(new Separator());
-            manager.add(importConnectorsAction);
-            manager.add(exportConnectorsAction);
         }
 
         // Other plug-ins can contribute there actions here
@@ -440,9 +428,6 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
 
     private void fillLocalToolBar( IToolBarManager manager ) {
         manager.add(newConnectorBindingAction);
-        manager.add(new Separator());
-        manager.add(importConnectorsAction);
-        manager.add(exportConnectorsAction);
         manager.add(new Separator());
         manager.add(showConnectorTypesToggleAction);
         manager.add(new Separator());
@@ -467,9 +452,6 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
 
         deleteSourceBindingAction = new DeleteSourceBindingAction();
         viewer.addSelectionChangedListener(deleteSourceBindingAction);
-
-        exportConnectorsAction = new ExportConnectorBindingsAction();
-        viewer.addSelectionChangedListener(exportConnectorsAction);
 
         openModelAction = new Action(OPEN_ACTION_LABEL) {
             @Override
@@ -519,18 +501,6 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
         showConnectorTypesToggleAction.setChecked(true);
         showConnectorTypesToggleAction.setToolTipText(HIDE_CONNECTORS_LABEL);
         showConnectorTypesToggleAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SHOW_HIDE_CONNECTORS_ICON));
-
-        importConnectorsAction = new Action() {
-            @Override
-            public void run() {
-                ConnectorImportWizard wizard = new ConnectorImportWizard();
-                WizardDialog dialog = new WizardDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(), wizard);
-                dialog.open();
-            }
-        };
-        importConnectorsAction.setText(IMPORT_CONNECTORS_ACTION_LABEL);
-        importConnectorsAction.setToolTipText(IMPORT_CONNECTORS_ACTION_TOOLTIP);
-        importConnectorsAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.IMPORT_CONNECTORS_ICON));
 
         collapseAllAction = new Action() {
             @Override
@@ -590,6 +560,8 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
 
     @Override
     public void dispose() {
+        DqpPlugin.getInstance().getServerRegistry().removeListener(this);
+
         if (this.configListener != null) {
             DqpPlugin.getInstance().getAdmin().removeChangeListener(this.configListener);
             this.workspaceConfig.removeChangeListener(this.configListener);
@@ -647,9 +619,9 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
                 int nElements = selection.size();
                 if (nElements == 1) {
                     Object elem = selection.getFirstElement();
-                    if (elem instanceof ConnectorBinding) {
+                    if (elem instanceof Connector) {
                         return DqpUiConstants.UTIL.getString(PREFIX + CONNECTOR_BINDING_STATUS_LABEL,
-                                                             ((ConnectorBinding)elem).getName());
+                                                             ((Connector)elem).getName());
                     } else if (elem instanceof SourceModelInfo) {
                         // Check for Connector Bindings
                         SourceModelInfo smi = (SourceModelInfo)elem;
@@ -664,9 +636,9 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
                         } else {
                             return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_MULTIPLE, smi.getName());
                         }
-                    } else if (elem instanceof ComponentTypeID) {
+                    } else if (elem instanceof ConnectorType) {
                         return DqpUiConstants.UTIL.getString(PREFIX + CONNECTOR_TYPE_STATUS_LABEL,
-                                                             ((ComponentTypeID)elem).getName());
+                                                             ((ConnectorType)elem).getName());
                     }
                 }
             }
@@ -674,5 +646,16 @@ public class ConnectorsView extends ViewPart implements ISelectionListener {
             return super.formatMessage(theSel);
         }
 
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.runtime.IExecutionConfigurationListener#configurationChanged(org.teiid.designer.runtime.ExecutionConfigurationEvent)
+     */
+    @Override
+    public Exception[] configurationChanged( ExecutionConfigurationEvent event ) {
+        // TODO implement
+        return null;
     }
 }

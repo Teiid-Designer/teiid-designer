@@ -17,7 +17,6 @@ Export-Package: com.metamatrix.modeler.dqp.ui,
  com.metamatrix.modeler.internal.dqp.ui.jdbc,
  com.metamatrix.modeler.internal.dqp.ui.preferences,
  com.metamatrix.modeler.internal.dqp.ui.views,
- com.metamatrix.modeler.internal.dqp.ui.wizards,
  com.metamatrix.modeler.internal.dqp.ui.workspace,
  com.metamatrix.modeler.internal.dqp.ui.workspace.actions,
  com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs

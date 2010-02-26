@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -85,7 +85,7 @@ public abstract class BaseNewConnectorBindingPanel extends Composite
      * @return the binding or <code>null</code>
      * @since 4.3
      */
-    public abstract ConnectorBinding getConnectorBinding() throws Exception;
+    public abstract Connector getConnector() throws Exception;
 
     /**
      * Obtains the properties key prefix. 

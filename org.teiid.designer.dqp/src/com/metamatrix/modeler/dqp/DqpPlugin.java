@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
-import org.teiid.designer.runtime.ServerRegistry;
+import org.teiid.designer.runtime.ServerManager;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
@@ -80,13 +80,13 @@ public class DqpPlugin extends Plugin {
     /**
      * The Teiid server registry.
      */
-    private ServerRegistry serverRegistry;
+    private ServerManager serverRegistry;
 
     /**
      * The manager of the source bindings.
      */
     private WorkspaceConfigurationManager workspaceConfig; // TODO change name to SourceBindingsManager and refactor binding
-                                                           // utility methods to ServerAdmin
+                                                           // utility methods to ExecutionAdmin
 
     /**
      * Collection of {@link VdbDefnHelper}s for a given {@link InternalVdbEditingContext}. Important to make sure only one context
@@ -94,6 +94,13 @@ public class DqpPlugin extends Plugin {
      * value=VdbDefnHelper
      */
     private Map vdbHelperMap = new HashMap();
+
+    /**
+     * @return serverRegistry
+     */
+    public ServerManager getServerRegistry() {
+        return this.serverRegistry;
+    }
 
     /**
      * @return
@@ -166,7 +173,7 @@ public class DqpPlugin extends Plugin {
     }
 
     private void initializeServerRegistry() throws CoreException {
-        this.serverRegistry = new ServerRegistry(DqpPath.getRuntimePath().toFile().getAbsolutePath());
+        this.serverRegistry = new ServerManager(DqpPath.getRuntimePath().toFile().getAbsolutePath());
 
         // restore registry
         IStatus status = this.serverRegistry.restoreState();

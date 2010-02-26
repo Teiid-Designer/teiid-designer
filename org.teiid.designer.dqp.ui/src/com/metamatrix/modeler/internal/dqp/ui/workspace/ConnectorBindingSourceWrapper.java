@@ -11,7 +11,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -36,7 +36,7 @@ public class ConnectorBindingSourceWrapper implements IExtendedModelObject {
     // ----------------------------------------------------------------------------------
     // Variables
     // ----------------------------------------------------------------------------------
-    private ConnectorBinding binding;
+    private Connector binding;
     private JdbcSource jdbcSource;
     private PropertySheetPage propertyPage;
     private IPropertySourceProvider propertySourceProvider;
@@ -46,15 +46,15 @@ public class ConnectorBindingSourceWrapper implements IExtendedModelObject {
     // ----------------------------------------------------------------------------------
     /**
      * Base Constructor
-     * @param binding
+     * @param connector
      * @param jdbcSource
      * @since 5.0
      */
-    public ConnectorBindingSourceWrapper(ConnectorBinding binding, JdbcSource jdbcSource) {
+    public ConnectorBindingSourceWrapper(Connector connector, JdbcSource jdbcSource) {
         
         
         
-        this.binding = binding;
+        this.binding = connector;
         this.jdbcSource = jdbcSource;
     }
     
@@ -63,7 +63,7 @@ public class ConnectorBindingSourceWrapper implements IExtendedModelObject {
      * @return
      * @since 5.0
      */
-    public ConnectorBinding getConnectorBinding() {
+    public Connector getConnector() {
         return binding;
     }
     

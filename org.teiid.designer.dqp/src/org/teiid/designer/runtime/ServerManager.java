@@ -12,7 +12,6 @@ import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -37,9 +36,9 @@ import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Base64;
 
 /**
- * The <code>ServerRegistry</code> class manages the creation, deletion, and editing of servers hosting Teiid servers.
+ * The <code>ServerManager</code> class manages the creation, deletion, and editing of servers hosting Teiid servers.
  */
-public final class ServerRegistry {
+public final class ServerManager implements EventManager {
 
     // ===========================================================================================================================
     // Constants
@@ -80,9 +79,9 @@ public final class ServerRegistry {
     // ===========================================================================================================================
 
     /**
-     * The listeners registered to receive {@link ServerRegistryEvent server registry events}.
+     * The listeners registered to receive {@link ExecutionConfigurationEvent server registry events}.
      */
-    private final CopyOnWriteArrayList<IServerRegistryListener> listeners;
+    private final CopyOnWriteArrayList<IExecutionConfigurationListener> listeners;
 
     /**
      * The path where the server registry is persisted or <code>null</code> if not persisted.
@@ -107,10 +106,10 @@ public final class ServerRegistry {
      * @param stateLocationPath the directory where the {@link Server} registry} is persisted (may be <code>null</code> if
      *        persistence is not desired)
      */
-    public ServerRegistry( String stateLocationPath ) {
+    public ServerManager( String stateLocationPath ) {
         this.servers = new ArrayList<Server>();
         this.stateLocationPath = stateLocationPath;
-        this.listeners = new CopyOnWriteArrayList<IServerRegistryListener>();
+        this.listeners = new CopyOnWriteArrayList<IExecutionConfigurationListener>();
     }
 
     // ===========================================================================================================================
@@ -118,21 +117,14 @@ public final class ServerRegistry {
     // ===========================================================================================================================
 
     /**
-     * Listeners already registered will not be added again. The new listener will receive events for all existing servers.
+     * {@inheritDoc}
      * 
-     * @param listener the listener being register to receive events (never <code>null</code>)
-     * @return <code>true</code> if listener was added
+     * @see org.teiid.designer.runtime.EventManager#addListener(org.teiid.designer.runtime.IExecutionConfigurationListener)
      */
-    public boolean addRegistryListener( IServerRegistryListener listener ) {
+    @Override
+    public boolean addListener( IExecutionConfigurationListener listener ) {
         ArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
-        boolean result = this.listeners.addIfAbsent(listener);
-
-        // inform new listener of registered servers
-        for (Server server : getServers()) {
-            listener.serverRegistryChanged(ServerRegistryEvent.createNewEvent(this, server));
-        }
-
-        return result;
+        return this.listeners.addIfAbsent(listener);
     }
 
     /**
@@ -148,16 +140,13 @@ public final class ServerRegistry {
 
     /**
      * @param url the URL of the server being requested (never <code>null</code> )
-     * @param user the user ID of the server being requested (never <code>null</code>)
      * @return the requested server or <code>null</code> if not found in the registry
      */
-    public Server findServer( String url,
-                              String user ) {
+    public Server getServer( String url ) {
         ArgCheck.isNotNull(url, "url"); //$NON-NLS-1$
-        ArgCheck.isNotNull(user, "user"); //$NON-NLS-1$
 
         for (Server server : getServers()) {
-            if (url.equals(server.getUrl()) && user.equals(server.getUser())) {
+            if (url.equals(server.getUrl())) {
                 return server;
             }
         }
@@ -213,8 +202,7 @@ public final class ServerRegistry {
 
         if (added) {
             if (notifyListeners) {
-                Exception[] errors = notifyRegistryListeners(ServerRegistryEvent.createNewEvent(this, server));
-                return processRegistryListenerErrors(errors);
+                notifyListeners(ExecutionConfigurationEvent.createAddServerEvent(server));
             }
 
             return Status.OK_STATUS;
@@ -249,8 +237,7 @@ public final class ServerRegistry {
 
         if (removed) {
             if (notifyListeners) {
-                Exception[] errors = notifyRegistryListeners(ServerRegistryEvent.createRemoveEvent(this, server));
-                return processRegistryListenerErrors(errors);
+                notifyListeners(ExecutionConfigurationEvent.createRemoveServerEvent(server));
             }
 
             return Status.OK_STATUS;
@@ -285,60 +272,29 @@ public final class ServerRegistry {
     }
 
     /**
-     * @param event the event the registry listeners are to process
-     * @return any errors thrown by or found by the listeners or <code>null</code> (never empty)
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.runtime.EventManager#notifyListeners(org.teiid.designer.runtime.ExecutionConfigurationEvent)
      */
-    private Exception[] notifyRegistryListeners( ServerRegistryEvent event ) {
-        Collection<Exception> errors = null;
-
-        for (IServerRegistryListener l : this.listeners) {
+    @Override
+    public void notifyListeners( ExecutionConfigurationEvent event ) {
+        for (IExecutionConfigurationListener l : this.listeners) {
             try {
-                Exception[] problems = l.serverRegistryChanged(event);
-
-                if ((problems != null) && (problems.length != 0)) {
-                    if (errors == null) {
-                        errors = new ArrayList<Exception>();
-                    }
-
-                    errors.addAll(Arrays.asList(problems));
-                }
+                l.configurationChanged(event);
             } catch (Exception e) {
-                if (errors == null) {
-                    errors = new ArrayList<Exception>();
-                }
-
-                errors.add(e);
+                removeListener(l);
+                Util.log(IStatus.WARNING, e, Util.getString("unexpectedErrorInExecutionConfigurationListener")); // TODO i18n this
             }
         }
-
-        if ((errors != null) && !errors.isEmpty()) {
-            return errors.toArray(new Exception[errors.size()]);
-        }
-
-        return null;
     }
 
     /**
-     * @param errors the errors reported by the registry listeners
-     * @return a status indicating if registry listeners reported any errors
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.runtime.EventManager#removeListener(org.teiid.designer.runtime.IExecutionConfigurationListener)
      */
-    private IStatus processRegistryListenerErrors( Exception[] errors ) {
-        if (errors == null) {
-            return Status.OK_STATUS;
-        }
-
-        for (Exception error : errors) {
-            Util.log(IStatus.ERROR, error, Util.getString("serverManagerRegistryListenerError"));
-        }
-
-        return new Status(IStatus.WARNING, PLUGIN_ID, Util.getString("serverManagerRegistryListenerErrorsOccurred.text()"));
-    }
-
-    /**
-     * @param listener the listener being unregistered and will no longer receive events (never <code>null</code>)
-     * @return <code>true</code> if listener was removed
-     */
-    public boolean removeRegistryListener( IServerRegistryListener listener ) {
+    @Override
+    public boolean removeListener( IExecutionConfigurationListener listener ) {
         ArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
         return this.listeners.remove(listener);
     }
@@ -380,7 +336,7 @@ public final class ServerRegistry {
                                                                                       "UTF-8")); //$NON-NLS-1$
 
                             // add server to registry
-                            addServer(new Server(urlNode.getNodeValue(), userNode.getNodeValue(), pswd, (pswd != null)));
+                            addServer(new Server(urlNode.getNodeValue(), userNode.getNodeValue(), pswd, (pswd != null), this));
                         }
                     }
                 } catch (Exception e) {
@@ -452,33 +408,32 @@ public final class ServerRegistry {
     /**
      * Updates the server registry with a new version of a server.
      * 
-     * @param previousServerVersion the version of the server being replaced (never <code>null</code>)
-     * @param newServerVersion the new version of the server being put in the server registry (never <code>null</code>)
+     * @param replacedServer the version of the server being replaced (never <code>null</code>)
+     * @param updatedServer the new version of the server being put in the server registry (never <code>null</code>)
      * @return a status indicating if the server was updated in the registry (never <code>null</code>)
      */
-    public IStatus updateServer( Server previousServerVersion,
-                                 Server newServerVersion ) {
-        ArgCheck.isNotNull(previousServerVersion, "previousServerVersion"); //$NON-NLS-1$
-        ArgCheck.isNotNull(newServerVersion, "newServerVersion"); //$NON-NLS-1$
+    public IStatus updateServer( Server replacedServer,
+                                 Server updatedServer ) {
+        ArgCheck.isNotNull(replacedServer, "previousServerVersion"); //$NON-NLS-1$
+        ArgCheck.isNotNull(updatedServer, "newServerVersion"); //$NON-NLS-1$
 
         IStatus status = null;
 
         try {
             this.serverLock.writeLock().lock();
-            status = internalRemoveServer(previousServerVersion, false);
+            status = internalRemoveServer(replacedServer, false);
 
             if (status.isOK()) {
-                status = internalAddServer(newServerVersion, false);
+                status = internalAddServer(updatedServer, false);
 
                 if (status.isOK()) {
                     // all good so notify listeners
-                    Exception[] errors = notifyRegistryListeners(ServerRegistryEvent.createUpdateEvent(this,
-                                                                                                       previousServerVersion,
-                                                                                                       newServerVersion));
-                    return processRegistryListenerErrors(errors);
+                    notifyListeners(ExecutionConfigurationEvent.createUpdateServerEvent(replacedServer, updatedServer));
+                    return status;
                 }
 
                 // unexpected problem adding new version of server to registry
+                // TODO add previousServerVerson back into registry???
                 return new Status(IStatus.ERROR, PLUGIN_ID,
                                   Util.getString("serverManagerRegistryUpdateAddError.text(status.getMessage())"));
             }

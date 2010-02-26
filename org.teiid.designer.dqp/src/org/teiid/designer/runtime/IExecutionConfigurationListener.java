@@ -8,8 +8,13 @@
 package org.teiid.designer.runtime;
 
 /**
- *
+ * The <code>IExecutionConfigurationListener</code> interface defines the API for a server registry listener.
  */
-public final class ServerQueryManager {
+public interface IExecutionConfigurationListener {
+
+    /**
+     * @param event the event being processed (never <code>null</code>)
+     */
+    void configurationChanged( ExecutionConfigurationEvent event );
 
 }

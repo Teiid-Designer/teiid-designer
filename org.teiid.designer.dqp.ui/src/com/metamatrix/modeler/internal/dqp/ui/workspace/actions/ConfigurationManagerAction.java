@@ -15,7 +15,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.teiid.designer.runtime.ServerAdmin;
+import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.workspace.WorkspaceConfigurationManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -27,7 +27,7 @@ import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
  */
 public abstract class ConfigurationManagerAction extends Action implements ISelectionChangedListener {
 
-    private static ServerAdmin admin;
+    private static ExecutionAdmin admin;
     private static WorkspaceConfigurationManager workspaceConfig;
     
     /** The current selection or <code>null</code>. */
@@ -72,7 +72,7 @@ public abstract class ConfigurationManagerAction extends Action implements ISele
         super(theText, theStyle);
     }
 
-    public ServerAdmin getAdmin() {
+    public ExecutionAdmin getAdmin() {
         if( this.admin ==  null) {
             this.admin = DqpPlugin.getInstance().getServerAdmin();
         }

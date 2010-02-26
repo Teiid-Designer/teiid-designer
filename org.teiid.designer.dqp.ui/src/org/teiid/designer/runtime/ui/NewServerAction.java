@@ -11,7 +11,7 @@ import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.designer.runtime.ServerRegistry;
+import org.teiid.designer.runtime.ServerManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 /**
@@ -26,7 +26,7 @@ public final class NewServerAction extends Action {
     /**
      * The server manager used to create and edit servers.
      */
-    private final ServerRegistry serverManager;
+    private final ServerManager serverManager;
 
     /**
      * The shell used to display the dialog that edits and creates servers.
@@ -42,7 +42,7 @@ public final class NewServerAction extends Action {
      * @param serverManager the server manager to use when creating and editing servers
      */
     public NewServerAction( Shell shell,
-                            ServerRegistry serverManager ) {
+                            ServerManager serverManager ) {
         super(UTIL.getString("newServerActionText.text()"));
         setToolTipText(UTIL.getString("newServerActionToolTip.text()"));
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(NEW_SERVER_IMAGE));

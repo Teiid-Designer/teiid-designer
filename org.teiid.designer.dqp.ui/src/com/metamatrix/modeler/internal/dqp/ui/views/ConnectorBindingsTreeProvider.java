@@ -13,8 +13,9 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.ServerAdmin;
+import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
@@ -25,7 +26,7 @@ import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 public class ConnectorBindingsTreeProvider implements DqpUiConstants, ITreeContentProvider, ILabelProvider {
 
     // private ConnectorBindingsManager bindingsManager;
-    private ServerAdmin admin;
+    private ExecutionAdmin admin;
 
     /**
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
@@ -33,7 +34,12 @@ public class ConnectorBindingsTreeProvider implements DqpUiConstants, ITreeConte
      */
     public Object[] getChildren( Object parentElement ) {
         if (parentElement instanceof ConnectorType) {
-            return this.admin.getConnectorBindings((ConnectorType)parentElement).toArray();
+            try {
+                return this.admin.getConnectors((ConnectorType)parentElement).toArray();
+            } catch (Exception e) {
+                UTIL.log(e);
+                return new Object[0];
+            }
         }
 
         return new Object[0];
@@ -60,7 +66,7 @@ public class ConnectorBindingsTreeProvider implements DqpUiConstants, ITreeConte
      * @since 4.2
      */
     public Image getImage( Object element ) {
-        if (element instanceof ConnectorBinding) {
+        if (element instanceof Connector) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_BINDING_ICON);
         }
         if (element instanceof ConnectorType) {
@@ -75,14 +81,11 @@ public class ConnectorBindingsTreeProvider implements DqpUiConstants, ITreeConte
      * @since 4.2
      */
     public String getText( Object element ) {
-        if (element instanceof ConnectorBinding) {
-            return ((ConnectorBinding)element).getName();
+        if (element instanceof Connector) {
+            return ((Connector)element).getName();
         }
         if (element instanceof ConnectorType) {
             return ((ConnectorType)element).getName();
-        }
-        if (element instanceof ComponentTypeID) {
-            return element.toString();
         }
         if (element instanceof String) {
             return (String)element;
@@ -121,8 +124,8 @@ public class ConnectorBindingsTreeProvider implements DqpUiConstants, ITreeConte
      * @since 4.2
      */
     public Object[] getElements( Object inputElement ) {
-        if (inputElement instanceof ServerAdmin) {
-            this.admin = (ServerAdmin)inputElement;
+        if (inputElement instanceof ExecutionAdmin) {
+            this.admin = (ExecutionAdmin)inputElement;
             return this.admin.getConnectorTypeIds().toArray();
         }
         return new Object[0];

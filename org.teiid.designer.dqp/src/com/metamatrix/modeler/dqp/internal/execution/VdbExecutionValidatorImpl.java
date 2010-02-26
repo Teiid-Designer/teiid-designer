@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.common.vdb.api.VDBDefn;
@@ -221,22 +222,22 @@ public class VdbExecutionValidatorImpl implements com.metamatrix.modeler.dqp.exe
                 ModelInfo model = (ModelInfo)modelItr.next();
 
                 if (model.requiresConnectorBinding()) {
-                    ConnectorBinding binding = ModelerDqpUtils.getFirstConnectorBinding(model, vdbDefn);
+                    Connector connector = ModelerDqpUtils.getFirstConnector(model, vdbDefn);
                     // can't assume we get a binding because we no longer stop on the first error:
-                    if (binding != null) {
-                        ConnectorType type = ModelerDqpUtils.getConnectorType(binding);
+                    if (connector != null) {
+                        ConnectorType type = ModelerDqpUtils.getConnectorType(connector);
                         if (type != null) {
                             for (PropertyDefinition typeDefn : type.getPropertyDefinitions()) {
 
                                 if( typeDefn.isRequired() ) {
                                     String id = typeDefn.getName();
-                                    String value = binding.getPropertyValue(id);
+                                    String value = connector.getPropertyValue(id);
                                     
                                     // look at type for default values as connectors inherit default values
                                     if ((value == null || StringUtil.isEmpty(value)) && typeDefn.getDefaultValue() == null) {
                                         vdbStatus.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID,
                                                                  BINDING_PROPERTY_ERROR_CODE, getString("bindingPropertyError", //$NON-NLS-1$
-                                                                         new Object[] { id, binding.getName() }), null));
+                                                                         new Object[] { id, connector.getName() }), null));
                                     }
                                 }
                                 

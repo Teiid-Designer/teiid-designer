@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.runtime;
 
+import org.teiid.adminapi.AdminFactory;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.HashCodeUtil;
 
@@ -38,6 +39,15 @@ public final class Server {
     // ===========================================================================================================================
     // Fields
     // ===========================================================================================================================
+
+    private ExecutionAdmin admin;
+
+    /**
+     * The object that will fire the events.
+     */
+    private final EventManager eventManager;
+
+    private ExecutionManager executionManager;
 
     /**
      * The password to use when logging on to the server.
@@ -74,14 +84,17 @@ public final class Server {
     public Server( String url,
                    String user,
                    String password,
-                   boolean persistPassword ) {
+                   boolean persistPassword,
+                   EventManager eventManager ) {
         ArgCheck.isNotNull(url, "url"); //$NON-NLS-1$
         ArgCheck.isNotNull(user, "user"); //$NON-NLS-1$
+        ArgCheck.isNotNull(eventManager, "eventManager"); //$NON-NLS-1$
 
         this.url = url;
         this.user = user;
         this.password = password;
         this.persistPassword = persistPassword;
+        this.eventManager = eventManager;
     }
 
     // ===========================================================================================================================
@@ -102,10 +115,15 @@ public final class Server {
         return equivalent(this.url, otherServer.url) && equivalent(this.user, otherServer.user)
                && equivalent(this.password, otherServer.password) && (this.persistPassword == otherServer.persistPassword);
     }
-    
-    public ServerAdmin getAdmin() {
-        // TODO implement
-        return null;
+
+    public ExecutionAdmin getAdmin() throws Exception {
+        if (this.admin == null) {
+            this.admin = new ExecutionAdmin(AdminFactory.getInstance().createAdmin(this.user,
+                                                                                   this.password.toCharArray(),
+                                                                                   this.url), this, this.eventManager);
+        }
+
+        return this.admin;
     }
 
     /**
@@ -128,10 +146,13 @@ public final class Server {
     public String getUser() {
         return this.user;
     }
-    
-    public ServerQueryManager getQueryManager() {
-        // TODO implement
-        return null;
+
+    public ExecutionManager getExecutionManager() {
+        if (this.executionManager == null) {
+            this.executionManager = new ExecutionManager();
+        }
+
+        return this.executionManager;
     }
 
     /**

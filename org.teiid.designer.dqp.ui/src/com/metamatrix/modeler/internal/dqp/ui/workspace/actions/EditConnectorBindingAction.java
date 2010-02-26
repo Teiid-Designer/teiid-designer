@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
 import org.eclipse.jface.window.Window;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.EditConnectorBindingDialog;
 import com.metamatrix.ui.internal.util.UiUtil;
@@ -36,7 +36,7 @@ public class EditConnectorBindingAction extends ConfigurationManagerAction {
     public void run() {
         //System.out.println("  EditConnectorBindingAction.run() ====>>> ");
         // Get Selection
-        ConnectorBinding theBinding = (ConnectorBinding)getSelectedObject();
+        Connector theBinding = (Connector)getSelectedObject();
         if( theBinding != null ) {
             EditConnectorBindingDialog dialog = new EditConnectorBindingDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(), theBinding);
 
@@ -58,7 +58,7 @@ public class EditConnectorBindingAction extends ConfigurationManagerAction {
         boolean result = false;
         if( !isMultiSelection() && !isEmptySelection() ) {
             Object selectedObject = getSelectedObject();
-            if( selectedObject instanceof ConnectorBinding) {
+            if( selectedObject instanceof Connector) {
                 result = true;
             }
         }

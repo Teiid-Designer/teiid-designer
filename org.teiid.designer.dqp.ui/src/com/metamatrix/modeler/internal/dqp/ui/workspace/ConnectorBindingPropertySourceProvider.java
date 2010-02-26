@@ -16,9 +16,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.ServerAdmin;
+import org.teiid.designer.runtime.Server;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceModelInfo;
@@ -38,15 +38,6 @@ public class ConnectorBindingPropertySourceProvider implements IPropertySourcePr
 
     private ArrayList<IPropertyChangeListener> listenerList = new ArrayList<IPropertyChangeListener>();
     private boolean showExpertProps = false;
-    private final ServerAdmin admin;
-
-    /**
-     *
-     * @since 4.2
-     */
-    public ConnectorBindingPropertySourceProvider(ServerAdmin admin) {
-        this.admin = admin;
-    }
 
     /**
      * Sets the editable state for <strong>both</strong> the connector binding and component type property sources.
@@ -76,7 +67,7 @@ public class ConnectorBindingPropertySourceProvider implements IPropertySourcePr
         listenerList.remove(listener);
     }
 
-    void propertyChanged(ConnectorBinding binding) {
+    void propertyChanged(Connector binding) {
         for ( Iterator<IPropertyChangeListener> iter = listenerList.iterator() ; iter.hasNext() ; ) {
             iter.next().propertyChange(null);
         }
@@ -87,8 +78,8 @@ public class ConnectorBindingPropertySourceProvider implements IPropertySourcePr
      * @since 4.2
      */
     public IPropertySource getPropertySource(Object object) {
-        if ( object instanceof ConnectorBinding ) {
-            ConnectorBindingPropertySource source = new ConnectorBindingPropertySource((ConnectorBinding) object, this.admin);
+        if ( object instanceof Connector ) {
+            ConnectorBindingPropertySource source = new ConnectorBindingPropertySource((Connector) object);
             source.setEditable(this.connectorBindingsEditable);
             source.setProvider(this);
             return source;
@@ -96,6 +87,9 @@ public class ConnectorBindingPropertySourceProvider implements IPropertySourcePr
             ComponentTypePropertySource source = new ComponentTypePropertySource((ConnectorType)object);
             source.setEditable(this.componentTypesEditable);
             return source;
+        } else if ( object instanceof Server ) {
+            // TODO implement ServerPropertySource
+            return null;
         } else if( object instanceof SourceModelInfo ) {
             SourceModelInfo smi = (SourceModelInfo)object;
             // Create the project path

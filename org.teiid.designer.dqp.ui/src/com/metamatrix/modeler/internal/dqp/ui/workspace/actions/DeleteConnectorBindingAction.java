@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
 import org.eclipse.swt.widgets.Display;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.ui.internal.util.UiUtil;
@@ -41,11 +41,11 @@ public class DeleteConnectorBindingAction extends ConfigurationManagerAction {
         Object[] selectedObjects = getSelectedObjects().toArray();
         if( selectedObjects != null ) {
             for( int i=0; i<selectedObjects.length; i++ ) {
-                if( selectedObjects[i] instanceof ConnectorBinding ) {
-                    ConnectorBinding theBinding = (ConnectorBinding)selectedObjects[i];
+                if( selectedObjects[i] instanceof Connector ) {
+                    Connector theBinding = (Connector)selectedObjects[i];
                     if( theBinding != null ) {
                         try {
-                            getAdmin().removeBinding(theBinding);
+                            theBinding.getType().getAdmin().removeConnector(theBinding);
                         } catch (final Exception error) {
                             UiUtil.runInSwtThread(new Runnable() {
                                 
@@ -73,7 +73,7 @@ public class DeleteConnectorBindingAction extends ConfigurationManagerAction {
             if( selectedObjects != null ) {
                 result = true;
                 for( int i=0; i<selectedObjects.length; i++ ) {
-                    if( ! (selectedObjects[i] instanceof ConnectorBinding) ) {
+                    if( ! (selectedObjects[i] instanceof Connector) ) {
                         result = false;
                     }
                 }

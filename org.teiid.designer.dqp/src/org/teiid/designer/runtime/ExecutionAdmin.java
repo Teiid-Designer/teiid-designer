@@ -16,33 +16,50 @@ import java.util.Properties;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.adminapi.PropertyDefinition;
-import com.metamatrix.core.event.IChangeListener;
+import com.metamatrix.core.util.ArgCheck;
 
 /**
  *
  */
-public final class ServerAdmin {
+public final class ExecutionAdmin {
 
     private final Admin admin;
-
     private Map<String, Connector> connectorByNameMap;
     private Map<String, ConnectorType> connectorTypeByNameMap;
+    private final EventManager eventManager;
+    private final Server server;
 
-    public ServerAdmin( Admin admin ) throws Exception {
+    public ExecutionAdmin( Admin admin,
+                           Server server,
+                           EventManager eventManager ) throws Exception {
         this.admin = admin;
+        this.eventManager = eventManager;
+        this.server = server;
     }
 
+    /**
+     * @param name
+     * @param type
+     * @param properties validated, complete connector properties
+     * @throws Exception
+     * @since 0.6
+     * @see #validateConnectorProperties(Properties)
+     */
     public void addConnector( String name,
-                              String typeName,
+                              ConnectorType type,
                               Properties properties ) throws Exception {
-        // TODO implement
-        this.admin.addConnectorBinding(name, typeName, properties);
-        // this.admin.getConnectorBinding(deployedName) != null
-        // TODO send event ???
-    }
+        ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
+        ArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
+        ArgCheck.isNotNull(properties, "properties"); //$NON-NLS-1$
 
-    public void addListener( IChangeListener listener ) {
-        // TODO implement
+        this.admin.addConnectorBinding(name, type.getName(), properties); // TODO get server guys to return the binding
+        // TODO ask server guys if type needs to also be in properties
+
+        ConnectorBinding binding = this.admin.getConnectorBinding(name);
+        Connector connector = new Connector(binding, type);
+        this.connectorByNameMap.put(name, connector);
+
+        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddConnectorEvent(connector));
     }
 
     /**
@@ -75,6 +92,7 @@ public final class ServerAdmin {
      * @throws Exception
      */
     public ConnectorType getConnectorType( String name ) throws Exception {
+        ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
         initialize();
         return this.connectorTypeByNameMap.get(name);
     }
@@ -82,6 +100,13 @@ public final class ServerAdmin {
     public Collection<ConnectorType> getConnectorTypes() throws Exception {
         initialize();
         return this.connectorTypeByNameMap.values();
+    }
+
+    /**
+     * @return the server who owns this admin object
+     */
+    public Server getServer() {
+        return this.server;
     }
 
     private void initialize() throws Exception {
@@ -108,15 +133,38 @@ public final class ServerAdmin {
         }
     }
 
-    public void removeConnectorType() {
-        // TODO implement
+    public void removeConnector( Connector connector ) throws Exception {
+        this.admin.deleteConnectorBinding(connector.getName());
+        this.connectorByNameMap.remove(connector.getName());
+        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createRemoveConnectorEvent(connector));
     }
 
-    public void removeBinding() {
-        // TODO implement
+    public Exception validateConnectorName( String name ) {
+        // TODO is there other name validation needed (number of chars, chars allowed, ...)
+        if (this.connectorByNameMap.containsKey(name)) {
+            return new Exception("connectorNameAlreadyExists"); // TODO i18n this
+        }
+
+        return null;
     }
 
-    public void removeListener( IChangeListener listener ) {
+    public Exception validateConnectorProperty( PropertyDefinition propDef,
+                                                String value ) {
         // TODO implement
+        return null;
     }
+
+    public void setPropertyValue( Connector connector,
+                                  String propName,
+                                  String value ) throws Exception {
+        String oldValue = connector.getPropertyValue(propName);
+
+        if (oldValue == null) {
+            if (value == null) return;
+        } else if (oldValue.equals(value)) return;
+
+        this.admin.setConnectorBindingProperty(connector.getName(), propName, value);
+        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(connector));
+    }
+
 }

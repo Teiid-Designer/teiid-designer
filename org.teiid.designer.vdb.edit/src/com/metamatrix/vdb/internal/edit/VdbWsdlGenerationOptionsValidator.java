@@ -11,12 +11,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.wsdl.WsdlPackage;
-import com.metamatrix.vdb.edit.VdbContextEditor;
 import com.metamatrix.vdb.edit.VdbEditPlugin;
 import com.metamatrix.vdb.edit.VdbWsdlGenerationOptions;
 import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
@@ -29,11 +27,6 @@ import com.metamatrix.vdb.edit.manifest.WsdlOptions;
 public class VdbWsdlGenerationOptionsValidator {
     
     private VdbEditingContextImpl vdbEditingContextImpl;
-    private VdbContextEditor vdbContextEditor;
-    
-    private final List eResources;
-    private final WsdlOptions wsdlOptions;
-    private final Map eResourceToPath; // Map of Resource to IPath location
     
     /**
      *  
@@ -43,25 +36,6 @@ public class VdbWsdlGenerationOptionsValidator {
     public VdbWsdlGenerationOptionsValidator(VdbEditingContextImpl vdbEditingContextImpl) {
         ArgCheck.isNotNull(vdbEditingContextImpl);
         this.vdbEditingContextImpl = vdbEditingContextImpl;
-        this.vdbContextEditor = null;
-        this.eResources       = null;
-        this.wsdlOptions      = null;
-        this.eResourceToPath  = null;
-    }
-    public VdbWsdlGenerationOptionsValidator( final VdbContextEditor vdbContextEditor, 
-                                              final List eResources, 
-                                              final WsdlOptions wsdlOptions, 
-                                              final Map eResourceToPath ) {
-        ArgCheck.isNotNull(vdbContextEditor);
-        ArgCheck.isNotNull(eResources);
-        ArgCheck.isNotNull(wsdlOptions);
-        ArgCheck.isNotNull(eResourceToPath);
-        this.vdbEditingContextImpl = null;
-        this.vdbContextEditor = vdbContextEditor;
-        
-        this.eResources      = eResources;
-        this.wsdlOptions     = wsdlOptions;
-        this.eResourceToPath = eResourceToPath;
     }
     
     /**
@@ -80,16 +54,8 @@ public class VdbWsdlGenerationOptionsValidator {
      * @since 4.2
      */
     protected void validateVdbWsdlGenerationOptions(List problemMarker, List problems) {
-        
-//      Validate the WSDL generation options ...
-        VdbWsdlGenerationOptions wsdlGenOptions = null;
-        if (this.vdbEditingContextImpl != null) {
-            wsdlGenOptions = this.vdbEditingContextImpl.getVdbWsdlGenerationOptions();
-        } else if (this.eResources != null) {
-            wsdlGenOptions = new WsdlGenerationOptionsHelper(eResources, wsdlOptions, eResourceToPath);
-        } else if (this.vdbContextEditor != null) {
-            wsdlGenOptions = new VdbWsdlGenerationOptionsImpl(this.vdbContextEditor);
-        }
+        VdbWsdlGenerationOptions wsdlGenOptions = this.vdbEditingContextImpl.getVdbWsdlGenerationOptions();
+
         if (wsdlGenOptions.canWsdlBeGenerated()) {
             
             final VirtualDatabase vdb = getVirtualDatabase();
@@ -113,13 +79,7 @@ public class VdbWsdlGenerationOptionsValidator {
     }
     
     private VirtualDatabase getVirtualDatabase() {
-        VirtualDatabase vdb = null;
-        if (this.vdbEditingContextImpl != null) {
-            vdb = this.vdbEditingContextImpl.getVirtualDatabase();
-        } else if (this.vdbContextEditor != null) {
-            vdb = this.vdbContextEditor.getVirtualDatabase();
-        }
-        return vdb;
+        return this.vdbEditingContextImpl.getVirtualDatabase();
     }
     
     /**

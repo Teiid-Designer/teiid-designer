@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -73,9 +73,9 @@ public class BindToConnectorAction extends SortableSelectionAction implements Dq
                         dialog.open();
                         
                         if (dialog.getReturnCode() == Window.OK) {
-                            ConnectorBinding selectedBinding = dialog.getSelectedConnectorBinding();
+                            Connector selectedBinding = dialog.getSelectedConnector();
                             if( selectedBinding != null ) {
-                                //System.out.println("  NewConnectorBindingAction.run() NEW BINDING = " + newBinding.getName());
+                                //System.out.println("  NewConnectorBindingAction.run() ADD BINDING = " + newBinding.getName());
                                 
                                 DqpPlugin.getInstance().getWorkspaceConfig().createSourceBinding(modelResource, selectedBinding);
                             }

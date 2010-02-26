@@ -9,7 +9,7 @@ package com.metamatrix.modeler.dqp.config;
 
 import java.util.Collection;
 import java.util.Map;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.vdb.edit.manifest.ModelReference;
 
@@ -34,7 +34,7 @@ public interface ModelConnectorBindingMapper {
      * @return The connector binding for the model reference
      * @since 4.3
      */
-    ConnectorBinding getConnectorBinding(ModelReference modelReference);
+    Connector getConnector(ModelReference modelReference);
 
     /**
      * Find the connector binding whose properties match the connection properties
@@ -80,7 +80,7 @@ public interface ModelConnectorBindingMapper {
      * @param modelReference The modelReference for a physical model.
      * @since 4.3
      */
-    void setConnectorBinding(ModelReference modelReference, ConnectorBinding binding);
+    void setConnector(ModelReference modelReference, Connector connector);
 
     /**
      * Create a connector binding reading the properties on the modelReference and given the
@@ -89,11 +89,11 @@ public interface ModelConnectorBindingMapper {
      * @param modelReference The modelReference whose JDBC import properties are to be read.
      * @param ConnectorType The type of the connector binding to create
      * @param theName the name the new binding should be called
-     * @return ConnectorBinding The connector binding with properties on the modelReference.
+     * @return the connector  with properties on the modelReference.
      * @since 4.3
      */
-    ConnectorBinding createConnectorBinding(ModelReference modelReference,
-                                            ConnectorType ConnectorType,
-                                            String theName) throws Exception;
+    Connector createConnectorBinding( ModelReference modelReference,
+                                      ConnectorType ConnectorType,
+                                      String theName ) throws Exception;
 
 }

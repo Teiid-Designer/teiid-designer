@@ -32,16 +32,16 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
-import org.teiid.designer.runtime.IServerRegistryListener;
+import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerRegistry;
-import org.teiid.designer.runtime.ServerRegistryEvent;
+import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 /**
  * The <code>ServerView</code> shows all defined servers and their repositories.
  */
-public final class ServerView extends ViewPart implements IServerRegistryListener {
+public final class ServerView extends ViewPart implements IExecutionConfigurationListener {
 
     // ===========================================================================================================================
     // Fields
@@ -195,8 +195,8 @@ public final class ServerView extends ViewPart implements IServerRegistryListene
         setTitleToolTip(UTIL.getString("serverViewToolTip.text()"));
 
         // register to receive changes to the server registry
-        getServerManager().addRegistryListener(this);
-        getServerManager().addRegistryListener(this.provider);
+        getServerManager().addListener(this);
+        getServerManager().addListener(this.provider);
 
         // register with the help system
         IWorkbenchHelpSystem helpSystem = DqpUiPlugin.getDefault().getWorkbench().getHelpSystem();
@@ -210,10 +210,10 @@ public final class ServerView extends ViewPart implements IServerRegistryListene
      */
     @Override
     public void dispose() {
-        getServerManager().removeRegistryListener(this);
+        getServerManager().removeListener(this);
 
         if (this.provider != null) {
-            getServerManager().removeRegistryListener(this.provider);
+            getServerManager().removeListener(this.provider);
         }
 
         super.dispose();
@@ -226,7 +226,7 @@ public final class ServerView extends ViewPart implements IServerRegistryListene
     /**
      * @return the server manager being used by this view
      */
-    private ServerRegistry getServerManager() {
+    private ServerManager getServerManager() {
         return Activator.getDefault().getServerManager();
     }
 
@@ -284,10 +284,10 @@ public final class ServerView extends ViewPart implements IServerRegistryListene
     /**
      * {@inheritDoc}
      *
-     * @see org.teiid.designer.runtime.IServerRegistryListener#serverRegistryChanged(org.teiid.designer.runtime.ServerRegistryEvent)
+     * @see org.teiid.designer.runtime.IExecutionConfigurationListener#configurationChanged(org.teiid.designer.runtime.ExecutionConfigurationEvent)
      */
     @Override
-    public Exception[] serverRegistryChanged( ServerRegistryEvent event ) {
+    public Exception[] configurationChanged( ExecutionConfigurationEvent event ) {
         if (event.isNew() || event.isUpdate()) {
             this.viewer.refresh();
         } else {

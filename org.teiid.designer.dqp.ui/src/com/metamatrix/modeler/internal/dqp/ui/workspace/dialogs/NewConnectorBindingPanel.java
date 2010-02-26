@@ -44,8 +44,9 @@ import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetSorter;
 import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.ServerAdmin;
+import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
@@ -85,11 +86,11 @@ public class NewConnectorBindingPanel extends Composite
 
     private ConnectorBindingPropertySourceProvider sourceProvider;
 
-    private ConnectorBinding connectorBinding;
+    private Connector connectorBinding;
 
-    private final ServerAdmin admin;
+    private final ExecutionAdmin admin;
 
-    public NewConnectorBindingPanel( Composite theParent, ServerAdmin admin ) throws IllegalStateException {
+    public NewConnectorBindingPanel( Composite theParent, ExecutionAdmin admin ) throws IllegalStateException {
         super(theParent, SWT.NONE);
 
         this.changeListeners = new ListenerList(ListenerList.IDENTITY);
@@ -293,7 +294,7 @@ public class NewConnectorBindingPanel extends Composite
         fireChangeEvent();
     }
 
-    public ConnectorBinding getConnectorBinding() {
+    public Connector getConnector() {
         return this.connectorBinding;
     }
     
@@ -302,13 +303,13 @@ public class NewConnectorBindingPanel extends Composite
         return null;
     }
     
-    private void createConnectorBinding() {
+    private void createConnector() {
         // bindings must have a type
         // TODO can't actually create a binding here because user can cancel out of dialog
         if (this.currentType != null) {
             try {
-                this.admin.addConnectorBinding(getNewBindingName(), this.currentType.getName(), getProperties());
-                this.connectorBinding = this.admin.getConnectorBinding(getNewBindingName());
+                this.admin.addConnector(getNewBindingName(), this.currentType, getProperties());
+                this.connectorBinding = this.admin.getConnector(getNewBindingName());
 	        } catch (Exception theException) {
 	            DqpUiConstants.UTIL.log(theException);
 	            theException.printStackTrace();
@@ -331,7 +332,7 @@ public class NewConnectorBindingPanel extends Composite
         }
 
         // If Component Type is changed, we need to create a new binding
-        createConnectorBinding();
+        createConnector();
 
         refreshPropertyPage();
 
@@ -362,7 +363,7 @@ public class NewConnectorBindingPanel extends Composite
     }
 
     private void loadConnectorTypes() {
-        this.componentTypes = ModelerDqpUtils.getConnectorTypes();
+        this.componentTypes = this.admin.getConnectorTypes();
         this.sortedTypes = new ArrayList(new TreeSet(this.componentTypes.keySet()));
 
         // see if currentType is in new list of types
@@ -470,7 +471,7 @@ public class NewConnectorBindingPanel extends Composite
     public void save() {
     	// Copy the connector binding so we get the new name
     	try {
-            this.admin.addConnectorBinding(getNewBindingName(), this.currentType.getName(), getProperties());
+            this.admin.addConnector(getNewBindingName(), this.currentType, getProperties());
 		} catch (Exception theException) {
 			DqpUiConstants.UTIL.log(theException);
            

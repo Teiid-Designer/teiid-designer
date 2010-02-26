@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package com.metamatrix.modeler.dqp.internal.workspace;
+package org.teiid.designer.runtime;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,13 +27,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
-import org.teiid.designer.runtime.Connector;
-import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.refactor.IRefactorResourceListener;
 import com.metamatrix.modeler.core.refactor.RefactorResourceEvent;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -41,37 +37,36 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceNotification;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceNotificationListener;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
-import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
+import com.metamatrix.modeler.dqp.internal.workspace.BasicWorkspaceDefn;
+import com.metamatrix.modeler.dqp.internal.workspace.SourceModelInfo;
+import com.metamatrix.modeler.dqp.internal.workspace.WorkspaceDefnReaderWriter;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 
 /**
- * This class is designed to manage a WorkspaceBindings.def file containing all workspace model-to-connector bindings. This file
+ * This class is designed to manage a SourceBindings.xml file containing all workspace model-to-connector bindings. This file
  * resides in the runtime workspace's .metadata/.plugins/com.metamatrix.modeler.dqp/workspaceConfig directory. If the workspace is
- * deleted (i.e. .metadata directory), the bindings will have to be re-created. Connector Bindings (i.e. Connectors) and Connector
- * Types are still managed by <code>ConfigurationManager</code> via a configuration.xml file.
+ * deleted (i.e. .metadata directory), the bindings will have to be re-created. Connectors and Connector Types are managed by the
+ * <code>ExecutionManager</code>s.
  * 
  * @since 5.0
  */
-public class WorkspaceConfigurationManager
-    implements IChangeNotifier, IChangeListener, IResourceChangeListener, IRefactorResourceListener {
+public class SourceBindingsManager
+    implements IChangeNotifier, IExecutionConfigurationListener, IResourceChangeListener, IRefactorResourceListener {
 
     private Collection listenerList;
 
-    private File defnFile;
-
-    private BasicWorkspaceDefn workspaceDefn;
+    private final File defnFile;
 
     private Properties headerProps;
 
-    private ExecutionAdmin executionAdmin;
+    private final ServerManager serverManager;
+    
+    private BasicWorkspaceDefn workspaceDefn;
 
     private WorkspaceDefnReaderWriter defReaderWriter = new WorkspaceDefnReaderWriter();
-
-    private BasicConfigurationObjectEditor editor = new BasicConfigurationObjectEditor(false);
 
     /**
      * Constructor initialized with a File representing the WorkspaceBindings.def
@@ -79,11 +74,12 @@ public class WorkspaceConfigurationManager
      * @param defnFile
      * @since 5.0
      */
-    public WorkspaceConfigurationManager( File defnFile ) {
+    public SourceBindingsManager( ServerManager serverManager,
+                                  File defnFile ) {
         this.defnFile = defnFile;
         this.headerProps = new Properties();
-        listenerList = new ArrayList(1);
-        this.executionAdmin.addChangeListener(this);
+        this.listenerList = new ArrayList(1);
+        this.serverManager = serverManager;
 
         WorkspaceNotificationListener listener = new WorkspaceNotificationListener();
         ModelWorkspaceManager.getModelWorkspaceManager().addNotificationListener(listener);
@@ -91,68 +87,40 @@ public class WorkspaceConfigurationManager
     }
 
     /**
-     * Returns the BasicWorkspacDefn instance which acts as the model for the WorkspaceBindings.def file.
-     * 
-     * @return
-     * @since 5.0
+     * @see com.metamatrix.core.event.IChangeNotifier#addChangeListener(com.metamatrix.core.event.IChangeListener)
+     * @since 4.3
      */
-    public BasicWorkspaceDefn getWorkspaceDefn() {
-        if (this.workspaceDefn == null) {
-            workspaceDefn = new BasicWorkspaceDefn();
-        }
-        return this.workspaceDefn;
-    }
-
-    /**
-     * Saves the WorkspaceBindings.def file.
-     * 
-     * @throws IOException
-     * @throws Exception
-     * @since 5.0
-     */
-    public void save() throws IOException, Exception {
-        defReaderWriter.write(new FileOutputStream(this.defnFile), getWorkspaceDefn(), headerProps);
-    }
-
-    private void internalSave() {
-        try {
-            save();
-        } catch (IOException theException) {
-            DqpPlugin.Util.log(IStatus.ERROR, theException.getMessage());
-        } catch (Exception theException) {
-            DqpPlugin.Util.log(IStatus.ERROR, theException.getMessage());
+    public void addChangeListener( IChangeListener theListener ) {
+        if (!listenerList.contains(theListener)) {
+            this.listenerList.add(theListener);
         }
     }
 
     /**
-     * Loads the WorkspaceBindings.def file
-     * 
-     * @throws IOException
-     * @throws Exception
-     * @since 5.0
-     */
-    public void load() throws IOException, Exception {
-        if (this.defnFile.exists() && this.defnFile.length() > 0) {
-            workspaceDefn = defReaderWriter.read(new FileInputStream(this.defnFile));
-        }
-
-        if (workspaceDefn != null) {
-
-        }
-    }
-
-    /**
-     * Helper method to determine if a model is mapped to a source. Basically it checks if the WorkspaceBindings.def file contains
-     * a source binding to the input <code>ModelResource</code>
+     * Creates a new <code>SourceModelInfo</code> object, adds the input connector binding to the object and sets the UUID and
+     * Path properties to the values from the <code>ModelResource</code>.
      * 
      * @param modelResource
-     * @return
+     * @param binding
      * @since 5.0
      */
-    public boolean modelIsMappedToSource( ModelResource modelResource ) {
-        ModelInfo modelInfo = getWorkspaceDefn().getModel(modelResource.getItemName());
+    public void createSourceBinding( ModelResource modelResource,
+                                     Connector connector ) {
+        SourceModelInfo modelInfo = new SourceModelInfo(modelResource.getItemName());
+        modelInfo.addConnector(connector);
 
-        return modelInfo != null;
+        try {
+            modelInfo.setUuid(modelResource.getUuid());
+            modelInfo.setContainerPath(modelResource.getParent().getPath().makeRelative().toString());
+        } catch (ModelWorkspaceException theException) {
+            DqpPlugin.Util.log(IStatus.ERROR, theException.getMessage());
+        }
+
+        getWorkspaceDefn().addModelInfo(modelInfo);
+
+        fireChangeEvent();
+
+        save();
     }
 
     /**
@@ -162,7 +130,7 @@ public class WorkspaceConfigurationManager
      * @return
      * @since 5.0
      */
-    public Collection<Connector> getBindingsForModel( String modelName ) {
+    public Collection<Connector> getConnectorsForModel( String modelName ) {
         Collection<Connector> connectors = Collections.emptyList();
         ModelInfo modelInfo = getWorkspaceDefn().getModel(modelName);
 
@@ -175,22 +143,13 @@ public class WorkspaceConfigurationManager
             for (int i = 0; i < names.length; i++) {
                 name = (String)names[i];
                 connector = this.executionAdmin.getConnector(name);
-                
+
                 if (connector != null) {
                     connectors.add(connector);
                 }
             }
         }
         return connectors;
-    }
-
-    /**
-     * @param modelName
-     * @return
-     * @since 5.0
-     */
-    public SourceModelInfo getSourceModelInfo( String modelName ) {
-        return (SourceModelInfo)getWorkspaceDefn().getModel(modelName);
     }
 
     /**
@@ -220,30 +179,64 @@ public class WorkspaceConfigurationManager
         return null;
     }
 
+    public Collection<SourceModelInfo> getModelsForConnector( Connector connector ) {
+        return getWorkspaceDefn().getModelsForConnector(connector);
+    }
+
     /**
-     * Creates a new <code>SourceModelInfo</code> object, adds the input connector binding to the object and sets the UUID and
-     * Path properties to the values from the <code>ModelResource</code>.
-     * 
-     * @param modelResource
-     * @param binding
+     * @param modelName
+     * @return
      * @since 5.0
      */
-    public void createSourceBinding( ModelResource modelResource,
-                                     Connector binding ) {
-        SourceModelInfo modelInfo = new SourceModelInfo(modelResource.getItemName());
-        modelInfo.addConnectorBindingByName(binding.getName());
-        try {
-            modelInfo.setUuid(modelResource.getUuid());
-            modelInfo.setContainerPath(modelResource.getParent().getPath().makeRelative().toString());
-        } catch (ModelWorkspaceException theException) {
-            DqpPlugin.Util.log(IStatus.ERROR, theException.getMessage());
+    public SourceModelInfo getSourceModelInfo( String modelName ) {
+        return (SourceModelInfo)getWorkspaceDefn().getModel(modelName);
+    }
+
+    /**
+     * Returns the BasicWorkspacDefn instance which acts as the model for the WorkspaceBindings.def file.
+     * 
+     * @return
+     * @since 5.0
+     */
+    public BasicWorkspaceDefn getWorkspaceDefn() {
+        if (this.workspaceDefn == null) {
+            workspaceDefn = new BasicWorkspaceDefn();
         }
+        return this.workspaceDefn;
+    }
 
-        getWorkspaceDefn().addModelInfo(modelInfo);
+    /**
+     * Loads the WorkspaceBindings.def file
+     * 
+     * @throws IOException
+     * @throws Exception
+     * @since 5.0
+     */
+    public void load() throws IOException, Exception {
+        if (this.defnFile.exists() && this.defnFile.length() > 0) {
+            workspaceDefn = defReaderWriter.read(new FileInputStream(this.defnFile));
+        }
+    }
 
-        fireChangeEvent();
+    /**
+     * Helper method to determine if a model is mapped to a source. Basically it checks if the WorkspaceBindings.def file contains
+     * a source binding to the input <code>ModelResource</code>
+     * 
+     * @param modelResource
+     * @return
+     * @since 5.0
+     */
+    public boolean modelIsMappedToSource( ModelResource modelResource ) {
+        ModelInfo modelInfo = getWorkspaceDefn().getModel(modelResource.getItemName());
+        return modelInfo != null;
+    }
 
-        internalSave();
+    /**
+     * @see com.metamatrix.core.event.IChangeNotifier#removeChangeListener(com.metamatrix.core.event.IChangeListener)
+     * @since 4.3
+     */
+    public void removeChangeListener( IChangeListener theListener ) {
+        this.listenerList.remove(theListener);
     }
 
     /**
@@ -254,7 +247,6 @@ public class WorkspaceConfigurationManager
      */
     public void removeSourceBinding( ModelResource modelResource ) {
         String modelName = modelResource.getItemName();
-
         removeSourceBinding(modelName);
     }
 
@@ -265,12 +257,9 @@ public class WorkspaceConfigurationManager
      * @since 5.0
      */
     public void removeSourceBinding( String modelName ) {
-
         getWorkspaceDefn().removeModelInfo(modelName);
-
         fireChangeEvent();
-
-        internalSave();
+        save();
     }
 
     /**
@@ -280,7 +269,6 @@ public class WorkspaceConfigurationManager
      * @since 5.0
      */
     public void removeSourceBinding( ModelInfo modelInfo ) {
-
         removeSourceBinding(modelInfo.getName());
     }
 
@@ -311,66 +299,9 @@ public class WorkspaceConfigurationManager
      * @since 5.0
      */
     public void removeSourceBindingForProject( String projectName ) {
-
         getWorkspaceDefn().removeModelInfosForProject(projectName);
-
         fireChangeEvent();
-
-        internalSave();
-    }
-
-    /**
-     * Creates a copy of an input connector binding and sets the name to the newName provided.
-     * 
-     * @param binding
-     * @param newName
-     * @param addBindingToConfig
-     * @return
-     * @throws CloneNotSupportedException
-     * @since 5.0
-     */
-    public Connector cloneConnector( Connector connector,
-                                     String newName ) throws Exception {
-        Connector newBinding = editor.createConnectorComponent(Configuration.NEXT_STARTUP_ID, connector, newName, null);
-
-        if (newBinding != null) {
-            this.executionAdmin.addBinding(newBinding);
-        }
-
-        return newBinding;
-    }
-
-    /**
-     * Utility method to return a collection of connector bindings from the <code>ConfigurationManager</code>
-     * 
-     * @return
-     * @since 5.0
-     */
-    public Collection getConnectorBindings() {
-        return this.executionAdmin.getConnectors();
-    }
-
-    public Collection getModelsForBinding( String connectorBindingName ) {
-        return getWorkspaceDefn().getModelsForBinding(connectorBindingName);
-    }
-
-    /**
-     * @see com.metamatrix.core.event.IChangeNotifier#addChangeListener(com.metamatrix.core.event.IChangeListener)
-     * @since 4.3
-     */
-    public void addChangeListener( IChangeListener theListener ) {
-
-        if (listenerList.contains(theListener)) return;
-
-        listenerList.add(theListener);
-    }
-
-    /**
-     * @see com.metamatrix.core.event.IChangeNotifier#removeChangeListener(com.metamatrix.core.event.IChangeListener)
-     * @since 4.3
-     */
-    public void removeChangeListener( IChangeListener theListener ) {
-        listenerList.remove(theListener);
+        save();
     }
 
     /*
@@ -410,187 +341,67 @@ public class WorkspaceConfigurationManager
             fireChangeEvent();
         }
 
-        internalSave();
+        save();
+    }
+
+    private void save() {
+        try {
+            defReaderWriter.write(new FileOutputStream(this.defnFile), getWorkspaceDefn(), headerProps);
+        } catch (IOException theException) {
+            DqpPlugin.Util.log(IStatus.ERROR, theException.getMessage());
+        } catch (Exception theException) {
+            DqpPlugin.Util.log(IStatus.ERROR, theException.getMessage());
+        }
     }
 
     /**
      * @since 4.3
      */
     protected void fireChangeEvent() {
-        if (listenerList == null || listenerList.isEmpty()) return;
-
-        for (Iterator it = listenerList.iterator(); it.hasNext();) {
-            IChangeListener listener = (IChangeListener)it.next();
-            listener.stateChanged(this);
+        if (!this.listenerList.isEmpty()) {
+            for (Iterator it = listenerList.iterator(); it.hasNext();) {
+                IChangeListener listener = (IChangeListener)it.next();
+                listener.stateChanged(this);
+            }
         }
     }
 
     /**
-     * Should be wired to listen for ConfigurationManager changed events. This method checks all current source bindings (i.e.
-     * SourceModelInfo's), gets any binding names and verifies they still exist in the ConfigurationManager. If not, then these
-     * source bindings are removed also.
+     * {@inheritDoc}
      * 
-     * @param theSource
-     * @since 5.0
+     * @see org.teiid.designer.runtime.IExecutionConfigurationListener#configurationChanged(org.teiid.designer.runtime.ExecutionConfigurationEvent)
      */
-    public void stateChanged( IChangeNotifier theSource ) {
+    @Override
+    public void configurationChanged( ExecutionConfigurationEvent event ) {
         // Need to check all source bindings and remove any "stale" ones. Basicaly
-        if (theSource == this.executionAdmin) {
-            // Need to check if any connector bindings have been removed.
-            Collection staleModelInfos = new ArrayList();
-            Collection allModelInfos = new ArrayList(workspaceDefn.getModels());
+        // Need to check if any connector bindings have been removed.
+        Collection staleModelInfos = new ArrayList();
 
-            for (Iterator iter = allModelInfos.iterator(); iter.hasNext();) {
-                SourceModelInfo nextModelInfo = (SourceModelInfo)iter.next();
-                Collection bindingNames = nextModelInfo.getConnectorBindingNames();
-                if (!allBindingsExist(bindingNames)) {
-                    staleModelInfos.add(nextModelInfo);
-                }
-            }
+        for (SourceModelInfo nextModelInfo : workspaceDefn.getModels()) {
+            Collection<Connector> connectors = nextModelInfo.getConnectors();
 
-            if (!staleModelInfos.isEmpty()) {
-                removeSourceBindings(staleModelInfos);
+            if (!allBindingsExist(connectors)) {
+                staleModelInfos.add(nextModelInfo);
             }
+        }
+
+        if (!staleModelInfos.isEmpty()) {
+            removeSourceBindings(staleModelInfos);
         }
     }
 
     /*
      * Helper method that checks if a collection os binding names still exist in the ConfigurationManager
      */
-    private boolean allBindingsExist( Collection bindingNames ) {
-        for (Iterator iter = bindingNames.iterator(); iter.hasNext();) {
-            String nextName = (String)iter.next();
+    private boolean allBindingsExist( Collection<Connector> connectors ) {
+        // TODO if server is down but we have a source binding we don't want to remove binding
+        // TODO do we need an OfflineConnector class???
+        for (Connector connector : connectors) {
             if (this.executionAdmin.getBinding(nextName) == null) {
                 return false;
             }
         }
         return true;
-    }
-
-    /**
-     * @param modelName the model name being used to create the binding name
-     * @return the unique binding name
-     * @since 5.5.3
-     */
-    public String createConnectorBindingName( String modelName ) {
-        String newBindingName = ModelerDqpUtils.createNewBindingName(modelName);
-        WorkspaceConfigurationManager wsConfigMgr = DqpPlugin.getInstance().getWorkspaceConfig();
-
-        if (!wsConfigMgr.isUniqueBindingName(newBindingName)) {
-            StringBuffer temp = new StringBuffer(newBindingName);
-
-            int i = 0;
-            temp.append(i);
-
-            while (!wsConfigMgr.isUniqueBindingName(temp.toString())) {
-                // remove the last index from the name
-                temp.setLength(temp.length() - Integer.toString(i).length());
-
-                // add the next index to the name
-                ++i;
-                temp.append(i);
-            }
-
-            newBindingName = temp.toString();
-        }
-
-        return newBindingName.toString();
-    }
-
-    public Collection<ConnectorType> findMatchingConnectorTypes( JdbcSource jdbcSource,
-                                                                               boolean useDefaultConnectorType ) {
-        Collection<ConnectorType> matches = new ArrayList<ConnectorType>();
-
-        for (Iterator itr = this.executionAdmin.getConnectorTypes().iterator(); itr.hasNext();) {
-            ConnectorType bindingType = (ConnectorType)itr.next();
-            Properties connectorTypeProps = bindingType.getDefaultPropertyValues();
-            String driverClassName = connectorTypeProps.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
-
-            if (StringUtil.isEmpty(driverClassName)) {
-                continue;
-            }
-
-            if (StringUtil.isEmpty(jdbcSource.getDriverClass()) || !driverClassName.equalsIgnoreCase(jdbcSource.getDriverClass())) {
-                continue;
-            }
-
-            matches.add(bindingType);
-        }
-        if (matches.isEmpty() && useDefaultConnectorType) {
-            ConnectorType bindingType = getDefaultJdbcConnectorType();
-            if (bindingType != null) {
-                matches.add(bindingType);
-            }
-
-        }
-
-        return matches;
-    }
-
-    private ConnectorType getDefaultJdbcConnectorType() {
-        for (Iterator itr = this.executionAdmin.getConnectorTypes().iterator(); itr.hasNext();) {
-            ConnectorType bindingType = (ConnectorType)itr.next();
-            Properties connectorTypeProps = bindingType.getDefaultPropertyValues();
-            String driverClassName = connectorTypeProps.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
-
-            if (StringUtil.isEmpty(driverClassName)
-                && bindingType.getName().equalsIgnoreCase(JDBCConnectionPropertyNames.DEFAULT_JDBC_CONNECTOR_NAME)) {
-                return bindingType;
-            }
-        }
-        return null;
-    }
-
-    public Collection<Connector> findMatchingConnectors( JdbcSource jdbcSource ) {
-        Collection<Connector> matches = new ArrayList<Connector>();
-
-        for (Iterator itr = getConnectorBindings().iterator(); itr.hasNext();) {
-            Connector binding = (Connector)itr.next();
-            ConnectorType bindingType = (ConnectorType)this.executionAdmin.getComponentType(binding);
-            Properties connectorTypeProps = bindingType.getDefaultPropertyValues();
-            String driverClassName = connectorTypeProps.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
-            String url = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
-            String user = binding.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
-
-            if (StringUtil.isEmpty(driverClassName) || StringUtil.isEmpty(url)) {
-                continue;
-            }
-
-            // check driver class
-            if (StringUtil.isEmpty(jdbcSource.getDriverClass()) || !driverClassName.equals(jdbcSource.getDriverClass())) {
-                continue;
-            }
-
-            // check url
-            if (StringUtil.isEmpty(jdbcSource.getUrl()) || !url.equalsIgnoreCase(jdbcSource.getUrl())) {
-                continue;
-            }
-
-            // check user
-            String userName = jdbcSource.getUsername();
-            if ((StringUtil.isEmpty(userName) && !StringUtil.isEmpty(user))
-                || (!StringUtil.isEmpty(userName) && StringUtil.isEmpty(user))
-                || ((!StringUtil.isEmpty(userName) && !StringUtil.isEmpty(user)) && !user.equalsIgnoreCase(userName))) {
-                continue;
-            }
-
-            matches.add(binding);
-        }
-
-        return matches;
-    }
-
-    /**
-     * @param proposedName the name being checked
-     * @return <code>true</code> if a binding by that name does not currently exist in the workspace
-     * @since 5.5.3
-     */
-    public boolean isUniqueBindingName( String proposedName ) {
-        return (this.executionAdmin.getConnector(proposedName) == null);
-    }
-
-    public ExecutionAdmin getConfigurationManager() {
-        return this.executionAdmin;
     }
 
     // ==================================================================================
@@ -641,11 +452,11 @@ public class WorkspaceConfigurationManager
 
         if (resource != null) {
             if (ResourceChangeUtilities.isPreDelete(theEvent)) {
-
                 if (resource instanceof IProject) { // if Project, then delete all contained model's source bindings
                     removeSourceBindingForProject(resource.getName());
                 } else { // if Model, then only do model's source binding
                     String nm = resource.getName();
+
                     if (nm != null) {
                         removeSourceBinding(nm);
                     }
@@ -730,4 +541,5 @@ public class WorkspaceConfigurationManager
 
         }
     }
+
 }

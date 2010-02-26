@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerRegistry;
+import org.teiid.designer.runtime.ServerManager;
 
 /**
  * The <code>ReconnectJob</code> attempts to reconnect to the selected {@link Server server(s)}.
@@ -64,7 +64,7 @@ public final class ReconnectJob extends Job {
     @Override
     protected IStatus run( IProgressMonitor monitor ) {
         IStatus result = null;
-        ServerRegistry serverManager = Activator.getDefault().getServerManager();
+        ServerManager serverManager = Activator.getDefault().getServerManager();
 
         try {
             String taskName = UTIL.getString("reconnectJobTaskName.text(this.server.getShortDescription())");

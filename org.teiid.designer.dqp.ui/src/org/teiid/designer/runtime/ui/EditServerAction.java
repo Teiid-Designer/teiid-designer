@@ -13,7 +13,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerRegistry;
+import org.teiid.designer.runtime.ServerManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 /**
@@ -33,7 +33,7 @@ public final class EditServerAction extends BaseSelectionListenerAction {
     /**
      * The server manager used to create and edit servers.
      */
-    private final ServerRegistry serverManager;
+    private final ServerManager serverManager;
 
     /**
      * The shell used to display the dialog that edits and creates servers.
@@ -49,7 +49,7 @@ public final class EditServerAction extends BaseSelectionListenerAction {
      * @param serverManager the server manager to use when creating and editing servers
      */
     public EditServerAction( Shell shell,
-                             ServerRegistry serverManager ) {
+                             ServerManager serverManager ) {
         super(UTIL.getString("editServerActionText.text()"));
         setToolTipText(UTIL.getString("editServerActionToolTip.text()"));
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(EDIT_SERVER_IMAGE));
