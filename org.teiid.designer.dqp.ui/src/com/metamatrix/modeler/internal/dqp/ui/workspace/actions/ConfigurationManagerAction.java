@@ -14,6 +14,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.teiid.designer.runtime.Connector;
+import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.SourceBindingsManager;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -25,21 +27,18 @@ import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
  */
 public abstract class ConfigurationManagerAction extends Action implements ISelectionChangedListener {
 
-    private static ExecutionAdmin admin;
     private static SourceBindingsManager sourceBindingsManager;
+
+    /**
+     * Set based on the connector(s), connector type(s) that are selected.
+     */
+    private ExecutionAdmin admin;
 
     /** The current selection or <code>null</code>. */
     private ISelection selection;
 
     /** The current event or <code>null</code> if last event was a workbench selection. */
     private SelectionChangedEvent selectionEvent;
-
-    /**
-     * @since 5.0
-     */
-    public ConfigurationManagerAction() {
-        super();
-    }
 
     /**
      * @param theText
@@ -49,30 +48,7 @@ public abstract class ConfigurationManagerAction extends Action implements ISele
         super(theText);
     }
 
-    /**
-     * @param theText
-     * @param theImage
-     * @since 5.0
-     */
-    public ConfigurationManagerAction( String theText,
-                                       ImageDescriptor theImage ) {
-        super(theText, theImage);
-    }
-
-    /**
-     * @param theText
-     * @param theStyle
-     * @since 5.0
-     */
-    public ConfigurationManagerAction( String theText,
-                                       int theStyle ) {
-        super(theText, theStyle);
-    }
-
-    public ExecutionAdmin getAdmin() {
-        if (this.admin == null) {
-            this.admin = DqpPlugin.getInstance().getServerAdmin();
-        }
+    protected ExecutionAdmin getAdmin() {
         return this.admin;
     }
 
@@ -82,13 +58,6 @@ public abstract class ConfigurationManagerAction extends Action implements ISele
      * @since 5.0
      */
     public void save() {
-        if (admin != null) {
-            try {
-                admin.saveConfig();
-            } catch (Exception theException) {
-                DqpUiConstants.UTIL.log(IStatus.ERROR, theException.getMessage());
-            }
-        }
         if (sourceBindingsManager != null) {
             try {
                 sourceBindingsManager.save();
@@ -106,9 +75,46 @@ public abstract class ConfigurationManagerAction extends Action implements ISele
     }
 
     public void selectionChanged( SelectionChangedEvent theEvent ) {
-        selection = theEvent.getSelection();
-        selectionEvent = theEvent;
-        setEnablement();
+        this.admin = null;
+        this.selection = theEvent.getSelection();
+        this.selectionEvent = theEvent;
+        List selectedObjects = getSelectedObjects();
+
+        if (!selectedObjects.isEmpty()) {
+            ExecutionAdmin newAdmin = null;
+            ExecutionAdmin tempAdmin = null;
+
+            for (Object obj : selectedObjects) {
+                if (obj instanceof ConnectorType) {
+                    tempAdmin = ((ConnectorType)obj).getAdmin();
+                } else if (obj instanceof Connector) {
+                    tempAdmin = ((Connector)obj).getType().getAdmin();
+                } else {
+                    newAdmin = null;
+                    break;
+                }
+
+                assert (tempAdmin != null);
+                
+                if (newAdmin == null) {
+                    newAdmin = tempAdmin;
+                } else if (!newAdmin.equals(tempAdmin)) {
+                    newAdmin = null;
+                    break;
+                }
+            }
+
+            if (newAdmin == null) {
+                // disable if no admin set
+                setEnabled(false);
+            } else {
+                // if we have an admin let the subclass decide enablement
+                this.admin = newAdmin;
+                setEnablement();
+            }
+        }
+
+        
     }
 
     abstract protected void setEnablement();

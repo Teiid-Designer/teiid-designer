@@ -15,6 +15,7 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.NewConnectorBindingDialog;
+import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
 
 /**
@@ -39,22 +40,15 @@ public class NewConnectorBindingAction extends ConfigurationManagerAction {
      */
     @Override
     public void run() {
-        // System.out.println("  NewConnectorBindingAction.run() ====>>> ");
-        // Get Selection
-
         Object selectedObject = getSelectedObject();
-
-        // TODO This dialog can be instantiated with either a selection or NOT. If a selection, then either a server is selected
-        // or a ConnectorType or Connector. In all three cases, the Admin object is available.
-        // BUT IF NO SELECTION, then how do we get the admin object if user hasn't specified one yet (i.e. server)
-        // So do we need to have a new "first page" where users selects 1) Server 2) ConnectorType
-        // OR something else entirely?
         ExecutionAdmin admin = null;
+
         if (selectedObject instanceof ConnectorType) {
             admin = ((ConnectorType)selectedObject).getAdmin();
         } else {
             admin = ((Connector)selectedObject).getType().getAdmin();
         }
+        
         NewConnectorBindingDialog dialog = new NewConnectorBindingDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(), admin);
 
         if (selectedObject instanceof ConnectorType) {
@@ -62,12 +56,12 @@ public class NewConnectorBindingAction extends ConfigurationManagerAction {
         } else {
             dialog.setConnectorType(((Connector)selectedObject).getType());
         }
+
         dialog.open();
 
         if (dialog.getReturnCode() == Window.OK) {
-            // NOTE: the result of this call is a clone of the dialog's connector binding and the addition of the binding to
-            // the Configuration Manager
-            dialog.getNewConnector();
+            Connector newConnector = dialog.getNewConnector();
+            admin.addConnector(newConnector.getName(), newConnector.getType(), dialog.getProperties());
         }
     }
 
@@ -78,9 +72,11 @@ public class NewConnectorBindingAction extends ConfigurationManagerAction {
     @Override
     protected void setEnablement() {
         boolean result = false;
-        if (!isMultiSelection() && !isEmptySelection()) {
-            Object selectedObject = getSelectedObject();
+
+        if (SelectionUtilities.isSingleSelection(getSelection())) {
             result = false;
+            Object selectedObject = getSelectedObject();
+
             if (selectedObject instanceof Connector || selectedObject instanceof ConnectorType) {
                 result = true;
             }

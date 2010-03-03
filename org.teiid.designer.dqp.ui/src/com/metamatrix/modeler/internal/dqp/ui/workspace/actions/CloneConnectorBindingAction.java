@@ -20,7 +20,7 @@ import com.metamatrix.ui.internal.util.UiUtil;
 /**
  * @since 5.0
  */
-public class CloneConnectorBindingAction extends ConfigurationManagerAction {
+public final class CloneConnectorBindingAction extends ConfigurationManagerAction {
 
     /**
      * @since 5.0
@@ -35,16 +35,14 @@ public class CloneConnectorBindingAction extends ConfigurationManagerAction {
      */
     @Override
     public void run() {
-        // System.out.println("  CloneConnectorBindingAction.run()   ====>>> ");
-        // Get Selection
-        Connector theBinding = (Connector)getSelectedObject();
+        Connector connector = (Connector)getSelectedObject();
 
-        if (theBinding != null) {
+        if (connector != null) {
             try {
-                theBinding = DqpPlugin.getInstance().getWorkspaceConfig().cloneConnector(theBinding,
-                                                                                         generateUniqueBindingName(theBinding.getName()));
+                String clonedConnectorName = getAdmin().ensureUniqueConnectorName(connector.getName());
+                connector = getAdmin().cloneConnector(connector, clonedConnectorName);
                 CloneConnectorBindingDialog dialog = new CloneConnectorBindingDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(),
-                                                                                     theBinding) {
+                                                                                     connector) {
 
                     /**
                      * @see com.metamatrix.ui.internal.widget.ExtendedTitleAreaDialog#close()
@@ -78,25 +76,6 @@ public class CloneConnectorBindingAction extends ConfigurationManagerAction {
                 }, false);
             }
         }
-    }
-
-    private String generateUniqueBindingName( String originalName ) {
-        String proposedName = originalName;
-
-        boolean validName = false;
-        int iVersion = 1;
-
-        while (!validName) {
-
-            if (!ModelerDqpUtils.isUniqueBindingName(proposedName)) {
-                proposedName = originalName + "_" + iVersion; //$NON-NLS-1$
-                iVersion++;
-            } else {
-                validName = true;
-            }
-        }
-
-        return proposedName;
     }
 
     /**

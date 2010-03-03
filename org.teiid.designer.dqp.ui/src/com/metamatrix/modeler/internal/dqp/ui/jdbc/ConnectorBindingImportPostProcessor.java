@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -121,7 +122,7 @@ public class ConnectorBindingImportPostProcessor implements DqpUiConstants, IJdb
 
         // create the binding if we have a type
         if (bindingType != null) {
-            return DqpPlugin.getInstance().getAdmin().createConnector(bindingType, bindingName, false);
+            return bindingType.getAdmin().addConnector(bindingName, bindingType, false);
         }
 
         // no type found or selected by user so a binding could not be created
@@ -197,45 +198,26 @@ public class ConnectorBindingImportPostProcessor implements DqpUiConstants, IJdb
     private Collection<Exception> setConnectorProperties( Connector newConnector,
                                                           IJdbcImportInfoProvider infoProvider ) {
         Collection<Exception> errors = new ArrayList<Exception>();
+        ExecutionAdmin admin = newConnector.getType().getAdmin();
         JdbcSource jdbcSource = infoProvider.getSource();
-        Exception[] temp;
 
         // set URL
         try {
-            temp = ModelerDqpUtils.setPropertyValue(newConnector,
-                                                    JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL,
-                                                    jdbcSource.getUrl());
-
-            // include any errors
-            if (!ArrayUtil.isNullOrEmpty(temp)) {
-                errors.addAll(Arrays.asList(temp));
-            }
+            admin.setPropertyValue(newConnector, JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL, jdbcSource.getUrl());
         } catch (Exception e) {
             errors.add(e);
         }
 
         // set user
         try {
-            temp = ModelerDqpUtils.setPropertyValue(newConnector,
-                                                    JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER,
-                                                    jdbcSource.getUsername());
-
-            // include any errors
-            if (!ArrayUtil.isNullOrEmpty(temp)) {
-                errors.addAll(Arrays.asList(temp));
-            }
+            admin.setPropertyValue(newConnector, JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER, jdbcSource.getUsername());
         } catch (Exception e) {
             errors.add(e);
         }
 
         // set password
         try {
-            temp = ModelerDqpUtils.setConnectorBindingPassword(newConnector, infoProvider.getPassword());
-
-            // include any errors
-            if (!ArrayUtil.isNullOrEmpty(temp)) {
-                errors.addAll(Arrays.asList(temp));
-            }
+            admin.setPropertyValue(newConnector, JDBCConnectionPropertyNames.CONNECTOR_JDBC_PASSWORD, infoProvider.getPassword());
         } catch (Exception e) {
             errors.add(e);
         }

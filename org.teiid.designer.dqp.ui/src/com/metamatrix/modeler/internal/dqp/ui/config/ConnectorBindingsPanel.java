@@ -422,11 +422,6 @@ public final class ConnectorBindingsPanel extends Composite
         }
     }
 
-    private ExecutionAdmin getAdmin() {
-        // TODO implement
-        return null;
-    }
-
     void handleEditBinding() {
         if (resetForReadOnly()) {
             MessageDialog.openWarning(getShell(), getString("readOnlyVDBDialogTitle"), getString("readOnlyVDBDialogMessage")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -447,17 +442,17 @@ public final class ConnectorBindingsPanel extends Composite
 
                 if (dialog.getReturnCode() == Window.OK) {
                     boolean changed = false;
-                    Connector newValue = dialog.getConnector();
+                    Connector newConnector = dialog.getConnector();
                     Connector oldValue = getVdbDefnHelper().getFirstConnector(modelDefn);
 
                     // if a different instance of a binding is the new value then the New Binding Dialog was OK'd
                     if (oldValue == null) {
-                        changed = (newValue != null);
+                        changed = (newConnector != null);
                     } else {
-                        if (newValue == null) {
+                        if (newConnector == null) {
                             changed = true;
                         } else {
-                            changed = !oldValue.getName().equals(newValue.getName());
+                            changed = !oldValue.getName().equals(newConnector.getName());
                         }
                     }
 
@@ -468,14 +463,16 @@ public final class ConnectorBindingsPanel extends Composite
                                 getVdbDefnHelper().removeConnector(modelDefn, oldValue);
                             }
 
-                            if (newValue != null) {
+                            if (newConnector != null) {
                                 // add binding to configuration if it doesn't already exist
-                                if (ModelerDqpUtils.isUniqueBindingName(newValue.getName())) {
-                                    getAdmin().addConnectorBinding(newValue);
+                                if (newConnector.getType().getAdmin().getConnector(newConnector.getName()) == null) {
+                                    newConnector.getType().getAdmin().addConnector(newConnector.getName(),
+                                                                                   newConnector.getType(),
+                                                                                   newConnector.getProperties());
                                 }
 
-                                ConnectorType type = newValue.getType();
-                                getVdbDefnHelper().setConnector(modelDefn, newValue, type);
+                                ConnectorType type = newConnector.getType();
+                                getVdbDefnHelper().setConnector(modelDefn, newConnector, type);
                             }
 
                             getViewer().refresh(modelDefn, true);

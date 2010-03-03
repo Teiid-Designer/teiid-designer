@@ -13,10 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import org.eclipse.core.runtime.IStatus;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.adminapi.PropertyDefinition;
 import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 
 /**
  *
@@ -60,6 +62,36 @@ public final class ExecutionAdmin {
         this.connectorByNameMap.put(name, connector);
 
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddConnectorEvent(connector));
+    }
+
+    /**
+     * @param proposedName the proposed name of the connector (must not be <code>null</code> and contain all valid characters)
+     * @return the unique connector name (maybe different than the proposed name if a connector of that name already exists)
+     * @throws Exception if there is a problem obtaining connectors and connector types from the server or if name contains
+     *         invalid characters
+     * @see ModelerDqpUtils#isValidBindingName(String)
+     */
+    public String ensureUniqueConnectorName( String proposedName ) throws Exception {
+        String result = proposedName;
+        boolean validName = false;
+        int suffix = 1;
+
+        while (!validName) {
+            IStatus status = (ModelerDqpUtils.isValidBindingName(result));
+            
+            if (!status.isOK()) {
+                throw new IllegalArgumentException(status.getMessage());
+            }
+
+            if ((getConnector(result) != null)) {
+                result = proposedName + "_" + suffix; //$NON-NLS-1$
+                ++suffix;
+            } else {
+                validName = true;
+            }
+        }
+
+        return result;
     }
 
     /**

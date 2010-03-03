@@ -75,9 +75,7 @@ public class BindToConnectorAction extends SortableSelectionAction implements Dq
                         if (dialog.getReturnCode() == Window.OK) {
                             Connector selectedBinding = dialog.getSelectedConnector();
                             if( selectedBinding != null ) {
-                                //System.out.println("  NewConnectorBindingAction.run() ADD BINDING = " + newBinding.getName());
-                                
-                                DqpPlugin.getInstance().getWorkspaceConfig().createSourceBinding(modelResource, selectedBinding);
+                                selectedBinding.getType().getAdmin().createSourceBinding(modelResource, selectedBinding);
                             }
                         }
                     }

@@ -209,6 +209,16 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         // hook up this view's selection provider to this site
         getViewSite().setSelectionProvider(viewer);
     }
+    
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.runtime.IExecutionConfigurationListener#configurationChanged(org.teiid.designer.runtime.ExecutionConfigurationEvent)
+     */
+    @Override
+    public void configurationChanged( ExecutionConfigurationEvent event ) {
+        // TODO implement
+    }
 
     void handleSelectionChanged( SelectionChangedEvent event ) {
 
@@ -646,14 +656,4 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
 
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.runtime.IExecutionConfigurationListener#configurationChanged(org.teiid.designer.runtime.ExecutionConfigurationEvent)
-     */
-    @Override
-    public Exception[] configurationChanged( ExecutionConfigurationEvent event ) {
-        // TODO implement
-        return null;
-    }
 }
