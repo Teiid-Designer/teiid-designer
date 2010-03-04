@@ -122,7 +122,7 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
             String msg = "Message has not been set"; //$NON-NLS-1$
             VdbDefnHelper helper = getVdbDefnHelper();
 
-            if (ModelerDqpUtils.isUniqueBindingName(getNewBindingName(), helper.getVdbDefn())) {
+            if (this.currentType.getAdmin().getConnector(getNewBindingName()) == null) {
                 // name is valid, unique so check to make sure a type has been selected
                 if (this.typeCombo.getSelectionIndex() == -1) {
                     msg = getString("noConnectorTypeMsg"); //$NON-NLS-1$

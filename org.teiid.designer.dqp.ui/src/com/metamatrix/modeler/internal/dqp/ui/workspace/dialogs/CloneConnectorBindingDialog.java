@@ -10,6 +10,7 @@ package com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -20,7 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.designer.runtime.Connector;
+import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
@@ -40,14 +41,21 @@ public class CloneConnectorBindingDialog extends ExtendedTitleAreaDialog impleme
 
     private CloneConnectorBindingPanel pnlBindings;
 
-    private Connector originalConnectorBinding;
+    private String name;
+    private ConnectorType type;
+    private Properties properties;
 
     private Collection<IChangeListener> changeListenerList = new ArrayList<IChangeListener>(2);
 
     public CloneConnectorBindingDialog( Shell theParentShell,
-                                        Connector initialConnector ) {
+                                        String name,
+                                        ConnectorType type,
+                                        Properties properties ) {
         super(theParentShell, DqpUiPlugin.getDefault());
-        this.originalConnectorBinding = initialConnector;
+
+        this.name = name;
+        this.type = type;
+        this.properties = properties;
     }
 
     @Override
@@ -61,7 +69,7 @@ public class CloneConnectorBindingDialog extends ExtendedTitleAreaDialog impleme
         gd.widthHint = WIDTH;
         mainComposite.setLayoutData(gd);
 
-        this.pnlBindings = new CloneConnectorBindingPanel(mainComposite, originalConnectorBinding);
+        this.pnlBindings = new CloneConnectorBindingPanel(mainComposite, this.name, this.type, this.properties);
         this.pnlBindings.addChangeListener(this);
         this.pnlBindings.setFocus();
 
@@ -136,11 +144,11 @@ public class CloneConnectorBindingDialog extends ExtendedTitleAreaDialog impleme
         super.okPressed();
     }
 
-    public Connector getNewConnector() {
-        return this.pnlBindings.getNewConnector();
+    public String getConnectorName() {
+        return this.pnlBindings.getConnectorName();
     }
 
-    public String getNewConnectorBindingName() {
-        return this.pnlBindings.getNewConnectorBindingName();
+    public Properties getConnectorProperties() {
+        return this.pnlBindings.getConnectorProperties();
     }
 }

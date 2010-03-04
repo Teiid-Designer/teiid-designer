@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.dqp.ui.jdbc;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -22,12 +21,11 @@ import org.eclipse.ui.dialogs.ListDialog;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
-import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
+import com.metamatrix.modeler.dqp.internal.workspace.WorkspaceConfigurationManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.modeler.jdbc.ui.wizards.IJdbcImportInfoProvider;
@@ -122,6 +120,8 @@ public class ConnectorBindingImportPostProcessor implements DqpUiConstants, IJdb
 
         // create the binding if we have a type
         if (bindingType != null) {
+            // TODO get connector type property definitions, create Properties object and populate from JDBC source object
+            // before calling addConnector(name, type, properties)
             return bindingType.getAdmin().addConnector(bindingName, bindingType, false);
         }
 

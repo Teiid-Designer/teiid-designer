@@ -46,10 +46,10 @@ public final class Connector {
         this.binding = binding;
         this.type = type;
     }
-    
+
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -91,10 +91,10 @@ public final class Connector {
     public ConnectorType getType() {
         return type;
     }
-    
+
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -138,12 +138,10 @@ public final class Connector {
         }
 
         if ("Boolean".equals(type)) { //$NON-NLS-1$
-            try {
-                Boolean.parseBoolean(value);
-                return true;
-            } catch (Exception e) {
+            if (value == null) {
                 return false;
             }
+            return (value.equalsIgnoreCase(Boolean.TRUE.toString()) || value.equalsIgnoreCase(Boolean.FALSE.toString()));
         }
 
         if ("Character".equals(type)) { //$NON-NLS-1$
@@ -228,7 +226,9 @@ public final class Connector {
             // if there are no allowed values, this is an illegal state for the property defn
             // but we need to allow the user to continue - just log it.
             Object[] msgArray = new Object[] {definition.getName(), type.getName()};
-            DqpPlugin.Util.log(IStatus.WARNING, DqpPlugin.Util.getString("Connector.noAllowedValuesWarning", msgArray)); // TODO i18n this
+            DqpPlugin.Util.log(IStatus.WARNING, DqpPlugin.Util.getString("Connector.noAllowedValuesWarning", msgArray)); // TODO
+            // i18n
+            // this
         }
 
         return true;

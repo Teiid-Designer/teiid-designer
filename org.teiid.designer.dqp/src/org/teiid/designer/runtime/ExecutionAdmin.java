@@ -37,6 +37,8 @@ public final class ExecutionAdmin {
         this.admin = admin;
         this.eventManager = eventManager;
         this.server = server;
+
+        refresh();
     }
 
     /**
@@ -78,7 +80,7 @@ public final class ExecutionAdmin {
 
         while (!validName) {
             IStatus status = (ModelerDqpUtils.isValidBindingName(result));
-            
+
             if (!status.isOK()) {
                 throw new IllegalArgumentException(status.getMessage());
             }
@@ -99,18 +101,15 @@ public final class ExecutionAdmin {
      * @return
      * @throws Exception
      */
-    public Connector getConnector( String name ) throws Exception {
-        initialize();
+    public Connector getConnector( String name ) {
         return this.connectorByNameMap.get(name);
     }
 
-    public Collection<Connector> getConnectors() throws Exception {
-        initialize();
+    public Collection<Connector> getConnectors() {
         return this.connectorByNameMap.values();
     }
 
-    public Collection<Connector> getConnectors( ConnectorType type ) throws Exception {
-        initialize();
+    public Collection<Connector> getConnectors( ConnectorType type ) {
         List<Connector> connectors = new ArrayList<Connector>();
         for (Connector connector : connectorByNameMap.values()) {
             if (connector.getType() == type) connectors.add(connector);
@@ -123,14 +122,12 @@ public final class ExecutionAdmin {
      * @return
      * @throws Exception
      */
-    public ConnectorType getConnectorType( String name ) throws Exception {
+    public ConnectorType getConnectorType( String name ) {
         ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
-        initialize();
         return this.connectorTypeByNameMap.get(name);
     }
 
-    public Collection<ConnectorType> getConnectorTypes() throws Exception {
-        initialize();
+    public Collection<ConnectorType> getConnectorTypes() {
         return this.connectorTypeByNameMap.values();
     }
 
@@ -139,12 +136,6 @@ public final class ExecutionAdmin {
      */
     public Server getServer() {
         return this.server;
-    }
-
-    private void initialize() throws Exception {
-        if (this.connectorTypeByNameMap == null) {
-            refresh();
-        }
     }
 
     public void refresh() throws Exception {

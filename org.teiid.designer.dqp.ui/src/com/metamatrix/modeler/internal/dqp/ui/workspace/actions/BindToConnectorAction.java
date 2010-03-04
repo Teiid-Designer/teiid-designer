@@ -27,33 +27,30 @@ import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
 
-
-/** 
+/**
  * @since 5.0
  */
 public class BindToConnectorAction extends SortableSelectionAction implements DqpUiConstants {
     private static final String label = UTIL.getString("BindToConnectorAction.label", SWT.DEFAULT); //$NON-NLS-1$
-    
-    /** 
-     * 
+
+    /**
      * @since 5.0
      */
     public BindToConnectorAction() {
         super(label, SWT.DEFAULT);
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.SOURCE_BINDING_ICON));
     }
-    
+
     /**
-     *  
      * @see com.metamatrix.modeler.ui.actions.SortableSelectionAction#isValidSelection(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
     @Override
-    public boolean isValidSelection(ISelection selection) {
+    public boolean isValidSelection( ISelection selection ) {
         // Enable for single/multiple Virtual Tables
         return sourceModelSelected(selection);
     }
-    
+
     /**
      * @see org.eclipse.jface.action.IAction#run()
      * @since 5.0
@@ -61,21 +58,23 @@ public class BindToConnectorAction extends SortableSelectionAction implements Dq
     @Override
     public void run() {
         ISelection cachedSelection = getSelection();
-        if( cachedSelection != null && !cachedSelection.isEmpty() ) {
+        if (cachedSelection != null && !cachedSelection.isEmpty()) {
             Object selectedObj = SelectionUtilities.getSelectedObject(cachedSelection);
-            if( selectedObj != null && selectedObj instanceof IFile) {
+            if (selectedObj != null && selectedObj instanceof IFile) {
                 ModelResource modelResource = null;
                 try {
-                    modelResource = ModelUtilities.getModelResource(((IFile) selectedObj), false);
-                    if( modelResource != null ) {
-                        SelectConnectorBindingDialog dialog = new SelectConnectorBindingDialog(UiUtil.getWorkbenchShellOnlyIfUiThread());
+                    modelResource = ModelUtilities.getModelResource(((IFile)selectedObj), false);
+                    if (modelResource != null) {
+                        SelectConnectorBindingDialog dialog = new SelectConnectorBindingDialog(
+                                                                                               UiUtil.getWorkbenchShellOnlyIfUiThread());
 
                         dialog.open();
-                        
+
                         if (dialog.getReturnCode() == Window.OK) {
                             Connector selectedBinding = dialog.getSelectedConnector();
-                            if( selectedBinding != null ) {
-                                selectedBinding.getType().getAdmin().createSourceBinding(modelResource, selectedBinding);
+                            if (selectedBinding != null) {
+                                DqpPlugin.getInstance().getSourceBindingsManager().createSourceBinding(modelResource,
+                                                                                                       selectedBinding);
                             }
                         }
                     }
@@ -83,38 +82,38 @@ public class BindToConnectorAction extends SortableSelectionAction implements Dq
                     UTIL.log(e);
                 }
             }
-            
+
         }
         selectionChanged(null, new StructuredSelection());
     }
-    
-    /** 
+
+    /**
      * @see com.metamatrix.modeler.ui.actions.ISelectionAction#isApplicable(org.eclipse.jface.viewers.ISelection)
      * @since 5.0
      */
     @Override
-    public boolean isApplicable(ISelection selection) {
+    public boolean isApplicable( ISelection selection ) {
         return sourceModelSelected(selection);
     }
-    
-    private boolean sourceModelSelected(ISelection theSelection) {
+
+    private boolean sourceModelSelected( ISelection theSelection ) {
         boolean result = false;
         List allObjs = SelectionUtilities.getSelectedObjects(theSelection);
-        if( !allObjs.isEmpty() && allObjs.size() == 1 ) {
+        if (!allObjs.isEmpty() && allObjs.size() == 1) {
             Iterator iter = allObjs.iterator();
             result = true;
             Object nextObj = null;
-            while( iter.hasNext() && result ) {
+            while (iter.hasNext() && result) {
                 nextObj = iter.next();
-                
-                if( nextObj instanceof IFile ) {
+
+                if (nextObj instanceof IFile) {
                     result = ModelIdentifier.isRelationalSourceModel((IFile)nextObj);
                 } else {
                     result = false;
                 }
             }
         }
-        
+
         return result;
     }
 }

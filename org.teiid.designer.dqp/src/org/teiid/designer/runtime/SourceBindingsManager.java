@@ -254,7 +254,7 @@ public class SourceBindingsManager
      * @param modelInfo
      * @since 5.0
      */
-    public void removeSourceBinding( ModelInfo modelInfo ) {
+    public void removeSourceBinding( SourceModelInfo modelInfo ) {
         removeSourceBinding(modelInfo.getName());
     }
 

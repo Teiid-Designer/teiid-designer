@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs;
 
+import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Status;
@@ -19,7 +20,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.designer.runtime.Connector;
+import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
@@ -46,17 +47,23 @@ public class CloneConnectorBindingPanel extends Composite implements ControlList
 
     private String currentBindingName;
 
-    private Connector newConnectorBinding;
+    private ConnectorType type;
+    // TODO Add property change support here!!!
+    private Properties properties;
 
     public CloneConnectorBindingPanel( Composite theParent,
-                                       Connector connector ) {
+                                       String name,
+                                       ConnectorType type,
+                                       Properties properties ) {
         super(theParent, SWT.NONE);
 
         this.changeListeners = new ListenerList(ListenerList.IDENTITY);
 
         // Clone the binding
 
-        newConnectorBinding = connector;
+        this.currentBindingName = name;
+        this.type = type;
+        this.properties = properties;
 
         createContents(this);
 
@@ -106,9 +113,9 @@ public class CloneConnectorBindingPanel extends Composite implements ControlList
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         nameGroup.setLayoutData(gridData);
 
-//        Label schemaNameLabel = new Label(nameGroup, SWT.NONE);
-//        schemaNameLabel.setText(getString("name")); //$NON-NLS-1$
-//        setGridData(schemaNameLabel, GridData.BEGINNING, false, GridData.CENTER, false);
+        // Label schemaNameLabel = new Label(nameGroup, SWT.NONE);
+        //        schemaNameLabel.setText(getString("name")); //$NON-NLS-1$
+        // setGridData(schemaNameLabel, GridData.BEGINNING, false, GridData.CENTER, false);
 
         bindingNameText = WidgetFactory.createTextField(nameGroup, GridData.HORIZONTAL_ALIGN_FILL);
         bindingNameText.setEditable(true);
@@ -118,7 +125,7 @@ public class CloneConnectorBindingPanel extends Composite implements ControlList
         // fileNameTextGridData.widthHint = FILE_NAME_TEXT_WIDTH;
         bindingNameText.setLayoutData(fileNameTextGridData);
 
-        bindingNameText.setText(newConnectorBinding.getName());
+        bindingNameText.setText(currentBindingName);
 
         this.bindingNameText.addKeyListener(new KeyListener() {
 
@@ -139,15 +146,15 @@ public class CloneConnectorBindingPanel extends Composite implements ControlList
         fireChangeEvent();
     }
 
-    public Connector getNewConnector() {
-        return this.newConnectorBinding;
+    public Properties getConnectorProperties() {
+        return this.properties;
     }
 
     private String getNewBindingName() {
         return bindingNameText.getText();
     }
 
-    public String getNewConnectorBindingName() {
+    public String getConnectorName() {
         return currentBindingName;
     }
 
@@ -158,7 +165,7 @@ public class CloneConnectorBindingPanel extends Composite implements ControlList
             int severity = IStatus.ERROR;
             String msg = "Message has not been set"; //$NON-NLS-1$
 
-            if (!ModelerDqpUtils.isUniqueBindingName(getNewBindingName())) {
+            if (this.type.getAdmin().getConnector(getNewBindingName()) != null) {
                 // binding with that name already exists //MyCode : need check in the future
                 severity = IStatus.ERROR;
                 msg = DqpUiConstants.UTIL.getString("duplicateNameMsg", getNewBindingName()); //$NON-NLS-1$

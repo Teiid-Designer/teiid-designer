@@ -43,7 +43,6 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetSorter;
-import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
@@ -90,7 +89,8 @@ public class NewConnectorBindingPanel extends Composite
 
     private final ExecutionAdmin admin;
 
-    public NewConnectorBindingPanel( Composite theParent, ExecutionAdmin admin ) throws IllegalStateException {
+    public NewConnectorBindingPanel( Composite theParent,
+                                     ExecutionAdmin admin ) throws IllegalStateException {
         super(theParent, SWT.NONE);
 
         this.changeListeners = new ListenerList(ListenerList.IDENTITY);
@@ -100,7 +100,7 @@ public class NewConnectorBindingPanel extends Composite
         createContents(this);
 
         this.typeCombo.select(0);
-        
+
         // When Type changes, New Binding is created because properties may be different
         connectorTypeChanged();
 
@@ -270,7 +270,7 @@ public class NewConnectorBindingPanel extends Composite
         this.propertyPage.createControl(propertyGroup);
         this.propertyPage.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        sourceProvider = new ConnectorBindingPropertySourceProvider(this.admin);
+        sourceProvider = new ConnectorBindingPropertySourceProvider();
 
         sourceProvider.addPropertyChangeListener(this);
         sourceProvider.setEditable(true);
@@ -297,12 +297,12 @@ public class NewConnectorBindingPanel extends Composite
     public Connector getConnector() {
         return this.connectorBinding;
     }
-    
+
     private Properties getProperties() {
         // TODO implement
         return null;
     }
-    
+
     private void createConnector() {
         // bindings must have a type
         // TODO can't actually create a binding here because user can cancel out of dialog
@@ -310,12 +310,12 @@ public class NewConnectorBindingPanel extends Composite
             try {
                 this.admin.addConnector(getNewBindingName(), this.currentType, getProperties());
                 this.connectorBinding = this.admin.getConnector(getNewBindingName());
-	        } catch (Exception theException) {
-	            DqpUiConstants.UTIL.log(theException);
-	            theException.printStackTrace();
-	            MessageDialog.openError(getShell(), getString("errorDialog.creatingConnector.title"), //$NON-NLS-1$
-	                                    getString("errorDialog.creatingConnector.msg")); //$NON-NLS-1$
-	        }
+            } catch (Exception theException) {
+                DqpUiConstants.UTIL.log(theException);
+                theException.printStackTrace();
+                MessageDialog.openError(getShell(), getString("errorDialog.creatingConnector.title"), //$NON-NLS-1$
+                                        getString("errorDialog.creatingConnector.msg")); //$NON-NLS-1$
+            }
         }
     }
 
@@ -469,15 +469,15 @@ public class NewConnectorBindingPanel extends Composite
     }
 
     public void save() {
-    	// Copy the connector binding so we get the new name
-    	try {
+        // Copy the connector binding so we get the new name
+        try {
             this.admin.addConnector(getNewBindingName(), this.currentType, getProperties());
-		} catch (Exception theException) {
-			DqpUiConstants.UTIL.log(theException);
-           
+        } catch (Exception theException) {
+            DqpUiConstants.UTIL.log(theException);
+
             MessageDialog.openError(getShell(), getString("errorDialog.creatingConnector.title"), //$NON-NLS-1$
                                     getString("errorDialog.creatingConnector.msg")); //$NON-NLS-1$
-		}
+        }
     }
 
     /**
@@ -504,7 +504,7 @@ public class NewConnectorBindingPanel extends Composite
         Color bkg = UiUtil.getSystemColor(colorCode);
         propertyPage.getControl().setBackground(bkg);
     }
-    
+
     /**
      * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
      * @since 5.5

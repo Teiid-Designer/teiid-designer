@@ -7,13 +7,12 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
+import java.util.Properties;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.designer.runtime.Connector;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.CloneConnectorBindingDialog;
 import com.metamatrix.ui.internal.util.UiUtil;
 
@@ -35,14 +34,15 @@ public final class CloneConnectorBindingAction extends ConfigurationManagerActio
      */
     @Override
     public void run() {
-        Connector connector = (Connector)getSelectedObject();
+        final Connector connector = (Connector)getSelectedObject();
 
         if (connector != null) {
             try {
                 String clonedConnectorName = getAdmin().ensureUniqueConnectorName(connector.getName());
-                connector = getAdmin().cloneConnector(connector, clonedConnectorName);
+
                 CloneConnectorBindingDialog dialog = new CloneConnectorBindingDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(),
-                                                                                     connector) {
+                                                                                     clonedConnectorName, connector.getType(),
+                                                                                     connector.getProperties()) {
 
                     /**
                      * @see com.metamatrix.ui.internal.widget.ExtendedTitleAreaDialog#close()
@@ -51,15 +51,15 @@ public final class CloneConnectorBindingAction extends ConfigurationManagerActio
                     @Override
                     public boolean close() {
                         if (getReturnCode() == Window.OK) {
-                            Connector newBinding = getNewConnector();
-                            if (newBinding != null) {
-                                // System.out.println("  NewConnectorBindingAction.run() ADD BINDING = " + newBinding.getName());
-                                try {
-                                    getAdmin().addConnectorBinding(newBinding, getNewConnectorBindingName());
-                                } catch (Exception error) {
-                                    DqpUiPlugin.showErrorDialog(getShell(), error);
-                                    return false;
-                                }
+                            String name = getConnectorName();
+                            Properties properties = getConnectorProperties();
+
+                            // System.out.println("  NewConnectorBindingAction.run() ADD BINDING = " + newBinding.getName());
+                            try {
+                                getAdmin().addConnector(name, connector.getType(), properties);
+                            } catch (Exception error) {
+                                DqpUiPlugin.showErrorDialog(getShell(), error);
+                                return false;
                             }
                         }
                         return super.close();

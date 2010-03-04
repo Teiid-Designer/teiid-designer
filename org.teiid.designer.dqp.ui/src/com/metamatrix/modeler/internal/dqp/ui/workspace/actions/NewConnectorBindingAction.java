@@ -48,7 +48,7 @@ public class NewConnectorBindingAction extends ConfigurationManagerAction {
         } else {
             admin = ((Connector)selectedObject).getType().getAdmin();
         }
-        
+
         NewConnectorBindingDialog dialog = new NewConnectorBindingDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(), admin);
 
         if (selectedObject instanceof ConnectorType) {
@@ -60,8 +60,7 @@ public class NewConnectorBindingAction extends ConfigurationManagerAction {
         dialog.open();
 
         if (dialog.getReturnCode() == Window.OK) {
-            Connector newConnector = dialog.getNewConnector();
-            admin.addConnector(newConnector.getName(), newConnector.getType(), dialog.getProperties());
+            admin.addConnector(dialog.getName(), dialog.getType(), dialog.getProperties());
         }
     }
 

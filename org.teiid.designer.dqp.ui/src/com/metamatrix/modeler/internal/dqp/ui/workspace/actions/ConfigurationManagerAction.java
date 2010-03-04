@@ -8,9 +8,7 @@
 package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
 import java.util.List;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -19,7 +17,6 @@ import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.SourceBindingsManager;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**
@@ -52,21 +49,6 @@ public abstract class ConfigurationManagerAction extends Action implements ISele
         return this.admin;
     }
 
-    /**
-     * Saves both the configuration.xml file and the WorkspaceConfig.def file
-     * 
-     * @since 5.0
-     */
-    public void save() {
-        if (sourceBindingsManager != null) {
-            try {
-                sourceBindingsManager.save();
-            } catch (Exception theException) {
-                DqpUiConstants.UTIL.log(IStatus.ERROR, theException.getMessage());
-            }
-        }
-    }
-
     public SourceBindingsManager getWorkspaceConfig() {
         if (sourceBindingsManager == null) {
             sourceBindingsManager = DqpPlugin.getInstance().getSourceBindingsManager();
@@ -95,7 +77,7 @@ public abstract class ConfigurationManagerAction extends Action implements ISele
                 }
 
                 assert (tempAdmin != null);
-                
+
                 if (newAdmin == null) {
                     newAdmin = tempAdmin;
                 } else if (!newAdmin.equals(tempAdmin)) {
@@ -114,7 +96,6 @@ public abstract class ConfigurationManagerAction extends Action implements ISele
             }
         }
 
-        
     }
 
     abstract protected void setEnablement();
