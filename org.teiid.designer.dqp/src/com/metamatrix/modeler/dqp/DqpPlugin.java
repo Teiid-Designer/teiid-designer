@@ -198,7 +198,8 @@ public class DqpPlugin extends Plugin {
         this.sourceBindingsManager = new SourceBindingsManager(this.serverRegistry, configFile);
 
         try {
-            this.sourceBindingsManager.load(); // Load will create file if it does not exist yet
+            // TODO: Load
+            // this.sourceBindingsManager.load(); // Load will create file if it does not exist yet
         } catch (Exception theException) {
             String msg = Util.getString(I18nUtil.getPropertyPrefix(DqpPlugin.class) + "problemLoadingWorkspaceDefnFile", //$NON-NLS-1$
                                         SOURCE_BINDINGS_FILE_NAME);
