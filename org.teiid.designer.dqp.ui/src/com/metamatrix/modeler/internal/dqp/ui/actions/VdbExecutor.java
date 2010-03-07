@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.dqp.ui.actions;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.Properties;
 import net.sourceforge.sqlexplorer.AliasModel;
 import net.sourceforge.sqlexplorer.DriverModel;
@@ -32,14 +31,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.teiid.adminapi.Admin;
-import org.teiid.adminapi.AdminException;
-import org.teiid.adminapi.AdminObject;
-import org.teiid.adminapi.VDB;
 import com.metamatrix.common.vdb.api.VDBDefn;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
-import com.metamatrix.core.util.FileUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -389,25 +383,26 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
     private boolean deployVDB( String vdbName,
                                File vdbFile ) throws SQLException {
 
-        Admin admin = getAdminConnection().getAdminAPI();
-
-        // remove the old one if there is one.
-        try {
-            Collection<VDB> vdbs = admin.getVDBs(vdbName + AdminObject.WILDCARD);
-            for (VDB vdb : vdbs) {
-                admin.changeVDBStatus(vdb.getName(), vdb.getVDBVersion(), VDB.DELETED);
-            } // for
-        } catch (AdminException e) {
-            UTIL.log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, "Failed undeploy the vdb", null)); //$NON-NLS-1$                
-        }
-
-        // now add the new one
-        try {
-            admin.addVDB(vdbName, new FileUtil(vdbFile).readBytes(), new AdminOptions(AdminOptions.OnConflict.OVERWRITE));
-        } catch (AdminException e) {
-            UTIL.log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, "Failed deploy the vdb = " + vdbName, null)); //$NON-NLS-1$                                
-        }
-        return true;
+        // Admin admin = getAdminConnection().getAdminAPI();
+        //
+        // // remove the old one if there is one.
+        // try {
+        // Collection<VDB> vdbs = admin.getVDBs(vdbName + AdminObject.WILDCARD);
+        // for (VDB vdb : vdbs) {
+        // admin.changeVDBStatus(vdb.getName(), vdb.getVDBVersion(), VDB.DELETED);
+        // } // for
+        // } catch (AdminException e) {
+        //            UTIL.log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, "Failed undeploy the vdb", null)); //$NON-NLS-1$                
+        // }
+        //
+        // // now add the new one
+        // try {
+        // admin.addVDB(vdbName, new FileUtil(vdbFile).readBytes(), new AdminOptions(AdminOptions.OnConflict.OVERWRITE));
+        // } catch (AdminException e) {
+        //            UTIL.log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, "Failed deploy the vdb = " + vdbName, null)); //$NON-NLS-1$                                
+        // }
+        // return true;
+        return false;
     }
 
     public SQLConnection getSqlConnection() {

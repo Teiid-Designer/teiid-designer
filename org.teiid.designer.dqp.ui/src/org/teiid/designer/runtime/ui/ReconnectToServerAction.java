@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.Server;
+import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 /**
@@ -42,7 +43,7 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
     public ReconnectToServerAction( TreeViewer viewer ) {
         super(UTIL.getString("serverReconnectActionText.text()"));
         setToolTipText(UTIL.getString("serverReconnectActionToolTip.text()"));
-        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(REFRESH_IMAGE));
+        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.REFRESH_ICON));
         setEnabled(false);
 
         this.viewer = viewer;

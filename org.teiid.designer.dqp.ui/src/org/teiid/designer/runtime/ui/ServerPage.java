@@ -68,7 +68,7 @@ public final class ServerPage extends WizardPage {
     /**
      * The current validation status.
      */
-    private Status status;
+    private IStatus status;
 
     /**
      * The server URL.
@@ -314,7 +314,9 @@ public final class ServerPage extends WizardPage {
 
         // register with the help system
         IWorkbenchHelpSystem helpSystem = DqpUiPlugin.getDefault().getWorkbench().getHelpSystem();
-        helpSystem.setHelp(pnlMain, SERVER_DIALOG_HELP_CONTEXT);
+        // TODO bring over Help contexts from Publishing Plugin
+        // helpSystem.setHelp(pnlMain, SERVER_DIALOG_HELP_CONTEXT);
+        helpSystem.setHelp(pnlMain, "SERVER_DIALOG_HELP_CONTEXT");
     }
 
     /**
@@ -371,7 +373,9 @@ public final class ServerPage extends WizardPage {
              */
             @Override
             public void run() {
-                success[0] = getServerManager().ping(server).isOK();
+                // TODO Actually ping the server
+                success[0] = true;
+                // getServerManager().ping(server).isOK();
             }
         });
 
@@ -404,6 +408,14 @@ public final class ServerPage extends WizardPage {
     void handleUserModified( String newUser ) {
         this.user = newUser;
         updateState();
+    }
+
+    private IStatus isServerValid( String url,
+                                   String username,
+                                   String password ) {
+        // TODO actually check server validity
+        // Utils.isServerValid(this.url, this.user, this.password);
+        return Status.OK_STATUS;
     }
 
     /**
@@ -462,7 +474,7 @@ public final class ServerPage extends WizardPage {
      * Validates all inputs and sets the validation status.
      */
     private void validate() {
-        this.status = Utils.isServerValid(this.url, this.user, this.password);
+        this.status = isServerValid(this.url, this.user, this.password);
 
         // now check to see if a server is already registered
         if (this.status.isOK()) {

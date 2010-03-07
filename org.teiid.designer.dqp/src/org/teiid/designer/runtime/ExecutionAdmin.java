@@ -67,6 +67,34 @@ public final class ExecutionAdmin {
     }
 
     /**
+     * @param vdbName the VDB name
+     * @param vdbVersion the version of the VDB
+     * @param modelName the name of the model
+     * @param connectorBindingName the name of the Connector
+     * @throws Exception
+     */
+    public void assignBindingToModel( String vdbName,
+                                      String vdbVersion,
+                                      String modelName,
+                                      String connectorBindingName ) throws Exception {
+        this.admin.assignBindingToModel(vdbName, vdbVersion, modelName, connectorBindingName);
+    }
+
+    /**
+     * @param vdbName
+     * @param vdbVersion
+     * @param modelName
+     * @param connectorBindingNames
+     * @throws Exception
+     */
+    public void assignBindingsToModel( String vdbName,
+                                       String vdbVersion,
+                                       String modelName,
+                                       String[] connectorBindingNames ) throws Exception {
+        this.admin.assignBindingsToModel(connectorBindingNames, vdbName, vdbVersion, modelName);
+    }
+
+    /**
      * @param proposedName the proposed name of the connector (must not be <code>null</code> and contain all valid characters)
      * @return the unique connector name (maybe different than the proposed name if a connector of that name already exists)
      * @throws Exception if there is a problem obtaining connectors and connector types from the server or if name contains

@@ -288,6 +288,11 @@ public final class ServerManager implements EventManager {
         }
     }
 
+    public IStatus ping( Server server ) {
+        // TODO implement method
+        return Status.OK_STATUS;
+    }
+
     /**
      * {@inheritDoc}
      * 

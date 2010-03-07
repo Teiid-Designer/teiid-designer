@@ -54,7 +54,13 @@ import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
+import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.SourceBindingsManager;
+import org.teiid.designer.runtime.ui.DeleteServerAction;
+import org.teiid.designer.runtime.ui.EditServerAction;
+import org.teiid.designer.runtime.ui.NewServerAction;
+import org.teiid.designer.runtime.ui.ReconnectToServerAction;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
@@ -77,7 +83,7 @@ import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.widget.Label;
 
 /**
- * The ConnectorsView provides a tree view of workpace connector bindings which are stored in a configuration.xml file and
+ * The ConnectorsView provides a tree view of workspace connector bindings which are stored in a configuration.xml file and
  * corresponding model-to-connector mappings in a WorkspaceBindings.def file.
  */
 public class ConnectorsView extends ViewPart implements ISelectionListener, IExecutionConfigurationListener {
@@ -107,7 +113,29 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
     private CloneConnectorBindingAction cloneConnectorBindingAction;
     private DeleteSourceBindingAction deleteSourceBindingAction;
     private Action openModelAction;
+    /**
+     * Collapses all tree nodes.
+     */
     private IAction collapseAllAction;
+
+    /**
+     * Deletes a server.
+     */
+    private DeleteServerAction deleteServerAction;
+
+    /**
+     * Creates a new server.
+     */
+    private NewServerAction newServerAction;
+
+    /**
+     * Edits a server's properties.
+     */
+    private EditServerAction editServerAction;
+    /**
+     * Refreshes the server connections.
+     */
+    private ReconnectToServerAction reconnectAction;
 
     /** needed for key listening */
     private KeyAdapter kaKeyAdapter;
@@ -209,10 +237,10 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         // hook up this view's selection provider to this site
         getViewSite().setSelectionProvider(viewer);
     }
-    
+
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.teiid.designer.runtime.IExecutionConfigurationListener#configurationChanged(org.teiid.designer.runtime.ExecutionConfigurationEvent)
      */
     @Override
@@ -221,7 +249,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
     }
 
     void handleSelectionChanged( SelectionChangedEvent event ) {
-
+        updateStatusLine((IStructuredSelection)event.getSelection());
     }
 
     void handleConfigurationChanged() {
@@ -413,7 +441,11 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
     void fillContextMenu( IMenuManager manager ) {
         Object selection = getSelectedObject();
         if (selection != null) {
-            if (selection instanceof Connector) {
+            if (selection instanceof Server) {
+                manager.add(editServerAction);
+                manager.add(deleteServerAction);
+                manager.add(reconnectAction);
+            } else if (selection instanceof Connector) {
                 manager.add(newConnectorBindingAction);
                 manager.add(new Separator());
                 manager.add(editConnectorBindingAction);
@@ -428,6 +460,8 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                 manager.add(openModelAction);
             }
         } else {
+            manager.add(newServerAction);
+            manager.add(new Separator());
             newConnectorBindingAction.checkEnablement();
             manager.add(newConnectorBindingAction);
         }
@@ -523,6 +557,22 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         collapseAllAction.setToolTipText(getString("collapseAllAction.tooltip")); //$NON-NLS-1$
         collapseAllAction.setEnabled(true);
 
+        // the shell used for dialogs that the actions display
+        Shell shell = this.getSite().getShell();
+        // the reconnect action tries to ping a selected server
+        this.reconnectAction = new ReconnectToServerAction(this.viewer);
+
+        // the delete action will delete one or more servers
+        this.deleteServerAction = new DeleteServerAction(shell, getServerManager());
+        this.viewer.addSelectionChangedListener(this.deleteServerAction);
+
+        // the edit action is only enabled when one server is selected
+        this.editServerAction = new EditServerAction(shell, getServerManager());
+        this.viewer.addSelectionChangedListener(this.editServerAction);
+
+        // the new server action is always enabled
+        this.newServerAction = new NewServerAction(shell, getServerManager());
+
     }
 
     private void initKeyListener() {
@@ -591,6 +641,13 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         return super.getAdapter(adapter);
     }
 
+    /**
+     * @return the server manager being used by this view
+     */
+    private ServerManager getServerManager() {
+        return DqpPlugin.getInstance().getServerRegistry();
+    }
+
     public void selectionChanged( IWorkbenchPart thePart,
                                   ISelection theSelection ) {
         // If Selection is a SINGLE MODEL FILE, then we can find the source and select it??
@@ -607,6 +664,29 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                 }
             }
         }
+    }
+
+    /**
+     * @param selection the current viewer selection (never <code>null</code>)
+     */
+    private void updateStatusLine( IStructuredSelection selection ) {
+        assert (selection.size() < 2);
+
+        String msg = ""; //$NON-NLS-1$
+
+        // TODO make sure we cover all objects including VDB's and Bound sources
+        // AND the string message contains pertinent info.
+
+        Object selectedObject = selection.getFirstElement();
+        if (selectedObject instanceof Server) {
+            msg = ((Server)selectedObject).toString();
+        } else if (selectedObject instanceof Connector) {
+            msg = ((Connector)selectedObject).toString();
+        } else if (selectedObject instanceof ConnectorType) {
+            msg = ((ConnectorType)selectedObject).toString();
+        }
+
+        getViewSite().getActionBars().getStatusLineManager().setMessage(msg);
     }
 
     /**

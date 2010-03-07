@@ -24,7 +24,6 @@ import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
-import com.metamatrix.modeler.dqp.internal.workspace.WorkspaceConfigurationManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.jdbc.JdbcSource;
@@ -122,7 +121,7 @@ public class ConnectorBindingImportPostProcessor implements DqpUiConstants, IJdb
         if (bindingType != null) {
             // TODO get connector type property definitions, create Properties object and populate from JDBC source object
             // before calling addConnector(name, type, properties)
-            return bindingType.getAdmin().addConnector(bindingName, bindingType, false);
+            return bindingType.getAdmin().addConnector(bindingName, bindingType, null);
         }
 
         // no type found or selected by user so a binding could not be created

@@ -47,8 +47,8 @@ public final class DeleteServerDialog extends MessageDialog {
     public DeleteServerDialog( Shell parentShell,
                                Collection<Server> serversBeingDeleted ) {
         super(parentShell, UTIL.getString("deleteServerDialogTitle.text()"),
-              DqpUiPlugin.getDefault().getImage(ModeShape_IMAGE_16x), null, MessageDialog.QUESTION, new String[] {
-                  IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL}, 0);
+              DqpUiPlugin.getDefault().getImage(DqpUiPlugin.Images.DELETE_SERVER_ICON), null, MessageDialog.QUESTION,
+              new String[] {IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL}, 0);
 
         ArgCheck.isNotNull(serversBeingDeleted, "serversBeingDeleted"); //$NON-NLS-1$
         this.serversBeingDeleted = serversBeingDeleted;
@@ -113,7 +113,8 @@ public final class DeleteServerDialog extends MessageDialog {
     @Override
     protected void initializeBounds() {
         super.initializeBounds();
-        Utils.centerAndSizeShellRelativeToDisplay(getShell(), 75, 75);
+        // TODO position dialog
+        // Utils.centerAndSizeShellRelativeToDisplay(getShell(), 75, 75);
     }
 
 }

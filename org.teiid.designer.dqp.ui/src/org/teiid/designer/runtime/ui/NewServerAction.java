@@ -12,6 +12,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.runtime.ServerManager;
+import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 /**
@@ -45,7 +46,7 @@ public final class NewServerAction extends Action {
                             ServerManager serverManager ) {
         super(UTIL.getString("newServerActionText.text()"));
         setToolTipText(UTIL.getString("newServerActionToolTip.text()"));
-        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(NEW_SERVER_IMAGE));
+        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.NEW_SERVER_ICON));
 
         this.shell = shell;
         this.serverManager = serverManager;
@@ -72,7 +73,7 @@ public final class NewServerAction extends Action {
             @Override
             protected void configureShell( Shell newShell ) {
                 super.configureShell(newShell);
-                newShell.setImage(DqpUiPlugin.getDefault().getImage(ModeShape_IMAGE_16x));
+                newShell.setImage(DqpUiPlugin.getDefault().getImage(DqpUiConstants.Images.NEW_SERVER_ICON));
             }
         };
 

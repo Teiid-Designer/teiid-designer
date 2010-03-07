@@ -14,6 +14,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
+import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 /**
@@ -53,7 +54,7 @@ public final class ServerWizard extends Wizard {
         this.page = new ServerPage();
         this.serverManager = serverManager;
 
-        setDefaultPageImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(WIZARD_BANNER_IMAGE));
+        setDefaultPageImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SERVER_WIZBAN));
         setWindowTitle(UTIL.getString("serverWizardNewServerTitle.text()"));
     }
 

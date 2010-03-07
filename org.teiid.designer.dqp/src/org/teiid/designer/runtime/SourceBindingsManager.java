@@ -8,13 +8,10 @@
 package org.teiid.designer.runtime;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.Properties;
 import org.eclipse.core.internal.resources.WorkspaceRoot;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -26,7 +23,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
-import com.metamatrix.common.vdb.api.ModelInfo;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.modeler.core.refactor.IRefactorResourceListener;
@@ -36,9 +32,7 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceNotification;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceNotificationListener;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.internal.workspace.BasicWorkspaceDefn;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceModelInfo;
-import com.metamatrix.modeler.dqp.internal.workspace.WorkspaceDefnReaderWriter;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
@@ -57,15 +51,7 @@ public class SourceBindingsManager
 
     private Collection listenerList;
 
-    private final File defnFile;
-
-    private Properties headerProps;
-
     private final ServerManager serverManager;
-
-    private BasicWorkspaceDefn workspaceDefn;
-
-    private WorkspaceDefnReaderWriter defReaderWriter = new WorkspaceDefnReaderWriter();
 
     /**
      * Constructor initialized with a File representing the WorkspaceBindings.def
@@ -75,8 +61,6 @@ public class SourceBindingsManager
      */
     public SourceBindingsManager( ServerManager serverManager,
                                   File defnFile ) {
-        this.defnFile = defnFile;
-        this.headerProps = new Properties();
         this.listenerList = new ArrayList(1);
         this.serverManager = serverManager;
 
@@ -115,11 +99,14 @@ public class SourceBindingsManager
             DqpPlugin.Util.log(IStatus.ERROR, theException.getMessage());
         }
 
-        getWorkspaceDefn().addModelInfo(modelInfo);
+        try {
+            connector.getType().getAdmin().assignBindingToModel("DEFAULT", "1", modelInfo.getName(), connector.getName());
+        } catch (Exception e) {
+            DqpPlugin.Util.log(IStatus.ERROR, e.getMessage());
+        }
 
         fireChangeEvent();
 
-        save();
     }
 
     /**
@@ -130,9 +117,13 @@ public class SourceBindingsManager
      * @since 5.0
      */
     public Collection<Connector> getConnectorsForModel( String modelName ) {
-        SourceModelInfo modelInfo = getWorkspaceDefn().getModel(modelName);
-
-        return modelInfo.getConnectors();
+        // TODO gonna have to expand this. You can get a Default/hidden VDB for the model
+        // if ONE binding exists for each model, else we'll have to add a VDB argument (or server)
+        //        
+        // SourceModelInfo modelInfo = getWorkspaceDefn().getModel(modelName);
+        //
+        // return modelInfo.getConnectors();
+        return Collections.EMPTY_LIST;
     }
 
     /**
@@ -163,7 +154,9 @@ public class SourceBindingsManager
     }
 
     public Collection<SourceModelInfo> getModelsForConnector( Connector connector ) {
-        return getWorkspaceDefn().getModelsForConnector(connector);
+        // TODO find models for connector
+        // return getWorkspaceDefn().getModelsForConnector(connector);
+        return Collections.EMPTY_LIST;
     }
 
     /**
@@ -172,36 +165,9 @@ public class SourceBindingsManager
      * @since 5.0
      */
     public SourceModelInfo getSourceModelInfo( String modelName ) {
-        return getWorkspaceDefn().getModel(modelName);
-    }
-
-    /**
-     * Returns the BasicWorkspacDefn instance which acts as the model for the WorkspaceBindings.def file.
-     * 
-     * @return
-     * @since 5.0
-     */
-    public BasicWorkspaceDefn getWorkspaceDefn() {
-        if (this.workspaceDefn == null) {
-            workspaceDefn = new BasicWorkspaceDefn();
-        }
-        return this.workspaceDefn;
-    }
-
-    /**
-     * Loads the WorkspaceBindings.def file
-     * 
-     * @throws IOException
-     * @throws Exception
-     * @since 5.0
-     */
-    public void load() throws IOException, Exception {
-        if (this.defnFile.exists() && this.defnFile.length() > 0) {
-            workspaceDefn = defReaderWriter.read(new FileInputStream(this.defnFile));
-        } else {
-            save();
-            workspaceDefn = defReaderWriter.read(new FileInputStream(this.defnFile));
-        }
+        // TODO find sourceModelInfo
+        // return getWorkspaceDefn().getModel(modelName);
+        return null;
     }
 
     /**
@@ -213,8 +179,10 @@ public class SourceBindingsManager
      * @since 5.0
      */
     public boolean modelIsMappedToSource( ModelResource modelResource ) {
-        SourceModelInfo modelInfo = getWorkspaceDefn().getModel(modelResource.getItemName());
-        return modelInfo != null;
+        // TODO reimplement method
+        // SourceModelInfo modelInfo = getWorkspaceDefn().getModel(modelResource.getItemName());
+        // return modelInfo != null;
+        return false;
     }
 
     /**
@@ -243,9 +211,9 @@ public class SourceBindingsManager
      * @since 5.0
      */
     public void removeSourceBinding( String modelName ) {
-        getWorkspaceDefn().removeModelInfo(modelName);
+        // TODO re-implement method
+        // getWorkspaceDefn().removeModelInfo(modelName);
         fireChangeEvent();
-        save();
     }
 
     /**
@@ -268,8 +236,8 @@ public class SourceBindingsManager
     public void removeSourceBindings( Collection objects ) {
         for (Iterator iter = objects.iterator(); iter.hasNext();) {
             Object nextObj = iter.next();
-            if (nextObj instanceof ModelInfo) {
-                removeSourceBinding((ModelInfo)nextObj);
+            if (nextObj instanceof SourceModelInfo) {
+                removeSourceBinding((SourceModelInfo)nextObj);
             } else if (nextObj instanceof String) {
                 removeSourceBinding((String)nextObj);
             } else if (nextObj instanceof ModelResource) {
@@ -285,9 +253,9 @@ public class SourceBindingsManager
      * @since 5.0
      */
     public void removeSourceBindingForProject( String projectName ) {
-        getWorkspaceDefn().removeModelInfosForProject(projectName);
+        // TODO re-implement
+        // getWorkspaceDefn().removeModelInfosForProject(projectName);
         fireChangeEvent();
-        save();
     }
 
     /*
@@ -305,7 +273,8 @@ public class SourceBindingsManager
 
         if (!modelResource.getItemName().equalsIgnoreCase(modelInfo.getName())) {
             // Remove the current model info
-            getWorkspaceDefn().removeModelInfo(modelInfo.getName());
+            // TODO remove current model info from source binding?
+            // getWorkspaceDefn().removeModelInfo(modelInfo.getName());
 
             // Reset the values in the model info.
             modelInfo.setName(modelResource.getItemName());
@@ -322,22 +291,12 @@ public class SourceBindingsManager
 
         if (replaceInfo) {
             // Add the info back to the defn
-            getWorkspaceDefn().addModelInfo(modelInfo);
+            // TODO add it back
+            // getWorkspaceDefn().addModelInfo(modelInfo);
 
             fireChangeEvent();
         }
 
-        save();
-    }
-
-    private void save() {
-        try {
-            defReaderWriter.write(new FileOutputStream(this.defnFile), getWorkspaceDefn(), headerProps);
-        } catch (IOException theException) {
-            DqpPlugin.Util.log(IStatus.ERROR, theException.getMessage());
-        } catch (Exception theException) {
-            DqpPlugin.Util.log(IStatus.ERROR, theException.getMessage());
-        }
     }
 
     /**
@@ -363,17 +322,18 @@ public class SourceBindingsManager
         // Need to check if any connector bindings have been removed.
         Collection staleModelInfos = new ArrayList();
 
-        for (SourceModelInfo nextModelInfo : workspaceDefn.getModels()) {
-            Collection<Connector> connectors = nextModelInfo.getConnectors();
-
-            if (!allBindingsExist(connectors)) {
-                staleModelInfos.add(nextModelInfo);
-            }
-        }
-
-        if (!staleModelInfos.isEmpty()) {
-            removeSourceBindings(staleModelInfos);
-        }
+        // TODO re-implement
+        // for (SourceModelInfo nextModelInfo : workspaceDefn.getModels()) {
+        // Collection<Connector> connectors = nextModelInfo.getConnectors();
+        //
+        // if (!allBindingsExist(connectors)) {
+        // staleModelInfos.add(nextModelInfo);
+        // }
+        // }
+        //
+        // if (!staleModelInfos.isEmpty()) {
+        // removeSourceBindings(staleModelInfos);
+        // }
     }
 
     /*
@@ -383,7 +343,7 @@ public class SourceBindingsManager
         // TODO if server is down but we have a source binding we don't want to remove binding
         // TODO do we need an OfflineConnector class???
         for (Connector connector : connectors) {
-            if (this.executionAdmin.getBinding(nextName) == null) {
+            if (connector.getType().getAdmin().getConnector(connector.getName()) == null) {
                 return false;
             }
         }

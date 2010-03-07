@@ -32,11 +32,15 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
+import com.metamatrix.modeler.dqp.DqpPlugin;
+import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
+import com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorsViewTreeProvider;
 
 /**
  * The <code>ServerView</code> shows all defined servers and their repositories.
@@ -70,7 +74,7 @@ public final class ServerView extends ViewPart implements IExecutionConfiguratio
     /**
      * The viewer's content and label provider.
      */
-    private ModeShapeContentProvider provider;
+    private ConnectorsViewTreeProvider provider;
 
     /**
      * Refreshes the server connections.
@@ -98,7 +102,7 @@ public final class ServerView extends ViewPart implements IExecutionConfiguratio
         };
 
         this.collapseAllAction.setToolTipText(UTIL.getString("collapseActionToolTip.text()"));
-        this.collapseAllAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(COLLAPSE_ALL_IMAGE));
+        this.collapseAllAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.COLLAPSE_ALL_ICON));
 
         // the reconnect action tries to ping a selected server
         this.reconnectAction = new ReconnectToServerAction(this.viewer);
@@ -144,7 +148,7 @@ public final class ServerView extends ViewPart implements IExecutionConfiguratio
      * @param parent the viewer's parent
      */
     private void constructTreeViewer( Composite parent ) {
-        this.provider = new ModeShapeContentProvider();
+        this.provider = new ConnectorsViewTreeProvider(true);
         this.viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 
         this.viewer.setContentProvider(this.provider);
@@ -196,11 +200,11 @@ public final class ServerView extends ViewPart implements IExecutionConfiguratio
 
         // register to receive changes to the server registry
         getServerManager().addListener(this);
-        getServerManager().addListener(this.provider);
+        // getServerManager().addListener(this.provider);
 
         // register with the help system
         IWorkbenchHelpSystem helpSystem = DqpUiPlugin.getDefault().getWorkbench().getHelpSystem();
-        helpSystem.setHelp(parent, SERVER_VIEW_HELP_CONTEXT);
+        helpSystem.setHelp(parent, "SERVER_VIEW_HELP_CONTEXT");
     }
 
     /**
@@ -213,7 +217,7 @@ public final class ServerView extends ViewPart implements IExecutionConfiguratio
         getServerManager().removeListener(this);
 
         if (this.provider != null) {
-            getServerManager().removeListener(this.provider);
+            // getServerManager().removeListener(this.provider);
         }
 
         super.dispose();
@@ -227,7 +231,7 @@ public final class ServerView extends ViewPart implements IExecutionConfiguratio
      * @return the server manager being used by this view
      */
     private ServerManager getServerManager() {
-        return Activator.getDefault().getServerManager();
+        return DqpPlugin.getInstance().getServerRegistry();
     }
 
     /**
@@ -283,18 +287,16 @@ public final class ServerView extends ViewPart implements IExecutionConfiguratio
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.teiid.designer.runtime.IExecutionConfigurationListener#configurationChanged(org.teiid.designer.runtime.ExecutionConfigurationEvent)
      */
     @Override
-    public Exception[] configurationChanged( ExecutionConfigurationEvent event ) {
-        if (event.isNew() || event.isUpdate()) {
+    public void configurationChanged( ExecutionConfigurationEvent event ) {
+        if (event.getEventType() == EventType.ADD || event.getEventType() == EventType.UPDATE) {
             this.viewer.refresh();
-        } else {
+        } else if (event.getEventType() == EventType.REMOVE) {
             this.viewer.remove(event.getServer());
         }
-
-        return null;
     }
 
     /**

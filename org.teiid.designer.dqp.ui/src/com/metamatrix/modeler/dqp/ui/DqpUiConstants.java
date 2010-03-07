@@ -37,26 +37,6 @@ public interface DqpUiConstants {
     PluginUtil UTIL = new PluginUtilImpl(PLUGIN_ID, PC.I18N_NAME, ResourceBundle.getBundle(PC.I18N_NAME));
 
     /**
-     * File extension for CDK files
-     */
-    public static final String CDK_FILE_EXTENSION = ".cdk"; //$NON-NLS-1$
-
-    /**
-     * File extension for CAF files
-     */
-    public static final String CAF_FILE_EXTENSION = ".caf"; //$NON-NLS-1$
-
-    /**
-     * File extensions for connector type files
-     */
-    public static final String[] CDK_FILE_EXTENSIONS = new String[] {"*.cdk", "*.caf"}; //$NON-NLS-1$ //$NON-NLS-2$
-
-    /**
-     * File extensions filter names for connector type files
-     */
-    public static final String[] CDK_FILE_NAMES = new String[] {"Connector Types (*.cdk)", "Connector Types Archive (*.caf)"}; //$NON-NLS-1$ //$NON-NLS-2$
-
-    /**
      * Extension ID of the jdbc client perspective
      */
     String JDBC_CLIENT_PERSPECTIVE_ID = /*EXT_PREFIX + DOT + */"jdbcClientPluginPerspective"; //$NON-NLS-1$
@@ -70,6 +50,8 @@ public interface DqpUiConstants {
      * VDB Editor Tab ID for ConnectorBindings
      */
     String VDB_EDITOR_CONNECTOR_BINDINGS_ID = UTIL.getString("ConnectorBindingsEditorPart.tabTitle"); //$NON-NLS-1$
+
+    String RECONNECT_SERVER_FAMILY = "reconnectServer"; //$NON-NLS-1$
 
     /**
      * import types
@@ -165,8 +147,10 @@ public interface DqpUiConstants {
         public static final String SOURCE_MODEL_ICON = PC.OBJ16 + "Model.gif"; //$NON-NLS-1$
         public static final String SOURCE_CONNECTOR_BINDING_ICON = PC.OBJ16 + "sourceModelBinding.png"; //$NON-NLS-1$
         public static final String IMPORT_WIZ_ICON = PC.CTOOL16 + "import_wiz.gif"; //$NON-NLS-1$
-        public static final String IMPORT_CONNECTORS_ICON = PC.CTOOL16 + "import_connectors.png"; //$NON-NLS-1$
-        public static final String EXPORT_CONNECTORS_ICON = PC.CTOOL16 + "export_connectors.png"; //$NON-NLS-1$
+        // TODO create SERVER images
+        public static final String NEW_SERVER_ICON = PC.CTOOL16 + "new_server.png"; //$NON-NLS-1$
+        public static final String DELETE_SERVER_ICON = PC.CTOOL16 + "delete_server.png"; //$NON-NLS-1$
+        public static final String EDIT_SERVER_ICON = PC.CTOOL16 + "edit_server.png"; //$NON-NLS-1$
         public static final String NEW_BINDING_ICON = PC.CTOOL16 + "new_binding.png"; //$NON-NLS-1$
 
         public static final String PREVIEW_DATA_ICON = PC.CTOOL16 + "previewData.gif"; //$NON-NLS-1$
@@ -175,6 +159,8 @@ public interface DqpUiConstants {
 
         public static final String IMPORT_CONNECTORS_WIZBAN = PC.WIZBAN + "import_connectors.jpg"; //$NON-NLS-1$
         public static final String EXPORT_CONNECTORS_WIZBAN = PC.WIZBAN + "export_connectors.jpg"; //$NON-NLS-1$
+        public static final String SERVER_WIZBAN = PC.WIZBAN + "server_wizard_banner.jpg"; //$NON-NLS-1$
+
     }
 
     interface Extensions {

@@ -57,7 +57,7 @@ public final class DeleteServerAction extends BaseSelectionListenerAction {
                                ServerManager serverManager ) {
         super(UTIL.getString("deleteServerActionText.text()"));
         setToolTipText(UTIL.getString("deleteServerActionToolTip.text()"));
-        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DELETE_SERVER_IMAGE));
+        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiPlugin.Images.DELETE_SERVER_ICON));
         setEnabled(false);
 
         this.serversToDelete = new ArrayList<Server>(5);

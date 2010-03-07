@@ -52,7 +52,7 @@ public final class EditServerAction extends BaseSelectionListenerAction {
                              ServerManager serverManager ) {
         super(UTIL.getString("editServerActionText.text()"));
         setToolTipText(UTIL.getString("editServerActionToolTip.text()"));
-        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(EDIT_SERVER_IMAGE));
+        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiPlugin.Images.EDIT_SERVER_ICON));
         setEnabled(false);
 
         this.shell = shell;
@@ -80,7 +80,7 @@ public final class EditServerAction extends BaseSelectionListenerAction {
             @Override
             protected void configureShell( Shell newShell ) {
                 super.configureShell(newShell);
-                newShell.setImage(DqpUiPlugin.getDefault().getImage(ModeShape_IMAGE_16x));
+                newShell.setImage(DqpUiPlugin.getDefault().getImage(DqpUiPlugin.Images.EDIT_SERVER_ICON));
             }
         };
 
