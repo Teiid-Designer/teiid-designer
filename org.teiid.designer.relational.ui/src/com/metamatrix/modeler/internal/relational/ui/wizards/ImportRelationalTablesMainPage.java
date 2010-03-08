@@ -41,7 +41,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.WizardDataTransferPage;
-import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.progress.IProgressConstants;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -370,7 +369,7 @@ public class ImportRelationalTablesMainPage extends WizardDataTransferPage imple
         GridLayout layout = new GridLayout();
         optionsGroup.setLayout(layout);
         optionsGroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
-        optionsGroup.setText(IDEWorkbenchMessages.WizardExportPage_options);
+        optionsGroup.setText(getString("options")); //$NON-NLS-1$
         optionsGroup.setFont(parent.getFont());
 
         WidgetFactory.createLabel(optionsGroup, SWT.NONE, getString("label.defaultToString")); //$NON-NLS-1$
