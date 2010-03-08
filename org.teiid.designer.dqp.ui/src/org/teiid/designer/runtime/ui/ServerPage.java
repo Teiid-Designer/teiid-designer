@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
+import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 /**
@@ -89,7 +90,7 @@ public final class ServerPage extends WizardPage {
      */
     public ServerPage() {
         super(ServerPage.class.getSimpleName());
-        setTitle(UTIL.getString("serverPageTitle.text()"));
+        setTitle(UTIL.getString("serverPageTitle")); //$NON-NLS-1$
         setPageComplete(false);
     }
 
@@ -100,7 +101,7 @@ public final class ServerPage extends WizardPage {
      */
     public ServerPage( Server server ) {
         super(ServerPage.class.getSimpleName());
-        setTitle(UTIL.getString("serverPageTitle.text()"));
+        setTitle(UTIL.getString("serverPageTitle")); //$NON-NLS-1$
 
         this.server = server;
         this.url = server.getUrl();
@@ -115,18 +116,18 @@ public final class ServerPage extends WizardPage {
 
     private void constructAuthenticationPanel( Composite parent ) {
         Group pnl = new Group(parent, SWT.NONE);
-        pnl.setText(UTIL.getString("serverPageAuthenticationGroupTitle.text()"));
+        pnl.setText(UTIL.getString("serverPageAuthenticationGroupTitle")); //$NON-NLS-1$
         pnl.setLayout(new GridLayout(2, false));
         pnl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
         { // user row
             Label lblUser = new Label(pnl, SWT.LEFT);
             lblUser.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            lblUser.setText(UTIL.getString("serverPageUserLabel.text()"));
+            lblUser.setText(UTIL.getString("serverPageUserLabel")); //$NON-NLS-1$
 
             Text txtUser = new Text(pnl, SWT.BORDER);
             txtUser.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-            txtUser.setToolTipText(UTIL.getString("serverPageUserToolTip.text()"));
+            txtUser.setToolTipText(UTIL.getString("serverPageUserToolTip")); //$NON-NLS-1$
 
             // set initial value
             if (this.user != null) {
@@ -149,11 +150,11 @@ public final class ServerPage extends WizardPage {
         { // password row
             Label lblPassword = new Label(pnl, SWT.LEFT);
             lblPassword.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            lblPassword.setText(UTIL.getString("serverPagePasswordLabel.text()"));
+            lblPassword.setText(UTIL.getString("serverPagePasswordLabel")); //$NON-NLS-1$
 
             Text txtPassword = new Text(pnl, SWT.BORDER);
             txtPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            txtPassword.setToolTipText(UTIL.getString("serverPagePasswordToolTip.text()"));
+            txtPassword.setToolTipText(UTIL.getString("serverPagePasswordToolTip")); //$NON-NLS-1$
             txtPassword.setEchoChar('*');
 
             // set initial value before hooking up listener
@@ -179,8 +180,8 @@ public final class ServerPage extends WizardPage {
             final Button btn = new Button(pnl, SWT.CHECK | SWT.LEFT);
             btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
             ((GridData)btn.getLayoutData()).horizontalSpan = 2;
-            btn.setText(UTIL.getString("serverPageSavePasswordButton.text()"));
-            btn.setToolTipText(UTIL.getString("serverPageSavePasswordToolTip.text()"));
+            btn.setText(UTIL.getString("serverPageSavePasswordButton")); //$NON-NLS-1$
+            btn.setToolTipText(UTIL.getString("serverPageSavePasswordToolTip")); //$NON-NLS-1$
 
             // set initial value before hooking up listeners
             if (this.savePassword) {
@@ -221,7 +222,7 @@ public final class ServerPage extends WizardPage {
             lblImage.setImage(Display.getDefault().getSystemImage(SWT.ICON_INFORMATION));
 
             StyledText st = new StyledText(pnl, SWT.READ_ONLY | SWT.MULTI | SWT.NO_FOCUS | SWT.WRAP);
-            st.setText(UTIL.getString("serverPageSavePasswordLabel.text()"));
+            st.setText(UTIL.getString("serverPageSavePasswordLabel")); //$NON-NLS-1$
             st.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
             st.setCaret(null);
             GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, true);
@@ -240,11 +241,11 @@ public final class ServerPage extends WizardPage {
 
         Label lbl = new Label(pnl, SWT.LEFT);
         lbl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-        lbl.setText(UTIL.getString("serverPageTestConnectionLabel.text()"));
+        lbl.setText(UTIL.getString("serverPageTestConnectionLabel")); //$NON-NLS-1$
 
         this.btnTestConnection = new Button(pnl, SWT.PUSH);
-        this.btnTestConnection.setText(UTIL.getString("serverPageTestConnectionButton.text()"));
-        this.btnTestConnection.setToolTipText(UTIL.getString("serverPageTestConnectionButtonToolTip.text()"));
+        this.btnTestConnection.setText(UTIL.getString("serverPageTestConnectionButton")); //$NON-NLS-1$
+        this.btnTestConnection.setToolTipText(UTIL.getString("serverPageTestConnectionButtonToolTip")); //$NON-NLS-1$
 
         // add margins to the side of the text
         GridData gd = new GridData(SWT.LEFT, SWT.CENTER, false, false);
@@ -273,11 +274,11 @@ public final class ServerPage extends WizardPage {
 
         Label lblUrl = new Label(pnl, SWT.LEFT);
         lblUrl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-        lblUrl.setText(UTIL.getString("serverPageUrlLabel.text()"));
+        lblUrl.setText(UTIL.getString("serverPageUrlLabel")); //$NON-NLS-1$
 
         Text txtUrl = new Text(pnl, SWT.BORDER);
         txtUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        txtUrl.setToolTipText(UTIL.getString("serverPageUrlToolTip.text()"));
+        txtUrl.setToolTipText(UTIL.getString("serverPageUrlToolTip")); //$NON-NLS-1$
 
         // set initial value
         if (this.url != null) {
@@ -316,7 +317,7 @@ public final class ServerPage extends WizardPage {
         IWorkbenchHelpSystem helpSystem = DqpUiPlugin.getDefault().getWorkbench().getHelpSystem();
         // TODO bring over Help contexts from Publishing Plugin
         // helpSystem.setHelp(pnlMain, SERVER_DIALOG_HELP_CONTEXT);
-        helpSystem.setHelp(pnlMain, "SERVER_DIALOG_HELP_CONTEXT");
+        helpSystem.setHelp(pnlMain, "SERVER_DIALOG_HELP_CONTEXT"); //$NON-NLS-1$
     }
 
     /**
@@ -330,7 +331,7 @@ public final class ServerPage extends WizardPage {
         }
 
         // should never be called if error status
-        throw new RuntimeException(UTIL.getString("serverPageInvalidServerProperties.text()"));
+        throw new RuntimeException(UTIL.getString("serverPageInvalidServerProperties")); //$NON-NLS-1$
     }
 
     /**
@@ -380,13 +381,11 @@ public final class ServerPage extends WizardPage {
         });
 
         if (success[0]) {
-            MessageDialog.openInformation(getShell(),
-                                          UTIL.getString("serverPageTestConnectionDialogTitle.text()"),
-                                          UTIL.getString("serverPageTestConnectionDialogSuccessMsg.text()"));
+            MessageDialog.openInformation(getShell(), UTIL.getString("serverPageTestConnectionDialogTitle"), //$NON-NLS-1$
+                                          UTIL.getString("serverPageTestConnectionDialogSuccessMsg")); //$NON-NLS-1$
         } else {
-            MessageDialog.openError(getShell(),
-                                    UTIL.getString("serverPageTestConnectionDialogTitle.text()"),
-                                    UTIL.getString("serverPageTestConnectionDialogFailureMsg.text()"));
+            MessageDialog.openError(getShell(), UTIL.getString("serverPageTestConnectionDialogTitle"), //$NON-NLS-1$
+                                    UTIL.getString("serverPageTestConnectionDialogFailureMsg")); //$NON-NLS-1$
         }
     }
 
@@ -413,6 +412,14 @@ public final class ServerPage extends WizardPage {
     private IStatus isServerValid( String url,
                                    String username,
                                    String password ) {
+        if (url == null) {
+            return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, "serverUrlCannotBeNull");
+        }
+
+        if (username == null) {
+            return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, "usernameCannotBeNull");
+        }
+
         // TODO actually check server validity
         // Utils.isServerValid(this.url, this.user, this.password);
         return Status.OK_STATUS;
@@ -422,7 +429,7 @@ public final class ServerPage extends WizardPage {
      * If the initial message is being displayed do a validation.
      */
     void updateInitialMessage() {
-        if (UTIL.getString("serverPageOkStatusMsg.text()").equals(getMessage())) {
+        if (UTIL.getString("serverPageOkStatusMsg").equals(getMessage())) { //$NON-NLS-1$
             updateState();
         }
     }
@@ -441,7 +448,7 @@ public final class ServerPage extends WizardPage {
             validate();
 
             // set initial message
-            setMessage(UTIL.getString("serverPageOkStatusMsg.text()"));
+            setMessage(UTIL.getString("serverPageOkStatusMsg")); //$NON-NLS-1$
         }
     }
 
@@ -465,7 +472,7 @@ public final class ServerPage extends WizardPage {
             } else if (this.status.getSeverity() == IStatus.INFO) {
                 setMessage(this.status.getMessage(), IMessageProvider.INFORMATION);
             } else {
-                setMessage(UTIL.getString("serverPageOkStatusMsg.text()"));
+                setMessage(UTIL.getString("serverPageOkStatusMsg")); //$NON-NLS-1$
             }
         }
     }
@@ -483,8 +490,7 @@ public final class ServerPage extends WizardPage {
             // don't check if modifying existing server and identifying properties have not changed
             if (((this.server == null) || !this.server.hasSameKey(changedServer))
                 && getServerManager().isRegistered(changedServer)) {
-                this.status = new Status(IStatus.ERROR, PLUGIN_ID,
-                                         UTIL.getString("serverExistsMsg.text(changedServer.getShortDescription()"));
+                this.status = new Status(IStatus.ERROR, PLUGIN_ID, UTIL.getString("serverExistsMsg", changedServer.getUrl())); //$NON-NLS-1$
             }
         }
     }

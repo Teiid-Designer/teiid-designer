@@ -50,8 +50,8 @@ public final class EditServerAction extends BaseSelectionListenerAction {
      */
     public EditServerAction( Shell shell,
                              ServerManager serverManager ) {
-        super(UTIL.getString("editServerActionText.text()"));
-        setToolTipText(UTIL.getString("editServerActionToolTip.text()"));
+        super(UTIL.getString("editServerActionText")); //$NON-NLS-1$
+        setToolTipText(UTIL.getString("editServerActionToolTip")); //$NON-NLS-1$
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiPlugin.Images.EDIT_SERVER_ICON));
         setEnabled(false);
 

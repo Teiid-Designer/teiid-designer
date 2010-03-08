@@ -209,7 +209,7 @@ public final class ServerManager implements EventManager {
         }
 
         // server already exists
-        return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("serverExistsMsg.text(server.getShortDescription()"));
+        return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("serverExistsMsg", server.getUrl())); //$NON-NLS-1$
     }
 
     /**
@@ -244,8 +244,7 @@ public final class ServerManager implements EventManager {
         }
 
         // server could not be removed
-        return new Status(IStatus.ERROR, PLUGIN_ID,
-                          Util.getString("serverManagerRegistryRemoveUnexpectedError.text(server.getShortDescription())"));
+        return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("serverManagerRegistryRemoveUnexpectedError", server.getUrl())); //$NON-NLS-1$
     }
 
     /**
@@ -283,7 +282,7 @@ public final class ServerManager implements EventManager {
                 l.configurationChanged(event);
             } catch (Exception e) {
                 removeListener(l);
-                Util.log(IStatus.WARNING, e, Util.getString("unexpectedErrorInExecutionConfigurationListener")); // TODO i18n this
+                Util.log(IStatus.WARNING, e, Util.getString("unexpectedErrorInExecutionConfigurationListener")); //$NON-NLS-1$
             }
         }
     }
@@ -346,7 +345,7 @@ public final class ServerManager implements EventManager {
                     }
                 } catch (Exception e) {
                     return new Status(IStatus.ERROR, PLUGIN_ID,
-                                      Util.getString("errorRestoringServerRegistry.text(getStateFileName())"));
+                                      Util.getString("errorRestoringServerRegistry", getStateFileName())); //$NON-NLS-1$
                 }
             }
         }
@@ -385,18 +384,17 @@ public final class ServerManager implements EventManager {
                 TransformerFactory transFactory = TransformerFactory.newInstance();
                 Transformer transformer = transFactory.newTransformer();
                 transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2"); //$NON-NLS-1$
+                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2"); //$NON-NLS-1$ //$NON-NLS-2$ 
                 transformer.transform(source, resultXML);
             } catch (Exception e) {
-                return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("errorSavingServerRegistry.text(getStateFileName())"));
+                return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("errorSavingServerRegistry", getStateFileName())); //$NON-NLS-1$
             }
         } else if ((this.stateLocationPath != null) && stateFileExists()) {
             // delete current registry file since all servers have been deleted
             try {
                 new File(getStateFileName()).delete();
             } catch (Exception e) {
-                return new Status(IStatus.ERROR, PLUGIN_ID,
-                                  Util.getString("errorDeletingServerRegistryFile.text(getStateFileName())"));
+                return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("errorDeletingServerRegistryFile", getStateFileName())); //$NON-NLS-1$
             }
         }
 
@@ -440,15 +438,14 @@ public final class ServerManager implements EventManager {
                 // unexpected problem adding new version of server to registry
                 // TODO add previousServerVerson back into registry???
                 return new Status(IStatus.ERROR, PLUGIN_ID,
-                                  Util.getString("serverManagerRegistryUpdateAddError.text(status.getMessage())"));
+                                  Util.getString("serverManagerRegistryUpdateAddError", status.getMessage())); //$NON-NLS-1$
             }
         } finally {
             this.serverLock.writeLock().unlock();
         }
 
         // unexpected problem removing server from registry
-        return new Status(IStatus.ERROR, PLUGIN_ID,
-                          Util.getString("serverManagerRegistryUpdateRemoveError.text(status.getMessage())"));
+        return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("serverManagerRegistryUpdateRemoveError", status.getMessage())); //$NON-NLS-1$
     }
 
 }

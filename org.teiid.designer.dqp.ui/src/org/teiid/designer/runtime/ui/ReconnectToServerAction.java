@@ -41,8 +41,8 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
      * @param viewer the server view tree viewer
      */
     public ReconnectToServerAction( TreeViewer viewer ) {
-        super(UTIL.getString("serverReconnectActionText.text()"));
-        setToolTipText(UTIL.getString("serverReconnectActionToolTip.text()"));
+        super(UTIL.getString("serverReconnectActionText")); //$NON-NLS-1$
+        setToolTipText(UTIL.getString("serverReconnectActionToolTip")); //$NON-NLS-1$
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.REFRESH_ICON));
         setEnabled(false);
 

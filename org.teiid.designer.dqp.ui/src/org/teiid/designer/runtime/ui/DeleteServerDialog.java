@@ -46,7 +46,8 @@ public final class DeleteServerDialog extends MessageDialog {
      */
     public DeleteServerDialog( Shell parentShell,
                                Collection<Server> serversBeingDeleted ) {
-        super(parentShell, UTIL.getString("deleteServerDialogTitle.text()"),
+        super(parentShell,
+              UTIL.getString("deleteServerDialogTitle"), //$NON-NLS-1$
               DqpUiPlugin.getDefault().getImage(DqpUiPlugin.Images.DELETE_SERVER_ICON), null, MessageDialog.QUESTION,
               new String[] {IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL}, 0);
 
@@ -75,9 +76,9 @@ public final class DeleteServerDialog extends MessageDialog {
 
         if (this.serversBeingDeleted.size() == 1) {
             Server server = this.serversBeingDeleted.iterator().next();
-            msg = UTIL.getString("deleteServerDialogOneServerMsg.text(server.getUrl(), server.getUser())");
+            msg = UTIL.getString("deleteServerDialogOneServerMsg", server.getUrl(), server.getUser()); //$NON-NLS-1$
         } else {
-            msg = UTIL.getString("deleteServerDialogMultipleServersMsg.text(this.serversBeingDeleted.size())");
+            msg = UTIL.getString("deleteServerDialogMultipleServersMsg", this.serversBeingDeleted.size()); //$NON-NLS-1$
         }
 
         this.message = msg;
@@ -98,7 +99,7 @@ public final class DeleteServerDialog extends MessageDialog {
             serverList.setLayoutData(gd);
 
             for (Server server : this.serversBeingDeleted) {
-                serverList.add(server.getUrl() + "::" + server.getUser());
+                serverList.add(server.getUrl() + "::" + server.getUser()); //$NON-NLS-1$
             }
         }
 

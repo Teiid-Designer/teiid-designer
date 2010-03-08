@@ -55,8 +55,8 @@ public final class DeleteServerAction extends BaseSelectionListenerAction {
      */
     public DeleteServerAction( Shell shell,
                                ServerManager serverManager ) {
-        super(UTIL.getString("deleteServerActionText.text()"));
-        setToolTipText(UTIL.getString("deleteServerActionToolTip.text()"));
+        super(UTIL.getString("deleteServerActionText")); //$NON-NLS-1$
+        setToolTipText(UTIL.getString("deleteServerActionToolTip")); //$NON-NLS-1$
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiPlugin.Images.DELETE_SERVER_ICON));
         setEnabled(false);
 
@@ -94,9 +94,8 @@ public final class DeleteServerAction extends BaseSelectionListenerAction {
             }
 
             if (errorsOccurred) {
-                MessageDialog.openError(this.shell,
-                                        UTIL.getString("errorDialogTitle.text()"),
-                                        UTIL.getString("deleteServerDialogErrorsOccurredMsg.text()"));
+                MessageDialog.openError(this.shell, UTIL.getString("errorDialogTitle.text()"), //$NON-NLS-1$
+                                        UTIL.getString("deleteServerDialogErrorsOccurredMsg.text()")); //$NON-NLS-1$
             }
         }
     }

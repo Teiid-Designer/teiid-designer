@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.runtime;
 
+import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 import com.metamatrix.core.modeler.util.ArgCheck;
 
 /**
@@ -76,14 +77,16 @@ public final class ExecutionConfigurationEvent {
         this.target = target;
         this.updatedTarget = updatedTarget;
     }
-    
+
     /**
      * @return the connector involved in the event
      * @throws IllegalStateException if method is called for a server event
      */
     public Connector getConnector() {
         if (this.targetType != TargetType.CONNECTOR) {
-            throw new IllegalStateException("invalidTargetTypeForGetConnectorMethod"); // TODO i18n this
+            throw new IllegalStateException(Util.getString("invalidTargetTypeForGetConnectorMethod", //$NON-NLS-1$
+                                                           this.targetType,
+                                                           TargetType.CONNECTOR));
         }
 
         return (Connector)this.target;
@@ -95,14 +98,16 @@ public final class ExecutionConfigurationEvent {
     public EventType getEventType() {
         return this.eventType;
     }
-    
+
     /**
      * @return the server involved in the event
      * @throws IllegalStateException if method is called for a connector event
      */
     public Server getServer() {
         if (this.targetType != TargetType.SERVER) {
-            throw new IllegalStateException("invalidTargetTypeForGetServerMethod"); // TODO i18n this
+            throw new IllegalStateException(Util.getString("invalidTargetTypeForGetServerMethod", //$NON-NLS-1$
+                                                           this.targetType,
+                                                           TargetType.SERVER));
         }
 
         return (Server)this.target;
@@ -114,14 +119,16 @@ public final class ExecutionConfigurationEvent {
     public TargetType getTargetType() {
         return this.targetType;
     }
-    
+
     /**
      * @return the server involved in the event
      * @throws IllegalStateException if method is called for a connector event
      */
     public Server getUpdatedServer() {
         if (this.targetType != TargetType.SERVER) {
-            throw new IllegalStateException("invalidTargetTypeForGetUpdatedServerMethod"); // TODO i18n this
+            throw new IllegalStateException(Util.getString("invalidTargetTypeForGetUpdatedServerMethod", //$NON-NLS-1$
+                                                           this.targetType,
+                                                           TargetType.SERVER));
         }
 
         return (Server)this.updatedTarget;

@@ -44,8 +44,8 @@ public final class NewServerAction extends Action {
      */
     public NewServerAction( Shell shell,
                             ServerManager serverManager ) {
-        super(UTIL.getString("newServerActionText.text()"));
-        setToolTipText(UTIL.getString("newServerActionToolTip.text()"));
+        super(UTIL.getString("newServerActionText")); //$NON-NLS-1$
+        setToolTipText(UTIL.getString("newServerActionToolTip")); //$NON-NLS-1$
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.NEW_SERVER_ICON));
 
         this.shell = shell;

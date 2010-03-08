@@ -55,7 +55,7 @@ public final class ServerWizard extends Wizard {
         this.serverManager = serverManager;
 
         setDefaultPageImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SERVER_WIZBAN));
-        setWindowTitle(UTIL.getString("serverWizardNewServerTitle.text()"));
+        setWindowTitle(UTIL.getString("serverWizardNewServerTitle")); //$NON-NLS-1$
     }
 
     /**
@@ -69,7 +69,7 @@ public final class ServerWizard extends Wizard {
         this.page = new ServerPage(server);
         this.serverManager = serverManager;
         this.existingServer = server;
-        setWindowTitle(UTIL.getString("serverWizardEditServerTitle.text()"));
+        setWindowTitle(UTIL.getString("serverWizardEditServerTitle")); //$NON-NLS-1$
     }
 
     // ===========================================================================================================================
@@ -107,17 +107,15 @@ public final class ServerWizard extends Wizard {
             status = this.serverManager.addServer(server);
 
             if (status.getSeverity() == IStatus.ERROR) {
-                MessageDialog.openError(getShell(),
-                                        UTIL.getString("errorDialogTitle.text()"),
-                                        UTIL.getString("serverWizardEditServerErrorMsg.text()"));
+                MessageDialog.openError(getShell(), UTIL.getString("errorDialogTitle"), //$NON-NLS-1$
+                                        UTIL.getString("serverWizardEditServerErrorMsg")); //$NON-NLS-1$
             }
         } else if (!this.existingServer.equals(server)) {
             status = this.serverManager.updateServer(this.existingServer, server);
 
             if (status.getSeverity() == IStatus.ERROR) {
-                MessageDialog.openError(getShell(),
-                                        UTIL.getString("errorDialogTitle.text()"),
-                                        UTIL.getString("serverWizardNewServerErrorMsg.text()"));
+                MessageDialog.openError(getShell(), UTIL.getString("errorDialogTitle"), //$NON-NLS-1$
+                                        UTIL.getString("serverWizardNewServerErrorMsg")); //$NON-NLS-1$
             }
         }
 

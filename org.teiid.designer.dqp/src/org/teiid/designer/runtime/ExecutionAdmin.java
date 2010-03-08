@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.runtime;
 
+import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -193,7 +194,7 @@ public final class ExecutionAdmin {
     public Exception validateConnectorName( String name ) {
         // TODO is there other name validation needed (number of chars, chars allowed, ...)
         if (this.connectorByNameMap.containsKey(name)) {
-            return new Exception("connectorNameAlreadyExists"); // TODO i18n this
+            return new Exception(Util.getString("connectorNameAlreadyExists", name)); //$NON-NLS-1$
         }
 
         return null;

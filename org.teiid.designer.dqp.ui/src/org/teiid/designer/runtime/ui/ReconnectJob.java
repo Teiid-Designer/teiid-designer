@@ -40,7 +40,7 @@ public final class ReconnectJob extends Job {
      * @param server the server being connected to (never <code>null</code>)
      */
     public ReconnectJob( Server server ) {
-        super(UTIL.getString("reconnectJobTaskName.text(server.getShortDescription())"));
+        super(UTIL.getString("reconnectJobTaskName", server.getUrl())); //$NON-NLS-1$
         this.server = server;
     }
 
@@ -69,7 +69,7 @@ public final class ReconnectJob extends Job {
         ServerManager serverManager = DqpPlugin.getInstance().getServerRegistry();
 
         try {
-            String taskName = UTIL.getString("reconnectJobTaskName.text(this.server.getShortDescription())");
+            String taskName = UTIL.getString("reconnectJobTaskName", this.server.getUrl()); //$NON-NLS-1$
             monitor.beginTask(taskName, 1);
             monitor.setTaskName(taskName);
             IStatus status = serverManager.ping(this.server);
@@ -82,7 +82,7 @@ public final class ReconnectJob extends Job {
             if (e instanceof InterruptedException) {
                 msg = e.getLocalizedMessage();
             } else {
-                msg = UTIL.getString("publishJobUnexpectedErrorMsg.text()");
+                msg = UTIL.getString("reconnectJobUnexpectedErrorMsg", this.server.getUrl()); //$NON-NLS-1$
             }
 
             result = new Status(IStatus.ERROR, PLUGIN_ID, msg, e);

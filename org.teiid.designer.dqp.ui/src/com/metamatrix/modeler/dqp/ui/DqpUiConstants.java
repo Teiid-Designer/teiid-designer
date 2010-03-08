@@ -148,9 +148,9 @@ public interface DqpUiConstants {
         public static final String SOURCE_CONNECTOR_BINDING_ICON = PC.OBJ16 + "sourceModelBinding.png"; //$NON-NLS-1$
         public static final String IMPORT_WIZ_ICON = PC.CTOOL16 + "import_wiz.gif"; //$NON-NLS-1$
         // TODO create SERVER images
-        public static final String NEW_SERVER_ICON = PC.CTOOL16 + "new_server.png"; //$NON-NLS-1$
-        public static final String DELETE_SERVER_ICON = PC.CTOOL16 + "delete_server.png"; //$NON-NLS-1$
-        public static final String EDIT_SERVER_ICON = PC.CTOOL16 + "edit_server.png"; //$NON-NLS-1$
+        public static final String NEW_SERVER_ICON = PC.CTOOL16 + "new_server.gif"; //$NON-NLS-1$
+        public static final String DELETE_SERVER_ICON = PC.CTOOL16 + "delete_server.gif"; //$NON-NLS-1$
+        public static final String EDIT_SERVER_ICON = PC.CTOOL16 + "edit_server.gif"; //$NON-NLS-1$
         public static final String NEW_BINDING_ICON = PC.CTOOL16 + "new_binding.png"; //$NON-NLS-1$
 
         public static final String PREVIEW_DATA_ICON = PC.CTOOL16 + "previewData.gif"; //$NON-NLS-1$
@@ -159,7 +159,7 @@ public interface DqpUiConstants {
 
         public static final String IMPORT_CONNECTORS_WIZBAN = PC.WIZBAN + "import_connectors.jpg"; //$NON-NLS-1$
         public static final String EXPORT_CONNECTORS_WIZBAN = PC.WIZBAN + "export_connectors.jpg"; //$NON-NLS-1$
-        public static final String SERVER_WIZBAN = PC.WIZBAN + "server_wizard_banner.jpg"; //$NON-NLS-1$
+        public static final String SERVER_WIZBAN = PC.WIZBAN + "export_connectors.jpg"; //"server_wizard_banner.jpg"; //$NON-NLS-1$
 
     }
 
