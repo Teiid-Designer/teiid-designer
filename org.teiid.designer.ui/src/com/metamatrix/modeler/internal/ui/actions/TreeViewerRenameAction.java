@@ -8,7 +8,8 @@
 package com.metamatrix.modeler.internal.ui.actions;
 
 import java.util.List;
-import org.eclipse.core.internal.resources.File;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -182,7 +183,7 @@ public class TreeViewerRenameAction extends RenameAction {
             IStructuredSelection selection = new StructuredSelection(eObject);
             treeViewer.setSelection(selection);
             cachedSelection = navigatorTree.getSelection();
-        } else if (eObject != null && cachedSelection.length == 1 && (cachedSelection[0].getData() instanceof File)) {
+        } else if (eObject != null && cachedSelection.length == 1 && (cachedSelection[0].getData() instanceof IFile)) {
             IStructuredSelection selection = new StructuredSelection(eObject);
             treeViewer.setSelection(selection);
             cachedSelection = navigatorTree.getSelection();
