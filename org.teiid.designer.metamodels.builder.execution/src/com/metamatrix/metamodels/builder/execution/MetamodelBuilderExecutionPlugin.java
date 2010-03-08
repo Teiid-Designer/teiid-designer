@@ -13,7 +13,6 @@ import java.net.URL;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
@@ -42,8 +41,6 @@ public class MetamodelBuilderExecutionPlugin extends Plugin {
      */
     private static final String I18N_NAME = PACKAGE_ID + ".i18n"; //$NON-NLS-1$
     public static final PluginUtil Util = new PluginUtilImpl(PLUGIN_ID, I18N_NAME, ResourceBundle.getBundle(I18N_NAME));
-
-    public static boolean DEBUG = false;
 
     /** Defines the expected name of the built-in datatype model file */
     public static final String DATATYPES_XSD_FILE_NAME = "builtInDataTypes.xsd"; //$NON-NLS-1$
@@ -141,21 +138,6 @@ public class MetamodelBuilderExecutionPlugin extends Plugin {
             }
         }
         return builtInTypesResource;
-    }
-
-    public void logMessage( int severity,
-                            String message ) {
-        Util.log(severity, message);
-    }
-
-    public void logMessage( IStatus status ) {
-        Util.log(status);
-    }
-
-    public void logMessage( int severity,
-                            Throwable t,
-                            String message ) {
-        Util.log(severity, t, message);
     }
 
     // ==================================================================================

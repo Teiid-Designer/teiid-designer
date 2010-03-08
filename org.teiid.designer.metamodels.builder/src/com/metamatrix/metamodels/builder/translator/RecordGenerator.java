@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.metamodels.builder.BuilderConstants;
+import com.metamatrix.metamodels.builder.MetamodelBuilderPlugin;
 import com.metamatrix.metamodels.builder.MetamodelEntityRecord;
 import com.metamatrix.metamodels.builder.ModelRecord;
 import com.metamatrix.metamodels.internal.builder.util.BuilderUtil;
@@ -26,7 +26,7 @@ import com.metamatrix.metamodels.internal.builder.util.MetaClassUriHelper;
 /**
  * RecordGenerator - creates Model or Entity Records from ResultSets
  */
-public class RecordGenerator implements BuilderConstants {
+public class RecordGenerator {
 
     private static final String MODEL_TYPE = "ModelType"; //$NON-NLS-1$
     private static final String MODEL_SUBTYPE = "SubType"; //$NON-NLS-1$
@@ -41,13 +41,13 @@ public class RecordGenerator implements BuilderConstants {
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(RecordGenerator.class);
 
     private static String getString( final String id ) {
-        return UTIL.getString(I18N_PREFIX + id);
+        return MetamodelBuilderPlugin.Util.getString(I18N_PREFIX + id);
     }
 
     private static String getString( final String id,
                                      final Object param1,
                                      final Object param2 ) {
-        return UTIL.getString(I18N_PREFIX + id, param1, param2);
+        return MetamodelBuilderPlugin.Util.getString(I18N_PREFIX + id, param1, param2);
     }
 
     /**
