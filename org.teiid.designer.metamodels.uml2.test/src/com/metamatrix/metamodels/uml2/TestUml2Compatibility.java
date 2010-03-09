@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.uml2.uml.UMLPackage;
-import org.eclipse.uml2.uml.internal.impl.UMLPackageImpl;
 import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.core.util.StringUtil;
 
@@ -57,7 +56,6 @@ public class TestUml2Compatibility extends TestCase {
         return new TestSetup(suite) {
             @Override
             public void setUp() throws Exception {
-                UMLPackageImpl.init();
                 metaClassNames = readMetaClassFile(new File(METACLASS_FILE_PATH));
                 assertTrue(metaClassNames.length > 10);
             }
@@ -70,12 +68,11 @@ public class TestUml2Compatibility extends TestCase {
 
     public static String[] readMetaClassFile( final File f ) throws Exception {
         if (f != null && f.exists()) {
-            final List names = new ArrayList();
+            final List<String> names = new ArrayList<String>();
             BufferedReader in = new BufferedReader(new FileReader(f));
             String str;
             while ((str = in.readLine()) != null) {
                 String name = str.substring(PREFIX_LENGTH);
-                // System.out.println(name);
                 names.add(name);
             }
             in.close();
@@ -84,17 +81,17 @@ public class TestUml2Compatibility extends TestCase {
         return StringUtil.Constants.EMPTY_STRING_ARRAY;
     }
 
-    private static void sortAndOutputStrings( final List strings ) {
+    private static void sortAndOutputStrings( final List<String> strings ) {
         Collections.sort(strings, String.CASE_INSENSITIVE_ORDER);
-        for (final Iterator iter = strings.iterator(); iter.hasNext();) {
+        for (final Iterator<String> iter = strings.iterator(); iter.hasNext();) {
             final String str = (String)iter.next();
             System.out.println("    " + str); //$NON-NLS-1$
         }
     }
 
-    private static List getNameList( final List objs ) {
-        List result = new ArrayList(objs.size());
-        for (final Iterator iter = objs.iterator(); iter.hasNext();) {
+    private static List<String> getNameList( final List<?> objs ) {
+        List<String> result = new ArrayList<String>(objs.size());
+        for (final Iterator<?> iter = objs.iterator(); iter.hasNext();) {
             Object obj = iter.next();
             if (obj instanceof EClass) {
                 result.add(((EClass)obj).getName());
@@ -127,7 +124,7 @@ public class TestUml2Compatibility extends TestCase {
             EClassifier eClassifier = UMLPackage.eINSTANCE.getEClassifier(metaClassNames[i]);
             if (eClassifier != null && eClassifier instanceof EClass) {
                 System.out.println("  SuperTypes for " + ((EClass)eClassifier).getName()); //$NON-NLS-1$
-                List superTypeNames = getNameList(((EClass)eClassifier).getEAllSuperTypes());
+                List<String> superTypeNames = getNameList(((EClass)eClassifier).getEAllSuperTypes());
                 sortAndOutputStrings(superTypeNames);
             } else {
                 System.out.println("--> EClassifier is null or not instanceof EClass " + metaClassNames[i]); //$NON-NLS-1$
@@ -141,7 +138,7 @@ public class TestUml2Compatibility extends TestCase {
             EClassifier eClassifier = UMLPackage.eINSTANCE.getEClassifier(metaClassNames[i]);
             if (eClassifier != null && eClassifier instanceof EClass) {
                 System.out.println("  Features for " + ((EClass)eClassifier).getName()); //$NON-NLS-1$
-                List superTypeNames = getNameList(((EClass)eClassifier).getEAllStructuralFeatures());
+                List<String> superTypeNames = getNameList(((EClass)eClassifier).getEAllStructuralFeatures());
                 sortAndOutputStrings(superTypeNames);
             } else {
                 System.out.println("--> EClassifier is null or not instanceof EClass " + metaClassNames[i]); //$NON-NLS-1$
@@ -155,7 +152,7 @@ public class TestUml2Compatibility extends TestCase {
             EClassifier eClassifier = UMLPackage.eINSTANCE.getEClassifier(metaClassNames[i]);
             if (eClassifier != null && eClassifier instanceof EEnum) {
                 System.out.println("  Enumeration literals for " + ((EEnum)eClassifier).getName()); //$NON-NLS-1$
-                List literals = getNameList(((EEnum)eClassifier).getELiterals());
+                List<String> literals = getNameList(((EEnum)eClassifier).getELiterals());
                 sortAndOutputStrings(literals);
             }
         }
