@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import org.eclipse.core.internal.resources.ResourceException;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
@@ -21,7 +21,6 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.core.modeler.util.ArgCheck;
@@ -263,12 +262,7 @@ public class ModelMarkerManager implements IResourceChangeListener {
             try {
                 attribute = iMarker.getAttribute(attributeName);
             } catch (CoreException e) {
-                // ResourceException is caught here because some calls to getAttribute() may be on an IMarker who's resource
-                // does not exist in the workspace any more.  (Defect 15552)
-                if (!(e instanceof ResourceException)) {
-                    String message = ModelerCore.Util.getString("ModelMarkerManager.getMarkerAttribute.errorMessage", attributeName); //$NON-NLS-1$
-                    ModelerCore.Util.log(IStatus.ERROR, e, message);
-                }
+                //Do nothing.
             }
         }
         return attribute;
