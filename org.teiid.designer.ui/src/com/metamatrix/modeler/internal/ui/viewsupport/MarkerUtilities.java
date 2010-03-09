@@ -7,12 +7,14 @@
  */
 package com.metamatrix.modeler.internal.ui.viewsupport;
 
-import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.WorkbenchException;
+
+import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.validation.ProblemMarker;
 import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -49,7 +51,8 @@ public abstract class MarkerUtilities {
             } catch (CoreException e) {
                 // ResourceException is caught here because some calls to getAttribute() may be on an IMarker who's resource
                 // does not exist in the workspace any more.  (Defect 15552)
-                if (!(e instanceof ResourceException)) {
+                if (e instanceof ModelerCoreException || 
+                		e instanceof WorkbenchException) {
                     String message = UiConstants.Util.getString("MarkerUtilities.getMarkerAttribute.errorMessage", attributeName); //$NON-NLS-1$
                     UiConstants.Util.log(IStatus.ERROR, e, message);
                 }
