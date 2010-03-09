@@ -25,11 +25,9 @@ package org.teiid.designer.runtime;
 
 import java.util.Collection;
 import java.util.Properties;
-import org.eclipse.core.runtime.IStatus;
 import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.adminapi.PropertyDefinition;
 import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  */
@@ -104,133 +102,119 @@ public final class Connector {
     }
 
     /**
-     * Sets a connector property.
-     * 
      * @param name the property name
-     * @param value the new property value
-     * @throws Exception if the property was not set
-     * @since 5.0
+     * @param value the proposed new value
+     * @return <code>true</code> if the property exists and the proposed value is valid
+     * @since 7.0
      */
-    public void setPropertyValue( String name,
-                                  String value ) throws Exception {
-        ArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
+    public boolean isValidPropertyValue( String name,
+                                         String value ) {
+        PropertyDefinition definition = this.type.getPropertyDefinition(name);
+        if (definition == null) return false;
 
-        PropertyDefinition propDef = type.getPropertyDefinition(name);
-        if (propDef == null) {
-            throw new Exception(DqpPlugin.Util.getString("Connector.unableToFindTypeDefinition", name)); //$NON-NLS-1$
-        }
-
-        if (isValid(propDef, value)) {
-            if (propDef.getDefaultValue() == null || !propDef.getDefaultValue().equals(value)) {
-                this.type.getAdmin().setPropertyValue(this, name, value);
-            }
-        } else {
-            throw new Exception(DqpPlugin.Util.getString("Connector.invalidPropertyValue", value, name)); //$NON-NLS-1$
-        }
-    }
-
-    private boolean isValidValue( PropertyDefinition definition,
-                                  String value ) {
         String type = definition.getPropertyTypeClassName();
 
-        if ("String".equals(type)) { //$NON-NLS-1$
-            return true;
-        }
+        // Note: "String" does not need any validation here
 
         if ("Boolean".equals(type)) { //$NON-NLS-1$
             if (value == null) {
                 return false;
             }
-            return (value.equalsIgnoreCase(Boolean.TRUE.toString()) || value.equalsIgnoreCase(Boolean.FALSE.toString()));
-        }
 
-        if ("Character".equals(type)) { //$NON-NLS-1$
-            return ((value == null) || (value.length() <= 1));
-        }
-
-        if ("Byte".equals(type)) { //$NON-NLS-1$
+            if (!value.equalsIgnoreCase(Boolean.TRUE.toString()) && !value.equalsIgnoreCase(Boolean.FALSE.toString())) {
+                return false;
+            }
+        } else if ("Character".equals(type)) { //$NON-NLS-1$
+            if ((value != null) && (value.length() > 1)) {
+                return false;
+            }
+        } else if ("Byte".equals(type)) { //$NON-NLS-1$
             try {
                 Byte.parseByte(value);
-                return true;
             } catch (Exception e) {
                 return false;
             }
-        }
-
-        if ("Short".equals(type)) { //$NON-NLS-1$
+        } else if ("Short".equals(type)) { //$NON-NLS-1$
             try {
                 Short.parseShort(value);
-                return true;
             } catch (Exception e) {
                 return false;
             }
-        }
-
-        if ("Int".equals(type)) { //$NON-NLS-1$
+        } else if ("Int".equals(type)) { //$NON-NLS-1$
             try {
                 Integer.parseInt(value);
-                return true;
             } catch (Exception e) {
                 return false;
             }
-        }
-
-        if ("Long".equals(type)) { //$NON-NLS-1$
+        } else if ("Long".equals(type)) { //$NON-NLS-1$
             try {
                 Long.parseLong(value);
-                return true;
             } catch (Exception e) {
                 return false;
             }
-        }
-
-        if ("Float".equals(type)) { //$NON-NLS-1$
+        } else if ("Float".equals(type)) { //$NON-NLS-1$
             try {
                 Float.parseFloat(value);
-                return true;
             } catch (Exception e) {
                 return false;
             }
-        }
-
-        if ("Double".equals(type)) { //$NON-NLS-1$
+        } else if ("Double".equals(type)) { //$NON-NLS-1$
             try {
                 Double.parseDouble(value);
-                return true;
             } catch (Exception e) {
                 return false;
             }
         }
 
-        // should never get here
-        assert (false);
-        return false;
-    }
-
-    private boolean isValid( PropertyDefinition definition,
-                             String value ) {
-        if (isValidValue(definition, value) && definition.isConstrainedToAllowedValues()) {
+        // should only get here if valid so far
+        if (definition.isConstrainedToAllowedValues()) {
             Collection values = definition.getAllowedValues();
+            assert ((values != null) && !values.isEmpty()); // TODO is this a valid assert??
 
-            if (values != null && !values.isEmpty()) {
-                for (Object allowedValue : values) {
-                    if (allowedValue.equals(value)) {
-                        return true;
-                    }
+            boolean foundIt = false;
+
+            for (Object allowedValue : values) {
+                if (allowedValue.equals(value)) {
+                    return true;
                 }
-
-                // value is not allowable
-                return false;
             }
 
-            // if there are no allowed values, this is an illegal state for the property defn
-            // but we need to allow the user to continue - just log it.
-            Object[] msgArray = new Object[] {definition.getName(), type.getName()};
-            DqpPlugin.Util.log(IStatus.WARNING, DqpPlugin.Util.getString("Connector.noAllowedValuesWarning", msgArray)); // TODO
-            // i18n
-            // this
+            return false;
         }
 
         return true;
     }
+
+    /**
+     * Sets a connector property.
+     * 
+     * @param name the property name (never <code>null</code>)
+     * @param value the new property value
+     * @throws Exception if there is a problem changing the property
+     * @since 5.0
+     */
+    public void setPropertyValue( String name,
+                                  String value ) throws Exception {
+        ArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
+        this.type.getAdmin().setPropertyValue(this, name, value);
+        getProperties().setProperty(name, value); // TODO does the admin call do this
+    }
+
+    /**
+     * @param changedProperties the list of properties that are being changed (never <code>null</code> or empty)
+     * @throws Exception if there is a problem changing the properties
+     * @since 7.0
+     */
+    public void setProperties( Properties changedProperties ) throws Exception {
+        ArgCheck.isNotEmpty(changedProperties.entrySet(), "changedProperties"); //$NON-NLS-1$
+        this.type.getAdmin().setProperties(this, changedProperties);
+
+        // TODO does the admin call do this
+        Properties props = getProperties();
+        
+        for (String name : changedProperties.stringPropertyNames()) {
+            props.setProperty(name, changedProperties.getProperty(name));
+        }
+    }
+
 }

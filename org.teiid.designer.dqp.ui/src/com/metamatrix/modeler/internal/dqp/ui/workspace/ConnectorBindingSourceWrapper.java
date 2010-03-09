@@ -83,13 +83,13 @@ public class ConnectorBindingSourceWrapper implements IExtendedModelObject {
      */
     public IPropertySource getPropertySource() {
         if( propertyPage == null ) {
-            propertySourceProvider = new ConnectorBindingPropertySourceProvider();
+            propertySourceProvider = new RuntimePropertySourceProvider();
             propertyPage = new PropertySheetPage();
             propertyPage.setPropertySourceProvider(propertySourceProvider);
             
         }
-        ((ConnectorBindingPropertySourceProvider)propertySourceProvider).setEditable(true);
-        ((ConnectorBindingPropertySource)propertySourceProvider.getPropertySource(binding)).setEditable(true);
+        ((RuntimePropertySourceProvider)propertySourceProvider).setEditable(true);
+        ((ConnectorPropertySource)propertySourceProvider.getPropertySource(binding)).setEditable(true);
         
         return propertySourceProvider.getPropertySource(binding);
     }

@@ -7,22 +7,24 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
+import java.util.Properties;
 import org.eclipse.jface.window.Window;
 import org.teiid.designer.runtime.Connector;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.EditConnectorBindingDialog;
+import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.EditConnectorDialog;
 import com.metamatrix.ui.internal.util.UiUtil;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * @since 5.0
  */
-public class EditConnectorBindingAction extends ConfigurationManagerAction {
+public class EditConnectorAction extends ConfigurationManagerAction {
 
     /**
      * @since 5.0
      */
-    public EditConnectorBindingAction() {
-        super(DqpUiConstants.UTIL.getString("EditConnectorBindingAction.label")); //$NON-NLS-1$
+    public EditConnectorAction() {
+        super(DqpUiConstants.UTIL.getString("EditConnectorAction.label")); //$NON-NLS-1$
     }
 
     /**
@@ -34,12 +36,17 @@ public class EditConnectorBindingAction extends ConfigurationManagerAction {
         Connector connector = (Connector)getSelectedObject();
         assert (connector != null); // action should not be enabled if there isn't one and only one connector selected
 
-        EditConnectorBindingDialog dialog = new EditConnectorBindingDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(), connector);
-
+        EditConnectorDialog dialog = new EditConnectorDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(), connector);
         dialog.open();
 
         if (dialog.getReturnCode() == Window.OK) {
-            getAdmin().modifyConnector(); // TODO need this method in admin
+            Properties changedProperties = dialog.getPropertyChanges();
+            try {
+                getAdmin().setProperties(connector, changedProperties);
+            } catch (Exception e) {
+                // TODO might need a better error message here
+                WidgetUtil.showError(e);
+            }
         }
     }
 

@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.adminapi.PropertyDefinition;
-import com.metamatrix.core.util.ArgCheck;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 
 /**
@@ -200,23 +200,69 @@ public final class ExecutionAdmin {
         return null;
     }
 
-    public Exception validateConnectorProperty( PropertyDefinition propDef,
-                                                String value ) {
-        // TODO implement
-        return null;
-    }
-
+    /**
+     * @param connector the connector whose property is being changed
+     * @param propName the name of the property being changed
+     * @param value the new value
+     * @throws Exception if there is a problem setting the property
+     * @since 7.0
+     */
     public void setPropertyValue( Connector connector,
                                   String propName,
                                   String value ) throws Exception {
-        String oldValue = connector.getPropertyValue(propName);
+        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        ArgCheck.isNotNull(propName, "propName"); //$NON-NLS-1$
+        internalSetPropertyValue(connector, propName, value, true);
+    }
 
-        if (oldValue == null) {
-            if (value == null) return;
-        } else if (oldValue.equals(value)) return;
+    private void internalSetPropertyValue( Connector connector,
+                                           String propName,
+                                           String value,
+                                           boolean notify ) throws Exception {
+        if (connector.isValidPropertyValue(propName, value)) {
+            String oldValue = connector.getPropertyValue(propName);
 
-        this.admin.setConnectorBindingProperty(connector.getName(), propName, value);
-        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(connector));
+            // don't set if value has not changed
+            if (oldValue == null) {
+                if (value == null) return;
+            } else if (oldValue.equals(value)) return;
+
+            // set value
+            this.admin.setConnectorBindingProperty(connector.getName(), propName, value);
+
+            if (notify) {
+                this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(connector));
+            }
+        } else {
+            throw new Exception(Util.getString("ExecutionAdmin.invalidPropertyValue", value, propName)); //$NON-NLS-1$
+        }
+    }
+
+    /**
+     * @param connector the connector whose properties are being changed (never <code>null</code>)
+     * @param changedProperties a collection of properties that have changed (never <code>null</code> or empty)
+     * @throws Exception if there is a problem changing the properties
+     * @since 7.0
+     */
+    public void setProperties( Connector connector,
+                               Properties changedProperties ) throws Exception {
+        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(changedProperties.entrySet(), "changedProperties"); //$NON-NLS-1$
+
+        if (changedProperties.size() == 1) {
+            String name = changedProperties.stringPropertyNames().iterator().next();
+            setPropertyValue(connector, name, changedProperties.getProperty(name));
+        } else {
+            // TODO stop connector??
+
+            for (String name : changedProperties.stringPropertyNames()) {
+                internalSetPropertyValue(connector, name, changedProperties.getProperty(name), false);
+            }
+
+            // TODO restart connector??
+            
+            this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(connector));
+        }
     }
 
 }

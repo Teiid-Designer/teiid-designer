@@ -7,9 +7,7 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.layout.GridData;
@@ -20,8 +18,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.runtime.Connector;
-import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
@@ -32,26 +28,20 @@ import com.metamatrix.ui.internal.widget.ExtendedTitleAreaDialog;
 /**
  * @since 5.0
  */
-public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implements IChangeListener {
+public class EditConnectorDialog extends ExtendedTitleAreaDialog implements IChangeListener {
 
-    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(NewConnectorBindingDialog.class);
+    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(EditConnectorDialog.class);
     private static final int WIDTH = 610;
     private static final int HEIGHT = 500;
 
     private Button btnOk;
+    private EditConnectorPanel pnlBindings;
+    private Connector connector;
 
-    private NewConnectorBindingPanel pnlBindings;
-
-    private ConnectorType initialConnectorType;
-
-    private Collection changeListenerList = new ArrayList(2);
-
-    private final ExecutionAdmin admin;
-
-    public NewConnectorBindingDialog( Shell theParentShell,
-                                      ExecutionAdmin admin ) {
-        super(theParentShell, DqpUiPlugin.getDefault());
-        this.admin = admin;
+    public EditConnectorDialog( Shell parentShell,
+                                       Connector connector ) {
+        super(parentShell, DqpUiPlugin.getDefault());
+        this.connector = connector;
     }
 
     @Override
@@ -66,13 +56,10 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
         gd.heightHint = HEIGHT;
         mainComposite.setLayoutData(gd);
 
-        this.pnlBindings = new NewConnectorBindingPanel(mainComposite, this.admin);
+        this.pnlBindings = new EditConnectorPanel(mainComposite, connector);
         this.pnlBindings.addChangeListener(this);
-        // this.pnlBindings.setSaveOnChange(true);
         this.pnlBindings.setFocus();
-        if (initialConnectorType != null) {
-            pnlBindings.setConnectorType(initialConnectorType);
-        }
+
         getShell().setText(DqpUiConstants.UTIL.getString(I18N_PREFIX + "name")); //$NON-NLS-1$
         setTitle(DqpUiConstants.UTIL.getString(I18N_PREFIX + "title")); //$NON-NLS-1$
 
@@ -106,14 +93,12 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
         return btn;
     }
 
-    public void addIChangeListener( IChangeListener listener ) {
-        if (!changeListenerList.contains(listener)) {
-            changeListenerList.add(listener);
-        }
-    }
-
-    public void removeIChangeListener( IChangeListener listener ) {
-        changeListenerList.remove(listener);
+    /**
+     * @return the changed properties
+     * @since 7.0
+     */
+    public Properties getPropertyChanges() {
+        return this.pnlBindings.getPropertyChanges();
     }
 
     /**
@@ -121,36 +106,14 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
      * @since 4.3
      */
     public void stateChanged( IChangeNotifier theSource ) {
-        for (Iterator iter = changeListenerList.iterator(); iter.hasNext();) {
-            ((IChangeListener)iter.next()).stateChanged(theSource);
-        }
         updateState();
     }
 
     void updateState() {
-        if (this.btnOk != null) {
-            IStatus status = this.pnlBindings.getStatus();
-            setMessage(status.getMessage(), status.getSeverity());
+        IStatus status = this.pnlBindings.getStatus();
+        setMessage(status.getMessage(), status.getSeverity());
 
-            this.btnOk.setEnabled(status.getSeverity() == IStatus.OK);
-        }
+        this.btnOk.setEnabled(status.getSeverity() == IStatus.OK);
     }
 
-    /**
-     * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-     * @since 4.3
-     */
-    @Override
-    protected void okPressed() {
-        this.pnlBindings.save();
-        super.okPressed();
-    }
-
-    public Connector getNewConnector() {
-        return this.pnlBindings.getConnector();
-    }
-
-    public void setConnectorType( ConnectorType type ) {
-        initialConnectorType = type;
-    }
 }

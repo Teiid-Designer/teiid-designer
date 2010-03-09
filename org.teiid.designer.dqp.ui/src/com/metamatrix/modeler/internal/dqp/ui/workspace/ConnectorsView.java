@@ -73,8 +73,8 @@ import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.CloneConnectorBindingAction;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.DeleteConnectorBindingAction;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.DeleteSourceBindingAction;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.EditConnectorBindingAction;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.NewConnectorBindingAction;
+import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.EditConnectorAction;
+import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.NewConnectorAction;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
@@ -108,8 +108,8 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
     ConnectorsViewTreeProvider treeProvider;
 
     Action showConnectorTypesToggleAction;
-    private EditConnectorBindingAction editConnectorBindingAction;
-    private NewConnectorBindingAction newConnectorBindingAction;
+    private EditConnectorAction editConnectorBindingAction;
+    private NewConnectorAction newConnectorBindingAction;
     private DeleteConnectorBindingAction deleteConnectorBindingAction;
     private CloneConnectorBindingAction cloneConnectorBindingAction;
     private DeleteSourceBindingAction deleteSourceBindingAction;
@@ -515,10 +515,10 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
      *  Initialize view actions, set icons and action text.
      */
     private void initActions() {
-        editConnectorBindingAction = new EditConnectorBindingAction();
+        editConnectorBindingAction = new EditConnectorAction();
         viewer.addSelectionChangedListener(editConnectorBindingAction);
 
-        newConnectorBindingAction = new NewConnectorBindingAction();
+        newConnectorBindingAction = new NewConnectorAction();
         viewer.addSelectionChangedListener(newConnectorBindingAction);
 
         deleteConnectorBindingAction = new DeleteConnectorBindingAction();
@@ -665,8 +665,8 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
     @Override
     public Object getAdapter( Class adapter ) {
         if (adapter.equals(IPropertySheetPage.class)) {
-            propertySourceProvider = new ConnectorBindingPropertySourceProvider();
-            ((ConnectorBindingPropertySourceProvider)propertySourceProvider).setEditable(true, false);
+            propertySourceProvider = new RuntimePropertySourceProvider();
+            ((RuntimePropertySourceProvider)propertySourceProvider).setEditable(true, false);
             PropertySheetPage page = new PropertySheetPage();
             page.setPropertySourceProvider(propertySourceProvider);
             return page;

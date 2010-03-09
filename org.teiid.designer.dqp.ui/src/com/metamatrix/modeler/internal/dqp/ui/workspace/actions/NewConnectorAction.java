@@ -11,23 +11,25 @@ import org.eclipse.jface.window.Window;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
+import org.teiid.designer.runtime.Server;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.NewConnectorBindingDialog;
+import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.NewConnectorDialog;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * @since 5.0
  */
-public class NewConnectorBindingAction extends ConfigurationManagerAction {
-    private static final String PREFIX = I18nUtil.getPropertyPrefix(NewConnectorBindingAction.class);
+public class NewConnectorAction extends ConfigurationManagerAction {
+    private static final String PREFIX = I18nUtil.getPropertyPrefix(NewConnectorAction.class);
 
     /**
      * @since 5.0
      */
-    public NewConnectorBindingAction() {
+    public NewConnectorAction() {
         super(DqpUiConstants.UTIL.getString(PREFIX + "label")); //$NON-NLS-1$
         this.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.NEW_BINDING_ICON));
         this.setToolTipText(DqpUiConstants.UTIL.getString(PREFIX + "tooltip")); //$NON-NLS-1$
@@ -40,27 +42,30 @@ public class NewConnectorBindingAction extends ConfigurationManagerAction {
      */
     @Override
     public void run() {
+        ExecutionAdmin admin = getAdmin();
+        ConnectorType type = null;
         Object selectedObject = getSelectedObject();
-        ExecutionAdmin admin = null;
+
+        assert (selectedObject != null);
+        assert ((selectedObject instanceof Connector) || (selectedObject instanceof ConnectorType) || (selectedObject instanceof Server));
+        assert (admin != null);
 
         if (selectedObject instanceof ConnectorType) {
-            admin = ((ConnectorType)selectedObject).getAdmin();
-        } else {
-            admin = ((Connector)selectedObject).getType().getAdmin();
+            type = (ConnectorType)selectedObject;
+        } else if (selectedObject instanceof Connector) {
+            type = ((Connector)selectedObject).getType();
         }
 
-        NewConnectorBindingDialog dialog = new NewConnectorBindingDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(), admin);
+        // show dialog
+        NewConnectorDialog dialog = new NewConnectorDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(), admin, type);
 
-        if (selectedObject instanceof ConnectorType) {
-            dialog.setConnectorType((ConnectorType)selectedObject);
-        } else {
-            dialog.setConnectorType(((Connector)selectedObject).getType());
-        }
-
-        dialog.open();
-
-        if (dialog.getReturnCode() == Window.OK) {
-            admin.addConnector(dialog.getName(), dialog.getType(), dialog.getProperties());
+        if (dialog.open() == Window.OK) {
+            try {
+                admin.addConnector(dialog.getConnectorName(), dialog.getConnectorType(), dialog.getConnectorProperties());
+            } catch (Exception e) {
+                // TODO might need a better error message here
+                WidgetUtil.showError(e);
+            }
         }
     }
 
@@ -73,10 +78,10 @@ public class NewConnectorBindingAction extends ConfigurationManagerAction {
         boolean result = false;
 
         if (SelectionUtilities.isSingleSelection(getSelection())) {
-            result = false;
             Object selectedObject = getSelectedObject();
 
-            if (selectedObject instanceof Connector || selectedObject instanceof ConnectorType) {
+            if ((selectedObject instanceof Connector) || (selectedObject instanceof ConnectorType)
+                || (selectedObject instanceof Server)) {
                 result = true;
             }
         }

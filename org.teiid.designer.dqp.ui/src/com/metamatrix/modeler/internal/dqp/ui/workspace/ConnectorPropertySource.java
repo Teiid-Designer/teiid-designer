@@ -13,8 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.swt.widgets.Display;
+import java.util.Properties;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
@@ -22,47 +21,43 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.ui.internal.util.UiUtil;
 
 /**
  * @since 5.5
  */
-public class ConnectorBindingPropertySource implements IPropertySource {
+public class ConnectorPropertySource implements IPropertySource {
 
-    private Connector connector;
-    private ConnectorType type;
+    private Connector connector; // null if creating a new connector
+    private final ConnectorType type;
+    private final Properties properties;
+    private final Properties initialValues;
 
     private boolean isEditable = false;
-    private ConnectorBindingPropertySourceProvider provider;
+    private RuntimePropertySourceProvider provider;
 
     /**
-     * @since 4.2
+     * @param type the connector type of the connector (never <code>null</code>)
+     * @param properties the properties of the connector (never <code>null</code>)
      */
-    public ConnectorBindingPropertySource( Connector connector ) {
+    public ConnectorPropertySource( ConnectorType type,
+                                    Properties properties ) {
+        ArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
+        ArgCheck.isNotNull(properties, "properties"); //$NON-NLS-1$
+
+        this.type = type;
+        this.properties = properties;
+        this.initialValues = new Properties(properties);
+    }
+
+    /**
+     * @param connector the connector whose properties are being edited (never <code>null</code>)
+     */
+    public ConnectorPropertySource( Connector connector ) {
+        this(connector.getType(), connector.getProperties());
         this.connector = connector;
-
-        if (connector != null) {
-            this.type = connector.getType();
-
-            // we should always find a type
-            if (this.type == null) {
-                DqpUiConstants.UTIL.log(IStatus.ERROR,
-                                        DqpUiConstants.UTIL.getString("ConnectorBindingsPropertySource.bindingTypeNotFound", //$NON-NLS-1$
-                                                                      this.connector.getName()));
-            }
-        }
-    }
-
-    public void setProvider( ConnectorBindingPropertySourceProvider provider ) {
-        this.provider = provider;
-    }
-
-    public void setEditable( boolean isEditable ) {
-        this.isEditable = isEditable;
     }
 
     /**
@@ -70,7 +65,7 @@ public class ConnectorBindingPropertySource implements IPropertySource {
      * @since 4.2
      */
     public Object getEditableValue() {
-        return this.connector;
+        return this.properties;
     }
 
     /**
@@ -79,53 +74,79 @@ public class ConnectorBindingPropertySource implements IPropertySource {
      */
     public IPropertyDescriptor[] getPropertyDescriptors() {
         IPropertyDescriptor[] result = new IPropertyDescriptor[0];
+        Collection<PropertyDefinition> typeDefs = this.type.getPropertyDefinitions();
+        boolean showExpertProps = this.provider.isShowingExpertProperties();
+        Collection temp = new ArrayList(typeDefs.size());
 
-        // don't return any descriptors if no binding or no type. this prevents the
-        // set and get property methods from being called.
-        if ((this.connector != null) && (this.type != null)) {
-            Collection<PropertyDefinition> typeDefs;
-            try {
-                typeDefs = this.type.getPropertyDefinitions();
-            } catch (Exception e) {
-                // TODO log
-                return new IPropertyDescriptor[0];
+        for (PropertyDefinition propDefn : typeDefs) {
+            String id = propDefn.getName();
+            String displayName = propDefn.getDisplayName();
+
+            // don't add if an expert or readonly property and expert properties are not being shown
+            if ((propDefn.isAdvanced() || !propDefn.isModifiable()) && !showExpertProps) {
+                continue;
             }
 
-            if ((typeDefs != null) && !typeDefs.isEmpty()) {
-                boolean showExpertProps = this.provider.isShowingExpertProperties();
-                Collection temp = new ArrayList(typeDefs.size());
+            Object descriptor = null;
 
-                for (PropertyDefinition propDefn : typeDefs) {
-                    String id = propDefn.getName();
-                    String displayName = propDefn.getDisplayName();
-
-                    // don't add if an expert or readonly property and expert properties are not being shown
-                    if ((propDefn.isAdvanced() || !propDefn.isModifiable()) && !showExpertProps) {
-                        continue;
-                    }
-
-                    // don't add hidden definitions or expert props if not showing
-                    Object descriptor = null;
-
-                    // make sure readonly definitions are not modifiable
-                    if (this.isEditable && propDefn.isModifiable()) {
-                        descriptor = new TextPropertyDescriptor(id, displayName);
-                    } else {
-                        descriptor = new PropertyDescriptor(id, displayName);
-                    }
-
-                    temp.add(descriptor);
-                }
-
-                if (!temp.isEmpty()) {
-                    temp.toArray(result = new IPropertyDescriptor[temp.size()]);
-                }
+            // make sure readonly definitions are not modifiable
+            if (this.isEditable && propDefn.isModifiable()) {
+                descriptor = new TextPropertyDescriptor(id, displayName);
+            } else {
+                // read only
+                descriptor = new PropertyDescriptor(id, displayName);
             }
 
-            result = sortPropertyDescriptors(result);
+            temp.add(descriptor);
+        }
+
+        if (!temp.isEmpty()) {
+            temp.toArray(result = new IPropertyDescriptor[temp.size()]);
+        }
+
+        result = sortPropertyDescriptors(result);
+
+        return result;
+    }
+
+    /**
+     * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
+     * @since 4.2
+     */
+    public boolean isPropertySet( Object id ) {
+        return false;
+    }
+
+    /**
+     * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
+     * @since 4.2
+     */
+    public Object getPropertyValue( Object id ) {
+        PropertyDefinition propDefn = ((PropertyDefinition)id);
+        String result = this.properties.getProperty(propDefn.getName());
+
+        if (result == null) {
+            result = StringUtil.Constants.EMPTY_STRING;
         }
 
         return result;
+    }
+
+    /**
+     * @see org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java.lang.Object)
+     * @since 4.2
+     */
+    public void resetPropertyValue( Object id ) {
+        PropertyDefinition propDefn = ((PropertyDefinition)id);
+        setPropertyValue(id, this.initialValues.getProperty(propDefn.getName()));
+    }
+
+    public void setEditable( boolean isEditable ) {
+        this.isEditable = isEditable;
+    }
+
+    public void setProvider( RuntimePropertySourceProvider provider ) {
+        this.provider = provider;
     }
 
     /**
@@ -142,55 +163,17 @@ public class ConnectorBindingPropertySource implements IPropertySource {
     }
 
     /**
-     * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
-     * @since 4.2
-     */
-    public Object getPropertyValue( Object id ) {
-        String result = connector.getPropertyValue((String)id);
-
-        if (result == null) {
-            result = StringUtil.Constants.EMPTY_STRING;
-        }
-
-        return result;
-    }
-
-    /**
-     * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
-     * @since 4.2
-     */
-    public boolean isPropertySet( Object id ) {
-        return false;
-    }
-
-    /**
-     * @see org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java.lang.Object)
-     * @since 4.2
-     */
-    public void resetPropertyValue( Object id ) {
-    }
-
-    /**
      * @see org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.lang.Object, java.lang.Object)
      * @since 4.2
      */
     public void setPropertyValue( Object id,
                                   Object value ) {
-        try {
-            this.connector.setPropertyValue((String)id, (String)value);
+        PropertyDefinition propDefn = ((PropertyDefinition)id);
+        this.properties.setProperty(propDefn.getName(), (String)value);
+
+        if (this.connector != null) {
             this.provider.propertyChanged(this.connector);
-        } catch (final Exception error) {
-            UiUtil.runInSwtThread(new Runnable() {
-
-                public void run() {
-                    DqpUiPlugin.showErrorDialog(Display.getCurrent().getActiveShell(), error);
-                }
-            }, false);
         }
-    }
-
-    public Connector getConnector() {
-        return this.connector;
     }
 
     /**

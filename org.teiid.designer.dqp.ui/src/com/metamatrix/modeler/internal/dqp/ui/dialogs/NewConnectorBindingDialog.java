@@ -48,7 +48,7 @@ public class NewConnectorBindingDialog extends ExtendedTitleAreaDialog implement
     private static final int MAPPING_TAB = 2;
     private static final String PREFIX = I18nUtil.getPropertyPrefix(NewConnectorBindingDialog.class);
 
-    private TabFolder tabPane;
+    TabFolder tabPane;
     private ConnectorType currentType;
     private final InternalVdbEditingContext vdbContext;
     private ModelInfo modelInfo;

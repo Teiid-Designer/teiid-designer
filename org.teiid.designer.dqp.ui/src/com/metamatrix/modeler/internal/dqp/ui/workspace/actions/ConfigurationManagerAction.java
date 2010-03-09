@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
+import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
@@ -15,6 +16,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
+import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.SourceBindingsManager;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -71,7 +73,16 @@ public abstract class ConfigurationManagerAction extends Action implements ISele
                     tempAdmin = ((ConnectorType)obj).getAdmin();
                 } else if (obj instanceof Connector) {
                     tempAdmin = ((Connector)obj).getType().getAdmin();
+                } else if (obj instanceof Server) {
+                    try {
+                        tempAdmin = ((Server)obj).getAdmin();
+                    } catch (Exception e) {
+                        UTIL.log(e);
+                        newAdmin = null;
+                        break;
+                    }
                 } else {
+                    // obj is not a type we care about
                     newAdmin = null;
                     break;
                 }

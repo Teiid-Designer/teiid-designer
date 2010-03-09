@@ -26,7 +26,6 @@ import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.ui.internal.util.UiUtil;
 
 /**

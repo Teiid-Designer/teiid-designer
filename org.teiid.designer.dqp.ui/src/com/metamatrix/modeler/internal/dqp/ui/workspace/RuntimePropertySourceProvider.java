@@ -18,23 +18,22 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import org.teiid.designer.runtime.Server;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceModelInfo;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
-import com.metamatrix.modeler.internal.dqp.ui.config.ComponentTypePropertySource;
+import com.metamatrix.modeler.internal.dqp.ui.config.ConnectorTypePropertySource;
 import com.metamatrix.modeler.internal.ui.properties.ModelPropertySource;
 
 
 /**
  * @since 4.2
  */
-public class ConnectorBindingPropertySourceProvider implements IPropertySourceProvider {
+public class RuntimePropertySourceProvider implements IPropertySourceProvider {
 
-    private boolean connectorBindingsEditable = false;
-    private boolean componentTypesEditable = false;
+    private boolean connectorsEditable = false;
+    private boolean connectorTypesEditable = false;
 
     private ArrayList<IPropertyChangeListener> listenerList = new ArrayList<IPropertyChangeListener>();
     private boolean showExpertProps = false;
@@ -48,13 +47,13 @@ public class ConnectorBindingPropertySourceProvider implements IPropertySourcePr
     }
 
     /**
-     * @param connectorBindingsEditable the new editable state for the connector binding property source
-     * @param componentTypesEditable the new editable state for the component type property source
+     * @param connectorsEditable the new editable state for the connector binding property source
+     * @param connectorTypesEditable the new editable state for the component type property source
      */
     public void setEditable(boolean connectorBindingsEditable,
                             boolean componentTypesEditable) {
-        this.connectorBindingsEditable = connectorBindingsEditable;
-        this.componentTypesEditable = componentTypesEditable;
+        this.connectorsEditable = connectorBindingsEditable;
+        this.connectorTypesEditable = componentTypesEditable;
     }
 
     public void addPropertyChangeListener(IPropertyChangeListener listener) {
@@ -79,17 +78,14 @@ public class ConnectorBindingPropertySourceProvider implements IPropertySourcePr
      */
     public IPropertySource getPropertySource(Object object) {
         if ( object instanceof Connector ) {
-            ConnectorBindingPropertySource source = new ConnectorBindingPropertySource((Connector) object);
-            source.setEditable(this.connectorBindingsEditable);
+            ConnectorPropertySource source = new ConnectorPropertySource((Connector) object);
+            source.setEditable(this.connectorsEditable);
             source.setProvider(this);
             return source;
         } else  if ( object instanceof ConnectorType ) {
-            ComponentTypePropertySource source = new ComponentTypePropertySource((ConnectorType)object);
-            source.setEditable(this.componentTypesEditable);
+            ConnectorTypePropertySource source = new ConnectorTypePropertySource((ConnectorType)object);
+            source.setEditable(this.connectorTypesEditable);
             return source;
-        } else if ( object instanceof Server ) {
-            // TODO implement ServerPropertySource
-            return null;
         } else if( object instanceof SourceModelInfo ) {
             SourceModelInfo smi = (SourceModelInfo)object;
             // Create the project path

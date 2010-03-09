@@ -219,14 +219,6 @@ public class VdbEditPlugin extends Plugin {
                     vdbEditingContextCache.remove(key);
                     context.removeChangeListener(vdbContextChangeListener);
                 }
-            } else if (theSource instanceof VdbContextEditor) {
-                VdbContextEditor context = (VdbContextEditor)theSource;
-                if (!context.isOpen()) {
-                    IPath pathToVdbFile = new Path(context.getVdbFile().getAbsolutePath());
-                    String key = pathToVdbFile.makeAbsolute().toString();
-                    vdbEditingContextCache.remove(key);
-                    context.removeChangeListener(vdbContextChangeListener);
-                }
             }
         }
     };

@@ -7,28 +7,26 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.config;
 
+import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import java.util.Collection;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.designer.runtime.ConnectorType;
+import com.metamatrix.core.util.StringUtil;
 
 /**
  * @since 4.2
  */
-public class ComponentTypePropertySource implements IPropertySource {
-    private static final String EMPTY_STRING = ""; //$NON-NLS-1$
+public final class ConnectorTypePropertySource implements IPropertySource {
 
     private final ConnectorType connectorType;
-
-    private boolean editable;
 
     /**
      * @since 4.2
      */
-    public ComponentTypePropertySource( ConnectorType type ) {
+    public ConnectorTypePropertySource( ConnectorType type ) {
         this.connectorType = type;
     }
 
@@ -45,25 +43,22 @@ public class ComponentTypePropertySource implements IPropertySource {
      * @since 4.2
      */
     public IPropertyDescriptor[] getPropertyDescriptors() {
-
         Collection<PropertyDefinition> propDefns;
 
         try {
             propDefns = this.connectorType.getPropertyDefinitions();
         } catch (Exception e) {
-            // TODO log
+            UTIL.log(e);
             return new IPropertyDescriptor[0];
         }
 
         IPropertyDescriptor[] result = new IPropertyDescriptor[propDefns.size()];
         int index = 0;
         for (PropertyDefinition propertyDefn : propDefns) {
-            if (this.editable) {
-                result[index++] = new TextPropertyDescriptor(propertyDefn, propertyDefn.getDisplayName());
-            } else {
-                result[index++] = new PropertyDescriptor(propertyDefn, propertyDefn.getDisplayName());
-            }
+            // connector type properties can't be edited
+            result[index++] = new PropertyDescriptor(propertyDefn, propertyDefn.getDisplayName());
         }
+
         return result;
     }
 
@@ -75,7 +70,7 @@ public class ComponentTypePropertySource implements IPropertySource {
         Object defValue = ((PropertyDefinition)id).getDefaultValue();
 
         if (defValue == null) {
-            defValue = EMPTY_STRING;
+            defValue = StringUtil.Constants.EMPTY_STRING;
         }
 
         return defValue;
@@ -94,10 +89,11 @@ public class ComponentTypePropertySource implements IPropertySource {
      * @since 4.2
      */
     public void resetPropertyValue( Object id ) {
+        // nothing to do since properties are not editable
     }
 
     public void setEditable( boolean editable ) {
-        this.editable = editable;
+        // nothing to do since properties are not editable
     }
 
     /**
@@ -106,6 +102,7 @@ public class ComponentTypePropertySource implements IPropertySource {
      */
     public void setPropertyValue( Object id,
                                   Object value ) {
+        // nothing to do since properties are not editable
     }
 
 }
