@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -25,7 +26,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
@@ -142,7 +142,7 @@ public final class VdbEditorUserFilesComposite
         fileSelectDialog.setText(FILE_SELECTION_DIALOG_TITLE);
         String filterPath = fileSelectDialog.getFilterPath();
         if (filterPath == null || filterPath.trim().length() == 0) {
-            fileSelectDialog.setFilterPath(IDEWorkbenchPlugin.getPluginWorkspace().getRoot().getLocation().toOSString());
+            fileSelectDialog.setFilterPath(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString());
         }
 
         refresh();
