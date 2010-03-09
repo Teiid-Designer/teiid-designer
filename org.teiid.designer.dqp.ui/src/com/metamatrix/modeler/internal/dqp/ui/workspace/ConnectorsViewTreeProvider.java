@@ -133,6 +133,9 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
      * @since 4.2
      */
     public Image getImage( Object element ) {
+        if (element instanceof Server) {
+            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ICON);
+        }
         if (element instanceof Connector) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_BINDING_ICON);
         }
@@ -151,6 +154,9 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
      * @since 4.2
      */
     public String getText( Object element ) {
+        if (element instanceof Server) {
+            return ((Server)element).getUrl();
+        }
         if (element instanceof Connector) {
             return ((Connector)element).getName();
         }

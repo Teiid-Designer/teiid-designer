@@ -57,6 +57,7 @@ import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.SourceBindingsManager;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.ui.DeleteServerAction;
 import org.teiid.designer.runtime.ui.EditServerAction;
 import org.teiid.designer.runtime.ui.NewServerAction;
@@ -200,7 +201,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         hookToolTips();
 
         viewer.setSorter(new NameSorter());
-        viewer.setInput(DqpPlugin.getInstance().getServerRegistry().getServers());
+        viewer.setInput(DqpPlugin.getInstance().getServerRegistry());
         viewer.expandToLevel(2);
 
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -245,6 +246,30 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
      */
     @Override
     public void configurationChanged( ExecutionConfigurationEvent event ) {
+        if (event.getTargetType() == TargetType.SERVER) {
+            switch (event.getEventType()) {
+                case UPDATE: {
+
+                }
+                    break;
+                case REFRESH: {
+
+                }
+                    break;
+                case ADD: {
+                    this.viewer.getInput();
+                }
+                    break;
+                case REMOVE: {
+
+                }
+                    break;
+
+            }
+
+        }
+
+        handleConfigurationChanged();
         // TODO implement
     }
 
@@ -445,6 +470,8 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                 manager.add(editServerAction);
                 manager.add(deleteServerAction);
                 manager.add(reconnectAction);
+                manager.add(new Separator());
+                manager.add(newServerAction);
             } else if (selection instanceof Connector) {
                 manager.add(newConnectorBindingAction);
                 manager.add(new Separator());
@@ -452,12 +479,18 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                 manager.add(cloneConnectorBindingAction);
                 manager.add(new Separator());
                 manager.add(deleteConnectorBindingAction);
+                manager.add(new Separator());
+                manager.add(newServerAction);
             } else if (selection instanceof ConnectorType) {
                 manager.add(newConnectorBindingAction);
+                manager.add(new Separator());
+                manager.add(newServerAction);
             } else {
                 manager.add(deleteSourceBindingAction);
                 manager.add(new Separator());
                 manager.add(openModelAction);
+                manager.add(new Separator());
+                manager.add(newServerAction);
             }
         } else {
             manager.add(newServerAction);
