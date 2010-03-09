@@ -158,7 +158,7 @@ public class ValidationContext {
     }
 
     /**
-     * Sets the {@link org.eclipse.core.internal.resources.Resource}s that define the valid resources considered
+     * Sets the {@link org.eclipse.emf.ecore.resource.Resource}s that define the valid resources considered
      * to be within the validation scope. Resources that are not defined in this scope should be considered invalid
      * and should result in a validation error.
      * @param theResources the resources in scope or <code>null</code> or empty if all resources are in scope
@@ -173,7 +173,7 @@ public class ValidationContext {
     }
 
     /**
-     * Obtain all the valid {@link org.eclipse.core.internal.resources.Resource}s that define the validation
+     * Obtain all the valid {@link org.eclipse.emf.ecore.resource.Resource}s that define the validation
      * scope. If an empty collection is returned then all resources are considered to be within the validation scope.
      * @return the valid resources (never <code>null</code>)
      * @since 4.2
