@@ -58,11 +58,11 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.forms.HyperlinkSettings;
 import org.eclipse.ui.forms.widgets.FormText;
-import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -936,15 +936,15 @@ public final class WidgetUtil implements
      */
     public static Image getStatusImage( IStatus status ) {
         if (status.getSeverity() == IStatus.ERROR) {
-            return WorkbenchPlugin.getDefault().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
+            return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
         }
 
         if (status.getSeverity() == IStatus.WARNING) {
-            return WorkbenchPlugin.getDefault().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
+            return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
         }
 
         if (status.getSeverity() == IStatus.INFO) {
-            return WorkbenchPlugin.getDefault().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
+            return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
         }
 
         return null;
