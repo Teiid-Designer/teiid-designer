@@ -71,7 +71,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.WizardDataTransferPage;
-import org.eclipse.ui.internal.dialogs.DialogUtil;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.eclipse.ui.wizards.datatransfer.ZipFileStructureProvider;
 import com.metamatrix.core.util.FileSeparatorUtil;
@@ -255,7 +254,7 @@ public class ImportModelerProjectSetMainPage extends WizardDataTransferPage impl
         Table table = new Table(parent, SWT.BORDER);
         GridData data = new GridData(GridData.FILL_BOTH);
 
-        int availableRows = DialogUtil.availableRows(parent);
+        int availableRows = availableRows(parent);
 
         // Only give a height hint if the dialog is going to be too small
         if (availableRows > 50) {
@@ -273,6 +272,14 @@ public class ImportModelerProjectSetMainPage extends WizardDataTransferPage impl
         projectViewer.setLabelProvider(new ProjectReferenceLabelProvider());
 
         setViewerContents(Collections.EMPTY_LIST);
+    }
+    
+    public static int availableRows(Composite parent) {
+
+        int fontHeight = (parent.getFont().getFontData())[0].getHeight();
+        int displayHeight = parent.getDisplay().getClientArea().height;
+
+        return displayHeight / fontHeight;
     }
 
     /**
