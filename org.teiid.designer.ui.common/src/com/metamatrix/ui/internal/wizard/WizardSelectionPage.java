@@ -25,7 +25,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.internal.dialogs.WorkbenchWizardElement;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.ui.UiConstants;
@@ -123,9 +122,12 @@ final class WizardSelectionPage extends WizardPage implements UiConstants {
 
                 if (sel != null && !sel.isEmpty()) {
                     IConfigurationElement elem = (IConfigurationElement)sel.getFirstElement();
-                    WorkbenchWizardElement wwe = new WorkbenchWizardElement(elem);
-                    String message = wwe.getDescription();
-                    setMessage(message);
+                    IConfigurationElement[] children = elem.getChildren("description"); //$NON-NLS-1$
+            	    if (children.length >= 1) {
+            	    	setMessage(children[0].getValue());
+            	    } else {
+            	    	setMessage("");//$NON-NLS-1$
+            	    }
                 }
             }
         });
