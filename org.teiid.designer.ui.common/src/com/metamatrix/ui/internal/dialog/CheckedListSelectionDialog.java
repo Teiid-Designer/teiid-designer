@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -19,19 +20,22 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.SelectionDialog;
-import org.eclipse.ui.internal.MessageLine;
 import com.metamatrix.ui.internal.InternalUiConstants;
 
 /**
@@ -57,7 +61,7 @@ public class CheckedListSelectionDialog extends SelectionDialog {
     CheckboxTableViewer listViewer;
 
     private ISelectionStatusValidator statusValidator;
-    private MessageLine statusLine;
+    private CLabel statusLine;
 
     /**
      * @param parentShell
@@ -178,10 +182,10 @@ public class CheckedListSelectionDialog extends SelectionDialog {
             }
         });
 
-        statusLine = new MessageLine(composite);
-        statusLine.setAlignment(SWT.LEFT);
+        statusLine = new CLabel(composite, SWT.LEFT);
         statusLine.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        statusLine.setErrorStatus(null);
+        statusLine.setText(""); //$NON-NLS-1$	
+        statusLine.setImage(null);
         statusLine.setFont(parent.getFont());
 
         return composite;
@@ -242,11 +246,39 @@ public class CheckedListSelectionDialog extends SelectionDialog {
     }
 
     private void setStatus( IStatus status ) {
-        statusLine.setErrorStatus(status);
-        if (status == null || status.isOK()) {
+    	if (status != null) {
+            String message = status.getMessage();
+            if (message != null && message.length() > 0) {
+                statusLine.setText(message);
+                statusLine.setImage(findImage(status));
+                statusLine.setBackground(JFaceColors.getErrorBackground(
+                		statusLine.getDisplay()));
+            }
+        } else {
+        	statusLine.setText(""); //$NON-NLS-1$	
+        	statusLine.setImage(null);
+        }
+
+    	if (status == null || status.isOK()) {
             getButton(Window.OK).setEnabled(true);
         } else {
             getButton(Window.OK).setEnabled(false);
         }
+    }
+    
+    private Image findImage(IStatus status) {
+        if (status.isOK()) {
+            return null;
+        } else if (status.matches(IStatus.ERROR)) {
+            return PlatformUI.getWorkbench().getSharedImages().getImage(
+                    ISharedImages.IMG_OBJS_ERROR_TSK);
+        } else if (status.matches(IStatus.WARNING)) {
+            return PlatformUI.getWorkbench().getSharedImages().getImage(
+                    ISharedImages.IMG_OBJS_WARN_TSK);
+        } else if (status.matches(IStatus.INFO)) {
+            return PlatformUI.getWorkbench().getSharedImages().getImage(
+                    ISharedImages.IMG_OBJS_INFO_TSK);
+        }
+        return null;
     }
 }
