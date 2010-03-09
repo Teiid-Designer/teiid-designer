@@ -72,7 +72,7 @@ public class ModelBuilder extends IncrementalProjectBuilder implements Ignorable
     }
 
     /**
-     * @see org.eclipse.core.internal.events.InternalBuilder#build(int, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.eclipse.core.resources.IncrementalProjectBuilder#build(int, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     protected IProject[] build( final int kind,
