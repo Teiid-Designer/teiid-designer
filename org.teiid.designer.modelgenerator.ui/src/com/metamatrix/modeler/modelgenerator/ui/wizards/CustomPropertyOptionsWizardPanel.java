@@ -42,7 +42,6 @@ import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Stereotype;
-import org.eclipse.uml2.uml.internal.operations.ElementOperations;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -504,7 +503,7 @@ public class CustomPropertyOptionsWizardPanel extends Composite implements Model
                             }
                             Property prop = (Property)propBinding.getSourceProp();
                             String propName = prop.getName();
-                            Object obj = ElementOperations.getValue(prop.getOwner(), stereotype, propName);
+                            Object obj = prop.getOwner().getValue(stereotype, propName);
                             // Object obj = prop.getValue(stereotype,prop.getName());
                             // Object obj = prop.getValue(stereotype, targetStr);
                             resultMap.put(targetStr, obj);
@@ -556,7 +555,7 @@ public class CustomPropertyOptionsWizardPanel extends Composite implements Model
                             }
                             Property prop = (Property)propBinding.getSourceProp();
                             String propName = prop.getName();
-                            Object obj = ElementOperations.getValue(prop.getOwner(), stereotype, propName);
+                            Object obj = prop.getOwner().getValue(stereotype, propName);
                             // Object obj = prop.getValue(stereotype,prop.getName());
                             // Object obj = prop.getValue(stereotype, targetStr);
                             resultMap.put(targetStr, obj);
