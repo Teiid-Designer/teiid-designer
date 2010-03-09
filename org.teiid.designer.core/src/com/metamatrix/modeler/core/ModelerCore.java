@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -661,7 +660,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     private static ValidationRuleManager validationRuleMgr;
 
     // Eclipse IWorkspace that can be set and used for headless testing.
-    private static Workspace WORKSPACE;
+    private static IWorkspace WORKSPACE;
 
     public static boolean DEBUG = false;
     public static boolean DEBUG_MODELER_CORE_INIT = false;
@@ -1030,7 +1029,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * 
      * @return the object graph representing the modeling workspace
      */
-    public static void setEcliseWorkspace( Workspace ws ) {
+    public static void setEcliseWorkspace( IWorkspace ws ) {
         WORKSPACE = ws;
     }
 
