@@ -7,7 +7,6 @@
  */
 package com.metamatrix.ui.internal.product;
 
-import org.eclipse.core.internal.runtime.InternalPlatform;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -131,7 +130,7 @@ public final class ProductCustomizerMgr implements IProductCustomizer,
      */
     public void loadCustomizations() {
         // establish the running product. no product if running via IDE.
-        IProduct product = InternalPlatform.getDefault().getProduct();
+        IProduct product = Platform.getProduct();
 
         if (product != null) {
             // get the ProductAuthorizer extension point from the plugin class
