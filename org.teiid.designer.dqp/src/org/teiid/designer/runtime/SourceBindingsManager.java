@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import org.eclipse.core.internal.resources.WorkspaceRoot;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -408,7 +408,7 @@ public class SourceBindingsManager
                     }
                 }
             } else if (ResourceChangeUtilities.isPostChange(theEvent)) {
-                if (theEvent.getDelta().getResource() instanceof WorkspaceRoot) {
+                if (theEvent.getDelta().getResource() instanceof IWorkspaceRoot) {
                     fireChangeEvent();
                 }
             }
