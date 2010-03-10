@@ -134,8 +134,7 @@
          id="org.jaxen"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.teiid.designer.metamodels.function"
@@ -329,8 +328,7 @@
          id="net.sf.saxon"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.teiid.designer.tools.textimport.ui"
@@ -350,15 +348,13 @@
          id="org.apache.commons.validator"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.apache.oro"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.teiid.designer.modelgenerator.uml2"
@@ -371,8 +367,7 @@
          id="org.apache.poi"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.teiid.designer.metamodels.xmlservice"
@@ -434,8 +429,7 @@
          id="org.wsdl4j"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.teiid.core.designer"
@@ -455,8 +449,7 @@
          id="org.teiid.designer.modelgenerator.salesforce"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.teiid.designer.modelgenerator.salesforce.ui"
@@ -469,8 +462,7 @@
          id="teiid_embedded_query"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.teiid.designer"

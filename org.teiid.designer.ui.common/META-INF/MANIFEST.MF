@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.ui.common;singleton:=true
 Bundle-Version: 7.0.0
-Bundle-ClassPath: ui.jar
 Bundle-Activator: com.metamatrix.ui.UiPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.relational.ui;singleton:=true
 Bundle-Version: 7.0.0
-Bundle-ClassPath: modelerRelationalUi.jar
 Bundle-Activator: com.metamatrix.modeler.relational.ui.UiPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

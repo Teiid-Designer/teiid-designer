@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.rose.ui;singleton:=true
 Bundle-Version: 7.0.0
-Bundle-ClassPath: roseUi.jar
 Bundle-Activator: com.metamatrix.rose.internal.ui.RoseUiPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

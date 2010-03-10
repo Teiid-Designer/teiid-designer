@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.ui;singleton:=true
 Bundle-Version: 7.0.0
-Bundle-ClassPath: modelerUi.jar
 Bundle-Activator: com.metamatrix.modeler.ui.UiPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

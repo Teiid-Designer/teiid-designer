@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.core;singleton:=true
 Bundle-Version: 7.0.0
-Bundle-ClassPath: modelerCore.jar
 Bundle-Activator: com.metamatrix.modeler.core.ModelerCore
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -53,7 +52,6 @@ Export-Package: com.metamatrix.core.interceptor,
  com.metamatrix.modeler.internal.core.reader,
  com.metamatrix.modeler.internal.core.refactor,
  com.metamatrix.modeler.internal.core.resource,
- com.metamatrix.modeler.internal.core.resource.vdb,
  com.metamatrix.modeler.internal.core.resource.xmi,
  com.metamatrix.modeler.internal.core.search,
  com.metamatrix.modeler.internal.core.search.commands,

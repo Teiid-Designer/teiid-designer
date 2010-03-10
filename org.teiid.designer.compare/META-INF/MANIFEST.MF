@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.compare;singleton:=true
 Bundle-Version: 7.0.0
-Bundle-ClassPath: modelerCompare.jar
 Bundle-Activator: com.metamatrix.modeler.compare.ModelerComparePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

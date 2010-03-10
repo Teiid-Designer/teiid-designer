@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.jdbc.ui;singleton:=true
 Bundle-Version: 7.0.0
-Bundle-ClassPath: modelerJdbcUi.jar
 Bundle-Activator: com.metamatrix.modeler.internal.jdbc.ui.ModelerJdbcUiPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

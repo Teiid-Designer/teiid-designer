@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.metamodels.relationship;singleton:=true
 Bundle-Version: 7.0.0
-Bundle-ClassPath: relationship.jar
 Bundle-Activator: com.metamatrix.metamodels.relationship.RelationshipMetamodelPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
