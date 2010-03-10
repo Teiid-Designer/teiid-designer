@@ -7,9 +7,6 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;

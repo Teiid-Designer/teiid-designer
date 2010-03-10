@@ -171,8 +171,6 @@ public final class Connector {
             Collection values = definition.getAllowedValues();
             assert ((values != null) && !values.isEmpty()); // TODO is this a valid assert??
 
-            boolean foundIt = false;
-
             for (Object allowedValue : values) {
                 if (allowedValue.equals(value)) {
                     return true;
