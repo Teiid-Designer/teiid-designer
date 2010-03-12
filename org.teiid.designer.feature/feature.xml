@@ -11,6 +11,7 @@
       label="%featureName"
       version="7.0.0.qualifier"
       provider-name="%providerName"
+      plugin="org.teiid.designer"
       image="feature.gif">
 
    <description url="www.jboss.org/projects/teiiddesigner">
