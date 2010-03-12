@@ -26,7 +26,7 @@ Export-Package: com.metamatrix.modeler.modelgenerator.salesforce;uses:="junit.fr
  com.metamatrix.modeler.modelgenerator.salesforce.modelextension,
  com.metamatrix.modeler.modelgenerator.salesforce.util,
  com.sforce.soap.partner;x-friends:="org.teiid.designer.modelgenerator.salesforce.test"
-Bundle-ClassPath: salesforcemodelgenerator.jar,
+Bundle-ClassPath: .,
  axis.jar,
  salesforce.jar,
  jaxrpc.jar,
