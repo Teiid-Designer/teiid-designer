@@ -1,7 +1,6 @@
 !*** Generated with org.eclipse.dash.common.releng/tools/scripts/buildAllHelper.xml#dir2svnmap task
 
-feature@org.teiid.designer=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/org.teiid.designer-feature
-feature@org.teiid.designer-feature=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/org.teiid.designer-feature
+feature@org.teiid.designer.feature=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/org.teiid.designer.feature
 
 plugin@net.sf.saxon=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/net.sf.saxon
 plugin@net.sourceforge.sqlexplorer=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/net.sourceforge.sqlexplorer
@@ -12,7 +11,6 @@ plugin@org.jaxen=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/org.jaxen
 plugin@org.jdom=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/org.jdom
 plugin@org.teiid.core.designer=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/org.teiid.core.designer
 plugin@org.teiid.core.designer.test=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/org.teiid.core.designer.test
-plugin@org.teiid.designer=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/org.teiid.designer
 plugin@org.teiid.designer.compare=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/org.teiid.designer.compare
 plugin@org.teiid.designer.compare.test=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/org.teiid.designer.compare.test
 plugin@org.teiid.designer.compare.ui=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/org.teiid.designer.compare.ui

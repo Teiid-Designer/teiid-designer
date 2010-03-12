@@ -5,7 +5,9 @@
 	<target name="run">
 		<!-- 0. Set a valid path to JAVA_HOME, if Eclipse's ${java.home}/../bin/javac cannot be found
 		-->
-		<property name="JAVA_HOME" value="${java.home}/.." />
+		<condition property="JAVA_HOME" value="${java.home}" else="${java.home}/..">
+			<available file="${java.home}/bin/javac" type="file" />
+		</condition>
 
 		<tstamp>
 			<format property="buildTimestamp" pattern="yyyyMMddHHmm" />
