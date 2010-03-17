@@ -30,7 +30,7 @@ import com.metamatrix.core.modeler.util.ArgCheck;
 /**
  *
  */
-public final class ConnectorType implements Comparable<ConnectorType> {
+public class ConnectorType implements Comparable<ConnectorType> {
 
     private final Collection<PropertyDefinition> propDefs;
     private final String name;

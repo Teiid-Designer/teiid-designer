@@ -24,7 +24,7 @@ import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 /**
  *
  */
-public final class ExecutionAdmin {
+public class ExecutionAdmin {
 
     private final Admin admin;
     private Map<String, Connector> connectorByNameMap;
@@ -260,7 +260,7 @@ public final class ExecutionAdmin {
             }
 
             // TODO restart connector??
-            
+
             this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(connector));
         }
     }
