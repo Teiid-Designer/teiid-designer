@@ -25,6 +25,8 @@ package org.teiid.designer.runtime;
 
 import java.util.Collection;
 import java.util.Properties;
+import java.util.Set;
+import java.util.Map.Entry;
 import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.adminapi.PropertyDefinition;
 import com.metamatrix.core.modeler.util.ArgCheck;
@@ -109,6 +111,9 @@ public final class Connector {
      */
     public boolean isValidPropertyValue( String name,
                                          String value ) {
+        if (value == null) {
+            return false;
+        }
         PropertyDefinition definition = this.type.getPropertyDefinition(name);
         if (definition == null) return false;
 
@@ -116,49 +121,46 @@ public final class Connector {
 
         // Note: "String" does not need any validation here
 
-        if ("Boolean".equals(type)) { //$NON-NLS-1$
-            if (value == null) {
-                return false;
-            }
+        if (Boolean.class.getName().equals(type)) {
 
             if (!value.equalsIgnoreCase(Boolean.TRUE.toString()) && !value.equalsIgnoreCase(Boolean.FALSE.toString())) {
                 return false;
             }
-        } else if ("Character".equals(type)) { //$NON-NLS-1$
-            if ((value != null) && (value.length() > 1)) {
+        } else if (Character.class.getName().equals(type)) {
+            if (value.length() != 1) {
                 return false;
             }
-        } else if ("Byte".equals(type)) { //$NON-NLS-1$
+        } else if (Byte.class.getName().equals(type)) {
             try {
                 Byte.parseByte(value);
             } catch (Exception e) {
                 return false;
             }
-        } else if ("Short".equals(type)) { //$NON-NLS-1$
+        } else if (Short.class.getName().equals(type)) {
             try {
                 Short.parseShort(value);
             } catch (Exception e) {
                 return false;
             }
-        } else if ("Int".equals(type)) { //$NON-NLS-1$
+        } else if (Integer.class.getName().equals(type)) {
             try {
                 Integer.parseInt(value);
             } catch (Exception e) {
                 return false;
             }
-        } else if ("Long".equals(type)) { //$NON-NLS-1$
+        } else if (Long.class.getName().equals(type)) {
             try {
                 Long.parseLong(value);
             } catch (Exception e) {
                 return false;
             }
-        } else if ("Float".equals(type)) { //$NON-NLS-1$
+        } else if (Float.class.getName().equals(type)) {
             try {
                 Float.parseFloat(value);
             } catch (Exception e) {
                 return false;
             }
-        } else if ("Double".equals(type)) { //$NON-NLS-1$
+        } else if (Double.class.getName().equals(type)) {
             try {
                 Double.parseDouble(value);
             } catch (Exception e) {
@@ -204,14 +206,17 @@ public final class Connector {
      * @since 7.0
      */
     public void setProperties( Properties changedProperties ) throws Exception {
-        ArgCheck.isNotEmpty(changedProperties.entrySet(), "changedProperties"); //$NON-NLS-1$
+        ArgCheck.isNotNull(changedProperties, "changedProperties"); //$NON-NLS-1$
+        Set<Entry<Object, Object>> entrySet = changedProperties.entrySet();
+        ArgCheck.isNotEmpty(entrySet, "changedProperties"); //$NON-NLS-1$
         this.type.getAdmin().setProperties(this, changedProperties);
 
         // TODO does the admin call do this
         Properties props = getProperties();
-        
-        for (String name : changedProperties.stringPropertyNames()) {
-            props.setProperty(name, changedProperties.getProperty(name));
+
+        for (Entry<Object, Object> entry : entrySet) {
+            // TODO: MAY NOT WORK DUE TO ADMIN API's APPARENT READ-ONLY NATURE??
+            props.setProperty((String)entry.getKey(), (String)entry.getValue());
         }
     }
 
