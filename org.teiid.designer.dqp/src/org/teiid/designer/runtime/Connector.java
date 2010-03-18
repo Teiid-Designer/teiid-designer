@@ -33,7 +33,7 @@ import com.metamatrix.core.modeler.util.ArgCheck;
 
 /**
  */
-public final class Connector {
+public class Connector {
 
     private final ConnectorBinding binding;
     private final ConnectorType type;

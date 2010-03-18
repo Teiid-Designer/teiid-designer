@@ -60,6 +60,7 @@ public class ConnectorType implements Comparable<ConnectorType> {
      */
     @Override
     public int compareTo( ConnectorType type ) {
+        ArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
         return getName().compareTo(type.getName());
     }
 

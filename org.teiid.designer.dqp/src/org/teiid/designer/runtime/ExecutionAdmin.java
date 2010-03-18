@@ -35,6 +35,10 @@ public class ExecutionAdmin {
     public ExecutionAdmin( Admin admin,
                            Server server,
                            EventManager eventManager ) throws Exception {
+        ArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
+        ArgCheck.isNotNull(server, "server"); //$NON-NLS-1$
+        ArgCheck.isNotNull(eventManager, "eventManager"); //$NON-NLS-1$
+
         this.admin = admin;
         this.eventManager = eventManager;
         this.server = server;
@@ -103,6 +107,8 @@ public class ExecutionAdmin {
      * @see ModelerDqpUtils#isValidBindingName(String)
      */
     public String ensureUniqueConnectorName( String proposedName ) throws Exception {
+        ArgCheck.isNotEmpty(proposedName, "proposedName"); //$NON-NLS-1$
+
         String result = proposedName;
         boolean validName = false;
         int suffix = 1;
@@ -131,6 +137,7 @@ public class ExecutionAdmin {
      * @throws Exception
      */
     public Connector getConnector( String name ) {
+        ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
         return this.connectorByNameMap.get(name);
     }
 
@@ -139,6 +146,8 @@ public class ExecutionAdmin {
     }
 
     public Collection<Connector> getConnectors( ConnectorType type ) {
+        ArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
+
         List<Connector> connectors = new ArrayList<Connector>();
         for (Connector connector : connectorByNameMap.values()) {
             if (connector.getType() == type) connectors.add(connector);
@@ -186,12 +195,21 @@ public class ExecutionAdmin {
     }
 
     public void removeConnector( Connector connector ) throws Exception {
+        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
         this.admin.deleteConnectorBinding(connector.getName());
         this.connectorByNameMap.remove(connector.getName());
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createRemoveConnectorEvent(connector));
     }
 
     public Exception validateConnectorName( String name ) {
+        if (name == null) {
+            return new Exception(Util.getString("connectorNameCannotBeNull", name)); //$NON-NLS-1$
+        }
+
+        if (name.length() == 0) {
+            return new Exception(Util.getString("connectorNameCannotBeEmpty", name)); //$NON-NLS-1$
+        }
+
         // TODO is there other name validation needed (number of chars, chars allowed, ...)
         if (this.connectorByNameMap.containsKey(name)) {
             return new Exception(Util.getString("connectorNameAlreadyExists", name)); //$NON-NLS-1$
@@ -211,7 +229,8 @@ public class ExecutionAdmin {
                                   String propName,
                                   String value ) throws Exception {
         ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
-        ArgCheck.isNotNull(propName, "propName"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(propName, "propName"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(value, "value"); //$NON-NLS-1$
         internalSetPropertyValue(connector, propName, value, true);
     }
 
@@ -247,6 +266,7 @@ public class ExecutionAdmin {
     public void setProperties( Connector connector,
                                Properties changedProperties ) throws Exception {
         ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        ArgCheck.isNotNull(changedProperties, "changedProperties"); //$NON-NLS-1$
         ArgCheck.isNotEmpty(changedProperties.entrySet(), "changedProperties"); //$NON-NLS-1$
 
         if (changedProperties.size() == 1) {

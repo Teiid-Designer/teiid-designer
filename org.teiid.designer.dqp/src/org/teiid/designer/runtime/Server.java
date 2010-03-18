@@ -14,7 +14,7 @@ import com.metamatrix.core.util.HashCodeUtil;
 /**
  *
  */
-public final class Server {
+public class Server {
 
     // ===========================================================================================================================
     // Class Methods
