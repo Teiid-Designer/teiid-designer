@@ -222,8 +222,8 @@ public class ConnectorTest {
         stub(propertyDefinition.getPropertyTypeClassName()).toReturn(Float.class.getName());
         stub(connectorType.getPropertyDefinition(PROP_NAME)).toReturn(propertyDefinition);
         Connector connector = new Connector(connectorBinding, connectorType);
-        System.out.println(Float.MIN_VALUE);
-        System.out.println(Float.MAX_VALUE);
+        // System.out.println(Float.MIN_VALUE);
+        // System.out.println(Float.MAX_VALUE);
         assertThat(connector.isValidPropertyValue(PROP_NAME, "1.0"), is(true));
         assertThat(connector.isValidPropertyValue(PROP_NAME, "3.4028235E37"), is(true));
         assertThat(connector.isValidPropertyValue(PROP_NAME, "3.4028235E38"), is(true)); // TREATED AS INFINITY
@@ -245,8 +245,8 @@ public class ConnectorTest {
         stub(propertyDefinition.getPropertyTypeClassName()).toReturn(Double.class.getName());
         stub(connectorType.getPropertyDefinition(PROP_NAME)).toReturn(propertyDefinition);
         Connector connector = new Connector(connectorBinding, connectorType);
-        System.out.println(Double.MIN_VALUE);
-        System.out.println(Double.MAX_VALUE);
+        // System.out.println(Double.MIN_VALUE);
+        // System.out.println(Double.MAX_VALUE);
         assertThat(connector.isValidPropertyValue(PROP_NAME, "1.0"), is(true));
         assertThat(connector.isValidPropertyValue(PROP_NAME, "1.7976931348623157E307"), is(true));
         // Anything above greater than 1.7976931348623157E308 is deemed INFINITY and it's still a valid double

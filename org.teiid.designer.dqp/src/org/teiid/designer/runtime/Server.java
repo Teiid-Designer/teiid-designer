@@ -118,9 +118,12 @@ public class Server {
 
     public ExecutionAdmin getAdmin() throws Exception {
         if (this.admin == null) {
-            this.admin = new ExecutionAdmin(AdminFactory.getInstance().createAdmin(this.user,
-                                                                                   this.password.toCharArray(),
-                                                                                   this.url), this, this.eventManager);
+            char[] pwd = null;
+            if (this.password != null) {
+                pwd = this.password.toCharArray();
+            }
+            this.admin = new ExecutionAdmin(AdminFactory.getInstance().createAdmin(this.user, pwd, this.url), this,
+                                            this.eventManager);
         }
 
         return this.admin;
