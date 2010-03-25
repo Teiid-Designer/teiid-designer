@@ -7,7 +7,6 @@
  */
 package com.metamatrix.modeler.dqp;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -17,11 +16,9 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 import org.teiid.designer.runtime.ServerManager;
-import org.teiid.designer.runtime.SourceBindingsManager;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.dqp.internal.config.VdbDefnHelper;
@@ -80,13 +77,7 @@ public class DqpPlugin extends Plugin {
     /**
      * The Teiid server registry.
      */
-    private ServerManager serverRegistry;
-
-    /**
-     * The manager of the source bindings.
-     */
-    private SourceBindingsManager sourceBindingsManager; // TODO change name to SourceBindingsManager and refactor binding
-    // utility methods to ExecutionAdmin
+    private ServerManager serverMgr;
 
     /**
      * Collection of {@link VdbDefnHelper}s for a given {@link InternalVdbEditingContext}. Important to make sure only one context
@@ -96,18 +87,10 @@ public class DqpPlugin extends Plugin {
     private Map vdbHelperMap = new HashMap();
 
     /**
-     * @return serverRegistry
+     * @return the server manager
      */
-    public ServerManager getServerRegistry() {
-        return this.serverRegistry;
-    }
-
-    /**
-     * @return
-     * @since 5.0
-     */
-    public SourceBindingsManager getSourceBindingsManager() {
-        return this.sourceBindingsManager;
+    public ServerManager getServerManager() {
+        return this.serverMgr;
     }
 
     /**
@@ -127,7 +110,6 @@ public class DqpPlugin extends Plugin {
 
         try {
             initializeServerRegistry();
-            initializeWorkspaceConfig();
         } catch (Exception e) {
             if (e instanceof CoreException) {
                 throw (CoreException)e;
@@ -173,10 +155,10 @@ public class DqpPlugin extends Plugin {
     }
 
     private void initializeServerRegistry() throws CoreException {
-        this.serverRegistry = new ServerManager(DqpPath.getRuntimePath().toFile().getAbsolutePath());
+        this.serverMgr = new ServerManager(DqpPath.getRuntimePath().toFile().getAbsolutePath());
 
         // restore registry
-        IStatus status = this.serverRegistry.restoreState();
+        IStatus status = this.serverMgr.restoreState();
 
         if (!status.isOK()) {
             Util.log(status);
@@ -184,26 +166,6 @@ public class DqpPlugin extends Plugin {
 
         if (status.getSeverity() == IStatus.ERROR) {
             throw new CoreException(status);
-        }
-    }
-
-    private void initializeWorkspaceConfig() {
-        // TODO rewrite
-        File workspaceDefnDirectory = DqpPath.getWorkspaceDefnPath().toFile();
-        assert (workspaceDefnDirectory.exists() && workspaceDefnDirectory.isDirectory());
-
-        // Check for config file
-        String configFilePath = workspaceDefnDirectory.getAbsolutePath() + File.separator + SOURCE_BINDINGS_FILE_NAME;
-        File configFile = new File(configFilePath);
-        this.sourceBindingsManager = new SourceBindingsManager(this.serverRegistry, configFile);
-
-        try {
-            // TODO: Load
-            // this.sourceBindingsManager.load(); // Load will create file if it does not exist yet
-        } catch (Exception theException) {
-            String msg = Util.getString(I18nUtil.getPropertyPrefix(DqpPlugin.class) + "problemLoadingWorkspaceDefnFile", //$NON-NLS-1$
-                                        SOURCE_BINDINGS_FILE_NAME);
-            Util.log(IStatus.ERROR, theException, msg);
         }
     }
 

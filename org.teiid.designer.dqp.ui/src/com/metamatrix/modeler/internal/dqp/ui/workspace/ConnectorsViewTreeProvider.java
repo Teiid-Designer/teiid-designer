@@ -19,9 +19,10 @@ import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.SourceBindingsManager;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.internal.workspace.SourceModelInfo;
+import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
@@ -32,7 +33,7 @@ import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
  */
 public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelProvider {
 
-    private ServerManager serverRegistry;
+    private ServerManager serverMgr;
 
     private boolean showModelMappings = false;
 
@@ -85,18 +86,19 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
 
         } else if (parentElement instanceof Connector) {
             Connector connector = (Connector)parentElement;
-            Collection modelInfos = Collections.EMPTY_LIST;
+            Collection bindings = Collections.EMPTY_LIST;
 
-            if (showModelMappings && serverRegistry != null) {
-                modelInfos = DqpPlugin.getInstance().getSourceBindingsManager().getModelsForConnector(connector);
+            if (showModelMappings && serverMgr != null) {
+                SourceBindingsManager sourceBindingsMgr = connector.getType().getAdmin().getSourceBindingsManager();
+                bindings = sourceBindingsMgr.getSourceBindings(connector);
             }
 
-            if (modelInfos.isEmpty()) {
+            if (bindings.isEmpty()) {
                 return new Object[0];
             }
 
-            return modelInfos.toArray();
-        } else if (parentElement instanceof SourceModelInfo) {
+            return bindings.toArray();
+        } else if (parentElement instanceof SourceBinding) {
             return new Object[0];
         } else if (parentElement instanceof ConnectorType) {
             ConnectorType type = (ConnectorType)parentElement;
@@ -143,7 +145,7 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_TYPE_ICON);
         }
 
-        if (element instanceof SourceModelInfo) {
+        if (element instanceof SourceBinding) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SOURCE_CONNECTOR_BINDING_ICON);
         }
         return null;
@@ -163,9 +165,9 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
         if (element instanceof ConnectorType) {
             return ((ConnectorType)element).getName();
         }
-        if (element instanceof SourceModelInfo) {
-            SourceModelInfo mInfo = (SourceModelInfo)element;
-            return mInfo.getName();
+        if (element instanceof SourceBinding) {
+            SourceBinding binding = (SourceBinding)element;
+            return binding.getName();
         }
         if (element instanceof String) {
             return (String)element;
@@ -183,8 +185,8 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
     public boolean containsBindings() {
         boolean result = false;
 
-        if (this.serverRegistry != null) {
-            Object[] types = getElements(this.serverRegistry);
+        if (this.serverMgr != null) {
+            Object[] types = getElements(this.serverMgr);
 
             if ((types != null) && (types.length != 0)) {
                 for (int i = 0; i < types.length; ++i) {
@@ -205,8 +207,8 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
      */
     public Object[] getElements( Object inputElement ) {
         if (inputElement instanceof ServerManager) {
-            serverRegistry = (ServerManager)inputElement;
-            return serverRegistry.getServers().toArray();
+            serverMgr = (ServerManager)inputElement;
+            return serverMgr.getServers().toArray();
         }
 
         return new Object[0];

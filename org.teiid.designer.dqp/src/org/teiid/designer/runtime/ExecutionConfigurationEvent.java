@@ -9,6 +9,7 @@ package org.teiid.designer.runtime;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
 
 /**
  * The <code>ExecutionConfigurationEvent</code> class is the event that is broadcast from the {@link ServerManager server manager}
@@ -25,7 +26,8 @@ public final class ExecutionConfigurationEvent {
 
     public enum TargetType {
         CONNECTOR,
-        SERVER;
+        SERVER,
+        SOURCE_BINDING;
     }
 
     public static ExecutionConfigurationEvent createAddServerEvent( Server server ) {
@@ -53,15 +55,37 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.UPDATE, TargetType.CONNECTOR, connector);
     }
 
+    public static ExecutionConfigurationEvent createAddSourceBindingEvent( SourceBinding binding ) {
+        return new ExecutionConfigurationEvent(EventType.ADD, TargetType.SOURCE_BINDING, binding);
+    }
+
+    public static ExecutionConfigurationEvent createRefreshSourceBindingsEvent() {
+        return new ExecutionConfigurationEvent(TargetType.SOURCE_BINDING);
+    }
+
+    public static ExecutionConfigurationEvent createRemoveSourceBindingEvent( SourceBinding binding ) {
+        return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.SOURCE_BINDING, binding);
+    }
+
     private final EventType eventType;
     private final TargetType targetType;
     private final Object target;
     private final Object updatedTarget;
 
+    /**
+     * Create a refresh event.
+     * 
+     * @param targetType the target type that was refreshed
+     */
+    private ExecutionConfigurationEvent( TargetType targetType ) {
+        this(EventType.REFRESH, targetType, null, null);
+    }
+
     private ExecutionConfigurationEvent( EventType eventType,
                                          TargetType targetType,
                                          Object target ) {
         this(eventType, targetType, target, null);
+        ArgCheck.isNotNull(target, "target"); //$NON-NLS-1$
     }
 
     private ExecutionConfigurationEvent( EventType eventType,
@@ -70,12 +94,25 @@ public final class ExecutionConfigurationEvent {
                                          Object updatedTarget ) {
         assert (eventType != null);
         assert (targetType != null);
-        ArgCheck.isNotNull(target, "target"); //$NON-NLS-1$
 
         this.eventType = eventType;
         this.targetType = targetType;
         this.target = target;
         this.updatedTarget = updatedTarget;
+    }
+
+    /**
+     * @return the source binding involved in the event
+     * @throws IllegalStateException if method is called for a non-source binding event
+     */
+    public SourceBinding getSourceBinding() {
+        if (this.targetType != TargetType.SOURCE_BINDING) {
+            throw new IllegalStateException(Util.getString("invalidTargetTypeForGetSourceBindingMethod", //$NON-NLS-1$
+                                                           this.targetType,
+                                                           TargetType.SOURCE_BINDING));
+        }
+
+        return (SourceBinding)this.target;
     }
 
     /**

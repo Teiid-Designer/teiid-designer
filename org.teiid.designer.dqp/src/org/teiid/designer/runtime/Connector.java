@@ -1,28 +1,13 @@
 /*
- * JBoss DNA (http://www.jboss.org/dna)
- * See the COPYRIGHT.txt file distributed with this work for information
- * regarding copyright ownership.  Some portions may be licensed
- * to Red Hat, Inc. under one or more contributor license agreements.
- * See the AUTHORS.txt file in the distribution for a full listing of 
- * individual contributors.
+ * JBoss, Home of Professional Open Source.
  *
- * JBoss DNA is free software. Unless otherwise indicated, all code in JBoss DNA
- * is licensed to you under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
- * 
- * JBoss DNA is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
 package org.teiid.designer.runtime;
 
+import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
@@ -33,7 +18,7 @@ import com.metamatrix.core.modeler.util.ArgCheck;
 
 /**
  */
-public class Connector {
+public class Connector implements Comparable<Connector> {
 
     private final ConnectorBinding binding;
     private final ConnectorType type;
@@ -45,6 +30,17 @@ public class Connector {
 
         this.binding = binding;
         this.type = type;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo( Connector connector ) {
+        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        return getName().compareTo(connector.getName());
     }
 
     /**
@@ -218,6 +214,16 @@ public class Connector {
             // TODO: MAY NOT WORK DUE TO ADMIN API's APPARENT READ-ONLY NATURE??
             props.setProperty((String)entry.getKey(), (String)entry.getValue());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return Util.getString("connectorDetailedName", getName(), getType().getName(), getType().getAdmin().getServer()); //$NON-NLS-1$
     }
 
 }

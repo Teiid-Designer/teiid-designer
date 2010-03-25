@@ -50,24 +50,21 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
+import org.teiid.adminapi.VDB;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
-import org.teiid.designer.runtime.SourceBindingsManager;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.ui.DeleteServerAction;
 import org.teiid.designer.runtime.ui.EditServerAction;
 import org.teiid.designer.runtime.ui.NewServerAction;
 import org.teiid.designer.runtime.ui.ReconnectToServerAction;
-import com.metamatrix.core.event.IChangeListener;
-import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.internal.workspace.SourceModelInfo;
+import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.CloneConnectorBindingAction;
@@ -141,13 +138,9 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
     /** needed for key listening */
     private KeyAdapter kaKeyAdapter;
 
-    private IChangeListener configListener;
-
     private StatusBarUpdater statusBarListener;
 
     private IPropertySourceProvider propertySourceProvider;
-
-    private SourceBindingsManager sourceBindingsManager = DqpPlugin.getInstance().getSourceBindingsManager();
 
     class NameSorter extends ViewerSorter {
     }
@@ -174,11 +167,11 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
             public boolean select( Viewer viewer,
                                    Object parentElement,
                                    Object element ) {
-                if (element instanceof SourceModelInfo) {
-                    SourceModelInfo smi = (SourceModelInfo)element;
+                if (element instanceof SourceBinding) {
+                    SourceBinding binding = (SourceBinding)element;
 
                     // Check to see if model in closed project or not?
-                    String modelName = smi.getName();
+                    String modelName = binding.getName();
                     IResource openModel = ModelUtilities.findModelByName(modelName);
                     if (openModel != null) {
                         return true;
@@ -201,7 +194,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         hookToolTips();
 
         viewer.setSorter(new NameSorter());
-        viewer.setInput(DqpPlugin.getInstance().getServerRegistry());
+        viewer.setInput(DqpPlugin.getInstance().getServerManager());
         viewer.expandToLevel(2);
 
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -218,15 +211,8 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
 
         initKeyListener();
 
-        // Wire as listener to configuration manager
-        // register to receive configuration changes
-        this.configListener = new IChangeListener() {
-            public void stateChanged( IChangeNotifier theSource ) {
-                handleConfigurationChanged();
-            }
-        };
-        DqpPlugin.getInstance().getServerRegistry().addListener(this);
-        sourceBindingsManager.addChangeListener(this.configListener);
+        // Wire as listener to server manager and to receive configuration changes
+        DqpPlugin.getInstance().getServerManager().addListener(this);
 
         // hook up our status bar manager for EObjects
         IStatusLineManager slManager = getViewSite().getActionBars().getStatusLineManager();
@@ -246,38 +232,6 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
      */
     @Override
     public void configurationChanged( ExecutionConfigurationEvent event ) {
-        if (event.getTargetType() == TargetType.SERVER) {
-            switch (event.getEventType()) {
-                case UPDATE: {
-
-                }
-                    break;
-                case REFRESH: {
-
-                }
-                    break;
-                case ADD: {
-                    this.viewer.getInput();
-                }
-                    break;
-                case REMOVE: {
-
-                }
-                    break;
-
-            }
-
-        }
-
-        handleConfigurationChanged();
-        // TODO implement
-    }
-
-    void handleSelectionChanged( SelectionChangedEvent event ) {
-        updateStatusLine((IStructuredSelection)event.getSelection());
-    }
-
-    void handleConfigurationChanged() {
         if (viewer.getTree().isDisposed()) {
             return;
         }
@@ -299,6 +253,34 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
 
         // Refresh the Model Explorer too
         ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();
+//
+//        if (event.getTargetType() == TargetType.SERVER) {
+//            switch (event.getEventType()) {
+//                case UPDATE: {
+//
+//                }
+//                    break;
+//                case REFRESH: {
+//
+//                }
+//                    break;
+//                case ADD: {
+//                    this.viewer.getInput();
+//                }
+//                    break;
+//                case REMOVE: {
+//
+//                }
+//                    break;
+//
+//            }
+//
+//        }
+        // TODO is specific code for each event type needed instead of refreshing entire view?
+    }
+
+    void handleSelectionChanged( SelectionChangedEvent event ) {
+        updateStatusLine((IStructuredSelection)event.getSelection());
     }
 
     /**
@@ -418,11 +400,8 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
     }
 
     String getConnectorToolTip( Connector connector ) {
-        // TODO fix this
-        return connector.getName();
-        // Object params = new Object[] {binding.getName(), binding.getDeployedName(), binding.getConnectorClass(),
-        // binding.getComponentTypeID(), binding.getConfigurationID(), binding.getID(), binding.isEssential()};
-        //        return DqpUiConstants.UTIL.getString(PREFIX + "bindingToolTip", params); //$NON-NLS-1$
+        return DqpUiConstants.UTIL.getString(PREFIX + "bindingToolTip", new Object[] {connector.getName(), //$NON-NLS-1$
+            connector.getType().getName()});
     }
 
     private void hookContextMenu() {
@@ -454,10 +433,10 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         return null;
     }
 
-    SourceModelInfo getSelectedModel() {
+    SourceBinding getSelectedBinding() {
         StructuredSelection selection = (StructuredSelection)viewer.getSelection();
-        if (!selection.isEmpty() && selection.getFirstElement() instanceof SourceModelInfo) {
-            return (SourceModelInfo)selection.getFirstElement();
+        if (!selection.isEmpty() && selection.getFirstElement() instanceof SourceBinding) {
+            return (SourceBinding)selection.getFirstElement();
         }
 
         return null;
@@ -533,9 +512,9 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         openModelAction = new Action(OPEN_ACTION_LABEL) {
             @Override
             public void run() {
-                SourceModelInfo modelInfo = getSelectedModel();
-                if (modelInfo != null) {
-                    String modelName = modelInfo.getName();
+                SourceBinding binding = getSelectedBinding();
+                if (binding != null) {
+                    String modelName = binding.getName();
 
                     IResource theModel = ModelUtilities.findModelByName(modelName);
                     if (theModel != null) {
@@ -549,7 +528,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                         }
                     } else {
                         final String title = getString("openModelAction.title"); //$NON-NLS-1$
-                        final String message = DqpUiConstants.UTIL.getString(PREFIX + "openModelAction.noModelFoundMessage", modelName, modelInfo.getContainerPath()); //$NON-NLS-1$
+                        final String message = DqpUiConstants.UTIL.getString(PREFIX + "openModelAction.noModelFoundMessage", modelName, binding.getContainerPath()); //$NON-NLS-1$
                         MessageDialog.openInformation(UiUtil.getWorkbenchShellOnlyIfUiThread(), title, message);
                     }
                 }
@@ -653,12 +632,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
 
     @Override
     public void dispose() {
-        DqpPlugin.getInstance().getServerRegistry().removeListener(this);
-
-        if (this.configListener != null) {
-            this.sourceBindingsManager.removeChangeListener(this.configListener);
-        }
-
+        DqpPlugin.getInstance().getServerManager().removeListener(this);
         super.dispose();
     }
 
@@ -678,21 +652,25 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
      * @return the server manager being used by this view
      */
     private ServerManager getServerManager() {
-        return DqpPlugin.getInstance().getServerRegistry();
+        return DqpPlugin.getInstance().getServerManager();
     }
 
     public void selectionChanged( IWorkbenchPart thePart,
                                   ISelection theSelection ) {
-        // If Selection is a SINGLE MODEL FILE, then we can find the source and select it??
-
         if (theSelection instanceof StructuredSelection) {
             StructuredSelection sel = (StructuredSelection)theSelection;
+
             if (sel.size() == 1) {
                 Object selObj = sel.getFirstElement();
+
                 if (selObj instanceof IResource && ModelUtilities.isModelFile((IResource)selObj)) {
-                    SourceModelInfo modelInfo = sourceBindingsManager.getSourceModelInfo(((IResource)selObj).getName());
-                    if (modelInfo != null) {
-                        viewer.setSelection(new StructuredSelection(modelInfo), true);
+                    ServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
+                    Collection<SourceBinding> bindings = serverMgr.getSourceBindingsForModel(((IResource)selObj).getName());
+
+                    if (bindings.isEmpty()) {
+                        viewer.setSelection(StructuredSelection.EMPTY);
+                    } else {
+                        viewer.setSelection(new StructuredSelection(bindings.toArray()), true);
                     }
                 }
             }
@@ -706,17 +684,18 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         assert (selection.size() < 2);
 
         String msg = ""; //$NON-NLS-1$
-
-        // TODO make sure we cover all objects including VDB's and Bound sources
-        // AND the string message contains pertinent info.
-
         Object selectedObject = selection.getFirstElement();
+
         if (selectedObject instanceof Server) {
-            msg = ((Server)selectedObject).toString();
+            msg = selectedObject.toString();
         } else if (selectedObject instanceof Connector) {
-            msg = ((Connector)selectedObject).toString();
+            msg = selectedObject.toString();
         } else if (selectedObject instanceof ConnectorType) {
-            msg = ((ConnectorType)selectedObject).toString();
+            msg = selectedObject.toString();
+        } else if (selectedObject instanceof VDB) {
+            msg = selectedObject.toString();
+        } else if (selectedObject instanceof SourceBinding) {
+            msg = selectedObject.toString();
         }
 
         getViewSite().getActionBars().getStatusLineManager().setMessage(msg);
@@ -743,19 +722,19 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                     Object elem = selection.getFirstElement();
                     if (elem instanceof Connector) {
                         return DqpUiConstants.UTIL.getString(PREFIX + CONNECTOR_BINDING_STATUS_LABEL, ((Connector)elem).getName());
-                    } else if (elem instanceof SourceModelInfo) {
+                    } else if (elem instanceof SourceBinding) {
                         // Check for Connector Bindings
-                        SourceModelInfo smi = (SourceModelInfo)elem;
-                        Collection<Connector> connectors = smi.getConnectors();
+                        SourceBinding binding = (SourceBinding)elem;
+                        Collection<Connector> connectors = binding.getConnectors();
                         if (connectors.isEmpty()) {
-                            return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_NONE, smi.getName());
+                            return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_NONE, binding.getName());
                         } else if (connectors.size() == 1) {
                             String firstConnectorName = connectors.iterator().next().getName();
                             return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_OK,
-                                                                 smi.getName(),
+                                                                 binding.getName(),
                                                                  firstConnectorName);
                         } else {
-                            return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_MULTIPLE, smi.getName());
+                            return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_MULTIPLE, binding.getName());
                         }
                     } else if (elem instanceof ConnectorType) {
                         return DqpUiConstants.UTIL.getString(PREFIX + CONNECTOR_TYPE_STATUS_LABEL,

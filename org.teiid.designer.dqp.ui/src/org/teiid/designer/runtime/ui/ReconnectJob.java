@@ -66,7 +66,7 @@ public final class ReconnectJob extends Job {
     @Override
     protected IStatus run( IProgressMonitor monitor ) {
         IStatus result = null;
-        ServerManager serverManager = DqpPlugin.getInstance().getServerRegistry();
+        ServerManager serverManager = DqpPlugin.getInstance().getServerManager();
 
         try {
             String taskName = UTIL.getString("reconnectJobTaskName", this.server.getUrl()); //$NON-NLS-1$

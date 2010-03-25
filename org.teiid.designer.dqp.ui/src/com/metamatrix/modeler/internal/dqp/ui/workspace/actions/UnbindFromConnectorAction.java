@@ -13,6 +13,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.teiid.designer.runtime.Connector;
+import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.SourceBindingsManager;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -61,7 +64,13 @@ public class UnbindFromConnectorAction extends SortableSelectionAction implement
                 try {
                     modelResource = ModelUtilities.getModelResource(((IFile)selectedObj), false);
                     if (modelResource != null) {
-                        DqpPlugin.getInstance().getSourceBindingsManager().removeSourceBinding(modelResource);
+                        // TODO this deletes all bindings for this model is this what the user really wants here?
+                        ServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
+                        
+                        for (Connector connector : serverMgr.getConnectorsForModel(modelResource.getItemName())) {
+                            SourceBindingsManager sourceBindingsMgr = connector.getType().getAdmin().getSourceBindingsManager();
+                            sourceBindingsMgr.removeSourceBinding(modelResource);
+                        }
                     }
                 } catch (ModelWorkspaceException e) {
                     UTIL.log(e);
@@ -104,7 +113,7 @@ public class UnbindFromConnectorAction extends SortableSelectionAction implement
                         }
 
                         if (modelResource == null
-                            || DqpPlugin.getInstance().getSourceBindingsManager().getConnectorsForModel(modelResource.getItemName()).isEmpty()) {
+                            || DqpPlugin.getInstance().getServerManager().getConnectorsForModel(modelResource.getItemName()).isEmpty()) {
                             result = false;
                         }
                     }

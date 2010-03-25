@@ -39,7 +39,6 @@
    <extension-point id="resourceLoadOptions" name="%extension-point.name.25"/>
    <extension-point id="newModelObjectHelper" name="%newModelObjectHelper"/>
    <extension-point id="pasteContributor" name="%extension-point.name.26" schema="schema/pasteContributor.exsd"/>
-   <extension-point id="refactorResourceListener" name="%extension-point.name.27" schema="schema/refactorResourceListener.exsd"/>
 
 <!-- Metamodel extensions -->
    <extension

@@ -7,7 +7,6 @@
  */
 package com.metamatrix.modeler.core;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -30,17 +30,11 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMLMapImpl;
-import org.eclipse.emf.edit.command.CommandParameter;
-import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.xsd.XSDPlugin;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
@@ -56,14 +50,13 @@ import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.core.util.Stopwatch;
 import com.metamatrix.core.util.StringUtil;
-import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.container.ResourceDescriptor;
-import com.metamatrix.modeler.core.index.IndexSelectorFactory;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.metamodel.MetamodelRegistry;
 import com.metamatrix.modeler.core.metamodel.ResourceLoadOptionContributor;
-import com.metamatrix.modeler.core.search.MetadataSearch;
+import com.metamatrix.modeler.core.refactor.IRefactorResourceListener;
+import com.metamatrix.modeler.core.refactor.RefactorResourceEvent;
 import com.metamatrix.modeler.core.transaction.UnitOfWork;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.modeler.core.types.DatatypeManagerLifecycle;
@@ -79,12 +72,10 @@ import com.metamatrix.modeler.internal.core.ModelEditorImpl;
 import com.metamatrix.modeler.internal.core.TransformationPreferencesImpl;
 import com.metamatrix.modeler.internal.core.ValidationPreferencesImpl;
 import com.metamatrix.modeler.internal.core.container.ContainerImpl;
-import com.metamatrix.modeler.internal.core.index.ModelWorkspaceIndexSelectorFactory;
 import com.metamatrix.modeler.internal.core.metamodel.MetamodelRegistryImpl;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.resource.EmfResourceSet;
 import com.metamatrix.modeler.internal.core.resource.EmfResourceSetImpl;
-import com.metamatrix.modeler.internal.core.search.MetadataSearchImpl;
 import com.metamatrix.modeler.internal.core.util.FlatRegistry;
 import com.metamatrix.modeler.internal.core.util.StartupLogger;
 import com.metamatrix.modeler.internal.core.util.WorkspaceUriPathConverter;
@@ -687,14 +678,14 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     private static boolean IGNORE_VALIDATION_PREFERNCES_ON_BUILD = false;
 
     private ISaveParticipant saveParticipant;
-
-    private final HashMap<Method, Boolean> writableInvocationMap = new HashMap<Method, Boolean>();
+    private final CopyOnWriteArrayList<IRefactorResourceListener> refactorListeners;
 
     /**
      * The constructor.
      */
     public ModelerCore() {
         MODELER_CORE_PLUGIN = this;
+        this.refactorListeners = new CopyOnWriteArrayList<IRefactorResourceListener>();
     }
 
     /**
@@ -704,6 +695,39 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      */
     public static Plugin getPlugin() {
         return MODELER_CORE_PLUGIN;
+    }
+
+    /**
+     * Listeners already registered will not be added again.
+     * 
+     * @param listener the listener being registered to receive events (never <code>null</code>)
+     * @return <code>true</code> if listener was added
+     */
+    public boolean addRefactorResourceListener( IRefactorResourceListener listener ) {
+        ArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
+        return this.refactorListeners.addIfAbsent(listener);
+    }
+
+    /**
+     * @param listener the listener being unregistered and will no longer receive events (never <code>null</code>)
+     * @return <code>true</code> if listener was removed
+     */
+    public boolean removeRefactorResourceListener( IRefactorResourceListener listener ) {
+        ArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
+        return this.refactorListeners.remove(listener);
+    }
+
+    /**
+     * @param event the event being broadcast to registered {@link IRefactorResourceListener}s
+     */
+    public void notifyRefactored( RefactorResourceEvent event ) {
+        for (IRefactorResourceListener listener : this.refactorListeners) {
+            try {
+                listener.notifyRefactored(event);
+            } catch (Exception e) {
+                Util.log(e);
+            }
+        }
     }
 
     /**
@@ -1872,222 +1896,4 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         getModelEditor().setObjectID(object, objectId);
     }
 
-    // ============================================================================================================================
-    // // DeclarativeTransactionManager implementation
-    // public InvocationFactoryHelper[] getInvocationFactoryHelperArray() {
-    // return ModelerCore.getInvocationFactoryHelpers();
-    // }
-    //
-    public boolean isWritable( final Method method ) {
-        if (this.writableInvocationMap.get(method) == null) {
-            final InvocationFactoryHelper[] helpers = ModelerCore.getInvocationFactoryHelpers();
-            for (int i = 0; i < helpers.length; i++) {
-                InvocationFactoryHelper next = helpers[i];
-                final int writable = next.isWrite(method);
-                if (writable == InvocationFactoryHelper.READ_ONLY) {
-                    this.writableInvocationMap.put(method, Boolean.FALSE);
-                    return false;
-                } else if (writable == InvocationFactoryHelper.WRITABLE) {
-                    this.writableInvocationMap.put(method, Boolean.TRUE);
-                    return true;
-                }
-            }
-        } else {
-            return this.writableInvocationMap.get(method);
-        }
-
-        return false;
-    }
-
-    // /**
-    // * @see com.metamatrix.core.aspects.DeclarativeTransactionManager#beginTxn(java.lang.String, java.lang.Object)
-    // * @since 4.1
-    // */
-    // public boolean beginTxn(String description,
-    // Object source) {
-    // return ModelerCore.startTxn(description, source);
-    // }
-    //
-    // /**
-    // * @see com.metamatrix.core.aspects.DeclarativeTransactionManager#endTxn()
-    // * @since 4.1
-    // */
-    // public void endTxn() {
-    // ModelerCore.commitTxn();
-    // }
-    // /**
-    // * @see com.metamatrix.core.aspects.DeclarativeTransactionManager#rollbackDeclarativeTxn()
-    // * @since 4.1
-    // */
-    // public void rollbackDeclarativeTxn() {
-    // ModelerCore.rollbackTxn();
-    // }
-
-    public Object executeInTransaction( final Method method,
-                                        final Object target,
-                                        final Object[] params ) throws RuntimeException {
-        ArgCheck.isNotNull(method);
-        ArgCheck.isNotNull(params);
-        ArgCheck.isNotNull(target);
-        final boolean startedTxn = ModelerCore.startTxn(null, this);
-        boolean success = false;
-        try {
-            CommandParameter param = createCommandParameter(method, target, params);
-
-            // if (param != null && param.getFeature() != null && target instanceof EObject && param.getFeature() instanceof
-            // EStructuralFeature) {
-            // Object oldValue = ((EObject) target).eGet((EStructuralFeature) param.getFeature());
-            // Object newValue = params.length == 2 ? params[1] : params[0];
-            //                System.out.println("ModelerCore:executeInTransaction - Old value: " + oldValue + " *** New value: " + newValue); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-            // }
-
-            if (param != null && param.getFeature() != null) {
-                EStructuralFeature sf = (EStructuralFeature)param.getFeature();
-                EClassifier eType = sf.getEType();
-                if (eType instanceof EEnum && sf.isMany()) {
-                    Object newValue = (params.length == 2 ? params[1] : params[0]);
-                    if (newValue instanceof String) {
-                        param = null;
-                    }
-                }
-            }
-
-            final ContainerImpl cntr = (ContainerImpl)defaultModelContainer;
-            final Command cmd = (param == null || cntr == null) ? null : cntr.getEditingDomain().createCommand(SetCommand.class,
-                                                                                                               param);
-
-            // If we couldn't create a command param, just execute the method within a txn.
-            if (cmd == null || param == null) {
-                Object result = null;
-                try {
-                    result = method.invoke(target, params);
-                    success = true;
-                    return result;
-                } catch (Exception e) {
-                    final String msg = ModelerCore.Util.getString("ModelerCore.unexpected_declarative_txn_exception"); //$NON-NLS-1$
-                    Util.log(IStatus.ERROR, e, msg);
-                    success = false;
-                    return result;
-                }
-            }
-
-            // Else, execute the command via the ModelerEditor so that it is undoable.
-            ModelerCore.getModelEditor().executeCommand((EObject)target, cmd);
-
-            final Collection result = cmd.getResult();
-            if (result != null && result.size() == 1) {
-                success = true;
-                return result.iterator().next();
-            }
-
-            success = true;
-            return result;
-        } catch (Exception e) {
-            final String msg = ModelerCore.Util.getString("ModelerCore.unexpected_declarative_txn_exception"); //$NON-NLS-1$
-            Util.log(IStatus.ERROR, e, msg);
-            return null;
-        } finally {
-            if (startedTxn) {
-                if (success) {
-                    commitTxn();
-                } else {
-                    rollbackTxn();
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Create an object that performs searches for model object instances.
-     * 
-     * @return the search object; never null
-     */
-    private CommandParameter createCommandParameter( final Method method,
-                                                     final Object target,
-                                                     final Object[] params ) {
-        if (!(target instanceof EObject)) {
-            return null;
-        }
-
-        final EObject eTarget = (EObject)target;
-        EStructuralFeature sf = null;
-
-        // First check the invocation parameters to see if one of the params is a SF...
-        for (int i = 0; i < params.length; i++) {
-            final Object temp = params[i];
-            if (temp instanceof EStructuralFeature) {
-                sf = (EStructuralFeature)temp;
-
-                if (params.length == 2) {
-                    // Assume params consist of sf and value
-                    return new CommandParameter(target, sf, params[1]);
-                }
-            }
-        }
-
-        // Currently we are assuming that all commands will be sets
-        final String sfName = method.getName().substring(3);
-
-        // Lower case the first char and try to look-up the SF
-        final String tempName = StringUtilities.lowerCaseFirstChar(sfName);
-        sf = eTarget.eClass().getEStructuralFeature(tempName);
-
-        // Try to get the SF with the feature name as-is (First char will probably be uppercase)
-        if (sf == null) {
-            sf = eTarget.eClass().getEStructuralFeature(sfName);
-        }
-
-        // Final fall-through... if sf is still null, try using substrings of the method name
-        // looking at the last upper case char, and moving back from there.
-        if (sf == null) {
-            sf = complexSFSearch(sfName, eTarget);
-        }
-
-        // If we can't find a SF assume this should be a read txn
-        if (sf == null) {
-            return null;
-        }
-
-        return new CommandParameter(eTarget, sf, params[0]);
-    }
-
-    /**
-     * Unable to locate SF via assuming just "setXXX". Now search by substring from the last upper case char backwards.
-     * 
-     * @return EStructuralFeature
-     */
-    private EStructuralFeature complexSFSearch( String sfName,
-                                                EObject target ) {
-        String tmp = StringUtilities.getLastUpperCharToken(sfName);
-        EStructuralFeature result = target.eClass().getEStructuralFeature(tmp);
-
-        // if result still null try lower casing first char
-        if (result == null) {
-            result = target.eClass().getEStructuralFeature(StringUtilities.lowerCaseFirstChar(tmp));
-        }
-
-        while (!sfName.equals(tmp) && result == null) {
-            tmp = StringUtilities.getLastUpperCharToken(sfName, tmp);
-            result = target.eClass().getEStructuralFeature(tmp);
-
-            // if result stull null try lower casing first char
-            if (result == null) {
-                result = target.eClass().getEStructuralFeature(StringUtilities.lowerCaseFirstChar(tmp));
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Create an object that performs searches for model object instances.
-     * 
-     * @return the search object; never null
-     */
-    public static MetadataSearch createMetadataSearch() {
-        final IndexSelectorFactory factory = new ModelWorkspaceIndexSelectorFactory();
-        final ModelWorkspace workspace = ModelerCore.getModelWorkspace();
-        return new MetadataSearchImpl(workspace, factory);
-    }
 }

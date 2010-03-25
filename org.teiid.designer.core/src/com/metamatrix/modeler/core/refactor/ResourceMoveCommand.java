@@ -352,7 +352,10 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
     /*
      * Notify with RefactorRenameEvent.TYPE_RENAME
      */
-    private void notifyMoved(IPath oldPath , IResource movedResource) {
-        RefactorResourceUtil.notifyRefactored(new RefactorResourceEvent(movedResource, RefactorResourceEvent.TYPE_MOVE, this, oldPath));
+    private void notifyMoved( IPath oldPath,
+                              IResource movedResource ) {
+        ((ModelerCore)ModelerCore.getPlugin()).notifyRefactored(new RefactorResourceEvent(movedResource,
+                                                                                          RefactorResourceEvent.TYPE_MOVE, this,
+                                                                                          oldPath));
     }
 }

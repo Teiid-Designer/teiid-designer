@@ -18,15 +18,12 @@ import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.SourceBindingsManager;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**
  * @since 5.0
  */
 public abstract class ConfigurationManagerAction extends Action implements ISelectionChangedListener {
-
-    private static SourceBindingsManager sourceBindingsManager;
 
     /**
      * Set based on the connector(s), connector type(s) that are selected.
@@ -47,15 +44,22 @@ public abstract class ConfigurationManagerAction extends Action implements ISele
         super(theText);
     }
 
+    /**
+     * @return the execution admin (maybe <code>null</code>)
+     */
     protected ExecutionAdmin getAdmin() {
         return this.admin;
     }
 
-    public SourceBindingsManager getWorkspaceConfig() {
-        if (sourceBindingsManager == null) {
-            sourceBindingsManager = DqpPlugin.getInstance().getSourceBindingsManager();
+    /**
+     * @return the source bindings manager (maybe <code>null</code> if there is no admin object)
+     */
+    protected SourceBindingsManager getSourceBindingsManager() {
+        if (this.admin == null) {
+            return null;
         }
-        return sourceBindingsManager;
+
+        return this.admin.getSourceBindingsManager();
     }
 
     public void selectionChanged( SelectionChangedEvent theEvent ) {

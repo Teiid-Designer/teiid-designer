@@ -107,7 +107,7 @@ public class ExistingConnectorBindingPanel extends BaseNewConnectorBindingPanel 
         treeViewer.setContentProvider(treeProvider);
         treeViewer.setLabelProvider(treeProvider);
 
-        treeViewer.setInput(DqpPlugin.getInstance().getServerRegistry().getServers());
+        treeViewer.setInput(DqpPlugin.getInstance().getServerManager().getServers());
         treeViewer.expandToLevel(2);
 
         GridData gd = new GridData(GridData.FILL_BOTH);

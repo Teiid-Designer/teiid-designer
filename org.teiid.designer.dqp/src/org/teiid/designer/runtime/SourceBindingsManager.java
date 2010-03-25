@@ -7,11 +7,16 @@
  */
 package org.teiid.designer.runtime;
 
-import java.io.File;
+import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -23,107 +28,152 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
-import com.metamatrix.core.event.IChangeListener;
-import com.metamatrix.core.event.IChangeNotifier;
+import org.teiid.adminapi.AdminException;
+import org.teiid.adminapi.Model;
+import org.teiid.adminapi.VDB;
+import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.refactor.IRefactorResourceListener;
 import com.metamatrix.modeler.core.refactor.RefactorResourceEvent;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceNotification;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceNotificationListener;
-import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.internal.workspace.SourceModelInfo;
+import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 
 /**
- * This class is designed to manage a SourceBindings.xml file containing all workspace model-to-connector bindings. This file
- * resides in the runtime workspace's .metadata/.plugins/com.metamatrix.modeler.dqp/workspaceConfig directory. If the workspace is
- * deleted (i.e. .metadata directory), the bindings will have to be re-created. Connectors and Connector Types are managed by the
- * <code>ExecutionManager</code>s.
- * 
- * @since 5.0
+ * The <code>SourceBindingsManager</code> manages the {@link SourceBinding}s registered on its associated execution server.
  */
-public class SourceBindingsManager
-    implements IChangeNotifier, IExecutionConfigurationListener, IResourceChangeListener, IRefactorResourceListener {
+public class SourceBindingsManager implements IResourceChangeListener, IRefactorResourceListener {
 
-    private Collection listenerList;
+    private static final int VDB_VERSION = 1;
 
-    private final ServerManager serverManager;
+    private final ExecutionAdmin admin;
+    private final Map<String, SourceBinding> bindingsByModelNameMap;
+//    private VdbEditingContext hiddenVdb;
+    private final WorkspaceNotificationListener workspaceListener;
 
     /**
-     * Constructor initialized with a File representing the WorkspaceBindings.def
-     * 
-     * @param defnFile
-     * @since 5.0
+     * @param admin the execution admin associated with this manager (never <code>null</code>)
      */
-    public SourceBindingsManager( ServerManager serverManager,
-                                  File defnFile ) {
-        this.listenerList = new ArrayList(1);
-        this.serverManager = serverManager;
+    public SourceBindingsManager( ExecutionAdmin admin ) {
+        ArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
+        this.admin = admin;
+        this.bindingsByModelNameMap = new HashMap<String, SourceBinding>();
 
-        WorkspaceNotificationListener listener = new WorkspaceNotificationListener();
-        ModelWorkspaceManager.getModelWorkspaceManager().addNotificationListener(listener);
+        // hookup listening
+        this.workspaceListener = new WorkspaceNotificationListener();
+        ModelWorkspaceManager.getModelWorkspaceManager().addNotificationListener(this.workspaceListener);
         ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+        ((ModelerCore)ModelerCore.getPlugin()).addRefactorResourceListener(this);
     }
 
     /**
-     * @see com.metamatrix.core.event.IChangeNotifier#addChangeListener(com.metamatrix.core.event.IChangeListener)
-     * @since 4.3
-     */
-    public void addChangeListener( IChangeListener theListener ) {
-        if (!listenerList.contains(theListener)) {
-            this.listenerList.add(theListener);
-        }
-    }
-
-    /**
-     * Creates a new <code>SourceModelInfo</code> object, adds the input connector binding to the object and sets the UUID and
-     * Path properties to the values from the <code>ModelResource</code>.
+     * Creates a new <code>SourceBinding</code> object, adds the input connector binding to the object and sets the UUID and Path
+     * properties to the values from the <code>ModelResource</code>.
      * 
-     * @param modelResource
-     * @param binding
+     * @param modelResource the model whose source binding is being created (never <code>null</code>)
+     * @param connector the connector being added to the binding (never <code>null</code>)
      * @since 5.0
      */
     public void createSourceBinding( ModelResource modelResource,
                                      Connector connector ) {
-        SourceModelInfo modelInfo = new SourceModelInfo(modelResource.getItemName());
-        modelInfo.addConnector(connector);
+        ArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        createSourceBinding(modelResource, Collections.singleton(connector));
+    }
 
-        try {
-            modelInfo.setUuid(modelResource.getUuid());
-            modelInfo.setContainerPath(modelResource.getParent().getPath().makeRelative().toString());
-        } catch (ModelWorkspaceException theException) {
-            DqpPlugin.Util.log(IStatus.ERROR, theException.getMessage());
+    private void createSourceBinding( ModelResource modelResource,
+                                      Set<Connector> connectors ) {
+        String modelName = modelResource.getItemName();
+
+        // collect connector names
+        String[] connectorNames = new String[connectors.size()];
+        int i = 0;
+
+        for (Connector connector : connectors) {
+            connectorNames[i] = connector.getName();
+            ++i;
         }
 
         try {
-            connector.getType().getAdmin().assignBindingToModel("DEFAULT", "1", modelInfo.getName(), connector.getName());
+//            ensureModelExistsInHiddenVdb();
+            this.admin.getAdminApi().assignBindingsToModel(connectorNames,
+                                                           getHiddenVdbName(),
+                                                           Integer.toString(VDB_VERSION),
+                                                           modelName);
+            SourceBinding newBinding = new SourceBinding(modelName,
+                                                         modelResource.getParent().getPath().makeRelative().toString(),
+                                                         connectors);
+            this.bindingsByModelNameMap.put(modelName, newBinding);
+
+            // notify listeners
+            fireConfigurationEvent(ExecutionConfigurationEvent.createAddSourceBindingEvent(newBinding));
         } catch (Exception e) {
-            DqpPlugin.Util.log(IStatus.ERROR, e.getMessage());
+            Util.log(IStatus.ERROR, e.getMessage());
         }
+    }
+//
+//    /**
+//     * Make sure the hidden workspace preview VDB exists on server
+//     * 
+//     * @throws Exception if there is a problem retrieving or creating the VDB
+//     */
+//    private void ensureHiddenVdbExists() {
+//        if (this.hiddenVdb == null) {
+//            try {
+//                // TODO create VDB at the right location
+//                IPath path = DqpPlugin.getInstance().getStateLocation().append(getHiddenVdbName());
+//                this.hiddenVdb = VdbEditPlugin.createVdbEditingContext(path);
+//                this.hiddenVdb.open(); // create file
+//            } catch (Exception e) {
+//                Util.log(e);
+//                this.hiddenVdb = null;
+//                throw new Exception(); // TODO need error msg
+//            }
+//
+//            try {
+//                this.admin.getAdminApi().deployVDB(getHiddenVdbName(), path.toFile().toURI().toURL());
+//            } catch (Exception e) {
+//                Util.log(e);
+//                throw new Exception(); // TODO need error msg
+//            }
+//        }
+//        VDB vdb = this.admin.getAdminApi().getVDB(getHiddenVdbName(), VDB_VERSION);
+//
+//    }
+//
+//    private void ensureModelExistsInHiddenVdb( ModelResource modelResource ) throws Exception {
+//        ensureHiddenVdbExists();
+//        this.hiddenVdb.addModel(null, modelResource.getPath(), false); // TODO not sure what this does if model already added
+//    }
 
-        fireChangeEvent();
-
+    void fireConfigurationEvent( ExecutionConfigurationEvent event ) {
+        assert (event != null);
+        this.admin.getEventManager().notifyListeners(event);
     }
 
     /**
-     * Returns a collection of any ConnectorsBindngs bound to the input <code>ModelResource</code>
+     * Obtains the connectors bound to the specified model.
      * 
-     * @param String
-     * @return
+     * @param modelName the name of the model whose connectors are being requested (never <code>null</code> or empty)
+     * @return the connectors (never <code>null</code> but can be empty)
      * @since 5.0
      */
     public Collection<Connector> getConnectorsForModel( String modelName ) {
-        // TODO gonna have to expand this. You can get a Default/hidden VDB for the model
-        // if ONE binding exists for each model, else we'll have to add a VDB argument (or server)
-        //        
-        // SourceModelInfo modelInfo = getWorkspaceDefn().getModel(modelName);
-        //
-        // return modelInfo.getConnectors();
-        return Collections.EMPTY_LIST;
+        ArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
+        SourceBinding binding = this.bindingsByModelNameMap.get(modelName);
+        if (binding == null) return Collections.emptyList();
+        return binding.getConnectors();
+    }
+
+    private String getHiddenVdbName() {
+        // TODO figure out good name
+        return "W_O_R_K_S_P_A_C_E__P_R_E_V_I_E_W__V_D_B"; //$NON-NLS-1$
     }
 
     /**
@@ -139,7 +189,7 @@ public class SourceBindingsManager
         try {
             allEObjects = modelResource.getEObjects();
         } catch (ModelWorkspaceException theException) {
-            DqpPlugin.Util.log(IStatus.ERROR, theException.getMessage());
+            Util.log(IStatus.ERROR, theException.getMessage());
         }
         if (allEObjects != null && !allEObjects.isEmpty()) {
             for (Iterator iter = allEObjects.iterator(); iter.hasNext();) {
@@ -153,21 +203,30 @@ public class SourceBindingsManager
         return null;
     }
 
-    public Collection<SourceModelInfo> getModelsForConnector( Connector connector ) {
-        // TODO find models for connector
-        // return getWorkspaceDefn().getModelsForConnector(connector);
-        return Collections.EMPTY_LIST;
+    /**
+     * @param modelName the name of the model whose binding is being requested (never <code>null</code> or empty)
+     * @return the binding or <code>null</code>
+     * @since 5.0
+     */
+    public SourceBinding getSourceBinding( String modelName ) {
+        ArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
+        return this.bindingsByModelNameMap.get(modelName);
     }
 
     /**
-     * @param modelName
-     * @return
-     * @since 5.0
+     * @param connector the connector whose source bindings are being requested (never <code>null</code>)
+     * @return the source bindings (never <code>null</code>)
+     * @since 7.0
      */
-    public SourceModelInfo getSourceModelInfo( String modelName ) {
-        // TODO find sourceModelInfo
-        // return getWorkspaceDefn().getModel(modelName);
-        return null;
+    public Collection<SourceBinding> getSourceBindings( Connector connector ) {
+        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        Collection<SourceBinding> result = new ArrayList<SourceBinding>();
+
+        for (SourceBinding binding : this.bindingsByModelNameMap.values()) {
+            if (binding.getConnectors().contains(connector)) result.add(binding);
+        }
+
+        return Collections.EMPTY_LIST;
     }
 
     /**
@@ -178,19 +237,81 @@ public class SourceBindingsManager
      * @return
      * @since 5.0
      */
-    public boolean modelIsMappedToSource( ModelResource modelResource ) {
-        // TODO reimplement method
-        // SourceModelInfo modelInfo = getWorkspaceDefn().getModel(modelResource.getItemName());
-        // return modelInfo != null;
-        return false;
+    public boolean hasSourceBinding( ModelResource modelResource ) {
+        ArgCheck.isNotNull(modelResource, "modelResource.getItemName()"); //$NON-NLS-1$
+        return (getSourceBinding(modelResource.getItemName()) != null);
     }
 
     /**
-     * @see com.metamatrix.core.event.IChangeNotifier#removeChangeListener(com.metamatrix.core.event.IChangeListener)
-     * @since 4.3
+     * @see com.metamatrix.modeler.core.refactor.IRefactorResourceListener#notifyRefactored(com.metamatrix.modeler.core.refactor.RefactorResourceEvent)
+     * @since 5.0
      */
-    public void removeChangeListener( IChangeListener theListener ) {
-        this.listenerList.remove(theListener);
+    public void notifyRefactored( RefactorResourceEvent theEvent ) {
+        switch (theEvent.getType()) {
+            case RefactorResourceEvent.TYPE_MOVE: {
+                if (theEvent.getResource() instanceof IFile) {
+                    resetSourceBinding(theEvent.getResource().getName(), (IFile)theEvent.getResource());
+                } else if (theEvent.getResource() instanceof IFolder) {
+                    // Folder we refactored plus it's contents
+                    resetSourceBindings((IFolder)theEvent.getResource());
+                }
+            }
+                break;
+
+            case RefactorResourceEvent.TYPE_RENAME: {
+                if (theEvent.getResource() instanceof IFile) {
+                    resetSourceBinding(theEvent.getOriginalPath().lastSegment(), (IFile)theEvent.getResource());
+                } else if (theEvent.getResource() instanceof IFolder) {
+                    // Folder we refactored plus it's contents
+                    resetSourceBindings((IFolder)theEvent.getResource());
+                }
+            }
+                break;
+
+            case RefactorResourceEvent.TYPE_DELETE: {
+                removeSourceBinding(theEvent.getOriginalPath().lastSegment());
+            }
+                break;
+        }
+    }
+
+    /**
+     * Refreshes the {@link SourceBinding}s in the hidden workspace VDB found on the server.
+     * 
+     * @throws Exception if there is a problem getting the hidden VDB
+     */
+    void refresh() throws Exception {
+        this.bindingsByModelNameMap.clear();
+        VDB vdb = this.admin.getAdminApi().getVDB(getHiddenVdbName(), VDB_VERSION);
+
+        if (vdb != null) {
+            for (Model model : vdb.getModels()) {
+                List<String> connectorNames = model.getConnectorBindingNames();
+
+                if (!connectorNames.isEmpty()) {
+                    Set<Connector> connectors = new HashSet<Connector>(connectorNames.size());
+
+                    for (String connectorName : connectorNames) {
+                        Connector connector = this.admin.getConnector(connectorName);
+
+                        if (connector == null) {
+                            // TODO should this ever happen? if it does should we remove the binding now?
+                            Util.log(IStatus.ERROR, Util.getString("hiddenVdbConnectorNotFound", connectorName, model.getName())); //$NON-NLS-1$
+                        } else {
+                            connectors.add(connector);
+                        }
+                    }
+
+                    if (!connectors.isEmpty()) {
+                        SourceBinding binding = new SourceBinding(model.getName(), model.getPath(), connectors);
+                        this.bindingsByModelNameMap.put(model.getName(), binding);
+                    }
+                }
+            }
+        }
+
+        // notify listeners
+        fireConfigurationEvent(ExecutionConfigurationEvent.createRefreshSourceBindingsEvent());
     }
 
     /**
@@ -200,154 +321,152 @@ public class SourceBindingsManager
      * @since 5.0
      */
     public void removeSourceBinding( ModelResource modelResource ) {
+        ArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
         String modelName = modelResource.getItemName();
         removeSourceBinding(modelName);
     }
 
     /**
-     * Removes the source binding for the input model name.
+     * Removes the source binding for the specified model.
      * 
-     * @param modelName
+     * @param modelName the name of the model whose source binding is being removed (never <code>null</code> or empty)
      * @since 5.0
      */
     public void removeSourceBinding( String modelName ) {
-        // TODO re-implement method
-        // getWorkspaceDefn().removeModelInfo(modelName);
-        fireChangeEvent();
-    }
+        ArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
 
-    /**
-     * Removes the source binding for the input <code>ModelInfo</code>
-     * 
-     * @param modelInfo
-     * @since 5.0
-     */
-    public void removeSourceBinding( SourceModelInfo modelInfo ) {
-        removeSourceBinding(modelInfo.getName());
-    }
+        if (this.bindingsByModelNameMap.containsKey(modelName)) {
+            try {
+                if (this.bindingsByModelNameMap.size() == 1) {
+                    assert (this.bindingsByModelNameMap.containsKey(modelName));
+                    this.admin.getAdminApi().deleteVDB(getHiddenVdbName(), VDB_VERSION);
+                } else {
+                    // other models still have bindings just clear binding for this model on the server
+                    this.admin.getAdminApi().assignBindingToModel("", getHiddenVdbName(), Integer.toString(VDB_VERSION), modelName); //$NON-NLS-1$
+                }
 
-    /**
-     * Helper method to remove source bindings for a collection of objects which may be of type: <code>ModelInfo</code>
-     * <code>String</code> <code>ModelResource</code>
-     * 
-     * @param objects
-     * @since 5.0
-     */
-    public void removeSourceBindings( Collection objects ) {
-        for (Iterator iter = objects.iterator(); iter.hasNext();) {
-            Object nextObj = iter.next();
-            if (nextObj instanceof SourceModelInfo) {
-                removeSourceBinding((SourceModelInfo)nextObj);
-            } else if (nextObj instanceof String) {
-                removeSourceBinding((String)nextObj);
-            } else if (nextObj instanceof ModelResource) {
-                removeSourceBinding((ModelResource)nextObj);
+                // clear local cache
+                SourceBinding removedBinding = this.bindingsByModelNameMap.remove(modelName);
+
+                // notify listeners
+                fireConfigurationEvent(ExecutionConfigurationEvent.createRemoveSourceBindingEvent(removedBinding));
+            } catch (AdminException e) {
+                Util.log(IStatus.ERROR, e, Util.getString("problemRemovingSourceBinding", modelName)); //$NON-NLS-1$
             }
         }
+    }
+
+    /**
+     * Removes the source binding.
+     * 
+     * @param binding the binding being removed (never <code>null</code>)
+     * @throws IllegalArgumentException if a source binding was not removed
+     * @since 5.0
+     */
+    public void removeSourceBinding( SourceBinding binding ) {
+        removeSourceBinding(binding.getName());
     }
 
     /**
      * Removes the source bindings associated with models under a project.
      * 
-     * @param modelName
+     * @param projectName the name of the project whose contained source bindings are being removed (never <code>null</code> or
+     *        empty)
      * @since 5.0
      */
-    public void removeSourceBindingForProject( String projectName ) {
-        // TODO re-implement
-        // getWorkspaceDefn().removeModelInfosForProject(projectName);
-        fireChangeEvent();
+    private void removeSourceBindingsForProject( String projectName ) {
+        ArgCheck.isNotEmpty(projectName, "projectName"); //$NON-NLS-1$
+        Collection<SourceBinding> allBindings = new ArrayList<SourceBinding>(this.bindingsByModelNameMap.values());
+
+        for (SourceBinding binding : allBindings) {
+            if (binding.getContainerPath().startsWith(projectName)) {
+                removeSourceBinding(binding.getName()); // TODO this fires event after each remove, may just want one event at end
+            }
+        }
     }
 
-    /*
-     * Private method which will reset the SourceModelInfo Name, UUID & Container Path values
-     * If NAME is CHANGED, the SourceModelInfo is removed and re-added to the the configuration to sync up it's MAP and an event
-     * is fired to allow DQP to react.
-     * 
-     * If the NAME is NOT CHANGED, then we just replace the UUID and Container Path.
-     * 
-     * In all cases, the configuration is saved.
+    /**
+     * @param modelResource the model whose binding is being reset (never <code>null</code>)
      */
-    private void resetSourceInfo( ModelResource modelResource,
-                                  SourceModelInfo modelInfo ) {
-        boolean replaceInfo = false;
+    private void resetSourceBinding( ModelResource modelResource ) {
+        ArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
 
-        if (!modelResource.getItemName().equalsIgnoreCase(modelInfo.getName())) {
-            // Remove the current model info
-            // TODO remove current model info from source binding?
-            // getWorkspaceDefn().removeModelInfo(modelInfo.getName());
+        SourceBinding binding = getSourceBinding(modelResource.getItemName());
 
-            // Reset the values in the model info.
-            modelInfo.setName(modelResource.getItemName());
-
-            replaceInfo = true;
+        // only reset if one currently exists
+        if (binding != null) {
+            removeSourceBinding(binding);
+            createSourceBinding(modelResource, binding.getConnectors());
         }
+    }
+
+    private void resetSourceBinding( String modelNameWithExtension,
+                                     IFile modelFile ) {
+        ModelResource mr = null;
 
         try {
-            modelInfo.setUuid(modelResource.getUuid());
-            modelInfo.setContainerPath(modelResource.getParent().getPath().makeRelative().toString());
-        } catch (ModelWorkspaceException theException) {
-            DqpPlugin.Util.log(IStatus.ERROR, theException.getMessage());
-        }
+            mr = ModelUtil.getModelResource(modelFile, false);
 
-        if (replaceInfo) {
-            // Add the info back to the defn
-            // TODO add it back
-            // getWorkspaceDefn().addModelInfo(modelInfo);
-
-            fireChangeEvent();
-        }
-
-    }
-
-    /**
-     * @since 4.3
-     */
-    protected void fireChangeEvent() {
-        if (!this.listenerList.isEmpty()) {
-            for (Iterator it = listenerList.iterator(); it.hasNext();) {
-                IChangeListener listener = (IChangeListener)it.next();
-                listener.stateChanged(this);
+            if (mr != null) {
+                resetSourceBinding(mr);
             }
+        } catch (ModelWorkspaceException theException) {
+            Util.log(IStatus.ERROR, theException.getMessage());
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.runtime.IExecutionConfigurationListener#configurationChanged(org.teiid.designer.runtime.ExecutionConfigurationEvent)
-     */
-    @Override
-    public void configurationChanged( ExecutionConfigurationEvent event ) {
-        // Need to check all source bindings and remove any "stale" ones. Basicaly
-        // Need to check if any connector bindings have been removed.
-        Collection staleModelInfos = new ArrayList();
-
-        // TODO re-implement
-        // for (SourceModelInfo nextModelInfo : workspaceDefn.getModels()) {
-        // Collection<Connector> connectors = nextModelInfo.getConnectors();
-        //
-        // if (!allBindingsExist(connectors)) {
-        // staleModelInfos.add(nextModelInfo);
-        // }
-        // }
-        //
-        // if (!staleModelInfos.isEmpty()) {
-        // removeSourceBindings(staleModelInfos);
-        // }
     }
 
     /*
-     * Helper method that checks if a collection os binding names still exist in the ConfigurationManager
+     * This method 
      */
-    private boolean allBindingsExist( Collection<Connector> connectors ) {
-        // TODO if server is down but we have a source binding we don't want to remove binding
-        // TODO do we need an OfflineConnector class???
-        for (Connector connector : connectors) {
-            if (connector.getType().getAdmin().getConnector(connector.getName()) == null) {
-                return false;
+    private void resetSourceBindings( IFolder refactoredFolder ) {
+        try {
+            IResource[] children = refactoredFolder.members();
+
+            for (int i = 0; i < children.length; i++) {
+                if (ModelUtil.isModelFile(children[i])) {
+                    resetSourceBinding(children[i].getFullPath().lastSegment(), (IFile)children[i]);
+                } else if (children[i] instanceof IFolder) {
+                    resetSourceBindings((IFolder)children[i]);
+                }
+            }
+        } catch (CoreException theException) {
+            Util.log(IStatus.ERROR, theException.getMessage());
+        }
+    }
+
+    void shutdown() {
+        if (this.workspaceListener != null) {
+            ModelWorkspaceManager.getModelWorkspaceManager().removeNotificationListener(this.workspaceListener);
+        }
+
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
+        ((ModelerCore)ModelerCore.getPlugin()).removeRefactorResourceListener(this);
+    }
+
+    /**
+     * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+     * @since 4.2
+     */
+    public void resourceChanged( IResourceChangeEvent theEvent ) {
+        IResource resource = theEvent.getResource();
+
+        if (resource != null) {
+            if (ResourceChangeUtilities.isPreDelete(theEvent)) {
+                if (resource instanceof IProject) { // if Project, then delete all contained model's source bindings
+                    removeSourceBindingsForProject(resource.getName());
+                } else { // if Model, then only do model's source binding
+                    String nm = resource.getName();
+
+                    if (nm != null) {
+                        removeSourceBinding(nm);
+                    }
+                }
+            } else if (ResourceChangeUtilities.isPostChange(theEvent)) {
+                if (theEvent.getDelta().getResource() instanceof IWorkspaceRoot) {
+                    fireConfigurationEvent(ExecutionConfigurationEvent.createRefreshSourceBindingsEvent());
+                }
             }
         }
-        return true;
     }
 
     // ==================================================================================
@@ -372,7 +491,8 @@ public class SourceBindingsManager
         }
 
         public void notifyOpen( ModelWorkspaceNotification notification ) {
-            fireChangeEvent();
+            // project opened
+            fireConfigurationEvent(ExecutionConfigurationEvent.createRefreshSourceBindingsEvent());
         }
 
         public void notifyClosing( ModelWorkspaceNotification notification ) {
@@ -385,106 +505,6 @@ public class SourceBindingsManager
         }
 
         public void notifyClean( final IProject proj ) {
-        }
-
-    }
-
-    /**
-     * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
-     * @since 4.2
-     */
-    public void resourceChanged( IResourceChangeEvent theEvent ) {
-        IResource resource = theEvent.getResource();
-
-        if (resource != null) {
-            if (ResourceChangeUtilities.isPreDelete(theEvent)) {
-                if (resource instanceof IProject) { // if Project, then delete all contained model's source bindings
-                    removeSourceBindingForProject(resource.getName());
-                } else { // if Model, then only do model's source binding
-                    String nm = resource.getName();
-
-                    if (nm != null) {
-                        removeSourceBinding(nm);
-                    }
-                }
-            } else if (ResourceChangeUtilities.isPostChange(theEvent)) {
-                if (theEvent.getDelta().getResource() instanceof IWorkspaceRoot) {
-                    fireChangeEvent();
-                }
-            }
-        }
-    }
-
-    /**
-     * @see com.metamatrix.modeler.core.refactor.IRefactorResourceListener#notifyRefactored(com.metamatrix.modeler.core.refactor.RefactorResourceEvent)
-     * @since 5.0
-     */
-    public void notifyRefactored( RefactorResourceEvent theEvent ) {
-        switch (theEvent.getType()) {
-            case RefactorResourceEvent.TYPE_MOVE: {
-                if (theEvent.getResource() instanceof IFile) {
-                    resetSourceModelInfo(theEvent.getResource().getName(), (IFile)theEvent.getResource());
-                } else if (theEvent.getResource() instanceof IFolder) {
-                    // Folder we refactored plus it's contents
-                    resetForRefactoredFolder(theEvent.getResource());
-                }
-            }
-                break;
-
-            case RefactorResourceEvent.TYPE_RENAME: {
-                if (theEvent.getResource() instanceof IFile) {
-                    resetSourceModelInfo(theEvent.getOriginalPath().lastSegment(), (IFile)theEvent.getResource());
-                } else if (theEvent.getResource() instanceof IFolder) {
-                    // Folder we refactored plus it's contents
-                    resetForRefactoredFolder(theEvent.getResource());
-                }
-            }
-                break;
-
-            case RefactorResourceEvent.TYPE_DELETE: {
-                // if(
-                removeSourceBinding(theEvent.getOriginalPath().lastSegment());
-            }
-                break;
-        }
-    }
-
-    private void resetSourceModelInfo( String modelNameWithExtension,
-                                       IFile newModelResource ) {
-        ModelResource mr = null;
-
-        try {
-            mr = ModelUtil.getModelResource(newModelResource, false);
-        } catch (ModelWorkspaceException theException) {
-            DqpPlugin.Util.log(IStatus.ERROR, theException.getMessage());
-        }
-        if (mr != null) {
-            SourceModelInfo smi = getSourceModelInfo(modelNameWithExtension);
-            if (smi != null) {
-                resetSourceInfo(mr, smi);
-            }
-        }
-    }
-
-    /*
-     * This method 
-     */
-    private void resetForRefactoredFolder( IResource refactoredFolder ) {
-        if (refactoredFolder instanceof IFolder) {
-            try {
-                IResource[] children = ((IFolder)refactoredFolder).members();
-
-                for (int i = 0; i < children.length; i++) {
-                    if (ModelUtil.isModelFile(children[i])) {
-                        resetSourceModelInfo(children[i].getFullPath().lastSegment(), (IFile)children[i]);
-                    } else if (children[i] instanceof IFolder) {
-                        resetForRefactoredFolder(children[i]);
-                    }
-                }
-            } catch (CoreException theException) {
-                DqpPlugin.Util.log(IStatus.ERROR, theException.getMessage());
-            }
-
         }
     }
 

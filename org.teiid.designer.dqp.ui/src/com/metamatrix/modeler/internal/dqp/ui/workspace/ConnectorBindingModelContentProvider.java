@@ -63,15 +63,19 @@ public class ConnectorBindingModelContentProvider implements ITreeContentProvide
         Object[] children = NO_CHILDREN;
 
         if (parentElement instanceof EObject && parentElement instanceof JdbcSource) {
-            // check if ConnectorBinding exists for model??
+            // check if ConnectorBinding exists for model
             ModelResource mr = ModelUtilities.getModelResource(parentElement);
+
             if (mr != null) {
-                if (DqpPlugin.getInstance().getSourceBindingsManager().modelIsMappedToSource(mr)) {
-                    Object[] cb = DqpPlugin.getInstance().getSourceBindingsManager().getConnectorsForModel(mr.getItemName()).toArray();
+                Collection<Connector> connectors = DqpPlugin.getInstance().getServerManager().getConnectorsForModel(mr.getItemName());
+
+                if (!connectors.isEmpty()) {
                     Collection<ConnectorBindingSourceWrapper> wrappedCBs = new ArrayList<ConnectorBindingSourceWrapper>();
-                    for (int i = 0; i < cb.length; i++) {
-                        wrappedCBs.add(new ConnectorBindingSourceWrapper((Connector)cb[i], (JdbcSource)parentElement));
+
+                    for (Connector connector : connectors) {
+                        wrappedCBs.add(new ConnectorBindingSourceWrapper(connector, (JdbcSource)parentElement));
                     }
+
                     children = wrappedCBs.toArray();
                 }
             }

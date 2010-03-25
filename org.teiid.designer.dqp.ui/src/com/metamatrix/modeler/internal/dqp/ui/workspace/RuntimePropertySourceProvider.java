@@ -20,7 +20,7 @@ import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.dqp.internal.workspace.SourceModelInfo;
+import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.dqp.ui.config.ConnectorTypePropertySource;
@@ -86,12 +86,12 @@ public class RuntimePropertySourceProvider implements IPropertySourceProvider {
             ConnectorTypePropertySource source = new ConnectorTypePropertySource((ConnectorType)object);
             source.setEditable(this.connectorTypesEditable);
             return source;
-        } else if( object instanceof SourceModelInfo ) {
-            SourceModelInfo smi = (SourceModelInfo)object;
+        } else if( object instanceof SourceBinding ) {
+            SourceBinding binding = (SourceBinding)object;
             // Create the project path
-            IPath modelPath = new Path(smi.getContainerPath());
+            IPath modelPath = new Path(binding.getContainerPath());
             // append the model name
-            modelPath = modelPath.append(smi.getName());
+            modelPath = modelPath.append(binding.getName());
 
             ModelResource mr = ModelWorkspaceManager.getModelWorkspaceManager().getModelWorkspace().findModelResource(modelPath);
             

@@ -7,7 +7,7 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
-import com.metamatrix.modeler.dqp.internal.workspace.SourceModelInfo;
+import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 
 
@@ -31,10 +31,10 @@ public final class DeleteSourceBindingAction extends ConfigurationManagerAction 
      */
     @Override
     public void run() {
-        // Get Selection
-        SourceModelInfo theModelInfo = (SourceModelInfo)getSelectedObject();
-        if( theModelInfo != null ) {
-            getWorkspaceConfig().removeSourceBinding(theModelInfo);
+        SourceBinding binding = (SourceBinding)getSelectedObject();
+
+        if( binding != null ) {
+            getSourceBindingsManager().removeSourceBinding(binding);
         }
     }
 
@@ -48,7 +48,8 @@ public final class DeleteSourceBindingAction extends ConfigurationManagerAction 
         boolean result = false;
         if( !isMultiSelection() && !isEmptySelection() ) {
             Object selectedObject = getSelectedObject();
-            if( selectedObject instanceof SourceModelInfo) {
+
+            if( selectedObject instanceof SourceBinding) {
                 result = true;
             }
         }

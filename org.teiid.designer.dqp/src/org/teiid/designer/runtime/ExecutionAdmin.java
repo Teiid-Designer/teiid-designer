@@ -10,14 +10,17 @@ package org.teiid.designer.runtime;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.adminapi.VDB;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 
@@ -31,7 +34,15 @@ public class ExecutionAdmin {
     private Map<String, ConnectorType> connectorTypeByNameMap;
     private final EventManager eventManager;
     private final Server server;
+    private final SourceBindingsManager sourceBindingsMgr;
+    private Set<VDB> vdbs;
 
+    /**
+     * @param admin the associated Teiid Admin API (never <code>null</code>)
+     * @param server the server this admin belongs to (never <code>null</code>)
+     * @param eventManager the event manager used to fire events (never <code>null</code>)
+     * @throws Exception if there is a problem connecting the server
+     */
     public ExecutionAdmin( Admin admin,
                            Server server,
                            EventManager eventManager ) throws Exception {
@@ -42,6 +53,7 @@ public class ExecutionAdmin {
         this.admin = admin;
         this.eventManager = eventManager;
         this.server = server;
+        this.sourceBindingsMgr = new SourceBindingsManager(this);
 
         refresh();
     }
@@ -72,35 +84,7 @@ public class ExecutionAdmin {
     }
 
     /**
-     * @param vdbName the VDB name
-     * @param vdbVersion the version of the VDB
-     * @param modelName the name of the model
-     * @param connectorBindingName the name of the Connector
-     * @throws Exception
-     */
-    public void assignBindingToModel( String vdbName,
-                                      String vdbVersion,
-                                      String modelName,
-                                      String connectorBindingName ) throws Exception {
-        this.admin.assignBindingToModel(vdbName, vdbVersion, modelName, connectorBindingName);
-    }
-
-    /**
-     * @param vdbName
-     * @param vdbVersion
-     * @param modelName
-     * @param connectorBindingNames
-     * @throws Exception
-     */
-    public void assignBindingsToModel( String vdbName,
-                                       String vdbVersion,
-                                       String modelName,
-                                       String[] connectorBindingNames ) throws Exception {
-        this.admin.assignBindingsToModel(connectorBindingNames, vdbName, vdbVersion, modelName);
-    }
-
-    /**
-     * @param proposedName the proposed name of the connector (must not be <code>null</code> and contain all valid characters)
+     * @param proposedName the proposed name of the connector (must not be <code>null</code> or empty and it must contain all valid characters)
      * @return the unique connector name (maybe different than the proposed name if a connector of that name already exists)
      * @throws Exception if there is a problem obtaining connectors and connector types from the server or if name contains
      *         invalid characters
@@ -131,8 +115,12 @@ public class ExecutionAdmin {
         return result;
     }
 
+    Admin getAdminApi() {
+        return this.admin;
+    }
+
     /**
-     * @param name
+     * @param name the connector name (never <code>null</code> or empty)
      * @return
      * @throws Exception
      */
@@ -145,6 +133,10 @@ public class ExecutionAdmin {
         return this.connectorByNameMap.values();
     }
 
+    /**
+     * @param type the <code>ConnectorType</code> whose connectors are being requested (never <code>null</code>)
+     * @return the connectors (never <code>null</code> or empty)
+     */
     public Collection<Connector> getConnectors( ConnectorType type ) {
         ArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
 
@@ -168,12 +160,47 @@ public class ExecutionAdmin {
     public Collection<ConnectorType> getConnectorTypes() {
         return this.connectorTypeByNameMap.values();
     }
+    
+    /**
+     * @return the event manager (never <code>null</code>)
+     */
+    EventManager getEventManager() {
+        return this.eventManager;
+    }
 
     /**
-     * @return the server who owns this admin object
+     * @return the server who owns this admin object (never <code>null</code>)
      */
     public Server getServer() {
         return this.server;
+    }
+    
+    /**
+     * @return the source bindings manager (never <code>null</code>)
+     */
+    public SourceBindingsManager getSourceBindingsManager() {
+        return this.sourceBindingsMgr;
+    }
+
+    /**
+     * @return an unmodifiable set of VDBs deployed on the server
+     */
+    public Set<VDB> getVdbs() {
+        return this.vdbs;
+    }
+
+    /**
+     * @param name the name of the VDB being requested (never <code>null</code> or empty)
+     * @return the VDB or <code>null</code> if not found
+     */
+    public VDB getVdb( String name ) {
+        ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
+
+        for (VDB vdb : this.vdbs) {
+            if (vdb.getName().equals(name)) return vdb;
+        }
+
+        return null;
     }
 
     public void refresh() throws Exception {
@@ -192,10 +219,14 @@ public class ExecutionAdmin {
             ConnectorType type = getConnectorType(binding.getPropertyValue(IConnectorProperties.CONNECTOR_TYPE));
             this.connectorByNameMap.put(binding.getName(), new Connector(binding, type));
         }
+
+        // populate VDBs and source bindings
+        // TODO may need to filter out hidden vdb
+        this.vdbs = Collections.unmodifiableSet(this.admin.getVDBs());
+        this.sourceBindingsMgr.refresh();
     }
 
     public void removeConnector( Connector connector ) throws Exception {
-        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
         this.admin.deleteConnectorBinding(connector.getName());
         this.connectorByNameMap.remove(connector.getName());
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createRemoveConnectorEvent(connector));
@@ -219,8 +250,8 @@ public class ExecutionAdmin {
     }
 
     /**
-     * @param connector the connector whose property is being changed
-     * @param propName the name of the property being changed
+     * @param connector the connector whose property is being changed (never <code>null</code>)
+     * @param propName the name of the property being changed (never <code>null</code> or empty)
      * @param value the new value
      * @throws Exception if there is a problem setting the property
      * @since 7.0

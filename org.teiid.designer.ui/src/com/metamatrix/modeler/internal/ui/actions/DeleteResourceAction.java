@@ -40,7 +40,6 @@ import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.notification.util.DefaultIgnorableNotificationSource;
 import com.metamatrix.modeler.core.refactor.ModelResourceCollectorVisitor;
 import com.metamatrix.modeler.core.refactor.RefactorResourceEvent;
-import com.metamatrix.modeler.core.refactor.RefactorResourceUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.builder.ModelBuildUtil;
@@ -871,7 +870,8 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
      * Notify with RefactorRenameEvent.TYPE_DELETE
      */
     private void notifyDeleted( IPath deletedResourcePath ) {
-        RefactorResourceUtil.notifyRefactored(new RefactorResourceEvent(null, RefactorResourceEvent.TYPE_DELETE, this,
-                                                                        deletedResourcePath));
+        ((ModelerCore)ModelerCore.getPlugin()).notifyRefactored(new RefactorResourceEvent(null,
+                                                                                          RefactorResourceEvent.TYPE_DELETE,
+                                                                                          this, deletedResourcePath));
     }
 }

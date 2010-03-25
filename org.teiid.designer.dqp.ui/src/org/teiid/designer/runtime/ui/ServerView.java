@@ -231,7 +231,7 @@ public final class ServerView extends ViewPart implements IExecutionConfiguratio
      * @return the server manager being used by this view
      */
     private ServerManager getServerManager() {
-        return DqpPlugin.getInstance().getServerRegistry();
+        return DqpPlugin.getInstance().getServerManager();
     }
 
     /**

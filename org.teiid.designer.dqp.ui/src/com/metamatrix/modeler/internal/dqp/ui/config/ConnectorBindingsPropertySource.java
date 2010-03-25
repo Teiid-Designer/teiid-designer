@@ -86,8 +86,14 @@ public class ConnectorBindingsPropertySource implements DqpUiConstants, IPropert
             Collection<PropertyDefinition> typeDefs;
             try {
                 typeDefs = this.type.getPropertyDefinitions();
-            } catch (Exception e) {
-                // TODO log
+            } catch (final Exception e) {
+                DqpUiConstants.UTIL.log(e);
+                UiUtil.runInSwtThread(new Runnable() {
+                    public void run() {
+                        DqpUiPlugin.showErrorDialog(Display.getCurrent().getActiveShell(), e);
+                    }
+                }, false);
+                
                 return new IPropertyDescriptor[0];
             }
 

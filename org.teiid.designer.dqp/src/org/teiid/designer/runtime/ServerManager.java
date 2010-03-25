@@ -34,6 +34,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Base64;
+import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
 
 /**
  * The <code>ServerManager</code> class manages the creation, deletion, and editing of servers hosting Teiid servers.
@@ -139,6 +140,30 @@ public final class ServerManager implements EventManager {
     }
 
     /**
+     * Obtains the connectors bound to the specified model. All registered servers will be searched.
+     * 
+     * @param modelName the name of the model whose connectors are being requested (never <code>null</code> or empty)
+     * @return the connectors (never <code>null</code> but can be empty)
+     */
+    public Collection<Connector> getConnectorsForModel( String modelName ) {
+        ArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
+        Collection<Connector> connectors = new ArrayList<Connector>();
+
+        for (Server server : getServers()) {
+            SourceBindingsManager sourceBindingsMgr;
+
+            try {
+                sourceBindingsMgr = server.getAdmin().getSourceBindingsManager();
+                connectors.addAll(sourceBindingsMgr.getConnectorsForModel(modelName));
+            } catch (Exception e) {
+                Util.log(e);
+            }
+        }
+
+        return connectors;
+    }
+
+    /**
      * @param url the URL of the server being requested (never <code>null</code> )
      * @return the requested server or <code>null</code> if not found in the registry
      */
@@ -164,6 +189,30 @@ public final class ServerManager implements EventManager {
         } finally {
             this.serverLock.readLock().unlock();
         }
+    }
+
+    /**
+     * Obtains the <code>SourceBinding</code>s of the specified model. All registered servers will be searched.
+     * 
+     * @param modelName the name of the model whose source bindings are being requested (never <code>null</code> or empty)
+     * @return the source bindings (never <code>null</code> but can be empty)
+     */
+    public Collection<SourceBinding> getSourceBindingsForModel( String modelName ) {
+        ArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
+        Collection<SourceBinding> bindings = new ArrayList<SourceBinding>();
+
+        for (Server server : getServers()) {
+            SourceBindingsManager sourceBindingsMgr;
+
+            try {
+                sourceBindingsMgr = server.getAdmin().getSourceBindingsManager();
+                bindings.add(sourceBindingsMgr.getSourceBinding(modelName));
+            } catch (Exception e) {
+                Util.log(e);
+            }
+        }
+
+        return bindings;
     }
 
     /**

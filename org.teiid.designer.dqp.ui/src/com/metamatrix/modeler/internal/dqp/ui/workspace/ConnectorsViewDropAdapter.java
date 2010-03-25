@@ -13,9 +13,9 @@ import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.part.PluginDropAdapter;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.teiid.designer.runtime.Connector;
+import org.teiid.designer.runtime.SourceBindingsManager;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 
 /**
@@ -45,18 +45,19 @@ public class ConnectorsViewDropAdapter extends PluginDropAdapter {
      */
     @Override
     public boolean performDrop( Object theData ) {
-        // System.out.println("ConnectorsViewDropAdapter.performDrop()  theData = " + theData.getClass().toString());
         if (theData instanceof IResource[]) {
             IResource[] resources = (IResource[])theData;
-
             ModelResource mr = ModelerCore.getModelWorkspace().findModelResource(resources[0]);
+
             if (mr != null && ModelIdentifier.isPhysicalModelType(mr)) {
-                DqpPlugin.getInstance().getSourceBindingsManager().createSourceBinding(mr, theTargetBinding);
+                SourceBindingsManager sourceBindingsMgr = this.theTargetBinding.getType().getAdmin().getSourceBindingsManager();
+                sourceBindingsMgr.createSourceBinding(mr, theTargetBinding);
                 theTargetBinding = null;
                 currentTransfer = null;
                 return true;
             }
         }
+
         return false;
     }
 

@@ -65,7 +65,7 @@ public class SelectConnectorBindingDialog extends ElementTreeSelectionDialog imp
         // super.setValidator( new EObjectSelectionValidator() );
 
         // use default root
-        setInput(DqpPlugin.getInstance().getServerRegistry().getServers());
+        setInput(DqpPlugin.getInstance().getServerManager().getServers());
 
     }
 

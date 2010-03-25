@@ -417,7 +417,10 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
     /*
      * Notify with RefactorRenameEvent.TYPE_RENAME
      */
-    private void notifyRenamed(IPath oldPath, IResource renamedResource) {
-        RefactorResourceUtil.notifyRefactored(new RefactorResourceEvent(renamedResource, RefactorResourceEvent.TYPE_RENAME, this, oldPath));
+    private void notifyRenamed( IPath oldPath,
+                                IResource renamedResource ) {
+        ((ModelerCore)ModelerCore.getPlugin()).notifyRefactored(new RefactorResourceEvent(renamedResource,
+                                                                                          RefactorResourceEvent.TYPE_RENAME,
+                                                                                          this, oldPath));
     }
 }

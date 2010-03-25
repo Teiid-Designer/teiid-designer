@@ -15,9 +15,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.teiid.designer.runtime.Connector;
+import org.teiid.designer.runtime.SourceBindingsManager;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.SelectConnectorBindingDialog;
@@ -71,10 +71,11 @@ public class BindToConnectorAction extends SortableSelectionAction implements Dq
                         dialog.open();
 
                         if (dialog.getReturnCode() == Window.OK) {
-                            Connector selectedBinding = dialog.getSelectedConnector();
-                            if (selectedBinding != null) {
-                                DqpPlugin.getInstance().getSourceBindingsManager().createSourceBinding(modelResource,
-                                                                                                       selectedBinding);
+                            Connector connector = dialog.getSelectedConnector();
+          
+                            if (connector != null) {
+                                SourceBindingsManager sourceBindingsMgr = connector.getType().getAdmin().getSourceBindingsManager();
+                                sourceBindingsMgr.createSourceBinding(modelResource, connector);
                             }
                         }
                     }
