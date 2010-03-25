@@ -85,16 +85,6 @@ public class ExecutionAdminTest {
         execAdmin.addConnector("name", mock(ConnectorType.class), new Properties());
     }
 
-    @Test
-    public void shouldAllowAssignBindingToModel() throws Exception {
-        getNewAdmin().assignBindingToModel(null, null, null, null);
-    }
-
-    @Test
-    public void shouldAllowAssignBindingsToModel() throws Exception {
-        getNewAdmin().assignBindingToModel(null, null, null, null);
-    }
-
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowNullConnectorName() throws Exception {
         getNewAdmin().ensureUniqueConnectorName("");
@@ -108,6 +98,11 @@ public class ExecutionAdminTest {
     @Test
     public void shouldAllowEnsureUniqueConnectorName() throws Exception {
         getNewAdmin().ensureUniqueConnectorName("name");
+    }
+
+    @Test
+    public void shouldAllowGetAdminApi() throws Exception {
+        getNewAdmin().getAdminApi();
     }
 
     @Test( expected = IllegalArgumentException.class )
@@ -161,8 +156,38 @@ public class ExecutionAdminTest {
     }
 
     @Test
+    public void shouldAllowGetEventManager() throws Exception {
+        assertThat(getNewAdmin().getEventManager(), notNullValue());
+    }
+
+    @Test
     public void shouldAllowGetServer() throws Exception {
-        getNewAdmin().getServer();
+        assertThat(getNewAdmin().getServer(), notNullValue());
+    }
+
+    @Test
+    public void shouldAllowGetSourceBindingManager() throws Exception {
+        assertThat(getNewAdmin().getSourceBindingsManager(), notNullValue());
+    }
+
+    @Test
+    public void shouldAllowGetVdbs() throws Exception {
+        getNewAdmin().getVdbs();
+    }
+
+    @Test( expected = IllegalArgumentException.class )
+    public void shouldNotAllowGetVdbWithNullName() throws Exception {
+        getNewAdmin().getVdb(null);
+    }
+
+    @Test( expected = IllegalArgumentException.class )
+    public void shouldNotAllowGetVdbWithEmptyName() throws Exception {
+        getNewAdmin().getVdb("");
+    }
+
+    @Test
+    public void shouldAllowGetVdbWithName() throws Exception {
+        getNewAdmin().getVdb("name");
     }
 
     @Test
