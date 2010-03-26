@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Notification;
 import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.Model;
@@ -54,7 +55,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
 
     private final ExecutionAdmin admin;
     private final Map<String, SourceBinding> bindingsByModelNameMap;
-//    private VdbEditingContext hiddenVdb;
+    // private VdbEditingContext hiddenVdb;
     private final WorkspaceNotificationListener workspaceListener;
 
     /**
@@ -67,9 +68,11 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
 
         // hookup listening
         this.workspaceListener = new WorkspaceNotificationListener();
-        ModelWorkspaceManager.getModelWorkspaceManager().addNotificationListener(this.workspaceListener);
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
-        ((ModelerCore)ModelerCore.getPlugin()).addRefactorResourceListener(this);
+        if (Platform.isRunning()) {
+            ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+            ModelWorkspaceManager.getModelWorkspaceManager().addNotificationListener(this.workspaceListener);
+            ((ModelerCore)ModelerCore.getPlugin()).addRefactorResourceListener(this);
+        }
     }
 
     /**
@@ -96,12 +99,15 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
         int i = 0;
 
         for (Connector connector : connectors) {
+            if (connector == null) {
+                throw new IllegalArgumentException(Util.getString("connectorCannotBeNullForSourceBinding")); //$NON-NLS-1$
+            }
             connectorNames[i] = connector.getName();
             ++i;
         }
 
         try {
-//            ensureModelExistsInHiddenVdb();
+            // ensureModelExistsInHiddenVdb();
             this.admin.getAdminApi().assignBindingsToModel(connectorNames,
                                                            getHiddenVdbName(),
                                                            Integer.toString(VDB_VERSION),
@@ -117,40 +123,41 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
             Util.log(IStatus.ERROR, e.getMessage());
         }
     }
-//
-//    /**
-//     * Make sure the hidden workspace preview VDB exists on server
-//     * 
-//     * @throws Exception if there is a problem retrieving or creating the VDB
-//     */
-//    private void ensureHiddenVdbExists() {
-//        if (this.hiddenVdb == null) {
-//            try {
-//                // TODO create VDB at the right location
-//                IPath path = DqpPlugin.getInstance().getStateLocation().append(getHiddenVdbName());
-//                this.hiddenVdb = VdbEditPlugin.createVdbEditingContext(path);
-//                this.hiddenVdb.open(); // create file
-//            } catch (Exception e) {
-//                Util.log(e);
-//                this.hiddenVdb = null;
-//                throw new Exception(); // TODO need error msg
-//            }
-//
-//            try {
-//                this.admin.getAdminApi().deployVDB(getHiddenVdbName(), path.toFile().toURI().toURL());
-//            } catch (Exception e) {
-//                Util.log(e);
-//                throw new Exception(); // TODO need error msg
-//            }
-//        }
-//        VDB vdb = this.admin.getAdminApi().getVDB(getHiddenVdbName(), VDB_VERSION);
-//
-//    }
-//
-//    private void ensureModelExistsInHiddenVdb( ModelResource modelResource ) throws Exception {
-//        ensureHiddenVdbExists();
-//        this.hiddenVdb.addModel(null, modelResource.getPath(), false); // TODO not sure what this does if model already added
-//    }
+
+    //
+    // /**
+    // * Make sure the hidden workspace preview VDB exists on server
+    // *
+    // * @throws Exception if there is a problem retrieving or creating the VDB
+    // */
+    // private void ensureHiddenVdbExists() {
+    // if (this.hiddenVdb == null) {
+    // try {
+    // // TODO create VDB at the right location
+    // IPath path = DqpPlugin.getInstance().getStateLocation().append(getHiddenVdbName());
+    // this.hiddenVdb = VdbEditPlugin.createVdbEditingContext(path);
+    // this.hiddenVdb.open(); // create file
+    // } catch (Exception e) {
+    // Util.log(e);
+    // this.hiddenVdb = null;
+    // throw new Exception(); // TODO need error msg
+    // }
+    //
+    // try {
+    // this.admin.getAdminApi().deployVDB(getHiddenVdbName(), path.toFile().toURI().toURL());
+    // } catch (Exception e) {
+    // Util.log(e);
+    // throw new Exception(); // TODO need error msg
+    // }
+    // }
+    // VDB vdb = this.admin.getAdminApi().getVDB(getHiddenVdbName(), VDB_VERSION);
+    //
+    // }
+    //
+    // private void ensureModelExistsInHiddenVdb( ModelResource modelResource ) throws Exception {
+    // ensureHiddenVdbExists();
+    // this.hiddenVdb.addModel(null, modelResource.getPath(), false); // TODO not sure what this does if model already added
+    // }
 
     void fireConfigurationEvent( ExecutionConfigurationEvent event ) {
         assert (event != null);
@@ -184,6 +191,8 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @since 5.0
      */
     public JdbcSource getJdbcSource( ModelResource modelResource ) {
+        ArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$v
+
         Collection allEObjects = null;
 
         try {
@@ -247,6 +256,8 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @since 5.0
      */
     public void notifyRefactored( RefactorResourceEvent theEvent ) {
+        ArgCheck.isNotNull(theEvent, "theEvent"); //$NON-NLS-1$
+
         switch (theEvent.getType()) {
             case RefactorResourceEvent.TYPE_MOVE: {
                 if (theEvent.getResource() instanceof IFile) {
@@ -364,6 +375,8 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @since 5.0
      */
     public void removeSourceBinding( SourceBinding binding ) {
+        ArgCheck.isNotNull(binding, "binding"); //$NON-NLS-1$
+
         removeSourceBinding(binding.getName());
     }
 
@@ -448,6 +461,8 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @since 4.2
      */
     public void resourceChanged( IResourceChangeEvent theEvent ) {
+        ArgCheck.isNotNull(theEvent, "theEvent"); //$NON-NLS-1$v
+
         IResource resource = theEvent.getResource();
 
         if (resource != null) {

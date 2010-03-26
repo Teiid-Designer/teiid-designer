@@ -44,8 +44,8 @@ public class ExecutionConfigurationEventTest {
         assertThat(ExecutionConfigurationEvent.createRemoveServerEvent(mock(Server.class)), notNullValue());
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotCreateUpdateServerEventWithNullServer() {
+    @Test
+    public void shouldCreateUpdateServerEventWithNullServer() {
         ExecutionConfigurationEvent.createUpdateServerEvent(null, null);
     }
 

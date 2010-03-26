@@ -56,6 +56,9 @@ public class SourceBinding {
 
         // make sure all connectors from same server
         for (Connector connector : connectors) {
+            if (connector == null) {
+                throw new IllegalArgumentException(Util.getString("connectorCannotBeNullForSourceBinding")); //$NON-NLS-1$
+            }
             if (admin == null) {
                 admin = connector.getType().getAdmin();
             } else if (admin != connector.getType().getAdmin()) {

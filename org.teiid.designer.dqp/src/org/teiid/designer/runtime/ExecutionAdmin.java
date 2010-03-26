@@ -84,7 +84,8 @@ public class ExecutionAdmin {
     }
 
     /**
-     * @param proposedName the proposed name of the connector (must not be <code>null</code> or empty and it must contain all valid characters)
+     * @param proposedName the proposed name of the connector (must not be <code>null</code> or empty and it must contain all
+     *        valid characters)
      * @return the unique connector name (maybe different than the proposed name if a connector of that name already exists)
      * @throws Exception if there is a problem obtaining connectors and connector types from the server or if name contains
      *         invalid characters
@@ -160,7 +161,7 @@ public class ExecutionAdmin {
     public Collection<ConnectorType> getConnectorTypes() {
         return this.connectorTypeByNameMap.values();
     }
-    
+
     /**
      * @return the event manager (never <code>null</code>)
      */
@@ -174,7 +175,7 @@ public class ExecutionAdmin {
     public Server getServer() {
         return this.server;
     }
-    
+
     /**
      * @return the source bindings manager (never <code>null</code>)
      */
@@ -227,6 +228,7 @@ public class ExecutionAdmin {
     }
 
     public void removeConnector( Connector connector ) throws Exception {
+        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
         this.admin.deleteConnectorBinding(connector.getName());
         this.connectorByNameMap.remove(connector.getName());
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createRemoveConnectorEvent(connector));
