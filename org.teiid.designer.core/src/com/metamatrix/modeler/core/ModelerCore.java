@@ -52,11 +52,13 @@ import com.metamatrix.core.util.Stopwatch;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.container.ResourceDescriptor;
+import com.metamatrix.modeler.core.index.IndexSelectorFactory;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.metamodel.MetamodelRegistry;
 import com.metamatrix.modeler.core.metamodel.ResourceLoadOptionContributor;
 import com.metamatrix.modeler.core.refactor.IRefactorResourceListener;
 import com.metamatrix.modeler.core.refactor.RefactorResourceEvent;
+import com.metamatrix.modeler.core.search.MetadataSearch;
 import com.metamatrix.modeler.core.transaction.UnitOfWork;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.modeler.core.types.DatatypeManagerLifecycle;
@@ -72,10 +74,12 @@ import com.metamatrix.modeler.internal.core.ModelEditorImpl;
 import com.metamatrix.modeler.internal.core.TransformationPreferencesImpl;
 import com.metamatrix.modeler.internal.core.ValidationPreferencesImpl;
 import com.metamatrix.modeler.internal.core.container.ContainerImpl;
+import com.metamatrix.modeler.internal.core.index.ModelWorkspaceIndexSelectorFactory;
 import com.metamatrix.modeler.internal.core.metamodel.MetamodelRegistryImpl;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.resource.EmfResourceSet;
 import com.metamatrix.modeler.internal.core.resource.EmfResourceSetImpl;
+import com.metamatrix.modeler.internal.core.search.MetadataSearchImpl;
 import com.metamatrix.modeler.internal.core.util.FlatRegistry;
 import com.metamatrix.modeler.internal.core.util.StartupLogger;
 import com.metamatrix.modeler.internal.core.util.WorkspaceUriPathConverter;
@@ -1896,4 +1900,14 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         getModelEditor().setObjectID(object, objectId);
     }
 
+    /**
+     * Create an object that performs searches for model object instances.
+     * 
+     * @return the search object; never null
+     */
+    public static MetadataSearch createMetadataSearch() {
+        final IndexSelectorFactory factory = new ModelWorkspaceIndexSelectorFactory();
+        final ModelWorkspace workspace = ModelerCore.getModelWorkspace();
+        return new MetadataSearchImpl(workspace, factory);
+    }
 }
