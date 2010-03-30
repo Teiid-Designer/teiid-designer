@@ -11,7 +11,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IStatus;
-import com.metamatrix.modeler.dqp.internal.config.FakeVdbEditingContext;
 import com.metamatrix.vdb.edit.VdbEditingContext;
 import com.metamatrix.vdb.internal.runtime.model.BasicVDBModelDefn;
 
@@ -41,25 +40,6 @@ public final class TestModelerDqpUtils extends TestCase {
         } catch (IllegalArgumentException theException) {
             // expected
         }
-    }
-
-    /**
-     * Make sure exception thrown when ModelInfo is null
-     */
-    public void testGetModelImportSource2() {
-        try {
-            ModelerDqpUtils.getModelImportSource(new FakeVdbEditingContext(), null);
-            fail("Did not get expected IllegalArgumentException for null ModelInfo"); //$NON-NLS-1$
-        } catch (IllegalArgumentException theException) {
-            // expected
-        }
-    }
-
-    /**
-     * Make sure no exceptions when non-null inputs
-     */
-    public void testGetModelImportSource3() {
-        ModelerDqpUtils.getModelImportSource(new FakeVdbEditingContext(), new BasicVDBModelDefn("test")); //$NON-NLS-1$
     }
 
     /**
