@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.dqp.ui.config;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.designer.runtime.Connector;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -19,63 +18,60 @@ import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 import com.metamatrix.vdb.internal.runtime.model.BasicVDBModelDefn;
 
-
-/** 
+/**
  * @since 4.2
  */
-public class VdbDefinitionLabelProvider implements DqpUiConstants,
-                                                   ITableLabelProvider {
+public class VdbDefinitionLabelProvider implements DqpUiConstants, ITableLabelProvider {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(VdbDefinitionLabelProvider.class);
-    
-    //===========================================
+
+    // ===========================================
     // Static Utility Methods
 
-    /**<p>
+    /**
+     * <p>
      * </p>
+     * 
      * @since 4.2
      */
-    private static String getString(final String id) {
+    private static String getString( final String id ) {
         return UTIL.getString(I18N_PREFIX + id);
     }
 
-    
-    
     private static final Image MODEL_ICON = DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SOURCE_MODEL_ICON);
     private static final Image CONNECTOR_ICON = DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_ICON);
 
-    
     private final InternalVdbEditingContext vdbContext;
-    
-    public VdbDefinitionLabelProvider(InternalVdbEditingContext theContext) {
+
+    public VdbDefinitionLabelProvider( InternalVdbEditingContext theContext ) {
         this.vdbContext = theContext;
     }
 
-    /** 
+    /**
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
      * @since 4.2
      */
-    public Image getColumnImage(Object element,
-                                int columnIndex) {
+    public Image getColumnImage( Object element,
+                                 int columnIndex ) {
         return (columnIndex == 0 ? MODEL_ICON : CONNECTOR_ICON);
     }
 
-    /** 
+    /**
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
      * @since 4.2
      */
-    public String getColumnText(Object element,
-                                int columnIndex) {
-        switch ( columnIndex ) {
+    public String getColumnText( Object element,
+                                 int columnIndex ) {
+        switch (columnIndex) {
             case 0:
-                if ( element instanceof BasicVDBModelDefn ) {
-                    String result = ((BasicVDBModelDefn) element).getName();
+                if (element instanceof BasicVDBModelDefn) {
+                    String result = ((BasicVDBModelDefn)element).getName();
                     return result;
                 }
                 return element.toString();
             case 1:
-                if ( element instanceof BasicVDBModelDefn ) {
-                    Connector binding = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext).getFirstConnector((BasicVDBModelDefn) element);
+                if (element instanceof BasicVDBModelDefn) {
+                    Connector binding = DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext).getFirstConnector((BasicVDBModelDefn)element);
                     return getText(binding);
                 }
                 return element.toString();
@@ -84,44 +80,44 @@ public class VdbDefinitionLabelProvider implements DqpUiConstants,
         return ""; //$NON-NLS-1$
     }
 
-    public String getText(Connector binding) { 
-        if ( binding == null ) {
+    public String getText( Connector binding ) {
+        if (binding == null) {
             if (this.vdbContext.isReadOnly()) {
                 return getString("none.ReadOnly"); //$NON-NLS-1$
             }
             return getString("none.Modifiable"); //$NON-NLS-1$                            
         }
-        return binding.getName() + " - " + binding.getComponentTypeID().getName(); //$NON-NLS-1$
+        return binding.getName();
     }
-    
-    /** 
+
+    /**
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      * @since 4.2
      */
-    public void addListener(ILabelProviderListener listener) {
+    public void addListener( ILabelProviderListener listener ) {
     }
 
-    /** 
+    /**
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      * @since 4.2
      */
     public void dispose() {
     }
 
-    /** 
+    /**
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
      * @since 4.2
      */
-    public boolean isLabelProperty(Object element,
-                                   String property) {
+    public boolean isLabelProperty( Object element,
+                                    String property ) {
         return false;
     }
 
-    /** 
+    /**
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      * @since 4.2
      */
-    public void removeListener(ILabelProviderListener listener) {
+    public void removeListener( ILabelProviderListener listener ) {
     }
 
 }
