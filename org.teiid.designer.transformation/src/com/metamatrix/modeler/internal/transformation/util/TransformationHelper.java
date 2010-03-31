@@ -77,6 +77,7 @@ import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.core.util.ModelResourceContainerFactory;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
+import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
@@ -2142,7 +2143,7 @@ public class TransformationHelper implements SqlConstants {
                 URI theUri = ((InternalEObject)eObject).eProxyURI().trimFragment();
                 if (theUri.isFile()) {
                     File newFile = new File(theUri.toFileString());
-                    XMIHeader header = ModelUtil.getXmiHeader(newFile);
+                    XMIHeader header = ModelFileUtil.getXmiHeader(newFile);
                     if (header != null && ModelType.VIRTUAL_LITERAL.equals(ModelType.get(header.getModelType()))) return true;
                 }
             }
@@ -2166,7 +2167,7 @@ public class TransformationHelper implements SqlConstants {
                 URI theUri = ((InternalEObject)eObject).eProxyURI().trimFragment();
                 if (theUri.isFile()) {
                     File newFile = new File(theUri.toFileString());
-                    XMIHeader header = ModelUtil.getXmiHeader(newFile);
+                    XMIHeader header = ModelFileUtil.getXmiHeader(newFile);
                     if (header != null && ModelType.PHYSICAL_LITERAL.equals(ModelType.get(header.getModelType()))) return true;
                 }
             }

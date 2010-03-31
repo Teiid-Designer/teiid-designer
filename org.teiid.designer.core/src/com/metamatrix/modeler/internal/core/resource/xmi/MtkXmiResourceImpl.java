@@ -59,7 +59,7 @@ import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.internal.core.container.ContainerImpl;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.resource.EmfResourceSet;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 
 /**
  * This class extends the XMIResourceImpl class to provide the capability to account for UUIDs (which is explicitly ignored in
@@ -177,7 +177,7 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
         if (this.uri != null && this.uri.isFile()) {
             File f = new File(this.uri.toFileString());
             if (f.exists()) {
-                XMIHeader header = ModelUtil.getXmiHeader(f);
+                XMIHeader header = ModelFileUtil.getXmiHeader(f);
                 // If the file is an XMI 1.x version file then we cannot process it
                 if (header != null && header.getXmiVersion() != null && header.getXmiVersion().startsWith("1.")) { //$NON-NLS-1$
                     Object[] params = new Object[] {this.uri};
@@ -546,7 +546,7 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
         if (getURI().isFile()) {
             File f = new File(getURI().toFileString());
             if (f.exists()) {
-                header = ModelUtil.getXmiHeader(f);
+                header = ModelFileUtil.getXmiHeader(f);
             }
         }
         return header;

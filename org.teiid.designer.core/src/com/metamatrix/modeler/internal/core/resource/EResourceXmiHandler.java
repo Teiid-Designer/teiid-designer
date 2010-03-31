@@ -54,13 +54,12 @@ import com.metamatrix.modeler.core.ModelerCore;
  */
 public class EResourceXmiHandler extends SAXXMIHandler {
 
-    private static final String MANIFEST_MODEL_NAME = "MetaMatrix-VdbManifestModel.xmi"; //$NON-NLS-1$
-    private static final DateFormat [] DATE_FORMATS = { new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy"), //$NON-NLS-1$
-                                                        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.'SSSZ"), //$NON-NLS-1$
-                                                        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.'SSS"), //$NON-NLS-1$
-                                                        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"), //$NON-NLS-1$
-                                                        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"), //$NON-NLS-1$
-                                                        new SimpleDateFormat("yyyy-MM-dd") }; //$NON-NLS-1$
+    private static final DateFormat[] DATE_FORMATS = {new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy"), //$NON-NLS-1$
+        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.'SSSZ"), //$NON-NLS-1$
+        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.'SSS"), //$NON-NLS-1$
+        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"), //$NON-NLS-1$
+        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"), //$NON-NLS-1$
+        new SimpleDateFormat("yyyy-MM-dd")}; //$NON-NLS-1$
 
     private final IDGenerator idGenerator;
     private final EResourceImpl eResource;
@@ -69,46 +68,48 @@ public class EResourceXmiHandler extends SAXXMIHandler {
     private final Collection modelImportsToConvert;
     private boolean isXsdResource;
 
-//    private static final boolean DEBUG = false;
+    // private static final boolean DEBUG = false;
 
     /**
      * Constructor for EResourceXmiHandler.
+     * 
      * @param xmiResource
      * @param helper
      * @param options
      */
-    public EResourceXmiHandler(final XMIResource xmiResource, final XMLHelper helper, final Map options) {
+    public EResourceXmiHandler( final XMIResource xmiResource,
+                                final XMLHelper helper,
+                                final Map options ) {
         super(xmiResource, helper, options);
 
         ArgCheck.isNotNull(xmiResource);
         ArgCheck.isInstanceOf(EResourceImpl.class, xmiResource);
 
-        this.eResource   = (EResourceImpl) xmiResource;
+        this.eResource = (EResourceImpl)xmiResource;
         this.idGenerator = IDGenerator.getInstance();
-        this.roots       = new ArrayList();
+        this.roots = new ArrayList();
         this.proxyResourceURIs = new HashSet();
         this.modelImportsToConvert = new HashSet();
 
         this.isXsdResource = false;
     }
 
-    //==================================================================================
-    //                   O V E R R I D D E N   M E T H O D S
-    //==================================================================================
-
     /**
      * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#startElement(java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
-    public void startElement(String uri, String localName, String name) {
+    public void startElement( String uri,
+                              String localName,
+                              String name ) {
         super.startElement(uri, localName, name);
     }
 
     /**
      * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#createTopObject(java.lang.String,java.lang.String)
-   	 */
+     */
     @Override
-    protected void createTopObject(final String prefix, final String name){
+    protected void createTopObject( final String prefix,
+                                    final String name ) {
         if (isXsdPrefix(prefix)) {
             this.isXsdResource = true;
         }
@@ -119,7 +120,7 @@ public class EResourceXmiHandler extends SAXXMIHandler {
      * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#processTopObject(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    protected void processTopObject(EObject object) {
+    protected void processTopObject( EObject object ) {
         super.processObject(object);
         this.roots.add(object);
     }
@@ -128,41 +129,41 @@ public class EResourceXmiHandler extends SAXXMIHandler {
      * @see org.eclipse.emf.ecore.xmi.impl.SAXXMIHandler#handleObjectAttribs(org.eclipse.emf.ecore.EObject)
      */
     @Override
-    protected void handleObjectAttribs(final EObject obj) {
+    protected void handleObjectAttribs( final EObject obj ) {
         if (attribs != null) {
             InternalEObject internalEObject = (InternalEObject)obj;
             for (int i = 0, size = attribs.getLength(); i < size; ++i) {
                 String qName = attribs.getQName(i);
 
                 // If the xmi:id attribute is encountered ...
-                if (qName.equals(ID_ATTRIB) ){
+                if (qName.equals(ID_ATTRIB)) {
                     this.xmlResource.setID(internalEObject, attribs.getValue(i));
 
-                // If the xmi:uuid attribute is encountered ...
+                    // If the xmi:uuid attribute is encountered ...
                 } else if (qName.equals(UUID_ATTRIB)) {
                     ObjectID uuid = getObjectIDFromString(attribs.getValue(i));
                     Assertion.isNotNull(uuid);
 
                     // Apply patch for defect 14449
-                    uuid = patch_defect14449(obj,uuid,i);
+                    uuid = patch_defect14449(obj, uuid, i);
 
                     // Set the xmi:uuid value on the EObject instance
                     ModelerCore.setObjectId(obj, uuid);
 
                     // Add the EObject to the EResource local cache
-                    this.eResource.addToEObjectCache(obj,false);
+                    this.eResource.addToEObjectCache(obj, false);
 
-                // If the xmi:href attribute is encountered ...
+                    // If the xmi:href attribute is encountered ...
                 } else if (qName.equals(XMLResource.HREF)) {
                     String value = attribs.getValue(i);
                     // If no resource URI prepends the href then the reference is assumed to be inside this resource
-                    if(value.startsWith("#") ){ //$NON-NLS-1$
+                    if (value.startsWith("#")) { //$NON-NLS-1$
                         value = this.resourceURI.toString() + value;
                     }
 
                     handleProxy(internalEObject, value);
 
-                // For all other attributes in which the prefix is not "xmlns" and is not one of the ignored features ...
+                    // For all other attributes in which the prefix is not "xmlns" and is not one of the ignored features ...
                 } else if (!qName.startsWith(XMLResource.XML_NS) && !notFeatures.contains(qName)) {
                     EStructuralFeature feature = obj.eClass().getEStructuralFeature(qName);
                     if (feature != null && feature.isChangeable()) {
@@ -170,7 +171,7 @@ public class EResourceXmiHandler extends SAXXMIHandler {
                     }
                     // If we are setting a namespace URI on a new EPackage instance then register it
                     if (obj instanceof EPackage && EcorePackage.eINSTANCE.getEPackage_NsURI().equals(feature)) {
-                        EPackage.Registry.INSTANCE.put(attribs.getValue(i),obj);
+                        EPackage.Registry.INSTANCE.put(attribs.getValue(i), obj);
                     }
                 }
             }
@@ -186,15 +187,15 @@ public class EResourceXmiHandler extends SAXXMIHandler {
      * @since 4.3
      */
     @Override
-    protected void handleProxy(InternalEObject proxy,
-                               String uriLiteral) {
+    protected void handleProxy( InternalEObject proxy,
+                                String uriLiteral ) {
         super.handleProxy(proxy, uriLiteral);
 
         // Save the URI of the proxy's resource
         this.proxyResourceURIs.add(proxy.eProxyURI().trimFragment());
 
         // If the resource is the built-in datatypes resource then we possibly need to convert
-        // from a logical URI to a physical URI.  For example, if the logical URI was
+        // from a logical URI to a physical URI. For example, if the logical URI was
         // "http://www.w3.org/2001/XMLSchema#string" we need to remap this to the physical URI of
         // "file:/E:/.../cache/www.w3.org/2001/XMLSchema.xsd#//string;XSDSimpleTypeDefinition=7".
         URI physicalUri = null;
@@ -210,13 +211,17 @@ public class EResourceXmiHandler extends SAXXMIHandler {
     }
 
     /**
-     * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#setFeatureValue(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int)
+     * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#setFeatureValue(org.eclipse.emf.ecore.EObject,
+     *      org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int)
      */
     @Override
-    protected void setFeatureValue(EObject object, EStructuralFeature feature, Object value, int position) {
+    protected void setFeatureValue( EObject object,
+                                    EStructuralFeature feature,
+                                    Object value,
+                                    int position ) {
         // If the object for which the value is being set in XMLSchema model ...
         if (this.isXsdResource || isXsdPrefix(object.eClass().getEPackage().getNsPrefix())) {
-            setValue(object,feature,value,position);
+            setValue(object, feature, value, position);
             return;
         }
 
@@ -229,18 +234,19 @@ public class EResourceXmiHandler extends SAXXMIHandler {
         }
 
         // Process as a normal feature value
-        super.setFeatureValue(object,feature,value,position);
+        super.setFeatureValue(object, feature, value, position);
     }
 
     /**
      * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#createObjectFromFactory(org.eclipse.emf.ecore.EFactory, java.lang.String)
      */
     @Override
-    protected EObject createObjectFromFactory(EFactory factory, String typeName) {
+    protected EObject createObjectFromFactory( EFactory factory,
+                                               String typeName ) {
         EObject newObject = null;
 
         if (factory != null) {
-            // Get the eProxy from the EResource local cache.  If one is found,
+            // Get the eProxy from the EResource local cache. If one is found,
             // as a side-effect, the eProxy is removed from that cache.
             newObject = findEProxy();
 
@@ -281,18 +287,14 @@ public class EResourceXmiHandler extends SAXXMIHandler {
         this.eResource.getContents().addAll(this.roots);
 
         // This second patch reconciles the "modelLocation" value that was simply transfered from
-        /// the "path" value in the first patch to its correct relative URI path
+        // / the "path" value in the first patch to its correct relative URI path
         patchB_modelImport();
 
         super.endDocument();
     }
 
-    // ==================================================================================
-    //                    P R O T E C T E D   M E T H O D S
-    // ==================================================================================
-
     protected EObject findEProxy() {
-        for (int i = 0, size = attribs.getLength(); i < size; ++i){
+        for (int i = 0, size = attribs.getLength(); i < size; ++i) {
             String qName = attribs.getQName(i);
 
             // If the xmi:uuid attribute is encountered ...
@@ -313,25 +315,25 @@ public class EResourceXmiHandler extends SAXXMIHandler {
         return null;
     }
 
-    protected ObjectID getObjectIDFromString(final String uuidString) {
+    protected ObjectID getObjectIDFromString( final String uuidString ) {
         if (uuidString == null || uuidString.length() == 0) {
             return null;
         }
         try {
             return IDGenerator.getInstance().stringToObject(uuidString);
-        } catch ( InvalidIDException e ) {
+        } catch (InvalidIDException e) {
             // do nothing ...
         }
         return null;
     }
 
     /**
-     * For a newly created EObject along with its associated attributes, check that EObject
-     * has an "href" attribte to a "http://www.eclipse.org/emf/2002/Ecore" instance and resolve
-     * it immediately, otherwise return the original object.
-     * Fix for defect 12764.
+     * For a newly created EObject along with its associated attributes, check that EObject has an "href" attribte to a
+     * "http://www.eclipse.org/emf/2002/Ecore" instance and resolve it immediately, otherwise return the original object. Fix for
+     * defect 12764.
      */
-    protected EObject patch_defect12764(final EObject obj, final Attributes attribs) {
+    protected EObject patch_defect12764( final EObject obj,
+                                         final Attributes attribs ) {
         if (attribs != null) {
             for (int i = 0, size = attribs.getLength(); i < size; ++i) {
                 String qName = attribs.getQName(i);
@@ -350,26 +352,28 @@ public class EResourceXmiHandler extends SAXXMIHandler {
     }
 
     /**
-     * Fix to defect 14449, where Core::ModelImport objects were created with the same UUID as the model
-     * that they reference.  This fix only addresses the side effect of the defect in existing models; see
-     * a little lower in this method for the fix so that we don't reset it upon reading in (the original
-     * cause of the problem)
+     * Fix to defect 14449, where Core::ModelImport objects were created with the same UUID as the model that they reference. This
+     * fix only addresses the side effect of the defect in existing models; see a little lower in this method for the fix so that
+     * we don't reset it upon reading in (the original cause of the problem)
      * <p>
-     * Example shown below in which the EObject xmi:uuid is the same as the "uuid" feature value.  The "uuid"
-     * feature value represents the UUID of the model being referenced by the import.
-     * <modelImports xmi:uuid="mmuuid:bfa9eec0-c497-1fa8-a032-93e40f299f77" uuid="mmuuid:bfa9eec0-c497-1fa8-a032-93e40f299f77" ...
+     * Example shown below in which the EObject xmi:uuid is the same as the "uuid" feature value. The "uuid" feature value
+     * represents the UUID of the model being referenced by the import. <modelImports
+     * xmi:uuid="mmuuid:bfa9eec0-c497-1fa8-a032-93e40f299f77" uuid="mmuuid:bfa9eec0-c497-1fa8-a032-93e40f299f77" ...
      * </p>
+     * 
      * @param obj EObject being processed
      * @param objUuid current UUID of the EObject being processed
      * @param attribsIndex current index into the Attributes collection
      * @return new ObjectID instance if the fix applies to this EObject, otherwise objUuid is returned
      * @since 4.3
      */
-    protected ObjectID patch_defect14449(final EObject obj, final ObjectID objUuid, final int attribsIndex) {
+    protected ObjectID patch_defect14449( final EObject obj,
+                                          final ObjectID objUuid,
+                                          final int attribsIndex ) {
         Assertion.assertTrue(attribsIndex >= 0 && attribsIndex < attribs.getLength());
         Assertion.assertTrue(attribs.getQName(attribsIndex).equals(UUID_ATTRIB));
 
-        if ( obj instanceof ModelImport ) {
+        if (obj instanceof ModelImport) {
             final ModelImport modelImport = (ModelImport)obj;
 
             // The stringified UUID of the xmi:uuid attribute
@@ -377,23 +381,23 @@ public class EResourceXmiHandler extends SAXXMIHandler {
 
             // Get the UUID of the referenced model (first on the object instance) ...
             String uuidOfRefedModel = modelImport.getUuid();
-            if ( uuidOfRefedModel == null ) {
+            if (uuidOfRefedModel == null) {
                 // That attribute hasn't yet been read in, so look in attributes that haven't yet been processed ...
                 final String uuidFeatureName = CorePackage.eINSTANCE.getModelImport_Uuid().getName();
 
-                for (int k = (attribsIndex+1); k < attribs.getLength(); ++k ){    // start at the next unread attribute!!!
+                for (int k = (attribsIndex + 1); k < attribs.getLength(); ++k) { // start at the next unread attribute!!!
                     String qName = attribs.getQName(k);
-                    if ( qName.equals(uuidFeatureName) ) {
+                    if (qName.equals(uuidFeatureName)) {
                         uuidOfRefedModel = attribs.getValue(k);
                     }
                 }
             }
 
             // Check if the xmi:uuid of the EObject is the same as the "uuid" feature value representing
-            // the model referenced by the ModelImport.  If they are the same then the EObject xmi:uuid
+            // the model referenced by the ModelImport. If they are the same then the EObject xmi:uuid
             // needs to be recreated. [Note: both values use the "mmuuid:" form, so okay to compare
             // the value strings]
-            if ( uuidString.equals(uuidOfRefedModel) ) {
+            if (uuidString.equals(uuidOfRefedModel)) {
                 return this.idGenerator.create();
             }
         }
@@ -401,14 +405,14 @@ public class EResourceXmiHandler extends SAXXMIHandler {
     }
 
     /**
-     * First of two patches to convert the Core::ModelImport "path" feature value found in models
-     * created prior to 4.4 to their new "modelLocation" value.  In 4.4, the "path" feature on
-     * Core::ModelImport was changed to be transient and volatile to be replaced by a new feature,
-     * "modelLocation".  The new feature stores the relative URI path of the referenced resource
-     * instead of the "path" relative to the workspace root which assumed an Eclipse runtime workspace.
-     * This first patch simply transfers the "path" value to the new "modelLocation" feature.
+     * First of two patches to convert the Core::ModelImport "path" feature value found in models created prior to 4.4 to their
+     * new "modelLocation" value. In 4.4, the "path" feature on Core::ModelImport was changed to be transient and volatile to be
+     * replaced by a new feature, "modelLocation". The new feature stores the relative URI path of the referenced resource instead
+     * of the "path" relative to the workspace root which assumed an Eclipse runtime workspace. This first patch simply transfers
+     * the "path" value to the new "modelLocation" feature.
      */
-    protected EObject patchA_modelImport(final EObject obj, final Attributes attribs) {
+    protected EObject patchA_modelImport( final EObject obj,
+                                          final Attributes attribs ) {
         if (obj instanceof ModelImport && attribs != null) {
             for (int i = 0, size = attribs.getLength(); i < size; ++i) {
                 String qName = attribs.getQName(i);
@@ -423,13 +427,11 @@ public class EResourceXmiHandler extends SAXXMIHandler {
     }
 
     /**
-     * Second of two patches to convert the Core::ModelImport "path" feature value found in models
-     * created prior to 4.4 to their new "modelLocation" value.  In 4.4, the "path" feature on
-     * Core::ModelImport was changed to be transient and volatile to be replaced by a new feature,
-     * "modelLocation".  The new feature stores the relative URI path of the referenced resource
-     * instead of the "path" relative to the workspace root which assumed an Eclipse runtime workspace.
-     * This second patch reconciles the "modelLocation" value that was simply transfered from
-     * the "path" value in the first patch to its correct relative URI path
+     * Second of two patches to convert the Core::ModelImport "path" feature value found in models created prior to 4.4 to their
+     * new "modelLocation" value. In 4.4, the "path" feature on Core::ModelImport was changed to be transient and volatile to be
+     * replaced by a new feature, "modelLocation". The new feature stores the relative URI path of the referenced resource instead
+     * of the "path" relative to the workspace root which assumed an Eclipse runtime workspace. This second patch reconciles the
+     * "modelLocation" value that was simply transfered from the "path" value in the first patch to its correct relative URI path
      */
     protected void patchB_modelImport() {
         // If no ModelImport conversion work is required, return
@@ -437,14 +439,9 @@ public class EResourceXmiHandler extends SAXXMIHandler {
             return;
         }
 
-        // If the resource being loaded is the "MetaMatrix-VdbManifestModel.xmi" resource contained in a VDB ...
         URI eResourceURI = this.eResource.getURI();
-        if (MANIFEST_MODEL_NAME.equals(eResourceURI.lastSegment())) {
-            // do nothing
-            return;
-        }
 
-        // Preprocess the collection of proxy resource URIs ...
+        // Pre-process the collection of proxy resource URIs ...
         removeBadProxyResourceUris(this.proxyResourceURIs);
 
         // Reconcile the workspace relative paths, stored in the "modelLocation" feature,
@@ -452,18 +449,9 @@ public class EResourceXmiHandler extends SAXXMIHandler {
         Collection unconvertedImports = new HashSet(this.modelImportsToConvert);
         for (Iterator i = this.modelImportsToConvert.iterator(); i.hasNext();) {
             ModelImport modelImport = (ModelImport)i.next();
-            String modelLocation    = modelImport.getModelLocation().toLowerCase();
-
-//            // If the modelLocation value represents a logical location of a built-in resource then ignore it
-//            if (modelLocation.startsWith("http") || //$NON-NLS-1$
-//                modelLocation.startsWith(EResourceFinder.METAMATRIX_METAMODEL_PREFIX) ||
-//                modelLocation.startsWith(EResourceFinder.UML2_METAMODELS_PREFIX)) {
-//                unconvertedImports.remove(modelImport);
-//                continue;
-//            }
-
+            String modelLocation = modelImport.getModelLocation().toLowerCase();
             for (Iterator j = this.proxyResourceURIs.iterator(); j.hasNext();) {
-                URI importURI    = (URI)j.next();
+                URI importURI = (URI)j.next();
                 String uriString = URI.decode(importURI.toString()).toLowerCase();
 
                 // If the URI of the proxy resource is a logical URI of the form "http://..." then ignore it
@@ -492,10 +480,10 @@ public class EResourceXmiHandler extends SAXXMIHandler {
         // against the model names found in the resource URIs of the proxies
         for (Iterator i = unconvertedImports.iterator(); i.hasNext();) {
             ModelImport modelImport = (ModelImport)i.next();
-            String modelLocation    = removeProjectNameFromLocation(modelImport.getModelLocation()).toLowerCase();
+            String modelLocation = removeProjectNameFromLocation(modelImport.getModelLocation()).toLowerCase();
 
             for (Iterator j = this.proxyResourceURIs.iterator(); j.hasNext();) {
-                URI importURI    = (URI)j.next();
+                URI importURI = (URI)j.next();
                 String uriString = URI.decode(importURI.toString()).toLowerCase();
 
                 // If the URI of the proxy resource is a logical URI of the form "http://..." then ignore it
@@ -526,7 +514,7 @@ public class EResourceXmiHandler extends SAXXMIHandler {
         }
     }
 
-    protected String removeProjectNameFromLocation(final String location) {
+    protected String removeProjectNameFromLocation( final String location ) {
         String newLocation = location;
         URI uri = URI.createURI(location);
         if (uri.segmentCount() > 1) {
@@ -542,12 +530,11 @@ public class EResourceXmiHandler extends SAXXMIHandler {
     }
 
     /**
-     * If any of the resource URIs begin with '/' then it may represent a bad
-     * href (Eclipse workspace relative path of the form "/project/.../model.xmi")
-     * which are sometimes found in old model files.  Check if the collection
-     * contains the correct file URI so that the bad one can be removed
+     * If any of the resource URIs begin with '/' then it may represent a bad href (Eclipse workspace relative path of the form
+     * "/project/.../model.xmi") which are sometimes found in old model files. Check if the collection contains the correct file
+     * URI so that the bad one can be removed
      */
-    protected void removeBadProxyResourceUris(final Collection proxyResourceUris) {
+    protected void removeBadProxyResourceUris( final Collection proxyResourceUris ) {
         if (proxyResourceUris == null || proxyResourceUris.isEmpty()) {
             return;
         }
@@ -584,12 +571,15 @@ public class EResourceXmiHandler extends SAXXMIHandler {
         }
     }
 
-    protected void setValue(EObject object, EStructuralFeature feature, Object value, int position) {
+    protected void setValue( EObject object,
+                             EStructuralFeature feature,
+                             Object value,
+                             int position ) {
         int kind = helper.getFeatureKind(feature);
 
         switch (kind) {
-            case XMLHelper.DATATYPE_SINGLE :
-            case XMLHelper.DATATYPE_IS_MANY :
+            case XMLHelper.DATATYPE_SINGLE:
+            case XMLHelper.DATATYPE_IS_MANY:
                 EClassifier eMetaObject = feature.getEType();
                 EDataType eDataType = (EDataType)eMetaObject;
                 EFactory eFactory = eDataType.getEPackage().getEFactoryInstance();
@@ -598,8 +588,7 @@ public class EResourceXmiHandler extends SAXXMIHandler {
                     BasicEList list = (BasicEList)object.eGet(feature);
                     if (position == -2) {
                         for (StringTokenizer stringTokenizer = new StringTokenizer((String)value, " "); //$NON-NLS-1$
-                            stringTokenizer.hasMoreTokens();
-                            ) {
+                        stringTokenizer.hasMoreTokens();) {
                             String token = stringTokenizer.nextToken();
                             list.addUnique(eFactory.createFromString(eDataType, token));
                         }
@@ -619,8 +608,8 @@ public class EResourceXmiHandler extends SAXXMIHandler {
                     object.eSet(feature, eFactory.createFromString(eDataType, (String)value));
                 }
                 break;
-            case XMLHelper.IS_MANY_ADD :
-            case XMLHelper.IS_MANY_MOVE :
+            case XMLHelper.IS_MANY_ADD:
+            case XMLHelper.IS_MANY_MOVE:
                 BasicEList list = (BasicEList)object.eGet(feature);
 
                 if (position == -1) {
@@ -633,19 +622,19 @@ public class EResourceXmiHandler extends SAXXMIHandler {
                     list.move(position, value);
                 }
                 break;
-            default :
+            default:
                 object.eSet(feature, value);
         }
     }
 
-    protected boolean isXsdPrefix(final String prefix) {
+    protected boolean isXsdPrefix( final String prefix ) {
         if (prefix.equalsIgnoreCase(XSDPackage.eNS_PREFIX)) {
             return true;
         }
         return false;
     }
 
-    protected String convertDateFormat(final String value) {
+    protected String convertDateFormat( final String value ) {
         Date valueAsDate = null;
         for (int i = 0; i < DATE_FORMATS.length; ++i) {
             try {
@@ -656,23 +645,23 @@ public class EResourceXmiHandler extends SAXXMIHandler {
             }
         }
         if (valueAsDate == null) {
-            final String msg = ModelerCore.Util.getString("EResourceXmiHandler.Error_parsing_date_string",value); //$NON-NLS-1$
-            ModelerCore.Util.log(IStatus.ERROR,msg);
+            final String msg = ModelerCore.Util.getString("EResourceXmiHandler.Error_parsing_date_string", value); //$NON-NLS-1$
+            ModelerCore.Util.log(IStatus.ERROR, msg);
             return value;
         }
         return DateUtil.getDateAsString(valueAsDate);
     }
 
     /**
-     * Update any XMLSchema entity found in the model file.  By calling update()
-     * on a XMLSchema entity we are forcing a datatype analysis and validation
-     * of the whole schema.  This is necessary to ensure that datatypes defined
-     * within the schema are properly constrained.
+     * Update any XMLSchema entity found in the model file. By calling update() on a XMLSchema entity we are forcing a datatype
+     * analysis and validation of the whole schema. This is necessary to ensure that datatypes defined within the schema are
+     * properly constrained.
+     * 
      * @param topObject
      */
     protected void updateSchema( final EObject topObject ) {
         // Create the arguments to the method ...
-        final Object[] args = new Object[]{};
+        final Object[] args = new Object[] {};
 
         final Class xmlSchemaClass = topObject.getClass();
 
@@ -681,8 +670,8 @@ public class EResourceXmiHandler extends SAXXMIHandler {
         try {
             updateSchemaMethod = helper.findBestMethodOnTarget("update", args); //$NON-NLS-1$
         } catch (SecurityException e) {
-            final String msg = ModelerCore.Util.getString("EResourceXmiHandler.Error_executing_XSD_update_method",xmlSchemaClass); //$NON-NLS-1$
-            ModelerCore.Util.log(IStatus.ERROR,e,msg);
+            final String msg = ModelerCore.Util.getString("EResourceXmiHandler.Error_executing_XSD_update_method", xmlSchemaClass); //$NON-NLS-1$
+            ModelerCore.Util.log(IStatus.ERROR, e, msg);
         } catch (NoSuchMethodException e) {
             // do nothing
         }
@@ -690,10 +679,10 @@ public class EResourceXmiHandler extends SAXXMIHandler {
         // Execute the XSDSchema.update() method
         if (updateSchemaMethod != null) {
             try {
-                updateSchemaMethod.invoke(topObject,args);
-            } catch ( Throwable t ) {
-                final String msg = ModelerCore.Util.getString("EResourceXmiHandler.Error_executing_XSD_update_method",updateSchemaMethod); //$NON-NLS-1$
-                ModelerCore.Util.log(IStatus.ERROR,msg);
+                updateSchemaMethod.invoke(topObject, args);
+            } catch (Throwable t) {
+                final String msg = ModelerCore.Util.getString("EResourceXmiHandler.Error_executing_XSD_update_method", updateSchemaMethod); //$NON-NLS-1$
+                ModelerCore.Util.log(IStatus.ERROR, msg);
             }
         }
     }

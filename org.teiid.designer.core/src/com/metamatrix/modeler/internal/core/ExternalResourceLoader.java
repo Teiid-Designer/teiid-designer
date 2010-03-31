@@ -19,6 +19,7 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -31,7 +32,7 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.internal.core.container.ContainerImpl;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 
 public class ExternalResourceLoader {
 
@@ -71,7 +72,7 @@ public class ExternalResourceLoader {
             throw new ModelerCoreException(
                                            ModelerCore.Util.getString("ExternalResourceLoader.An_existing_resource_with_the_name_cannot_retrieved_from_{1}._7", resourceName, resourceUrl)); //$NON-NLS-1$
         }
-        if (!ModelUtil.isModelFile(resourceFile)) {
+        if (!ModelFileUtil.isModelFile(resourceFile)) {
             throw new ModelerCoreException(
                                            ModelerCore.Util.getString("ExternalResourceLoader.The_external_resource_with_the_name_is_not_a_model_resource._8", resourceName)); //$NON-NLS-1$
         }

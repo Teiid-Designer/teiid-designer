@@ -50,12 +50,6 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
      */
     public static final String PREF_FILENAME = ".mprefs"; //$NON-NLS-1$
 
-    //private static final String CUSTOM_DEFAULT_OPTION_VALUE = "#\r\n\r#custom-non-empty-default-value#\r\n\r#"; //$NON-NLS-1$
-
-    // ############################################################################################################################
-    // # Variables #
-    // ############################################################################################################################
-
     /**
      * The platform project this <code>ModelProject</code> is based on
      * 
@@ -69,10 +63,6 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
      * @since 4.0
      */
     protected IPath path;
-
-    // ############################################################################################################################
-    // # Constructors #
-    // ############################################################################################################################
 
     /**
      * Constructor needed for {@link IProject#getNature(java.lang.String)} and {@link IProject#addNature()}.
@@ -94,10 +84,6 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
         super(MODEL_PROJECT, parent, project.getName());
         fProject = project;
     }
-
-    // ############################################################################################################################
-    // # Methods #
-    // ############################################################################################################################
 
     /**
      * Returns a canonicalized path from the given external path. Note that the return path contains the same number of segments
@@ -179,143 +165,6 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
     }
 
     /**
-     * @see org.eclipse.jdt.core.IJavaProject#setOptions(Map)
-     */
-    // public void setOptions(Map newOptions) {
-    // Preferences preferences;
-    // setPreferences(preferences = new Preferences()); // always reset (26255)
-    // if (newOptions != null){
-    // Iterator keys = newOptions.keySet().iterator();
-    // while (keys.hasNext()){
-    // String key = (String)keys.next();
-    // if (!ModelWorkspaceManager.OptionNames.contains(key)) continue; // unrecognized option
-    // // no filtering for encoding (custom encoding for project is allowed)
-    // String value = (String)newOptions.get(key);
-    // preferences.setDefault(key, CUSTOM_DEFAULT_OPTION_VALUE); // empty string isn't the default (26251)
-    // preferences.setValue(key, value);
-    // }
-    // }
-    //
-    // // persist options
-    // savePreferences(preferences);
-    // }
-    /**
-     * Returns the project custom preference pool. Project preferences may include custom encoding.
-     */
-    // public Preferences getPreferences(){
-    // IProject project = getProject();
-    //
-    // if (!ModelProjectImpl.hasModelNature(project)) {
-    // return null;
-    // }
-    //
-    // ModelWorkspaceManager.PerProjectInfo perProjectInfo =
-    // ModelWorkspaceManager.getModelWorkspaceManager().getPerProjectInfo(project, true);
-    // Preferences preferences = perProjectInfo.preferences;
-    // if (preferences != null) {
-    // return preferences;
-    // }
-    //
-    // preferences = loadPreferences();
-    // if (preferences == null) {
-    // preferences = new Preferences();
-    // }
-    // perProjectInfo.preferences = preferences;
-    // return preferences;
-    // return new Preferences();
-    // }
-    //
-    // /*
-    // * load preferences from a shareable format (VCM-wise)
-    // */
-    // public Preferences loadPreferences() {
-    //
-    // Preferences preferences = new Preferences();
-    //
-    // // File prefFile = getProject().getLocation().append(PREF_FILENAME).toFile();
-    // IPath projectMetaLocation = getProject().getPluginWorkingLocation(ModelerCore.getPlugin().getDescriptor());
-    // if (projectMetaLocation != null) {
-    // File prefFile = projectMetaLocation.append(PREF_FILENAME).toFile();
-    // if (prefFile.exists()) { // load preferences from file
-    // InputStream in = null;
-    // try {
-    // in = new BufferedInputStream(new FileInputStream(prefFile));
-    // preferences.load(in);
-    // return preferences;
-    // } catch (IOException e) { // problems loading preference store - quietly ignore
-    // } finally {
-    // if (in != null) {
-    // try {
-    // in.close();
-    // } catch (IOException e) { // ignore problems with close
-    // }
-    // }
-    // }
-    // }
-    // }
-    // return null;
-    // }
-    //
-    // /*
-    // * Set cached preferences, no preference file is saved, only info is updated
-    // */
-    // public void setPreferences(Preferences preferences) {
-    // IProject project = getProject();
-    // if (!ModelProjectImpl.hasModelNature(project)) {
-    // return; // ignore
-    // }
-    // ModelWorkspaceManager.PerProjectInfo perProjectInfo =
-    // ModelWorkspaceManager.getModelWorkspaceManager().getPerProjectInfo(project, true);
-    // perProjectInfo.preferences = preferences;
-    // }
-    //
-    // /**
-    // * Save project custom preferences to shareable file (.mprefs)
-    // */
-    // private void savePreferences(Preferences preferences) {
-    //
-    // IProject project = getProject();
-    // if (!ModelProjectImpl.hasModelNature(project)) {
-    // return; // ignore
-    // }
-    //
-    // if (preferences == null || (!preferences.needsSaving() && preferences.propertyNames().length != 0)) {
-    // // nothing to save
-    // return;
-    // }
-    //
-    // // preferences need to be saved
-    // // the preferences file is located in the plug-in's state area
-    // // at a well-known name (.mprefs)
-    // File prefFile = project.getPluginWorkingLocation(ModelerCore.getPlugin().getDescriptor()).append(PREF_FILENAME).toFile();
-    // if (preferences.propertyNames().length == 0) {
-    // // there are no preference settings
-    // // rather than write an empty file, just delete any existing file
-    // if (prefFile.exists()) {
-    // prefFile.delete(); // don't worry if delete unsuccessful
-    // }
-    // return;
-    // }
-    //
-    // // write file, overwriting an existing one
-    // OutputStream out = null;
-    // try {
-    // // do it as carefully as we know how so that we don't lose/mangle
-    // // the setting in times of stress
-    // out = new BufferedOutputStream(new FileOutputStream(prefFile));
-    // preferences.store(out, null);
-    // } catch (IOException e) { // problems saving preference store - quietly ignore
-    // } finally {
-    // if (out != null) {
-    // try {
-    // out.close();
-    // } catch (IOException e) { // ignore problems with close
-    // }
-    // }
-    // }
-    // }
-    //
-    /**
      * Does nothing.
      * 
      * @see org.eclipse.core.resources.IProjectNature#configure()
@@ -353,23 +202,6 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
                 // compute the pkg fragment roots
                 updatePackageFragmentRoots();
 
-                // // remember the timestamps of external libraries the first time they are looked up
-                // ModelpathEntry[] resolvedmodelpath = getResolvedModelpath(true/*ignore unresolved variable*/);
-                // for (int i = 0, length = resolvedmodelpath.length; i < length; i++) {
-                // ModelpathEntry entry = resolvedModelpath[i];
-                // if (entry.getEntryKind() == ModelpathEntry.MPE_LIBRARY) {
-                // IPath path = entry.getPath();
-                // Object target = JavaModel.getTarget(ResourcesPlugin.getWorkspace().getRoot(), path, true);
-                // if (target instanceof java.io.File) {
-                // Map externalTimeStamps = JavaModelManager.getJavaModelManager().deltaProcessor.externalTimeStamps;
-                // if (externalTimeStamps.get(path) == null) {
-                // long timestamp = DeltaProcessor.getTimeStamp((java.io.File)target);
-                // externalTimeStamps.put(path, new Long(timestamp));
-                // }
-                // }
-                // }
-                // }
-
                 // only valid if reaches here
                 validInfo = true;
             }
@@ -396,25 +228,6 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
         return null;
     }
 
-    // /**
-    // * @see com.metamatrix.modeler.core.ModelProject#getModelPackageFragmentRoots()
-    // * @since 4.0
-    // */
-    // public ModelWorkspaceItem[] getModelPackageFragmentRoots() throws ModelWorkspaceException {
-    // Object[] children;
-    // int length;
-    // ModelPackageFragmentRoot[] roots;
-    //
-    // System.arraycopy(
-    // children = getChildren(),
-    // 0,
-    // roots = new ModelPackageFragmentRoot[length = children.length],
-    // 0,
-    // length);
-    //
-    // return roots;
-    // }
-    //
     /**
      * @see com.metamatrix.modeler.core.ModelProject#getNonModelingResources()
      * @since 4.0
@@ -457,26 +270,6 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
     public IResource getResource() {
         return this.getProject();
     }
-
-    // /**
-    // * Return the {@link ModelResource model resources} contained by this project.
-    // * @return the {@link ModelResource} instances contained by this project item; never null
-    // * @throws ModelWorkspaceException
-    // */
-    // public ModelResource[] getModelResources() throws ModelWorkspaceException {
-    // Object[] children;
-    // int length;
-    // ModelResource[] modelResources;
-    //
-    // System.arraycopy(
-    // children = getChildren(),
-    // 0,
-    // modelResources = new ModelResource[length = children.length],
-    // 0,
-    // length);
-    //
-    // return modelResources;
-    // }
 
     /**
      * Removes the given builder from the build spec for the given project.
@@ -526,28 +319,8 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
             boolean failed = false;
             try {
                 ModelProjectInfo info = getModelProjectInfo();
-
-                // ModelpathEntry[] modelpath = getResolvedmodelpath(true);
-                // NameLookup lookup = info.getNameLookup();
-                // if (lookup != null){
-                // IPackageFragmentRoot[] oldRoots = lookup.fPackageFragmentRoots;
-                // IPackageFragmentRoot[] newRoots = computePackageFragmentRoots(modelpath, true);
-                // checkIdentical: { // compare all pkg fragment root lists
-                // if (oldRoots.length == newRoots.length){
-                // for (int i = 0, length = oldRoots.length; i < length; i++){
-                // if (!oldRoots[i].equals(newRoots[i])){
-                // break checkIdentical;
-                // }
-                // }
-                // return; // no need to update
-                // }
-                // }
-                // info.setNameLookup(null); // discard name lookup (hold onto roots)
-                // }
                 info.setNonModelResources(null);
-                // info.setChildren( computePackageFragmentRoots(modelpath,false) );
                 info.setChildren(computeModelResources());
-
             } catch (ModelWorkspaceException e) {
                 failed = true;
                 throw e;
@@ -563,40 +336,6 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
                 }
             }
         }
-        // mtkTODO: Re-implement method to deal with package fragments rather than model resources ...
-
-        // if (this.isOpen()) {
-        // try {
-        // ModelProjectInfo info = getModelProjectItemInfo();
-        //
-        // ModelpathEntry[] modelpath = getResolvedmodelpath(true);
-        // NameLookup lookup = info.getNameLookup();
-        // if (lookup != null){
-        // IPackageFragmentRoot[] oldRoots = lookup.fPackageFragmentRoots;
-        // IPackageFragmentRoot[] newRoots = computePackageFragmentRoots(modelpath, true);
-        // checkIdentical: { // compare all pkg fragment root lists
-        // if (oldRoots.length == newRoots.length){
-        // for (int i = 0, length = oldRoots.length; i < length; i++){
-        // if (!oldRoots[i].equals(newRoots[i])){
-        // break checkIdentical;
-        // }
-        // }
-        // return; // no need to update
-        // }
-        // }
-        // info.setNameLookup(null); // discard name lookup (hold onto roots)
-        // }
-        // info.setNonModelResources(null);
-        // info.setChildren(
-        // computePackageFragmentRoots(modelpath, false));
-        //
-        // } catch(ModelWorkspaceException e){
-        // try {
-        // close(); // could not do better
-        // } catch(ModelWorkspaceException ex){
-        // }
-        // }
-        // }
     }
 
     public ModelWorkspaceItem findModelWorkspaceItem( IResource resource ) throws ModelWorkspaceException {
@@ -636,16 +375,7 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
             return this;
         }
 
-        final ModelWorkspaceItem parent = this.getModelWorkspace().getParent(resource);
-        // final String projectPath = this.getPath().toFile().toString();
-        // final String resourcePath = resource.getPath().toFile().toString();
-        // final String testName = projectPath + File.separator + resource.getName();
-        // if(resourcePath.equals(testName){
-        // return this;
-        // }
-        //
-        // final String parentPath = resource.getP
-        return parent;
+        return this.getModelWorkspace().getParent(resource);
     }
 
     public ModelWorkspaceItem[] computeModelResources() {
@@ -671,8 +401,8 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
 
                         // If the IFile extension does not match the set of well-known model file extensions with
                         // a case-sensitive check but does match when the check is case-insensitive then error (defect 17709)
-                    } else if (!ModelUtil.isModelFileExtension(child.getFileExtension(), true)
-                               && ModelUtil.isModelFileExtension(child.getFileExtension(), false)) {
+                    } else if (!ModelFileUtil.isModelFileExtension(child.getFileExtension(), true)
+                               && ModelFileUtil.isModelFileExtension(child.getFileExtension(), false)) {
                         final String actualFileName = child.getName();
                         final String actualExtension = child.getFileExtension();
                         final int endIndex = actualFileName.length() - actualExtension.length();

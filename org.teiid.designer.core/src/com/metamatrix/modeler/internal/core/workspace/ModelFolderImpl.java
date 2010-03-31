@@ -202,8 +202,8 @@ public class ModelFolderImpl extends OpenableImpl implements ModelFolder {
 
                             // If the IFile extension does not match the set of well-known model file extensions with
                             // a case-sensitive check but does match when the check is case-insensitive then error (defect 17709)
-                        } else if (!ModelUtil.isModelFileExtension(child.getFileExtension(), true)
-                                   && ModelUtil.isModelFileExtension(child.getFileExtension(), false)) {
+                        } else if (!ModelFileUtil.isModelFileExtension(child.getFileExtension(), true)
+                                   && ModelFileUtil.isModelFileExtension(child.getFileExtension(), false)) {
                             final String actualFileName = child.getName();
                             final String actualExtension = child.getFileExtension();
                             final int endIndex = actualFileName.length() - actualExtension.length();

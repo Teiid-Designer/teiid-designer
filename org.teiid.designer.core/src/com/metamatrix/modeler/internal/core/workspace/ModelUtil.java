@@ -8,17 +8,17 @@
 package com.metamatrix.modeler.internal.core.workspace;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.zip.ZipFile;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourceAttributes;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -49,14 +49,11 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.index.IndexUtil;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.resource.MMXmiResource;
-import com.metamatrix.modeler.internal.core.resource.vdb.VdbResourceImpl;
 
 /**
  * @since 4.0
  */
 public class ModelUtil {
-
-    public static final String MANIFEST_MODEL_NAME = ModelFileUtil.MANIFEST_MODEL_NAME;
 
     public static final String DOT_PROJECT = ModelFileUtil.DOT_PROJECT;
     public static final String FILE_COLON = ModelFileUtil.FILE_COLON;
@@ -212,7 +209,7 @@ public class ModelUtil {
      */
     public static boolean isModelFile( final IPath path ) {
         final String extension = path.getFileExtension();
-        return isModelFileExtension(extension, true);
+        return ModelFileUtil.isModelFileExtension(extension, true);
     }
 
     /**
@@ -233,21 +230,10 @@ public class ModelUtil {
         if (resource.getType() == IResource.FILE) {
             final IPath path = ((IFile)resource).getLocation();
             if (path != null) {
-                return isModelFile(path.toFile());
+                return ModelFileUtil.isModelFile(path.toFile());
             }
         }
         return false;
-    }
-
-    /**
-     * Return true if the File represents a Teiid Designer model file or an xsd file this method does not check if the file exists
-     * in a project with model nature. Returns a false for vdb files.
-     * 
-     * @param resource The file that may be a model file
-     * @return true if it is a ModelFile.
-     */
-    public static boolean isModelFile( final File resource ) {
-        return ModelFileUtil.isModelFile(resource);
     }
 
     /**
@@ -263,12 +249,7 @@ public class ModelUtil {
         }
 
         final String extension = resource.getURI().fileExtension();
-        return isModelFileExtension(extension, true);
-    }
-
-    public static boolean isModelFileExtension( final String extension,
-                                                boolean caseSensitive ) {
-        return ModelFileUtil.isModelFileExtension(extension, caseSensitive);
+        return ModelFileUtil.isModelFileExtension(extension, true);
     }
 
     public static boolean isIResourceReadOnly( IResource iResource ) {
@@ -284,26 +265,6 @@ public class ModelUtil {
         }
         attributes.setReadOnly(isReadOnly);
         return true;
-    }
-
-    /**
-     * Return the XMIHeader for the specified inputstream of a model file.
-     * 
-     * @param resourceStream The inputStream of a Teiid Designer model file.
-     * @return The XMIHeader for the model file
-     */
-    public static XMIHeader getXmiHeader( final InputStream resourceStream ) {
-        return ModelFileUtil.getXmiHeader(resourceStream);
-    }
-
-    /**
-     * Return the XMIHeader for the specified File or null if the file does not represent a Teiid Designer model file.
-     * 
-     * @param resource The file of a Teiid Designer model file.
-     * @return The XMIHeader for the model file
-     */
-    public static XMIHeader getXmiHeader( final File resource ) {
-        return ModelFileUtil.getXmiHeader(resource);
     }
 
     /**
@@ -323,16 +284,6 @@ public class ModelUtil {
     }
 
     /**
-     * Return the XMIHeader for the given vdb file or null if the file does not represent a vdb.
-     * 
-     * @param vdbArchiveJar The file for the vdb.
-     * @return The XMIHeader for the vdb manifest file
-     */
-    public static XMIHeader getXmiHeaderForVdbArchive( final File vdbArchiveJar ) {
-        return ModelFileUtil.getXmiHeaderForVdbArchive(vdbArchiveJar);
-    }
-
-    /**
      * Return the VdbHeader for the specified vdb file or null if the file does not represent a vdb.
      * 
      * @param resource The file of a Teiid Designer vdb file.
@@ -340,7 +291,7 @@ public class ModelUtil {
      */
     public static VdbHeader getVdbHeader( final File resource ) {
         if (resource != null && resource.isFile() && resource.exists()) {
-            if (isVdbArchiveFile(resource)) {
+            if (ModelFileUtil.isVdbArchiveFile(resource)) {
                 try {
                     return VdbHeaderReader.readHeader(resource);
                 } catch (MetaMatrixCoreException e) {
@@ -359,7 +310,7 @@ public class ModelUtil {
      */
     public static XsdHeader getXsdHeader( final File resource ) {
         if (resource != null && resource.isFile() && resource.exists()) {
-            if (isXsdFile(resource)) {
+            if (ModelFileUtil.isXsdFile(resource)) {
                 try {
                     return XsdHeaderReader.readHeader(resource);
                 } catch (MetaMatrixCoreException e) {
@@ -398,16 +349,6 @@ public class ModelUtil {
      */
     public static boolean isValidModelFileName( final String name ) {
         return validateModelFileName(name).getSeverity() != IStatus.ERROR;
-    }
-
-    /**
-     * Return true if the IResource represents a xsd file.
-     * 
-     * @param resource The file that may be a xsd file
-     * @return true if it is a xsd
-     */
-    public static boolean isXsdFile( final File resource ) {
-        return ModelFileUtil.isXsdFile(resource);
     }
 
     /**
@@ -580,13 +521,6 @@ public class ModelUtil {
     }
 
     /**
-     * @since 4.0
-     */
-    public static boolean isVdbArchiveFile( final File resource ) {
-        return ModelFileUtil.isVdbArchiveFile(resource);
-    }
-
-    /**
      * Return true if the Resource represents a vdb archive file.
      * 
      * @param resource The file that may be a vdb file
@@ -594,9 +528,6 @@ public class ModelUtil {
      */
     public static boolean isVdbArchiveFile( final Resource resource ) {
         if (resource != null) {
-            if (resource instanceof VdbResourceImpl) {
-                return true;
-            }
             // Check that the resource has the correct lower-case extension
             final URI uri = resource.getURI();
             if (uri != null) {
@@ -623,29 +554,6 @@ public class ModelUtil {
      */
     public static String getFileExtension( final File resource ) {
         return FileUtil.getExtension(resource);
-    }
-
-    /**
-     * Return a java.io.InputStream reference for the MetaMatrix-VdbManifestModel.xmi model file contained within the Vdb archive.
-     * If the specified file is not a Vdb archive file or the archive does not contain a manifest model then null is returned.
-     * 
-     * @param zip the Vdb archive
-     * @return the inputstream for the manifest file entry
-     */
-    public static InputStream getManifestModelContentsFromVdbArchive( final ZipFile zipFile ) {
-        return ModelFileUtil.getManifestModelContentsFromVdbArchive(zipFile);
-    }
-
-    /**
-     * Return a java.io.InputStream reference for the specified zip entry name
-     * 
-     * @param zip
-     * @param zipEntryName the fully qualified name of the zip entry
-     * @return the inputstream for the zipfile entry
-     */
-    public static InputStream getFileContentsFromArchive( final ZipFile zipFile,
-                                                          final String zipEntryName ) {
-        return ModelFileUtil.getFileContentsFromArchive(zipFile, zipEntryName);
     }
 
     /**

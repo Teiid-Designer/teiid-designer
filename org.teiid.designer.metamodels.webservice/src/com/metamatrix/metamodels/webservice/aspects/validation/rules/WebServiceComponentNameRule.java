@@ -42,7 +42,7 @@ import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.validation.ValidationProblemImpl;
 import com.metamatrix.modeler.internal.core.validation.ValidationResultImpl;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 
 /**
  * @since 4.2
@@ -285,7 +285,7 @@ public class WebServiceComponentNameRule extends StringNameRule {
                 File file = new File(uri.toFileString());
 
                 if (file.exists()) {
-                    final XMIHeader header = ModelUtil.getXmiHeader(file);
+                    final XMIHeader header = ModelFileUtil.getXmiHeader(file);
 
                     if (header != null) {
                         metamodelUri = header.getPrimaryMetamodelURI();

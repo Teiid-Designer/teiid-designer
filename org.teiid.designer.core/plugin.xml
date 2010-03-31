@@ -115,16 +115,6 @@
          xml
       </fileExtension>
    </extension>
-   <extension
-         id="vdbResourceFactory"
-         point="org.teiid.designer.core.resourceFactory">
-      <class
-            name="com.metamatrix.modeler.internal.core.resource.vdb.VdbResourceFactory">
-      </class>
-      <fileExtension>
-         vdb
-      </fileExtension>
-   </extension>
 <!-- This extension defines the Core Modeling Preferences -->
    <extension
          id="corePreferences"

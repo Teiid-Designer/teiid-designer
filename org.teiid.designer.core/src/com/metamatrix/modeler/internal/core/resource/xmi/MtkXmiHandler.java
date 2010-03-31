@@ -58,12 +58,10 @@ import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.metamodel.MetamodelRegistry;
 
 /**
- * @author Lance Phillips
  * @since 3.1
  */
 public class MtkXmiHandler extends SAXXMIHandler {
 
-    private static final String MANIFEST_MODEL_NAME = "MetaMatrix-VdbManifestModel.xmi"; //$NON-NLS-1$
     private static final String XSD_URI = XSDPackage.eNS_URI;
     private static final String TARGET_NS_ATTRIBUTE_NAME = "targetNamespace"; //$NON-NLS-1$
     private static final String SDT_DOMAIN_INSTANCE_CLASS_NAME = "com.metamatrix.metamodels.sdt.Domain"; //$NON-NLS-1$
@@ -654,12 +652,7 @@ public class MtkXmiHandler extends SAXXMIHandler {
             return;
         }
 
-        // If the resource being loaded is the "MetaMatrix-VdbManifestModel.xmi" resource contained in a VDB ...
         URI eResourceURI = this.resource.getURI();
-        if (MANIFEST_MODEL_NAME.equals(eResourceURI.lastSegment())) {
-            // do nothing
-            return;
-        }
 
         // Preprocess the collection of proxy resource URIs ...
         removeBadProxyResourceUris(this.proxyResourceURIs);

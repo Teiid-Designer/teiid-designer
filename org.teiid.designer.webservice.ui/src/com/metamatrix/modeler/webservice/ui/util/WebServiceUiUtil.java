@@ -40,6 +40,7 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
+import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.transformation.util.TransformationSqlHelper;
@@ -658,7 +659,7 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
      * @since 4.2
      */
     public static boolean isXsdFile( File theFile ) {
-        return ModelUtil.isXsdFile(theFile);
+        return ModelFileUtil.isXsdFile(theFile);
     }
 
     /**

@@ -14,6 +14,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.PlatformUI;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.PluginUtilImpl;
+import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 public class Util extends PluginUtilImpl {
@@ -64,7 +65,7 @@ public class Util extends PluginUtilImpl {
      * @since 4.2
      */
     public static boolean isXsdFile( File theFile ) {
-        return ModelUtil.isXsdFile(theFile);
+        return ModelFileUtil.isXsdFile(theFile);
     }
 
     /**

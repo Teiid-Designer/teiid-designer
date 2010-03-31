@@ -334,7 +334,7 @@ public class WorkspaceResourceFinderUtil {
                         if (!StringUtil.isEmpty(path)) {
                             dependentIResource = findIResource(path);
                         } else if (!StringUtil.isEmpty(location)) {
-                        	String depPath = iResource.getFullPath().removeLastSegments(1).append(location).toString();
+                            String depPath = iResource.getFullPath().removeLastSegments(1).append(location).toString();
                             if (!isGlobalResource(depPath)) {
                                 dependentIResource = findIResource(depPath);
                                 if (dependentIResource == null) {
@@ -352,7 +352,7 @@ public class WorkspaceResourceFinderUtil {
 
                 // Get the header information from the VDB archive file
             } else if (ModelUtil.isVdbArchiveFile(iResource)) {
-                final XMIHeader header = ModelUtil.getXmiHeaderForVdbArchive(iResourceFile);
+                final XMIHeader header = ModelFileUtil.getXmiHeader(iResourceFile);
                 if (header != null) {
 
                     ModelImportInfo[] infos = header.getModelImportInfos();

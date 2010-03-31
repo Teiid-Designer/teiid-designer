@@ -6,7 +6,13 @@ Bundle-Version: 7.0.0
 Bundle-Activator: com.metamatrix.modeler.core.ModelerCore
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.core.interceptor,
+Export-Package: com.metamatrix.common.protocol,
+ com.metamatrix.common.protocol.classpath,
+ com.metamatrix.common.protocol.mmfile,
+ com.metamatrix.common.protocol.mmrofile,
+ com.metamatrix.core.interceptor,
+ com.metamatrix.core.io,
+ com.metamatrix.core.util,
  com.metamatrix.modeler.core,
  com.metamatrix.modeler.core.association,
  com.metamatrix.modeler.core.builder,

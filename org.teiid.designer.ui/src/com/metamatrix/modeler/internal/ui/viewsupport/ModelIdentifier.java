@@ -20,6 +20,7 @@ import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -178,7 +179,7 @@ public abstract class ModelIdentifier implements UiConstants {
                             && ((thePrimaryMetamodelUri == null) || thePrimaryMetamodelUri.equals(XSDPackage.eNS_URI))) {
                             result = true;
                         } else {
-                            XMIHeader header = ModelUtil.getXmiHeader(resourceFile);
+                            XMIHeader header = ModelFileUtil.getXmiHeader(resourceFile);
                             if (header != null) {
                                 if (theModelType != null && header.getModelType() != null) {
                                     if (header.getModelType().equals(theModelType.getName())) {
@@ -338,7 +339,7 @@ public abstract class ModelIdentifier implements UiConstants {
             if (isXsdFile) {
                 thePMURI = XML_SCHEMA_MODEL_URI;
             } else {
-                XMIHeader header = ModelUtil.getXmiHeader(fileOnFileSystem);
+                XMIHeader header = ModelFileUtil.getXmiHeader(fileOnFileSystem);
                 if (header != null) {
                     thePMURI = header.getPrimaryMetamodelURI();
                 }
@@ -393,7 +394,7 @@ public abstract class ModelIdentifier implements UiConstants {
             if (isXsdFile) {
                 theModelType = XML_SCHEMA_MODEL_TYPE.toString();
             } else {
-                XMIHeader header = ModelUtil.getXmiHeader(fileOnFileSystem);
+                XMIHeader header = ModelFileUtil.getXmiHeader(fileOnFileSystem);
                 if (header != null) {
                     theModelType = header.getModelType();
                 }
@@ -615,7 +616,7 @@ public abstract class ModelIdentifier implements UiConstants {
                 if (path != null) {
                     File resourceFile = path.toFile();
                     if (resourceFile.exists()) {
-                        XMIHeader header = ModelUtil.getXmiHeader(resourceFile);
+                        XMIHeader header = ModelFileUtil.getXmiHeader(resourceFile);
                         if (header != null && header.getModelType() != null) {
                             return header.getModelType().equals(LOGICAL_MODEL_TYPE.getName());
                         }
@@ -825,7 +826,7 @@ public abstract class ModelIdentifier implements UiConstants {
             if (path != null) {
                 File resourceFile = path.toFile();
                 if (resourceFile.exists()) {
-                    XMIHeader header = ModelUtil.getXmiHeader(resourceFile);
+                    XMIHeader header = ModelFileUtil.getXmiHeader(resourceFile);
                     if (header != null && header.getModelType() != null) {
                         String theModelType = header.getModelType();
                         return ModelType.get(theModelType);

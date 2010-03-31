@@ -8,7 +8,6 @@
 
 package com.metamatrix.core.util;
 
-import com.metamatrix.core.CoreConstants;
 import com.metamatrix.core.CorePlugin;
 
 /**
@@ -50,7 +49,6 @@ public abstract class ResourceNameUtil {
     public static final String MANIFEST_NAME = "Manifest"; //$NON-NLS-1$
     public static final String MAPPING_NAME = "Mapping"; //$NON-NLS-1$
     public static final String MBR_NAME = "Mbr"; //$NON-NLS-1$
-    public static final String METAMATRIX_VDBMANIFESTMODEL_NAME = "MetaMatrix-VdbManifestModel"; //$NON-NLS-1$
     public static final String METAMODELRELATIONALMODEL_NAME = "MetamodelRelationalModel"; //$NON-NLS-1$
     public static final String NAMESPACE_NAME = "namespace"; //$NON-NLS-1$
     public static final String PRIMATIVETYPES_NAME = "primitiveTypes"; //$NON-NLS-1$
@@ -58,8 +56,6 @@ public abstract class ResourceNameUtil {
     public static final String RELATIONSHIP_NAME = "Relationship"; //$NON-NLS-1$
     public static final String SIMPLEDATATYPES_INSTANCE_NAME = "SimpleDatatypes-instance"; //$NON-NLS-1$
     public static final String SYSTEM_NAME = "System"; //$NON-NLS-1$    
-    public static final String SYSTEMADMIN_NAME = CoreConstants.SYSTEM_ADMIN_MODEL_NAME;
-    public static final String SYSTEMADMINPHYSICAL_NAME = CoreConstants.SYSTEM_ADMIN_PHYSICAL_MODEL_NAME;
     public static final String SYSTEMSCHEMA_NAME = "SystemSchema"; //$NON-NLS-1$
     public static final String SYSTEMVIRTUALDATABASE_NAME = "SystemVirtualDatabase"; //$NON-NLS-1$
     public static final String UML2_NAME = "Uml2"; //$NON-NLS-1$
@@ -75,10 +71,9 @@ public abstract class ResourceNameUtil {
 
     public static final String[] RESERVED_XMI_NAMES = {CORE_NAME, BUILTINRELATIONALTYPES_NAME, DATAACCESS_NAME,
         DATASERVICESYSTEMMODEL_NAME, DTCBASE_NAME, ECORE_NAME, ENTERPRISEDATATYPES_NAME, EXTENSION_NAME, FUNCTION_NAME,
-        JDBC_NAME, JDBCMODEL_NAME, JDBCSYSTEM_NAME, MANIFEST_NAME, MAPPING_NAME, MBR_NAME, METAMATRIX_VDBMANIFESTMODEL_NAME,
-        METAMODELRELATIONALMODEL_NAME, PRIMATIVETYPES_NAME, RELATIONAL_NAME, RELATIONSHIP_NAME, SIMPLEDATATYPES_INSTANCE_NAME,
-        SYSTEM_NAME, SYSTEMADMIN_NAME, SYSTEMADMINPHYSICAL_NAME, UML2_NAME, WEBSERVICE_NAME, WSDL1_1_NAME, WSDLSOAP_NAME,
-        XML_NAME, XSD_NAME,};
+        JDBC_NAME, JDBCMODEL_NAME, JDBCSYSTEM_NAME, MANIFEST_NAME, MAPPING_NAME, MBR_NAME, METAMODELRELATIONALMODEL_NAME,
+        PRIMATIVETYPES_NAME, RELATIONAL_NAME, RELATIONSHIP_NAME, SIMPLEDATATYPES_INSTANCE_NAME, SYSTEM_NAME, UML2_NAME,
+        WEBSERVICE_NAME, WSDL1_1_NAME, WSDLSOAP_NAME, XML_NAME, XSD_NAME,};
 
     public static final String[] RESERVED_XSD_NAMES = {BUILTINDATATYPES_NAME, ENTERPRISEDATATYPES_NAME, MAGICXMLSCHEMA_NAME,
         NAMESPACE_NAME, SIMPLEDATATYPES_INSTANCE_NAME, SYSTEMSCHEMA_NAME, XML_NAME, XMLSCHEMA_NAME, XMLSCHEMA_INSTANCE_NAME,};

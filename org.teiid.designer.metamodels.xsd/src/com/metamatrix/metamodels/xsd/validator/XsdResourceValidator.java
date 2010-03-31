@@ -48,6 +48,7 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspace;
 import com.metamatrix.modeler.internal.core.validation.ValidationProblemImpl;
 import com.metamatrix.modeler.internal.core.validation.ValidationResultImpl;
+import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 /**
@@ -84,7 +85,7 @@ public class XsdResourceValidator implements ResourceValidator {
 
         } else if (obj instanceof File) {
             final File f = (File)obj;
-            if (f.exists() && ModelUtil.isXsdFile(f)) {
+            if (f.exists() && ModelFileUtil.isXsdFile(f)) {
                 return true;
             }
 

@@ -34,6 +34,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 /**
  * This class provides notification analysis and bundling. It will categorize all notifications, collect target objects and
  * filters out ignorable notifications.
+ * 
  * @since 4.2
  */
 public class ModelObjectNotificationHelper {
@@ -127,7 +128,7 @@ public class ModelObjectNotificationHelper {
                         // Check ignorable target
                         checkNonDiagramRelatedChange(targetEObject, false);
                     } else if (NotificationUtilities.isChanged(notification)) {
-                    	handleChanged(notification, targetEObject);
+                        handleChanged(notification, targetEObject);
                         // Check ignorable target
                         checkNonDiagramRelatedChange(targetEObject, true);
                     }
@@ -151,7 +152,6 @@ public class ModelObjectNotificationHelper {
                         checkNonDiagramRelatedChange(targetEObject, true);
                     }
 
-                    // Make a check here (Defect 16070) because it could be the VdbManifest file on C:/Temp drive
                     // call findIResource since this does NOT open the model
                     IResource resource = WorkspaceResourceFinderUtil.findIResource((Resource)targetObject);
 
@@ -172,13 +172,13 @@ public class ModelObjectNotificationHelper {
 
             if (NotificationUtilities.isAdded(primaryNotification) || NotificationUtilities.isRemoved(primaryNotification)) {
                 if (targetEObject != null) {
-                	addOrRemoveTargets.add(targetEObject);
+                    addOrRemoveTargets.add(targetEObject);
                     // Check ignorable target
                     checkNonDiagramRelatedChange(targetEObject, false);
                 }
             } else if (NotificationUtilities.isChanged(primaryNotification)) {
                 if (targetEObject != null) {
-                	changeTargets.add(targetEObject);
+                    changeTargets.add(targetEObject);
                     // Check ignorable target
                     checkNonDiagramRelatedChange(targetEObject, true);
                 }
@@ -222,13 +222,13 @@ public class ModelObjectNotificationHelper {
         if (targetEObject != null) addOrRemoveTargets.add(targetEObject);
         else leftoverNotifications.add(notification);
     }
-    
+
     /**
      * @param notification
      * @param targetEObject
      */
     protected void handleChanged( Notification notification,
-                                      EObject targetEObject ) {
+                                  EObject targetEObject ) {
         if (targetEObject != null) changeTargets.add(targetEObject);
         else leftoverNotifications.add(notification);
     }
@@ -248,7 +248,6 @@ public class ModelObjectNotificationHelper {
     }
 
     /**
-     * 
      * @return List of the changed targets
      */
     public List getChangeTargets() {
@@ -300,14 +299,15 @@ public class ModelObjectNotificationHelper {
      * @param obj
      * @param isSet
      */
-    private void checkNonDiagramRelatedChange( Object obj , boolean isSet ) {
+    private void checkNonDiagramRelatedChange( Object obj,
+                                               boolean isSet ) {
         // Only do the check if still non-diagram notification
         if (isDiagramOnlyNotification && obj != null) {
             if (obj instanceof DiagramEntity) {
                 isDiagramOnlyNotification = true;
-            } else if(obj instanceof Diagram && isSet) {
-            	// This case is for diagram name change notifications (i.e. Custom Diagrams)
-            	isDiagramOnlyNotification = false;
+            } else if (obj instanceof Diagram && isSet) {
+                // This case is for diagram name change notifications (i.e. Custom Diagrams)
+                isDiagramOnlyNotification = false;
             } else if (obj instanceof List) {
                 for (Iterator iter = ((List)obj).iterator(); iter.hasNext();) {
                     Object nextObj = iter.next();
@@ -324,7 +324,8 @@ public class ModelObjectNotificationHelper {
 
     /**
      * Assesses whether or not all the changes from the notifications are ignorable.
-     * @return boolean  true if ignorable, false if not
+     * 
+     * @return boolean true if ignorable, false if not
      */
     public boolean allChangesAreIgnorable() {
         if (isDiagramOnlyNotification) {

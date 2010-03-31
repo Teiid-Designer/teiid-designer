@@ -78,6 +78,7 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelResourceReloadVetoListener;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.search.ModelWorkspaceSearch;
+import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerResourceNavigator;
@@ -594,8 +595,8 @@ public class ModelEditor extends MultiPageModelEditor
 
             // If the IFile extension does not match the set of well-known model file extensions with
             // a case-sensitive check but does match when the check is case-insensitive then error (defect 17709)
-        } else if (!ModelUtil.isModelFileExtension(file.getFileExtension(), true)
-                   && ModelUtil.isModelFileExtension(file.getFileExtension(), false)) {
+        } else if (!ModelFileUtil.isModelFileExtension(file.getFileExtension(), true)
+                   && ModelFileUtil.isModelFileExtension(file.getFileExtension(), false)) {
             final String actualFileName = file.getName();
             final String actualExtension = file.getFileExtension();
             final int endIndex = actualFileName.length() - actualExtension.length();

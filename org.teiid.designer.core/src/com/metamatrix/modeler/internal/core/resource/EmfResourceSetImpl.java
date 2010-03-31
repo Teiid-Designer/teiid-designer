@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -39,24 +40,17 @@ import com.metamatrix.modeler.core.util.UriPathConverter;
 import com.metamatrix.modeler.internal.core.container.ContainerImpl;
 import com.metamatrix.modeler.internal.core.resource.xmi.MtkXmiResourceFactory;
 import com.metamatrix.modeler.internal.core.util.BasicUriPathConverter;
+import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 /**
- * @author Dennis Fuglsang
  * @since 3.1
  */
 public class EmfResourceSetImpl extends ResourceSetImpl implements EmfResourceSet, IEditingDomainProvider {
 
-    // #############################################################################
-    // # Instance Attributes
-    // #############################################################################
     private final Container container;
     private ResourceSet[] externalResourceSets;
     private UriPathConverter pathConverter;
-
-    // #############################################################################
-    // # Constructors
-    // #############################################################################
 
     /**
      * Constructor for EmfResourceSetImpl.
@@ -72,10 +66,6 @@ public class EmfResourceSetImpl extends ResourceSetImpl implements EmfResourceSe
         this.container = container;
         this.externalResourceSets = new ResourceSet[0];
     }
-
-    // #############################################################################
-    // # Overridden ResourceSetImpl methods
-    // #############################################################################
 
     /**
      * @see org.eclipse.emf.ecore.resource.impl.ResourceSetImpl#createResource(org.eclipse.emf.common.util.URI)
@@ -369,10 +359,6 @@ public class EmfResourceSetImpl extends ResourceSetImpl implements EmfResourceSe
         return super.getEObject(uri, loadOnDemand);
     }
 
-    // #############################################################################
-    // # EmfResourceSet methods
-    // #############################################################################
-
     /**
      * @see com.metamatrix.modeler.internal.core.resource.EmfResourceSet#getContainer()
      */
@@ -380,20 +366,12 @@ public class EmfResourceSetImpl extends ResourceSetImpl implements EmfResourceSe
         return this.container;
     }
 
-    // #############################################################################
-    // # org.eclipse.emf.edit.domain.IEditingDomainProvider methods
-    // #############################################################################
-
     /**
      * @see org.eclipse.emf.edit.domain.IEditingDomainProvider#getEditingDomain()
      */
     public EditingDomain getEditingDomain() {
         return ((ContainerImpl)container).getEditingDomain();
     }
-
-    // #############################################################################
-    // # Public methods
-    // #############################################################################
 
     /**
      * Add a ResourceSet to be used for resolution of a resource URI. The specified ResourceSet will be treated as read-only and
@@ -455,10 +433,6 @@ public class EmfResourceSetImpl extends ResourceSetImpl implements EmfResourceSe
     public void setUriPathConverter( final UriPathConverter converter ) {
         this.pathConverter = converter;
     }
-
-    // #############################################################################
-    // # Protected methods
-    // #############################################################################
 
     /**
      * Register a Resource.Factory for URI's file extension if this URI represents a Teiid Designer model file for which there is
@@ -525,7 +499,7 @@ public class EmfResourceSetImpl extends ResourceSetImpl implements EmfResourceSe
 
             // Return the header only if the file exists (if it doesn't exist, there's nothing to read) ...
             if (resource.exists()) {
-                XMIHeader header = ModelUtil.getXmiHeader(resource);
+                XMIHeader header = ModelFileUtil.getXmiHeader(resource);
                 return header;
             }
         }

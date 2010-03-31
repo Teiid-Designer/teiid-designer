@@ -30,7 +30,7 @@ import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 
 /**
  * ResourceFileIndexSelector returns indexes associated with a specified file. The specified file can represent a single EMF
@@ -288,7 +288,7 @@ public class ResourceFileIndexSelector extends AbstractIndexSelector {
      */
     protected File[] loadModelsFromFile( final File file ) {
         File[] result = EMPTY_FILE_ARRAY;
-        if (ModelUtil.isModelFile(file)) {
+        if (ModelFileUtil.isModelFile(file)) {
             result = new File[1];
             result[0] = file;
         }
@@ -307,7 +307,7 @@ public class ResourceFileIndexSelector extends AbstractIndexSelector {
 
         File[] files = folder.listFiles();
         for (int i = 0; i < files.length; i++) {
-            if (ModelUtil.isModelFile(files[i])) {
+            if (ModelFileUtil.isModelFile(files[i])) {
                 tmp.add(files[i]);
             }
         }
@@ -386,7 +386,7 @@ public class ResourceFileIndexSelector extends AbstractIndexSelector {
                 outputStream.close();
 
                 // Add an File reference if zip entry is a model file
-                if (ModelUtil.isModelFile(entryFile)) {
+                if (ModelFileUtil.isModelFile(entryFile)) {
                     tmp.add(entryFile);
                 }
             }

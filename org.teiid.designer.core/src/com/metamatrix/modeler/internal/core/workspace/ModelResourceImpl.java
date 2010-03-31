@@ -381,19 +381,6 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
         return resource;
     }
 
-    // /**
-    // *
-    // * @see IOpenable
-    // */
-    // public boolean isOpen() {
-    // ModelBuffer buffer = getBufferManager().getOpenBuffer(this);
-    // if (buffer == null) {
-    // return false;
-    // }
-    //
-    // return !buffer.isClosed();
-    // }
-
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.core.ModelWorkspaceItem#getResource()
      */
@@ -450,18 +437,10 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
                 } finally {
                     this.errors = theBuffer.getErrors();
                 }
-
-                // Refresh the file (which may have been created in the open call)
-                // theBuffer.refresh(pm);
-                // DON'T REFRESH HERE, BECAUSE THIS IS CALLED WITHIN SYNCHRONIZED METHODS
-                // AND THIS REFRESH CAUSES A NOTIFICATION AND ULTIMATELY A DEADLOCK.
             }
 
             // add buffer to buffer cache
             bufManager.addBuffer(buffer);
-
-            // listen to buffer changes
-            // buffer.addBufferChangedListener(this);
         } finally {
             this.opening = false;
         }
@@ -476,12 +455,7 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
      */
     @Override
     public IResource getCorrespondingResource() {
-        // IPackageFragmentRoot root= (IPackageFragmentRoot)getParent().getParent();
-        // if (root.isArchive()) {
-        // return null;
-        // } else {
         return getUnderlyingResource();
-        // }
     }
 
     /* (non-Javadoc)
@@ -631,27 +605,6 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
         }
         return uriString;
     }
-
-    // /* (non-Javadoc)
-    // * @see com.metamatrix.modeler.core.ModelResource#getModelImportContainer()
-    // */
-    // public ModelImports getModelImportContainer() throws ModelWorkspaceException {
-    // return null;
-    // }
-    //
-    // /* (non-Javadoc)
-    // * @see com.metamatrix.modeler.core.ModelResource#getMetamodelImportContainer()
-    // */
-    // public MetamodelImports getMetamodelImportContainer() throws ModelWorkspaceException {
-    // return null;
-    // }
-
-    // /* (non-Javadoc)
-    // * @see com.metamatrix.modeler.core.workspace.ModelResource#getModelAnnotation()
-    // */
-    // public ModelAnnotation getModelAnnotation() throws ModelWorkspaceException {
-    // return getModelAnnotation(false);
-    // }
 
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.core.workspace.ModelResource#getModelAnnotation()
@@ -931,7 +884,7 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
             try {
                 final IPath modelPath = this.getUnderlyingResource().getLocation();
                 final File modelFile = new File(modelPath.toOSString());
-                if (modelFile.exists() && ModelUtil.isXsdFile(modelFile)) {
+                if (modelFile.exists() && ModelFileUtil.isXsdFile(modelFile)) {
                     this.xsdHeader = XsdHeaderReader.readHeader(modelFile);
                 }
             } catch (MetaMatrixCoreException e) {
