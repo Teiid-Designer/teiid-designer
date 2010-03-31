@@ -8,17 +8,19 @@
 package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.runtime.ServerManager;
+import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 /**
  * The <code>NewServerAction</code> runs a UI that allows the user to create a new {@link PersistedServer server}.
  */
-public final class NewServerAction extends Action {
+public class NewServerAction extends Action {
 
     // ===========================================================================================================================
     // Fields
@@ -45,8 +47,12 @@ public final class NewServerAction extends Action {
     public NewServerAction( Shell shell,
                             ServerManager serverManager ) {
         super(UTIL.getString("newServerActionText")); //$NON-NLS-1$
-        setToolTipText(UTIL.getString("newServerActionToolTip")); //$NON-NLS-1$
-        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.NEW_SERVER_ICON));
+        ArgCheck.isNotNull(serverManager, "serverManager"); //$NON-NLS-1$
+
+        if (Platform.isRunning()) {
+            setToolTipText(UTIL.getString("newServerActionToolTip")); //$NON-NLS-1$
+            setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.NEW_SERVER_ICON));
+        }
 
         this.shell = shell;
         this.serverManager = serverManager;
@@ -73,7 +79,9 @@ public final class NewServerAction extends Action {
             @Override
             protected void configureShell( Shell newShell ) {
                 super.configureShell(newShell);
-                newShell.setImage(DqpUiPlugin.getDefault().getImage(DqpUiConstants.Images.NEW_SERVER_ICON));
+                if (Platform.isRunning()) {
+                    newShell.setImage(DqpUiPlugin.getDefault().getImage(DqpUiConstants.Images.NEW_SERVER_ICON));
+                }
             }
         };
 

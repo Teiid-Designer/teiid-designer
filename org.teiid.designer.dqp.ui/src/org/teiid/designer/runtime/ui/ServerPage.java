@@ -36,6 +36,7 @@ import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
+import com.metamatrix.modeler.dqp.util.ServerUtils;
 
 /**
  * The <code>ServerPage</code> is used to create or modify a server.
@@ -281,9 +282,11 @@ public final class ServerPage extends WizardPage {
         txtUrl.setToolTipText(UTIL.getString("serverPageUrlToolTip")); //$NON-NLS-1$
 
         // set initial value
-        if (this.url != null) {
-            txtUrl.setText(this.url);
+        if (this.url == null) {
+            this.url = ServerUtils.DEFAULT_SERVER;
         }
+
+        txtUrl.setText(this.url);
 
         txtUrl.addModifyListener(new ModifyListener() {
             /**
@@ -412,12 +415,14 @@ public final class ServerPage extends WizardPage {
     private IStatus isServerValid( String url,
                                    String username,
                                    String password ) {
-        if (url == null) {
-            return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, "serverUrlCannotBeNull");
+        try {
+            ServerUtils.validateServerUrl(url);
+        } catch (IllegalArgumentException e) {
+            return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, e.getMessage()); // UTIL.getString("serverPageInvalidServerUrl"), e); //$NON-NLS-1$
         }
 
         if (username == null) {
-            return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, "usernameCannotBeNull");
+            return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, UTIL.getString("serverPageUsernameCannotBeNull")); //$NON-NLS-1$
         }
 
         // TODO actually check server validity
