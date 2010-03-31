@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -26,17 +27,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
-import com.metamatrix.core.util.Assertion;
+import org.teiid.designer.vdb.VdbEntry;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.ui.internal.InternalUiConstants.Widgets;
-import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.widget.ListPanel;
 import com.metamatrix.ui.internal.widget.ListPanelAdapter;
 import com.metamatrix.ui.internal.widget.TablePanel;
-import com.metamatrix.vdb.edit.VdbEditException;
-import com.metamatrix.vdb.edit.VdbEditingContext;
-import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 
 /**
  * The User Files panel.
@@ -69,8 +66,24 @@ public final class VdbEditorUserFilesComposite
         this.editor = editor;
     }
 
-    public void resetColumnWidths() {
-        tableProvider.resetColumnWidths(filesPanel.getTableViewer());
+    /**
+     * Method to show file selection dialog, then add the selected file using the vdbEditor context.
+     * 
+     * @since 5.3.3
+     */
+    Object[] addFiles() {
+        // get file paths from the file dialog.
+        final String[] paths = getFileNamesFromDialog();
+
+        // List for the added files
+        final List addedFiles = new ArrayList();
+
+        if (paths != null) for (final String path : paths) {
+            final VdbEntry addedFile = this.editor.getVdb().addEntry(Path.fromPortableString(path));
+            if (addedFile != null) addedFiles.add(addedFile.getName());
+        }
+        if (!addedFiles.isEmpty()) this.editor.update();
+        return addedFiles.toArray();
     }
 
     /**
@@ -81,7 +94,7 @@ public final class VdbEditorUserFilesComposite
         tableProvider = new VdbEditorUserFilesTableProvider(this.editor);
 
         // pre-filter the model list, showing only PUBLIC models
-        Collection fileList = this.editor.getContext().getUserFileNames();
+        final Collection fileList = this.editor.getVdb().getEntries();
 
         this.filesPanel = new TablePanel(parent, FILES_GROUP, new ListPanelAdapter() {
 
@@ -91,7 +104,7 @@ public final class VdbEditorUserFilesComposite
             }
 
             @Override
-            public Object[] removeButtonSelected( IStructuredSelection selection ) {
+            public Object[] removeButtonSelected( final IStructuredSelection selection ) {
                 return removeFiles(selection);
             }
 
@@ -109,21 +122,13 @@ public final class VdbEditorUserFilesComposite
         this.filesPanel.getTableViewer().setSorter(new ViewerSorter() {});
 
         this.filesPanel.getTableViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent event ) {
-                // ---------------------------------------------------------------
-                // Defect 22305 required checking if context is really open or not.
-                // This prevents a possible IllegalStateException
-                // ---------------------------------------------------------------
-                if (editor.isVdbContextOpen()) {
-                    ISelectionProvider provider = editor.getSite().getSelectionProvider();
-                    if (event.getSelection() instanceof StructuredSelection) {
-                        StructuredSelection selection = (StructuredSelection)event.getSelection();
-                        if (selection.size() == 1) provider.setSelection(event.getSelection());
-                        else provider.setSelection(new StructuredSelection());
-                    } else {
-                        provider.setSelection(event.getSelection());
-                    }
-                }
+            public void selectionChanged( final SelectionChangedEvent event ) {
+                final ISelectionProvider provider = editor.getSite().getSelectionProvider();
+                if (event.getSelection() instanceof StructuredSelection) {
+                    final StructuredSelection selection = (StructuredSelection)event.getSelection();
+                    if (selection.size() == 1) provider.setSelection(event.getSelection());
+                    else provider.setSelection(new StructuredSelection());
+                } else provider.setSelection(event.getSelection());
             }
         });
 
@@ -140,61 +145,12 @@ public final class VdbEditorUserFilesComposite
 
         // Init filterPath to workspace root on init
         fileSelectDialog.setText(FILE_SELECTION_DIALOG_TITLE);
-        String filterPath = fileSelectDialog.getFilterPath();
-        if (filterPath == null || filterPath.trim().length() == 0) {
-            fileSelectDialog.setFilterPath(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString());
-        }
+        final String filterPath = fileSelectDialog.getFilterPath();
+        if (filterPath == null || filterPath.trim().length() == 0) fileSelectDialog.setFilterPath(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString());
 
         refresh();
 
         return filesPanel;
-    }
-
-    /**
-     * @see org.eclipse.ui.IEditorPart#gotoMarker(org.eclipse.core.resources.IMarker)
-     * @since 5.3.3
-     */
-    public void gotoMarker( final IMarker marker ) {
-    }
-
-    public void setEnabledState( boolean isEnabled ) {
-        this.filesPanel.setEnabled(isEnabled);
-    }
-
-    public void layout() {
-        this.filesPanel.layout(true);
-    }
-
-    /**
-     * Method to show file selection dialog, then add the selected file using the vdbEditor context.
-     * 
-     * @since 5.3.3
-     */
-    Object[] addFiles() {
-        // get file paths from the file dialog.
-        String[] paths = getFileNamesFromDialog();
-
-        // List for the added files
-        List addedFiles = new ArrayList();
-
-        if (paths != null) {
-            try {
-                for (int i = 0; i < paths.length; i++) {
-                    File fileToAdd = new File(paths[i]);
-                    File addedFile = this.editor.getContext().addUserFile(fileToAdd);
-                    if (addedFile != null) {
-                        addedFiles.add(addedFile.getName());
-                    }
-                }
-            } catch (VdbEditException e) {
-                WidgetUtil.showError(e.getMessage());
-                VdbUiConstants.Util.log(e);
-            }
-        }
-        if (!addedFiles.isEmpty()) {
-            this.editor.setModified();
-        }
-        return addedFiles.toArray();
     }
 
     /**
@@ -207,13 +163,12 @@ public final class VdbEditorUserFilesComposite
         if (this.fileSelectDialog != null) {
             fileSelectDialog.open();
 
-            String[] shortNames = fileSelectDialog.getFileNames();
+            final String[] shortNames = fileSelectDialog.getFileNames();
             if (shortNames != null) {
-                String path = fileSelectDialog.getFilterPath();
-                String[] fullNames = new String[shortNames.length];
-                for (int i = 0; i < shortNames.length; i++) {
+                final String path = fileSelectDialog.getFilterPath();
+                final String[] fullNames = new String[shortNames.length];
+                for (int i = 0; i < shortNames.length; i++)
                     fullNames[i] = path + File.separator + shortNames[i];
-                }
                 return fullNames;
             }
         }
@@ -222,43 +177,48 @@ public final class VdbEditorUserFilesComposite
     }
 
     /**
+     * @see org.eclipse.ui.IEditorPart#gotoMarker(org.eclipse.core.resources.IMarker)
+     * @since 5.3.3
+     */
+    public void gotoMarker( final IMarker marker ) {
+    }
+
+    public void layout() {
+        this.filesPanel.layout(true);
+    }
+
+    void refresh() {
+        Display.getDefault().syncExec(new Runnable() {
+            public void run() {
+                if (filesPanel.getTableViewer() != null && !filesPanel.getTableViewer().getTable().isDisposed()) filesPanel.getTableViewer().refresh();
+            }
+        });
+    }
+
+    /**
      * @since 5.3.3
      */
     Object[] removeFiles( final IStructuredSelection selection ) {
         final List removedFiles = new ArrayList(selection.size());
-        VdbEditingContext context = editor.getContext();
-        Assertion.isInstanceOf(context, InternalVdbEditingContext.class, "VdbEditingContext"); //$NON-NLS-1$
-
-        List selected = selection.toList();
-        for (Iterator i = selected.iterator(); i.hasNext();) {
-            String name = (String)i.next();
-            try {
-                this.editor.getContext().removeUserFileWithName(name);
-                removedFiles.add(name);
-            } catch (VdbEditException e) {
-                WidgetUtil.showError(e.getMessage());
-                VdbUiConstants.Util.log(e);
-            }
+        final List selected = selection.toList();
+        for (final Iterator i = selected.iterator(); i.hasNext();) {
+            final VdbEntry entry = (VdbEntry)i.next();
+            this.editor.getVdb().removeEntry(entry);
+            removedFiles.add(entry);
         }
 
         if (!removedFiles.isEmpty()) {
-            this.editor.setModified();
+            this.editor.update();
             refresh();
         }
         return removedFiles.toArray();
     }
 
-    void refresh() {
-        if (!editor.isVdbContextOpen()) return;
+    public void resetColumnWidths() {
+        tableProvider.resetColumnWidths(filesPanel.getTableViewer());
+    }
 
-        Display.getDefault().syncExec(new Runnable() {
-            public void run() {
-                if (editor.isVdbContextOpen() && filesPanel.getTableViewer() != null
-                    && !filesPanel.getTableViewer().getTable().isDisposed()) {
-
-                    filesPanel.getTableViewer().refresh();
-                }
-            }
-        });
+    public void setEnabledState( final boolean isEnabled ) {
+        this.filesPanel.setEnabled(isEnabled);
     }
 }

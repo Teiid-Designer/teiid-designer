@@ -8,28 +8,26 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.internal.vdb.ui.actions,
  com.metamatrix.modeler.internal.vdb.ui.editor,
- com.metamatrix.modeler.internal.vdb.ui.extractor,
  com.metamatrix.modeler.internal.vdb.ui.properties,
  com.metamatrix.modeler.internal.vdb.ui.wizards,
- com.metamatrix.modeler.vdb.ui,
- com.metamatrix.modeler.vdb.ui.util
-Require-Bundle: org.eclipse.ui.ide,
- org.eclipse.ui.views,
- org.eclipse.jface.text,
- org.eclipse.ui.workbench.texteditor,
- org.eclipse.ui.editors,
- org.teiid.designer.core,
- org.teiid.designer.ui,
+ com.metamatrix.modeler.vdb.ui
+Require-Bundle: org.teiid.designer.ui,
  org.teiid.designer.ui.common,
- org.teiid.designer.vdb.edit,
- org.eclipse.ui,
+ org.teiid.designer.vdb;bundle-version="7.0.0",
  org.teiid.designer.metamodels.xml,
+ org.teiid.designer.core,
+ org.teiid.designer.metamodels.core,
  org.teiid.core.designer,
  teiid_embedded_query,
- org.eclipse.core.runtime,
+ org.eclipse.emf.ecore,
+ org.eclipse.ui.ide,
+ org.eclipse.ui.views,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.ui.editors,
+ org.eclipse.ui,
  org.eclipse.ui.forms,
- org.teiid.designer.metamodels.core,
+ org.eclipse.jface.text,
  org.eclipse.core.resources,
- org.eclipse.emf.ecore
+ org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

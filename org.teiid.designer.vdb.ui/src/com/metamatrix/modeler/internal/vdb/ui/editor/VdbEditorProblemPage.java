@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.vdb.ui.editor;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -27,6 +26,8 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.EditorPart;
+import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.validation.ProblemMarker;
@@ -37,8 +38,6 @@ import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.widget.AbstractTableLabelProvider;
 import com.metamatrix.ui.table.TableViewerSorter;
-import com.metamatrix.vdb.edit.manifest.ModelReference;
-import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 
 /**
  * @since 4.0
@@ -92,11 +91,11 @@ public class VdbEditorProblemPage extends EditorPart
             }
 
             public Object[] getElements( final Object inputElement ) {
-                final VirtualDatabase vdb = VdbEditorProblemPage.this.editor.getVirtualDatabase();
-                final ArrayList problems = new ArrayList(vdb.getMarkers());
-                for (final Iterator iter = vdb.getModels().iterator(); iter.hasNext();) {
-                    final ModelReference ref = (ModelReference)iter.next();
-                    problems.addAll(ref.getMarkers());
+                final Vdb vdb = VdbEditorProblemPage.this.editor.getVdb();
+                final ArrayList problems = new ArrayList();
+                for (VdbModelEntry entry : vdb.getModelEntries()) {
+                    problems.addAll(entry.getErrors());
+                    problems.addAll(entry.getWarnings());
                 }
                 return problems.toArray();
             }
@@ -153,6 +152,10 @@ public class VdbEditorProblemPage extends EditorPart
         WidgetUtil.pack(table);
     }
 
+    public void doRevertToSaved() {
+        if (editor.getVdb() != null) refreshViewer(); // already runs in asyncExec
+    }
+
     /**
      * @see org.eclipse.ui.ISaveablePart#doSave(org.eclipse.core.runtime.IProgressMonitor)
      * @since 4.0
@@ -160,26 +163,6 @@ public class VdbEditorProblemPage extends EditorPart
     @Override
     public void doSave( final IProgressMonitor monitor ) {
         refreshViewer();
-    }
-
-    /**
-     * Cause the tableviewer to refresh itself from its content provider
-     */
-    public void refreshViewer() {
-        // ---------------------------------------------------------------
-        // Defect 22305 required checking if context is really open or not.
-        // This prevents a possible IllegalStateException
-        // ---------------------------------------------------------------
-        if (!editor.isVdbContextOpen()) return;
-
-        Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
-                if (editor.isVdbContextOpen() && viewer != null && !viewer.getControl().isDisposed()) {
-                    viewer.refresh();
-                    WidgetUtil.pack(viewer);
-                }
-            }
-        });
     }
 
     /**
@@ -235,6 +218,20 @@ public class VdbEditorProblemPage extends EditorPart
     }
 
     /**
+     * Cause the table viewer to refresh itself from its content provider
+     */
+    public void refreshViewer() {
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                if (viewer != null && !viewer.getControl().isDisposed()) {
+                    viewer.refresh();
+                    WidgetUtil.pack(viewer);
+                }
+            }
+        });
+    }
+
+    /**
      * Does nothing.
      * 
      * @see org.eclipse.ui.IWorkbenchPart#setFocus()
@@ -242,11 +239,5 @@ public class VdbEditorProblemPage extends EditorPart
      */
     @Override
     public void setFocus() {
-    }
-
-    public void doRevertToSaved() {
-        if (editor.getContext() != null && editor.getContext().isOpen()) {
-            refreshViewer(); // already runs in asyncExec
-        }
     }
 }

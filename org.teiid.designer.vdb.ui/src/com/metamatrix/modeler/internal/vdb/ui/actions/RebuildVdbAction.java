@@ -7,22 +7,17 @@
  */
 package com.metamatrix.modeler.internal.vdb.ui.actions;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -31,22 +26,17 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditor;
 import com.metamatrix.modeler.ui.actions.ISelectionAction;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.modeler.vdb.ui.VdbUiPlugin;
-import com.metamatrix.modeler.vdb.ui.util.VdbEditUtil;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
-import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
 import com.metamatrix.ui.internal.widget.ListMessageDialog;
-import com.metamatrix.vdb.edit.VdbEditPlugin;
-import com.metamatrix.vdb.edit.VdbEditingContext;
-import com.metamatrix.vdb.edit.manifest.ModelReference;
 
 /**
  * @since 5.0
@@ -64,8 +54,6 @@ public class RebuildVdbAction extends Action implements ISelectionListener, Comp
     protected static final String VDB_IS_READ_ONLY_MESSAGE_ID = "vdbIsReadOnly.message"; //$NON-NLS-1$
     protected static final String FILE_DOES_NOT_EXIST_MSG_ID = "fileDoesNotExist.message"; //$NON-NLS-1$
     protected static final String VDB_EXTENSION = "vdb"; //$NON-NLS-1$
-    List selectedVdbs;
-    boolean runWasSuccessful = false;
 
     /**
      * @since 4.2
@@ -81,6 +69,10 @@ public class RebuildVdbAction extends Action implements ISelectionListener, Comp
                                      String arg ) {
         return VdbUiConstants.Util.getString(I18N_PREFIX + id, arg);
     }
+
+    List selectedVdbs;
+
+    boolean runWasSuccessful = false;
 
     /**
      * @since 5.0
@@ -118,9 +110,108 @@ public class RebuildVdbAction extends Action implements ISelectionListener, Comp
         return allVdbs;
     }
 
-    public void selectionChanged( IWorkbenchPart part,
-                                  ISelection selection ) {
-        setEnabled(allVdbsSelected(selection));
+    public int compareTo( Object o ) {
+        if (o instanceof String) {
+            return getText().compareTo((String)o);
+        }
+
+        if (o instanceof Action) {
+            return getText().compareTo(((Action)o).getText());
+        }
+        return 0;
+    }
+
+    private boolean doReadOnlyCheck() {
+        boolean allWriteable = true;
+        if (!selectedVdbs.isEmpty()) {
+            IFile nextVdb = null;
+            for (Iterator iter = selectedVdbs.iterator(); iter.hasNext() && allWriteable;) {
+                nextVdb = (IFile)iter.next();
+                if (ModelUtil.isIResourceReadOnly(nextVdb)) {
+                    String message = getString("vdbIsReadOnly.message", nextVdb.getName()); //$NON-NLS-1$
+                    MessageDialog.openError(null, READ_ONLY_FILE_MESSAGE, message);
+                    allWriteable = false;
+                }
+            }
+        }
+        return allWriteable;
+    }
+
+    private VdbEditor getOpenVdbEditor( IFile vdbFile ) {
+
+        IEditorReference[] editors = UiUtil.getWorkbenchPage().getEditorReferences();
+
+        IEditorPart nextEditor = null;
+        for (int i = 0; i < editors.length; i++) {
+            nextEditor = editors[i].getEditor(false);
+            if (nextEditor instanceof VdbEditor) {
+                VdbEditor editor = (VdbEditor)nextEditor;
+                IFileEditorInput input = (IFileEditorInput)editor.getEditorInput();
+                final IFile file = input.getFile();
+                if (file.equals(vdbFile)) {
+                    return editor;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param selection
+     * @return
+     */
+    public boolean isApplicable( ISelection selection ) {
+        return allVdbsSelected(selection);
+    }
+
+    boolean rebuildVdb( final IFile vdbFile,
+                        final IProgressMonitor monitor,
+                        final boolean refreshStaleModels ) {
+        boolean successful = false;
+        boolean thisContextIsLocal = false;
+        Vdb vdb = null;
+        VdbEditor editor = getOpenVdbEditor(vdbFile);
+
+        try {
+            if (editor != null) vdb = editor.getVdb();
+            if (vdb == null) {
+                vdb = new Vdb(vdbFile.getFullPath());
+                thisContextIsLocal = true;
+            }
+
+            // check the models in the VDB to make sure we should proceed
+
+            if (thisContextIsLocal) {
+                // Don't refresh out of sync if there are none to prevent progress monitor dialog from popping up
+                if (refreshStaleModels) {
+                    vdb.synchronize();
+                }
+                // Save the context
+                vdb.save(null);
+                // Refresh the file since it was modified by the context
+                ResourcesPlugin.getWorkspace().getRoot().findMember(vdb.getName()).refreshLocal(IResource.DEPTH_ZERO, null);
+
+                vdb.close();
+                successful = true;
+            } else if (editor != null) {
+                // Access the editor directly and call the same sync method
+                // behind the Synchronize All button action inside the editor.
+                // This prevents a possible IllegalStateExceptions
+                if (refreshStaleModels) {
+                    editor.synchronizeVdb(true);
+                }
+                editor.doSave(monitor);
+                successful = true;
+            }
+
+        } catch (final Exception err) {
+            VdbUiConstants.Util.log(err);
+            successful = false;
+            MessageDialog.openError(null, EXCEPTION_TITLE, err.getMessage());
+        }
+
+        return successful;
     }
 
     /**
@@ -179,210 +270,8 @@ public class RebuildVdbAction extends Action implements ISelectionListener, Comp
 
     }
 
-    private void saveContext( VdbEditingContext theContext,
-                              IFile theVdbFile ) {
-        if (theContext != null) {
-            // Save the context
-
-            // Defect 15772 - Update sync state when Synchronize Models action called and VDB not open
-            // Refresh the file since it was modified by the context
-            try {
-                theContext.setModified();
-                theContext.save(null);
-                // pass in null for monitor because we don't want an InterruptedException thrown
-                // if the monitor has been cancelled. we still want to refresh since the file has changed.
-                theVdbFile.refreshLocal(IResource.DEPTH_ZERO, null);
-            } catch (final CoreException err) {
-                WidgetUtil.showError(err.getMessage());
-                VdbUiConstants.Util.log(err);
-            } // endtry
-
-            try {
-                theContext.close();
-            } catch (IOException err) {
-                VdbUiConstants.Util.log(err);
-                MessageDialog.openInformation(null, EXCEPTION_TITLE, EXCEPTION_MESSAGE);
-            }
-        }
-    }
-
-    private boolean doReadOnlyCheck() {
-        boolean allWriteable = true;
-        if (!selectedVdbs.isEmpty()) {
-            IFile nextVdb = null;
-            for (Iterator iter = selectedVdbs.iterator(); iter.hasNext() && allWriteable;) {
-                nextVdb = (IFile)iter.next();
-                if (ModelUtil.isIResourceReadOnly(nextVdb)) {
-                    String message = getString("vdbIsReadOnly.message", nextVdb.getName()); //$NON-NLS-1$
-                    MessageDialog.openError(null, READ_ONLY_FILE_MESSAGE, message);
-                    allWriteable = false;
-                }
-            }
-        }
-        return allWriteable;
-    }
-
-    private VdbEditor getOpenVdbEditor( IFile vdbFile ) {
-
-        IEditorReference[] editors = UiUtil.getWorkbenchPage().getEditorReferences();
-
-        IEditorPart nextEditor = null;
-        for (int i = 0; i < editors.length; i++) {
-            nextEditor = editors[i].getEditor(false);
-            if (nextEditor instanceof VdbEditor) {
-                VdbEditor editor = (VdbEditor)nextEditor;
-                IFileEditorInput input = (IFileEditorInput)editor.getEditorInput();
-                final IFile file = input.getFile();
-                if (file.equals(vdbFile)) {
-                    return editor;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    boolean rebuildVdb( final IFile vdbFile,
-                        final IProgressMonitor progressMonitor,
-                        final boolean refreshStaleModels ) {
-        boolean successful = false;
-        boolean thisContextIsLocal = false;
-        VdbEditingContext thisContext = null;
-        VdbEditor editor = getOpenVdbEditor(vdbFile);
-
-        try {
-            if (editor != null) {
-                thisContext = editor.getContext();
-            }
-            if (thisContext == null) {
-                thisContext = VdbEditPlugin.createVdbEditingContext(vdbFile.getRawLocation());
-                thisContext.open();
-                thisContextIsLocal = true;
-            }
-
-            // check the models in the VDB to make sure we should proceed
-
-            if (thisContextIsLocal) {
-                // Don't refresh out of sync if there are none to prevent progress monitor dialog from popping up
-                if (refreshStaleModels && hasStaleModels(thisContext, vdbFile)) {
-                    if (checkModels(thisContext, vdbFile)) {
-                        final VdbEditingContext finalContext = thisContext;
-                        final IRunnableWithProgress op = new IRunnableWithProgress() {
-                            public void run( final IProgressMonitor theMonitor ) {
-                                theMonitor.beginTask("Refreshing Out of Sync Models", 100); //$NON-NLS-1$
-                                theMonitor.worked(50);
-                                // ----------------------------------------------------------
-                                // Defect 22248 - Had to replace the refresh methods in this action with a new Utility method
-                                // that mimiced what the VdbEditorModelComposite panel was doing.
-                                // ----------------------------------------------------------
-                                VdbEditUtil.refreshAllOutOfSyncModels(finalContext, this, vdbFile.getProject());
-
-                                theMonitor.done();
-                            }
-                        };
-                        try {
-                            new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(false, true, op);
-                        } catch (InterruptedException e) {
-                        } catch (InvocationTargetException e) {
-                            VdbUiConstants.Util.log(e.getTargetException());
-                        }
-                    }
-                }
-                // Go ahead and save this context.
-                saveContext(thisContext, vdbFile);
-                successful = true;
-            } else if (editor != null) {
-                // ---------------------------------------------------------------
-                // Defect 22305 was a result of this action performing the synching from outside
-                // the Vdb Editor. Needed to access the editor directly and call the same sync method
-                // behind the Synchronize All button action inside the editor.
-                // This prevents a possible IllegalStateExceptions
-                // ---------------------------------------------------------------
-                if (refreshStaleModels) {
-                    editor.synchronizeVdb(true);
-                }
-                editor.getContext().setModified();
-                editor.doSave(progressMonitor);
-                successful = true;
-            }
-
-        } catch (final Exception err) {
-            VdbUiConstants.Util.log(err);
-            successful = false;
-            MessageDialog.openInformation(null, EXCEPTION_TITLE, EXCEPTION_MESSAGE);
-        }
-
-        return successful;
-    }
-
-    /**
-     * Checks for the following conditions on all ModelResources that are stale: 1) Must exist in the workspace 2) Must have been
-     * validated since last save 3) Must not have any validation errors 4) If dirty, notify user and allow chance to cancel Also,
-     * if no models are stale, the method returns false.
-     * 
-     * @return true if the action may proceed, otherwise false.
-     * @since 4.2
-     */
-    private boolean checkModels( VdbEditingContext theContext,
-                                 IFile theVdbFile ) {
-        boolean result = true;
-
-        Collection modelList = theContext.getVirtualDatabase().getModels();
-        Collection staleFiles = new ArrayList();
-        // iterate through the models, as long as result remains TRUE
-        for (Iterator iter = modelList.iterator(); iter.hasNext() && result;) {
-            final ModelReference modelReference = (ModelReference)iter.next();
-            if (theContext.isStale(modelReference)) {
-                final IFile file = VdbEditUtil.getFile(modelReference, theVdbFile.getProject());
-                if (file == null) {
-                    // Cannot find file in the workspace - cannot continue
-                    final String message = getString(FILE_DOES_NOT_EXIST_MSG_ID, modelReference.toString());
-                    MessageDialog.openError(null, FILE_DOES_NOT_EXIST_TITLE, message);
-                    result = false;
-                } else {
-                    // Call Check models with file list
-                    staleFiles.add(file);
-                    result = ModelUtilities.verifyWorkspaceValidationState(file, this, FAILED_SYNCHRONIZATION_MSG);
-                }
-
-            }
-        }
-
-        return result;
-    }
-
-    private boolean hasStaleModels( VdbEditingContext theContext,
-                                    IFile theVdbFile ) {
-
-        Collection modelList = theContext.getVirtualDatabase().getModels();
-
-        // iterate through the models, as long as result remains TRUE
-        for (Iterator iter = modelList.iterator(); iter.hasNext();) {
-            final ModelReference modelReference = (ModelReference)iter.next();
-            if (theContext.isStale(modelReference)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public int compareTo( Object o ) {
-        if (o instanceof String) {
-            return getText().compareTo((String)o);
-        }
-
-        if (o instanceof Action) {
-            return getText().compareTo(((Action)o).getText());
-        }
-        return 0;
-    }
-
-    /**
-     * @param selection
-     * @return
-     */
-    public boolean isApplicable( ISelection selection ) {
-        return allVdbsSelected(selection);
+    public void selectionChanged( IWorkbenchPart part,
+                                  ISelection selection ) {
+        setEnabled(allVdbsSelected(selection));
     }
 }

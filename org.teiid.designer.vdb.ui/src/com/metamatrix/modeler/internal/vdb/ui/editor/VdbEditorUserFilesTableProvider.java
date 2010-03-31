@@ -26,51 +26,67 @@ import org.eclipse.ui.PlatformUI;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelLabelProvider;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 
-
-/** 
- * VdbEditorUserFilesTableProvider is the LabelProvider and ContentProvider for the TableViewer
- * in VdbEditorUserFilesComposite.
+/**
+ * VdbEditorUserFilesTableProvider is the LabelProvider and ContentProvider for the TableViewer in VdbEditorUserFilesComposite.
+ * 
  * @since 5.3.3
  */
-public class VdbEditorUserFilesTableProvider extends ModelLabelProvider 
-        implements IStructuredContentProvider, ITableLabelProvider {
+public class VdbEditorUserFilesTableProvider extends ModelLabelProvider implements IStructuredContentProvider, ITableLabelProvider {
     //
     // Class constants:
     //
-    private static final String EMPTY_STRING = "";  //$NON-NLS-1$
-    private static final String FILE_COLUMN_NAME = VdbUiConstants.Util.getString("VdbEditorUserFilesTableProvider.fileColumnName");  //$NON-NLS-1$
+    private static final String EMPTY_STRING = ""; //$NON-NLS-1$
+    private static final String FILE_COLUMN_NAME = VdbUiConstants.Util.getString("VdbEditorUserFilesTableProvider.fileColumnName"); //$NON-NLS-1$
     private static final String[] COLUMN_HEADERS = new String[] {FILE_COLUMN_NAME};
 
     private static final int COLUMN_FILE = 0;
-    
+
     //
     // Instance variables:
     //
-    private VdbEditor editor;
-    private ISharedImages imgs;
+    private final VdbEditor editor;
+    private final ISharedImages imgs;
+
     //
     // Constructors:
     //
 
-    /** 
+    /**
      * @since 5.3.3
      */
-    public VdbEditorUserFilesTableProvider(VdbEditor editor) {
+    public VdbEditorUserFilesTableProvider( final VdbEditor editor ) {
         super();
         this.editor = editor;
         final IWorkbench workbench = PlatformUI.getWorkbench();
         imgs = workbench.getSharedImages();
     }
 
-    /** 
-     * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+    /**
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      * @since 5.3.3
      */
-    public Object[] getElements(Object inputElement) {
-        return editor.getContext().getUserFileNames().toArray();
+    @Override
+    public void addListener( final ILabelProviderListener listener ) {
     }
 
-    /** 
+    void buildTableColumns( final TableViewer tableViewer ) {
+        final TableLayout layout = new TableLayout();
+        tableViewer.getTable().setLayout(layout);
+
+        final TableColumn column = new TableColumn(tableViewer.getTable(), SWT.NONE);
+        column.setText(FILE_COLUMN_NAME);
+        column.setWidth(300);
+
+        layout.addColumnData(new ColumnPixelData(50, false));
+        layout.addColumnData(new ColumnWeightData(200));
+        layout.addColumnData(new ColumnWeightData(80));
+        layout.addColumnData(new ColumnPixelData(17, false));
+        layout.addColumnData(new ColumnWeightData(80));
+
+        tableViewer.setColumnProperties(COLUMN_HEADERS);
+    }
+
+    /**
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      * @since 5.3.3
      */
@@ -78,39 +94,22 @@ public class VdbEditorUserFilesTableProvider extends ModelLabelProvider
     public void dispose() {
     }
 
-    /** 
-     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-     * @since 5.3.3
-     */
-    public void inputChanged(Viewer viewer,
-                             Object oldInput,
-                             Object newInput) {
-    }
-
-    /** 
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
-     * @since 5.3.3
-     */
-    @Override
-    public void addListener(ILabelProviderListener listener) {
-    }
-    /** 
+    /**
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
      * @since 5.3.3
      */
-    public Image getColumnImage(Object element,
-                                int columnIndex) {
-        if ( columnIndex == COLUMN_FILE ) {
-            return imgs.getImage(ISharedImages.IMG_OBJ_FILE);
-        } 
+    public Image getColumnImage( final Object element,
+                                 final int columnIndex ) {
+        if (columnIndex == COLUMN_FILE) return imgs.getImage(ISharedImages.IMG_OBJ_FILE);
         return null;
     }
-    /** 
+
+    /**
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
      * @since 5.3.3
      */
-    public String getColumnText(Object element,
-                                int columnIndex) {
+    public String getColumnText( final Object element,
+                                 final int columnIndex ) {
         String result = EMPTY_STRING;
         switch (columnIndex) {
             case COLUMN_FILE:
@@ -121,65 +120,66 @@ public class VdbEditorUserFilesTableProvider extends ModelLabelProvider
         }
         return result;
     }
-    /** 
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
+
+    /**
+     * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      * @since 5.3.3
      */
-    @Override
-    public boolean isLabelProperty(Object element,
-                                   String property) {
-        return false;
+    public Object[] getElements( final Object inputElement ) {
+        return editor.getVdb().getEntries().toArray();
     }
-    /** 
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
-     * @since 5.3.3
-     */
+
     @Override
-    public void removeListener(ILabelProviderListener listener) {
-    }
-    
-    @Override
-    public Image getImage(Object element) {
+    public Image getImage( final Object element ) {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         final ISharedImages imgs = workbench.getSharedImages();
-        if (element instanceof File) {
-        	return imgs.getImage(ISharedImages.IMG_OBJ_FILE);
-        }
+        if (element instanceof File) return imgs.getImage(ISharedImages.IMG_OBJ_FILE);
         return super.getImage(element);
     }
 
     @Override
-    public String getText(final Object element) {
+    public String getText( final Object element ) {
         if (element instanceof File) {
-            String name = ((File)element).getName();
+            final String name = ((File)element).getName();
             return name;
         }
         return super.getText(element);
     }
-    
-    void buildTableColumns(TableViewer tableViewer) {
-        TableLayout layout = new TableLayout();
-        tableViewer.getTable().setLayout(layout);
-        
-        TableColumn column = new TableColumn(tableViewer.getTable(), SWT.NONE);
-        column.setText(FILE_COLUMN_NAME); 
-        column.setWidth(300);
-        
-		layout.addColumnData(new ColumnPixelData(50, false));
-		layout.addColumnData(new ColumnWeightData(200));
-		layout.addColumnData(new ColumnWeightData(80));
-        layout.addColumnData(new ColumnPixelData(17, false));
-        layout.addColumnData(new ColumnWeightData(80));
-        
-        tableViewer.setColumnProperties(COLUMN_HEADERS);
+
+    /**
+     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+     *      java.lang.Object)
+     * @since 5.3.3
+     */
+    public void inputChanged( final Viewer viewer,
+                              final Object oldInput,
+                              final Object newInput ) {
     }
-    
-    public void resetColumnWidths(TableViewer viewer) {
-        Table table = viewer.getTable();
-        int colCount = table.getColumnCount();
+
+    /**
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
+     * @since 5.3.3
+     */
+    @Override
+    public boolean isLabelProperty( final Object element,
+                                    final String property ) {
+        return false;
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
+     * @since 5.3.3
+     */
+    @Override
+    public void removeListener( final ILabelProviderListener listener ) {
+    }
+
+    public void resetColumnWidths( final TableViewer viewer ) {
+        final Table table = viewer.getTable();
+        final int colCount = table.getColumnCount();
 
         for (int i = 0; i < colCount; i++) {
-            TableColumn column = table.getColumn(i);
+            final TableColumn column = table.getColumn(i);
 
             switch (i) {
                 case COLUMN_FILE:
@@ -190,5 +190,5 @@ public class VdbEditorUserFilesTableProvider extends ModelLabelProvider
             } // endswitch
         } // endfor
     }
-    
+
 }

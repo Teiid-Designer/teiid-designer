@@ -15,7 +15,7 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 /** 
  * @since 4.2
  */
-public class ModelReferencePropertyDescriptor extends TextPropertyDescriptor {
+public class ModelEntryPropertyDescriptor extends TextPropertyDescriptor {
 
     private String category;
     
@@ -24,7 +24,7 @@ public class ModelReferencePropertyDescriptor extends TextPropertyDescriptor {
      * @param displayName
      * @since 4.2
      */
-    public ModelReferencePropertyDescriptor(Object id,
+    public ModelEntryPropertyDescriptor(Object id,
                                             String displayName) {
         super(id, displayName);
     }
@@ -34,7 +34,7 @@ public class ModelReferencePropertyDescriptor extends TextPropertyDescriptor {
      * @param displayName
      * @since 4.2
      */
-    public ModelReferencePropertyDescriptor(Object id,
+    public ModelEntryPropertyDescriptor(Object id,
                                             String displayName, String category) {
         super(id, displayName);
         this.category = category;

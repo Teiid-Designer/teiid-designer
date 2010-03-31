@@ -7,9 +7,6 @@
  */
 package com.metamatrix.modeler.internal.vdb.ui.editor;
 
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Iterator;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -26,14 +23,11 @@ import org.eclipse.jface.text.IFindReplaceTarget;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -48,9 +42,10 @@ import org.eclipse.ui.forms.HyperlinkSettings;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.EditorPart;
+import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
-import com.metamatrix.modeler.core.validation.ProblemMarker;
 import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.editors.IRevertable;
@@ -60,8 +55,6 @@ import com.metamatrix.ui.actions.AbstractActionService;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.text.StyledTextEditor;
-import com.metamatrix.vdb.edit.manifest.ModelReference;
-import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 
 /**
  * @since 4.0
@@ -79,9 +72,7 @@ public final class VdbEditorOverviewPage extends EditorPart
     private static final String DESCRIPTION_LABEL = getString("descriptionLabel"); //$NON-NLS-1$
     private static final String NAME_LABEL = getString("nameLabel"); //$NON-NLS-1$
     private static final String STATUS_LABEL = getString("statusLabel"); //$NON-NLS-1$
-    private static final String UPDATED_LABEL = getString("updatedLabel"); //$NON-NLS-1$
     private static final String VALIDATION_LABEL = getString("validationLabel"); //$NON-NLS-1$
-    private static final String VALIDATION_MESSAGE = getString("validationMessage"); //$NON-NLS-1$    
     private static final String STATUS_ERROR_MESSAGE = getString("errorMessage"); //$NON-NLS-1$
 
     public static final String NOTES_MESSAGE = getString("notesMessage"); //$NON-NLS-1$
@@ -95,10 +86,7 @@ public final class VdbEditorOverviewPage extends EditorPart
 
     VdbEditor editor;
     private Control pageControl;
-
-    Button servValidation;
-
-    private CLabel updatedLabel, statusLabel;
+    private CLabel statusLabel;
     private FontMetrics fontMetrics;
     VdbEditorModelComposite modelPanel;
     private IResourceChangeListener resourceChangeListener;
@@ -132,6 +120,28 @@ public final class VdbEditorOverviewPage extends EditorPart
     }
 
     /**
+     * @see com.metamatrix.modeler.ui.undo.IUndoManager#canRedo()
+     * @since 5.5
+     */
+    public boolean canRedo() {
+        return this.textEditor.getUndoManager().redoable();
+    }
+
+    /**
+     * @see com.metamatrix.modeler.ui.undo.IUndoManager#canUndo()
+     * @since 5.5
+     */
+    public boolean canUndo() {
+        return this.textEditor.getUndoManager().undoable();
+    }
+
+    protected int convertHeightInCharsToPixels( int chars ) {
+        // test for failure to initialize for backward compatibility
+        if (fontMetrics == null) return 0;
+        return Dialog.convertHeightInCharsToPixels(fontMetrics, chars);
+    }
+
+    /**
      * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      * @since 4.0
      */
@@ -143,8 +153,6 @@ public final class VdbEditorOverviewPage extends EditorPart
         gc.setFont(parent.getFont());
         fontMetrics = gc.getFontMetrics();
         gc.dispose();
-
-        final VirtualDatabase vdb = this.editor.getVirtualDatabase();
 
         // insert a ScrolledComposite so controls don't disappear if the panel shrinks
         final ScrolledComposite scroller = new ScrolledComposite(parent, SWT.V_SCROLL | SWT.H_SCROLL);
@@ -166,24 +174,16 @@ public final class VdbEditorOverviewPage extends EditorPart
         scroller.setContent(pg);
 
         // Upper panel: ===========================
+        Vdb vdb = editor.getVdb();
         WidgetFactory.createLabel(pg, NAME_LABEL);
-        WidgetFactory.createLabel(pg, vdb.getName());
+        WidgetFactory.createLabel(pg, vdb.getName().toString());
         WidgetFactory.createLabel(pg, DESCRIPTION_LABEL);
 
         createTextEditor(pg);
 
-        WidgetFactory.createLabel(pg, UPDATED_LABEL);
-        this.updatedLabel = WidgetFactory.createLabel(pg, GridData.HORIZONTAL_ALIGN_FILL);
         WidgetFactory.createLabel(pg, STATUS_LABEL);
         this.statusLabel = WidgetFactory.createLabel(pg, GridData.HORIZONTAL_ALIGN_FILL);
         WidgetFactory.createLabel(pg, VALIDATION_LABEL);
-        servValidation = WidgetFactory.createCheckBox(pg, VALIDATION_MESSAGE, GridData.HORIZONTAL_ALIGN_FILL, true);
-        servValidation.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( SelectionEvent e ) {
-                editor.getContext().setPerformServerValidation(((Button)e.widget).getSelection());
-            }
-        });
 
         // Model table: ===========================
         this.modelPanel = new VdbEditorModelComposite(this.editor);
@@ -259,6 +259,53 @@ public final class VdbEditorOverviewPage extends EditorPart
     }
 
     /**
+     * @since 4.0
+     */
+    void descriptionModified() {
+        if (resetForReadOnly()) {
+            MessageDialog.openWarning(null, getString("readOnlyVDBDialogTitle"), getString("readOnlyVDBDialogMessage")); //$NON-NLS-1$ //$NON-NLS-2$
+            // reload old description
+            String description = editor.getVdb().getDescription();
+            if (description == null) {
+                // null string not allowed:
+                description = ""; //$NON-NLS-1$
+            }
+            reloadingDescription = true;
+            this.textEditor.setText(description);
+            setEnabledState();
+            reloadingDescription = false;
+            return;
+        }
+        this.editor.getVdb().setDescription(this.textEditor.getText());
+        this.editor.update();
+    }
+
+    /**
+     * @see org.eclipse.ui.IWorkbenchPart#dispose()
+     * @since 4.2
+     */
+    @Override
+    public void dispose() {
+        if (resourceChangeListener != null) {
+            ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeListener);
+        }
+
+        this.textEditor.dispose();
+        super.dispose();
+    }
+
+    public void doRevertToSaved() {
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                if (editor.getVdb() != null && !isDescriptionWidgetDisposed()) {
+                    update();
+                    setFocus();
+                }
+            }
+        });
+    }
+
+    /**
      * Does nothing.
      * 
      * @see org.eclipse.ui.ISaveablePart#doSave(org.eclipse.core.runtime.IProgressMonitor)
@@ -298,6 +345,22 @@ public final class VdbEditorOverviewPage extends EditorPart
         }
 
         return super.getAdapter(adapter);
+    }
+
+    /**
+     * @see com.metamatrix.modeler.ui.undo.IUndoManager#getRedoLabel()
+     * @since 5.5
+     */
+    public String getRedoLabel() {
+        return Util.getString(I18nUtil.getPropertyPrefix(VdbEditorOverviewPage.class) + "redoLabel"); //$NON-NLS-1$
+    }
+
+    /**
+     * @see com.metamatrix.modeler.ui.undo.IUndoManager#getUndoLabel()
+     * @since 5.5
+     */
+    public String getUndoLabel() {
+        return Util.getString(I18nUtil.getPropertyPrefix(VdbEditorOverviewPage.class) + "undoLabel"); //$NON-NLS-1$
     }
 
     /**
@@ -353,7 +416,7 @@ public final class VdbEditorOverviewPage extends EditorPart
      */
     @Override
     public boolean isDirty() {
-        return this.editor.getContext().isSaveRequired();
+        return this.editor.getVdb().isModified();
     }
 
     /**
@@ -367,18 +430,20 @@ public final class VdbEditorOverviewPage extends EditorPart
     }
 
     /**
-     * @see org.eclipse.ui.IWorkbenchPart#setFocus()
-     * @since 4.0
+     * @see com.metamatrix.modeler.ui.undo.IUndoManager#redo(org.eclipse.core.runtime.IProgressMonitor)
+     * @since 5.5
      */
-    @Override
-    public void setFocus() {
-        Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
-                if (editor.getContext() != null && editor.getContext().isOpen()) {
-                    setEnabledState();
-                }
-            }
-        });
+    public void redo( IProgressMonitor monitor ) {
+        this.textEditor.getUndoManager().redo();
+        monitor.done();
+    }
+
+    private boolean resetForReadOnly() {
+        boolean isReadOnly = false;
+        final IFile file = ((IFileEditorInput)getEditorInput()).getFile();
+        isReadOnly = file.isReadOnly();
+
+        return isReadOnly;
     }
 
     void setEnabledState() {
@@ -395,9 +460,7 @@ public final class VdbEditorOverviewPage extends EditorPart
                         accessTextEditor().setBackground(UiUtil.getSystemColor(SWT.COLOR_WHITE));
                     } else {
                         accessTextEditor().setBackground(UiUtil.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-                    } // endif
-                    // change validation:
-                    servValidation.setEnabled(isEnabled);
+                    }
                     // change model panel:
                     modelPanel.setEnabledState(isEnabled);
                 }
@@ -406,117 +469,16 @@ public final class VdbEditorOverviewPage extends EditorPart
     }
 
     /**
-     * @see org.eclipse.ui.IWorkbenchPart#dispose()
-     * @since 4.2
+     * @see org.eclipse.ui.IWorkbenchPart#setFocus()
+     * @since 4.0
      */
     @Override
-    public void dispose() {
-        if (resourceChangeListener != null) {
-            ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeListener);
-        }
-
-        this.textEditor.dispose();
-        super.dispose();
-    }
-
-    /**
-     * @since 4.0
-     */
-    void descriptionModified() {
-        if (resetForReadOnly()) {
-            MessageDialog.openWarning(null, getString("readOnlyVDBDialogTitle"), getString("readOnlyVDBDialogMessage")); //$NON-NLS-1$ //$NON-NLS-2$
-            // reload old description
-            String description = editor.getVirtualDatabase().getDescription();
-            if (description == null) {
-                // null string not allowed:
-                description = ""; //$NON-NLS-1$
-            }
-            reloadingDescription = true;
-            this.textEditor.setText(description);
-            setEnabledState();
-            reloadingDescription = false;
-            return;
-        }
-        this.editor.getVirtualDatabase().setDescription(this.textEditor.getText());
-
-        this.editor.setModified();
-    }
-
-    private boolean resetForReadOnly() {
-        boolean isReadOnly = false;
-        final IFile file = ((IFileEditorInput)getEditorInput()).getFile();
-        isReadOnly = file.isReadOnly();
-
-        return isReadOnly;
-    }
-
-    public void doRevertToSaved() {
+    public void setFocus() {
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
-                // defect 18303 - make sure open and visible:
-                if (editor.getContext() != null && editor.getContext().isOpen() && !isDescriptionWidgetDisposed()) {
-                    update();
-                    setFocus();
-                }
+                if (editor.getVdb() != null) setEnabledState();
             }
         });
-    }
-
-    /**
-     * @since 4.0
-     */
-    public void update() {
-        // ---------------------------------------------------------------
-        // Defect 22305 required checking if context is really open or not.
-        // This prevents a possible IllegalStateException
-        // ---------------------------------------------------------------
-        if (pageControl.isDisposed() || !editor.isVdbContextOpen()) return;
-
-        final VirtualDatabase vdb = this.editor.getVirtualDatabase();
-
-        // update the status label
-        final Date date = vdb.getTimeLastChangedAsDate();
-        this.updatedLabel.setText(date == null ? EMPTY_STRING : DateFormat.getDateTimeInstance().format(date));
-        Severity severity = vdb.getSeverity();
-        if (severity.getValue() < Severity.ERROR) {
-            for (final Iterator refIter = vdb.getModels().iterator(); refIter.hasNext();) {
-                final ModelReference ref = (ModelReference)refIter.next();
-                for (final Iterator markerIter = ref.getMarkers().iterator(); markerIter.hasNext();) {
-                    final Severity markerSeverity = ((ProblemMarker)markerIter.next()).getSeverity();
-                    if (markerSeverity.getValue() > severity.getValue()) {
-                        severity = markerSeverity;
-                        if (severity.getValue() == Severity.ERROR) {
-                            break;
-                        }
-                    }
-                }
-                if (severity.getValue() == Severity.ERROR) {
-                    break;
-                }
-            }
-        }
-        String statusText = severity.getName();
-        if (severity.getValue() == Severity.ERROR) {
-            statusText = statusText + ' ' + STATUS_ERROR_MESSAGE;
-        }
-        this.statusLabel.setText(statusText);
-        this.statusLabel.setImage(VdbEditor.getStatusImage(severity));
-
-        // update the description
-        reloadingDescription = true;
-        String description = editor.getVirtualDatabase().getDescription();
-        if (description == null) {
-            // null string not allowed:
-            description = ""; //$NON-NLS-1$
-        }
-
-        // only change if different
-        if (!description.equals(this.textEditor.getText())) {
-            this.textEditor.setText(description);
-        }
-        reloadingDescription = false;
-
-        setEnabledState();
     }
 
     /**
@@ -529,53 +491,6 @@ public final class VdbEditorOverviewPage extends EditorPart
         modelPanel.synchronizeVdb(autoSave);
     }
 
-    protected int convertHeightInCharsToPixels( int chars ) {
-        // test for failure to initialize for backward compatibility
-        if (fontMetrics == null) return 0;
-        return Dialog.convertHeightInCharsToPixels(fontMetrics, chars);
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.undo.IUndoManager#canRedo()
-     * @since 5.5
-     */
-    public boolean canRedo() {
-        return this.textEditor.getUndoManager().redoable();
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.undo.IUndoManager#canUndo()
-     * @since 5.5
-     */
-    public boolean canUndo() {
-        return this.textEditor.getUndoManager().undoable();
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.undo.IUndoManager#getRedoLabel()
-     * @since 5.5
-     */
-    public String getRedoLabel() {
-        return Util.getString(I18nUtil.getPropertyPrefix(VdbEditorOverviewPage.class) + "redoLabel"); //$NON-NLS-1$
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.undo.IUndoManager#getUndoLabel()
-     * @since 5.5
-     */
-    public String getUndoLabel() {
-        return Util.getString(I18nUtil.getPropertyPrefix(VdbEditorOverviewPage.class) + "undoLabel"); //$NON-NLS-1$
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.undo.IUndoManager#redo(org.eclipse.core.runtime.IProgressMonitor)
-     * @since 5.5
-     */
-    public void redo( IProgressMonitor monitor ) {
-        this.textEditor.getUndoManager().redo();
-        monitor.done();
-    }
-
     /**
      * @see com.metamatrix.modeler.ui.undo.IUndoManager#undo(org.eclipse.core.runtime.IProgressMonitor)
      * @since 5.5
@@ -583,5 +498,44 @@ public final class VdbEditorOverviewPage extends EditorPart
     public void undo( IProgressMonitor monitor ) {
         this.textEditor.getUndoManager().undo();
         monitor.done();
+    }
+
+    /**
+     * @since 4.0
+     */
+    public void update() {
+        if (pageControl.isDisposed()) return;
+        final Vdb vdb = this.editor.getVdb();
+        // update the status label
+        Severity severity = null;
+        for (VdbModelEntry entry : vdb.getModelEntries()) {
+            if (!entry.getErrors().isEmpty()) {
+                severity = Severity.ERROR_LITERAL;
+                break;
+            }
+            if (severity == null && !entry.getWarnings().isEmpty()) severity = Severity.WARNING_LITERAL;
+        }
+        String statusText = severity.getName();
+        if (severity.getValue() == Severity.ERROR) {
+            statusText = statusText + ' ' + STATUS_ERROR_MESSAGE;
+        }
+        this.statusLabel.setText(statusText);
+        this.statusLabel.setImage(VdbEditor.getStatusImage(severity));
+
+        // update the description
+        reloadingDescription = true;
+        String description = editor.getVdb().getDescription();
+        if (description == null) {
+            // null string not allowed:
+            description = ""; //$NON-NLS-1$
+        }
+
+        // only change if different
+        if (!description.equals(this.textEditor.getText())) {
+            this.textEditor.setText(description);
+        }
+        reloadingDescription = false;
+
+        setEnabledState();
     }
 }

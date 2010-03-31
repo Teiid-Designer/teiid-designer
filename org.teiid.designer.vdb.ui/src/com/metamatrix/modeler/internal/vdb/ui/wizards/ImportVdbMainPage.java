@@ -55,11 +55,9 @@ import org.eclipse.ui.dialogs.WizardDataTransferPage;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.internal.vdb.ui.extractor.VdbModelExtractor;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
-import com.metamatrix.modeler.vdb.ui.util.VdbEditUtil;
 import com.metamatrix.ui.internal.dialog.FileSystemDialog;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.viewsupport.ListContentProvider;
@@ -87,154 +85,136 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     static final IStatus STATUS_OK = new StatusInfo(PLUGIN_ID);
     static final IStatus STATUS_ERROR = new StatusInfo(PLUGIN_ID, IStatus.ERROR, getString("validationError")); //$NON-NLS-1$
 
-    private String initialContainerFieldValue = ResourcesPlugin.getWorkspace().getRoot().getRawLocation().toString();
+    public static int availableRows( final Composite parent ) {
 
-    // widgets
-    Combo fileSystemSourceNameField;
-    private Button fileSystemSourceBrowseButton;
-    String fileSystemSourceFile;
-    Combo workspaceSourceNameField;
-    private Button workspaceSourceBrowseButton;
-    String workspaceSourceFile;
+        final int fontHeight = (parent.getFont().getFontData())[0].getHeight();
+        final int displayHeight = parent.getDisplay().getClientArea().height;
 
-    private Button overwriteExistingResourcesCheckbox;
-    private Button importFromFileSystemCheckbox;
-    private Button importFromWorkspaceCheckbox;
-    private Button loadVdbIntoProjectCheckbox;
-
-    Text containerNameField;
-    private Button containerBrowseButton;
-    private TableViewer projectViewer;
-    private VdbModelExtractor vdbExtractor;
-    private Text vdbLocationNameField;
-    private Button vdbLocationBrowseButton;
-    private IContainer vdbLocation;
-
-    // A boolean to indicate if the user has typed anything
-    boolean entryChanged = false;
-    private boolean initializing = false;
+        return displayHeight / fontHeight;
+    }
 
     static String getString( final String id ) {
         return VdbUiConstants.Util.getString(I18N_PREFIX + SEPARATOR + id);
     }
 
     private static String getString( final String id,
-                                     Object object ) {
+                                     final Object object ) {
         return VdbUiConstants.Util.getString(I18N_PREFIX + SEPARATOR + id, object);
     }
 
+    private final String initialContainerFieldValue = ResourcesPlugin.getWorkspace().getRoot().getRawLocation().toString();
+    // widgets
+    Combo fileSystemSourceNameField;
+    private Button fileSystemSourceBrowseButton;
+    String fileSystemSourceFile;
+
+    Combo workspaceSourceNameField;
+    private Button workspaceSourceBrowseButton;
+    String workspaceSourceFile;
+    private Button overwriteExistingResourcesCheckbox;
+
+    private Button importFromFileSystemCheckbox;
+    private Button importFromWorkspaceCheckbox;
+    private Button loadVdbIntoProjectCheckbox;
+    Text containerNameField;
+    private Button containerBrowseButton;
+    private TableViewer projectViewer;
+
+    private Text vdbLocationNameField;
+    private Button vdbLocationBrowseButton;
+
+    private IContainer vdbLocation;
+
+    // A boolean to indicate if the user has typed anything
+    boolean entryChanged = false;
+
+    private boolean initializing = false;
+
     /** Filter for selecting VDB files. */
-    private ViewerFilter vdbFilter = new ViewerFilter() {
+    private final ViewerFilter vdbFilter = new ViewerFilter() {
         @Override
-        public boolean select( Viewer theViewer,
-                               Object theParentElement,
-                               Object theElement ) {
+        public boolean select( final Viewer theViewer,
+                               final Object theParentElement,
+                               final Object theElement ) {
             boolean result = false;
 
             if (theElement instanceof IContainer) {
-                IProject project = ((IContainer)theElement).getProject();
+                final IProject project = ((IContainer)theElement).getProject();
 
                 // check for closed project
-                if (project.isOpen()) {
-                    try {
-                        if (project.getNature(ModelerCore.NATURE_ID) != null) {
-                            result = true;
-                        }
-                    } catch (CoreException theException) {
-                        VdbUiConstants.Util.log(theException);
-                    }
+                if (project.isOpen()) try {
+                    if (project.getNature(ModelerCore.NATURE_ID) != null) result = true;
+                } catch (final CoreException theException) {
+                    VdbUiConstants.Util.log(theException);
                 }
-            } else if (theElement instanceof IFile) {
-                result = ModelUtilities.isVdbFile((IFile)theElement);
-            } else if (theElement instanceof File) {
-                return (((File)theElement).isDirectory() || VdbEditUtil.isVdbFile(((File)theElement)));
-            }
+            } else if (theElement instanceof IFile) result = ModelUtilities.isVdbFile((IFile)theElement);
+            else if (theElement instanceof File) return (((File)theElement).isDirectory() || ((File)theElement).getName().endsWith(".vdb")); //$NON-NLS-1$
 
             return result;
         }
     };
 
     /** Validator that makes sure the selection containes all WSDL files. */
-    private ISelectionStatusValidator vdbValidator = new ISelectionStatusValidator() {
-        public IStatus validate( Object[] theSelection ) {
+    private final ISelectionStatusValidator vdbValidator = new ISelectionStatusValidator() {
+        public IStatus validate( final Object[] theSelection ) {
             IStatus result = null;
             boolean valid = true;
 
             if ((theSelection != null) && (theSelection.length == 1)) {
-                for (int i = 0; i < theSelection.length; i++) {
+                for (int i = 0; i < theSelection.length; i++)
                     if ((!(theSelection[i] instanceof IFile)) || !ModelUtilities.isVdbFile((IFile)theSelection[i])) {
                         valid = false;
                         break;
                     }
-                }
-            } else {
-                valid = false;
-            }
+            } else valid = false;
 
-            if (valid) {
-                result = new StatusInfo(PLUGIN_ID);
-            } else {
-                result = new StatusInfo(PLUGIN_ID, IStatus.ERROR, getString("noVdbSelected")); //getString("msg.selectionIsNotVdb")); //$NON-NLS-1$
-            }
+            if (valid) result = new StatusInfo(PLUGIN_ID);
+            else result = new StatusInfo(PLUGIN_ID, IStatus.ERROR, getString("noVdbSelected")); //getString("msg.selectionIsNotVdb")); //$NON-NLS-1$
 
             return result;
         }
     };
 
     /** Filter for selecting WSDL files and their parent containers. */
-    private ViewerFilter vdbLocationFilter = new ViewerFilter() {
+    private final ViewerFilter vdbLocationFilter = new ViewerFilter() {
         @Override
-        public boolean select( Viewer theViewer,
-                               Object theParentElement,
-                               Object theElement ) {
+        public boolean select( final Viewer theViewer,
+                               final Object theParentElement,
+                               final Object theElement ) {
             boolean result = false;
 
             if (theElement instanceof IContainer) {
-                IProject project = ((IContainer)theElement).getProject();
+                final IProject project = ((IContainer)theElement).getProject();
 
                 // check for closed project
-                if (project.isOpen()) {
-                    try {
-                        if (project.getNature(ModelerCore.NATURE_ID) != null) {
-                            result = true;
-                        }
-                    } catch (CoreException theException) {
-                        VdbUiConstants.Util.log(theException);
-                    }
+                if (project.isOpen()) try {
+                    if (project.getNature(ModelerCore.NATURE_ID) != null) result = true;
+                } catch (final CoreException theException) {
+                    VdbUiConstants.Util.log(theException);
                 }
-            } else if (theElement instanceof File) {
-                return (((File)theElement).isDirectory());
-            }
+            } else if (theElement instanceof File) return (((File)theElement).isDirectory());
 
             return result;
         }
     };
 
     /** Validator that makes sure the selection containes all WSDL files. */
-    private ISelectionStatusValidator vdbLocationValidator = new ISelectionStatusValidator() {
-        public IStatus validate( Object[] theSelection ) {
+    private final ISelectionStatusValidator vdbLocationValidator = new ISelectionStatusValidator() {
+        public IStatus validate( final Object[] theSelection ) {
             IStatus result = null;
             boolean valid = true;
 
             if ((theSelection != null) && (theSelection.length == 1)) {
-                Object selectedElement = theSelection[0];
-                if (selectedElement instanceof IContainer) {
-                    valid = true;
-                } else if (selectedElement instanceof File) {
-                    File selectedFile = (File)selectedElement;
-                    if (!selectedFile.isDirectory()) {
-                        valid = false;
-                    }
+                final Object selectedElement = theSelection[0];
+                if (selectedElement instanceof IContainer) valid = true;
+                else if (selectedElement instanceof File) {
+                    final File selectedFile = (File)selectedElement;
+                    if (!selectedFile.isDirectory()) valid = false;
                 }
-            } else {
-                valid = false;
-            }
+            } else valid = false;
 
-            if (valid) {
-                result = new StatusInfo(PLUGIN_ID);
-            } else {
-                result = new StatusInfo(PLUGIN_ID, IStatus.ERROR, getString("noProjectOrFolderSelected")); //getString("msg.selectionIsNotVdb")); //$NON-NLS-1$
-            }
+            if (valid) result = new StatusInfo(PLUGIN_ID);
+            else result = new StatusInfo(PLUGIN_ID, IStatus.ERROR, getString("noProjectOrFolderSelected")); //getString("msg.selectionIsNotVdb")); //$NON-NLS-1$
 
             return result;
         }
@@ -255,6 +235,13 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     /**
+     * Called when the user presses the Cancel button. Return a boolean indicating permission to close the wizard.
+     */
+    public boolean cancel() {
+        return true;
+    }
+
+    /**
      * Creates a new button with the given id.
      * <p>
      * The <code>Dialog</code> implementation of this framework method creates a standard push button, registers for selection
@@ -268,27 +255,25 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
      * @param label the label from the button
      * @param defaultButton <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
      */
-    protected Button createButton( Composite parent,
-                                   int id,
-                                   String label,
-                                   boolean defaultButton ) {
+    protected Button createButton( final Composite parent,
+                                   final int id,
+                                   final String label,
+                                   final boolean defaultButton ) {
         // increment the number of columns in the button bar
         ((GridLayout)parent.getLayout()).numColumns++;
 
-        Button button = new Button(parent, SWT.PUSH);
+        final Button button = new Button(parent, SWT.PUSH);
         button.setFont(parent.getFont());
 
-        GridData buttonData = new GridData(GridData.FILL_HORIZONTAL);
+        final GridData buttonData = new GridData(GridData.FILL_HORIZONTAL);
         button.setLayoutData(buttonData);
 
         button.setData(new Integer(id));
         button.setText(label);
 
         if (defaultButton) {
-            Shell shell = parent.getShell();
-            if (shell != null) {
-                shell.setDefaultButton(button);
-            }
+            final Shell shell = parent.getShell();
+            if (shell != null) shell.setDefaultButton(button);
             button.setFocus();
         }
         return button;
@@ -297,12 +282,12 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     /**
      * Method declared on IDialogPage.
      */
-    public void createControl( Composite parent ) {
+    public void createControl( final Composite parent ) {
         initializing = true;
 
         initializeDialogUnits(parent);
 
-        Composite topComposite = new Composite(parent, SWT.NULL);
+        final Composite topComposite = new Composite(parent, SWT.NULL);
         topComposite.setLayout(new GridLayout());
         topComposite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
         topComposite.setSize(topComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
@@ -342,86 +327,28 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     /**
-     * Method to create List box control group for displaying current zip file project list.
-     * 
-     * @param parent
-     * @since 4.2
-     */
-    private void createProjectListGroup( Composite parent ) {
-        Label messageLabel = new Label(parent, SWT.NONE);
-        messageLabel.setText(getString("projectListMessage")); //$NON-NLS-1$
-        messageLabel.setFont(parent.getFont());
-
-        // Create a table for the list
-        Table table = new Table(parent, SWT.BORDER);
-        GridData data = new GridData(GridData.FILL_BOTH);
-
-        int availableRows = availableRows(parent);
-
-        // Only give a height hint if the dialog is going to be too small
-        if (availableRows > 50) {
-            data.heightHint = SIZING_LISTS_HEIGHT;
-        } else {
-            data.heightHint = availableRows * 3;
-        }
-
-        table.setLayoutData(data);
-        table.setFont(parent.getFont());
-
-        // the list viewer
-        projectViewer = new TableViewer(table);
-        projectViewer.setContentProvider(new ListContentProvider());
-        projectViewer.setLabelProvider(new ProjectReferenceLabelProvider());
-
-        setViewerContents(Collections.EMPTY_LIST);
-    }
-    
-    public static int availableRows(Composite parent) {
-
-        int fontHeight = (parent.getFont().getFontData())[0].getHeight();
-        int displayHeight = parent.getDisplay().getClientArea().height;
-
-        return displayHeight / fontHeight;
-    }
-
-    /**
-     * Internal method to change the contents of the project list box with a List of strings (assumes project folder names)
-     * 
-     * @param projectList
-     * @since 4.2
-     */
-    private void setViewerContents( List<IProject> projectList ) {
-        List<IProject> pList = new ArrayList<IProject>(projectList);
-        projectViewer.setInput(pList);
-    }
-
-    private void clearViewerContents() {
-        projectViewer.setInput(new ArrayList());
-    }
-
-    /**
      * Creates the import destination specification controls.
      * 
      * @param parent the parent control
      */
-    protected void createDestinationGroup( Composite parent ) {
+    protected void createDestinationGroup( final Composite parent ) {
         // container specification group
-        Composite containerGroup = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
+        final Composite containerGroup = new Composite(parent, SWT.NONE);
+        final GridLayout layout = new GridLayout();
         layout.numColumns = 3;
         containerGroup.setLayout(layout);
         containerGroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
         containerGroup.setFont(parent.getFont());
 
         // container label
-        Label resourcesLabel = new Label(containerGroup, SWT.NONE);
+        final Label resourcesLabel = new Label(containerGroup, SWT.NONE);
         resourcesLabel.setText(getString("folderLabel")); //$NON-NLS-1$
         resourcesLabel.setFont(parent.getFont());
 
         // container name entry field
         containerNameField = new Text(containerGroup, SWT.SINGLE | SWT.BORDER);
         containerNameField.addListener(SWT.Modify, this);
-        GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
+        final GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
         data.widthHint = SIZING_TEXT_FIELD_WIDTH;
         containerNameField.setLayoutData(data);
         containerNameField.setFont(parent.getFont());
@@ -438,30 +365,23 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     /**
-     * Create the import options specification widgets.
-     */
-    @Override
-    protected void createOptionsGroupButtons( Group optionsGroup ) {
-    }
-
-    /**
      * Create the group for creating the root directory
      */
-    protected void createFromFileSystemGroup( Composite parent ) {
-        Group fromFileSystemContainerGroup = new Group(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
+    protected void createFromFileSystemGroup( final Composite parent ) {
+        final Group fromFileSystemContainerGroup = new Group(parent, SWT.NONE);
+        final GridLayout layout = new GridLayout();
         layout.numColumns = 3;
         fromFileSystemContainerGroup.setLayout(layout);
         fromFileSystemContainerGroup.setFont(parent.getFont());
         fromFileSystemContainerGroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
 
-        Label groupLabel = new Label(fromFileSystemContainerGroup, SWT.NONE);
+        final Label groupLabel = new Label(fromFileSystemContainerGroup, SWT.NONE);
         groupLabel.setText(getSourceLabel());
         groupLabel.setFont(parent.getFont());
 
         // source name entry field
         fileSystemSourceNameField = new Combo(fromFileSystemContainerGroup, SWT.BORDER);
-        GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
+        final GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
         data.widthHint = SIZING_TEXT_FIELD_WIDTH;
         fileSystemSourceNameField.setLayoutData(data);
         fileSystemSourceNameField.setFont(parent.getFont());
@@ -469,7 +389,7 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         fileSystemSourceNameField.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected( SelectionEvent e ) {
+            public void widgetSelected( final SelectionEvent e ) {
                 fileSystemSourceFile = fileSystemSourceNameField.getText();
                 setCompletionStatus();
             }
@@ -477,23 +397,23 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
 
         fileSystemSourceNameField.addKeyListener(new KeyListener() {
 
-            public void keyPressed( KeyEvent e ) {
+            public void keyPressed( final KeyEvent e ) {
                 // If there has been a key pressed then mark as dirty
                 entryChanged = true;
                 setCompletionStatus();
             }
 
-            public void keyReleased( KeyEvent e ) {
+            public void keyReleased( final KeyEvent e ) {
             }
         });
 
         fileSystemSourceNameField.addFocusListener(new FocusListener() {
 
-            public void focusGained( FocusEvent e ) {
+            public void focusGained( final FocusEvent e ) {
                 // Do nothing when getting focus
             }
 
-            public void focusLost( FocusEvent e ) {
+            public void focusLost( final FocusEvent e ) {
                 // Clear the flag to prevent constant update
                 if (entryChanged) {
                     entryChanged = false;
@@ -517,22 +437,22 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     /**
      * Create the group for creating the root directory
      */
-    protected void createFromWorkspaceGroup( Composite parent ) {
-        Group fromWorkspaceContainerGroup = new Group(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
+    protected void createFromWorkspaceGroup( final Composite parent ) {
+        final Group fromWorkspaceContainerGroup = new Group(parent, SWT.NONE);
+        final GridLayout layout = new GridLayout();
         layout.numColumns = 3;
         fromWorkspaceContainerGroup.setLayout(layout);
         fromWorkspaceContainerGroup.setFont(parent.getFont());
         fromWorkspaceContainerGroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
         //fromWorkspaceContainerGroup.setText("File System Options"); //getString("chooseVdb")); //"Choose VDB"); //$NON-NLS-1$
 
-        Label groupLabel2 = new Label(fromWorkspaceContainerGroup, SWT.NONE);
+        final Label groupLabel2 = new Label(fromWorkspaceContainerGroup, SWT.NONE);
         groupLabel2.setText(getSourceLabel());
         groupLabel2.setFont(parent.getFont());
 
         // source name entry field
         workspaceSourceNameField = new Combo(fromWorkspaceContainerGroup, SWT.BORDER);
-        GridData data2 = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
+        final GridData data2 = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
         data2.widthHint = SIZING_TEXT_FIELD_WIDTH;
         workspaceSourceNameField.setLayoutData(data2);
         workspaceSourceNameField.setFont(parent.getFont());
@@ -540,7 +460,7 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         workspaceSourceNameField.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected( SelectionEvent e ) {
+            public void widgetSelected( final SelectionEvent e ) {
                 workspaceSourceFile = workspaceSourceNameField.getText();
                 setCompletionStatus();
             }
@@ -551,7 +471,7 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
             /*
              * @see KeyListener.keyPressed
              */
-            public void keyPressed( KeyEvent e ) {
+            public void keyPressed( final KeyEvent e ) {
                 // If there has been a key pressed then mark as dirty
                 entryChanged = true;
                 setCompletionStatus();
@@ -560,7 +480,7 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
             /*
              * @see KeyListener.keyReleased
              */
-            public void keyReleased( KeyEvent e ) {
+            public void keyReleased( final KeyEvent e ) {
             }
         });
 
@@ -569,14 +489,14 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
             /*
              * @see FocusListener.focusGained(FocusEvent)
              */
-            public void focusGained( FocusEvent e ) {
+            public void focusGained( final FocusEvent e ) {
                 // Do nothing when getting focus
             }
 
             /*
              * @see FocusListener.focusLost(FocusEvent)
              */
-            public void focusLost( FocusEvent e ) {
+            public void focusLost( final FocusEvent e ) {
                 // Clear the flag to prevent constant update
                 if (entryChanged) {
                     entryChanged = false;
@@ -596,13 +516,13 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
 
     }
 
-    private void createLoadVdbGroup( Composite parent ) {
-        Group loadVdbGroup = new Group(parent, SWT.NONE);
-        GridLayout layout1 = new GridLayout();
+    private void createLoadVdbGroup( final Composite parent ) {
+        final Group loadVdbGroup = new Group(parent, SWT.NONE);
+        final GridLayout layout1 = new GridLayout();
         layout1.numColumns = 3;
         loadVdbGroup.setLayout(layout1);
 
-        GridData gd_load_group = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+        final GridData gd_load_group = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
         gd_load_group.horizontalSpan = 3;
         loadVdbGroup.setLayoutData(gd_load_group);
 
@@ -613,18 +533,18 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         loadVdbIntoProjectCheckbox.setSelection(true);
         loadVdbIntoProjectCheckbox.addListener(SWT.Selection, this);
         loadVdbIntoProjectCheckbox.setText(getString("importVdbFromFileSystem")); //$NON-NLS-1$
-        GridData gd_load_ckbx = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+        final GridData gd_load_ckbx = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
         gd_load_ckbx.horizontalSpan = 3;
         loadVdbIntoProjectCheckbox.setLayoutData(gd_load_ckbx);
 
         // container label
-        Label resourcesLabel = new Label(loadVdbGroup, SWT.NONE);
+        final Label resourcesLabel = new Label(loadVdbGroup, SWT.NONE);
         resourcesLabel.setText(getString("targetProjectOrFolder")); //$NON-NLS-1$
         resourcesLabel.setFont(loadVdbGroup.getFont());
 
         vdbLocationNameField = new Text(loadVdbGroup, SWT.SINGLE | SWT.BORDER);
         vdbLocationNameField.addListener(SWT.Modify, this);
-        GridData vdbLocData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
+        final GridData vdbLocData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
         vdbLocData.widthHint = SIZING_TEXT_FIELD_WIDTH;
         vdbLocationNameField.setLayoutData(vdbLocData);
         vdbLocationNameField.setFont(loadVdbGroup.getFont());
@@ -640,23 +560,48 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     /**
-     * Called when the user presses the Cancel button. Return a boolean indicating permission to close the wizard.
+     * Create the import options specification widgets.
      */
-    public boolean cancel() {
-        return true;
+    @Override
+    protected void createOptionsGroupButtons( final Group optionsGroup ) {
     }
 
     /**
-     * Sets the initial contents of the container name field.
+     * Method to create List box control group for displaying current zip file project list.
+     * 
+     * @param parent
+     * @since 4.2
      */
-    protected final void initialPopulateContainerField() {
-        if (initialContainerFieldValue != null) containerNameField.setText(initialContainerFieldValue);
+    private void createProjectListGroup( final Composite parent ) {
+        final Label messageLabel = new Label(parent, SWT.NONE);
+        messageLabel.setText(getString("projectListMessage")); //$NON-NLS-1$
+        messageLabel.setFont(parent.getFont());
+
+        // Create a table for the list
+        final Table table = new Table(parent, SWT.BORDER);
+        final GridData data = new GridData(GridData.FILL_BOTH);
+
+        final int availableRows = availableRows(parent);
+
+        // Only give a height hint if the dialog is going to be too small
+        if (availableRows > 50) data.heightHint = SIZING_LISTS_HEIGHT;
+        else data.heightHint = availableRows * 3;
+
+        table.setLayoutData(data);
+        table.setFont(parent.getFont());
+
+        // the list viewer
+        projectViewer = new TableViewer(table);
+        projectViewer.setContentProvider(new ListContentProvider());
+        projectViewer.setLabelProvider(new ProjectReferenceLabelProvider());
+
+        setViewerContents(Collections.EMPTY_LIST);
     }
 
     /**
      * Answer a boolean indicating whether the specified source currently exists and is valid (ie.- proper format)
      */
-    protected boolean ensureSourceIsValid( Object specifiedFile ) {
+    protected boolean ensureSourceIsValid( final Object specifiedFile ) {
 
         if (specifiedFile == null) return false;
 
@@ -666,19 +611,19 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     /**
      * Execute the passed import operation. Answer a boolean indicating success.
      */
-    protected boolean executeImportOperation( ImportOperation op ) {
+    protected boolean executeImportOperation( final ImportOperation op ) {
         initializeOperation(op);
 
         try {
             getContainer().run(true, true, op);
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             return false;
-        } catch (InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             displayErrorDialog(e.getTargetException());
             return false;
         }
 
-        IStatus status = op.getStatus();
+        final IStatus status = op.getStatus();
         if (!status.isOK()) {
             ErrorDialog.openError(getContainer().getShell(), getString("importProblems"), //$NON-NLS-1$
                                   null, // no special message
@@ -690,23 +635,69 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     /**
-     * The Finish button was pressed. Try to do the required work now and answer a boolean indicating success. If false is
-     * returned then the wizard will not close.
+     * The Finish button was pressed. Try to do the required work now and answer a boolean indicating success. If false is returned
+     * then the wizard will not close.
      * 
      * @return boolean
      */
     public boolean finish() {
-        if (vdbExtractor != null && vdbExtractor.canExtract()) {
-            vdbExtractor.extractAll();
-            if (importFromFileSystemCheckbox.getSelection() && loadVdbIntoProjectCheckbox.getSelection() && vdbLocation != null) {
-                vdbExtractor.copyVdbToLocation(vdbLocation);
-            }
-            saveWidgetValues();
-        } else {
-            return false;
-        }
-
+        saveWidgetValues();
         return true;
+    }
+
+    /**
+     * Returns the path of the container resource specified in the container name entry field, or <code>null</code> if no name has
+     * been typed in.
+     * <p>
+     * The container specified by the full path might not exist and would need to be created.
+     * </p>
+     * 
+     * @return the full path of the container resource specified in the container name entry field, or <code>null</code>
+     */
+    protected IPath getContainerFullPath() {
+        // make the path absolute to allow for optional leading slash
+        final IPath testPath = getResourcePath();
+
+        return testPath;
+    }
+
+    IPath getDefaultFolder() {
+        return ResourcesPlugin.getWorkspace().getRoot().getRawLocation();
+    }
+
+    /**
+     * @see org.eclipse.ui.dialogs.WizardResourceImportPage#getFileProvider()
+     * @since 4.2
+     */
+    protected ITreeContentProvider getFileProvider() {
+        return null;
+    }
+
+    /**
+     * @see org.eclipse.ui.dialogs.WizardResourceImportPage#getFolderProvider()
+     * @since 4.2
+     */
+    protected ITreeContentProvider getFolderProvider() {
+        return null;
+    }
+
+    /**
+     * Returns the current project location path as entered by the user, or its anticipated initial value.
+     * 
+     * @return the project location path, its anticipated initial value, or <code>null</code> if no project location path is known
+     */
+    public IPath getLocationPath( final String projectName ) {
+
+        return new Path(getResourcePath() + "\\" + projectName); //$NON-NLS-1$
+    }
+
+    /**
+     * Return the path for the resource field.
+     * 
+     * @return IPath
+     */
+    protected IPath getResourcePath() {
+        return getPathFromText(this.containerNameField);
     }
 
     /**
@@ -716,12 +707,70 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         return getString("fromDirectory"); //$NON-NLS-1$
     }
 
+    protected String getSourceName() {
+        if (importFromFileSystemCheckbox.getSelection()) return fileSystemSourceFile;
+
+        // Import from workspace
+        // Need to get the full pathname
+        return workspaceSourceFile;
+    }
+
+    /**
+     * Returns the container resource specified in the container name entry field, or <code>null</code> if such a container does not
+     * exist in the workbench.
+     * 
+     * @return the container resource specified in the container name entry field, or <code>null</code>
+     */
+    protected IContainer getSpecifiedContainer() {
+        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        final IPath path = getContainerFullPath();
+        if (workspace.getRoot().exists(path)) return (IContainer)workspace.getRoot().findMember(path);
+
+        return null;
+    }
+
+    /**
+     * Answer a handle to the zip file currently specified as being the source. Return null if this file does not exist or is not of
+     * valid format.
+     */
+    protected File getSpecifiedSourceFile() {
+        fileSystemSourceNameField.setFocus();
+
+        return null;
+    }
+
+    /**
+     * Opens a container selection dialog and displays the user's subsequent container resource selection in this page's container
+     * name field.
+     */
+    protected void handleContainerBrowseButtonPressed() {
+        UiBusyIndicator.showWhile(getControl().getDisplay(), new Runnable() {
+            public void run() {
+                final FileSystemDialog dialog = new FileSystemDialog(containerNameField.getShell());
+                dialog.setAllowMultiple(false);
+                dialog.setInitialSelection(getDefaultFolder().toFile());
+                dialog.setOnlyShowFolders();
+                dialog.setValidator(new Validator());
+                dialog.setTitle(getString("dialog.targetFolder.title")); //$NON-NLS-1$
+                dialog.setMessage(getString("dialog.targetFolder.msg")); //$NON-NLS-1$
+
+                if (dialog.open() == Window.OK) {
+                    final Object[] selection = dialog.getResult();
+
+                    // should never be null since OK was pressed, but checking can't hurt.
+                    // should always have a selection but checking can't hurt
+                    if ((selection != null) && (selection.length > 0)) containerNameField.setText(((File)selection[0]).getAbsolutePath());
+                }
+            }
+        });
+    }
+
     /**
      * Handle all events and enablements for widgets in this dialog
      * 
      * @param event Event
      */
-    public void handleEvent( Event event ) {
+    public void handleEvent( final Event event ) {
         if (!initializing) {
             boolean validate = false;
 
@@ -740,12 +789,9 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
                 validate = true;
             }
 
-            if (event.widget == fileSystemSourceNameField || event.widget == containerNameField) {
-                validate = true;
-            }
+            if (event.widget == fileSystemSourceNameField || event.widget == containerNameField) validate = true;
 
             if (event.widget == importFromFileSystemCheckbox || event.widget == importFromWorkspaceCheckbox) {
-                vdbExtractor = null;
                 setOptionsWidgetsState();
                 validate = true;
             }
@@ -772,41 +818,6 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         }
     }
 
-    private void setOptionsWidgetsState() {
-        loadVdbIntoProjectCheckbox.setEnabled(importFromFileSystemCheckbox.getSelection());
-        vdbLocationBrowseButton.setEnabled(importFromFileSystemCheckbox.getSelection());
-        vdbLocationNameField.setEnabled(importFromFileSystemCheckbox.getSelection());
-
-        workspaceSourceNameField.setEnabled(importFromWorkspaceCheckbox.getSelection());
-        workspaceSourceBrowseButton.setEnabled(importFromWorkspaceCheckbox.getSelection());
-
-        fileSystemSourceNameField.setEnabled(importFromFileSystemCheckbox.getSelection());
-        fileSystemSourceBrowseButton.setEnabled(importFromFileSystemCheckbox.getSelection());
-    }
-
-    protected boolean setCompletionStatus() {
-        // Need to call the method to update the project list because source (zip file) may have changed.
-        // String selectedFileString = fileSystemSourceNameField.getText();
-        String selectedFileString = getSourceName();
-        if (selectedFileString != null && selectedFileString.length() > 0) {
-            IPath pathToVdb = new Path(selectedFileString);
-
-            vdbExtractor = new VdbModelExtractor(pathToVdb.toFile());
-
-            if (validateSourceAndDestination() && validateLoadVdb()) {
-                setErrorMessage(null);
-                setMessage(INITIAL_MESSAGE);
-                setPageComplete(true);
-                return true;
-            }
-        } else {
-            validateSourceAndDestination();
-            setErrorMessage(SOURCE_EMPTY_MESSAGE);
-        }
-        setPageComplete(false);
-        return false;
-    }
-
     /**
      * Open an appropriate source browser so that the user can specify a source to import from
      */
@@ -814,12 +825,12 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         String selectedFile = null;
 
         if (importFromFileSystemCheckbox.getSelection()) {
-            FileDialog dialog = new FileDialog(fileSystemSourceNameField.getShell(), SWT.OPEN);
+            final FileDialog dialog = new FileDialog(fileSystemSourceNameField.getShell(), SWT.OPEN);
             dialog.setFilterExtensions(new String[] {FILE_IMPORT_MASK});
 
-            String currentSourceString = getSourceName();
+            final String currentSourceString = getSourceName();
             if (currentSourceString != null) {
-                int lastSeparatorIndex = currentSourceString.lastIndexOf(File.separator);
+                final int lastSeparatorIndex = currentSourceString.lastIndexOf(File.separator);
                 if (lastSeparatorIndex != -1) dialog.setFilterPath(currentSourceString.substring(0, lastSeparatorIndex));
             }
             selectedFile = dialog.open();
@@ -838,17 +849,37 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     /**
+     * Opens a container selection dialog and displays the user's subsequent container resource selection in this page's vdb
+     * location name field.
+     */
+    protected void handleVdbLocationBrowseButtonPressed() {
+        final Object[] selectedFiles = WidgetUtil.showWorkspaceObjectSelectionDialog(getString("vdbLocationTitle"), //$NON-NLS-1$
+                                                                                     getString("vdbLocationMessage"), //$NON-NLS-1$
+                                                                                     true,
+                                                                                     null,
+                                                                                     new ModelingResourceFilter(
+                                                                                                                this.vdbLocationFilter),
+                                                                                     this.vdbLocationValidator);
+
+        if ((selectedFiles != null) && (selectedFiles.length == 1)) if (selectedFiles[0] instanceof IContainer) {
+            vdbLocation = (IContainer)selectedFiles[0];
+            vdbLocationNameField.setText(vdbLocation.getFullPath().toOSString());
+        }
+        // System.out.println(" Selected VDB Location = " );
+    }
+
+    /**
      * Open an appropriate source browser so that the user can specify a source to import from
      */
     protected void handleWorkspaceSourceBrowseButtonPressed() {
         String selectedFile = null;
         IFile selectedIFile = null;
-        Object[] selectedFiles = WidgetUtil.showWorkspaceObjectSelectionDialog(getString("selectVdbInWorkspaceTitle"), //$NON-NLS-1$
-                                                                               getString("selectVdbInWorkspaceMessage"), //$NON-NLS-1$
-                                                                               true,
-                                                                               null,
-                                                                               new ModelingResourceFilter(this.vdbFilter),
-                                                                               this.vdbValidator);
+        final Object[] selectedFiles = WidgetUtil.showWorkspaceObjectSelectionDialog(getString("selectVdbInWorkspaceTitle"), //$NON-NLS-1$
+                                                                                     getString("selectVdbInWorkspaceMessage"), //$NON-NLS-1$
+                                                                                     true,
+                                                                                     null,
+                                                                                     new ModelingResourceFilter(this.vdbFilter),
+                                                                                     this.vdbValidator);
 
         if ((selectedFiles != null) && (selectedFiles.length == 1)) {
             selectedIFile = (IFile)selectedFiles[0];
@@ -868,134 +899,43 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     /**
-     * Return the path for the resource field.
-     * 
-     * @return IPath
-     */
-    protected IPath getResourcePath() {
-        return getPathFromText(this.containerNameField);
-    }
-
-    /**
-     * Returns the path of the container resource specified in the container name entry field, or <code>null</code> if no name has
-     * been typed in.
-     * <p>
-     * The container specified by the full path might not exist and would need to be created.
-     * </p>
-     * 
-     * @return the full path of the container resource specified in the container name entry field, or <code>null</code>
-     */
-    protected IPath getContainerFullPath() {
-        // make the path absolute to allow for optional leading slash
-        IPath testPath = getResourcePath();
-
-        return testPath;
-    }
-
-    /**
-     * Returns the container resource specified in the container name entry field, or <code>null</code> if such a container does
-     * not exist in the workbench.
-     * 
-     * @return the container resource specified in the container name entry field, or <code>null</code>
-     */
-    protected IContainer getSpecifiedContainer() {
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        IPath path = getContainerFullPath();
-        if (workspace.getRoot().exists(path)) return (IContainer)workspace.getRoot().findMember(path);
-
-        return null;
-    }
-
-    /**
-     * Opens a container selection dialog and displays the user's subsequent container resource selection in this page's container
-     * name field.
-     */
-    protected void handleContainerBrowseButtonPressed() {
-        UiBusyIndicator.showWhile(getControl().getDisplay(), new Runnable() {
-            public void run() {
-                FileSystemDialog dialog = new FileSystemDialog(containerNameField.getShell());
-                dialog.setAllowMultiple(false);
-                dialog.setInitialSelection(getDefaultFolder().toFile());
-                dialog.setOnlyShowFolders();
-                dialog.setValidator(new Validator());
-                dialog.setTitle(getString("dialog.targetFolder.title")); //$NON-NLS-1$
-                dialog.setMessage(getString("dialog.targetFolder.msg")); //$NON-NLS-1$
-
-                if (dialog.open() == Window.OK) {
-                    Object[] selection = dialog.getResult();
-
-                    // should never be null since OK was pressed, but checking can't hurt.
-                    // should always have a selection but checking can't hurt
-                    if ((selection != null) && (selection.length > 0)) {
-                        containerNameField.setText(((File)selection[0]).getAbsolutePath());
-                    }
-                }
-            }
-        });
-    }
-
-    /**
-     * Opens a container selection dialog and displays the user's subsequent container resource selection in this page's vdb
-     * location name field.
-     */
-    protected void handleVdbLocationBrowseButtonPressed() {
-        Object[] selectedFiles = WidgetUtil.showWorkspaceObjectSelectionDialog(getString("vdbLocationTitle"), //$NON-NLS-1$
-                                                                               getString("vdbLocationMessage"), //$NON-NLS-1$
-                                                                               true,
-                                                                               null,
-                                                                               new ModelingResourceFilter(this.vdbLocationFilter),
-                                                                               this.vdbLocationValidator);
-
-        if ((selectedFiles != null) && (selectedFiles.length == 1)) {
-            if (selectedFiles[0] instanceof IContainer) {
-                vdbLocation = (IContainer)selectedFiles[0];
-                vdbLocationNameField.setText(vdbLocation.getFullPath().toOSString());
-            }
-            // System.out.println(" Selected VDB Location = " );
-        }
-    }
-
-    private boolean isOpenWorkspaceModelProjectFolder( String projectName ) {
-        IProject existingProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-        IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
-        for (int i = 0; i < projects.length; i++) {
-            if (projects[i].getName().equals(projectName)) {
-                if (projects[i].isOpen()) {
-                    if (ModelerCore.hasModelNature(existingProject)) return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private boolean isClosedWorkspaceModelProjectFolder( String projectName ) {
-        // IProject existingProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-        IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
-        for (int i = 0; i < projects.length; i++) {
-            if (projects[i].getName().equals(projectName)) {
-                if (!projects[i].isOpen()) {
-                    // System.out.println("ImportMPSMP.isWorkspaceProjectFolder() Selected Closed Project = " + existingProject);
-                    // Need to query the .project file and see if has a MODELER NATURE
-                    return true;
-                }
-            }
-
-        }
-
-        return false;
-    }
-
-    private boolean isNonWorkspaceModelProjectFolderOrDecendent( String projectName ) {
-        return false;
-    }
-
-    /**
      * Initializes the specified operation appropriately.
      */
-    protected void initializeOperation( ImportOperation op ) {
+    protected void initializeOperation( final ImportOperation op ) {
         // op.setCreateContainerStructure(createContainerStructureButton.getSelection());
         op.setOverwriteResources(overwriteExistingResourcesCheckbox.getSelection());
+    }
+
+    /**
+     * Sets the initial contents of the container name field.
+     */
+    protected final void initialPopulateContainerField() {
+        if (initialContainerFieldValue != null) containerNameField.setText(initialContainerFieldValue);
+    }
+
+    private boolean isClosedWorkspaceModelProjectFolder( final String projectName ) {
+        // IProject existingProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+        final IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
+        for (int i = 0; i < projects.length; i++)
+            if (projects[i].getName().equals(projectName)) if (!projects[i].isOpen()) // System.out.println("ImportMPSMP.isWorkspaceProjectFolder() Selected Closed Project = "
+            // + existingProject);
+            // Need to query the .project file and see if has a MODELER NATURE
+            return true;
+
+        return false;
+    }
+
+    private boolean isNonWorkspaceModelProjectFolderOrDecendent( final String projectName ) {
+        return false;
+    }
+
+    private boolean isOpenWorkspaceModelProjectFolder( final String projectName ) {
+        final IProject existingProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+        final IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
+        for (final IProject project : projects)
+            if (project.getName().equals(projectName)) if (project.isOpen()) if (ModelerCore.hasModelNature(existingProject)) return true;
+
+        return false;
     }
 
     /**
@@ -1003,7 +943,7 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
      */
     @Override
     protected void restoreWidgetValues() {
-        IDialogSettings settings = getDialogSettings();
+        final IDialogSettings settings = getDialogSettings();
         WidgetUtil.removeMissingResources(settings, STORE_FILE_SYSTEM_SOURCE_NAMES_ID);
         WidgetUtil.removeMissingResources(settings, STORE_WORKSPACE_SOURCE_NAMES_ID);
         if (settings != null) {
@@ -1011,26 +951,26 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
             if (sourceNames == null) return; // ie.- no values stored, so stop
 
             // set filenames history
-            for (int i = 0; i < sourceNames.length; i++)
-                fileSystemSourceNameField.add(sourceNames[i]);
+            for (final String sourceName : sourceNames)
+                fileSystemSourceNameField.add(sourceName);
 
             sourceNames = null;
             sourceNames = settings.getArray(STORE_WORKSPACE_SOURCE_NAMES_ID);
             if (sourceNames == null) return; // ie.- no values stored, so stop
 
             // set filenames history
-            for (int i = 0; i < sourceNames.length; i++)
-                workspaceSourceNameField.add(sourceNames[i]);
+            for (final String sourceName : sourceNames)
+                workspaceSourceNameField.add(sourceName);
         }
     }
 
     /**
-     * Since Finish was pressed, write widget values to the dialog store so that they will persist into the next invocation of
-     * this wizard page
+     * Since Finish was pressed, write widget values to the dialog store so that they will persist into the next invocation of this
+     * wizard page
      */
     @Override
     protected void saveWidgetValues() {
-        IDialogSettings settings = getDialogSettings();
+        final IDialogSettings settings = getDialogSettings();
         if (settings != null) {
             // update source names history
             String[] sourceNames = settings.getArray(STORE_FILE_SYSTEM_SOURCE_NAMES_ID);
@@ -1048,24 +988,42 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         }
     }
 
+    protected boolean setCompletionStatus() {
+        // Need to call the method to update the project list because source (zip file) may have changed.
+        // String selectedFileString = fileSystemSourceNameField.getText();
+        final String selectedFileString = getSourceName();
+        if (selectedFileString != null && selectedFileString.length() > 0) {
+            if (validateTargetFolder() && validateLoadVdb()) {
+                setErrorMessage(null);
+                setMessage(INITIAL_MESSAGE);
+                setPageComplete(true);
+                return true;
+            }
+        } else {
+            validateTargetFolder();
+            setErrorMessage(SOURCE_EMPTY_MESSAGE);
+        }
+        setPageComplete(false);
+        return false;
+    }
+
     /**
      * Sets the source name of the import to be the supplied path. Adds the name of the path to the list of items in the source
      * combo and selects it.
      * 
      * @param path the path to be added
      */
-    protected void setFileSystemSourceName( String path ) {
+    protected void setFileSystemSourceName( final String path ) {
 
         if (path.length() > 0) {
 
-            String[] currentItems = this.fileSystemSourceNameField.getItems();
+            final String[] currentItems = this.fileSystemSourceNameField.getItems();
             int selectionIndex = -1;
-            for (int i = 0; i < currentItems.length; i++) {
+            for (int i = 0; i < currentItems.length; i++)
                 if (currentItems[i].equals(path)) selectionIndex = i;
-            }
             if (selectionIndex < 0) {
-                int oldLength = currentItems.length;
-                String[] newItems = new String[oldLength + 1];
+                final int oldLength = currentItems.length;
+                final String[] newItems = new String[oldLength + 1];
                 System.arraycopy(currentItems, 0, newItems, 0, oldLength);
                 newItems[oldLength] = path;
                 this.fileSystemSourceNameField.setItems(newItems);
@@ -1076,24 +1034,56 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         }
     }
 
+    private void setOptionsWidgetsState() {
+        loadVdbIntoProjectCheckbox.setEnabled(importFromFileSystemCheckbox.getSelection());
+        vdbLocationBrowseButton.setEnabled(importFromFileSystemCheckbox.getSelection());
+        vdbLocationNameField.setEnabled(importFromFileSystemCheckbox.getSelection());
+
+        workspaceSourceNameField.setEnabled(importFromWorkspaceCheckbox.getSelection());
+        workspaceSourceBrowseButton.setEnabled(importFromWorkspaceCheckbox.getSelection());
+
+        fileSystemSourceNameField.setEnabled(importFromFileSystemCheckbox.getSelection());
+        fileSystemSourceBrowseButton.setEnabled(importFromFileSystemCheckbox.getSelection());
+    }
+
+    /**
+     * Internal method to change the contents of the project list box with a List of strings (assumes project folder names)
+     * 
+     * @param projectList
+     * @since 4.2
+     */
+    private void setViewerContents( final List<IProject> projectList ) {
+        final List<IProject> pList = new ArrayList<IProject>(projectList);
+        projectViewer.setInput(pList);
+    }
+
+    /*
+     * (non-Javadoc) Method declared on IDialogPage. Set the selection up when it becomes visible.
+     */
+    @Override
+    public void setVisible( final boolean visible ) {
+        super.setVisible(visible);
+
+        if (visible) this.fileSystemSourceNameField.setFocus();
+    }
+
     /**
      * Sets the source name of the import to be the supplied path. Adds the name of the path to the list of items in the source
      * combo and selects it.
      * 
      * @param path the path to be added
      */
-    protected void setWorkspaceSourceName( String path ) {
+    protected void setWorkspaceSourceName( final String path ) {
 
         if (path.length() > 0) {
 
-            String[] currentItems = this.workspaceSourceNameField.getItems();
+            final String[] currentItems = this.workspaceSourceNameField.getItems();
             int selectionIndex = -1;
-            for (int i = 0; i < currentItems.length; i++) {
+            for (int i = 0; i < currentItems.length; i++)
                 if (currentItems[i].equals(path)) selectionIndex = i;
-            }
             if (selectionIndex < 0) {
-                int oldLength = currentItems.length;
-                String[] newItems = new String[oldLength + 1];
+                final int oldLength = currentItems.length;
+                final String[] newItems = new String[oldLength + 1];
                 System.arraycopy(currentItems, 0, newItems, 0, oldLength);
                 newItems[oldLength] = path;
                 this.workspaceSourceNameField.setItems(newItems);
@@ -1102,16 +1092,6 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
             this.workspaceSourceNameField.select(selectionIndex);
 
         }
-    }
-
-    /*
-     * (non-Javadoc) Method declared on IDialogPage. Set the selection up when it becomes visible.
-     */
-    @Override
-    public void setVisible( boolean visible ) {
-        super.setVisible(visible);
-
-        if (visible) this.fileSystemSourceNameField.setFocus();
     }
 
     /**
@@ -1126,12 +1106,13 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         setOptionsWidgetsState();
     }
 
-    private boolean validateSourceAndDestination() {
-        if (validateVdbFile() && validateTargetFolder()) {
-            return true;
-        }
-
-        return false;
+    /**
+     * @see org.eclipse.ui.dialogs.WizardDataTransferPage#validateDestinationGroup()
+     * @since 4.2
+     */
+    @Override
+    protected boolean validateDestinationGroup() {
+        return true;
     }
 
     private boolean validateLoadVdb() {
@@ -1145,49 +1126,21 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     /**
-     * Answer a boolean indicating whether self's source specification widgets currently all contain valid values.
+     * @see org.eclipse.ui.dialogs.WizardDataTransferPage#validateOptionsGroup()
+     * @since 4.2
      */
-    private boolean validateVdbFile() {
-        if (vdbExtractor != null) {
-            if (vdbExtractor.canExtract()) {
-
-                IProject[] projects = vdbExtractor.getProjectsToAdd(vdbExtractor.getProjectFolders());
-                // Check one more time.
-
-                if (projects != null && projects.length > 0) {
-                    List<IProject> vdbProjects = new ArrayList<IProject>(projects.length);
-                    for (int i = 0; i < projects.length; i++) {
-                        vdbProjects.add(projects[i]);
-                    }
-                    setViewerContents(vdbProjects);
-                    if (!vdbExtractor.canExtract()) {
-                        setErrorMessage(vdbExtractor.getErrorMessage());
-                        return false;
-                    }
-                    return true;
-                }
-
-                clearViewerContents();
-
-            } else {
-                clearViewerContents();
-                setErrorMessage(vdbExtractor.getErrorMessage());
-            }
-        } else {
-            clearViewerContents();
-            if (getSourceName() == null) setMessage(SOURCE_EMPTY_MESSAGE);
-            return false;
-        }
-
-        return false;
+    @Override
+    protected boolean validateOptionsGroup() {
+        return true;
     }
 
-    protected String getSourceName() {
-        if (importFromFileSystemCheckbox.getSelection()) return fileSystemSourceFile;
-
-        // Import from workspace
-        // Need to get the full pathname
-        return workspaceSourceFile;
+    /**
+     * @see org.eclipse.ui.dialogs.WizardDataTransferPage#validateSourceGroup()
+     * @since 4.2
+     */
+    @Override
+    protected boolean validateSourceGroup() {
+        return true;
     }
 
     /* (non-Javadoc)
@@ -1195,13 +1148,13 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
      */
     private final boolean validateTargetFolder() {
 
-        IPath containerPath = getContainerFullPath();
+        final IPath containerPath = getContainerFullPath();
         if (containerPath == null) {
             setMessage(EMPTY_FOLDER_MESSAGE);
             return false;
         }
 
-        File directory = containerPath.toFile();
+        final File directory = containerPath.toFile();
         if (!directory.isDirectory()) {
             setMessage(null);
             setErrorMessage(getString("folderDoesNotExist", containerPath)); //$NON-NLS-1$
@@ -1228,71 +1181,33 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         return true;
     }
 
-    /**
-     * @see org.eclipse.ui.dialogs.WizardResourceImportPage#getFileProvider()
-     * @since 4.2
-     */
-    protected ITreeContentProvider getFileProvider() {
-        return null;
-    }
+    class ProjectReferenceLabelProvider implements ILabelProvider {
 
-    /**
-     * @see org.eclipse.ui.dialogs.WizardResourceImportPage#getFolderProvider()
-     * @since 4.2
-     */
-    protected ITreeContentProvider getFolderProvider() {
-        return null;
-    }
+        public void addListener( final ILabelProviderListener listener ) {
+        }
 
-    IPath getDefaultFolder() {
-        return ResourcesPlugin.getWorkspace().getRoot().getRawLocation();
-    }
+        public void dispose() {
+        }
 
-    /**
-     * Answer a handle to the zip file currently specified as being the source. Return null if this file does not exist or is not
-     * of valid format.
-     */
-    protected File getSpecifiedSourceFile() {
-        fileSystemSourceNameField.setFocus();
+        public Image getImage( final Object element ) {
+            if (element instanceof IProject) return UiPlugin.getDefault().getProjectImage();
 
-        return null;
-    }
+            return null;
+        }
 
-    /**
-     * Returns the current project location path as entered by the user, or its anticipated initial value.
-     * 
-     * @return the project location path, its anticipated initial value, or <code>null</code> if no project location path is known
-     */
-    public IPath getLocationPath( String projectName ) {
+        public String getText( final Object element ) {
+            if (element instanceof IProject) return ((IProject)element).getName();
+            return null;
+        }
 
-        return new Path(getResourcePath() + "\\" + projectName); //$NON-NLS-1$
-    }
+        public boolean isLabelProperty( final Object element,
+                                        final String property ) {
+            return false;
+        }
 
-    /**
-     * @see org.eclipse.ui.dialogs.WizardDataTransferPage#validateDestinationGroup()
-     * @since 4.2
-     */
-    @Override
-    protected boolean validateDestinationGroup() {
-        return true;
-    }
+        public void removeListener( final ILabelProviderListener listener ) {
+        }
 
-    /**
-     * @see org.eclipse.ui.dialogs.WizardDataTransferPage#validateOptionsGroup()
-     * @since 4.2
-     */
-    @Override
-    protected boolean validateOptionsGroup() {
-        return true;
-    }
-
-    /**
-     * @see org.eclipse.ui.dialogs.WizardDataTransferPage#validateSourceGroup()
-     * @since 4.2
-     */
-    @Override
-    protected boolean validateSourceGroup() {
-        return true;
     }
 
     /**
@@ -1301,57 +1216,22 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
      * @since 4.2
      */
     class Validator implements ISelectionStatusValidator {
+        private boolean containsProjectFile( final File theFile ) {
+            return false;
+        }
+
         /**
          * @see org.eclipse.ui.dialogs.ISelectionStatusValidator#validate(java.lang.Object[])
          * @since 4.2
          */
-        public IStatus validate( Object[] theSelection ) {
+        public IStatus validate( final Object[] theSelection ) {
             IStatus result = STATUS_OK;
 
-            if (theSelection.length > 0) {
-                // need to make sure a ".project" does not exist in this and any ancestor directory
-                if (containsProjectFile((File)theSelection[0])) {
-                    result = STATUS_ERROR;
-                }
-            }
+            if (theSelection.length > 0) // need to make sure a ".project" does not exist in this and any ancestor directory
+            if (containsProjectFile((File)theSelection[0])) result = STATUS_ERROR;
 
             return result;
         }
-
-        private boolean containsProjectFile( File theFile ) {
-            return false;
-        }
-    }
-
-    class ProjectReferenceLabelProvider implements ILabelProvider {
-
-        public Image getImage( Object element ) {
-            if (element instanceof IProject) {
-                return UiPlugin.getDefault().getProjectImage();
-            }
-
-            return null;
-        }
-
-        public String getText( Object element ) {
-            if (element instanceof IProject) return ((IProject)element).getName();
-            return null;
-        }
-
-        public void addListener( ILabelProviderListener listener ) {
-        }
-
-        public void dispose() {
-        }
-
-        public boolean isLabelProperty( Object element,
-                                        String property ) {
-            return false;
-        }
-
-        public void removeListener( ILabelProviderListener listener ) {
-        }
-
     }
 
 }

@@ -10,39 +10,18 @@ package com.metamatrix.modeler.internal.vdb.ui.properties;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import com.metamatrix.vdb.edit.VdbEditingContext;
-import com.metamatrix.vdb.edit.manifest.ModelReference;
+import org.teiid.designer.vdb.VdbModelEntry;
 
-
-/** 
+/**
  * @since 4.2
  */
-public class ModelReferencePropertySourceProvider implements
-                                                 IPropertySourceProvider {
+public class ModelEntryPropertySourceProvider implements IPropertySourceProvider {
 
-    private VdbEditingContext context;
     private PropertySheetPage propertySheetPage;
-    
-    /** 
-     * @since 4.2
-     */
-    public ModelReferencePropertySourceProvider(VdbEditingContext context) {
-        this.context = context;
-    }
-
-    /** 
-     * @see org.eclipse.ui.views.properties.IPropertySourceProvider#getPropertySource(java.lang.Object)
-     * @since 4.2
-     */
-    public IPropertySource getPropertySource(Object object) {
-        if ( object instanceof ModelReference ) {
-            return new ModelReferencePropertySource((ModelReference) object, context);
-        }
-        return null;
-    }
 
     /**
      * Obtain a PropertySheetPage for displaying Model Objects.
+     * 
      * @since 4.2
      */
     public PropertySheetPage getPropertySheetPage() {
@@ -54,5 +33,13 @@ public class ModelReferencePropertySourceProvider implements
         return propertySheetPage;
     }
 
-    
+    /**
+     * @see org.eclipse.ui.views.properties.IPropertySourceProvider#getPropertySource(java.lang.Object)
+     * @since 4.2
+     */
+    public IPropertySource getPropertySource( final Object object ) {
+        if (object instanceof VdbModelEntry) return new ModelEntryPropertySource((VdbModelEntry)object);
+        return null;
+    }
+
 }

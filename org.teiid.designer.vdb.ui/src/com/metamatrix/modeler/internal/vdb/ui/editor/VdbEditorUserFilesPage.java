@@ -73,6 +73,12 @@ public final class VdbEditorUserFilesPage extends EditorPart
         Dialog.class.getName();
     }
 
+    protected int convertHeightInCharsToPixels( final int chars ) {
+        // test for failure to initialize for backward compatibility
+        if (fontMetrics == null) return 0;
+        return Dialog.convertHeightInCharsToPixels(fontMetrics, chars);
+    }
+
     /**
      * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      * @since 5.3.3
@@ -80,7 +86,7 @@ public final class VdbEditorUserFilesPage extends EditorPart
     @Override
     public void createPartControl( final Composite parent ) {
         // Compute and store a font metric
-        GC gc = new GC(parent);
+        final GC gc = new GC(parent);
         gc.setFont(parent.getFont());
         fontMetrics = gc.getFontMetrics();
         gc.dispose();
@@ -107,7 +113,7 @@ public final class VdbEditorUserFilesPage extends EditorPart
         // Model table: ===========================
         this.userFilesPanel = new VdbEditorUserFilesComposite(this.editor);
         final Control panel = this.userFilesPanel.createPartControl(pg);
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true, COLUMNS, 1);
+        final GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true, COLUMNS, 1);
         gd.heightHint = 180;
         gd.minimumHeight = 180;
         panel.setLayoutData(gd);
@@ -115,8 +121,8 @@ public final class VdbEditorUserFilesPage extends EditorPart
         // ========= GUI finish-up:
 
         // Size with a fixed width and a bit more than the kids' height:
-        Point pt = pg.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-        int miny = pt.y + 45; // add a little extra to keep all label text visible.
+        final Point pt = pg.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+        final int miny = pt.y + 45; // add a little extra to keep all label text visible.
         scroller.setMinWidth(400);
         scroller.setMinHeight(miny);
         scroller.setExpandHorizontal(true);
@@ -128,11 +134,31 @@ public final class VdbEditorUserFilesPage extends EditorPart
         userFilesPanel.resetColumnWidths();
 
         resourceChangeListener = new IResourceChangeListener() {
-            public void resourceChanged( IResourceChangeEvent event ) {
+            public void resourceChanged( final IResourceChangeEvent event ) {
                 userFilesPanel.refresh();
             }
         };
         ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener);
+    }
+
+    /**
+     * @see org.eclipse.ui.IWorkbenchPart#dispose()
+     * @since 5.3.3
+     */
+    @Override
+    public void dispose() {
+        if (resourceChangeListener != null) ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeListener);
+
+        super.dispose();
+    }
+
+    public void doRevertToSaved() {
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                // defect 18303 - make sure open and visible:
+                if (editor.getVdb() != null) setFocus();
+            }
+        });
     }
 
     /**
@@ -171,9 +197,7 @@ public final class VdbEditorUserFilesPage extends EditorPart
     @Override
     public void init( final IEditorSite site,
                       final IEditorInput input ) throws PartInitException {
-        if (input != null && !(input instanceof IFileEditorInput)) {
-            throw new PartInitException(INVALID_INPUT_MESSAGE);
-        }
+        if (input != null && !(input instanceof IFileEditorInput)) throw new PartInitException(INVALID_INPUT_MESSAGE);
         setSite(site);
         setInput(input);
         setPartName(TITLE);
@@ -186,7 +210,7 @@ public final class VdbEditorUserFilesPage extends EditorPart
      */
     @Override
     public boolean isDirty() {
-        return this.editor.getContext().isSaveRequired();
+        return this.editor.getVdb().isModified();
     }
 
     /**
@@ -197,21 +221,6 @@ public final class VdbEditorUserFilesPage extends EditorPart
     @Override
     public boolean isSaveAsAllowed() {
         return false;
-    }
-
-    /**
-     * @see org.eclipse.ui.IWorkbenchPart#setFocus()
-     * @since 5.3.3
-     */
-    @Override
-    public void setFocus() {
-        Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
-                if (editor.getContext() != null && editor.getContext().isOpen()) {
-                    setEnabledState();
-                }
-            }
-        });
     }
 
     void setEnabledState() {
@@ -228,32 +237,15 @@ public final class VdbEditorUserFilesPage extends EditorPart
     }
 
     /**
-     * @see org.eclipse.ui.IWorkbenchPart#dispose()
+     * @see org.eclipse.ui.IWorkbenchPart#setFocus()
      * @since 5.3.3
      */
     @Override
-    public void dispose() {
-        if (resourceChangeListener != null) {
-            ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeListener);
-        }
-
-        super.dispose();
-    }
-
-    public void doRevertToSaved() {
+    public void setFocus() {
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
-                // defect 18303 - make sure open and visible:
-                if (editor.getContext() != null && editor.getContext().isOpen()) {
-                    setFocus();
-                }
+                if (editor.getVdb() != null) setEnabledState();
             }
         });
-    }
-
-    protected int convertHeightInCharsToPixels( int chars ) {
-        // test for failure to initialize for backward compatibility
-        if (fontMetrics == null) return 0;
-        return Dialog.convertHeightInCharsToPixels(fontMetrics, chars);
     }
 }
