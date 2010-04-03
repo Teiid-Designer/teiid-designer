@@ -30,11 +30,17 @@ import com.metamatrix.modeler.internal.core.resource.EmfResource;
 public class VdbModelEntry extends VdbEntry {
 
     private final Vdb vdb;
-    private final Set<Diagnostic> errors = new HashSet<Diagnostic>();
-    private final Set<Diagnostic> warnings = new HashSet<Diagnostic>();
+
+    // TODO: Note that the super() constructor calls synchronize() which will throw NPE's because errors, warnings, dependsUpon
+    // and dependentOf
+    // are set in THIS class not the super.
+    // NEED TO RETHINK? For now, I added checks in clean() method to initialize these sets.
+
+    private Set<Diagnostic> errors = new HashSet<Diagnostic>();
+    private Set<Diagnostic> warnings = new HashSet<Diagnostic>();
     private final AtomicBoolean visible = new AtomicBoolean(true);
-    private final CopyOnWriteArraySet<VdbModelEntry> dependsUpon = new CopyOnWriteArraySet<VdbModelEntry>();
-    private final CopyOnWriteArraySet<VdbModelEntry> dependentOf = new CopyOnWriteArraySet<VdbModelEntry>();
+    private CopyOnWriteArraySet<VdbModelEntry> dependsUpon = new CopyOnWriteArraySet<VdbModelEntry>();
+    private CopyOnWriteArraySet<VdbModelEntry> dependentOf = new CopyOnWriteArraySet<VdbModelEntry>();
     private final boolean builtIn;
     private final ModelType type;
     private final AtomicReference<String> connector = new AtomicReference();
@@ -55,8 +61,21 @@ public class VdbModelEntry extends VdbEntry {
 
     private void clean() {
         // Clear problems
+        if (this.errors == null) {
+            this.errors = new HashSet<Diagnostic>();
+        }
         errors.clear();
+        if (this.warnings == null) {
+            this.warnings = new HashSet<Diagnostic>();
+        }
         warnings.clear();
+
+        if (dependsUpon == null) {
+            dependsUpon = new CopyOnWriteArraySet<VdbModelEntry>();
+        }
+        if (dependentOf == null) {
+            dependentOf = new CopyOnWriteArraySet<VdbModelEntry>();
+        }
         // Clear set of dependents and inverse relationships
         for (final VdbModelEntry entry : dependsUpon) {
             entry.dependentOf.remove(this);
@@ -79,7 +98,7 @@ public class VdbModelEntry extends VdbEntry {
     }
 
     private Resource findModel() {
-        final Resource[] models = getFinder().findByName(getName().toString(), true, false);
+        final Resource[] models = getFinder().findByName(getName().lastSegment().toString(), true, false);
         if (models.length == 0) return null;
         assert models.length == 1;
         return models[0];

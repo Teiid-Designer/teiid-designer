@@ -42,8 +42,8 @@ import org.eclipse.ui.forms.HyperlinkSettings;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.EditorPart;
-import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbModelEntry;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.validation.Severity;
@@ -507,7 +507,7 @@ public final class VdbEditorOverviewPage extends EditorPart
         if (pageControl.isDisposed()) return;
         final Vdb vdb = this.editor.getVdb();
         // update the status label
-        Severity severity = null;
+        Severity severity = Severity.OK_LITERAL;
         for (VdbModelEntry entry : vdb.getModelEntries()) {
             if (!entry.getErrors().isEmpty()) {
                 severity = Severity.ERROR_LITERAL;

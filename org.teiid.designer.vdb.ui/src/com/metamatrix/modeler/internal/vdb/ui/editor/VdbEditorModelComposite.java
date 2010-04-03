@@ -614,8 +614,8 @@ public final class VdbEditorModelComposite
     }
 
     /**
-     * Public method used to synch the VDB outside of this editor sub-panel. if autoSave is ON, then this method forces a save, else
-     * the user is asked to save the dirty editor after synchronizing. (Defect 22305)
+     * Public method used to synch the VDB outside of this editor sub-panel. if autoSave is ON, then this method forces a save,
+     * else the user is asked to save the dirty editor after synchronizing. (Defect 22305)
      * 
      * @param autoSave
      */
