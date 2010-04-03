@@ -21,9 +21,6 @@ import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
-import com.metamatrix.modeler.dqp.internal.config.VdbDefnHelper;
-import com.metamatrix.vdb.edit.VdbEditingContext;
-import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -120,38 +117,20 @@ public class DqpPlugin extends Plugin {
     }
 
     /**
-     * Obtains the <code>VdbDefnHelper</code> for the specified <code>InternalVdbEditingContext</code>.
-     * 
-     * @param theContext the context whose helper is being requested
-     * @return the helper
-     * @since 4.3
-     */
-    public VdbDefnHelper getVdbDefnHelper( InternalVdbEditingContext theContext ) {
-        VdbDefnHelper result = (VdbDefnHelper)this.vdbHelperMap.get(theContext);
-
-        if (result == null) {
-            theContext.addChangeListener(this.changeListener);
-            result = new VdbDefnHelper(theContext.getPathToVdb().toFile(), theContext);
-            this.vdbHelperMap.put(theContext, result);
-        }
-
-        return result;
-    }
-
-    /**
      * Cleans up the map of context helpers.
      * 
      * @param theContext the context whose state has changed
      * @since 4.3
      */
-    void handleContextChanged( IChangeNotifier theContext ) {
-        if (this.vdbHelperMap.get(theContext) != null) {
-            // only care if the context is now closed
-            if (!((VdbEditingContext)theContext).isOpen()) {
-                this.vdbHelperMap.remove(theContext);
-                theContext.removeChangeListener(this.changeListener);
-            }
-        }
+    void handleContextChanged( IChangeNotifier vdb ) {
+        // TODO: re-implement
+        // if (this.vdbHelperMap.get(vdb) != null) {
+        // // only care if the context is now closed
+        // if (!(vdb.isOpen()) {
+        // this.vdbHelperMap.remove(vdb);
+        // theContext.removeChangeListener(this.changeListener);
+        // }
+        // }
     }
 
     private void initializeServerRegistry() throws CoreException {

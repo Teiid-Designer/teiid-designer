@@ -253,29 +253,29 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
 
         // Refresh the Model Explorer too
         ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();
-//
-//        if (event.getTargetType() == TargetType.SERVER) {
-//            switch (event.getEventType()) {
-//                case UPDATE: {
-//
-//                }
-//                    break;
-//                case REFRESH: {
-//
-//                }
-//                    break;
-//                case ADD: {
-//                    this.viewer.getInput();
-//                }
-//                    break;
-//                case REMOVE: {
-//
-//                }
-//                    break;
-//
-//            }
-//
-//        }
+        //
+        // if (event.getTargetType() == TargetType.SERVER) {
+        // switch (event.getEventType()) {
+        // case UPDATE: {
+        //
+        // }
+        // break;
+        // case REFRESH: {
+        //
+        // }
+        // break;
+        // case ADD: {
+        // this.viewer.getInput();
+        // }
+        // break;
+        // case REMOVE: {
+        //
+        // }
+        // break;
+        //
+        // }
+        //
+        // }
         // TODO is specific code for each event type needed instead of refreshing entire view?
     }
 
@@ -573,6 +573,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         Shell shell = this.getSite().getShell();
         // the reconnect action tries to ping a selected server
         this.reconnectAction = new ReconnectToServerAction(this.viewer);
+        this.viewer.addSelectionChangedListener(this.reconnectAction);
 
         // the delete action will delete one or more servers
         this.deleteServerAction = new DeleteServerAction(shell, getServerManager());

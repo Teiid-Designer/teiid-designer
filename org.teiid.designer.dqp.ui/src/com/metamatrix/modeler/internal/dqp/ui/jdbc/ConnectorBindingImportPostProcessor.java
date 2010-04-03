@@ -9,6 +9,7 @@ package com.metamatrix.modeler.internal.dqp.ui.jdbc;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -52,9 +53,11 @@ public class ConnectorBindingImportPostProcessor implements DqpUiConstants, IJdb
     private Connector createConnector( String modelName,
                                        JdbcSource jdbcSource ) throws Exception {
         ConnectorType bindingType = null;
-        WorkspaceConfigurationManager wsConfigMgr = DqpPlugin.getInstance().getWorkspaceConfig();
-        final String bindingName = wsConfigMgr.createConnectorBindingName(modelName);
-        final Collection<ConnectorType> bindingTypeMatches = wsConfigMgr.findMatchingConnectorTypes(jdbcSource, false);
+
+        // TODO: Find way to create binding name for JDBC Source??
+        final String bindingName = "someNewBindingName_TODO"; // .createConnectorBindingName(modelName);
+        final Collection<ConnectorType> bindingTypeMatches = Collections.EMPTY_LIST; // wsConfigMgr.findMatchingConnectorTypes(jdbcSource,
+        // false);
         int numTypesFound = bindingTypeMatches.size();
 
         if (numTypesFound == 1) {
@@ -111,7 +114,9 @@ public class ConnectorBindingImportPostProcessor implements DqpUiConstants, IJdb
         }
 
         if (useDefaultConnectorType) {
-            Collection<ConnectorType> matchedConnectorTypes = wsConfigMgr.findMatchingConnectorTypes(jdbcSource, true);
+            // TODO:
+            Collection<ConnectorType> matchedConnectorTypes = Collections.EMPTY_LIST; // wsConfigMgr.findMatchingConnectorTypes(jdbcSource,
+            // true);
             if (matchedConnectorTypes.size() == 1) {
                 bindingType = matchedConnectorTypes.iterator().next();
             }
@@ -121,7 +126,8 @@ public class ConnectorBindingImportPostProcessor implements DqpUiConstants, IJdb
         if (bindingType != null) {
             // TODO get connector type property definitions, create Properties object and populate from JDBC source object
             // before calling addConnector(name, type, properties)
-            return bindingType.getAdmin().addConnector(bindingName, bindingType, null);
+            bindingType.getAdmin().addConnector(bindingName, bindingType, null);
+            return bindingType.getAdmin().getConnector(bindingName);
         }
 
         // no type found or selected by user so a binding could not be created
@@ -135,7 +141,6 @@ public class ConnectorBindingImportPostProcessor implements DqpUiConstants, IJdb
     public void postProcess( final IJdbcImportInfoProvider infoProvider ) throws Exception {
         Connector binding = null;
 
-        final WorkspaceConfigurationManager wsConfigMgr = DqpPlugin.getInstance().getWorkspaceConfig();
         String modelName = infoProvider.getModelName();
 
         // if item name includes the file extension remove it
@@ -146,12 +151,13 @@ public class ConnectorBindingImportPostProcessor implements DqpUiConstants, IJdb
         }
 
         // see if model already has an assigned binding
-        Collection<Connector> bindings = DqpPlugin.getInstance().getSourceBindingsManager().getConnectorsForModel(modelName);
+        Collection<Connector> bindings = DqpPlugin.getInstance().getServerManager().getConnectorsForModel(modelName);
 
         // if model does not have a connector binding we need to find/create one
         if (bindings.isEmpty()) {
             JdbcSource jdbcSource = infoProvider.getSource();
-            Collection<Connector> matchingBindings = wsConfigMgr.findMatchingConnectors(jdbcSource);
+            // TODO:
+            Collection<Connector> matchingBindings = Collections.EMPTY_LIST; // wsConfigMgr.findMatchingConnectors(jdbcSource);
 
             if (matchingBindings.isEmpty()) {
                 Connector newBinding = createConnector(modelName, jdbcSource);
@@ -171,7 +177,9 @@ public class ConnectorBindingImportPostProcessor implements DqpUiConstants, IJdb
 
                 // finally add binding to configuration since the classpath has been set and the jars copied over (now the binding
                 // should start) and create a source binding so that preview will work
-                DqpPlugin.getInstance().getAdmin().addBinding(newBinding);
+                newBinding.getType().getAdmin().addConnector(newBinding.getName(),
+                                                             newBinding.getType(),
+                                                             newBinding.getProperties());
                 binding = newBinding;
             } else {
                 // found one or more matching bindings so just use the first one
@@ -179,7 +187,7 @@ public class ConnectorBindingImportPostProcessor implements DqpUiConstants, IJdb
             }
 
             // create source binding
-            DqpPlugin.getInstance().getSourceBindingsManager().createSourceBinding(infoProvider.getModelResource(), binding);
+            binding.getType().getAdmin().getSourceBindingsManager().createSourceBinding(infoProvider.getModelResource(), binding);
 
             // make sure ModelExplorer tree shows the new connector binding
             ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();

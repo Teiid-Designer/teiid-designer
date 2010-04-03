@@ -56,39 +56,6 @@ public interface DqpUiConstants {
     /**
      * import types
      */
-    public static final int IMPORT_CONFIG = 0;
-    public static final int IMPORT_CONNECTOR_BINDING = 1;
-    public static final int IMPORT_CONNECTOR_TYPE = 2;
-    public static final int IMPORT_FUNCTION_MOD = 3;
-    public static final int IMPORT_CONNECTOR_MOD = 4;
-
-    public static final String[][] IMPORT_FILE_NAMES = new String[][] { {"Configurations (*.cfg)", "Configurations (*.xml)"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"Connector Bindings (*.cdk)", "Connector Bindings (*.xml)"}, ////$NON-NLS-1$ //$NON-NLS-2$
-        {"Connector Types Archive (*.caf)", "Connector Types (*.cdk)"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"Function Modules (*.jar)", "Function Modules (*.zip)"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"Connector Modules (*.jar)"} //$NON-NLS-1$
-    };
-
-    public static final String[][] IMPORT_FILE_EXTENSIONS = new String[][] { {"*.cfg", "*.xml"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"*.cdk", "*.xml"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"*.caf", "*.cdk"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"*.jar", "*.zip"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"*.jar"} //$NON-NLS-1$
-    };
-
-    public static final String[][] IMPORT_FILE_NAMES_NEW = new String[][] { {"Configurations (*.cfg)", "Configurations (*.xml)"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"Connector Bindings (*.cdk)"}, ////$NON-NLS-1$
-        {"Connector Types Archive (*.caf)", "Connector Types (*.cdk)"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"Function Modules (*.jar)", "Function Modules (*.zip)"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"Extension Modules (*.jar)"} //$NON-NLS-1$
-    };
-
-    public static final String[][] IMPORT_FILE_EXTENSIONS_NEW = new String[][] { {"*.cfg", "*.xml"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"*.cdk"}, //$NON-NLS-1$
-        {"*.caf"}, //$NON-NLS-1$ 
-        {"*.jar", "*.zip"}, //$NON-NLS-1$ //$NON-NLS-2$
-        {"*.jar"} //$NON-NLS-1$
-    };
 
     /**
      * Private constants used by other constants within this class.
@@ -132,14 +99,9 @@ public interface DqpUiConstants {
         String SHOW_PLAN_TREE_ICON = PC.CTOOL16 + "plan_tree.gif"; //$NON-NLS-1$
 
         public static final String SEPARATOR_ICON = PC.CTOOL16 + "verticalseparator.gif"; //$NON-NLS-1$
-        public static final String NEW_FOLDER_ICON = PC.CTOOL16 + "newfolder.gif"; //$NON-NLS-1$
+
         public static final String DELETE_ICON = PC.CTOOL16 + "deletefile.gif"; //$NON-NLS-1$
         public static final String SAVE_TO_FILE_ICON = PC.CTOOL16 + "save_to_file.gif"; //$NON-NLS-1$
-        public static final String IMPORT_JAR_ICON = PC.CTOOL16 + "importjarorzip.gif"; //$NON-NLS-1$
-        public static final String IMPORT_CAF_ICON = PC.CTOOL16 + "import_caf.gif"; //$NON-NLS-1$
-
-        public static final String CONNECTOR_JAR_ICON = PC.OBJ16 + "connectorJar.gif"; //$NON-NLS-1$
-        public static final String CONNECTOR_ZIP_ICON = PC.OBJ16 + "connectorZip.gif"; //$NON-NLS-1$
 
         public static final String CONNECTOR_ICON = PC.OBJ16 + "connector.gif"; //$NON-NLS-1$
         public static final String SOURCE_BINDING_ICON = PC.OBJ16 + "sourceBinding.gif"; //$NON-NLS-1$
@@ -165,9 +127,6 @@ public interface DqpUiConstants {
     }
 
     interface Extensions {
-        // Connector Bindings VDB Editor Page
-        String CONNECTOR_BINDINGS_VDB_EDITOR_PAGE_ID = /*EXT_PREFIX + DOT + */"connectorBindingsEditorpart"; //$NON-NLS-1$;
-
         String XML_DOC_SQL_RESULTS_VIEW = /*EXT_PREFIX + DOT + */"xmlDocumentSqlResultsView"; //$NON-NLS-1$
 
         String XML_DOC_RESULTSET_PROCESSOR = /*EXT_PREFIX + DOT + */"xmlDocumentResultSetProcessor"; //$NON-NLS-1$

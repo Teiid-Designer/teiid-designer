@@ -11,19 +11,15 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.Properties;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-import org.eclipse.core.runtime.IStatus;
 import com.metamatrix.core.util.StringUtil;
-import com.metamatrix.jdbc.EmbeddedDriver;
 import com.metamatrix.jdbc.api.Connection;
-import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.ui.internal.util.UiUtil;
-import com.metamatrix.vdb.edit.loader.VDBConstants;
 
 /**
  * A factory class to create connections to the embedded query from the Designer.
  */
 public class QueryClient {
+    static final String TXN_AUTO_WRAP = "txnAutoWrap";
 
     private Connection adminConnection;
     boolean showPlan = false;
@@ -32,22 +28,22 @@ public class QueryClient {
         if (this.adminConnection == null) {
             ClassLoader current = Thread.currentThread().getContextClassLoader();
             try {
-                File propertiesDir = DqpPath.getRuntimePath().toFile();
-                String url = buildConnectionURL(propertiesDir.getAbsolutePath(), "admin", "1", new Properties()); //$NON-NLS-1$ //$NON-NLS-2$ 
-                DqpPlugin.Util.log(IStatus.INFO, "starting workspace execution with url = \"" + url); //$NON-NLS-1$ 
-                EmbeddedDriver driver = new EmbeddedDriver();
-
-                Thread.currentThread().setContextClassLoader(driver.getClass().getClassLoader());
-
-                Properties props = new Properties();
-                props.setProperty("user", "admin"); //$NON-NLS-1$ //$NON-NLS-2$
-                props.setProperty("password", "teiid"); //$NON-NLS-1$ //$NON-NLS-2$
-                this.adminConnection = (com.metamatrix.jdbc.api.Connection)driver.connect(url, props);
-//
-//                // wire the logging so that the messages are flown into designer
-//                this.adminConnection.getAdminAPI().setLogListener(new DesignerLogger());
-//            } catch (Exception e) {
-//                throw new RuntimeException(e);
+                // File propertiesDir = DqpPath.getRuntimePath().toFile();
+                //                String url = buildConnectionURL(propertiesDir.getAbsolutePath(), "admin", "1", new Properties()); //$NON-NLS-1$ //$NON-NLS-2$ 
+                //                DqpPlugin.Util.log(IStatus.INFO, "starting workspace execution with url = \"" + url); //$NON-NLS-1$ 
+                // EmbeddedDriver driver = new EmbeddedDriver();
+                //
+                // Thread.currentThread().setContextClassLoader(driver.getClass().getClassLoader());
+                //
+                // Properties props = new Properties();
+                //                props.setProperty("user", "admin"); //$NON-NLS-1$ //$NON-NLS-2$
+                //                props.setProperty("password", "teiid"); //$NON-NLS-1$ //$NON-NLS-2$
+                // this.adminConnection = (com.metamatrix.jdbc.api.Connection)driver.connect(url, props);
+                //
+                // // wire the logging so that the messages are flown into designer
+                // this.adminConnection.getAdminAPI().setLogListener(new DesignerLogger());
+                // } catch (Exception e) {
+                // throw new RuntimeException(e);
             } finally {
                 Thread.currentThread().setContextClassLoader(current);
             }
@@ -67,7 +63,7 @@ public class QueryClient {
                                       String theVdbName,
                                       String theVersion,
                                       Properties executionProps ) {
-        String txnAutoWrap = executionProps.getProperty(VDBConstants.VDBElementNames.ExecutionProperties.Properties.TXN_AUTO_WRAP);
+        String txnAutoWrap = executionProps.getProperty(TXN_AUTO_WRAP);
 
         File propsFile = new File(executionDir, "workspace.properties"); //$NON-NLS-1$
 
@@ -77,18 +73,18 @@ public class QueryClient {
         .append(";version=") //$NON-NLS-1$
         .append(theVersion).append(";XMLFormat=Tree;"); //$NON-NLS-1$
 
-        if (SQLExplorerPlugin.getDefault() != null ) {
-        	showPlan = false;
-    		UiUtil.runInSwtThread(new Runnable() {
-    			@Override
-    			public void run() {
-    				showPlan = SQLExplorerPlugin.getDefault().shouldShowQueryPlan();
-    			}
-    		}, false);
-    		
-        	if( showPlan) {
-        		sb.append("sqlOptions").append("=").append("SHOWPLAN;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        	}
+        if (SQLExplorerPlugin.getDefault() != null) {
+            showPlan = false;
+            UiUtil.runInSwtThread(new Runnable() {
+                @Override
+                public void run() {
+                    showPlan = SQLExplorerPlugin.getDefault().shouldShowQueryPlan();
+                }
+            }, false);
+
+            if (showPlan) {
+                sb.append("sqlOptions").append("=").append("SHOWPLAN;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            }
         }
 
         sb.append("EmbeddedContext").append("=").append("Designer;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -100,32 +96,32 @@ public class QueryClient {
 
         return sb.toString();
     }
-//
-//    static class DesignerLogger implements EmbeddedLogger {
-//
-//        @Override
-//        public void log( int logLevel,
-//                         long timestamp,
-//                         String componentName,
-//                         String threadName,
-//                         String message,
-//                         Throwable throwable ) {
-//            switch (logLevel) {
-//                case LogConfiguration.NONE:
-//                    break;
-//                case LogConfiguration.CRITICAL:
-//                case LogConfiguration.ERROR:
-//                    DqpUiConstants.UTIL.log(new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, IStatus.OK, message, throwable));
-//                    break;
-//                case LogConfiguration.WARNING:
-//                    DqpUiConstants.UTIL.log(new Status(IStatus.WARNING, DqpUiConstants.PLUGIN_ID, IStatus.OK, message, throwable));
-//                    break;
-//                case LogConfiguration.INFO:
-//                case LogConfiguration.DETAIL:
-//                case LogConfiguration.TRACE:
-//                    DqpUiConstants.UTIL.log(new Status(IStatus.INFO, DqpUiConstants.PLUGIN_ID, IStatus.OK, message, throwable));
-//                    break;
-//            }
-//        }
-//    }
+    //
+    // static class DesignerLogger implements EmbeddedLogger {
+    //
+    // @Override
+    // public void log( int logLevel,
+    // long timestamp,
+    // String componentName,
+    // String threadName,
+    // String message,
+    // Throwable throwable ) {
+    // switch (logLevel) {
+    // case LogConfiguration.NONE:
+    // break;
+    // case LogConfiguration.CRITICAL:
+    // case LogConfiguration.ERROR:
+    // DqpUiConstants.UTIL.log(new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, IStatus.OK, message, throwable));
+    // break;
+    // case LogConfiguration.WARNING:
+    // DqpUiConstants.UTIL.log(new Status(IStatus.WARNING, DqpUiConstants.PLUGIN_ID, IStatus.OK, message, throwable));
+    // break;
+    // case LogConfiguration.INFO:
+    // case LogConfiguration.DETAIL:
+    // case LogConfiguration.TRACE:
+    // DqpUiConstants.UTIL.log(new Status(IStatus.INFO, DqpUiConstants.PLUGIN_ID, IStatus.OK, message, throwable));
+    // break;
+    // }
+    // }
+    // }
 }

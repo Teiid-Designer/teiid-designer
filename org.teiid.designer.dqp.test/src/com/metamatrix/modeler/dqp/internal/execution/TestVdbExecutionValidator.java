@@ -7,21 +7,10 @@
  */
 package com.metamatrix.modeler.dqp.internal.execution;
 
-import java.io.File;
-import java.util.Collection;
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.eclipse.core.runtime.IStatus;
-import com.metamatrix.core.util.SmartTestSuite;
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.modeler.core.validation.ProblemMarker;
-import com.metamatrix.modeler.core.validation.Severity;
-import com.metamatrix.vdb.edit.manifest.ManifestFactory;
-import com.metamatrix.vdb.edit.manifest.ModelReference;
-import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
-import com.metamatrix.vdb.edit.manifest.impl.VirtualDatabaseImpl;
 
 /**
  * @since 4.3
@@ -65,40 +54,40 @@ public class TestVdbExecutionValidator extends TestCase {
     // H E L P E R M E T H O D S
     // =========================================================================
 
-    public VirtualDatabase helpGetVirtualDatabaseWithErrors() {
-        ManifestFactory factory = ManifestFactory.eINSTANCE;
-        VirtualDatabaseImpl database = (VirtualDatabaseImpl)factory.createVirtualDatabase();
-        database.setSeverity(Severity.ERROR_LITERAL);
-        Collection markers = database.getMarkers();
-        ProblemMarker marker = factory.createProblemMarker();
-        marker.setSeverity(Severity.ERROR_LITERAL);
-        markers.add(marker);
-        return database;
-    }
-
-    public VirtualDatabase helpGetVirtualDatabaseWithNoModels() {
-        ManifestFactory factory = ManifestFactory.eINSTANCE;
-        VirtualDatabaseImpl database = (VirtualDatabaseImpl)factory.createVirtualDatabase();
-        return database;
-    }
-
-    public VirtualDatabase helpGetVirtualDatabaseWithPhysicalModels() {
-        ManifestFactory factory = ManifestFactory.eINSTANCE;
-        VirtualDatabaseImpl database = (VirtualDatabaseImpl)factory.createVirtualDatabase();
-        ModelReference reference1 = factory.createModelReference();
-        reference1.setModelType(ModelType.PHYSICAL_LITERAL);
-        reference1.setName(PHYSICAL_MODEL_NAME1);
-        database.getModels().add(reference1);
-        ModelReference reference2 = factory.createModelReference();
-        reference2.setModelType(ModelType.PHYSICAL_LITERAL);
-        reference2.setName(PHYSICAL_MODEL_NAME2);
-        database.getModels().add(reference2);
-        ModelReference reference3 = factory.createModelReference();
-        reference3.setModelType(ModelType.PHYSICAL_LITERAL);
-        reference3.setName(PHYSICAL_MODEL_NAME3);
-        database.getModels().add(reference3);
-        return database;
-    }
+    // public VirtualDatabase helpGetVirtualDatabaseWithErrors() {
+    // ManifestFactory factory = ManifestFactory.eINSTANCE;
+    // VirtualDatabaseImpl database = (VirtualDatabaseImpl)factory.createVirtualDatabase();
+    // database.setSeverity(Severity.ERROR_LITERAL);
+    // Collection markers = database.getMarkers();
+    // ProblemMarker marker = factory.createProblemMarker();
+    // marker.setSeverity(Severity.ERROR_LITERAL);
+    // markers.add(marker);
+    // return database;
+    // }
+    //
+    // public VirtualDatabase helpGetVirtualDatabaseWithNoModels() {
+    // ManifestFactory factory = ManifestFactory.eINSTANCE;
+    // VirtualDatabaseImpl database = (VirtualDatabaseImpl)factory.createVirtualDatabase();
+    // return database;
+    // }
+    //
+    // public VirtualDatabase helpGetVirtualDatabaseWithPhysicalModels() {
+    // ManifestFactory factory = ManifestFactory.eINSTANCE;
+    // VirtualDatabaseImpl database = (VirtualDatabaseImpl)factory.createVirtualDatabase();
+    // ModelReference reference1 = factory.createModelReference();
+    // reference1.setModelType(ModelType.PHYSICAL_LITERAL);
+    // reference1.setName(PHYSICAL_MODEL_NAME1);
+    // database.getModels().add(reference1);
+    // ModelReference reference2 = factory.createModelReference();
+    // reference2.setModelType(ModelType.PHYSICAL_LITERAL);
+    // reference2.setName(PHYSICAL_MODEL_NAME2);
+    // database.getModels().add(reference2);
+    // ModelReference reference3 = factory.createModelReference();
+    // reference3.setModelType(ModelType.PHYSICAL_LITERAL);
+    // reference3.setName(PHYSICAL_MODEL_NAME3);
+    // database.getModels().add(reference3);
+    // return database;
+    // }
 
     public Object helpGetVdbDefnWithConnectorBindingss() {
         return null;
@@ -112,33 +101,33 @@ public class TestVdbExecutionValidator extends TestCase {
     // T E S T C A S E S
     // =========================================================================
 
-    public void testVdbWithValidationErrors() {
-        VirtualDatabase database = helpGetVirtualDatabaseWithErrors();
-        VdbExecutionValidatorImpl validator = new VdbExecutionValidatorImpl();
-        IStatus status = validator.validateVirtualDatabase(database);
-        assertEquals(IStatus.ERROR, status.getSeverity());
-    }
-
-    public void testVdbWithValidationNoErrors() {
-        VirtualDatabase database = helpGetVirtualDatabaseWithPhysicalModels();
-        VdbExecutionValidatorImpl validator = new VdbExecutionValidatorImpl();
-        IStatus status = validator.validateVirtualDatabase(database);
-        assertEquals(IStatus.OK, status.getSeverity());
-    }
-
-    public void testVdbWithNoModels() {
-        VirtualDatabase database = helpGetVirtualDatabaseWithNoModels();
-        VdbExecutionValidatorImpl validator = new VdbExecutionValidatorImpl();
-        IStatus status = validator.validateVirtualDatabase(database);
-        assertEquals(IStatus.WARNING, status.getSeverity());
-    }
-
-    public void testVdbWithModels() {
-        VirtualDatabase database = helpGetVirtualDatabaseWithPhysicalModels();
-        VdbExecutionValidatorImpl validator = new VdbExecutionValidatorImpl();
-        IStatus status = validator.validateVirtualDatabase(database);
-        assertEquals(IStatus.OK, status.getSeverity());
-    }
+    // public void testVdbWithValidationErrors() {
+    // VirtualDatabase database = helpGetVirtualDatabaseWithErrors();
+    // VdbExecutionValidatorImpl validator = new VdbExecutionValidatorImpl();
+    // IStatus status = validator.validateVirtualDatabase(database);
+    // assertEquals(IStatus.ERROR, status.getSeverity());
+    // }
+    //
+    // public void testVdbWithValidationNoErrors() {
+    // VirtualDatabase database = helpGetVirtualDatabaseWithPhysicalModels();
+    // VdbExecutionValidatorImpl validator = new VdbExecutionValidatorImpl();
+    // IStatus status = validator.validateVirtualDatabase(database);
+    // assertEquals(IStatus.OK, status.getSeverity());
+    // }
+    //
+    // public void testVdbWithNoModels() {
+    // VirtualDatabase database = helpGetVirtualDatabaseWithNoModels();
+    // VdbExecutionValidatorImpl validator = new VdbExecutionValidatorImpl();
+    // IStatus status = validator.validateVirtualDatabase(database);
+    // assertEquals(IStatus.WARNING, status.getSeverity());
+    // }
+    //
+    // public void testVdbWithModels() {
+    // VirtualDatabase database = helpGetVirtualDatabaseWithPhysicalModels();
+    // VdbExecutionValidatorImpl validator = new VdbExecutionValidatorImpl();
+    // IStatus status = validator.validateVirtualDatabase(database);
+    // assertEquals(IStatus.OK, status.getSeverity());
+    // }
 
     // public void testStaleVdb() throws Exception {
     // FakeVdbEditingContext context = (FakeVdbEditingContext) helpGetStaleEditingContext();
@@ -150,10 +139,10 @@ public class TestVdbExecutionValidator extends TestCase {
     // assertEquals(IStatus.WARNING, status.getSeverity());
     // }
 
-    public void testVdbWithNoDefinition() {
-        String vdbPath = SmartTestSuite.getTestDataPath() + File.separator + "partssupplierConfig/PartsSupplier.vdb"; //$NON-NLS-1$
-        VdbExecutionValidatorImpl validator = new VdbExecutionValidatorImpl();
-        IStatus status = validator.validateVdb(vdbPath);
-        assertEquals(IStatus.ERROR, status.getSeverity());
-    }
+    // public void testVdbWithNoDefinition() {
+    //        String vdbPath = SmartTestSuite.getTestDataPath() + File.separator + "partssupplierConfig/PartsSupplier.vdb"; //$NON-NLS-1$
+    // VdbExecutionValidatorImpl validator = new VdbExecutionValidatorImpl();
+    // IStatus status = validator.validateVdb(vdbPath);
+    // assertEquals(IStatus.ERROR, status.getSeverity());
+    // }
 }

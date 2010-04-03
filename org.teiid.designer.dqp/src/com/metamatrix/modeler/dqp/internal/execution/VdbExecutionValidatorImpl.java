@@ -7,36 +7,25 @@
  */
 package com.metamatrix.modeler.dqp.internal.execution;
 
-import java.beans.VetoableChangeListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import com.metamatrix.common.vdb.api.ModelInfo;
-import com.metamatrix.common.vdb.api.VDBDefn;
+import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbModelEntry;
 import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.AutoMultiStatus;
-import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.internal.config.VdbDefnHelper;
-import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
-import com.metamatrix.vdb.edit.ClosePreventionVetoableChangeListener;
-import com.metamatrix.vdb.edit.VdbEditPlugin;
-import com.metamatrix.vdb.edit.VdbEditingContext;
-import com.metamatrix.vdb.edit.manifest.ModelReference;
-import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
-import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
+import com.metamatrix.modeler.dqp.execution.VdbExecutionValidator;
 
 /**
  * This validator verifies that the given vdb has a vdb definition file, all the physical models in a given vdb have connector
@@ -44,7 +33,7 @@ import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
  * 
  * @since 4.3
  */
-public class VdbExecutionValidatorImpl implements com.metamatrix.modeler.dqp.execution.VdbExecutionValidator {
+public class VdbExecutionValidatorImpl implements VdbExecutionValidator {
     private static final String I18N_PREFIX = "VdbExecutionValidator."; //$NON-NLS-1$
     //
     // Class constants:
@@ -76,44 +65,21 @@ public class VdbExecutionValidatorImpl implements com.metamatrix.modeler.dqp.exe
     //
     // Instance variables:
     //
-    private VetoableChangeListener veto = new ClosePreventionVetoableChangeListener();
+    // private VetoableChangeListener veto = new ClosePreventionVetoableChangeListener();
 
     //
     // Implementation of VDBExecutionValidator interface:
     //
 
     /**
-     * Validate the vdb at the given location.
+     * Validate the vdb given the vdb editing context.
      * 
-     * @param pathToVdb The path to the vdb file
+     * @param context The editing context for vdb containing the definition file.
      * @return The validation status for the vdb indication if its ready for execution.
      * @since 4.3
      */
-    public IStatus validateVdb( final String pathToVdb ) {
-        return validateVdb(pathToVdb, true);
-    }
-
-    /**
-     * Validate the vdb at the given location.
-     * 
-     * @param pathToVdb The path to the vdb file
-     * @return The validation status for the vdb indication if its ready for execution.
-     * @since 4.3
-     */
-    protected IStatus validateVdb( final String pathToVdb,
-                                   boolean addSyncWarning ) {
-        ArgCheck.isNotNull(pathToVdb);
-
-        try {
-            VdbEditingContext context = VdbEditPlugin.createVdbEditingContext(new Path(pathToVdb));
-            IStatus result = validateVdb(context);
-            if (result.isOK()) {
-                result = OK_STATUS;
-            }
-            return result;
-        } catch (Exception e) {
-            return new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, EXECPTION_ERROR_CODE, e.getMessage(), e);
-        }
+    public IStatus validateVdb( final Vdb vdb ) {
+        return validateVdb(vdb, true);
     }
 
     /**
@@ -123,48 +89,19 @@ public class VdbExecutionValidatorImpl implements com.metamatrix.modeler.dqp.exe
      * @return The validation status for the vdb indication if its ready for execution.
      * @since 4.3
      */
-    public IStatus validateVdb( final VdbEditingContext context ) {
-        return validateVdb(context, true);
-    }
-
-    /**
-     * Validate the vdb given the vdb editing context.
-     * 
-     * @param context The editing context for vdb containing the definition file.
-     * @return The validation status for the vdb indication if its ready for execution.
-     * @since 4.3
-     */
-    public IStatus validateVdb( final VdbEditingContext context,
+    public IStatus validateVdb( final Vdb vdb,
                                 boolean addSyncWarning ) {
         final AutoMultiStatus status = new AutoMultiStatus(OK_STATUS);
 
-        Assertion.assertTrue(context instanceof InternalVdbEditingContext);
-        InternalVdbEditingContext internalContext = (InternalVdbEditingContext)context;
-        boolean validatorOpenedContext = false;
         try {
-            if (!context.isOpen()) {
-                internalContext.setLoadModelsOnOpen(false);
-                context.open();
-                validatorOpenedContext = true;
-            }
-            context.addVetoableChangeListener(veto);
-
-            // check save state:
-            if (context.isSaveRequired()) {
-                status.add(STATUS_UNEXECUTABLE_ERROR);
-            } // endif
-
-            // use the helper to determine if we have the def file:
-            VdbDefnHelper helper = getHelper(internalContext);
-            VDBDefn defFile = helper.getVdbDefn();
 
             // must have a defn for this class to function
-            Assertion.isNotNull(defFile, DqpPlugin.Util.getStringOrKey(VdbDefnHelper.PREFIX + "nullVdbDefn")); //$NON-NLS-1$
+            Assertion.isNotNull(vdb, "vdb"); //$NON-NLS-1$
 
             // get the vdb definition file
-            status.merge(validateVdbModels(context.getVirtualDatabase(), defFile));
+            status.merge(validateVdbModels(vdb));
 
-            if (addSyncWarning && context.isStale()) {
+            if (addSyncWarning) {
                 status.add(STATUS_SYNC_WARNING);
             }
 
@@ -172,15 +109,7 @@ public class VdbExecutionValidatorImpl implements com.metamatrix.modeler.dqp.exe
             String message = (e.getMessage() != null) ? e.getMessage() : StringUtil.Constants.EMPTY_STRING;
             status.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, EXECPTION_ERROR_CODE, message, e));
         } finally {
-            context.removeVetoableChangeListener(veto);
-            if (validatorOpenedContext) {
-                try {
-                    internalContext.close(true, false, true);
-                    internalContext.setLoadModelsOnOpen(true);
-                } catch (IOException err) {
-                    VdbEditPlugin.Util.log(err);
-                }
-            }
+
         }
 
         // return what we have built:
@@ -196,45 +125,51 @@ public class VdbExecutionValidatorImpl implements com.metamatrix.modeler.dqp.exe
      * @return The status of vdb execution validation
      * @since 4.3
      */
-    public IStatus validateVdbModels( final VirtualDatabase database,
-                                      final VDBDefn vdbDefn ) {
-        ArgCheck.isNotNull(database);
-        ArgCheck.isNotNull(vdbDefn);
+    public IStatus validateVdbModels( final Vdb vdb ) {
+        ArgCheck.isNotNull(vdb);
 
         // validate the virtual database
         AutoMultiStatus vdbStatus = new AutoMultiStatus(OK_STATUS);
+
         // map of modelNames to connector bindings
-        Map modelBindingMap = vdbDefn.getModelToBindingMappings();
-        // verify each of the physical models has a connecot binding defined
-        for (final Iterator iter = getPhysicalModelNames(database).iterator(); iter.hasNext();) {
-            String modelName = (String)iter.next();
-            Collection routingIDList = (Collection)modelBindingMap.get(modelName);
-            if (routingIDList == null || routingIDList.isEmpty()) {
-                vdbStatus.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, INCOMPLETE_BINDINGS_ERROR_CODE,
-                                         getString("physical_model_no_connector_binding", modelName), null)); //$NON-NLS-1$
-            }
-        }
+        // verify each of the physical models has a connector binding defined
+
+        // TODO:
+
+        // for (final Iterator iter = getPhysicalModelNames(vdb).iterator(); iter.hasNext();) {
+        // String modelName = (String)iter.next();
+        // Collection routingIDList = (Collection)modelBindingMap.get(modelName);
+        // if (routingIDList == null || routingIDList.isEmpty()) {
+        // vdbStatus.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, INCOMPLETE_BINDINGS_ERROR_CODE,
+        //                                         getString("physical_model_no_connector_binding", modelName), null)); //$NON-NLS-1$
+        // }
+        // }
         // verify each of the materialization models has a connector binding defined
-        for (final Iterator iter = getMaterializationModelNames(database).iterator(); iter.hasNext();) {
-            String modelName = (String)iter.next();
-            Collection routingIDList = (Collection)modelBindingMap.get(modelName);
-            if (routingIDList == null || routingIDList.isEmpty()) {
-                vdbStatus.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, INCOMPLETE_BINDINGS_ERROR_CODE,
-                                         getString("materialization_model_no_connector_binding", modelName), null)); //$NON-NLS-1$
-            }
-        }
+
+        // TODO:
+
+        // for (final Iterator iter = getMaterializationModelNames(vdb).iterator(); iter.hasNext();) {
+        // String modelName = (String)iter.next();
+        // Collection routingIDList = (Collection)modelBindingMap.get(modelName);
+        // if (routingIDList == null || routingIDList.isEmpty()) {
+        // vdbStatus.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, INCOMPLETE_BINDINGS_ERROR_CODE,
+        //                                         getString("materialization_model_no_connector_binding", modelName), null)); //$NON-NLS-1$
+        // }
+        // }
 
         // for each connector binding make sure their masked properties can be decrypted. stop after finding one that can't.
-        Collection models = vdbDefn.getModels();
+        Collection modelEntries = vdb.getModelEntries();
 
-        if ((models != null) && !models.isEmpty()) {
-            Iterator modelItr = models.iterator();
+        if ((modelEntries != null) && !modelEntries.isEmpty()) {
+            Iterator modelItr = modelEntries.iterator();
 
             while (modelItr.hasNext()) {
-                ModelInfo model = (ModelInfo)modelItr.next();
+                VdbModelEntry modelEntry = (VdbModelEntry)modelItr.next();
 
-                if (model.requiresConnectorBinding()) {
-                    Connector connector = ModelerDqpUtils.getFirstConnector(model, vdbDefn);
+                if (modelEntry.requiresConnector()) {
+                    // TODO: We don't have a Server defined here yet? How about the concept
+                    // of a Preview/Execution Server??
+                    Connector connector = DqpPlugin.getInstance().getServerManager().getFirstConnector(model, vdbDefn);
                     // can't assume we get a binding because we no longer stop on the first error:
                     if (connector != null) {
                         ConnectorType type = connector.getType();
@@ -261,18 +196,8 @@ public class VdbExecutionValidatorImpl implements com.metamatrix.modeler.dqp.exe
         }
 
         // validate VDB here so that more useful errors will be up front:
-        vdbStatus.add(validateVirtualDatabase(database));
+        vdbStatus.add(validateVirtualDatabase(vdb));
         return vdbStatus;
-    }
-
-    /**
-     * Get the vdb defn helper used in validation
-     * 
-     * @return Returns the helper.
-     * @since 4.3
-     */
-    private VdbDefnHelper getHelper( InternalVdbEditingContext context ) throws Exception {
-        return DqpPlugin.getInstance().getVdbDefnHelper(context);
     }
 
     /**
@@ -283,13 +208,13 @@ public class VdbExecutionValidatorImpl implements com.metamatrix.modeler.dqp.exe
      * @return The validation status.
      * @since 4.3
      */
-    protected IStatus validateVirtualDatabase( final VirtualDatabase database ) {
-        IStatus valCheck = checkForValidationErrors(database);
+    protected IStatus validateVirtualDatabase( final Vdb vdb ) {
+        IStatus valCheck = checkForValidationErrors(vdb);
         if (valCheck.getSeverity() == IStatus.ERROR) {
             return valCheck;
         }
 
-        Collection physicalModels = getPhysicalModelNames(database);
+        Collection physicalModels = getPhysicalModelNames(vdb);
         // if there are no physical models there is nothing more to validate....just warn.
         if (physicalModels.isEmpty()) {
             return STATUS_NO_MODELS_WARNING;
@@ -297,9 +222,9 @@ public class VdbExecutionValidatorImpl implements com.metamatrix.modeler.dqp.exe
         return OK_STATUS;
     }
 
-    protected IStatus checkForValidationErrors( final VirtualDatabase database ) {
+    protected IStatus checkForValidationErrors( final Vdb vdb ) {
         // if the vdb has validation errors....exit with an error...cannot execute such a vdb
-        if (database.getSeverity().getValue() == Severity.ERROR) {
+        if (vdb.getSeverity().getValue() == Severity.ERROR) {
             return STATUS_VDB_VALIDATION_ERRORS;
         }
         return OK_STATUS;
@@ -312,13 +237,12 @@ public class VdbExecutionValidatorImpl implements com.metamatrix.modeler.dqp.exe
      * @return The names of all physical models in given vdb.
      * @since 4.3
      */
-    private Collection getPhysicalModelNames( final VirtualDatabase database ) {
+    private Collection getPhysicalModelNames( final Vdb vdb ) {
         Collection physicalModelNames = new ArrayList();
-        for (final Iterator iter = database.getModels().iterator(); iter.hasNext();) {
-            ModelReference reference = (ModelReference)iter.next();
-            ModelType type = reference.getModelType();
-            if (type == ModelType.PHYSICAL_LITERAL) {
-                physicalModelNames.add(FileUtils.getFilenameWithoutExtension(reference.getName()));
+
+        for (VdbModelEntry entry : vdb.getModelEntries()) {
+            if (entry.getType() == ModelType.PHYSICAL_LITERAL) {
+                physicalModelNames.add(FileUtils.getFilenameWithoutExtension(entry.getName().lastSegment()));
             }
         }
         return physicalModelNames;
@@ -331,13 +255,12 @@ public class VdbExecutionValidatorImpl implements com.metamatrix.modeler.dqp.exe
      * @return The names of all materialization models in given vdb.
      * @since 4.3
      */
-    private Collection getMaterializationModelNames( final VirtualDatabase database ) {
+    private Collection getMaterializationModelNames( final Vdb vdb ) {
         Collection materializationModelNames = new ArrayList();
-        for (final Iterator iter = database.getModels().iterator(); iter.hasNext();) {
-            ModelReference reference = (ModelReference)iter.next();
-            ModelType type = reference.getModelType();
-            if (type == ModelType.MATERIALIZATION_LITERAL) {
-                materializationModelNames.add(FileUtils.getFilenameWithoutExtension(reference.getName()));
+
+        for (VdbModelEntry entry : vdb.getModelEntries()) {
+            if (entry.getType() == ModelType.MATERIALIZATION_LITERAL) {
+                materializationModelNames.add(FileUtils.getFilenameWithoutExtension(entry.getName().lastSegment()));
             }
         }
         return materializationModelNames;

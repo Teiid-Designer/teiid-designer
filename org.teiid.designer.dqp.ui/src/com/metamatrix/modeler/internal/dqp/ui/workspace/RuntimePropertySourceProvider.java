@@ -23,7 +23,6 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
-import com.metamatrix.modeler.internal.dqp.ui.config.ConnectorTypePropertySource;
 import com.metamatrix.modeler.internal.ui.properties.ModelPropertySource;
 
 

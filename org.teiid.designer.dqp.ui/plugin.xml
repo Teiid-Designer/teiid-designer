@@ -38,16 +38,6 @@
             id="xmlDocumentSqlResultsView">
       </view>
   </extension>
-<!-- VDB Execution Tab contribution to the VDB Editor -->
-  <extension
-        id="connectorBindingsEditorpart"
-        name="%connectorBindingsVdbEditorPage.name"
-        point="org.teiid.designer.vdb.ui.vdbEditorPage">
-        <class
-            displayName="%connectorBindingsVdbEditorPage.name"
-            name="com.metamatrix.modeler.internal.dqp.ui.config.ConnectorBindingsEditorPart">
-        </class>
-  </extension>
 <!-- JDBC Client Perspective -->
    <extension
          point="org.eclipse.ui.perspectives">

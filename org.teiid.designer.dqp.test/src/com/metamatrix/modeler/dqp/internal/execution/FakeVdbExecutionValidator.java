@@ -9,11 +9,9 @@ package com.metamatrix.modeler.dqp.internal.execution;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.common.vdb.api.VDBDefn;
+import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.execution.VdbExecutionValidator;
-import com.metamatrix.vdb.edit.VdbEditingContext;
-import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 
 public class FakeVdbExecutionValidator implements VdbExecutionValidator {
 
@@ -32,12 +30,11 @@ public class FakeVdbExecutionValidator implements VdbExecutionValidator {
         return this.testStatus;
     }
 
-    public IStatus validateVdb( VdbEditingContext context ) {
+    public IStatus validateVdb( Vdb vdb ) {
         return this.testStatus;
     }
 
-    public IStatus validateVdbModels( VirtualDatabase database,
-                                      VDBDefn vdbDefn ) {
+    public IStatus validateVdbModels( Vdb vdb ) {
         return this.testStatus;
     }
 

@@ -21,7 +21,7 @@ import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
-import com.metamatrix.common.vdb.api.ModelInfo;
+import com.metamatrix.common.vdb.ModelInfo;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metamodels.core.ModelType;

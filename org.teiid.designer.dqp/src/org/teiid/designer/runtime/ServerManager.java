@@ -337,7 +337,11 @@ public final class ServerManager implements EventManager {
     }
 
     public IStatus ping( Server server ) {
-        // TODO implement method
+        try {
+            server.getAdmin();
+        } catch (Exception e) {
+            return new Status(IStatus.WARNING, "org.teiid.desginer.dqp", "Server Not connected");
+        }
         return Status.OK_STATUS;
     }
 

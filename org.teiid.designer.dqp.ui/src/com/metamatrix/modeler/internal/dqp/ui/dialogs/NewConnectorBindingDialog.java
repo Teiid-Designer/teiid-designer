@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
-import com.metamatrix.common.vdb.api.ModelInfo;
+import com.metamatrix.common.vdb.ModelInfo;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;

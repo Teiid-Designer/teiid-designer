@@ -7,28 +7,19 @@
  */
 package com.metamatrix.modeler.dqp.util;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.designer.runtime.Connector;
-import com.metamatrix.common.vdb.api.ModelInfo;
-import com.metamatrix.common.vdb.api.VDBDefn;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.designer.vdb.VdbModelEntry;
+import com.metamatrix.common.vdb.ModelInfo;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
-import com.metamatrix.vdb.edit.VdbEditingContext;
-import com.metamatrix.vdb.edit.manifest.ModelReference;
-import com.metamatrix.vdb.edit.manifest.ModelSource;
-import com.metamatrix.vdb.edit.manifest.ModelSourceProperty;
+import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 
 /**
  * @since 4.3
@@ -125,70 +116,6 @@ public final class ModelerDqpUtils {
     }
 
     /**
-     * Obtains the first <code>ConnectorBinding</code> assigned to the specified model using the specified VDB definition.
-     * 
-     * @param theModel the model whose first binding is being requested
-     * @param theDefn the VDB definition used to find bindings
-     * @return the binding or <code>null</code>
-     * @throws IllegalArgumentException if an input parameter is <code>null</code>
-     * @since 4.3
-     */
-    public static Connector getFirstConnector( ModelInfo theModel,
-                                               VDBDefn theDefn ) {
-        ArgCheck.isNotNull(theModel);
-        ArgCheck.isNotNull(theDefn);
-
-        Connector result = null;
-
-        if (theModel.requiresConnectorBinding()) {
-            Collection bindingNames = theModel.getConnectorBindingNames();
-
-            if ((bindingNames != null) && !bindingNames.isEmpty()) {
-                String cbname = (String)bindingNames.iterator().next();
-
-                Connector connector = theDefn.getConnectorBindings().get(cbname);
-                if (connector != null) {
-                    result = connector;
-                }
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Obtains the <code>ModelSource</code> for the specified model using the given context.
-     * 
-     * @param theContext the context used to find the import source
-     * @param theModel the model whose import source is being requested
-     * @return the import source or <code>null</code> if not found
-     * @throws IllegalArgumentException if any input parameter is <code>null</code>
-     * @since 4.3
-     */
-    public static ModelSource getModelImportSource( VdbEditingContext theContext,
-                                                    ModelInfo theModel ) {
-        ArgCheck.isNotNull(theContext);
-        ArgCheck.isNotNull(theModel);
-
-        ModelSource result = null;
-        List modelRefs = theContext.getVirtualDatabase().getModels();
-
-        // no need to check if modelRefs is null as ELists are never null
-        if (!modelRefs.isEmpty()) {
-            for (int size = modelRefs.size(), i = 0; i < size; ++i) {
-                ModelReference modelRef = (ModelReference)modelRefs.get(i);
-
-                if (FileUtils.getFilenameWithoutExtension(modelRef.getName()).equals(theModel.getName())) {
-                    result = modelRef.getModelSource();
-                    break;
-                }
-            }
-        }
-
-        return result;
-    }
-
-    /**
      * Get a <code>Map</code> of property name to values for JDBC connection properties stored on a model reference on the vdb
      * manifest model.
      * 
@@ -196,31 +123,36 @@ public final class ModelerDqpUtils {
      * @return a map of JDBC connection properties (never <code>null</code> but maybe empty)
      * @since 5.0
      */
-    public static Map getModelJdbcProperties( ModelReference theModelRef ) {
+    public static Map getModelJdbcProperties( VdbModelEntry modelEntry ) {
         Map result = null;
-        ModelSource mdlSource = theModelRef.getModelSource();
+        IPath modelPath = modelEntry.getName();
 
-        if ((theModelRef.getModelType() != ModelType.PHYSICAL_LITERAL) || (mdlSource == null)) {
+        IResource resource = WorkspaceResourceFinderUtil.findIResourceByPath(modelPath);
+
+        if ((modelEntry.getType() != ModelType.PHYSICAL_LITERAL) || (resource == null)) {
             result = Collections.EMPTY_MAP;
         } else {
             result = new HashMap();
-            Collection properties = mdlSource.getProperties();
 
-            for (Iterator itr = properties.iterator(); itr.hasNext();) {
-                ModelSourceProperty sourceProperty = (ModelSourceProperty)itr.next();
-                String propertyName = sourceProperty.getName();
-                String propertyValue = sourceProperty.getValue();
+            // TODO: Find Model's JDBC PRoperties here!!!!
 
-                if (!StringUtil.isEmpty(propertyName) && !StringUtil.isEmpty(propertyValue)) {
-                    if (propertyName.equalsIgnoreCase(JDBCConnectionPropertyNames.JDBC_IMPORT_DRIVER_CLASS)) {
-                        result.put(JDBCConnectionPropertyNames.JDBC_IMPORT_DRIVER_CLASS, propertyValue);
-                    } else if (propertyName.equalsIgnoreCase(JDBCConnectionPropertyNames.JDBC_IMPORT_URL)) {
-                        result.put(JDBCConnectionPropertyNames.JDBC_IMPORT_URL, propertyValue);
-                    } else if (propertyName.equalsIgnoreCase(JDBCConnectionPropertyNames.JDBC_IMPORT_USERNAME)) {
-                        result.put(JDBCConnectionPropertyNames.JDBC_IMPORT_USERNAME, propertyValue);
-                    }
-                }
-            }
+            // Collection properties = mdlSource.getProperties();
+            //
+            // for (Iterator itr = properties.iterator(); itr.hasNext();) {
+            // ModelSourceProperty sourceProperty = (ModelSourceProperty)itr.next();
+            // String propertyName = sourceProperty.getName();
+            // String propertyValue = sourceProperty.getValue();
+            //
+            // if (!StringUtil.isEmpty(propertyName) && !StringUtil.isEmpty(propertyValue)) {
+            // if (propertyName.equalsIgnoreCase(JDBCConnectionPropertyNames.JDBC_IMPORT_DRIVER_CLASS)) {
+            // result.put(JDBCConnectionPropertyNames.JDBC_IMPORT_DRIVER_CLASS, propertyValue);
+            // } else if (propertyName.equalsIgnoreCase(JDBCConnectionPropertyNames.JDBC_IMPORT_URL)) {
+            // result.put(JDBCConnectionPropertyNames.JDBC_IMPORT_URL, propertyValue);
+            // } else if (propertyName.equalsIgnoreCase(JDBCConnectionPropertyNames.JDBC_IMPORT_USERNAME)) {
+            // result.put(JDBCConnectionPropertyNames.JDBC_IMPORT_USERNAME, propertyValue);
+            // }
+            // }
+            // }
         }
 
         return result;

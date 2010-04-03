@@ -12,16 +12,15 @@ import java.sql.SQLException;
 import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import com.metamatrix.core.util.StringUtil;
-import com.metamatrix.jdbc.EmbeddedDriver;
 import com.metamatrix.jdbc.api.Connection;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
-import com.metamatrix.vdb.edit.loader.VDBConstants;
 
 /**
  *
  */
 public final class ExecutionManager {
+    public static final String TXN_AUTO_WRAP = "txnAutoWrap"; //$NON-NLS-1$
 
     private Connection adminConnection;
 
@@ -37,7 +36,7 @@ public final class ExecutionManager {
                                       String vdbName,
                                       String version,
                                       Properties executionProps ) {
-        String txnAutoWrap = executionProps.getProperty(VDBConstants.VDBElementNames.ExecutionProperties.Properties.TXN_AUTO_WRAP);
+        String txnAutoWrap = executionProps.getProperty(TXN_AUTO_WRAP);
         File propsFile = new File(executionDir, "workspace.properties"); //$NON-NLS-1$
 
         StringBuffer sb = new StringBuffer().append("jdbc:metamatrix:") //$NON-NLS-1$
@@ -55,20 +54,21 @@ public final class ExecutionManager {
     }
 
     protected Connection getAdminConnection() throws SQLException {
+        // TODO: FIX
         if (this.adminConnection == null) {
             ClassLoader current = Thread.currentThread().getContextClassLoader();
             try {
                 File propertiesDir = DqpPath.getRuntimePath().toFile();
                 String url = buildConnectionURL(propertiesDir.getAbsolutePath(), "admin", "1", new Properties()); //$NON-NLS-1$ //$NON-NLS-2$ 
                 DqpPlugin.Util.log(IStatus.INFO, "starting workspace execution with url = \"" + url); //$NON-NLS-1$ 
-                EmbeddedDriver driver = new EmbeddedDriver();
+                // EmbeddedDriver driver = new EmbeddedDriver();
 
-                Thread.currentThread().setContextClassLoader(driver.getClass().getClassLoader());
+                // Thread.currentThread().setContextClassLoader(driver.getClass().getClassLoader());
 
                 Properties props = new Properties();
                 props.setProperty("user", "admin"); //$NON-NLS-1$ //$NON-NLS-2$
                 props.setProperty("password", "teiid"); //$NON-NLS-1$ //$NON-NLS-2$
-                this.adminConnection = (com.metamatrix.jdbc.api.Connection)driver.connect(url, props);
+                // this.adminConnection = (com.metamatrix.jdbc.api.Connection)driver.connect(url, props);
             } finally {
                 Thread.currentThread().setContextClassLoader(current);
             }

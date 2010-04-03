@@ -16,11 +16,10 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.FileEditorInput;
+import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditor;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
-import com.metamatrix.vdb.edit.VdbEditingContext;
-import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 
 /**
  * @since 4.3
@@ -31,9 +30,9 @@ public class DefaultVdbEditorUtil implements IVdbEditorUtil {
      * @see com.metamatrix.modeler.dqp.ui.IVdbEditorUtil#openConnectorBindingsEditor(com.metamatrix.vdb.edit.VdbEditingContext)
      * @since 4.3
      */
-    public void openConnectorBindingsEditor( VdbEditingContext theContext ) {
+    public void openConnectorBindingsEditor( Vdb theVdb ) {
 
-        activateEditor(theContext, DqpUiConstants.VDB_EDITOR_CONNECTOR_BINDINGS_ID);
+        activateEditor(theVdb, DqpUiConstants.VDB_EDITOR_CONNECTOR_BINDINGS_ID);
 
     }
 
@@ -41,9 +40,9 @@ public class DefaultVdbEditorUtil implements IVdbEditorUtil {
      * @see com.metamatrix.modeler.dqp.ui.IVdbEditorUtil#displayVdbProblems(com.metamatrix.vdb.edit.VdbEditingContext)
      * @since 4.3
      */
-    public void displayVdbProblems( VdbEditingContext theContext ) {
+    public void displayVdbProblems( Vdb theVdb ) {
 
-        activateEditor(theContext, VdbUiConstants.Extensions.PROBLEMS_TAB_ID);
+        activateEditor(theVdb, VdbUiConstants.Extensions.PROBLEMS_TAB_ID);
 
     }
 
@@ -51,10 +50,10 @@ public class DefaultVdbEditorUtil implements IVdbEditorUtil {
      * @see com.metamatrix.modeler.dqp.ui.IVdbEditorUtil#openVdbEditor(com.metamatrix.vdb.edit.VdbEditingContext)
      * @since 4.3
      */
-    public void openVdbEditor( VdbEditingContext theContext,
+    public void openVdbEditor( Vdb theVdb,
                                String tabId ) {
 
-        activateEditor(theContext, tabId);
+        activateEditor(theVdb, tabId);
 
     }
 
@@ -67,7 +66,7 @@ public class DefaultVdbEditorUtil implements IVdbEditorUtil {
             IEditorPart editor = editors[i].getEditor(false);
             if (editor instanceof VdbEditor) {
                 VdbEditor vdbEditor = (VdbEditor)editor;
-                IPath editorVdbPath = ((InternalVdbEditingContext)vdbEditor.getContext()).getPathToVdb();
+                IPath editorVdbPath = vdbEditor.getVdb().getPathToVdb();
                 if (contextVdbPath.equals(editorVdbPath)) {
                     return vdbEditor;
                 }
@@ -78,13 +77,13 @@ public class DefaultVdbEditorUtil implements IVdbEditorUtil {
         return null;
     }
 
-    private void activateEditor( final VdbEditingContext theContext,
+    private void activateEditor( final Vdb theVdb,
                                  final String tabId ) {
 
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
 
-                IPath contextVdbPath = ((InternalVdbEditingContext)theContext).getPathToVdb();
+                IPath contextVdbPath = theVdb.getPathToVdb();
                 IWorkbenchWindow window = UiPlugin.getDefault().getCurrentWorkbenchWindow();
 
                 if (window != null) {

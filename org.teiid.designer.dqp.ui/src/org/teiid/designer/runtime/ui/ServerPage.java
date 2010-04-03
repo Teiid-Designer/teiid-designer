@@ -379,7 +379,7 @@ public final class ServerPage extends WizardPage {
             public void run() {
                 // TODO Actually ping the server
                 success[0] = true;
-                // getServerManager().ping(server).isOK();
+                getServerManager().ping(server).isOK();
             }
         });
 

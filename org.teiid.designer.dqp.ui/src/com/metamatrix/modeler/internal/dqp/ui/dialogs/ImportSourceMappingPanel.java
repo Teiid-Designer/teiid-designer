@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import com.metamatrix.common.vdb.api.ModelInfo;
+import com.metamatrix.common.vdb.ModelInfo;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.modeler.util.ArgCheck;

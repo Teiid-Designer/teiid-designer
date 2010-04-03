@@ -32,11 +32,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.part.ViewPart;
+import org.teiid.client.plan.DisplayHelper;
+import org.teiid.client.plan.PlanNode;
+import org.teiid.client.plan.XMLOutputVisitor;
+import com.metamatrix.common.util.QueryPlanDisplayHelper;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
-import com.metamatrix.jdbc.api.PlanNode;
-import com.metamatrix.jdbc.api.XMLOutputVisitor;
-import com.metamatrix.jdbc.api.tools.QueryPlanDisplayHelper;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.ui.internal.dialog.TextAreaDialog;
 import com.metamatrix.ui.internal.util.SystemClipboardUtilities;
@@ -356,7 +357,7 @@ public class ResultsPanel extends Composite implements DqpUiConstants {
                 this.txtQueryPlan.setLayoutData(new GridData(GridData.FILL_BOTH));
             }
 
-            QueryPlanDisplayHelper helper = new QueryPlanDisplayHelper();
+            DisplayHelper helper = new QueryPlanDisplayHelper();
             XMLOutputVisitor v = new XMLOutputVisitor(helper);
             v.visit(theQueryPlan);
             this.txtQueryPlan.setText(v.getText());

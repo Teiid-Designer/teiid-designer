@@ -87,7 +87,28 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
                                      Connector connector ) {
         ArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
         ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
-        createSourceBinding(modelResource, Collections.singleton(connector));
+
+        String modelName = modelResource.getItemName();
+        String sourceName = connector.getName();
+        String jndiName = connector.getType().getPropertyDefinition("jndiName").getPropertyValue("name");
+
+        try {
+            // ensureModelExistsInHiddenVdb();
+            this.admin.getAdminApi().assignBindingToModel(getHiddenVdbName(), VDB_VERSION, modelName, sourceName, jndiName);
+
+            SourceBinding newBinding = new SourceBinding(modelName,
+                                                         modelResource.getParent().getPath().makeRelative().toString(),
+                                                         Collections.singleton(connector));
+            this.bindingsByModelNameMap.put(modelName, newBinding);
+
+            // notify listeners
+            fireConfigurationEvent(ExecutionConfigurationEvent.createAddSourceBindingEvent(newBinding));
+        } catch (Exception e) {
+            Util.log(IStatus.ERROR, e.getMessage());
+        }
+
+        // createSourceBinding(modelResource, Collections.singleton(connector));
+
     }
 
     private void createSourceBinding( ModelResource modelResource,
@@ -104,14 +125,12 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
             }
             connectorNames[i] = connector.getName();
             ++i;
+
+            createSourceBinding(modelResource, connector);
         }
 
         try {
             // ensureModelExistsInHiddenVdb();
-            this.admin.getAdminApi().assignBindingsToModel(connectorNames,
-                                                           getHiddenVdbName(),
-                                                           Integer.toString(VDB_VERSION),
-                                                           modelName);
             SourceBinding newBinding = new SourceBinding(modelName,
                                                          modelResource.getParent().getPath().makeRelative().toString(),
                                                          connectors);
@@ -297,7 +316,8 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
 
         if (vdb != null) {
             for (Model model : vdb.getModels()) {
-                List<String> connectorNames = model.getConnectorBindingNames();
+
+                List<String> connectorNames = model.getSourceNames();
 
                 if (!connectorNames.isEmpty()) {
                     Set<Connector> connectors = new HashSet<Connector>(connectorNames.size());
@@ -314,7 +334,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
                     }
 
                     if (!connectors.isEmpty()) {
-                        SourceBinding binding = new SourceBinding(model.getName(), model.getPath(), connectors);
+                        SourceBinding binding = new SourceBinding(model.getName(), model.getPropertyValue("location"), connectors);
                         this.bindingsByModelNameMap.put(model.getName(), binding);
                     }
                 }
@@ -353,7 +373,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
                     this.admin.getAdminApi().deleteVDB(getHiddenVdbName(), VDB_VERSION);
                 } else {
                     // other models still have bindings just clear binding for this model on the server
-                    this.admin.getAdminApi().assignBindingToModel("", getHiddenVdbName(), Integer.toString(VDB_VERSION), modelName); //$NON-NLS-1$
+                    this.admin.getAdminApi().assignBindingToModel(getHiddenVdbName(), VDB_VERSION, modelName, "", ""); //$NON-NLS-1$
                 }
 
                 // clear local cache

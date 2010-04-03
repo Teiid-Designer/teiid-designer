@@ -30,8 +30,8 @@ import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 public class ExecutionAdmin {
 
     private final Admin admin;
-    private Map<String, Connector> connectorByNameMap;
-    private Map<String, ConnectorType> connectorTypeByNameMap;
+    protected Map<String, Connector> connectorByNameMap;
+    protected Map<String, ConnectorType> connectorTypeByNameMap;
     private final EventManager eventManager;
     private final Server server;
     private final SourceBindingsManager sourceBindingsMgr;
@@ -209,21 +209,33 @@ public class ExecutionAdmin {
         this.connectorTypeByNameMap = new HashMap<String, ConnectorType>();
 
         // populate connector type map
-        for (String connectorTypeName : this.admin.getConnectorTypes()) {
-            Collection<PropertyDefinition> propDefs = this.admin.getConnectorTypePropertyDefinitions(connectorTypeName);
-            ConnectorType connectorType = new ConnectorType(connectorTypeName, propDefs, this);
-            this.connectorTypeByNameMap.put(connectorTypeName, connectorType);
-        }
+        refreshConnectorTypes(this.admin.getConnectorTypes());
 
         // populate connector map
-        for (ConnectorBinding binding : this.admin.getConnectorBindings()) {
-            ConnectorType type = getConnectorType(binding.getPropertyValue(IConnectorProperties.CONNECTOR_TYPE));
-            this.connectorByNameMap.put(binding.getName(), new Connector(binding, type));
-        }
+        refreshConnectors(this.admin.getConnectorBindings());
 
         // populate VDBs and source bindings
         // TODO may need to filter out hidden vdb
         this.vdbs = Collections.unmodifiableSet(this.admin.getVDBs());
+        refreshSourceBindings();
+    }
+
+    protected void refreshConnectors( Collection<ConnectorBinding> connectorBindings ) {
+        for (ConnectorBinding binding : connectorBindings) {
+            ConnectorType type = getConnectorType(binding.getPropertyValue(IConnectorProperties.CONNECTOR_TYPE));
+            this.connectorByNameMap.put(binding.getName(), new Connector(binding, type));
+        }
+    }
+
+    protected void refreshConnectorTypes( Set<String> connectorTypeNames ) throws Exception {
+        for (String connectorTypeName : connectorTypeNames) {
+            Collection<PropertyDefinition> propDefs = this.admin.getConnectorTypePropertyDefinitions(connectorTypeName);
+            ConnectorType connectorType = new ConnectorType(connectorTypeName, propDefs, this);
+            this.connectorTypeByNameMap.put(connectorTypeName, connectorType);
+        }
+    }
+    
+    protected void refreshSourceBindings() throws Exception {
         this.sourceBindingsMgr.refresh();
     }
 

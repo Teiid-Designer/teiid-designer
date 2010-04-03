@@ -40,12 +40,12 @@ public class Server {
     // Fields
     // ===========================================================================================================================
 
-    private ExecutionAdmin admin;
+    protected ExecutionAdmin admin;
 
     /**
      * The object that will fire the events.
      */
-    private final EventManager eventManager;
+    protected final EventManager eventManager;
 
     private ExecutionManager executionManager;
 

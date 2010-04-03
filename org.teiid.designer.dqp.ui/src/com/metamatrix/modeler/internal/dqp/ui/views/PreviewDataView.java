@@ -143,7 +143,7 @@ public class PreviewDataView extends AbstractPreviewDataView implements IResults
 
                     // store in collection used to populate the results table viewer
                     int index = list.indexOf(model);
-                    
+
                     if (index == -1) {
                         list.add(model);
                     } else {

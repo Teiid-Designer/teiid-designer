@@ -11,13 +11,9 @@ import net.sourceforge.sqlexplorer.ISqlExecVetoListener;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
-import com.metamatrix.modeler.dqp.internal.execution.WorkspaceProblemsExecutionValidatorImpl;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.dqp.ui.connection.IVdbConnectionMgr;
-import com.metamatrix.modeler.internal.dqp.ui.actions.VdbExecutor;
-import com.metamatrix.modeler.internal.dqp.ui.dialogs.StaleVdbConnectionDialog;
-import com.metamatrix.vdb.edit.VdbEditingContext;
 
 /**
  * @since 4.3
@@ -73,42 +69,43 @@ public class StaledVDBChecker implements ISqlExecVetoListener {
         Display.getDefault().syncExec(new Runnable() {
             public void run() {
                 if (!Display.getDefault().isDisposed()) {
-                    try {
-                        IVdbConnectionMgr connMgr = DqpUiPlugin.getDefault().getVdbConnectionMgr();
-                        VdbEditingContext vdbContext = connMgr.getVdbEditingContext(theConnection);
-
-                        if (vdbContext != null) {
-                            VdbExecutor executor = new VdbExecutor(vdbContext, new WorkspaceProblemsExecutionValidatorImpl());
-                            boolean validVdb = (executor.canExecute().getSeverity() != IStatus.ERROR);
-
-                            String vdbName = vdbContext.getVirtualDatabase().getName();
-                            StaleVdbConnectionDialog dlg = new StaleVdbConnectionDialog(
-                                                                                        null,
-                                                                                        vdbName,
-                                                                                        validVdb,
-                                                                                        DqpUiConstants.UTIL.getString(messageKey,
-                                                                                                                      vdbName));
-                            dlg.setOptions(false, true); // don't show reconnect option
-                            dlg.open(); // blocks until gets a user response
-
-                            if (dlg.closeConnection() || dlg.reconnect()) {
-                                connMgr.closeConnection(vdbContext);
-
-                                if (dlg.reconnect()) {
-                                    result[0] = STOP_EXECUTION_RECONNECT;
-                                    // not implemented since reconnect is not an option
-                                } else {
-                                    result[0] = STOP_EXECUTION_CLOSE_CONNECTION;
-                                }
-                            }
-                        } else {
-                            DqpUiConstants.UTIL.log(IStatus.ERROR,
-                                                    DqpUiConstants.UTIL.getString("DqpUiPlugin.vdbContextNotFound", theConnection)); //$NON-NLS-1$
-                        }
-                    } catch (Exception theException) {
-                        String msg = DqpUiConstants.UTIL.getStringOrKey("DqpUiPlugin.problemHandlingStaleConnection"); //$NON-NLS-1$
-                        DqpUiConstants.UTIL.log(IStatus.ERROR, theException, msg);
-                    }
+                    // TODO: Does this need to change or be removed?
+                    // try {
+                    // IVdbConnectionMgr connMgr = DqpUiPlugin.getDefault().getVdbConnectionMgr();
+                    // VdbEditingContext vdbContext = connMgr.getVdbEditingContext(theConnection);
+                    //
+                    // if (vdbContext != null) {
+                    // VdbExecutor executor = new VdbExecutor(vdbContext, new WorkspaceProblemsExecutionValidatorImpl());
+                    // boolean validVdb = (executor.canExecute().getSeverity() != IStatus.ERROR);
+                    //
+                    // String vdbName = vdbContext.getVirtualDatabase().getName();
+                    // StaleVdbConnectionDialog dlg = new StaleVdbConnectionDialog(
+                    // null,
+                    // vdbName,
+                    // validVdb,
+                    // DqpUiConstants.UTIL.getString(messageKey,
+                    // vdbName));
+                    // dlg.setOptions(false, true); // don't show reconnect option
+                    // dlg.open(); // blocks until gets a user response
+                    //
+                    // if (dlg.closeConnection() || dlg.reconnect()) {
+                    // connMgr.closeConnection(vdbContext);
+                    //
+                    // if (dlg.reconnect()) {
+                    // result[0] = STOP_EXECUTION_RECONNECT;
+                    // // not implemented since reconnect is not an option
+                    // } else {
+                    // result[0] = STOP_EXECUTION_CLOSE_CONNECTION;
+                    // }
+                    // }
+                    // } else {
+                    // DqpUiConstants.UTIL.log(IStatus.ERROR,
+                    //                                                    DqpUiConstants.UTIL.getString("DqpUiPlugin.vdbContextNotFound", theConnection)); //$NON-NLS-1$
+                    // }
+                    // } catch (Exception theException) {
+                    //                        String msg = DqpUiConstants.UTIL.getStringOrKey("DqpUiPlugin.problemHandlingStaleConnection"); //$NON-NLS-1$
+                    // DqpUiConstants.UTIL.log(IStatus.ERROR, theException, msg);
+                    // }
                 }
             }
         });

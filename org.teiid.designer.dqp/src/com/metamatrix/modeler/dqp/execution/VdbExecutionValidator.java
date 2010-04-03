@@ -9,10 +9,8 @@ package com.metamatrix.modeler.dqp.execution;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.common.vdb.api.VDBDefn;
+import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.vdb.edit.VdbEditingContext;
-import com.metamatrix.vdb.edit.manifest.VirtualDatabase;
 
 public interface VdbExecutionValidator {
 
@@ -25,35 +23,27 @@ public interface VdbExecutionValidator {
     public static final int SYNCH_WARNING_CODE = 96;
     public static final int DECRYPTION_ERROR_CODE = 97;
     public static final int BINDING_PROPERTY_ERROR_CODE = 98;
-    
-    public static final IStatus OK_STATUS = new Status(IStatus.OK, DqpPlugin.PLUGIN_ID, IStatus.OK, DqpPlugin.Util.getString("VdbExecutionValidator.okMessage"), null); //$NON-NLS-1$
-	
-    
-    /**
-     * Validate the vdb at the given location. 
-     * @param pathToVdb The path to the vdb file
-     * @return The validation status for the vdb indication if its ready for execution.
-     * @since 4.3
-     */
-    IStatus validateVdb(final String pathToVdb);
-    
-    /**
-     * Validate the vdb given the vdb editing context. 
-     * @param context The editing context for vdb containing the definition file.
-     * @return The validation status for the vdb indication if its ready for execution.
-     * @since 4.3
-     */
-    IStatus validateVdb(final VdbEditingContext context);
+
+    public static final IStatus OK_STATUS = new Status(IStatus.OK, DqpPlugin.PLUGIN_ID, IStatus.OK,
+                                                       DqpPlugin.Util.getString("VdbExecutionValidator.okMessage"), null); //$NON-NLS-1$
 
     /**
-     * Validate a vdb to check if it is ready for execution. Checks if the physical models
-     * in the vdb have connector bindings defined. Also checks if the vdb has build validation
-     * problems.
-     * @param database The VirtualDatabase object to validate.
-     * @param vdbDefn The object representation of VDBDefn file
+     * Validate the vdb given the vdb
+     * 
+     * @param context The vdb.
+     * @return The validation status for the vdb indication if its ready for execution.
+     * @since 4.3
+     */
+    IStatus validateVdb( final Vdb vdb );
+
+    /**
+     * Validate a vdb to check if it is ready for execution. Checks if the physical models in the vdb have connector bindings
+     * defined. Also checks if the vdb has build validation problems.
+     * 
+     * @param Vdb object to validate.
      * @return The status of vdb execution validation
      * @since 4.3
      */
-    IStatus validateVdbModels(final VirtualDatabase database, final VDBDefn vdbDefn);
+    IStatus validateVdbModels( final Vdb vdb );
 
 }

@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
+import org.teiid.adminapi.AdminComponentException;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.Server;
@@ -66,6 +67,8 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
             if (showTypes) {
                 try {
                     result = ((Server)parentElement).getAdmin().getConnectorTypes().toArray();
+                } catch (AdminComponentException ace) {
+                    return new Object[0];
                 } catch (Exception e) {
                     DqpPlugin.Util.log(e);
                     return new Object[0];
@@ -78,6 +81,8 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
                 for (ConnectorType type : ((Server)parentElement).getAdmin().getConnectorTypes()) {
                     allConnectors.addAll(type.getAdmin().getConnectors());
                 }
+            } catch (AdminComponentException ace) {
+                return new Object[0];
             } catch (Exception e) {
                 DqpPlugin.Util.log(e);
             }
@@ -89,8 +94,12 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
             Collection bindings = Collections.EMPTY_LIST;
 
             if (showModelMappings && serverMgr != null) {
-                SourceBindingsManager sourceBindingsMgr = connector.getType().getAdmin().getSourceBindingsManager();
-                bindings = sourceBindingsMgr.getSourceBindings(connector);
+                try {
+                    SourceBindingsManager sourceBindingsMgr = connector.getType().getAdmin().getSourceBindingsManager();
+                    bindings = sourceBindingsMgr.getSourceBindings(connector);
+                } catch (Exception e) {
+                    return new Object[0];
+                }
             }
 
             if (bindings.isEmpty()) {

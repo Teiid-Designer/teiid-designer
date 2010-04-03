@@ -13,6 +13,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.teiid.adminapi.AdminComponentException;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
@@ -80,6 +81,9 @@ public abstract class ConfigurationManagerAction extends Action implements ISele
                 } else if (obj instanceof Server) {
                     try {
                         tempAdmin = ((Server)obj).getAdmin();
+                    } catch (AdminComponentException ace) {
+                        newAdmin = null;
+                        break;
                     } catch (Exception e) {
                         UTIL.log(e);
                         newAdmin = null;

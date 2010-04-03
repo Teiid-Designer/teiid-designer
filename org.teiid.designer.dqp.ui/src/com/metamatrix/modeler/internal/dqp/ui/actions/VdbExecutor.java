@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import com.metamatrix.common.vdb.api.VDBDefn;
+import com.metamatrix.common.vdb.VDBDefn;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.I18nUtil;

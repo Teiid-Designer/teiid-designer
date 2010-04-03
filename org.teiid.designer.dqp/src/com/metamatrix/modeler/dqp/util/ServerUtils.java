@@ -30,12 +30,11 @@ public class ServerUtils {
     public static final String COLON = ":"; //$NON-NLS-1$
     public static final String COMMA = ","; //$NON-NLS-1$
 
-    public static final StringNameValidator hostNameValidator = new StringNameValidator(
-                                                                                        StringNameValidator.DEFAULT_MINIMUM_LENGTH,
-                                                                                        StringNameValidator.DEFAULT_MAXIMUM_LENGTH,
-                                                                                        new char[] {';', '@', '#', '$', '%', '^',
-                                                                                            '&', '*', '(', ')', '[', ']', '{',
-                                                                                            '}', '|', '!', '<', '>', '?', '\''});
+    public static ServerNameValidator hostNameValidator;
+
+    public ServerUtils getInstance() {
+        return this;
+    }
 
     public static void validateServerUrl( String url ) throws IllegalArgumentException {
         if (url == null || url.isEmpty()) {
@@ -96,6 +95,13 @@ public class ServerUtils {
     }
 
     public static boolean isValidHostName( String host ) {
+        if (hostNameValidator == null) {
+            hostNameValidator = new ServerNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
+                                                        StringNameValidator.DEFAULT_MAXIMUM_LENGTH, new char[] {';', '@', '#',
+                                                            '$', '%', '^', '&', '*', '(', ')', '[', ']', '{', '}', '|', '!', '<',
+                                                            '>', '?', '\''});
+        }
         return hostNameValidator.isValidName(host);
     }
+
 }
