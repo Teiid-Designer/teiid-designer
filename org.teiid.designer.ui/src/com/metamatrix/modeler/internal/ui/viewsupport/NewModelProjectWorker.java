@@ -30,7 +30,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.internal.wizards.newresource.ResourceMessages;
-import com.metamatrix.common.util.OSPlatformUtil;
+import com.metamatrix.core.util.OSPlatformUtil;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelProject;

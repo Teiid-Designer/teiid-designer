@@ -24,10 +24,10 @@ package com.metamatrix.modeler.transformation.metadata;
 
 import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.core.index.IEntryResult;
+import com.metamatrix.core.index.SimpleIndexUtil;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.modeler.core.index.IndexSelector;
-import com.metamatrix.modeler.internal.core.index.SimpleIndexUtil;
 
 /**
  * Metadata implementation used by server to resolve queries.

@@ -9,7 +9,6 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import com.metamatrix.query.sql.ReservedWords;
 import com.metamatrix.query.sql.lang.OrderBy;
 import com.metamatrix.query.sql.symbol.AliasSymbol;
@@ -61,11 +60,10 @@ public class OrderByDisplayNode extends DisplayNode {
         childNodeList = new ArrayList();
 
         OrderBy orderBy = (OrderBy)(this.getLanguageObject());
-        List symbols = orderBy.getVariables();
+        int nVariables = orderBy.getVariableCount();
 
-        Iterator iter = symbols.iterator();
-        while (iter.hasNext()) {
-            SingleElementSymbol symbol = (SingleElementSymbol)iter.next();
+        for (int i = 0; i < nVariables; i++) {
+            SingleElementSymbol symbol = orderBy.getVariable(i);
             childNodeList.add(DisplayNodeFactory.createDisplayNode(this, symbol));
         }
 

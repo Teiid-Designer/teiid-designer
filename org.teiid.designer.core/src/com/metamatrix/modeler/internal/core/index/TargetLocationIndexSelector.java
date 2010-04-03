@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import com.metamatrix.core.index.AbstractIndexSelector;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.internal.core.index.Index;
 

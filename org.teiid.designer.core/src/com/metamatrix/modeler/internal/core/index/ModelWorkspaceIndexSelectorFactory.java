@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import com.metamatrix.core.index.CompositeIndexSelector;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.core.index.IndexSelector;
 import com.metamatrix.modeler.core.index.IndexSelectorFactory;

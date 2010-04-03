@@ -24,7 +24,7 @@ package com.metamatrix.metadata.runtime.api;
 
 import java.util.Date;
 import java.util.List;
-import com.metamatrix.common.vdb.api.ModelInfo;
+import com.metamatrix.common.vdb.ModelInfo;
 
 
 /**

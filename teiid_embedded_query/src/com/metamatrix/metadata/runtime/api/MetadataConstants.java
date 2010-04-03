@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
-import com.metamatrix.common.vdb.api.ModelInfo;
+import com.metamatrix.common.vdb.ModelInfo;
 
 
 /**

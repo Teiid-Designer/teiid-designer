@@ -13,7 +13,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.common.vdb.api.SystemVdbUtility;
+import com.metamatrix.common.vdb.SystemVdbUtility;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.transformation.InputSet;

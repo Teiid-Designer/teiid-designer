@@ -11,9 +11,9 @@ package com.metamatrix.core.event;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.common.log.LogManager;
-import com.metamatrix.common.util.LogConstants;
+import org.eclipse.core.runtime.IStatus;
 import com.metamatrix.core.CorePlugin;
+import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.util.Assertion;
 
 abstract public class AbstractEventBroker extends AbstractEventSource implements EventBroker {
@@ -147,9 +147,9 @@ abstract public class AbstractEventBroker extends AbstractEventSource implements
                             listener.processEvent(obj);
                         }
                     } catch (Throwable t) {
-                        LogManager.logError(LogConstants.CTX_COMMUNICATION,
-                                            t,
-                                            CorePlugin.Util.getString("AbstractEventBroker.Error_during_event_processing", this.getName())); //$NON-NLS-1$
+                        CoreModelerPlugin.Util.log(IStatus.ERROR,
+                                                   t,
+                                                   CorePlugin.Util.getString("AbstractEventBroker.Error_during_event_processing", this.getName())); //$NON-NLS-1$
                     }
                 }
                 // RMH: }
@@ -162,7 +162,7 @@ abstract public class AbstractEventBroker extends AbstractEventSource implements
 
                 eventPerfMsg.append('\n');
 
-                LogManager.logInfo(LogConstants.CTX_COMMUNICATION, eventPerfMsg.toString());
+                CoreModelerPlugin.Util.log(IStatus.ERROR, eventPerfMsg.toString());
                 eventPerfMsg.setLength(0);
             }
         }

@@ -20,7 +20,7 @@
  * 02110-1301 USA.
  */
 
-package com.metamatrix.modeler.internal.core.index;
+package com.metamatrix.core.index;
 
 import java.io.File;
 import java.io.IOException;

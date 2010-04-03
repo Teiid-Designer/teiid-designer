@@ -13,7 +13,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xsd.XSDPackage;
-import com.metamatrix.internal.core.xml.xmi.XMIHeader;
+import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.core.extension.ExtensionPackage;
 import com.metamatrix.metamodels.relational.RelationalPackage;

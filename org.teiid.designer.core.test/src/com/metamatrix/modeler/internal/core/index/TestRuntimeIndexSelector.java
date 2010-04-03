@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
+import com.metamatrix.core.index.RuntimeIndexSelector;
 import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.internal.core.index.Index;
 

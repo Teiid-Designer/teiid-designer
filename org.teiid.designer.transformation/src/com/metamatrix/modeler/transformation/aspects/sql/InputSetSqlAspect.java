@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.common.vdb.api.SystemVdbUtility;
+import com.metamatrix.common.vdb.SystemVdbUtility;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.metamodels.transformation.InputSet;
 import com.metamatrix.metamodels.transformation.MappingClass;

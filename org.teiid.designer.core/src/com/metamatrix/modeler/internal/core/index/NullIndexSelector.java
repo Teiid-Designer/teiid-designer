@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.internal.core.index;
 
+import com.metamatrix.core.index.AbstractIndexSelector;
 import com.metamatrix.internal.core.index.Index;
 
 /**

@@ -28,16 +28,15 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import com.metamatrix.common.vdb.VdbModelInfo;
+import com.metamatrix.common.xmi.ModelImportInfo;
+import com.metamatrix.common.xmi.XMIHeader;
+import com.metamatrix.common.xmi.XMIHeaderReader;
+import com.metamatrix.common.xsd.XsdHeader;
+import com.metamatrix.common.xsd.XsdHeaderReader;
 import com.metamatrix.core.MetaMatrixCoreException;
 import com.metamatrix.core.id.UUID;
 import com.metamatrix.core.util.StringUtil;
-import com.metamatrix.internal.core.xml.vdb.VdbHeader;
-import com.metamatrix.internal.core.xml.vdb.VdbModelInfo;
-import com.metamatrix.internal.core.xml.xmi.ModelImportInfo;
-import com.metamatrix.internal.core.xml.xmi.XMIHeader;
-import com.metamatrix.internal.core.xml.xmi.XMIHeaderReader;
-import com.metamatrix.internal.core.xml.xsd.XsdHeader;
-import com.metamatrix.internal.core.xml.xsd.XsdHeaderReader;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.workspace.ResourceFilter;
@@ -1105,7 +1104,7 @@ public class WorkspaceResourceFinderUtil {
             }
             File vdbFile = nextResource.getRawLocation().toFile();
             if (vdbFile.exists()) {
-                VdbHeader vdbHeader = ModelUtil.getVdbHeader(vdbFile);
+                com.metamatrix.common.vdb.VdbHeader vdbHeader = ModelUtil.getVdbHeader(vdbFile);
                 if (vdbHeader != null) {
                     VdbModelInfo[] infos = vdbHeader.getModelInfos();
                     for (int i = 0; i != infos.length; ++i) {

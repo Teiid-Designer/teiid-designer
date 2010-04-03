@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.internal.core.xml.xmi.XMIHeader;
+import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.metamodels.webservice.Interface;

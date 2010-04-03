@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<cheatsheet title="Overview of Web Services">
+
+	<intro 
+		contextId="com.metamatrix.modeler.webservice.ui.cheatSheetHelp">
+		<description>This cheat sheet will provide information about Web services
+			and how they work in this product.<br/>
+			<br/>
+			<b>Note:</b> These steps are sequential and require you to complete or
+			skip each step before being allowed to <b>Perform</b>, <b>Complete</b> or <b>Skip</b> the next step.<br/>
+			<br/>
+			To learn more about using cheat sheets click help icon above.
+			<br/>
+			<br/>Press "<b>Click to Begin</b>" button below to start this cheat sheet.
+		</description>
+	</intro>
+
+	<item
+		contextId="com.metamatrix.modeler.webservice.ui.structureOfWebServiceHelp"
+		title="Structure of a Web Service">
+		<description>
+            MetaMatrix Web services are <b>data services</b> - they connect relational 
+		    or XML data sources to XML output.   While they may be created in different ways,
+		    all MetaMatrix Web services share some common features:
+			<br/>
+			
+			<br/><b>1.</b> One or more <b>Relational Sources</b> that describe where the data
+			    is coming from.
+			<br/>
+			<br/><b>2.</b> <b>XSD Schemas</b> defining the XML formats for the Web service operation's 
+			input and output arguments.  These will comprise the bodies of the request and response
+			 SOAP messages when the Web service is executed.
+			<br/>
+			<br/><b>3.</b> An <b>XML View Model</b> that describes the relationship between the 
+			XML format of the Web service operation's output argument and the Relational Source models.
+			<br/>
+			<br/><b>4.</b> A <b>Web service Model</b> that names the Web service and defines the 
+			individual Web service operations.  Each Web service operation is linked to the input 
+			XML Schema, the output XML Schema, and the output XML View model.
+			<br/>
+			<br/><b>5.</b> A <b>WSDL</b> (Web Services Description Language) file that describes 
+			    the interface to the users of the Web service.
+			<br/>
+			<br/>Press "<b>Click to Complete</b>" button below to read the next step.
+		</description>
+	</item>
+
+	<item
+		title="Source materials">
+		<!--action class="com.metamatrix.modeler.internal.ui.actions.ImportAction" 
+			pluginId="com.metamatrix.modeler.ui" /-->
+		<description>Web services can be created from different starting points.
+			You will need one or more of the following pieces of information:
+			<br/>
+			<br/><b>1.</b> <b>Source Connection Information</b>
+			<br/><b>2.</b> <b>XSD Schemas</b>
+			<br/><b>3.</b> <b>WSDL files</b>
+			<br/>
+			<br/>Press "<b>Click to Complete</b>" button below to read the next step.
+		</description>
+	</item>
+
+	<item
+		title="Create Web Service">
+		<description>Click one of the following icons to open help for working
+			with that type of data.
+			<br/><b>Note:</b> If you do not see any steps here, be sure to complete
+			all previous steps.</description>
+		<subitem label="Relational Data Sources">
+			<action class="com.metamatrix.modeler.webservice.ui.actions.LaunchCheatSheetAction" 
+				pluginId="com.metamatrix.modeler.webservice.ui" 
+				param1="com.metamatrix.modeler.webservice.ui.cheat.JDBCToWebService"/>
+		</subitem>
+		<subitem label="XSD Schema or XML Views">
+			<action class="com.metamatrix.modeler.webservice.ui.actions.LaunchCheatSheetAction" 
+				pluginId="com.metamatrix.modeler.webservice.ui" 
+				param1="com.metamatrix.modeler.webservice.ui.cheat.XSDToWebService"/>
+		</subitem>
+		<subitem label="WSDL files">
+			<action class="com.metamatrix.modeler.webservice.ui.actions.LaunchCheatSheetAction" 
+				pluginId="com.metamatrix.modeler.webservice.ui" 
+				param1="com.metamatrix.modeler.webservice.ui.cheat.WSDLToWebService"/>
+		</subitem>
+	</item>
+</cheatsheet>

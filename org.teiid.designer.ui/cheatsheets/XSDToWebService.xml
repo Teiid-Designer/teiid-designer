@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<cheatsheet title="Create a new Web Service from XSD or XML View">
+
+	<intro 
+		contextId="com.metamatrix.modeler.webservice.ui.cheatSheetHelp">
+		<description>This cheat sheet will guide you through the steps to create and
+			optionally deploy a Web service starting with an XSD describing the
+			structure of a Web service. This process begins by focusing on creating
+			an XML View model defined by existing XSD files. This will be followed 
+			by steps to import/create sources and specify/customize transformations
+			between the Source models and XML View models, and generation of Web services.<br/>
+			<br/>
+			If you wish to create a Web service from an XML View, please 
+			skip down to the "Map..." step.<br/>
+			<br/>
+			<b>Note:</b> These steps are sequential and require you to complete or
+			skip each step before being allowed to <b>Perform</b>, <b>Complete</b> or <b>Skip</b> the next step.<br/>
+			<br/>
+			To learn more about using cheat sheets click the help icon above.
+			<br/>
+			<br/>Press "<b>Click to Begin</b>" button below to start.
+		</description>
+	</intro>
+
+	<item skip="true"
+		contextId="com.metamatrix.modeler.webservice.ui.createVirtualDatabaseHelp"
+		title="Create a VDB">
+		<action class="com.metamatrix.modeler.webservice.ui.actions.LaunchProductAction" 
+			pluginId="com.metamatrix.modeler.webservice.ui" 
+			param1="NewVDB"/>
+		<description>
+			First, you will need to create a VDB.  This is where all the Web
+			service information and models are stored on your local computer.
+			
+			<br/> ==========================================================================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to create new VDB.
+			<br/> -- > You may skip this step if you have already imported this data.
+			<br/> ==========================================================================================================
+		</description>
+	</item>
+
+	<item skip="true"
+		contextId="com.metamatrix.modeler.webservice.ui.importXsdFilesHelp"
+		title="Import XSD">
+		<action class="com.metamatrix.modeler.webservice.ui.actions.LaunchProductAction" 
+			pluginId="com.metamatrix.modeler.webservice.ui"
+			confirm="true"
+			param1="ImportXsd" 
+			param2="requiresProject"/>
+		<description>
+			You will now need to import one or more XSD (Schema) files that contain
+		    information on the input and output messages for the Web service.
+			
+			<br/> ==========================================================================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to import files.
+			<br/> -- > Repeat as as needed to obtain all desired XSDs.
+			<br/> -- > Press "<b>Click to Complete</b>" button below when finished.
+			<br/> -- > You may skip this step if you have already imported this data.
+			<br/> ==========================================================================================================
+		</description>
+	</item>
+
+	<item skip="true"
+		contextId="com.metamatrix.modeler.webservice.ui.createXmlViewModelHelp"
+		title="Create XML View Model">
+		<action class="com.metamatrix.modeler.webservice.ui.actions.LaunchProductAction" 
+			pluginId="com.metamatrix.modeler.webservice.ui"
+			confirm="true"
+			param1="NewXmlDocumentModel"
+			param2="requiresProject"/>
+		<description>
+			XML document messages are used to provide data via Web service mappings. You will need
+			to create one or more XML View models from your XSD Schema to define your XML documents.
+			<br/> ==========================================================================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to create model.
+			<br/> -- > Repeat as as needed to define desired models.
+			<br/> -- > Press "<b>Click to Complete</b>" button below when finished.
+			<br/> -- > You may skip this step if you have existing XML View Models.
+			<br/> ==========================================================================================================
+		</description>
+	</item>
+	
+	<item skip="true"
+		contextId="com.metamatrix.modeler.webservice.ui.jdbcImportHelp"
+		title="Import from Relational Data Sources">
+		<action class="com.metamatrix.modeler.webservice.ui.actions.LaunchProductAction" 
+			pluginId="com.metamatrix.modeler.webservice.ui"
+			confirm="true"
+			param1="ImportJdbc"
+			param2="requiresProject"/>
+		<description>
+			Next, you will need to obtain the structure of the
+			database tables and procedures of interest. 
+			This will create a Source Model of your data
+			
+			<br/> ==========================================================================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below import source data.
+			<br/> -- > Repeat as as needed to obtain all desired source data.
+			<br/> -- > Press "<b>Click to Complete</b>" button below when finished.
+			<br/> -- > You may skip this step if you have already imported this data.
+			<br/> ==========================================================================================================
+		</description>
+	</item>
+	
+	<item skip="true"
+		title="Map XML Views to Relational sources">
+		<description>
+			Open each mapping class in your XML View and define its transformation.
+			Consult the documentation for information on how to connect to relational data sources.
+					    
+		    <br/> ==========================================================================================================
+			<br/> -- > Press "<b>Click to Complete</b>" button below when finished.
+			<br/> -- > You may skip this step if you have already imported this data.
+			<br/> ==========================================================================================================
+		</description>
+	</item>
+	
+	<item skip="true"
+		contextId="com.metamatrix.modeler.webservice.ui.executeVirtualDatabaseHelp"
+		title="Test Sources and Views">
+		<action class="com.metamatrix.modeler.webservice.ui.actions.LaunchProductAction"
+			pluginId="com.metamatrix.modeler.webservice.ui" 
+			confirm="true"
+			param1="ExecuteVDB"/>
+		<description>
+			Once your VDB is complete you can test it.
+			A VDB is complete when all views have been mapped to sources, all sources have valid connector bindings, 
+			no validation errors exist and a "green" status is displayed in the Web Service Advisor.
+			
+			<br/> ==========================================================================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to execute the VDB.
+			<br/> -- > Repeat as as needed to verify expected results.
+			<br/> -- > Press "<b>Click to Complete</b>" button below when finished.
+			<br/> -- > You may skip this step.
+			<br/> ==========================================================================================================
+			<br/> Note - VDB and its models must be free of errors.
+			<br/> ==========================================================================================================
+		</description>
+	</item>
+		
+	<item skip="true"
+	    contextId="com.metamatrix.modeler.webservice.ui.createWebServiceFromXMLHelp"
+		title="Generate Web Service Models">
+		<action class="com.metamatrix.modeler.webservice.ui.actions.LaunchGenWSFromXmlCheatSheetAction" 
+			pluginId="com.metamatrix.modeler.webservice.ui"
+			confirm="true"/>
+		<description>
+			Create your Web service models based on selected XML View documents.
+			
+			<br/> ==========================================================================================================
+			<br/> -- > Select one XML View document in the VDB Explorer
+			<br/> -- > Press "<b>Click to Perform</b>" button below to create model.
+			<br/> -- > Press "<b>Click to Complete</b>" button below when finished.
+			<br/> -- > You may skip this step if you have existing Web service models.
+			<br/> ==========================================================================================================
+			<br/>Note 1 - Fill in all fields to generate Web services.
+			<br/>Note 2 - Generated procedure queries will have no criteria. 
+			Edit procedures in transformation editor to set specific criteria.
+			<br/> ==========================================================================================================
+			</description>
+	</item>
+
+	<item skip="true"
+	    contextId="com.metamatrix.modeler.webservice.ui.createWebServiceWarHelp"
+		title="Create Web Service WAR File">
+		<action class="com.metamatrix.modeler.webservice.ui.actions.LaunchDeployCheatSheetAction" 
+			pluginId="com.metamatrix.modeler.webservice.ui"/>
+		<description>
+			You can now create a WAR file to deploy to a Servlet container with the Web services defined.
+			<br/> ==========================================================================================================
+			<br/> -- > Press "<b>Click to Perform</b>" button below to create the WAR file
+			<br/> -- > In the dialog, specify WAR file location on your file system, set properties, view connector bindings 
+			information and finish by clicking "<b>OK</b>". 
+			<br/> ==========================================================================================================
+			<br/> Note - VDB and its models must be free of errors.
+			<br/> ==========================================================================================================
+		</description>
+	</item>
+
+	<item
+		title="Summary">
+		<description>The Web service has been created and is ready to deploy.  Here is a 
+		    summary of the steps we have taken:
+			<br/>
+			<br/>
+				<b>1.</b> You created a <b>VDB</b> that holds all the models and configuration.
+			<br/>
+			
+			<br/>
+				<b>2.</b> You imported <b>XSDs</b> describing the input and output of the Web service.
+			<br/>
+			
+			<br/>
+				<b>3.</b> You created an <b>XML View Model</b> with the XSD.
+			<br/>
+			
+			<br/>
+				<b>4.</b> You created a <b>Relational Source Model</b> via Import
+				representing the structure of the database tables and procedures.
+			<br/>
+			
+			<br/>
+				<b>5.</b> You mapped the XML View Model to <b>relational source models</b>.
+			<br/>
+			
+			<br/>
+				<b>6.</b> You used the <b>Create Web Service</b> 
+				wizard to generate all remaining models needed for the Web service.
+			<br/>
+			
+			<br/>
+				<b>7.</b> You linked the source models to the JDBC 
+				database by creating <b>connector bindings</b>.
+			<br/>
+			
+			<br/>
+				<b>8.</b> You created a <b>WAR</b> file that contains all your 
+				work and is ready to deploy to a Servlet Container.
+			<br/>
+			
+			<br/>
+				Select "Click to Complete" to go back to the beginning of this cheat sheet.
+		</description>
+	</item>
+
+</cheatsheet>

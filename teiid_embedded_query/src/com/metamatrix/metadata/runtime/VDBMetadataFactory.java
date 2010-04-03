@@ -26,9 +26,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import com.metamatrix.core.index.CompositeIndexSelector;
+import com.metamatrix.core.index.RuntimeIndexSelector;
 import com.metamatrix.modeler.core.index.IndexSelector;
-import com.metamatrix.modeler.internal.core.index.CompositeIndexSelector;
-import com.metamatrix.modeler.internal.core.index.RuntimeIndexSelector;
 import com.metamatrix.modeler.transformation.metadata.ServerMetadataFactory;
 import com.metamatrix.query.metadata.QueryMetadataInterface;
 

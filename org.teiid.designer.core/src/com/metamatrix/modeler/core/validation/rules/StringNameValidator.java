@@ -29,7 +29,7 @@ import com.metamatrix.modeler.core.ModelerCoreRuntimeException;
  */
 public class StringNameValidator {
 
-    private static final char UNDERSCORE_CHARACTER = '_';
+    public static final char UNDERSCORE_CHARACTER = '_';
     public static final char DEFAULT_REPLACEMENT_CHARACTER = UNDERSCORE_CHARACTER;
     public static final int MAXIMUM_LENGTH = Integer.MAX_VALUE;
     public static final int DEFAULT_MAXIMUM_LENGTH = 255;

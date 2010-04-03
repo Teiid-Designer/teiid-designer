@@ -27,13 +27,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import com.metamatrix.core.index.SimpleIndexUtil;
 import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.metadata.runtime.DatatypeRecord;
 import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord;
 import com.metamatrix.modeler.core.metadata.runtime.PropertyRecord;
-import com.metamatrix.modeler.internal.core.index.SimpleIndexUtil;
 
 
 /** 

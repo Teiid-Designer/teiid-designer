@@ -814,5 +814,22 @@
             class="com.metamatrix.modeler.internal.ui.preferences.LogicalAsRelationalPreferenceContributor">
       </preference>      
 	</extension>
+   <extension
+         point="org.eclipse.ui.cheatsheets.cheatSheetContent">
+      <category
+            id="org.teiid.designer.ui.category1747310555"
+            name="Designer">
+      </category>
+      <cheatsheet
+            category="org.teiid.designer.ui.category1747310555"
+            composite="false"
+            contentFile="$nl$/cheatsheets/JDBCToWebService.xml"
+            id="org.teiid.designer.ui.cheatsheet310603064"
+            name="Create a new Web Service from Relational Views/Sources">
+         <description>
+            Create Relational Model from JDBC Import
+         </description>
+      </cheatsheet>
+   </extension>
 
 </plugin>
