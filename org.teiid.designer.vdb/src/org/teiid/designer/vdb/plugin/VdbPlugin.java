@@ -1,4 +1,4 @@
-package org.teiid.designer.vdb;
+package org.teiid.designer.vdb.plugin;
 
 import java.util.ResourceBundle;
 import org.eclipse.core.runtime.Plugin;

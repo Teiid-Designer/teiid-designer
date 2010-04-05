@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import com.metamatrix.core.util.ChecksumUtil;
 
 /**
@@ -26,12 +27,14 @@ public class VdbEntry {
     private final IPath name;
     private final AtomicLong checksum = new AtomicLong();
 
-    /**
-     * @param name
-     */
-    public VdbEntry( final IPath name ) {
+    VdbEntry( final IPath name ) {
         this.name = name;
-        synchronize();
+        synchronizeEntry();
+    }
+
+    VdbEntry( final String name,
+              final String path ) {
+        this.name = Path.fromPortableString(path).append(name);
     }
 
     private long computeChecksum() {
@@ -49,13 +52,12 @@ public class VdbEntry {
             if (stream != null) try {
                 stream.close();
             } catch (final IOException ignored) {
-                throw runtimeError;
+                if (runtimeError != null) throw runtimeError;
             }
         }
     }
 
     void dispose() {
-        // TODO: Drop file ref
     }
 
     /**
@@ -97,9 +99,15 @@ public class VdbEntry {
      * @return <code>true</code> if synchronization was successful
      */
     public boolean synchronize() {
+        return synchronizeEntry();
+    }
+
+    /*
+     * Private since called by constructor and don't want subclasses overriding
+     */
+    private boolean synchronizeEntry() {
         // Return if resource to synchronize on doesn't exist
         if (!fileExists()) return false;
-        // TODO: get ref to resource
         // Synchronize file checksum
         checksum.set(computeChecksum());
         return true;

@@ -18,6 +18,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
+import org.teiid.designer.vdb.manifest.ModelElement;
+import org.teiid.designer.vdb.manifest.PropertyElement;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.ResourceFinder;
@@ -30,52 +32,46 @@ import com.metamatrix.modeler.internal.core.resource.EmfResource;
 public class VdbModelEntry extends VdbEntry {
 
     private final Vdb vdb;
-
-    // TODO: Note that the super() constructor calls synchronize() which will throw NPE's because errors, warnings, dependsUpon
-    // and dependentOf
-    // are set in THIS class not the super.
-    // NEED TO RETHINK? For now, I added checks in clean() method to initialize these sets.
-
-    private Set<Diagnostic> errors = new HashSet<Diagnostic>();
-    private Set<Diagnostic> warnings = new HashSet<Diagnostic>();
+    private final Set<Diagnostic> errors = new HashSet<Diagnostic>();
+    private final Set<Diagnostic> warnings = new HashSet<Diagnostic>();
     private final AtomicBoolean visible = new AtomicBoolean(true);
-    private CopyOnWriteArraySet<VdbModelEntry> dependsUpon = new CopyOnWriteArraySet<VdbModelEntry>();
-    private CopyOnWriteArraySet<VdbModelEntry> dependentOf = new CopyOnWriteArraySet<VdbModelEntry>();
+    private final CopyOnWriteArraySet<VdbModelEntry> dependsUpon = new CopyOnWriteArraySet<VdbModelEntry>();
+    private final CopyOnWriteArraySet<VdbModelEntry> dependentOf = new CopyOnWriteArraySet<VdbModelEntry>();
     private final boolean builtIn;
     private final ModelType type;
     private final AtomicReference<String> connector = new AtomicReference();
 
-    /**
-     * @param name
-     * @param vdb
-     */
-    public VdbModelEntry( final IPath name,
-                          final Vdb vdb ) {
+    VdbModelEntry( final IPath name,
+                   final Vdb vdb ) {
         super(name);
-        this.vdb = vdb;
         final Resource model = findModel();
         builtIn = (model == null ? false : getFinder().isBuiltInResource(model));
         assert model instanceof EmfResource;
         type = ((EmfResource)model).getModelAnnotation().getModelType();
+        this.vdb = vdb;
+        synchronizeModelEntry();
+    }
+
+    VdbModelEntry( final ModelElement model,
+                   final Vdb vdb ) {
+        super(model.getName(), model.getPath());
+        type = ModelType.get(model.getType());
+        visible.set(model.isVisible());
+        boolean builtIn = false;
+        for (final PropertyElement property : model.getProperties())
+            if (PropertyElement.BUILT_IN.equals(property.getName())) {
+                builtIn = Boolean.parseBoolean(property.getValue());
+                break;
+            }
+        this.builtIn = builtIn;
+        this.vdb = vdb;
+        synchronizeModelEntry();
     }
 
     private void clean() {
         // Clear problems
-        if (this.errors == null) {
-            this.errors = new HashSet<Diagnostic>();
-        }
         errors.clear();
-        if (this.warnings == null) {
-            this.warnings = new HashSet<Diagnostic>();
-        }
         warnings.clear();
-
-        if (dependsUpon == null) {
-            dependsUpon = new CopyOnWriteArraySet<VdbModelEntry>();
-        }
-        if (dependentOf == null) {
-            dependentOf = new CopyOnWriteArraySet<VdbModelEntry>();
-        }
         // Clear set of dependents and inverse relationships
         for (final VdbModelEntry entry : dependsUpon) {
             entry.dependentOf.remove(this);
@@ -98,7 +94,7 @@ public class VdbModelEntry extends VdbEntry {
     }
 
     private Resource findModel() {
-        final Resource[] models = getFinder().findByName(getName().lastSegment().toString(), true, false);
+        final Resource[] models = getFinder().findByName(getName().toString(), true, false);
         if (models.length == 0) return null;
         assert models.length == 1;
         return models[0];
@@ -190,6 +186,10 @@ public class VdbModelEntry extends VdbEntry {
     @Override
     public final boolean synchronize() {
         if (!super.synchronize()) return false;
+        return synchronizeModelEntry();
+    }
+
+    private boolean synchronizeModelEntry() {
         final Resource model = findModel();
         // Return if resource to synchronize on doesn't exist
         clean();

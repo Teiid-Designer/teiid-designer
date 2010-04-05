@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.vdb;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -15,15 +17,23 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 import net.jcip.annotations.ThreadSafe;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.designer.vdb.VdbEntry.SyncState;
+import org.teiid.designer.vdb.manifest.ModelElement;
+import org.teiid.designer.vdb.manifest.VdbElement;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.modeler.util.ArgCheck;
 
 /**
  * 
@@ -42,9 +52,36 @@ public class Vdb implements IChangeNotifier {
      * @param name
      */
     public Vdb( final IPath name ) {
-        ArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
         this.name = name;
-        // TODO: Open archive and populate model entries
+        // Open archive and populate model entries
+        ZipFile archive = null;
+        RuntimeException runtimeError = null;
+        InputStream manifestStream = null;
+        try {
+            archive = new ZipFile(name.toString());
+            // Initialize using manifest
+            final ZipEntry entry = archive.getEntry("/META-INF/vdb.xml"); //$NON-NLS-1$
+            final JAXBContext context = JAXBContext.newInstance(new Class<?>[] {VdbElement.class});
+            final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            final Schema schema = schemaFactory.newSchema(VdbElement.class.getResource("/vdb-deployer.xsd")); //$NON-NLS-1$
+            final Unmarshaller unmarchaller = context.createUnmarshaller();
+            unmarchaller.setSchema(schema);
+            manifestStream = archive.getInputStream(entry);
+            final VdbElement manifest = (VdbElement)unmarchaller.unmarshal(manifestStream);
+            setDescription(manifest.getDescription());
+            for (final ModelElement model : manifest.getModels())
+                entries.add(new VdbModelEntry(model, this));
+        } catch (final Exception error) {
+            runtimeError = new RuntimeException(error);
+            throw runtimeError;
+        } finally {
+            try {
+                if (manifestStream != null) manifestStream.close();
+                if (archive != null) archive.close();
+            } catch (final IOException ignored) {
+                if (runtimeError != null) throw runtimeError;
+            }
+        }
     }
 
     /**
