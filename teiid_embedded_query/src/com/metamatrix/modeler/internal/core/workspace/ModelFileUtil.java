@@ -23,17 +23,11 @@
 package com.metamatrix.modeler.internal.core.workspace;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
 import com.metamatrix.common.log.LogManager;
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.common.xmi.XMIHeaderReader;
 import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.util.ArgCheck;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 
@@ -46,7 +40,6 @@ public class ModelFileUtil {
                                   XMIHeader header );
     }
 
-    public static final String MANIFEST_MODEL_NAME = "MetaMatrix-VdbManifestModel.xmi"; //$NON-NLS-1$
     public static final String DOT_PROJECT = ".project"; //$NON-NLS-1$
     public static final String FILE_COLON = "file:"; //$NON-NLS-1$
     public static final String EXTENSION_XML = "xml"; //$NON-NLS-1$
@@ -206,10 +199,6 @@ public class ModelFileUtil {
                     return header;
                 }
             }
-
-            if (isVdbArchiveFile(resource)) {
-                return getXmiHeaderForVdbArchive(resource);
-            }
             try {
                 XMIHeader header = XMIHeaderReader.readHeader(resource);
                 // add to cache
@@ -227,94 +216,6 @@ public class ModelFileUtil {
             }
         }
 
-        return null;
-    }
-
-    /**
-     * Return the XMIHeader for the given vdb file or null if the file does not represent a vdb.
-     * 
-     * @param vdbArchiveJar The file for the vdb.
-     * @return The XMIHeader for the vdb manifest file
-     */
-    public static XMIHeader getXmiHeaderForVdbArchive( final File vdbArchiveJar ) {
-        if (isVdbArchiveFile(vdbArchiveJar)) {
-
-            // vdb file is empty there is nothing to read
-            if (vdbArchiveJar.length() == 0) {
-                return null;
-            }
-
-            ZipFile zipFile = null;
-            XMIHeader header = null;
-            InputStream manifestStream = null;
-            try {
-                zipFile = new ZipFile(vdbArchiveJar);
-                manifestStream = getManifestModelContentsFromVdbArchive(zipFile);
-                header = getXmiHeader(manifestStream);
-            } catch (ZipException e) {
-                LogManager.logWarning(RuntimeMetadataPlugin.PLUGIN_ID, e, e.getMessage());
-            } catch (IOException e) {
-                LogManager.logWarning(RuntimeMetadataPlugin.PLUGIN_ID, e, e.getMessage());
-            } finally {
-                if (manifestStream != null) {
-                    try {
-                        manifestStream.close();
-                    } catch (IOException err) {
-                        // do nothing
-                    }
-                }
-                if (zipFile != null) {
-                    try {
-                        zipFile.close();
-                    } catch (IOException e) {
-                        // do nothing
-                    }
-                }
-            }
-
-            return header;
-        }
-        return null;
-    }
-
-    /**
-     * Return a java.io.InputStream reference for the MetaMatrix-VdbManifestModel.xmi model file contained within the Vdb archive.
-     * If the specified file is not a Vdb archive file or the archive does not contain a manifest model then null is returned.
-     * 
-     * @param zip the Vdb archive
-     * @return the inputstream for the manifest file entry
-     */
-    public static InputStream getManifestModelContentsFromVdbArchive( final ZipFile zipFile ) {
-        return ModelFileUtil.getFileContentsFromArchive(zipFile, MANIFEST_MODEL_NAME);
-    }
-
-    /**
-     * Return a java.io.InputStream reference for the specified zip entry name
-     * 
-     * @param zip
-     * @param zipEntryName the fully qualified name of the zip entry
-     * @return the inputstream for the zipfile entry
-     */
-    public static InputStream getFileContentsFromArchive( final ZipFile zipFile,
-                                                          final String zipEntryName ) {
-        ArgCheck.isNotNull(zipFile);
-        ArgCheck.isNotEmpty(zipEntryName);
-        try {
-            // Iterate over all entries in the zip file ...
-            for (final Enumeration entries = zipFile.entries(); entries.hasMoreElements();) {
-                ZipEntry entry = (ZipEntry)entries.nextElement();
-                if (entry == null) {
-                    continue;
-                }
-                // If the specified zip entry is found ...
-                if (entry.getName().equalsIgnoreCase(zipEntryName)) {
-                    // return the contents of the entry
-                    return zipFile.getInputStream(entry);
-                }
-            }
-        } catch (IOException e) {
-            LogManager.logWarning(RuntimeMetadataPlugin.PLUGIN_ID, e, e.getMessage());
-        }
         return null;
     }
 
