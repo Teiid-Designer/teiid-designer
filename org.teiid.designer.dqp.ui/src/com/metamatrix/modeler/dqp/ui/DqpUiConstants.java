@@ -46,11 +46,6 @@ public interface DqpUiConstants {
      */
     String JDBC_CONNECTION_VIEW_ID = "net.sourceforge.sqlexplorer.plugin.views.ConnectionsView"; //$NON-NLS-1$
 
-    /**
-     * VDB Editor Tab ID for ConnectorBindings
-     */
-    String VDB_EDITOR_CONNECTOR_BINDINGS_ID = UTIL.getString("ConnectorBindingsEditorPart.tabTitle"); //$NON-NLS-1$
-
     String RECONNECT_SERVER_FAMILY = "reconnectServer"; //$NON-NLS-1$
 
     /**

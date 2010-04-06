@@ -12,7 +12,6 @@ Bundle-ClassPath: .,
  teiid-engine-7.0.0-SNAPSHOT.jar
 Export-Package: com.metamatrix.api.exception,
  com.metamatrix.api.exception.query,
- com.metamatrix.api.exception.security,
  com.metamatrix.cache,
  com.metamatrix.common.api,
  com.metamatrix.common.buffer,

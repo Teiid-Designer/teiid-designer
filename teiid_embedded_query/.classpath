@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="teiid-7.0.0-SNAPSHOT-client.jar"/>
+	<classpathentry exported="true" kind="lib" path="teiid-7.0.0-SNAPSHOT-client.jar" sourcepath="teiid-7.0.0-SNAPSHOT-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="teiid-connector-api-7.0.0-SNAPSHOT.jar"/>
 	<classpathentry exported="true" kind="lib" path="teiid-engine-7.0.0-SNAPSHOT.jar"/>
 	<classpathentry exported="true" kind="lib" path="jta-1.1.jar"/>

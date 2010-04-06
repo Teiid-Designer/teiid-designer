@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 import org.teiid.adminapi.Admin;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.adminapi.ConnectionFactory;
 import org.teiid.adminapi.PropertyDefinition;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 
@@ -46,11 +46,11 @@ public class TestExecutionAdmin extends ExecutionAdmin {
      * @see org.teiid.designer.runtime.ExecutionAdmin#refreshConnectors(java.util.Collection)
      */
     @Override
-    protected void refreshConnectors( Collection<ConnectorBinding> connectorBindings ) {
+    protected void refreshConnectors( Collection<ConnectionFactory> connectorBindings ) {
         if (this.connectorNameConnectorTypeNameMap != null) {
             for (Entry<String, String> entry : this.connectorNameConnectorTypeNameMap.entrySet()) {
                 ConnectorType type = getConnectorType(entry.getValue());
-                ConnectorBinding binding = mock(ConnectorBinding.class);
+                ConnectionFactory binding = mock(ConnectionFactory.class);
                 stub(binding.getName()).toReturn(entry.getKey());
                 this.connectorByNameMap.put(binding.getName(), new Connector(binding, type));
             }

@@ -94,7 +94,11 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
 
         try {
             // ensureModelExistsInHiddenVdb();
-            this.admin.getAdminApi().assignBindingToModel(getHiddenVdbName(), VDB_VERSION, modelName, sourceName, jndiName);
+            this.admin.getAdminApi().assignConnectionFactoryToModel(getHiddenVdbName(),
+                                                                    VDB_VERSION,
+                                                                    modelName,
+                                                                    sourceName,
+                                                                    jndiName);
 
             SourceBinding newBinding = new SourceBinding(modelName,
                                                          modelResource.getParent().getPath().makeRelative().toString(),
@@ -334,7 +338,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
                     }
 
                     if (!connectors.isEmpty()) {
-                        SourceBinding binding = new SourceBinding(model.getName(), model.getPropertyValue("location"), connectors);
+                        SourceBinding binding = new SourceBinding(model.getName(), model.getPropertyValue("location"), connectors); //$NON-NLS-1$
                         this.bindingsByModelNameMap.put(model.getName(), binding);
                     }
                 }
@@ -373,7 +377,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
                     this.admin.getAdminApi().deleteVDB(getHiddenVdbName(), VDB_VERSION);
                 } else {
                     // other models still have bindings just clear binding for this model on the server
-                    this.admin.getAdminApi().assignBindingToModel(getHiddenVdbName(), VDB_VERSION, modelName, "", ""); //$NON-NLS-1$
+                    this.admin.getAdminApi().assignConnectionFactoryToModel(getHiddenVdbName(), VDB_VERSION, modelName, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
                 }
 
                 // clear local cache

@@ -18,7 +18,7 @@ import java.util.Properties;
 import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.adminapi.Admin;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.adminapi.ConnectionFactory;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.VDB;
 import com.metamatrix.core.modeler.util.ArgCheck;
@@ -73,10 +73,10 @@ public class ExecutionAdmin {
         ArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
         ArgCheck.isNotNull(properties, "properties"); //$NON-NLS-1$
 
-        this.admin.addConnectorBinding(name, type.getName(), properties); // TODO get server guys to return the binding
+        this.admin.addConnectionFactory(name, type.getName(), properties); // TODO get server guys to return the binding
         // TODO ask server guys if type needs to also be in properties
 
-        ConnectorBinding binding = this.admin.getConnectorBinding(name);
+        ConnectionFactory binding = this.admin.getConnectionFactory(name);
         Connector connector = new Connector(binding, type);
         this.connectorByNameMap.put(name, connector);
 
@@ -209,10 +209,10 @@ public class ExecutionAdmin {
         this.connectorTypeByNameMap = new HashMap<String, ConnectorType>();
 
         // populate connector type map
-        refreshConnectorTypes(this.admin.getConnectorTypes());
+        refreshConnectorTypes(this.admin.getConnectorNames());
 
         // populate connector map
-        refreshConnectors(this.admin.getConnectorBindings());
+        refreshConnectors(this.admin.getConnectionFactories());
 
         // populate VDBs and source bindings
         // TODO may need to filter out hidden vdb
@@ -220,8 +220,8 @@ public class ExecutionAdmin {
         refreshSourceBindings();
     }
 
-    protected void refreshConnectors( Collection<ConnectorBinding> connectorBindings ) {
-        for (ConnectorBinding binding : connectorBindings) {
+    protected void refreshConnectors( Collection<ConnectionFactory> connectorBindings ) {
+        for (ConnectionFactory binding : connectorBindings) {
             ConnectorType type = getConnectorType(binding.getPropertyValue(IConnectorProperties.CONNECTOR_TYPE));
             this.connectorByNameMap.put(binding.getName(), new Connector(binding, type));
         }
@@ -229,19 +229,19 @@ public class ExecutionAdmin {
 
     protected void refreshConnectorTypes( Set<String> connectorTypeNames ) throws Exception {
         for (String connectorTypeName : connectorTypeNames) {
-            Collection<PropertyDefinition> propDefs = this.admin.getConnectorTypePropertyDefinitions(connectorTypeName);
+            Collection<PropertyDefinition> propDefs = this.admin.getConnectorPropertyDefinitions(connectorTypeName);
             ConnectorType connectorType = new ConnectorType(connectorTypeName, propDefs, this);
             this.connectorTypeByNameMap.put(connectorTypeName, connectorType);
         }
     }
-    
+
     protected void refreshSourceBindings() throws Exception {
         this.sourceBindingsMgr.refresh();
     }
 
     public void removeConnector( Connector connector ) throws Exception {
         ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
-        this.admin.deleteConnectorBinding(connector.getName());
+        this.admin.deleteConnectionFactory(connector.getName());
         this.connectorByNameMap.remove(connector.getName());
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createRemoveConnectorEvent(connector));
     }
@@ -292,7 +292,7 @@ public class ExecutionAdmin {
             } else if (oldValue.equals(value)) return;
 
             // set value
-            this.admin.setConnectorBindingProperty(connector.getName(), propName, value);
+            this.admin.setConnectionFactoryProperty(connector.getName(), propName, value);
 
             if (notify) {
                 this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(connector));

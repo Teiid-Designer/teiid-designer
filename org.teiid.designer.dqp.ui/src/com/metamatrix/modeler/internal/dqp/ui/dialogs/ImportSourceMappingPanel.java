@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.adminapi.ConnectorBinding;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.common.vdb.ModelInfo;
@@ -47,16 +46,11 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
 import com.metamatrix.modeler.dqp.internal.config.ModelConnectorBindingMapperImpl;
-import com.metamatrix.modeler.dqp.internal.config.VdbDefnHelper;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.modeler.internal.dqp.ui.views.ConnectorBindingsTreeProvider;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.widget.DefaultContentProvider;
-import com.metamatrix.vdb.edit.manifest.ModelReference;
-import com.metamatrix.vdb.edit.manifest.ModelSource;
-import com.metamatrix.vdb.edit.manifest.ModelSourceProperty;
-import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 
 /**
  * @since 4.3

@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Map.Entry;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.adminapi.ConnectionFactory;
 import org.teiid.adminapi.PropertyDefinition;
 import com.metamatrix.core.modeler.util.ArgCheck;
 
@@ -20,10 +20,10 @@ import com.metamatrix.core.modeler.util.ArgCheck;
  */
 public class Connector implements Comparable<Connector> {
 
-    private final ConnectorBinding binding;
+    private final ConnectionFactory binding;
     private final ConnectorType type;
 
-    Connector( ConnectorBinding binding,
+    Connector( ConnectionFactory binding,
                ConnectorType type ) {
         assert (binding != null);
         assert (type != null);

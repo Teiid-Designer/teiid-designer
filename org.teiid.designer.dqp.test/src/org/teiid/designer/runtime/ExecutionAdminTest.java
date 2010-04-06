@@ -18,7 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.teiid.adminapi.Admin;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.adminapi.ConnectionFactory;
 
 /**
  * 
@@ -35,7 +35,7 @@ public class ExecutionAdminTest {
     }
 
     private Connector getNewConnector() throws Exception {
-        return new Connector(mock(ConnectorBinding.class), mock(ConnectorType.class));
+        return new Connector(mock(ConnectionFactory.class), mock(ConnectorType.class));
     }
 
     @Test( expected = IllegalArgumentException.class )
@@ -78,9 +78,9 @@ public class ExecutionAdminTest {
     @Test
     public void shouldAddConnector() throws Exception {
 
-        ConnectorBinding cb = mock(ConnectorBinding.class);
+        ConnectionFactory cb = mock(ConnectionFactory.class);
         Admin admin = mock(Admin.class);
-        stub(admin.getConnectorBinding("name")).toReturn(cb);
+        stub(admin.getConnectionFactory("name")).toReturn(cb);
         ExecutionAdmin execAdmin = new ExecutionAdmin(admin, mock(Server.class), mock(EventManager.class));
         execAdmin.addConnector("name", mock(ConnectorType.class), new Properties());
     }
@@ -202,7 +202,7 @@ public class ExecutionAdminTest {
 
     @Test
     public void shouldAllowRemoveConnectorWithConnector() throws Exception {
-        getNewAdmin().removeConnector(new Connector(mock(ConnectorBinding.class), mock(ConnectorType.class)));
+        getNewAdmin().removeConnector(new Connector(mock(ConnectionFactory.class), mock(ConnectorType.class)));
     }
 
     @Test

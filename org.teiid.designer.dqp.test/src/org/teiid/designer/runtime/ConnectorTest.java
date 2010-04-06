@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.teiid.adminapi.ConnectorBinding;
+import org.teiid.adminapi.ConnectionFactory;
 import org.teiid.adminapi.PropertyDefinition;
 
 /**
@@ -29,7 +29,7 @@ public class ConnectorTest {
     @Mock
     private PropertyDefinition propertyDefinition;
     @Mock
-    private ConnectorBinding connectorBinding;
+    private ConnectionFactory connectionFactory;
 
     private static final String PROP_NAME = "name";
 
@@ -39,7 +39,7 @@ public class ConnectorTest {
     }
 
     private Connector getNewConnector() {
-        return new Connector(connectorBinding, connectorType);
+        return new Connector(connectionFactory, connectorType);
     }
 
     @Test( expected = AssertionError.class )
@@ -49,7 +49,7 @@ public class ConnectorTest {
 
     @Test( expected = AssertionError.class )
     public void shouldNotAllowNullType() {
-        new Connector(connectorBinding, null);
+        new Connector(connectionFactory, null);
     }
 
     @Test
@@ -270,7 +270,7 @@ public class ConnectorTest {
     public void shouldAllowSetPropertyValue() throws Exception {
         ExecutionAdmin admin = mock(ExecutionAdmin.class);
         stub(connectorType.getAdmin()).toReturn(admin);
-        stub(connectorBinding.getProperties()).toReturn(new Properties());
+        stub(connectionFactory.getProperties()).toReturn(new Properties());
 
         getNewConnector().setPropertyValue("", "");
     }
@@ -286,7 +286,7 @@ public class ConnectorTest {
         stub(connectorType.getAdmin()).toReturn(admin);
         Properties props = new Properties();
 
-        stub(connectorBinding.getProperties()).toReturn(props);
+        stub(connectionFactory.getProperties()).toReturn(props);
 
         Properties newProps = new Properties();
         newProps.put("prop_1", "value_1");
