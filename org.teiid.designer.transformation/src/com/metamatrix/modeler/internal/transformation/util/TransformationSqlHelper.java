@@ -61,6 +61,7 @@ import com.metamatrix.query.sql.lang.From;
 import com.metamatrix.query.sql.lang.FromClause;
 import com.metamatrix.query.sql.lang.GroupBy;
 import com.metamatrix.query.sql.lang.OrderBy;
+import com.metamatrix.query.sql.lang.OrderByItem;
 import com.metamatrix.query.sql.lang.Query;
 import com.metamatrix.query.sql.lang.QueryCommand;
 import com.metamatrix.query.sql.lang.SPParameter;
@@ -1054,15 +1055,12 @@ public class TransformationSqlHelper implements SqlConstants {
         if (result.getOrderBy() != null) {
             // Remove any symbols from the Order By that exist in the removeElements list
             OrderBy orderBy = result.getOrderBy();
-            final Iterator iter2 = orderBy.getVariables().iterator();
+            final Iterator<OrderByItem> iter2 = orderBy.getOrderByItems().iterator();
             while (iter2.hasNext()) {
-                final Object next = iter2.next();
-                if (next instanceof SingleElementSymbol) {
-                    final SingleElementSymbol seSymbol = (SingleElementSymbol)next;
-                    final String name = TransformationSqlHelper.getSingleElementSymbolShortName(seSymbol, false);
-                    if (removeNames.contains(name)) {
-                        iter2.remove();
-                    }
+                final OrderByItem next = iter2.next();
+                final String name = TransformationSqlHelper.getSingleElementSymbolShortName(next.getSymbol(), false);
+                if (removeNames.contains(name)) {
+                    iter2.remove();
                 }
             }
 
@@ -1076,6 +1074,7 @@ public class TransformationSqlHelper implements SqlConstants {
         return result;
     }
 
+    // TODO: COULD BE PROBLEMATTIC!!! OrderBy and GroupBy can hold expressions
     private static List removeSymbols( List currentSymbols,
                                        List symbolNamesToRemove ) {
         if (currentSymbols == null || symbolNamesToRemove == null) {
