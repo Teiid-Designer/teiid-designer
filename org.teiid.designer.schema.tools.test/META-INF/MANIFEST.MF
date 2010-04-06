@@ -11,8 +11,8 @@ Export-Package: com.metamatrix.modeler.schema.tools,
  com.metamatrix.modeler.schema.tools.model.schema.impl,
  com.metamatrix.modeler.schema.tools.processing
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.designer.schema.tools;bundle-version="6.0.0",
- org.eclipse.xsd;bundle-version="2.4.0",
- org.junit4;bundle-version="4.3.1",
- teiid_embedded_query;bundle-version="6.0.0",
- org.jdom;bundle-version="1.0"
+Require-Bundle: org.teiid.designer.schema.tools,
+ org.eclipse.xsd,
+ org.junit4,
+ teiid_embedded_query,
+ org.jdom

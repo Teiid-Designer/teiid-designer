@@ -9,9 +9,9 @@ Bundle-Localization: plugin
 Export-Package: com.metamatrix.metamodels.relational.aspects.validation.rules,
  com.metamatrix.metamodels.relational.provider,
  com.metamatrix.metamodels.relational.util
-Require-Bundle: org.teiid.designer.metamodels.relational;bundle-version="6.0.0",
- org.junit4;bundle-version="4.3.1",
- org.teiid.designer.core;bundle-version="6.0.0",
- org.eclipse.emf.ecore;bundle-version="2.4.1",
- org.teiid.designer.core.test;bundle-version="6.0.0",
- org.eclipse.core.runtime;bundle-version="3.4.0"
+Require-Bundle: org.teiid.designer.metamodels.relational,
+ org.junit4,
+ org.teiid.designer.core,
+ org.eclipse.emf.ecore,
+ org.teiid.designer.core.test,
+ org.eclipse.core.runtime

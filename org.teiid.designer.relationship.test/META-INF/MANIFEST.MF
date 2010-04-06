@@ -8,11 +8,11 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.internal.relationship,
  com.metamatrix.modeler.relationship
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.designer.relationship;bundle-version="6.0.0",
- org.junit4;bundle-version="4.3.1",
- org.teiid.designer.metamodels.relationship;bundle-version="6.0.0",
- org.eclipse.emf.ecore;bundle-version="2.4.1",
- org.teiid.designer.core;bundle-version="6.0.0",
- org.teiid.designer.core.test;bundle-version="6.0.0",
- org.teiid.core.designer.test;bundle-version="6.0.0",
- org.eclipse.core.runtime;bundle-version="3.4.0"
+Require-Bundle: org.teiid.designer.relationship,
+ org.junit4,
+ org.teiid.designer.metamodels.relationship,
+ org.eclipse.emf.ecore,
+ org.teiid.designer.core,
+ org.teiid.designer.core.test,
+ org.teiid.core.designer.test,
+ org.eclipse.core.runtime

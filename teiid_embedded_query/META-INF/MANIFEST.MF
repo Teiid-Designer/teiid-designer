@@ -144,6 +144,6 @@ Import-Package: javax.sql,
  javax.sql.rowset.serial,
  javax.sql.rowset.spi,
  javax.transaction.xa
-Require-Bundle: org.jdom;bundle-version="1.0.0",
- net.sf.saxon;bundle-version="8.7.3"
+Require-Bundle: org.jdom,
+ net.sf.saxon
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

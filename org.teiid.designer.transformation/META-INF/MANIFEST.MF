@@ -31,6 +31,6 @@ Require-Bundle: org.teiid.designer.core,
  org.teiid.designer.metamodels.transformation,
  org.teiid.designer.metamodels.core,
  org.eclipse.core.resources,
- org.teiid.designer.udf;bundle-version="7.0.0"
+ org.teiid.designer.udf
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

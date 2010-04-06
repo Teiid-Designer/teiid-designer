@@ -34,6 +34,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.wsdl4j,
  teiid_embedded_query,
  org.teiid.designer.modelgenerator.xml,
- org.jdom;bundle-version="1.0"
+ org.jdom
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -13,11 +13,11 @@ Export-Package: com.metamatrix.jdbctest,
  com.metamatrix.modeler.jdbc.metadata,
  com.metamatrix.modeler.jdbc.metadata.impl
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.designer.jdbc;bundle-version="6.0.0",
- org.junit4;bundle-version="4.3.1",
- org.eclipse.core.runtime;bundle-version="3.4.0",
- org.teiid.designer.core;bundle-version="6.0.0",
- org.eclipse.emf.ecore;bundle-version="2.4.1",
- teiid_embedded_query;bundle-version="6.0.0",
- org.teiid.core.designer.test;bundle-version="6.0.0",
- org.eclipse.emf.ecore.xmi;bundle-version="2.4.1"
+Require-Bundle: org.teiid.designer.jdbc,
+ org.junit4,
+ org.eclipse.core.runtime,
+ org.teiid.designer.core,
+ org.eclipse.emf.ecore,
+ teiid_embedded_query,
+ org.teiid.core.designer.test,
+ org.eclipse.emf.ecore.xmi

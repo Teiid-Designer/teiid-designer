@@ -7,5 +7,5 @@ Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.metamodels.core.impl
 Bundle-Localization: plugin
-Require-Bundle: org.junit4;bundle-version="4.3.1",
- org.teiid.designer.metamodels.core;bundle-version="6.0.0"
+Require-Bundle: org.junit4,
+ org.teiid.designer.metamodels.core

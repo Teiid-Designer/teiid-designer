@@ -13,7 +13,7 @@ Export-Package: com.metamatrix.modeler.internal.vdb.ui.actions,
  com.metamatrix.modeler.vdb.ui
 Require-Bundle: org.teiid.designer.ui,
  org.teiid.designer.ui.common,
- org.teiid.designer.vdb;bundle-version="7.0.0",
+ org.teiid.designer.vdb,
  org.teiid.designer.metamodels.xml,
  org.teiid.designer.core,
  org.teiid.designer.metamodels.core,

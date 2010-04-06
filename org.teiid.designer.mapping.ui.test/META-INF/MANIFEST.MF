@@ -7,7 +7,7 @@ Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.mapping.ui.actions
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.designer.mapping.ui;bundle-version="6.0.0",
- org.junit4;bundle-version="4.3.1",
- org.teiid.designer.metamodels.transformation;bundle-version="6.0.0",
- org.teiid.designer.ui;bundle-version="6.0.0"
+Require-Bundle: org.teiid.designer.mapping.ui,
+ org.junit4,
+ org.teiid.designer.metamodels.transformation,
+ org.teiid.designer.ui

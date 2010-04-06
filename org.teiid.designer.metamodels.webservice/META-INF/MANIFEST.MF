@@ -29,6 +29,6 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.mapping,
  org.eclipse.xsd,
  org.eclipse.emf.ecore.xmi,
- org.eclipse.core.resources;bundle-version="3.5.0"
+ org.eclipse.core.resources
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

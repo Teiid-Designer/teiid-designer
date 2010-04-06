@@ -7,7 +7,7 @@ Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.metamodels.dependency
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.designer.metamodels.dependency;bundle-version="6.0.0",
- org.eclipse.emf.ecore;bundle-version="2.4.1",
- org.eclipse.core.resources;bundle-version="3.4.1",
- teiid_embedded_query;bundle-version="6.0.0"
+Require-Bundle: org.teiid.designer.metamodels.dependency,
+ org.eclipse.emf.ecore,
+ org.eclipse.core.resources,
+ teiid_embedded_query

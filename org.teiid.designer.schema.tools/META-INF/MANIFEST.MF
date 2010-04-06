@@ -18,6 +18,6 @@ Require-Bundle: org.teiid.designer.core,
  org.teiid.core.designer,
  teiid_embedded_query,
  org.eclipse.core.runtime,
- org.jdom;bundle-version="1.0"
+ org.jdom
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
