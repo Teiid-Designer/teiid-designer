@@ -95,6 +95,11 @@ public final class ServerManager implements EventManager {
     private final List<Server> servers;
 
     /**
+     * The server registry.
+     */
+    private Server defaultServer;
+
+    /**
      * Lock used for when accessing the server registry.
      */
     private final ReadWriteLock serverLock = new ReentrantReadWriteLock();
@@ -161,6 +166,13 @@ public final class ServerManager implements EventManager {
         }
 
         return connectors;
+    }
+
+    /**
+     * @return defaultServer
+     */
+    public Server getDefaultServer() {
+        return defaultServer;
     }
 
     /**
@@ -243,6 +255,9 @@ public final class ServerManager implements EventManager {
             this.serverLock.writeLock().lock();
 
             if (!isRegistered(server)) {
+                if (servers.isEmpty()) {
+                    setDefaultServer(server);
+                }
                 added = this.servers.add(server);
             }
         } finally {
@@ -277,6 +292,16 @@ public final class ServerManager implements EventManager {
             for (Server registeredServer : this.servers) {
                 if (registeredServer.hasSameKey(server)) {
                     removed = this.servers.remove(registeredServer);
+                    if (removed) {
+                        // If no servers left, set defaultServer to null
+                        if (this.servers.isEmpty()) {
+                            setDefaultServer(null);
+                        }
+                        // Check if removed server is default, then set to first server
+                        if (server.equals(getDefaultServer())) {
+                            setDefaultServer(this.servers.get(0));
+                        }
+                    }
                     break;
                 }
             }
@@ -294,6 +319,14 @@ public final class ServerManager implements EventManager {
 
         // server could not be removed
         return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("serverManagerRegistryRemoveUnexpectedError", server.getUrl())); //$NON-NLS-1$
+    }
+
+    public boolean isDefaultServer( Server server ) {
+        ArgCheck.isNotNull(server, "server"); //$NON-NLS-1$
+        if (this.defaultServer == null) {
+            return false;
+        }
+        return this.defaultServer.equals(server);
     }
 
     /**
@@ -452,6 +485,24 @@ public final class ServerManager implements EventManager {
         }
 
         return Status.OK_STATUS;
+    }
+
+    /**
+     * @param server Sets defaultServer to the specified value. May be null.
+     */
+    public void setDefaultServer( Server server ) {
+        boolean notify = false;
+        if (server != null) {
+            notify = !server.equals(this.defaultServer);
+        } else {
+            notify = defaultServer != null;
+        }
+
+        this.defaultServer = server;
+
+        if (notify) {
+            notifyListeners(ExecutionConfigurationEvent.createSetDefaultServerEvent(defaultServer));
+        }
     }
 
     /**

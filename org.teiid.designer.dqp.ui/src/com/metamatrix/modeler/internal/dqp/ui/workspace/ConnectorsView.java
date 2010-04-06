@@ -61,6 +61,7 @@ import org.teiid.designer.runtime.ui.DeleteServerAction;
 import org.teiid.designer.runtime.ui.EditServerAction;
 import org.teiid.designer.runtime.ui.NewServerAction;
 import org.teiid.designer.runtime.ui.ReconnectToServerAction;
+import org.teiid.designer.runtime.ui.SetDefaultServerAction;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -134,6 +135,11 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
      * Refreshes the server connections.
      */
     private ReconnectToServerAction reconnectAction;
+
+    /**
+     * Sets the selected Server as the default server for preview and execution
+     */
+    private SetDefaultServerAction setDefaultServerAction;
 
     /** needed for key listening */
     private KeyAdapter kaKeyAdapter;
@@ -446,36 +452,39 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         Object selection = getSelectedObject();
         if (selection != null) {
             if (selection instanceof Server) {
-                manager.add(editServerAction);
-                manager.add(deleteServerAction);
-                manager.add(reconnectAction);
+                manager.add(this.editServerAction);
+                manager.add(this.deleteServerAction);
+                if (this.setDefaultServerAction.isEnabled()) {
+                    manager.add(this.setDefaultServerAction);
+                }
+                manager.add(this.reconnectAction);
                 manager.add(new Separator());
-                manager.add(newServerAction);
+                manager.add(this.newServerAction);
             } else if (selection instanceof Connector) {
-                manager.add(newConnectorBindingAction);
+                manager.add(this.newConnectorBindingAction);
                 manager.add(new Separator());
-                manager.add(editConnectorBindingAction);
-                manager.add(cloneConnectorBindingAction);
+                manager.add(this.editConnectorBindingAction);
+                manager.add(this.cloneConnectorBindingAction);
                 manager.add(new Separator());
-                manager.add(deleteConnectorBindingAction);
+                manager.add(this.deleteConnectorBindingAction);
                 manager.add(new Separator());
-                manager.add(newServerAction);
+                manager.add(this.newServerAction);
             } else if (selection instanceof ConnectorType) {
-                manager.add(newConnectorBindingAction);
+                manager.add(this.newConnectorBindingAction);
                 manager.add(new Separator());
-                manager.add(newServerAction);
+                manager.add(this.newServerAction);
             } else {
-                manager.add(deleteSourceBindingAction);
+                manager.add(this.deleteSourceBindingAction);
                 manager.add(new Separator());
-                manager.add(openModelAction);
+                manager.add(this.openModelAction);
                 manager.add(new Separator());
-                manager.add(newServerAction);
+                manager.add(this.newServerAction);
             }
         } else {
-            manager.add(newServerAction);
+            manager.add(this.newServerAction);
             manager.add(new Separator());
-            newConnectorBindingAction.checkEnablement();
-            manager.add(newConnectorBindingAction);
+            this.newConnectorBindingAction.checkEnablement();
+            manager.add(this.newConnectorBindingAction);
         }
 
         // Other plug-ins can contribute there actions here
@@ -483,33 +492,33 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
     }
 
     private void fillLocalToolBar( IToolBarManager manager ) {
-        manager.add(newConnectorBindingAction);
+        manager.add(this.newConnectorBindingAction);
         manager.add(new Separator());
-        manager.add(showConnectorTypesToggleAction);
+        manager.add(this.showConnectorTypesToggleAction);
         manager.add(new Separator());
-        manager.add(collapseAllAction);
+        manager.add(this.collapseAllAction);
     }
 
     /*
      *  Initialize view actions, set icons and action text.
      */
     private void initActions() {
-        editConnectorBindingAction = new EditConnectorAction();
-        viewer.addSelectionChangedListener(editConnectorBindingAction);
+        this.editConnectorBindingAction = new EditConnectorAction();
+        this.viewer.addSelectionChangedListener(editConnectorBindingAction);
 
-        newConnectorBindingAction = new NewConnectorAction();
-        viewer.addSelectionChangedListener(newConnectorBindingAction);
+        this.newConnectorBindingAction = new NewConnectorAction();
+        this.viewer.addSelectionChangedListener(newConnectorBindingAction);
 
-        deleteConnectorBindingAction = new DeleteConnectorBindingAction();
-        viewer.addSelectionChangedListener(deleteConnectorBindingAction);
+        this.deleteConnectorBindingAction = new DeleteConnectorBindingAction();
+        this.viewer.addSelectionChangedListener(deleteConnectorBindingAction);
 
-        cloneConnectorBindingAction = new CloneConnectorBindingAction();
-        viewer.addSelectionChangedListener(cloneConnectorBindingAction);
+        this.cloneConnectorBindingAction = new CloneConnectorBindingAction();
+        this.viewer.addSelectionChangedListener(cloneConnectorBindingAction);
 
-        deleteSourceBindingAction = new DeleteSourceBindingAction();
-        viewer.addSelectionChangedListener(deleteSourceBindingAction);
+        this.deleteSourceBindingAction = new DeleteSourceBindingAction();
+        this.viewer.addSelectionChangedListener(deleteSourceBindingAction);
 
-        openModelAction = new Action(OPEN_ACTION_LABEL) {
+        this.openModelAction = new Action(OPEN_ACTION_LABEL) {
             @Override
             public void run() {
                 SourceBinding binding = getSelectedBinding();
@@ -534,9 +543,9 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                 }
             }
         };
-        openModelAction.setEnabled(true);
+        this.openModelAction.setEnabled(true);
 
-        showConnectorTypesToggleAction = new Action(" ", SWT.TOGGLE) { //$NON-NLS-1$
+        this.showConnectorTypesToggleAction = new Action(" ", SWT.TOGGLE) { //$NON-NLS-1$
             @Override
             public void run() {
                 treeProvider.setShowTypes(showConnectorTypesToggleAction.isChecked());
@@ -553,21 +562,21 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
 
             }
         };
-        showConnectorTypesToggleAction.setEnabled(true);
-        showConnectorTypesToggleAction.setChecked(true);
-        showConnectorTypesToggleAction.setToolTipText(HIDE_CONNECTORS_LABEL);
-        showConnectorTypesToggleAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SHOW_HIDE_CONNECTORS_ICON));
+        this.showConnectorTypesToggleAction.setEnabled(true);
+        this.showConnectorTypesToggleAction.setChecked(true);
+        this.showConnectorTypesToggleAction.setToolTipText(HIDE_CONNECTORS_LABEL);
+        this.showConnectorTypesToggleAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SHOW_HIDE_CONNECTORS_ICON));
 
-        collapseAllAction = new Action() {
+        this.collapseAllAction = new Action() {
             @Override
             public void run() {
                 viewer.collapseAll();
             }
         };
 
-        collapseAllAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.COLLAPSE_ALL_ICON));
-        collapseAllAction.setToolTipText(getString("collapseAllAction.tooltip")); //$NON-NLS-1$
-        collapseAllAction.setEnabled(true);
+        this.collapseAllAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.COLLAPSE_ALL_ICON));
+        this.collapseAllAction.setToolTipText(getString("collapseAllAction.tooltip")); //$NON-NLS-1$
+        this.collapseAllAction.setEnabled(true);
 
         // the shell used for dialogs that the actions display
         Shell shell = this.getSite().getShell();
@@ -585,6 +594,10 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
 
         // the new server action is always enabled
         this.newServerAction = new NewServerAction(shell, getServerManager());
+
+        // the edit action is only enabled when one server is selected
+        this.setDefaultServerAction = new SetDefaultServerAction(getServerManager());
+        this.viewer.addSelectionChangedListener(this.setDefaultServerAction);
 
     }
 

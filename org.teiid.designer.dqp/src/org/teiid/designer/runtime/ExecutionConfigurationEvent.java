@@ -21,7 +21,8 @@ public final class ExecutionConfigurationEvent {
         ADD,
         REFRESH,
         REMOVE,
-        UPDATE;
+        UPDATE,
+        DEFAULT;
     }
 
     public enum TargetType {
@@ -36,6 +37,10 @@ public final class ExecutionConfigurationEvent {
 
     public static ExecutionConfigurationEvent createRemoveServerEvent( Server server ) {
         return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.SERVER, server);
+    }
+
+    public static ExecutionConfigurationEvent createSetDefaultServerEvent( Server server ) {
+        return new ExecutionConfigurationEvent(EventType.DEFAULT, TargetType.SERVER, server);
     }
 
     public static ExecutionConfigurationEvent createUpdateServerEvent( Server server,

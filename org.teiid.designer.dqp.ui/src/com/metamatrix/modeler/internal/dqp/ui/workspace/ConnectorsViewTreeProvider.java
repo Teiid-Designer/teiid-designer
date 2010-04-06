@@ -145,6 +145,9 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
      */
     public Image getImage( Object element ) {
         if (element instanceof Server) {
+            if (serverMgr.isDefaultServer((Server)element)) {
+                return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ICON);
+            }
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ICON);
         }
         if (element instanceof Connector) {
