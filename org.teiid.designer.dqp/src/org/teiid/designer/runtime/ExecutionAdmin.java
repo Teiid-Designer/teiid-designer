@@ -16,11 +16,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.ConnectionFactory;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.VDB;
+import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 
@@ -81,6 +83,30 @@ public class ExecutionAdmin {
         this.connectorByNameMap.put(name, connector);
 
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddConnectorEvent(connector));
+    }
+
+    /**
+     * @param vdb
+     * @return
+     */
+    public VDB deployVdb( Vdb vdb ) throws Exception {
+        ArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
+
+        VDB deployedVdb = null; // this.admin.deployVDB(vdb.getName(), vdb);
+
+        return deployedVdb;
+    }
+
+    /**
+     * @param vdb
+     * @return
+     */
+    public VDB deployVdb( IFile vdbFile ) throws Exception {
+        ArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
+
+        VDB deployedVdb = null; // this.admin.deployVDB(vdb.getName(), vdb);
+
+        return deployedVdb;
     }
 
     /**

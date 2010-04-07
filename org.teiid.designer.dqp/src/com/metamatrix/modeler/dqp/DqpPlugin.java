@@ -117,6 +117,27 @@ public class DqpPlugin extends Plugin {
     }
 
     /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+     */
+    @Override
+    public void stop( BundleContext context ) throws Exception {
+        super.stop(context);
+
+        // restore registry
+        IStatus status = this.serverMgr.saveState();
+
+        if (!status.isOK()) {
+            Util.log(status);
+        }
+
+        if (status.getSeverity() == IStatus.ERROR) {
+            throw new CoreException(status);
+        }
+    }
+
+    /**
      * Cleans up the map of context helpers.
      * 
      * @param theContext the context whose state has changed

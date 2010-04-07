@@ -34,6 +34,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Base64;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
 
 /**
@@ -373,7 +374,7 @@ public final class ServerManager implements EventManager {
         try {
             server.getAdmin();
         } catch (Exception e) {
-            return new Status(IStatus.WARNING, "org.teiid.desginer.dqp", "Server Not connected");
+            return new Status(IStatus.WARNING, DqpPlugin.PLUGIN_ID, "Server Not connected");
         }
         return Status.OK_STATUS;
     }

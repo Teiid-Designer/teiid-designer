@@ -418,7 +418,7 @@ public final class ServerPage extends WizardPage {
         try {
             ServerUtils.validateServerUrl(url);
         } catch (IllegalArgumentException e) {
-            return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, e.getMessage()); // UTIL.getString("serverPageInvalidServerUrl"), e); //$NON-NLS-1$
+            return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, UTIL.getString("serverPageInvalidServerUrl"), e); //$NON-NLS-1$
         }
 
         if (username == null) {

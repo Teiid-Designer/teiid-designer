@@ -200,4 +200,13 @@
          label="%previewTableDataContextAction.label">
       </specialAction>
    </extension>
+      <extension
+        id="DeployVdbAction"
+        name="%deployVdbAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.runtime.ui.DeployVdbAction"
+         label="%deployVdbAction.label">
+      </resourceAction>
+   </extension>
 </plugin>

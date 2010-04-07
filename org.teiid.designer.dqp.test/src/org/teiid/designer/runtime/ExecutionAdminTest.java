@@ -14,11 +14,13 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.stub;
 import java.util.Properties;
+import org.eclipse.core.resources.IFile;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.ConnectionFactory;
+import org.teiid.designer.vdb.Vdb;
 
 /**
  * 
@@ -83,6 +85,23 @@ public class ExecutionAdminTest {
         stub(admin.getConnectionFactory("name")).toReturn(cb);
         ExecutionAdmin execAdmin = new ExecutionAdmin(admin, mock(Server.class), mock(EventManager.class));
         execAdmin.addConnector("name", mock(ConnectorType.class), new Properties());
+    }
+
+    @Test( expected = IllegalArgumentException.class )
+    public void shouldNotAllowNullIFileVdbForDeployVdb() throws Exception {
+        IFile nullFile = null;
+        getNewAdmin().deployVdb(nullFile);
+    }
+
+    @Test( expected = IllegalArgumentException.class )
+    public void shouldNotAllowNullVdbForDeployVdb() throws Exception {
+        Vdb nullVdb = null;
+        getNewAdmin().deployVdb(nullVdb);
+    }
+
+    @Test
+    public void shouldDeployVdb() throws Exception {
+        getNewAdmin().deployVdb(mock(IFile.class));
     }
 
     @Test( expected = IllegalArgumentException.class )
