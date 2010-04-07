@@ -10,7 +10,6 @@ package com.metamatrix.modeler.internal.dqp.ui.dialogs;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -19,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import com.metamatrix.common.vdb.VDBDefn;
+import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.Assertion;
@@ -28,10 +27,8 @@ import com.metamatrix.modeler.dqp.execution.VdbExecutionValidator;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.internal.dqp.ui.actions.VdbExecutor;
-import com.metamatrix.modeler.internal.dqp.ui.config.ConnectorBindingsPanel;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.widget.ExtendedTitleAreaDialog;
-import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 
 /**
  * @since 4.2
@@ -42,34 +39,58 @@ public class ConnectorBindingsDialog extends ExtendedTitleAreaDialog implements 
 
     private Button btnOk;
 
-    private File vdbFile;
+    private final File vdbFile;
 
-    private InternalVdbEditingContext vdbContext;
+    private final Vdb vdb;
 
     private ConnectorBindingsPanel pnlBindings;
 
-    private VdbExecutor validator;
+    private final VdbExecutor validator;
 
-    private Collection<IChangeListener> changeListenerList = new ArrayList<IChangeListener>(2);
+    private final Collection<IChangeListener> changeListenerList = new ArrayList<IChangeListener>(2);
 
-    public ConnectorBindingsDialog( Shell theParentShell,
-                                    File theVdbFile,
-                                    InternalVdbEditingContext theContext,
-                                    VdbExecutionValidator theValidator ) {
+    public ConnectorBindingsDialog( final Shell theParentShell,
+                                    final File theVdbFile,
+                                    final Vdb vdb,
+                                    final VdbExecutionValidator theValidator ) {
         super(theParentShell, DqpUiPlugin.getDefault());
 
         Assertion.isNotNull(theVdbFile);
-        Assertion.isNotNull(theContext);
+        Assertion.isNotNull(vdb);
 
         this.vdbFile = theVdbFile;
-        this.vdbContext = theContext;
-        this.validator = new VdbExecutor(this.vdbContext, theValidator);
+        this.vdb = vdb;
+        this.validator = new VdbExecutor(this.vdb, theValidator);
+    }
+
+    public void addIChangeListener( final IChangeListener listener ) {
+        if (!changeListenerList.contains(listener)) changeListenerList.add(listener);
+    }
+
+    /**
+     * @see org.eclipse.jface.dialogs.Dialog#createButton(org.eclipse.swt.widgets.Composite, int, java.lang.String, boolean)
+     * @since 4.3
+     */
+    @Override
+    protected Button createButton( final Composite theParent,
+                                   final int theId,
+                                   final String theLabel,
+                                   final boolean theDefaultButton ) {
+        final Button btn = super.createButton(theParent, theId, theLabel, theDefaultButton);
+
+        if (theId == IDialogConstants.OK_ID) {
+            this.btnOk = btn;
+            this.btnOk.setEnabled(false);
+            this.btnOk.setToolTipText(UTIL.getStringOrKey(I18N_PREFIX + "btnOk.tip")); //$NON-NLS-1$
+        }
+
+        return btn;
     }
 
     @Override
-    protected Control createDialogArea( Composite parent ) {
-        Composite composite = (Composite)super.createDialogArea(parent);
-        this.pnlBindings = new ConnectorBindingsPanel(parent, this.vdbFile, this.vdbContext);
+    protected Control createDialogArea( final Composite parent ) {
+        final Composite composite = (Composite)super.createDialogArea(parent);
+        this.pnlBindings = new ConnectorBindingsPanel(parent, this.vdbFile, this.vdb);
         this.pnlBindings.addChangeListener(this);
         this.pnlBindings.setSaveOnChange(true);
         this.pnlBindings.setFocus();
@@ -87,66 +108,12 @@ public class ConnectorBindingsDialog extends ExtendedTitleAreaDialog implements 
         return composite;
     }
 
-    /**
-     * @see org.eclipse.jface.dialogs.Dialog#createButton(org.eclipse.swt.widgets.Composite, int, java.lang.String, boolean)
-     * @since 4.3
-     */
-    @Override
-    protected Button createButton( Composite theParent,
-                                   int theId,
-                                   String theLabel,
-                                   boolean theDefaultButton ) {
-        Button btn = super.createButton(theParent, theId, theLabel, theDefaultButton);
-
-        if (theId == IDialogConstants.OK_ID) {
-            this.btnOk = btn;
-            this.btnOk.setEnabled(false);
-            this.btnOk.setToolTipText(UTIL.getStringOrKey(I18N_PREFIX + "btnOk.tip")); //$NON-NLS-1$
-        }
-
-        return btn;
-    }
-
     public VDBDefn getVdbDefn() {
         return (this.pnlBindings == null) ? null : this.pnlBindings.getVdbDefn();
     }
 
-    public void saveVdbDefn() {
-        if (this.pnlBindings != null) {
-            this.pnlBindings.save();
-        }
-    }
-
     public boolean hasVdbDefnChanges() {
         return (this.pnlBindings == null) ? false : this.pnlBindings.hasVdbDefnChanges();
-    }
-
-    public void addIChangeListener( IChangeListener listener ) {
-        if (!changeListenerList.contains(listener)) {
-            changeListenerList.add(listener);
-        }
-    }
-
-    public void removeIChangeListener( IChangeListener listener ) {
-        changeListenerList.remove(listener);
-    }
-
-    /**
-     * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
-     * @since 4.3
-     */
-    public void stateChanged( IChangeNotifier theSource ) {
-        for (Iterator<IChangeListener> iter = changeListenerList.iterator(); iter.hasNext();) {
-            iter.next().stateChanged(theSource);
-        }
-        updateState();
-    }
-
-    void updateState() {
-        IStatus status = this.validator.canExecute();
-        String message = status.getMessage();
-        setMessage(message, UiUtil.getDialogMessageType(status));
-        this.btnOk.setEnabled(status.getSeverity() != IStatus.ERROR);
     }
 
     /**
@@ -155,10 +122,33 @@ public class ConnectorBindingsDialog extends ExtendedTitleAreaDialog implements 
      */
     @Override
     protected void okPressed() {
-        if (hasVdbDefnChanges()) {
-            this.pnlBindings.save();
-        }
+        if (hasVdbDefnChanges()) this.pnlBindings.save();
 
         super.okPressed();
+    }
+
+    public void removeIChangeListener( final IChangeListener listener ) {
+        changeListenerList.remove(listener);
+    }
+
+    public void saveVdbDefn() {
+        if (this.pnlBindings != null) this.pnlBindings.save();
+    }
+
+    /**
+     * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
+     * @since 4.3
+     */
+    public void stateChanged( final IChangeNotifier theSource ) {
+        for (final IChangeListener iChangeListener : changeListenerList)
+            iChangeListener.stateChanged(theSource);
+        updateState();
+    }
+
+    void updateState() {
+        final IStatus status = this.validator.canExecute();
+        final String message = status.getMessage();
+        setMessage(message, UiUtil.getDialogMessageType(status));
+        this.btnOk.setEnabled(status.getSeverity() != IStatus.ERROR);
     }
 }

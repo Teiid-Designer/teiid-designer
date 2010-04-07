@@ -38,6 +38,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbModelEntry;
 import com.metamatrix.common.vdb.ModelInfo;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
@@ -67,7 +69,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
 
     private List connectorTypePanelControls;
 
-    private ModelSource importSource;
+    private final ModelSource importSource;
 
     private ModelConnectorBindingMapperImpl mapper;
 
@@ -75,13 +77,13 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
 
     private Collection matchingConnectorTypes;
 
-    private ModelInfo modelInfo;
+    private final ModelInfo modelInfo;
 
     private boolean newTypeCreated;
 
     private String pswd;
 
-    private final InternalVdbEditingContext vdbContext;
+    private final Vdb vdb;
 
     private Button btnExistingBinding;
 
@@ -108,18 +110,18 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
      * @throws IllegalArgumentException if any of the input parameters is <code>null</code>
      * @since 4.3
      */
-    public ImportSourceMappingPanel( Composite theParent,
-                                     InternalVdbEditingContext theContext,
-                                     ModelInfo theModelInfo,
-                                     ModelSource theImportSource ) {
+    public ImportSourceMappingPanel( final Composite theParent,
+                                     final Vdb vdb,
+                                     final ModelInfo theModelInfo,
+                                     final ModelSource theImportSource ) {
         super(theParent);
 
         ArgCheck.isNotNull(theParent);
-        ArgCheck.isNotNull(theContext);
+        ArgCheck.isNotNull(vdb);
         ArgCheck.isNotNull(theModelInfo);
         ArgCheck.isNotNull(theImportSource);
 
-        this.vdbContext = theContext;
+        this.vdb = vdb;
         this.modelInfo = theModelInfo;
         this.importSource = theImportSource;
 
@@ -144,26 +146,22 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         Object user = ""; //$NON-NLS-1$
         Object driverType = ""; //$NON-NLS-1$
 
-        List props = this.importSource.getProperties();
+        final List props = this.importSource.getProperties();
         ModelSourceProperty prop = null;
 
         for (int numProps = props.size(), j = 0; j < numProps; ++j) {
             prop = (ModelSourceProperty)props.get(j);
 
-            if (prop.getName().equals(JDBCConnectionPropertyNames.JDBC_IMPORT_URL)) {
-                url = prop.getValue();
-            } else if (prop.getName().equals(JDBCConnectionPropertyNames.JDBC_IMPORT_USERNAME)) {
-                user = prop.getValue();
-            } else if (prop.getName().equals(JDBCConnectionPropertyNames.JDBC_IMPORT_DRIVER_CLASS)) {
-                driverType = prop.getValue();
-            }
+            if (prop.getName().equals(JDBCConnectionPropertyNames.JDBC_IMPORT_URL)) url = prop.getValue();
+            else if (prop.getName().equals(JDBCConnectionPropertyNames.JDBC_IMPORT_USERNAME)) user = prop.getValue();
+            else if (prop.getName().equals(JDBCConnectionPropertyNames.JDBC_IMPORT_DRIVER_CLASS)) driverType = prop.getValue();
         }
 
         //
         // create panel description label
         //
 
-        StyledText lblGeneralDescription = new StyledText(this, SWT.WRAP | SWT.READ_ONLY | SWT.MULTI);
+        final StyledText lblGeneralDescription = new StyledText(this, SWT.WRAP | SWT.READ_ONLY | SWT.MULTI);
         lblGeneralDescription.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         lblGeneralDescription.setText(UTIL.getString(PREFIX + "lblGeneralDescription", new Object[] {url, user, driverType})); //$NON-NLS-1$
         lblGeneralDescription.setBackground(UiUtil.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
@@ -179,13 +177,13 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         // create assigne connector binding group
         //
 
-        Group group = WidgetFactory.createGroup(this, getString("group.title"), GridData.FILL_BOTH); //$NON-NLS-1$
+        final Group group = WidgetFactory.createGroup(this, getString("group.title"), GridData.FILL_BOTH); //$NON-NLS-1$
 
         //
         // create radio button panel
         //
 
-        Composite pnlButtons = new Composite(group, SWT.NONE);
+        final Composite pnlButtons = new Composite(group, SWT.NONE);
         pnlButtons.setLayout(new GridLayout(2, true));
         pnlButtons.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_CENTER));
 
@@ -197,7 +195,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         this.btnExistingBinding.setToolTipText(getString("btnExistingBinding.tip")); //$NON-NLS-1$
         this.btnExistingBinding.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected( SelectionEvent theEvent ) {
+            public void widgetSelected( final SelectionEvent theEvent ) {
                 handleUseExistingBinding();
             }
         });
@@ -210,7 +208,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         this.btnCreateFromType.setToolTipText(getString("btnCreateFromType.tip")); //$NON-NLS-1$
         this.btnCreateFromType.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected( SelectionEvent theEvent ) {
+            public void widgetSelected( final SelectionEvent theEvent ) {
                 handleCreateBindingFromType();
             }
         });
@@ -233,7 +231,8 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         // create description label for matching bindings
         //
 
-        StyledText lblMatchingBindingDescription = new StyledText(this.pnlMatchingBinding, SWT.WRAP | SWT.READ_ONLY | SWT.MULTI);
+        final StyledText lblMatchingBindingDescription = new StyledText(this.pnlMatchingBinding, SWT.WRAP | SWT.READ_ONLY
+                                                                                                 | SWT.MULTI);
         lblMatchingBindingDescription.setText(getString("lblMatchingBindingDescription")); //$NON-NLS-1$
         lblMatchingBindingDescription.setBackground(UiUtil.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
         gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -244,7 +243,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         // create shared label provider for views
         //
 
-        IBaseLabelProvider labelProvider = new ConnectorBindingsTreeProvider();
+        final IBaseLabelProvider labelProvider = new ConnectorBindingsTreeProvider();
 
         //
         // create list containing existing bindings with matching properties
@@ -254,12 +253,12 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         this.bindingsViewer.setLabelProvider(labelProvider);
         this.bindingsViewer.setContentProvider(new DefaultContentProvider() {
             @Override
-            public Object[] getElements( Object theInputElement ) {
+            public Object[] getElements( final Object theInputElement ) {
                 return getBindings();
             }
         });
         this.bindingsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent theEvent ) {
+            public void selectionChanged( final SelectionChangedEvent theEvent ) {
                 handleBindingSelectionChanged();
             }
         });
@@ -289,7 +288,8 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         // create description label for matching connector types
         //
 
-        StyledText lblMatchingConnectorTypeDescription = new StyledText(this.pnlNewBinding, SWT.WRAP | SWT.READ_ONLY | SWT.MULTI);
+        final StyledText lblMatchingConnectorTypeDescription = new StyledText(this.pnlNewBinding, SWT.WRAP | SWT.READ_ONLY
+                                                                                                  | SWT.MULTI);
         lblMatchingConnectorTypeDescription.setText(getString("lblMatchingConnectorTypeDescription")); //$NON-NLS-1$
         lblMatchingConnectorTypeDescription.setBackground(UiUtil.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
         gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -304,12 +304,12 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         this.connectorTypesViewer.setLabelProvider(labelProvider);
         this.connectorTypesViewer.setContentProvider(new DefaultContentProvider() {
             @Override
-            public Object[] getElements( Object theInputElement ) {
+            public Object[] getElements( final Object theInputElement ) {
                 return getConnectorTypes();
             }
         });
         this.connectorTypesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged( SelectionChangedEvent theEvent ) {
+            public void selectionChanged( final SelectionChangedEvent theEvent ) {
                 handleConnectorTypeChanged();
             }
         });
@@ -331,13 +331,13 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         // create panel to group label/fields of name and password
         //
 
-        Composite pnl = WidgetFactory.createPanel(this.pnlNewBinding, SWT.NONE, GridData.FILL_HORIZONTAL, 1, 2);
+        final Composite pnl = WidgetFactory.createPanel(this.pnlNewBinding, SWT.NONE, GridData.FILL_HORIZONTAL, 1, 2);
 
         //
         // create binding name label
         //
 
-        CLabel lblBindingName = WidgetFactory.createLabel(pnl, getString("lblBindingName")); //$NON-NLS-1$
+        final CLabel lblBindingName = WidgetFactory.createLabel(pnl, getString("lblBindingName")); //$NON-NLS-1$
         gd = new GridData();
         gd.horizontalIndent = HORIZONTAL_INDENT;
         gd.horizontalAlignment = SWT.RIGHT;
@@ -353,7 +353,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         this.txtBindingName.setToolTipText(getString("txtBindingName.tip")); //$NON-NLS-1$
         this.txtBindingName.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         this.txtBindingName.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent theEvent ) {
+            public void modifyText( final ModifyEvent theEvent ) {
                 handleBindingNameChanged();
             }
         });
@@ -364,7 +364,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         // create password label
         //
 
-        CLabel lblPswd = WidgetFactory.createLabel(pnl, getString("lblPswd")); //$NON-NLS-1$
+        final CLabel lblPswd = WidgetFactory.createLabel(pnl, getString("lblPswd")); //$NON-NLS-1$
         gd = new GridData();
         gd.horizontalIndent = HORIZONTAL_INDENT;
         gd.horizontalAlignment = SWT.RIGHT;
@@ -380,7 +380,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         this.txtPswd.setToolTipText(getString("txtPswd.tip")); //$NON-NLS-1$
         this.txtPswd.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         this.txtPswd.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent theEvent ) {
+            public void modifyText( final ModifyEvent theEvent ) {
                 handlePasswordChanged();
             }
         });
@@ -392,14 +392,14 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
 
         // add dispose listener because when I overrode dispose() it never got called
         addDisposeListener(new DisposeListener() {
-            public void widgetDisposed( DisposeEvent theEvent ) {
+            public void widgetDisposed( final DisposeEvent theEvent ) {
                 handleDispose();
             }
         });
     }
 
     Object[] getBindings() {
-        Collection result = this.matchingBindings;
+        final Collection result = this.matchingBindings;
 
         return (result == null) ? new Object[] {getString("noMatchingBindings")} //$NON-NLS-1$
         : this.matchingBindings.toArray();
@@ -416,31 +416,24 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
     @Override
     public Connector getConnector() throws Exception {
         Connector result = null;
-        IStatus status = getStatus();
+        final IStatus status = getStatus();
 
-        if (status.getSeverity() != IStatus.ERROR) {
-            if (this.btnExistingBinding.getSelection() && (this.matchingBindings != null) && !this.matchingBindings.isEmpty()) {
-                IStructuredSelection selection = (IStructuredSelection)this.bindingsViewer.getSelection();
-                result = (Connector)selection.getFirstElement();
-            } else if (this.btnCreateFromType.getSelection() && (this.matchingConnectorTypes != null)
-                       && !this.matchingConnectorTypes.isEmpty()) {
-                IStructuredSelection selection = (IStructuredSelection)this.connectorTypesViewer.getSelection();
-                ModelReference modelRef = getModelReference();
-                result = this.mapper.createConnectorBinding(modelRef,
-                                                            (ConnectorType)selection.getFirstElement(),
-                                                            getNewBindingName());
-            }
+        if (status.getSeverity() != IStatus.ERROR) if (this.btnExistingBinding.getSelection() && (this.matchingBindings != null)
+                                                       && !this.matchingBindings.isEmpty()) {
+            final IStructuredSelection selection = (IStructuredSelection)this.bindingsViewer.getSelection();
+            result = (Connector)selection.getFirstElement();
+        } else if (this.btnCreateFromType.getSelection() && (this.matchingConnectorTypes != null)
+                   && !this.matchingConnectorTypes.isEmpty()) {
+            final IStructuredSelection selection = (IStructuredSelection)this.connectorTypesViewer.getSelection();
+            final VdbModelEntry modelEntry = getModelEntry();
+            result = this.mapper.createConnectorBinding(modelEntry, (ConnectorType)selection.getFirstElement(), getNewBindingName());
         }
 
         return result;
     }
 
-    private ModelReference getModelReference() {
-        return VdbDefnHelper.findModelReference(this.vdbContext, this.modelInfo);
-    }
-
     Object[] getConnectorTypes() {
-        Collection result = this.matchingConnectorTypes;
+        final Collection result = this.matchingConnectorTypes;
 
         return (result == null) ? new Object[] {getString("noMatchingConnectorTypes")} //$NON-NLS-1$
         : this.matchingConnectorTypes.toArray();
@@ -459,6 +452,10 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         return PREFIX;
     }
 
+    private VdbModelEntry getModelEntry() {
+        return VdbDefnHelper.findModelReference(this.vdb, this.modelInfo);
+    }
+
     private String getNewBindingName() {
         return this.txtBindingName.getText();
     }
@@ -472,9 +469,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
      * @see #isNewBindingState()
      */
     public String getPassword() {
-        if (this.isNewBindingState()) {
-            return this.pswd;
-        }
+        if (this.isNewBindingState()) return this.pswd;
 
         // this is more of an assertion as this method should never be called when not in proper state
         throw new IllegalStateException("Panel not in new binding state"); //$NON-NLS-1$
@@ -496,27 +491,21 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
                                  ((IStructuredSelection)this.bindingsViewer.getSelection()).getFirstElement());
         } else if (this.btnCreateFromType.getSelection() && !this.connectorTypesViewer.getSelection().isEmpty()) {
             // validate name first
-            IStatus result = ModelerDqpUtils.isValidBindingName(getNewBindingName());
+            final IStatus result = ModelerDqpUtils.isValidBindingName(getNewBindingName());
 
             if (result.getSeverity() != IStatus.ERROR) {
-                VdbDefnHelper helper = getVdbDefnHelper();
+                final VdbDefnHelper helper = getVdbDefnHelper();
 
                 if (ModelerDqpUtils.isUniqueBindingName(getNewBindingName(), helper.getVdbDefn())) {
                     severity = IStatus.OK;
                     msg = UTIL.getString(PREFIX + "okMsg.connectorType", //$NON-NLS-1$
                                          new Object[] {getNewBindingName(),
                                              ((IStructuredSelection)this.connectorTypesViewer.getSelection()).getFirstElement()});
-                } else {
-                    // binding with that name already exists
-                    msg = UTIL.getString(PREFIX + "bindingNameExists", getNewBindingName()); //$NON-NLS-1$
-                }
-            } else {
-                msg = result.getMessage();
-            }
-        } else {
-            // invalid
-            msg = getString("errorMsg"); //$NON-NLS-1$
-        }
+                } else // binding with that name already exists
+                msg = UTIL.getString(PREFIX + "bindingNameExists", getNewBindingName()); //$NON-NLS-1$
+            } else msg = result.getMessage();
+        } else // invalid
+        msg = getString("errorMsg"); //$NON-NLS-1$
 
         return BaseNewConnectorBindingPanel.createStatus(severity, msg);
     }
@@ -526,7 +515,11 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
      * @since 5.0
      */
     private VdbDefnHelper getVdbDefnHelper() {
-        return DqpPlugin.getInstance().getVdbDefnHelper(this.vdbContext);
+        return DqpPlugin.getInstance().getVdbDefnHelper(this.vdb);
+    }
+
+    void handleBindingNameChanged() {
+        fireChangeEvent();
     }
 
     /**
@@ -553,10 +546,6 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         }
     }
 
-    void handleBindingNameChanged() {
-        fireChangeEvent();
-    }
-
     void handleCreateBindingFromType() {
         if (this.btnCreateFromType.getSelection()) {
             // show pnlMatchingBinding card
@@ -567,9 +556,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
             this.btnExistingBinding.setSelection(false);
 
             // restore selection state in bindings viewer
-            if (this.typeIndex == -1) {
-                this.typeIndex = 0;
-            }
+            if (this.typeIndex == -1) this.typeIndex = 0;
 
             this.connectorTypesViewer.getTable().setSelection(this.typeIndex);
 
@@ -597,85 +584,26 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         this.pswd = this.txtPswd.getText();
     }
 
-    void handleUseExistingBinding() {
-        if (this.btnExistingBinding.getSelection()) {
-            // show pnlMatchingBinding card
-            this.stackLayout.topControl = this.pnlMatchingBinding;
-            this.pnlCards.layout();
-
-            this.newTypeCreated = false;
-            this.btnCreateFromType.setSelection(false);
-
-            // restore selection state in bindings viewer or select first row if no previous selection
-            if (this.bindingIndex == -1) {
-                this.bindingIndex = 0;
-            }
-
-            this.bindingsViewer.getTable().setSelection(this.bindingIndex);
-
-            // save selected connector type index and then remove selection from connector type viewer
-            this.typeIndex = this.connectorTypesViewer.getTable().getSelectionIndex();
-            this.connectorTypesViewer.getTable().deselectAll();
-
-            // alert listeners of a change in state
-            fireChangeEvent();
-        }
-    }
-
-    /**
-     * Indicates if the panel is in a state that a new binding will/has been created. The password should only be used when in a
-     * new binding state.
-     * 
-     * @return <code>true</code> if new binding state; <code>false</code> if an existing binding state.
-     * @since 4.3
-     */
-    public boolean isNewBindingState() {
-        return this.newTypeCreated;
-    }
-
-    private void populateBindingName() {
-        // if needed repopulate the name to the default name
-        if (getNewBindingName().length() == 0) {
-            this.txtBindingName.setText(ModelerDqpUtils.createNewConnectorName(this.modelInfo));
-        }
-
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
-     */
-    public void stateChanged( final IChangeNotifier theSource ) {
-        UiUtil.runInSwtThread(new Runnable() {
-            public void run() {
-                handleStateChanged(theSource);
-            }
-        }, false);
-    }
-
     /**
      * Fires when the ConfigurationManager changes
      * 
      * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
      * @since 4.3
      */
-    void handleStateChanged( IChangeNotifier theSource ) {
-        if ((this.bindingsViewer == null) || this.bindingsViewer.getTable().isDisposed()) {
-            return;
-        }
+    void handleStateChanged( final IChangeNotifier theSource ) {
+        if ((this.bindingsViewer == null) || this.bindingsViewer.getTable().isDisposed()) return;
 
         // reload the state
         try {
-            this.mapper = new ModelConnectorBindingMapperImpl(this.vdbContext);
-            ModelReference modelRef = getModelReference();
+            this.mapper = new ModelConnectorBindingMapperImpl(this.vdb);
+            final VdbModelEntry modelEntry = getModelEntry();
 
             // get matching bindings
-            this.matchingBindings = mapper.findConnectorBindingMatches(modelRef);
+            this.matchingBindings = mapper.findConnectorBindingMatches(modelEntry);
 
             // get matching connector types
-            this.matchingConnectorTypes = mapper.findConnectorTypeMatches(modelRef);
-        } catch (Exception theException) {
+            this.matchingConnectorTypes = mapper.findConnectorTypeMatches(modelEntry);
+        } catch (final Exception theException) {
             UTIL.log(theException);
             theException.printStackTrace();
         }
@@ -697,7 +625,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
                         btn.notifyListeners(SWT.Selection, event);
 
                         // select first row in table and notify listeners
-                        Table tbl = getBindingsViewer().getTable();
+                        final Table tbl = getBindingsViewer().getTable();
                         tbl.setSelection(0);
                         event = new Event();
                         event.widget = tbl;
@@ -725,7 +653,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
                         typeBtn.notifyListeners(SWT.Selection, event);
 
                         // select first row in table and notify listeners
-                        Table tbl = getConnectorTypesViewer().getTable();
+                        final Table tbl = getConnectorTypesViewer().getTable();
                         tbl.setSelection(0);
                         event = new Event();
                         event.widget = tbl;
@@ -738,6 +666,59 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         // populate the tables
         this.bindingsViewer.setInput(this);
         this.connectorTypesViewer.setInput(this);
+    }
+
+    void handleUseExistingBinding() {
+        if (this.btnExistingBinding.getSelection()) {
+            // show pnlMatchingBinding card
+            this.stackLayout.topControl = this.pnlMatchingBinding;
+            this.pnlCards.layout();
+
+            this.newTypeCreated = false;
+            this.btnCreateFromType.setSelection(false);
+
+            // restore selection state in bindings viewer or select first row if no previous selection
+            if (this.bindingIndex == -1) this.bindingIndex = 0;
+
+            this.bindingsViewer.getTable().setSelection(this.bindingIndex);
+
+            // save selected connector type index and then remove selection from connector type viewer
+            this.typeIndex = this.connectorTypesViewer.getTable().getSelectionIndex();
+            this.connectorTypesViewer.getTable().deselectAll();
+
+            // alert listeners of a change in state
+            fireChangeEvent();
+        }
+    }
+
+    /**
+     * Indicates if the panel is in a state that a new binding will/has been created. The password should only be used when in a new
+     * binding state.
+     * 
+     * @return <code>true</code> if new binding state; <code>false</code> if an existing binding state.
+     * @since 4.3
+     */
+    public boolean isNewBindingState() {
+        return this.newTypeCreated;
+    }
+
+    private void populateBindingName() {
+        // if needed repopulate the name to the default name
+        if (getNewBindingName().length() == 0) this.txtBindingName.setText(ModelerDqpUtils.createNewConnectorName(this.modelInfo));
+
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.core.event.IChangeListener#stateChanged(com.metamatrix.core.event.IChangeNotifier)
+     */
+    public void stateChanged( final IChangeNotifier theSource ) {
+        UiUtil.runInSwtThread(new Runnable() {
+            public void run() {
+                handleStateChanged(theSource);
+            }
+        }, false);
     }
 
 }

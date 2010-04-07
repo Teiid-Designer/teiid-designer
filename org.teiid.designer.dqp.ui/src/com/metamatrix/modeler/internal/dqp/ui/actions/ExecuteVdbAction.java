@@ -31,6 +31,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtil;
@@ -45,15 +46,11 @@ import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
-import com.metamatrix.vdb.edit.VdbEditPlugin;
-import com.metamatrix.vdb.edit.VdbEditingContext;
-import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 
 /**
  * @since 4.2
  */
-public class ExecuteVdbAction extends ActionDelegate
-    implements DqpUiConstants, IWorkbenchWindowActionDelegate, IViewActionDelegate {
+public class ExecuteVdbAction extends ActionDelegate implements DqpUiConstants, IWorkbenchWindowActionDelegate, IViewActionDelegate {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ExecuteVdbAction.class);
 
@@ -89,9 +86,91 @@ public class ExecuteVdbAction extends ActionDelegate
      * 
      * @param allowUserInteraction flag to allow or disallow user input
      */
-    public ExecuteVdbAction( boolean allowUserInteraction ) {
+    public ExecuteVdbAction( final boolean allowUserInteraction ) {
         super();
         this.allowUserInput = allowUserInteraction;
+    }
+
+    /**
+     * This runs the default VdbExecutor.execute method
+     */
+    private void executeVdb() {
+        // should be in an executable state here but check to be safe
+        if (getCanExecuteStatus().getSeverity() != IStatus.ERROR) vdbExecutor.execute(null);
+    }
+
+    public IStatus getCanExecuteStatus() {
+        return this.canExecute;
+    }
+
+    private Vdb getCurrentVdb() {
+        Vdb result = null;
+        final IEditorReference[] editors = UiUtil.getWorkbenchPage().getEditorReferences();
+        IEditorPart nextEditor = null;
+
+        for (int i = 0; i < editors.length; ++i) {
+            nextEditor = editors[i].getEditor(false);
+
+            if (nextEditor instanceof VdbEditor) {
+                final VdbEditor editor = (VdbEditor)nextEditor;
+                final IFileEditorInput input = (IFileEditorInput)editor.getEditorInput();
+                final IFile file = input.getFile();
+
+                if (file.equals(this.selectedVDB)) {
+                    result = editor.getVdb();
+                    break;
+                }
+            }
+        }
+
+        if (result == null) try {
+            result = new Vdb(this.selectedVDB.getLocation());
+        } catch (final Exception err) {
+            VdbUiConstants.Util.log(err);
+            MessageDialog.openInformation(null, getString("editorContextError.title"), getString("editorContextError.message")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        return result;
+    }
+
+    File getSelectedVdbFile() {
+        return (this.selectedVDB == null) ? null : this.selectedVDB.getLocation().toFile();
+    }
+
+    private Shell getShell() {
+        return DqpUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
+    }
+
+    /**
+     * run the VdbExecutor.execute method for initializing the connection only, and return a Vdb connection
+     */
+    public Connection getVdbConnection() {
+        Connection connection = null;
+        // should be in an executable state here but check to be safe
+        if (getCanExecuteStatus().getSeverity() != IStatus.ERROR) {
+            final IStatus vdbConnectionStatus = this.vdbExecutor.execute(null, true);
+            if (vdbConnectionStatus.isOK()) connection = this.vdbExecutor.getSqlConnection().getConnection();
+        }
+        return connection;
+    }
+
+    public VdbExecutionValidator getVdbExecutionValidator() {
+        if (this.validator == null) this.validator = new VdbExecutionValidatorImpl();
+        return this.validator;
+    }
+
+    /**
+     * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
+     * @since 4.2
+     */
+    public void init( final IViewPart view ) {
+    }
+
+    /**
+     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+     * @since 4.2
+     */
+    public void init( final IWorkbenchWindow window ) {
     }
 
     /**
@@ -99,36 +178,62 @@ public class ExecuteVdbAction extends ActionDelegate
      * @since 4.2
      */
     @Override
-    public void run( IAction action ) {
+    public void run( final IAction action ) {
         setupVdbForExecution();
 
         executeVdb();
     }
 
-    public void setupVdbForExecution() {
-        final VdbEditingContext vdbContext = getCurrentVdbContext();
+    /**
+     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+     * @since 4.2
+     */
+    @Override
+    public void selectionChanged( final IAction action,
+                                  final ISelection selection ) {
+        boolean enable = false;
 
-        Assertion.isNotNull(vdbContext);
-        Assertion.isInstanceOf(vdbContext, InternalVdbEditingContext.class, vdbContext.getClass().getName());
+        if (!SelectionUtilities.isMultiSelection(selection)) {
+            final Object obj = SelectionUtilities.getSelectedObject(selection);
+
+            if (obj instanceof IFile) if (StringUtil.endsWithIgnoreCase(((IFile)obj).getName(), ModelerCore.VDB_FILE_EXTENSION)) {
+                setSelectedVdbFile((IFile)obj);
+                enable = true;
+            }
+        }
+
+        action.setEnabled(enable);
+    }
+
+    void setCanExecute( final IStatus theExecuteStatus ) {
+        this.canExecute = theExecuteStatus;
+    }
+
+    public void setSelectedVdbFile( final IFile vdbFile ) {
+        this.selectedVDB = vdbFile;
+    }
+
+    public void setupVdbForExecution() {
+        final Vdb vdb = getCurrentVdb();
+
+        Assertion.isNotNull(vdb);
 
         // if not saved show dialog and exit
-        if (vdbContext.isSaveRequired()) {
+        if (vdb.isModified()) {
             // show error dialog
-            if (this.allowUserInput) {
-                MessageDialog.openError(getShell(), getString("unsavedVdbDialog.title"), //$NON-NLS-1$
-                                        getString("unsavedVdbDialog.msg") //$NON-NLS-1$
-                );
-            }
+            if (this.allowUserInput) MessageDialog.openError(getShell(), getString("unsavedVdbDialog.title"), //$NON-NLS-1$
+                                                             getString("unsavedVdbDialog.msg") //$NON-NLS-1$
+            );
             // Set error status
             setCanExecute(new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, -1, getString("unsavedVdbDialog.msg"), null)); //$NON-NLS-1$
             return;
         }
 
         // executor for executing VDB and validating execution status
-        vdbExecutor = new VdbExecutor(vdbContext, getVdbExecutionValidator());
+        vdbExecutor = new VdbExecutor(vdb, getVdbExecutionValidator());
 
         // check vdb execute status. exit if problem found.
-        WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
+        final WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
             @Override
             public void execute( final IProgressMonitor monitor ) {
                 setCanExecute(vdbExecutor.canExecute());
@@ -137,8 +242,8 @@ public class ExecuteVdbAction extends ActionDelegate
 
         try {
             new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, operation);
-        } catch (InterruptedException e) {
-        } catch (InvocationTargetException e) {
+        } catch (final InterruptedException e) {
+        } catch (final InvocationTargetException e) {
             UTIL.log(e.getTargetException());
             MessageDialog.openError(getShell(), getString("executorErrorDialog.title"), //$NON-NLS-1$
                                     getString("executorErrorDialog.msg") //$NON-NLS-1$
@@ -152,9 +257,8 @@ public class ExecuteVdbAction extends ActionDelegate
         if (!this.canExecute.isOK() && this.allowUserInput) {
             UiBusyIndicator.showWhile(null, new Runnable() {
                 public void run() {
-                    Shell shell = DqpUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
-                    dialog = new ConnectorBindingsDialog(shell, getSelectedVdbFile(), (InternalVdbEditingContext)vdbContext,
-                                                         getVdbExecutionValidator());
+                    final Shell shell = DqpUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
+                    dialog = new ConnectorBindingsDialog(shell, getSelectedVdbFile(), vdb, getVdbExecutionValidator());
                 }
             });
 
@@ -162,15 +266,13 @@ public class ExecuteVdbAction extends ActionDelegate
 
             if (dialog.getReturnCode() == Window.OK) {
                 // save VDB if necessary
-                if (vdbContext.isSaveRequired()) {
-                    vdbContext.save(new NullProgressMonitor());
-                }
+                if (vdb.isModified()) vdb.save(new NullProgressMonitor());
 
                 // recheck the execution status. should be OK if the dialog OK button was clicked. but just make sure.
                 try {
                     new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, operation);
-                } catch (InterruptedException e) {
-                } catch (InvocationTargetException e) {
+                } catch (final InterruptedException e) {
+                } catch (final InvocationTargetException e) {
                     UTIL.log(e.getTargetException());
                     MessageDialog.openError(getShell(), getString("executorErrorDialog.title"), //$NON-NLS-1$
                                             getString("executorErrorDialog.msg") //$NON-NLS-1$
@@ -181,131 +283,7 @@ public class ExecuteVdbAction extends ActionDelegate
         }
     }
 
-    /**
-     * This runs the default VdbExecutor.execute method
-     */
-    private void executeVdb() {
-        // should be in an executable state here but check to be safe
-        if (getCanExecuteStatus().getSeverity() != IStatus.ERROR) {
-            vdbExecutor.execute(null);
-        }
-    }
-
-    /**
-     * run the VdbExecutor.execute method for initializing the connection only, and return a Vdb connection
-     */
-    public Connection getVdbConnection() {
-        Connection connection = null;
-        // should be in an executable state here but check to be safe
-        if (getCanExecuteStatus().getSeverity() != IStatus.ERROR) {
-            IStatus vdbConnectionStatus = this.vdbExecutor.execute(null, true);
-            if (vdbConnectionStatus.isOK()) {
-                connection = this.vdbExecutor.getSqlConnection().getConnection();
-            }
-        }
-        return connection;
-    }
-
-    /**
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-     *      org.eclipse.jface.viewers.ISelection)
-     * @since 4.2
-     */
-    @Override
-    public void selectionChanged( IAction action,
-                                  ISelection selection ) {
-        boolean enable = false;
-
-        if (!SelectionUtilities.isMultiSelection(selection)) {
-            Object obj = SelectionUtilities.getSelectedObject(selection);
-
-            if (obj instanceof IFile) {
-                if (StringUtil.endsWithIgnoreCase(((IFile)obj).getName(), ModelerCore.VDB_FILE_EXTENSION)) {
-                    setSelectedVdbFile((IFile)obj);
-                    enable = true;
-                }
-            }
-        }
-
-        action.setEnabled(enable);
-    }
-
-    public void setSelectedVdbFile( IFile vdbFile ) {
-        this.selectedVDB = vdbFile;
-    }
-
-    /**
-     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
-     * @since 4.2
-     */
-    public void init( IWorkbenchWindow window ) {
-    }
-
-    /**
-     * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
-     * @since 4.2
-     */
-    public void init( IViewPart view ) {
-    }
-
-    File getSelectedVdbFile() {
-        return (this.selectedVDB == null) ? null : this.selectedVDB.getLocation().toFile();
-    }
-
-    private VdbEditingContext getCurrentVdbContext() {
-        VdbEditingContext result = null;
-        IEditorReference[] editors = UiUtil.getWorkbenchPage().getEditorReferences();
-        IEditorPart nextEditor = null;
-
-        for (int i = 0; i < editors.length; ++i) {
-            nextEditor = editors[i].getEditor(false);
-
-            if (nextEditor instanceof VdbEditor) {
-                VdbEditor editor = (VdbEditor)nextEditor;
-                IFileEditorInput input = (IFileEditorInput)editor.getEditorInput();
-                IFile file = input.getFile();
-
-                if (file.equals(this.selectedVDB)) {
-                    result = editor.getContext();
-                    break;
-                }
-            }
-        }
-
-        if (result == null) {
-            try {
-                result = VdbEditPlugin.createVdbEditingContext(this.selectedVDB.getLocation());
-                result.open();
-            } catch (final Exception err) {
-                VdbUiConstants.Util.log(err);
-                MessageDialog.openInformation(null,
-                                              getString("editorContextError.title"), getString("editorContextError.message")); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-        }
-
-        return result;
-    }
-
-    private Shell getShell() {
-        return DqpUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
-    }
-
-    void setCanExecute( IStatus theExecuteStatus ) {
-        this.canExecute = theExecuteStatus;
-    }
-
-    public IStatus getCanExecuteStatus() {
-        return this.canExecute;
-    }
-
-    public void setVdbExecutionValidator( VdbExecutionValidator validator ) {
+    public void setVdbExecutionValidator( final VdbExecutionValidator validator ) {
         this.validator = validator;
-    }
-
-    public VdbExecutionValidator getVdbExecutionValidator() {
-        if (this.validator == null) {
-            this.validator = new VdbExecutionValidatorImpl();
-        }
-        return this.validator;
     }
 }

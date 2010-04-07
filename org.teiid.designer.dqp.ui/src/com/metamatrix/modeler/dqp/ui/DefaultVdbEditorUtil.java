@@ -26,68 +26,17 @@ import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
  */
 public class DefaultVdbEditorUtil implements IVdbEditorUtil {
 
-    /**
-     * @see com.metamatrix.modeler.dqp.ui.IVdbEditorUtil#openConnectorBindingsEditor(com.metamatrix.vdb.edit.VdbEditingContext)
-     * @since 4.3
-     */
-    public void openConnectorBindingsEditor( Vdb theVdb ) {
-
-        activateEditor(theVdb, DqpUiConstants.VDB_EDITOR_CONNECTOR_BINDINGS_ID);
-
-    }
-
-    /**
-     * @see com.metamatrix.modeler.dqp.ui.IVdbEditorUtil#displayVdbProblems(com.metamatrix.vdb.edit.VdbEditingContext)
-     * @since 4.3
-     */
-    public void displayVdbProblems( Vdb theVdb ) {
-
-        activateEditor(theVdb, VdbUiConstants.Extensions.PROBLEMS_TAB_ID);
-
-    }
-
-    /**
-     * @see com.metamatrix.modeler.dqp.ui.IVdbEditorUtil#openVdbEditor(com.metamatrix.vdb.edit.VdbEditingContext)
-     * @since 4.3
-     */
-    public void openVdbEditor( Vdb theVdb,
-                               String tabId ) {
-
-        activateEditor(theVdb, tabId);
-
-    }
-
-    VdbEditor findEditorPart( IWorkbenchPage page,
-                              IPath contextVdbPath ) {
-        // look through the open editors and see if there is one available for this model file.
-        IEditorReference[] editors = page.getEditorReferences();
-        for (int i = 0; i < editors.length; ++i) {
-
-            IEditorPart editor = editors[i].getEditor(false);
-            if (editor instanceof VdbEditor) {
-                VdbEditor vdbEditor = (VdbEditor)editor;
-                IPath editorVdbPath = vdbEditor.getVdb().getPathToVdb();
-                if (contextVdbPath.equals(editorVdbPath)) {
-                    return vdbEditor;
-                }
-
-            }
-        }
-
-        return null;
-    }
-
-    private void activateEditor( final Vdb theVdb,
+    private void activateEditor( final Vdb vdb,
                                  final String tabId ) {
 
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
 
-                IPath contextVdbPath = theVdb.getPathToVdb();
-                IWorkbenchWindow window = UiPlugin.getDefault().getCurrentWorkbenchWindow();
+                final IPath contextVdbPath = vdb.getName();
+                final IWorkbenchWindow window = UiPlugin.getDefault().getCurrentWorkbenchWindow();
 
                 if (window != null) {
-                    IWorkbenchPage page = window.getActivePage();
+                    final IWorkbenchPage page = window.getActivePage();
 
                     if (page != null) {
                         VdbEditor editor = findEditorPart(page, contextVdbPath);
@@ -100,15 +49,13 @@ public class DefaultVdbEditorUtil implements IVdbEditorUtil {
 
                             // at this point, there is no active editor for this context, so open it
                             final IFile vdbFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(contextVdbPath);
-                            if (vdbFile != null) {
-                                try {
-                                    editor = (VdbEditor)page.openEditor(new FileEditorInput(vdbFile),
-                                                                        VdbUiConstants.Extensions.VDB_EDITOR_ID);
-                                    page.activate(editor);
-                                    editor.setTab(tabId);
-                                } catch (Exception e) {
-                                    DqpUiConstants.UTIL.log(e);
-                                }
+                            if (vdbFile != null) try {
+                                editor = (VdbEditor)page.openEditor(new FileEditorInput(vdbFile),
+                                                                    VdbUiConstants.Extensions.VDB_EDITOR_ID);
+                                page.activate(editor);
+                                editor.setTab(tabId);
+                            } catch (final Exception e) {
+                                DqpUiConstants.UTIL.log(e);
                             }
 
                         }
@@ -117,6 +64,55 @@ public class DefaultVdbEditorUtil implements IVdbEditorUtil {
 
             }
         });
+    }
+
+    /**
+     * @see com.metamatrix.modeler.dqp.ui.IVdbEditorUtil#displayVdbProblems(com.metamatrix.vdb.edit.VdbEditingContext)
+     * @since 4.3
+     */
+    public void displayVdbProblems( final Vdb vdb ) {
+
+        activateEditor(vdb, VdbUiConstants.Extensions.PROBLEMS_TAB_ID);
+
+    }
+
+    VdbEditor findEditorPart( final IWorkbenchPage page,
+                              final IPath contextVdbPath ) {
+        // look through the open editors and see if there is one available for this model file.
+        final IEditorReference[] editors = page.getEditorReferences();
+        for (int i = 0; i < editors.length; ++i) {
+
+            final IEditorPart editor = editors[i].getEditor(false);
+            if (editor instanceof VdbEditor) {
+                final VdbEditor vdbEditor = (VdbEditor)editor;
+                final IPath editorVdbPath = vdbEditor.getVdb().getName();
+                if (contextVdbPath.equals(editorVdbPath)) return vdbEditor;
+
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @see com.metamatrix.modeler.dqp.ui.IVdbEditorUtil#openConnectorBindingsEditor(com.metamatrix.vdb.edit.VdbEditingContext)
+     * @since 4.3
+     */
+    public void openConnectorBindingsEditor( final Vdb vdb ) {
+
+        activateEditor(vdb, DqpUiConstants.VDB_EDITOR_CONNECTOR_BINDINGS_ID);
+
+    }
+
+    /**
+     * @see com.metamatrix.modeler.dqp.ui.IVdbEditorUtil#openVdbEditor(com.metamatrix.vdb.edit.VdbEditingContext)
+     * @since 4.3
+     */
+    public void openVdbEditor( final Vdb vdb,
+                               final String tabId ) {
+
+        activateEditor(vdb, tabId);
+
     }
 
 }

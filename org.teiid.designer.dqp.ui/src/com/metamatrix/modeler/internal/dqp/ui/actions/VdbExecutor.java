@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import com.metamatrix.common.vdb.VDBDefn;
+import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.I18nUtil;
@@ -39,15 +39,12 @@ import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.execution.VdbExecutionValidator;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
-import com.metamatrix.modeler.dqp.internal.config.VdbDefnHelper;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.workspace.QueryClient;
 import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.vdb.edit.VdbEditingContext;
-import com.metamatrix.vdb.internal.edit.InternalVdbEditingContext;
 
 /**
- * This component is used to execute the vdb that has a well defined vdb definition file.
+ * This component is used to execute the VDB that has a well defined VDB definition file.
  * 
  * @since 4.3
  */
@@ -64,15 +61,16 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
     public static final int LICENSE_PROBLEM_CODE = 30160037; // see com.metatmatrix.license.util.ErrorMessageKeys
     private static final IStatus SUCCESS = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK, getString("executionSuccess"), null); //$NON-NLS-1$
 
-    private final InternalVdbEditingContext context;
-    private VdbExecutionValidator validator;
-    private SQLConnection sqlConnection;
-
-    private long timestamp; // the modification date of the VDB
-
     private static String getString( final String theId ) {
         return UTIL.getStringOrKey(I18N_PREFIX + theId);
     }
+
+    private final Vdb vdb;
+    private final VdbExecutionValidator validator;
+
+    private SQLConnection sqlConnection;
+
+    private long timestamp; // the modification date of the VDB
 
     /**
      * VdbExecutor Constructor
@@ -80,74 +78,68 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
      * @param vdbFile
      * @since 4.3
      */
-    public VdbExecutor( final VdbEditingContext context,
+    public VdbExecutor( final Vdb vdb,
                         final VdbExecutionValidator validator ) {
-        ArgCheck.isNotNull(context);
-        Assertion.assertTrue(context instanceof InternalVdbEditingContext);
+        ArgCheck.isNotNull(vdb);
         ArgCheck.isNotNull(validator);
-        this.context = (InternalVdbEditingContext)context;
+        this.vdb = vdb;
         this.validator = validator;
-        // initialize the context
+        // initialize the VDB
         init();
     }
 
-    private void init() {
-        try {
-            if (!this.context.isOpen()) {
-                this.context.setLoadModelsOnOpen(false);
-                this.context.open();
-            }
-
-            this.timestamp = getVdbFile().lastModified();
-        } catch (Exception e) {
-            UTIL.log(IStatus.ERROR, e, UTIL.getString(I18N_PREFIX + "error_vdb_context_loading", getVdbFile().getName())); //$NON-NLS-1$
-        }
-    }
-
     /**
-     * Check if the vdb can be executed, this runs the VdbExecutionValidator on the given vdb.
+     * Check if the VDB can be executed, this runs the VdbExecutionValidator on the given VDB.
      * 
-     * @return The status for executing a vdb.
+     * @return The status for executing a VDB.
      * @since 4.3
      */
     public IStatus canExecute() {
-        return validator.validateVdb(this.context);
+        return validator.validateVdb(this.vdb);
     }
 
     /**
-     * Check if the vdb and its models are complete with connector bindings defined, also check the vdb models have any validation
+     * Check if the VDB and its models are complete with connector bindings defined, also check the VDB models have any validation
      * problems.
      * 
-     * @param defn The vdb definition to validate the models against.
-     * @return The status for executing a vdb.
+     * @param defn The VDB definition to validate the models against.
+     * @return The status for executing a VDB.
      * @since 4.3
      */
     public IStatus checkVdbModelState( final VDBDefn defn ) {
-        return validator.validateVdbModels(this.context.getVirtualDatabase(), defn);
+        return validator.validateVdbModels(this.vdb, defn);
     }
 
-    private File getVdbFile() {
-        return this.context.getPathToVdb().toFile();
+    public void closeAllConnections() {
+        SQLExplorerPlugin.getDefault().closeAllConnections();
     }
 
-    private ISQLAlias getSqlAlias( String theName ) {
-        // lookup the VDB name in the AliasModel and see if one has been created
-        SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
-        final AliasModel aliasModel = sqlPlugin.getAliasModel();
-        Object[] aliasArray = aliasModel.getElements();
+    private boolean deployVDB( final String vdbName,
+                               final File vdbFile ) {
 
-        for (int i = 0; i < aliasArray.length; ++i) {
-            ISQLAlias aliasElement = (ISQLAlias)aliasArray[i];
-
-            if (theName.equals(aliasElement.getName())) {
-                return aliasElement;
-            }
-        }
-        return null;
-
+        // Admin admin = getAdminConnection().getAdminAPI();
+        //
+        // // remove the old one if there is one.
+        // try {
+        // Collection<VDB> vdbs = admin.getVDBs(vdbName + AdminObject.WILDCARD);
+        // for (VDB vdb : vdbs) {
+        // admin.changeVDBStatus(vdb.getName(), vdb.getVDBVersion(), VDB.DELETED);
+        // } // for
+        // } catch (AdminException e) {
+        //            UTIL.log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, "Failed to undeploy the VDB", null)); //$NON-NLS-1$                
+        // }
+        //
+        // // now add the new one
+        // try {
+        // admin.addVDB(vdbName, new FileUtil(vdbFile).readBytes(), new AdminOptions(AdminOptions.OnConflict.OVERWRITE));
+        // } catch (AdminException e) {
+        //            UTIL.log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, "Failed to deploy the VDB = " + vdbName, null)); //$NON-NLS-1$                                
+        // }
+        // return true;
+        return false;
     }
 
-    public IStatus execute( IProgressMonitor theMonitor ) {
+    public IStatus execute( final IProgressMonitor theMonitor ) {
         return execute(theMonitor, false);
     }
 
@@ -158,35 +150,33 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
      * @return the execution status
      * @since 4.3
      */
-    public IStatus execute( IProgressMonitor theMonitor,
-                            boolean initConnOnly ) {
+    public IStatus execute( final IProgressMonitor theMonitor,
+                            final boolean initConnOnly ) {
         IStatus result = SUCCESS;
 
-        SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
-        VdbDefnHelper helper = DqpPlugin.getInstance().getVdbDefnHelper(this.context);
-        VDBDefn defn = helper.getVdbDefn();
-        String vdbName = defn.getName();
+        final SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
+        final VdbDefnHelper helper = DqpPlugin.getInstance().getVdbDefnHelper(this.vdb);
+        final VDBDefn defn = helper.getVdbDefn();
+        final String vdbName = defn.getName();
         String vdbVersion = defn.getVersion();
 
-        if (StringUtil.isEmpty(vdbVersion)) {
-            vdbVersion = "1"; //$NON-NLS-1$
-        }
+        if (StringUtil.isEmpty(vdbVersion)) vdbVersion = "1"; //$NON-NLS-1$
 
-        File vdbFile = getVdbFile();
+        final File vdbFile = getVdbFile();
 
-        File executionDir = DqpPath.getRuntimePath().toFile();
-        String url = buildConnectionURL(executionDir.getAbsolutePath(), vdbName, vdbVersion, getExecutionProperties());
+        final File executionDir = DqpPath.getRuntimePath().toFile();
+        final String url = buildConnectionURL(executionDir.getAbsolutePath(), vdbName, vdbVersion, getExecutionProperties());
         ISQLDriver driver = null;
 
         // ensure that the JDBC Driver for the DQP has been loaded
         try {
             driver = getDqpDriver();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             UTIL.log(e);
             return new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, getString("dqpDriverError"), e); //$NON-NLS-1$
         }
 
-        String aliasName = vdbFile.getAbsolutePath();
+        final String aliasName = vdbFile.getAbsolutePath();
 
         Assertion.isNotNull(aliasName);
 
@@ -196,8 +186,8 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
 
         if (alias == null) {
             // no alias found, need to create one;
-            IdentifierFactory factory = IdentifierFactory.getInstance();
-            AliasModel aliasModel = sqlPlugin.getAliasModel();
+            final IdentifierFactory factory = IdentifierFactory.getInstance();
+            final AliasModel aliasModel = sqlPlugin.getAliasModel();
             alias = aliasModel.createAlias(factory.createIdentifier());
 
             try {
@@ -209,34 +199,32 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
                 alias.setAutoLogon(false);
                 alias.setPassword("password"); //$NON-NLS-1$
                 aliasModel.addAlias(alias);
-            } catch (ValidationException excp) {
+            } catch (final ValidationException excp) {
                 result = new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, getString("sqlAliasValidationError"), excp); //$NON-NLS-1$
                 UTIL.log(result);
                 return result;
-            } catch (DuplicateObjectException excp) {
+            } catch (final DuplicateObjectException excp) {
                 result = new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, getString("sqlAliasDuplicateError"), excp); //$NON-NLS-1$
                 UTIL.log(result);
                 return result;
             }
-        } else {
-            // check to see if the url has changed
-            if (!url.equals(alias.getUrl())) {
-                closePrevious = true;
-                try {
-                    alias.setUrl(url);
-                } catch (ValidationException excp) {
-                    UTIL.log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK,
-                                        UTIL.getString(I18N_PREFIX + "sqlAliasUrlError", url), excp)); //$NON-NLS-1$
-                }
+        } else // check to see if the url has changed
+        if (!url.equals(alias.getUrl())) {
+            closePrevious = true;
+            try {
+                alias.setUrl(url);
+            } catch (final ValidationException excp) {
+                UTIL.log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK,
+                                    UTIL.getString(I18N_PREFIX + "sqlAliasUrlError", url), excp)); //$NON-NLS-1$
             }
         }
 
-        // If init connection only, we can skip this
+        // If initializing connection only, we can skip this
         if (!initConnOnly) {
             // TODO: second, get the connection bindings and display them to the user
 
             // third, launch the JFaceDbc perspective
-            IWorkbenchPage page = UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage();
+            final IWorkbenchPage page = UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage();
 
             // page should never be null but check just in case
             if (page == null) {
@@ -246,10 +234,10 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
             }
 
             try {
-                IWorkbenchPage jdbcPage = PlatformUI.getWorkbench().showPerspective(JDBC_CLIENT_PERSPECTIVE_ID,
-                                                                                    page.getWorkbenchWindow());
+                final IWorkbenchPage jdbcPage = PlatformUI.getWorkbench().showPerspective(JDBC_CLIENT_PERSPECTIVE_ID,
+                                                                                          page.getWorkbenchWindow());
                 jdbcPage.showView(JDBC_CONNECTION_VIEW_ID);
-            } catch (Throwable e) {
+            } catch (final Throwable e) {
                 result = new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, getString("perspectiveErrorMsg"), e); //$NON-NLS-1$
                 UTIL.log(result);
                 return result;
@@ -260,7 +248,7 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
 
         final DriverModel driverModel = sqlPlugin.getDriverModel();
         final SQLDriverManager driverMgr = sqlPlugin.getSQLDriverManager();
-        ISQLDriver dv = driverModel.getDriver(alias.getDriverIdentifier());
+        final ISQLDriver dv = driverModel.getDriver(alias.getDriverIdentifier());
         this.sqlConnection = null;
         boolean deployVDB = true;
 
@@ -281,32 +269,28 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
                     sessionNode.close();
                     sessionNode = null;
                 }
-            } else {
-                closeAllConnections();
-            }
+            } else closeAllConnections();
 
-            // since the vdb changed now deploy the new one vdb file
-            if (deployVDB) {
-                try {
-                    deployVDB(vdbName, vdbFile);
-                } catch (SQLException e) {
-                    return new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, getString("dqpDriverError"), e); //$NON-NLS-1$
-                }
+            // since the VDB changed now deploy the new one VDB file
+            if (deployVDB) try {
+                deployVDB(vdbName, vdbFile);
+            } catch (final SQLException e) {
+                return new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, getString("dqpDriverError"), e); //$NON-NLS-1$
             }
 
             // create new connection if old connection with right timestamp is not found
             if (this.sqlConnection == null) {
-                LoggingProgress lp = new LoggingProgress(driverMgr, dv, alias, alias.getUserName(), alias.getPassword());
-                ProgressMonitorDialog pg = new ProgressMonitorDialog(null);
+                final LoggingProgress lp = new LoggingProgress(driverMgr, dv, alias, alias.getUserName(), alias.getPassword());
+                final ProgressMonitorDialog pg = new ProgressMonitorDialog(null);
                 pg.run(true, true, lp);
 
                 if (lp.isOk()) {
                     this.sqlConnection = lp.getConn();
                     this.sqlConnection.setAutoCommit(true);
                 } else {
-                    Throwable e = lp.getException();
-                    Object param = (lp.getError() == null) ? e.getClass().getName() : lp.getError();
-                    String message = UTIL.getString(I18N_PREFIX + "connectionErrorMsg", param); //$NON-NLS-1$
+                    final Throwable e = lp.getException();
+                    final Object param = (lp.getError() == null) ? e.getClass().getName() : lp.getError();
+                    final String message = UTIL.getString(I18N_PREFIX + "connectionErrorMsg", param); //$NON-NLS-1$
                     UTIL.log(result);
 
                     return new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, message, null);
@@ -315,39 +299,26 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
                 // If init connection only, we can skip this
                 if (!initConnOnly) {
                     // run query
-                    RetrievingTableDataProgress rtdp = new RetrievingTableDataProgress(this.sqlConnection, alias, sqlPlugin.stm,
-                                                                                       alias.getPassword());
-                    ProgressMonitorDialog pg2 = new ProgressMonitorDialog(null);
+                    final RetrievingTableDataProgress rtdp = new RetrievingTableDataProgress(this.sqlConnection, alias,
+                                                                                             sqlPlugin.stm, alias.getPassword());
+                    final ProgressMonitorDialog pg2 = new ProgressMonitorDialog(null);
                     pg2.run(true, true, rtdp);
                 }
-            } else {
-                // If init connection only, we can skip this
-                if (!initConnOnly) {
-                    // just select the appropriate structure view
-                    DBView dbView = (DBView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(IConstants.Extensions.Views.SQL_DB_VIEW);
+            } else // If init connection only, we can skip this
+            if (!initConnOnly) {
+                // just select the appropriate structure view
+                final DBView dbView = (DBView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(IConstants.Extensions.Views.SQL_DB_VIEW);
 
-                    if (dbView != null) {
-                        dbView.setInput(sessionNode);
-                    }
-                }
-
+                if (dbView != null) dbView.setInput(sessionNode);
             }
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             result = new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, getString("connectionErrorMsg"), e); //$NON-NLS-1$
             UTIL.log(result);
             return result;
         }
 
         return result;
-    }
-
-    private Properties getExecutionProperties() {
-        return context.getExecutionProperties();
-    }
-
-    public void closeAllConnections() {
-        SQLExplorerPlugin.getDefault().closeAllConnections();
     }
 
     /**
@@ -357,22 +328,20 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
      * @param theAlias the alias whose connection is being requested
      * @return the connection or <code>null</code>
      */
-    private SessionTreeNode findOpenSession( ISQLAlias theAlias ) {
+    private SessionTreeNode findOpenSession( final ISQLAlias theAlias ) {
         return SQLExplorerPlugin.getDefault().stm.findOpenSessionTreeNode(theAlias);
     }
 
     private ISQLDriver getDqpDriver() throws Exception {
         final DriverModel driverModel = SQLExplorerPlugin.getDefault().getDriverModel();
-        Object[] drivers = driverModel.getElements();
+        final Object[] drivers = driverModel.getElements();
         for (int i = 0; i < drivers.length; ++i) {
-            ISQLDriver driver = (ISQLDriver)drivers[i];
-            if (driver.getDriverClassName().equals(DQP_DRIVER_CLASS)) {
-                // found it
-                return driver;
-            }
+            final ISQLDriver driver = (ISQLDriver)drivers[i];
+            if (driver.getDriverClassName().equals(DQP_DRIVER_CLASS)) // found it
+            return driver;
         }
         // never found our driver, so create it.
-        ISQLDriver driver = driverModel.createDriver(IdentifierFactory.getInstance().createIdentifier());
+        final ISQLDriver driver = driverModel.createDriver(IdentifierFactory.getInstance().createIdentifier());
         driver.setDriverClassName(DQP_DRIVER_CLASS);
         driver.setName(DQP_DRIVER_NAME);
         driver.setUrl(DQP_SAMPLE_URL);
@@ -380,32 +349,40 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
         return driver;
     }
 
-    private boolean deployVDB( String vdbName,
-                               File vdbFile ) throws SQLException {
+    private Properties getExecutionProperties() {
+        return vdb.getExecutionProperties();
+    }
 
-        // Admin admin = getAdminConnection().getAdminAPI();
-        //
-        // // remove the old one if there is one.
-        // try {
-        // Collection<VDB> vdbs = admin.getVDBs(vdbName + AdminObject.WILDCARD);
-        // for (VDB vdb : vdbs) {
-        // admin.changeVDBStatus(vdb.getName(), vdb.getVDBVersion(), VDB.DELETED);
-        // } // for
-        // } catch (AdminException e) {
-        //            UTIL.log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, "Failed undeploy the vdb", null)); //$NON-NLS-1$                
-        // }
-        //
-        // // now add the new one
-        // try {
-        // admin.addVDB(vdbName, new FileUtil(vdbFile).readBytes(), new AdminOptions(AdminOptions.OnConflict.OVERWRITE));
-        // } catch (AdminException e) {
-        //            UTIL.log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, "Failed deploy the vdb = " + vdbName, null)); //$NON-NLS-1$                                
-        // }
-        // return true;
-        return false;
+    private ISQLAlias getSqlAlias( final String theName ) {
+        // lookup the VDB name in the AliasModel and see if one has been created
+        final SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
+        final AliasModel aliasModel = sqlPlugin.getAliasModel();
+        final Object[] aliasArray = aliasModel.getElements();
+
+        for (int i = 0; i < aliasArray.length; ++i) {
+            final ISQLAlias aliasElement = (ISQLAlias)aliasArray[i];
+
+            if (theName.equals(aliasElement.getName())) return aliasElement;
+        }
+        return null;
+
     }
 
     public SQLConnection getSqlConnection() {
         return sqlConnection;
+    }
+
+    private File getVdbFile() {
+        return this.vdb.getName().toFile();
+    }
+
+    private void init() {
+        try {
+            this.vdb.setLoadModelsOnOpen(false);
+
+            this.timestamp = getVdbFile().lastModified();
+        } catch (final Exception e) {
+            UTIL.log(IStatus.ERROR, e, UTIL.getString(I18N_PREFIX + "error_vdb_context_loading", getVdbFile().getName())); //$NON-NLS-1$
+        }
     }
 }
