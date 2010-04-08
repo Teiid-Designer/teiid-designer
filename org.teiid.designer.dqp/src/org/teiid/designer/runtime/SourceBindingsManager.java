@@ -8,6 +8,8 @@
 package org.teiid.designer.runtime;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+import static org.teiid.designer.runtime.IConnectorProperties.JNDI_NAME;
+import static org.teiid.designer.runtime.IConnectorProperties.NAME;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,7 +29,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Notification;
 import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.Model;
@@ -68,11 +69,9 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
 
         // hookup listening
         this.workspaceListener = new WorkspaceNotificationListener();
-        if (Platform.isRunning()) {
-            ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
-            ModelWorkspaceManager.getModelWorkspaceManager().addNotificationListener(this.workspaceListener);
-            ((ModelerCore)ModelerCore.getPlugin()).addRefactorResourceListener(this);
-        }
+        ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+        ModelWorkspaceManager.getModelWorkspaceManager().addNotificationListener(this.workspaceListener);
+        ((ModelerCore)ModelerCore.getPlugin()).addRefactorResourceListener(this);
     }
 
     /**
@@ -90,7 +89,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
 
         String modelName = modelResource.getItemName();
         String sourceName = connector.getName();
-        String jndiName = connector.getType().getPropertyDefinition("jndiName").getPropertyValue("name");
+        String jndiName = connector.getType().getPropertyDefinition(JNDI_NAME).getPropertyValue(NAME);
 
         try {
             // ensureModelExistsInHiddenVdb();

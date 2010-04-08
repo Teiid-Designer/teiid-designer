@@ -7,48 +7,17 @@
  */
 package com.metamatrix.modeler.dqp.internal.execution;
 
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * @since 4.3
  */
-public class TestVdbExecutionValidator extends TestCase {
+public class TestVdbExecutionValidator {
+    
+    // TODO implement tests
 
-    private static String PHYSICAL_MODEL_NAME1 = "PhysicalModel1"; //$NON-NLS-1$
-    private static String PHYSICAL_MODEL_NAME2 = "PhysicalModel2"; //$NON-NLS-1$
-    private static String PHYSICAL_MODEL_NAME3 = "PhysicalModel3"; //$NON-NLS-1$
-
-    /**
-     * Constructor for TestVdbExecutionValidator.
-     * 
-     * @param name
-     */
-    public TestVdbExecutionValidator( String name ) {
-        super(name);
-    }
-
-    /**
-     * Test suite, with one-time setup.
-     */
-    public static Test suite() {
-        TestSuite suite = new TestSuite("TestVdbExecutionValidator"); //$NON-NLS-1$
-        suite.addTestSuite(TestVdbExecutionValidator.class);
-        //        suite.addTest(new TestVdbExecutionValidator("testPathExist"));//$NON-NLS-1$
-
-        // One-time setup and teardown
-        return new TestSetup(suite) {
-            @Override
-            public void setUp() {
-            }
-
-            @Override
-            public void tearDown() {
-            }
-        };
-    }
+//    private static String PHYSICAL_MODEL_NAME1 = "PhysicalModel1"; //$NON-NLS-1$
+//    private static String PHYSICAL_MODEL_NAME2 = "PhysicalModel2"; //$NON-NLS-1$
+//    private static String PHYSICAL_MODEL_NAME3 = "PhysicalModel3"; //$NON-NLS-1$
 
     // =========================================================================
     // H E L P E R M E T H O D S

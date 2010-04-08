@@ -13,18 +13,27 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import java.util.Collection;
 import java.util.Collections;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 
 /**
  * 
  */
+@RunWith( PowerMockRunner.class )
+@PrepareForTest( {ModelerCore.class, ModelWorkspaceManager.class, ResourcesPlugin.class} )
 public class ServerManagerTest {
     private static final String MODEL1 = "Model1";
 
@@ -49,8 +58,8 @@ public class ServerManagerTest {
     @Before
     public void beforeEach() throws Exception {
         MockitoAnnotations.initMocks(this);
+        TestUtils.initializeStaticWorkspaceClasses();
         this.mgr = new ServerManager(null);
-        // server1.getAdmin().refresh();
     }
 
     @Test
@@ -70,45 +79,48 @@ public class ServerManagerTest {
         this.mgr.addListener(listener);
 
         // generate event
-        this.mgr.addServer(server1);
+        this.mgr.addServer(this.server1);
 
-        // test to make sure listener was called once
-        verify(listener).configurationChanged((ExecutionConfigurationEvent)anyObject());
+        // test to make sure listener was called twice (once for adding server, once for setting default server)
+        verify(listener, times(2)).configurationChanged((ExecutionConfigurationEvent)anyObject());
     }
 
     @Test
     public void shouldConfirmServerIsNotAddedMultipleTimes() {
+        // setup
+        when(this.server1.hasSameKey(this.server1)).thenReturn(true);
+
         // add
-        this.mgr.addServer(server1);
+        this.mgr.addServer(this.server1);
         assertThat(this.mgr.getServers().size(), is(1));
 
         // add again
-        this.mgr.addServer(server1);
+        this.mgr.addServer(this.server1);
         assertThat(this.mgr.getServers().size(), is(1));
     }
 
     @Test
     public void shouldConfirmServerIsNotRegistered() {
-        assertThat(this.mgr.isRegistered(server1), is(false));
+        assertThat(this.mgr.isRegistered(this.server1), is(false));
     }
 
     @Test
     public void shouldConfirmServerIsRegistered() {
-        stub(server1.hasSameKey(server1)).toReturn(true);
-        assertThat(this.mgr.addServer(server1).isOK(), is(true));
-        assertThat(this.mgr.isRegistered(server1), is(true));
+        when(this.server1.hasSameKey(server1)).thenReturn(true);
+        assertThat(this.mgr.addServer(this.server1).isOK(), is(true));
+        assertThat(this.mgr.isRegistered(this.server1), is(true));
     }
 
     @Test
     public void shouldConfirmServerIsRemoved() {
         // first add
-        stub(server1.hasSameKey(server1)).toReturn(true);
-        this.mgr.addServer(server1);
-        assertThat(this.mgr.isRegistered(server1), is(true));
+        when(server1.hasSameKey(server1)).thenReturn(true);
+        this.mgr.addServer(this.server1);
+        assertThat(this.mgr.isRegistered(this.server1), is(true));
 
         // now remove
-        assertThat(this.mgr.removeServer(server1).isOK(), is(true));
-        assertThat(this.mgr.isRegistered(server1), is(false));
+        assertThat(this.mgr.removeServer(this.server1).isOK(), is(true));
+        assertThat(this.mgr.isRegistered(this.server1), is(false));
     }
 
     @Test
@@ -119,7 +131,7 @@ public class ServerManagerTest {
         this.mgr.removeListener(listener);
 
         // generate event
-        this.mgr.addServer(server1);
+        this.mgr.addServer(this.server1);
 
         // test to make sure listener was called once
         verify(listener, never()).configurationChanged((ExecutionConfigurationEvent)anyObject());
@@ -129,12 +141,12 @@ public class ServerManagerTest {
     public void shouldFindConnectorsForModel() throws Exception {
         // register the server
         final ExecutionAdmin admin = mock(ExecutionAdmin.class);
-        stub(server1.getAdmin()).toReturn(admin);
+        when(server1.getAdmin()).thenReturn(admin);
         final SourceBindingsManager srcBindingsMgr = mock(SourceBindingsManager.class);
-        stub(admin.getSourceBindingsManager()).toReturn(srcBindingsMgr);
+        when(admin.getSourceBindingsManager()).thenReturn(srcBindingsMgr);
         final Connector connector = mock(Connector.class);
-        stub(srcBindingsMgr.getConnectorsForModel(MODEL1)).toReturn(Collections.singleton(connector));
-        stub(connector.getName()).toReturn(CONNECTOR1);
+        when(srcBindingsMgr.getConnectorsForModel(MODEL1)).thenReturn(Collections.singleton(connector));
+        when(connector.getName()).thenReturn(CONNECTOR1);
         this.mgr.addServer(server1);
 
         // test
@@ -146,7 +158,7 @@ public class ServerManagerTest {
     @Test
     public void shouldGetServerByUrl() {
         this.mgr.addServer(server1);
-        stub(server1.getUrl()).toReturn(SERVER1_URL);
+        when(server1.getUrl()).thenReturn(SERVER1_URL);
         assertThat(this.mgr.getServer(SERVER1_URL), is(server1));
     }
 

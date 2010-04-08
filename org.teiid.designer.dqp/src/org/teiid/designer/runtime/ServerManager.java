@@ -34,7 +34,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.Base64;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
 
 /**
@@ -370,12 +369,21 @@ public final class ServerManager implements EventManager {
         }
     }
 
+    /**
+     * Attempts to establish communication with the specified server.
+     * 
+     * @param server the server being checked (never <code>null</code>)
+     * @return a status if the server connection can be established
+     */
     public IStatus ping( Server server ) {
+        CoreArgCheck.isNotNull(server, "server"); //$NON-NLS-1$
         try {
-            server.getAdmin();
+            server.getAdmin().getAdminApi().getSessions();
         } catch (Exception e) {
-            return new Status(IStatus.WARNING, DqpPlugin.PLUGIN_ID, "Server Not connected");
+            String msg = Util.getString("cannotConnectToServer", server.getUrl()); //$NON-NLS-1$
+            return new Status(IStatus.WARNING, PLUGIN_ID, msg, e);
         }
+
         return Status.OK_STATUS;
     }
 

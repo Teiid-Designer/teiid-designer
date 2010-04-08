@@ -8,7 +8,7 @@
 package org.teiid.designer.runtime;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.junit.Before;
@@ -56,7 +56,7 @@ public class ConnectorTypeTest {
     @Test
     public void shouldAllowCompareTo() {
         ConnectorType type = mock(ConnectorType.class);
-        stub(type.getName()).toReturn("name_2");
+        when(type.getName()).thenReturn("name_2");
         new ConnectorType("name", propDefs, admin).compareTo(type);
     }
 

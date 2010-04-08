@@ -40,6 +40,10 @@ public final class ExecutionConfigurationEvent {
     }
 
     public static ExecutionConfigurationEvent createSetDefaultServerEvent( Server server ) {
+        if (server == null) {
+            return new ExecutionConfigurationEvent(EventType.DEFAULT, TargetType.SERVER, null, null);
+        }
+
         return new ExecutionConfigurationEvent(EventType.DEFAULT, TargetType.SERVER, server);
     }
 

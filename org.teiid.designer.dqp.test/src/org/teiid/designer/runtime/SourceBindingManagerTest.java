@@ -8,110 +8,60 @@
 package org.teiid.designer.runtime;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.teiid.adminapi.Admin;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.refactor.RefactorResourceEvent;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
+import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 
 /**
  * 
  */
+@RunWith( PowerMockRunner.class )
+@PrepareForTest( {ModelerCore.class, ModelWorkspaceManager.class, ResourcesPlugin.class} )
 public class SourceBindingManagerTest {
-    private static final Set<Connector> NULL_CONNECTORS = null;
     private static final Connector NULL_CONNECTOR = null;
     private static final ModelResource NULL_MODEL_RESOURCE = null;
     private static final SourceBinding NULL_SOURCE_BINDING = null;
     private static final String NULL_STRING = null;
 
-    @Mock
     private ExecutionAdmin commonExecutionAdmin;
-
     private Connector commonConnector;
 
     @Before
     public void beforeEach() {
-        MockitoAnnotations.initMocks(this);
+        TestUtils.initializeStaticWorkspaceClasses();
 
-        commonConnector = mock(Connector.class);
-        ConnectorType type = mock(ConnectorType.class);
-        stub(commonConnector.getType()).toReturn(type);
-        stub(type.getAdmin()).toReturn(commonExecutionAdmin);
-        Admin admin = mock(Admin.class);
-        stub(commonExecutionAdmin.getAdminApi()).toReturn(admin);
-        EventManager eventManager = mock(EventManager.class);
-        stub(commonExecutionAdmin.getEventManager()).toReturn(eventManager);
+        this.commonExecutionAdmin = MockObjectFactory.createExecutionAdmin();
+        this.commonConnector = MockObjectFactory.createConnector("connectorName", "connectorTypeName");
     }
 
     private Connector getMockConnector() {
-        Connector conn = mock(Connector.class);
-        ConnectorType type = mock(ConnectorType.class);
-        ExecutionAdmin executionAdmin = mock(ExecutionAdmin.class);
-        Admin admin = mock(Admin.class);
-        stub(conn.getType()).toReturn(type);
-        stub(type.getAdmin()).toReturn(executionAdmin);
-        stub(executionAdmin.getAdminApi()).toReturn(admin);
-
-        return conn;
+        return MockObjectFactory.createConnector("connectorName", "connectorTypeName");
     }
 
     private ModelResource getMockModelResource() {
-        // SourceBinding newBinding = new SourceBinding(modelName,
-        // modelResource.getParent().getPath().makeRelative().toString(),
-        // connectors);
-        // this.bindingsByModelNameMap.put(modelName, newBinding);
-
-        ModelResource mr = mock(ModelResource.class);
-        ModelWorkspaceItem mwi = mock(ModelWorkspaceItem.class);
-        IPath iPath = mock(IPath.class);
-        IPath relativePath = mock(IPath.class);
-        stub(mr.getParent()).toReturn(mwi);
-        stub(mwi.getPath()).toReturn(iPath);
-        stub(iPath.makeRelative()).toReturn(relativePath);
-        stub(relativePath.toString()).toReturn("relativePath");
-        stub(mr.getItemName()).toReturn("modelName");
-
-        return mr;
-    }
-
-    private Connector getMockConnectorWithCommonAdmin() {
-        Connector conn = mock(Connector.class);
-        ConnectorType type = mock(ConnectorType.class);
-        stub(conn.getType()).toReturn(type);
-        stub(type.getAdmin()).toReturn(commonExecutionAdmin);
-
-        return conn;
+        return MockObjectFactory.createModelResource("modelName", "relativePath");
     }
 
     private SourceBinding getNewSourceBinding() {
         Set<Connector> connectors = new HashSet<Connector>();
         connectors.add(getMockConnector());
-        return new SourceBinding("name", "path", connectors);
-    }
-
-    private SourceBinding getNewSourceBindingWithCommonAdmin() {
-        Set<Connector> connectors = new HashSet<Connector>();
-        connectors.add(getMockConnectorWithCommonAdmin());
-        return new SourceBinding("name", "path", connectors);
-    }
-
-    private SourceBinding getNewSourceBindingWithMultipleConnectors() {
-        Set<Connector> connectors = new HashSet<Connector>();
-        connectors.add(getMockConnectorWithCommonAdmin());
-        connectors.add(commonConnector);
         return new SourceBinding("name", "path", connectors);
     }
 
@@ -136,7 +86,7 @@ public class SourceBindingManagerTest {
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowCreateSourceBindingWithNullConnector() {
-        getNewSBM().createSourceBinding(mock(ModelResource.class), NULL_CONNECTOR);
+        getNewSBM().createSourceBinding(getMockModelResource(), NULL_CONNECTOR);
     }
 
     @Test
@@ -167,7 +117,7 @@ public class SourceBindingManagerTest {
     @Test
     public void shouldAllowGetJdbcSourceWithModelResource() throws ModelWorkspaceException {
         ModelResource mr = getMockModelResource();
-        stub(mr.getEObjects()).toReturn(Collections.EMPTY_LIST);
+        when(mr.getEObjects()).thenReturn(Collections.EMPTY_LIST);
         getNewSBM().getJdbcSource(mr);
     }
 
@@ -214,32 +164,32 @@ public class SourceBindingManagerTest {
     @Test
     public void shouldAllowNotifyRefactoredWithBogusEvent() {
         RefactorResourceEvent event = mock(RefactorResourceEvent.class);
-        stub(event.getType()).toReturn(-2);
+        when(event.getType()).thenReturn(-2);
         getNewSBM().notifyRefactored(event);
     }
 
     @Test
     public void shouldAllowNotifyRefactoredWithMoveEvent() {
         RefactorResourceEvent event = mock(RefactorResourceEvent.class);
-        stub(event.getType()).toReturn(RefactorResourceEvent.TYPE_MOVE);
+        when(event.getType()).thenReturn(RefactorResourceEvent.TYPE_MOVE);
         getNewSBM().notifyRefactored(event);
     }
 
     @Test
     public void shouldAllowNotifyRefactoredWithRenameEvent() {
         RefactorResourceEvent event = mock(RefactorResourceEvent.class);
-        stub(event.getType()).toReturn(RefactorResourceEvent.TYPE_RENAME);
+        when(event.getType()).thenReturn(RefactorResourceEvent.TYPE_RENAME);
         getNewSBM().notifyRefactored(event);
     }
 
     @Test
     public void shouldAllowNotifyRefactoredWithDeleteEvent() {
         RefactorResourceEvent event = mock(RefactorResourceEvent.class);
-        stub(event.getType()).toReturn(RefactorResourceEvent.TYPE_DELETE);
+        when(event.getType()).thenReturn(RefactorResourceEvent.TYPE_DELETE);
         // theEvent.getOriginalPath().lastSegment()
         IPath path = mock(IPath.class);
-        stub(path.lastSegment()).toReturn("lastSegment");
-        stub(event.getOriginalPath()).toReturn(path);
+        when(path.lastSegment()).thenReturn("lastSegment");
+        when(event.getOriginalPath()).thenReturn(path);
         getNewSBM().notifyRefactored(event);
     }
 
@@ -299,9 +249,9 @@ public class SourceBindingManagerTest {
     public void shouldAllowResourceChangedWithPreDeleteEvent() {
         IResourceChangeEvent event = mock(IResourceChangeEvent.class);
         IResource resource = mock(IResource.class);
-        stub(resource.getName()).toReturn("resourceName");
-        stub(event.getResource()).toReturn(resource);
-        stub(event.getType()).toReturn(IResourceChangeEvent.PRE_DELETE);
+        when(resource.getName()).thenReturn("resourceName");
+        when(event.getResource()).thenReturn(resource);
+        when(event.getType()).thenReturn(IResourceChangeEvent.PRE_DELETE);
         getNewSBM().resourceChanged(event);
     }
 
@@ -309,13 +259,13 @@ public class SourceBindingManagerTest {
     public void shouldAllowResourceChangedWithPrePostChangeEvent() {
         IResourceChangeEvent event = mock(IResourceChangeEvent.class);
         IResource resource = mock(IResource.class);
-        stub(resource.getName()).toReturn("resourceName");
-        stub(event.getResource()).toReturn(resource);
-        stub(event.getType()).toReturn(IResourceChangeEvent.POST_CHANGE);
+        when(resource.getName()).thenReturn("resourceName");
+        when(event.getResource()).thenReturn(resource);
+        when(event.getType()).thenReturn(IResourceChangeEvent.POST_CHANGE);
         // theEvent.getDelta().getResource()
         IResourceDelta delta = mock(IResourceDelta.class);
-        stub(delta.getResource()).toReturn(resource);
-        stub(event.getDelta()).toReturn(delta);
+        when(delta.getResource()).thenReturn(resource);
+        when(event.getDelta()).thenReturn(delta);
         getNewSBM().resourceChanged(event);
     }
 }

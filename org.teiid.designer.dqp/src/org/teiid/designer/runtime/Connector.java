@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import org.teiid.adminapi.ConnectionFactory;
 import org.teiid.adminapi.PropertyDefinition;
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.HashCodeUtil;
 
 /**
  */
@@ -25,8 +26,8 @@ public class Connector implements Comparable<Connector> {
 
     Connector( ConnectionFactory binding,
                ConnectorType type ) {
-        assert (binding != null);
-        assert (type != null);
+        CoreArgCheck.isNotNull(binding, "binding"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
 
         this.binding = binding;
         this.type = type;
@@ -50,8 +51,15 @@ public class Connector implements Comparable<Connector> {
      */
     @Override
     public boolean equals( Object obj ) {
-        // TODO overwrite to compare name and server
-        return super.equals(obj);
+        if (obj == null) return false;
+        if (obj.getClass() != getClass()) return false;
+
+        Connector other = (Connector)obj;
+        Server otherServer = other.getType().getAdmin().getServer();
+
+        if (getName().equals(other.getName()) && getType().getAdmin().getServer().equals(otherServer)) return true;
+
+        return false;
     }
 
     /**
@@ -95,8 +103,9 @@ public class Connector implements Comparable<Connector> {
      */
     @Override
     public int hashCode() {
-        // TODO overwrite to look at name and server
-        return super.hashCode();
+        int result = 0;
+        result = HashCodeUtil.hashCode(result, getName());
+        return HashCodeUtil.hashCode(result, getType().getAdmin().getServer().hashCode());
     }
 
     /**

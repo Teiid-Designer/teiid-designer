@@ -12,24 +12,31 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 import java.util.Properties;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.ConnectionFactory;
 import org.teiid.designer.vdb.Vdb;
+import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 
 /**
  * 
  */
+@RunWith( PowerMockRunner.class )
+@PrepareForTest( {ModelerCore.class, ModelWorkspaceManager.class, ResourcesPlugin.class} )
 public class ExecutionAdminTest {
 
     @Before
     public void beforeEach() {
-        MockitoAnnotations.initMocks(this);
+        TestUtils.initializeStaticWorkspaceClasses();
     }
 
     private ExecutionAdmin getNewAdmin() throws Exception {
@@ -82,7 +89,7 @@ public class ExecutionAdminTest {
 
         ConnectionFactory cb = mock(ConnectionFactory.class);
         Admin admin = mock(Admin.class);
-        stub(admin.getConnectionFactory("name")).toReturn(cb);
+        when(admin.getConnectionFactory("name")).thenReturn(cb);
         ExecutionAdmin execAdmin = new ExecutionAdmin(admin, mock(Server.class), mock(EventManager.class));
         execAdmin.addConnector("name", mock(ConnectorType.class), new Properties());
     }
@@ -267,7 +274,7 @@ public class ExecutionAdminTest {
     @Test
     public void shouldAllowSetPropertyValue() throws Exception {
         Connector mockConnector = mock(Connector.class);
-        stub(mockConnector.isValidPropertyValue("name", "value")).toReturn(true);
+        when(mockConnector.isValidPropertyValue("name", "value")).thenReturn(true);
         getNewAdmin().setPropertyValue(mockConnector, "name", "value");
     }
 

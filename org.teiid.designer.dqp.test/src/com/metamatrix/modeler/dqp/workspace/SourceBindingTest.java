@@ -10,7 +10,7 @@ package com.metamatrix.modeler.dqp.workspace;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.when;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Before;
@@ -41,16 +41,16 @@ public class SourceBindingTest {
 
         commonConnector = mock(Connector.class);
         ConnectorType type = mock(ConnectorType.class);
-        stub(commonConnector.getType()).toReturn(type);
-        stub(type.getAdmin()).toReturn(commonExecutionAdmin);
+        when(commonConnector.getType()).thenReturn(type);
+        when(type.getAdmin()).thenReturn(commonExecutionAdmin);
     }
 
     private Connector getMockConnector() {
         Connector conn = mock(Connector.class);
         ConnectorType type = mock(ConnectorType.class);
         ExecutionAdmin admin = mock(ExecutionAdmin.class);
-        stub(conn.getType()).toReturn(type);
-        stub(type.getAdmin()).toReturn(admin);
+        when(conn.getType()).thenReturn(type);
+        when(type.getAdmin()).thenReturn(admin);
 
         return conn;
     }
@@ -58,8 +58,8 @@ public class SourceBindingTest {
     private Connector getMockConnectorWithCommonAdmin() {
         Connector conn = mock(Connector.class);
         ConnectorType type = mock(ConnectorType.class);
-        stub(conn.getType()).toReturn(type);
-        stub(type.getAdmin()).toReturn(commonExecutionAdmin);
+        when(conn.getType()).thenReturn(type);
+        when(type.getAdmin()).thenReturn(commonExecutionAdmin);
 
         return conn;
     }
