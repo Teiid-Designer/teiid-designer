@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.transformation.aspects.validation;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
@@ -35,7 +35,7 @@ public class SqlTransformationAspect extends TransformationAspect {
      */
     @Override
     public boolean shouldValidate(final EObject eObject, final ValidationContext context) {
-        ArgCheck.isInstanceOf(SqlTransformation.class, eObject);
+        CoreArgCheck.isInstanceOf(SqlTransformation.class, eObject);
         if(!context.shouldIgnore(eObject)) {
             SqlTransformation sqlTransformation = (SqlTransformation) eObject;
 	        EObject mapping = sqlTransformation.getMapper();

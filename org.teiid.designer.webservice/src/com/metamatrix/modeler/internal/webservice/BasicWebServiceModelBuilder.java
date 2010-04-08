@@ -41,7 +41,7 @@ import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.ResourceNameUtil;
 import com.metamatrix.metamodels.wsdl.Definitions;
 import com.metamatrix.metamodels.wsdl.Import;
@@ -175,7 +175,7 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @since 4.2
      */
     public IWebServiceResource addResource( File theFile ) throws CoreException {
-        ArgCheck.isNotNull(theFile);
+        CoreArgCheck.isNotNull(theFile);
 
         // Check whether the file exists ...
         if (!theFile.exists()) {
@@ -217,7 +217,7 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @since 4.2
      */
     public IWebServiceResource addResource( IFile theFile ) throws CoreException {
-        ArgCheck.isNotNull(theFile);
+        CoreArgCheck.isNotNull(theFile);
 
         // Check whether the file exists ...
         if (!theFile.exists()) {
@@ -261,8 +261,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      */
     public void resolve( IWebServiceResource resource,
                          File theFile ) {
-        ArgCheck.isNotNull(resource);
-        ArgCheck.isNotNull(theFile);
+        CoreArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(theFile);
 
         // Create the new web service resource ...
         final IWebServiceResource resolved = new FileSystemWebServiceResource(resource.getNamespace(), theFile);
@@ -289,7 +289,7 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @since 4.2
      */
     public void unresolve( IWebServiceResource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         if (resource.isResolved()) {
             resource.setResolvedResource(null);
@@ -307,8 +307,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      */
     public void resolve( IWebServiceResource resource,
                          IFile theFile ) {
-        ArgCheck.isNotNull(resource);
-        ArgCheck.isNotNull(theFile);
+        CoreArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(theFile);
 
         // Create the new web service resource ...
         final IWebServiceResource resolved = new WorkspaceFileWebServiceResource(resource.getNamespace(), theFile);
@@ -335,7 +335,7 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
      * @since 4.2
      */
     public void remove( IWebServiceResource theResource ) {
-        ArgCheck.isNotNull(theResource);
+        CoreArgCheck.isNotNull(theResource);
 
         // Remove this resource ...
         if (!this.resources.remove(theResource)) {

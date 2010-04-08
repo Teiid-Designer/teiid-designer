@@ -19,8 +19,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
@@ -55,7 +54,7 @@ public class ModelWorkspaceView {
         super();
         this.filters = new LinkedList();
         this.workspace = ModelWorkspaceManager.getModelWorkspaceManager().getModelWorkspace();
-        Assertion.isNotNull(this.workspace);
+        CoreArgCheck.isNotNull(this.workspace);
         this.restrictedToModelResourcesOnly = DEFAULT_RESTRICT_TO_MODEL_RESOURCES_ONLY;
     }
 
@@ -133,7 +132,7 @@ public class ModelWorkspaceView {
     }
 
     public Object findObject( final IPath path ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         // Loop over the segments in the path ...
         final String[] segments = path.segments();
         Object object = this.workspace;
@@ -163,7 +162,7 @@ public class ModelWorkspaceView {
      * @throws ModelWorkspaceException if there is an error in the ModelWorkspace
      */
     public ModelResource findModelResourceForObject( final IPath path ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         // Loop over the segments in the path ...
         final String[] segments = path.segments();
         Object object = this.workspace;
@@ -189,7 +188,7 @@ public class ModelWorkspaceView {
      * @throws ModelWorkspaceException if there is an error obtaining the information
      */
     public Object[] getChildren( final Object parent ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(parent);
+        CoreArgCheck.isNotNull(parent);
 
         // --------------------------------------------------
         // Compute the children of the supplied parent ...
@@ -350,7 +349,7 @@ public class ModelWorkspaceView {
      * @throws ModelWorkspaceException if there is an error obtaining the information
      */
     public Object getParent( final Object element ) {
-        ArgCheck.isNotNull(element);
+        CoreArgCheck.isNotNull(element);
 
         if (element instanceof EObject) {
             final EObject obj = (EObject)element;

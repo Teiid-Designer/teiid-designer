@@ -13,7 +13,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.webservice.Output;
 import com.metamatrix.metamodels.webservice.SampleMessages;
 import com.metamatrix.metamodels.webservice.WebServicePackage;
@@ -43,7 +43,7 @@ public class OutputAspect extends WebServiceComponentAspect implements SqlResult
      * @since 4.2
      */
     public List getColumns(final EObject eObject) {
-        ArgCheck.isInstanceOf(Output.class, eObject);
+        CoreArgCheck.isInstanceOf(Output.class, eObject);
         final Output output = (Output)eObject;
         SampleMessages sampleMsgs = output.getSamples();
         if(sampleMsgs != null) {
@@ -75,7 +75,7 @@ public class OutputAspect extends WebServiceComponentAspect implements SqlResult
      * @since 4.3
      */
     public boolean isDatatypeFeature(EObject eObject, EStructuralFeature eFeature) {
-        ArgCheck.isInstanceOf(Output.class, eObject); 
+        CoreArgCheck.isInstanceOf(Output.class, eObject); 
         final EObjectImpl eObjectImpl = super.getEObjectImpl(eObject);
         if (eObjectImpl != null) {
             switch (eObjectImpl.eDerivedStructuralFeatureID(eFeature)) {
@@ -92,7 +92,7 @@ public class OutputAspect extends WebServiceComponentAspect implements SqlResult
      * @since 5.0.2
      */
     public Object getProcedure(EObject eObject) {
-        ArgCheck.isInstanceOf(Output.class, eObject); 
+        CoreArgCheck.isInstanceOf(Output.class, eObject); 
         return ((Output)eObject).getOperation();
     }
 }

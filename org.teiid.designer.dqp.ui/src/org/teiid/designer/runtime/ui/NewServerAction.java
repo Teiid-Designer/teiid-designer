@@ -13,7 +13,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.runtime.ServerManager;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
@@ -47,7 +47,7 @@ public class NewServerAction extends Action {
     public NewServerAction( Shell shell,
                             ServerManager serverManager ) {
         super(UTIL.getString("newServerActionText")); //$NON-NLS-1$
-        ArgCheck.isNotNull(serverManager, "serverManager"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(serverManager, "serverManager"); //$NON-NLS-1$
 
         if (Platform.isRunning()) {
             setToolTipText(UTIL.getString("newServerActionToolTip")); //$NON-NLS-1$

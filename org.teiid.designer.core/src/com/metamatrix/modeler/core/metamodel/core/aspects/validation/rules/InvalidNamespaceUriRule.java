@@ -9,7 +9,7 @@ package com.metamatrix.modeler.core.metamodel.core.aspects.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.util.UriValidator;
 import com.metamatrix.modeler.core.validation.ObjectValidationRule;
@@ -33,7 +33,7 @@ public final class InvalidNamespaceUriRule implements ObjectValidationRule {
     public void validate(EObject theObject,
                          ValidationContext theContext) {
         
-        ArgCheck.isInstanceOf(ModelAnnotation.class, theObject);
+        CoreArgCheck.isInstanceOf(ModelAnnotation.class, theObject);
         
         String uri = ((ModelAnnotation)theObject).getNamespaceUri();
         

@@ -27,7 +27,7 @@ import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
 import org.jdom.JDOMException;
 import com.metamatrix.common.protocol.URLHelper;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.wsdl.WsdlPackage;
 import com.metamatrix.metamodels.wsdl.http.HttpPackage;
 import com.metamatrix.metamodels.wsdl.mime.MimePackage;
@@ -151,7 +151,7 @@ public class TestWsdlHelper extends TestCase {
 		Map map = new HashMap();
 		File file=null;
 		try {
-			file = URLHelper.createFileFromUrl(url, StringUtil.createFileName(url.getPath()),".wsdl"); //$NON-NLS-1$ 
+			file = URLHelper.createFileFromUrl(url, CoreStringUtil.createFileName(url.getPath()),".wsdl"); //$NON-NLS-1$ 
 		} catch (MalformedURLException e) {
 			fail(e.getMessage());
 		} catch (IOException e) {

@@ -17,7 +17,7 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDTypeDefinition;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.metamodels.webservice.Interface;
 import com.metamatrix.metamodels.webservice.Message;
@@ -199,7 +199,7 @@ public class WebServiceUtil {
         if (function != null && function.getArgs().length > 1) {
             return (String)((Constant)function.getArg(1)).getValue();
         }
-        return StringUtil.Constants.EMPTY_STRING;
+        return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     public static Function getXpathFunction(AssignmentStatement statement) {

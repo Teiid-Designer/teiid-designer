@@ -12,7 +12,7 @@ import java.util.Collection;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.CoreMetamodelPlugin;
 import com.metamatrix.metamodels.core.extension.XEnum;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -104,7 +104,7 @@ public class XEnumUmlAspect extends AbstractExtensionUmlAspect implements UmlCla
     }
 
     protected XEnum assertXEnum(Object eObject) {
-        ArgCheck.isInstanceOf(XEnum.class, eObject);
+        CoreArgCheck.isInstanceOf(XEnum.class, eObject);
     
         return (XEnum)eObject;
     }

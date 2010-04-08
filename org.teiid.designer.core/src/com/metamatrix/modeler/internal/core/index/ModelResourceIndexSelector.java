@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
 import com.metamatrix.core.index.AbstractIndexSelector;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelImport;
@@ -44,7 +44,7 @@ public class ModelResourceIndexSelector extends AbstractIndexSelector {
      * Construct an instance of ModelResourceIndexSelector
      */
     public ModelResourceIndexSelector( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         this.resource = resource;
     }
 
@@ -191,7 +191,7 @@ public class ModelResourceIndexSelector extends AbstractIndexSelector {
     // ==================================================================================
 
     private File[] getIndexFiles( final List modelImports ) {
-        ArgCheck.isNotNull(modelImports);
+        CoreArgCheck.isNotNull(modelImports);
         ArrayList tmp = new ArrayList();
 
         // get the index files name for the imports followed by

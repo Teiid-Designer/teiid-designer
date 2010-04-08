@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.mapping.Mapping;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelImport;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.TreeMappingRoot;
@@ -51,7 +51,7 @@ public class TreeMappingRootSqlAspect extends TransformationMappingRootSqlAspect
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTransformationAspect#getTransformedObject(org.eclipse.emf.ecore.EObject)
      */
     public Object getTransformedObject( EObject eObject ) {
-        ArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
         final TreeMappingRoot root = (TreeMappingRoot)eObject;
         EObject targetEObj = root.getTarget();
         if (targetEObj == null) {
@@ -66,7 +66,7 @@ public class TreeMappingRootSqlAspect extends TransformationMappingRootSqlAspect
      * @since 4.2
      */
     public List getInputObjects( EObject eObject ) {
-        ArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         return root.getInputs();
     }
@@ -76,7 +76,7 @@ public class TreeMappingRootSqlAspect extends TransformationMappingRootSqlAspect
      * @since 4.2
      */
     public List getNestedInputObjects( EObject eObject ) {
-        ArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         if (root.getNested() == null) {
             return Collections.EMPTY_LIST;
@@ -96,7 +96,7 @@ public class TreeMappingRootSqlAspect extends TransformationMappingRootSqlAspect
      * @since 4.2
      */
     public List getNestedOutputObjects( EObject eObject ) {
-        ArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         if (root.getNested() == null) {
             return Collections.EMPTY_LIST;
@@ -118,7 +118,7 @@ public class TreeMappingRootSqlAspect extends TransformationMappingRootSqlAspect
      */
     public List getNestedInputsForOutput( EObject eObject,
                                           EObject output ) {
-        ArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         if (root.getNested() != null) {
             for (final Iterator iter = root.getNested().iterator(); iter.hasNext();) {
@@ -138,7 +138,7 @@ public class TreeMappingRootSqlAspect extends TransformationMappingRootSqlAspect
      */
     public List getNestedOutputsForInput( EObject eObject,
                                           EObject input ) {
-        ArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         if (root.getNested() != null) {
             for (final Iterator iter = root.getNested().iterator(); iter.hasNext();) {
@@ -156,7 +156,7 @@ public class TreeMappingRootSqlAspect extends TransformationMappingRootSqlAspect
      * @since 4.2
      */
     public List getOutputObjects( EObject eObject ) {
-        ArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         return root.getOutputs();
     }
@@ -225,7 +225,7 @@ public class TreeMappingRootSqlAspect extends TransformationMappingRootSqlAspect
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTransformationAspect#getTransformationTypes(org.eclipse.emf.ecore.EObject)
      */
     public String[] getTransformationTypes( final EObject eObject ) {
-        ArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
         return TRANSFORMATION_TYPES;
     }
 

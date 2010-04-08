@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.function.FunctionForm;
 import com.metamatrix.query.function.FunctionLibrary;
@@ -302,13 +302,13 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
      */
     public void setFunctionArgValue( Expression theValue,
                                      int theIndex ) {
-        ArgCheck.isNotNull(argValues);
+        CoreArgCheck.isNotNull(argValues);
         argValues.set(theIndex, theValue);
     }
 
     public void setFunctionName( String theName ) {
         FunctionForm functionForm = findFunctionForm(theName);
-        ArgCheck.isNotNull(functionForm);
+        CoreArgCheck.isNotNull(functionForm);
 
         if ((selectedFunctionForm == null) || !selectedFunctionForm.equals(functionForm)) {
             selectedFunctionForm = functionForm;

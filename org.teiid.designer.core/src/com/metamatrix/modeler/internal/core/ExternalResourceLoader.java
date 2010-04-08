@@ -24,9 +24,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.FileUtils;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ExternalResourceDescriptor;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -48,11 +48,11 @@ public class ExternalResourceLoader {
     public Resource load( final ExternalResourceDescriptor descriptor,
                           final Container container ) throws ModelerCoreException {
         if (descriptor == null) {
-            ArgCheck.isNotNull(descriptor,
+            CoreArgCheck.isNotNull(descriptor,
                                ModelerCore.Util.getString("ExternalResourceLoader.The_ExternalResourceDescriptor_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
         if (container == null) {
-            ArgCheck.isNotNull(container,
+            CoreArgCheck.isNotNull(container,
                                ModelerCore.Util.getString("ExternalResourceLoader.The_Container_reference_may_not_be_null_2")); //$NON-NLS-1$
         }
 
@@ -83,7 +83,7 @@ public class ExternalResourceLoader {
 
     public void validateDescriptor( final ExternalResourceDescriptor descriptor ) throws ModelerCoreException {
         if (descriptor == null) {
-            ArgCheck.isNotNull(descriptor,
+            CoreArgCheck.isNotNull(descriptor,
                                ModelerCore.Util.getString("ExternalResourceLoader.The_ExternalResourceDescriptor_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
 
@@ -142,7 +142,7 @@ public class ExternalResourceLoader {
         // since this could be jar/zip/vdb file, and ZipUtil only works with the
         // physical files, we need to materialize this.
         if (resourceUrl.startsWith(BUNDLE_RESOURCE_URL)) {
-            String fileName = StringUtil.getLastToken(resourceUrl, "/"); //$NON-NLS-1$
+            String fileName = CoreStringUtil.getLastToken(resourceUrl, "/"); //$NON-NLS-1$
             resourceFile = new File(tempDirectoryPath, fileName);
             if (!resourceFile.exists()) {
                 try {
@@ -181,12 +181,12 @@ public class ExternalResourceLoader {
                                      final String internalUri ) throws ModelerCoreException {
 
         if (resourceFile == null) {
-            ArgCheck.isNotNull(resourceFile,
+            CoreArgCheck.isNotNull(resourceFile,
                                ModelerCore.Util.getString("ExternalResourceLoader.The_java.io.File_reference_may_not_be_null_11")); //$NON-NLS-1$
         }
 
         if (!resourceFile.exists()) {
-            ArgCheck.isTrue(resourceFile.exists(),
+            CoreArgCheck.isTrue(resourceFile.exists(),
                             ModelerCore.Util.getString("ExternalResourceLoader.The_java.io.File_reference_must_exist_12")); //$NON-NLS-1$
         }
 
@@ -360,11 +360,11 @@ public class ExternalResourceLoader {
 
     protected String getTempDirectoryPath( final ExternalResourceDescriptor descriptor ) {
         if (descriptor == null) {
-            ArgCheck.isNotNull(descriptor,
+            CoreArgCheck.isNotNull(descriptor,
                                ModelerCore.Util.getString("ExternalResourceLoader.The_ExternalResourceDescriptor_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
 
-        ArgCheck.isInstanceOf(ExternalResourceDescriptorImpl.class,
+        CoreArgCheck.isInstanceOf(ExternalResourceDescriptorImpl.class,
                               descriptor,
                               ModelerCore.Util.getString("ExternalResourceLoader.The_ExternalResourceDescriptor_must_be_an_instanceof_ExternalResourceDescriptorImpl_1")); //$NON-NLS-1$
 
@@ -385,7 +385,7 @@ public class ExternalResourceLoader {
      * str.toUpperCase().endsWith(".VDB")
      */
     protected boolean isArchiveFileName( String name ) {
-        if (StringUtil.isEmpty(name)) {
+        if (CoreStringUtil.isEmpty(name)) {
             return false;
         }
         final String upperCaseName = name.toUpperCase();

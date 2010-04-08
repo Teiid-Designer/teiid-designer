@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.EFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.extension.ExtensionPackage;
 import com.metamatrix.metamodels.core.extension.XAttribute;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -38,7 +38,7 @@ public class XAttributeDefaultValueDatatypeRule implements StructuralFeatureVali
                          EObject theObject,
                          Object theValue,
                          ValidationContext theContext) {
-        ArgCheck.isInstanceOf(XAttribute.class, theObject);
+        CoreArgCheck.isInstanceOf(XAttribute.class, theObject);
 
         if (theValue != null) {
 	        final XAttribute xattribute = (XAttribute)theObject;

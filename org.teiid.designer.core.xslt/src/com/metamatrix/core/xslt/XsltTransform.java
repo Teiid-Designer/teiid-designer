@@ -18,7 +18,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.jdom.Document;
 import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 public class XsltTransform {
 
@@ -33,13 +33,13 @@ public class XsltTransform {
 	 * may not be null or zero length
 	 */
 	public XsltTransform( final Style style) {
-		ArgCheck.isNotNull(style);
+		CoreArgCheck.isNotNull(style);
 		this.style = style;
 	}
     
     protected static Templates getTemplates( final Style style ) throws IOException, MetaMatrixCoreException,
                                                                         TransformerConfigurationException {
-        ArgCheck.isNotNull(style);
+        CoreArgCheck.isNotNull(style);
         // Create a source for the stylesheet ...
         final StreamSource source = style.getStreamSource();
         
@@ -79,8 +79,8 @@ public class XsltTransform {
                                                             MetaMatrixCoreException,
                                                             TransformerException,
                                                             TransformerConfigurationException {
-    	ArgCheck.isNotNull(sourceDoc);
-        ArgCheck.isNotNull(output);
+    	CoreArgCheck.isNotNull(sourceDoc);
+        CoreArgCheck.isNotNull(output);
         final Source source = CoreXsltPlugin.createSource(sourceDoc);
         final StreamResult result = new StreamResult(output);
         

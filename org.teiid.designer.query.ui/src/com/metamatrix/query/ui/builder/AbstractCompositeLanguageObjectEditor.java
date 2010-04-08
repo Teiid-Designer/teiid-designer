@@ -13,8 +13,7 @@ import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.query.internal.ui.builder.AbstractLanguageObjectEditor;
 import com.metamatrix.query.internal.ui.builder.model.CompositeLanguageObjectEditorModel;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModel;
@@ -125,8 +124,7 @@ public abstract class AbstractCompositeLanguageObjectEditor extends AbstractLang
         pnl.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         editors = createEditors(pnl);
-        Assertion.isNotNull(editors);
-        Assertion.isNotEmpty(editors);
+        CoreArgCheck.isNotEmpty(editors);
     }
 
     /**
@@ -173,8 +171,8 @@ public abstract class AbstractCompositeLanguageObjectEditor extends AbstractLang
      * @throws IllegalArgumentException if editor is <code>null</code> or not found in editor collection
      */
     protected void setCurrentEditor( ILanguageObjectEditor theEditor ) {
-        ArgCheck.isNotNull(theEditor);
-        ArgCheck.contains(editors, theEditor);
+        CoreArgCheck.isNotNull(theEditor);
+        CoreArgCheck.contains(editors, theEditor);
 
         currentEditor = theEditor;
         CompositeLanguageObjectEditorModel model = (CompositeLanguageObjectEditorModel)getModel();
@@ -189,9 +187,9 @@ public abstract class AbstractCompositeLanguageObjectEditor extends AbstractLang
     public void setModel( ILanguageObjectEditorModel theModel ) {
         super.setModel(theModel);
         if (!CompositeLanguageObjectEditorModel.class.isAssignableFrom(theModel.getClass())) {
-            Assertion.assertTrue(CompositeLanguageObjectEditorModel.class.isAssignableFrom(theModel.getClass()),
-                                 Util.getString(PREFIX + "wrongModelType", //$NON-NLS-1$
-                                                new Object[] {theModel.getClass().getName()}));
+            CoreArgCheck.isTrue(CompositeLanguageObjectEditorModel.class.isAssignableFrom(theModel.getClass()),
+                                Util.getString(PREFIX + "wrongModelType", //$NON-NLS-1$
+                                               new Object[] {theModel.getClass().getName()}));
         }
     }
 

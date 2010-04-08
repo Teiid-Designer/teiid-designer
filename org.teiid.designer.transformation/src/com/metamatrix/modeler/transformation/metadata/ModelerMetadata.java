@@ -26,8 +26,8 @@ import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
 import com.metamatrix.core.index.IEntryResult;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metadata.runtime.impl.RecordFactory;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.ModelImport;
@@ -123,7 +123,7 @@ public class ModelerMetadata extends TransformationMetadata {
      */
     @Override
     public Properties getExtensionProperties( Object metadataID ) {
-        ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
+        CoreArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
         MetadataRecord metadataRecord = (MetadataRecord)metadataID;
 
         String uuid = metadataRecord.getUUID();
@@ -178,11 +178,11 @@ public class ModelerMetadata extends TransformationMetadata {
         Collection eObjects = new ArrayList();
 
         String uuid = null;
-        if (StringUtil.startsWithIgnoreCase(entityName, UUID.PROTOCOL)) {
+        if (CoreStringUtil.startsWithIgnoreCase(entityName, UUID.PROTOCOL)) {
             uuid = entityName.toLowerCase();
         } else {
             String shortName = super.getShortElementName(entityName);
-            if (StringUtil.startsWithIgnoreCase(shortName, UUID.PROTOCOL)) {
+            if (CoreStringUtil.startsWithIgnoreCase(shortName, UUID.PROTOCOL)) {
                 uuid = shortName.toLowerCase();
             }
         }
@@ -208,7 +208,7 @@ public class ModelerMetadata extends TransformationMetadata {
             }
 
             // model name is first token
-            List tokens = StringUtil.getTokens(entityName, DELIMITER_STRING);
+            List tokens = CoreStringUtil.getTokens(entityName, DELIMITER_STRING);
             String firstSegment = (String)tokens.get(0);
 
             // check if a modelResource exists on the index selector,
@@ -300,7 +300,7 @@ public class ModelerMetadata extends TransformationMetadata {
     protected boolean isSystemModelName( final String firstSegment ) {
 
         // If the string is a UUID then it is not the name of one of our system models
-        if (StringUtil.startsWithIgnoreCase(firstSegment, UUID.PROTOCOL)) {
+        if (CoreStringUtil.startsWithIgnoreCase(firstSegment, UUID.PROTOCOL)) {
             return false;
         }
 
@@ -316,7 +316,7 @@ public class ModelerMetadata extends TransformationMetadata {
                                                     final boolean isPartialName ) throws MetaMatrixComponentException {
         Collection eObjects = new ArrayList();
 
-        List tokens = StringUtil.getTokens(entityName, DELIMITER_STRING);
+        List tokens = CoreStringUtil.getTokens(entityName, DELIMITER_STRING);
         String firstSegment = (String)tokens.get(0);
 
         if (!isSystemModelName(firstSegment)) {
@@ -510,7 +510,7 @@ public class ModelerMetadata extends TransformationMetadata {
     @Override
     protected Collection findChildRecords( final MetadataRecord parentRecord,
                                            final char childRecordType ) throws MetaMatrixComponentException {
-        ArgCheck.isNotNull(parentRecord);
+        CoreArgCheck.isNotNull(parentRecord);
         // find the eObject on the parent record
         EObject parentObj = (EObject)parentRecord.getEObject();
         // if not preset look up by uuid
@@ -612,7 +612,7 @@ public class ModelerMetadata extends TransformationMetadata {
      * found then null is returned.
      */
     protected EObject lookupEObject( final String uuid ) {
-        ArgCheck.isNotEmpty(uuid);
+        CoreArgCheck.isNotEmpty(uuid);
 
         // Before searching by UUID make sure all resources associated with this QMI are loaded
         if (this.getResources() != null) {
@@ -702,7 +702,7 @@ public class ModelerMetadata extends TransformationMetadata {
      * @return The collection of EMD resources
      */
     private Collection findResourcesByName( final String modelName ) {
-        ArgCheck.isNotEmpty(modelName);
+        CoreArgCheck.isNotEmpty(modelName);
 
         // get the collection of resources to check
         Collection rsrcs = new ArrayList((this.getResources() != null ? this.getResources() : getContainer().getResources()));
@@ -742,7 +742,7 @@ public class ModelerMetadata extends TransformationMetadata {
                         for (Iterator resourceIter = rsrcs.iterator(); resourceIter.hasNext();) {
                             Resource resource = (Resource)resourceIter.next();
                             String resourceUri = URI.decode(resource.getURI().toString());
-                            if (StringUtil.endsWithIgnoreCase(resourceUri, importPath)) {
+                            if (CoreStringUtil.endsWithIgnoreCase(resourceUri, importPath)) {
                                 resources.add(resource);
                                 break;
                             }
@@ -772,7 +772,7 @@ public class ModelerMetadata extends TransformationMetadata {
                                            final String entityName,
                                            final char recordType,
                                            final boolean isPartialName ) {
-        ArgCheck.isNotEmpty(entityName);
+        CoreArgCheck.isNotEmpty(entityName);
 
         AbstractNameFinder finder = null;
         switch (recordType) {

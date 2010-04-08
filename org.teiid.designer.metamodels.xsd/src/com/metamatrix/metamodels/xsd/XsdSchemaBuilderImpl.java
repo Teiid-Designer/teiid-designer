@@ -41,7 +41,7 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.AccessPattern;
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.metamodels.relational.Column;
@@ -103,8 +103,8 @@ public class XsdSchemaBuilderImpl {
      */
     public XsdSchemaBuilderImpl( final XsdBuilderOptions ops ) {
         super();
-        ArgCheck.isNotNull(ops);
-        ArgCheck.isNotNull(ops.getRoots());
+        CoreArgCheck.isNotNull(ops);
+        CoreArgCheck.isNotNull(ops.getRoots());
         this.ops = ops;
         this.doFlat = ops.isFlat();
     }

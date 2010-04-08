@@ -11,8 +11,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.InputParameter;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlProperty;
@@ -35,7 +35,7 @@ public class InputParameterUmlAspect extends AbstractTransformationUmlAspect imp
     }
 
     protected InputParameter assertInputParameter(Object eObject) {
-        ArgCheck.isInstanceOf(InputParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(InputParameter.class, eObject);
         return (InputParameter)eObject;
     }
 
@@ -88,7 +88,7 @@ public class InputParameterUmlAspect extends AbstractTransformationUmlAspect imp
 			typeName = ModelerCore.getModelEditor().getName(col.getType());
 		}
         if (typeName == null) {
-            typeName = StringUtil.Constants.EMPTY_STRING;
+            typeName = CoreStringUtil.Constants.EMPTY_STRING;
         }
 
         StringBuffer result = new StringBuffer();

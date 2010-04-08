@@ -14,7 +14,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.metamodels.relational.ForeignKey;
 import com.metamatrix.metamodels.relational.LogicalRelationship;
@@ -133,7 +133,7 @@ public class BaseTableAspect extends RelationalEntityAspect implements UmlClassi
     }
 
     protected BaseTable assertBaseTable(Object eObject) {
-        ArgCheck.isInstanceOf(BaseTable.class, eObject);
+        CoreArgCheck.isInstanceOf(BaseTable.class, eObject);
     
         return (BaseTable)eObject;
     }

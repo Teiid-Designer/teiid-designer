@@ -9,7 +9,7 @@ package com.metamatrix.modeler.core.metamodel.aspect.sql;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * SqlTransformationInfo
@@ -23,7 +23,7 @@ public class SqlTransformationInfo {
     private List bindings;
 
     public SqlTransformationInfo(String sqlTransform) {
-        ArgCheck.isNotEmpty(sqlTransform);
+        CoreArgCheck.isNotEmpty(sqlTransform);
         this.sqlTransform = sqlTransform;
     }
 

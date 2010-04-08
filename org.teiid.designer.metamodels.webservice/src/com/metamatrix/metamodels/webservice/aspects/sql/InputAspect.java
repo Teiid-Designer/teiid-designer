@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.webservice.aspects.sql;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.metamodels.webservice.WebServiceMetamodelPlugin;
 import com.metamatrix.metamodels.webservice.WebServicePackage;
@@ -49,7 +49,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @since 4.2
      */
     public EObject getDatatype(final EObject eObject) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         try {
             final DatatypeManager dtMgr = ModelerCore.getDatatypeManager(eObject,true);
             return dtMgr.getBuiltInDatatype(DATATYPE_NAME);
@@ -65,7 +65,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @since 4.2
      */
     public String getDatatypeName(final EObject eObject) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         return DATATYPE_NAME;
     }
 
@@ -87,7 +87,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @since 4.2
      */
     public String getRuntimeType(final EObject eObject) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         return RUNTIME_TYPE;
     }
 
@@ -96,7 +96,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @since 4.2
      */
     public Object getDefaultValue(final EObject eObject) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         return DEFAULT_VALUE;
     }
 
@@ -105,7 +105,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @since 4.2
      */
     public int getNullType(final EObject eObject) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         return NULL_TYPE;
     }
 
@@ -114,7 +114,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @since 4.2
      */
     public int getLength(final EObject eObject) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         return LENGTH;
     }
 
@@ -123,7 +123,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @since 4.2
      */
     public int getPosition(final EObject eObject) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         return POSITION;
     }
 
@@ -132,7 +132,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @since 4.2
      */
     public int getRadix(final EObject eObject) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         return RADIX;
     }
 
@@ -141,7 +141,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @since 4.2
      */
     public int getScale(final EObject eObject) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         return SCALE;
     }
 
@@ -150,7 +150,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @since 4.2
      */
     public int getPrecision(final EObject eObject) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         return PRECISION;
     }
 
@@ -159,7 +159,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @since 4.2
      */
     public int getType(final EObject eObject) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         return MetadataConstants.PARAMETER_TYPES.IN_PARM;
     }
 
@@ -168,7 +168,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @since 4.2
      */
     public boolean isOptional(final EObject eObject) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         return false;
     }
 
@@ -178,7 +178,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      */
     public boolean isDatatypeFeature(final EObject eObject,
                                      final EStructuralFeature eFeature) {
-        ArgCheck.isInstanceOf(Input.class, eObject); 
+        CoreArgCheck.isInstanceOf(Input.class, eObject); 
         final EObjectImpl eObjectImpl = super.getEObjectImpl(eObject);
         if (eObjectImpl != null) {
             switch (eObjectImpl.eDerivedStructuralFeatureID(eFeature)) {
@@ -210,7 +210,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      */
     public void setDatatype(EObject eObject,
                             EObject datatype) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         final String msg = WebServiceMetamodelPlugin.Util.getString("InputAspect.setDatatypeNotSupported"); //$NON-NLS-1$
         throw new UnsupportedOperationException(msg);
     }
@@ -227,7 +227,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @since 4.2
      */
     public void setLength(EObject eObject, int length) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         final String msg = WebServiceMetamodelPlugin.Util.getString("InputAspect.setLengthNotSupported"); //$NON-NLS-1$
         throw new UnsupportedOperationException(msg);
     }
@@ -245,7 +245,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @since 4.2
      */
     public void setNullType(EObject eObject, int nullType) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         final String msg = WebServiceMetamodelPlugin.Util.getString("InputAspect.setNullTypeNotSupported"); //$NON-NLS-1$
         throw new UnsupportedOperationException(msg);
     }
@@ -264,7 +264,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      */
     public void setDirection(EObject eObject,
                              int dir) {
-        ArgCheck.isInstanceOf(Input.class, eObject);
+        CoreArgCheck.isInstanceOf(Input.class, eObject);
         final String msg = WebServiceMetamodelPlugin.Util.getString("InputAspect.setDirectionNotSupported"); //$NON-NLS-1$
         throw new UnsupportedOperationException(msg);
     }

@@ -32,7 +32,7 @@ import org.eclipse.ui.views.framelist.UpAction;
 import org.eclipse.ui.views.navigator.FilterSelectionAction;
 import org.eclipse.ui.views.navigator.MainActionGroup;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerResourceNavigator;
 import com.metamatrix.modeler.ui.actions.ModelerActionBarIdManager;
 import com.metamatrix.ui.internal.util.UiUtil;
@@ -261,7 +261,7 @@ public class UdfModelView extends ModelExplorerResourceNavigator {
 
     @Override
     public void updateTitle() {
-        setContentDescription(StringUtil.Constants.EMPTY_STRING);
+        setContentDescription(CoreStringUtil.Constants.EMPTY_STRING);
     }
 
     /**

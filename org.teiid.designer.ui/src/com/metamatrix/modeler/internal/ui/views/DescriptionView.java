@@ -39,7 +39,7 @@ import org.eclipse.ui.views.properties.PropertySheet;
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.event.EventSourceException;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
@@ -120,7 +120,7 @@ public class DescriptionView extends ModelerView
 
     void clear( boolean enabled ) {
         if (!this.textEditor.isDisposed()) {
-            setText(StringUtil.Constants.EMPTY_STRING);
+            setText(CoreStringUtil.Constants.EMPTY_STRING);
             this.textEditor.setEditable(enabled);
             this.textEditor.resetUndoRedoHistory();
             this.textEditor.getTextWidget().traverse(SWT.TRAVERSE_PAGE_PREVIOUS);
@@ -664,7 +664,7 @@ public class DescriptionView extends ModelerView
 
     void setText( String newDescription ) {
         if (!this.textEditor.isDisposed()) {
-            String newText = (newDescription == null ? StringUtil.Constants.EMPTY_STRING : newDescription);
+            String newText = (newDescription == null ? CoreStringUtil.Constants.EMPTY_STRING : newDescription);
 
             // change the text if necessary
             if (!newText.equals(this.textEditor.getText())) {

@@ -17,8 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.TreeItem;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.MappingClassColumn;
 import com.metamatrix.metamodels.transformation.StagingTable;
@@ -68,7 +67,7 @@ public class MappingAdapterFilter {
         }
 
         mapper = ModelMapperFactory.createModelMapper(target);
-        Assertion.isNotNull(mapper);
+        CoreArgCheck.isNotNull(mapper);
     }
 
     public void setTreeExpansionMonitorStale() {
@@ -721,7 +720,7 @@ public class MappingAdapterFilter {
      */
     public List getDetailedMappingExtents( MappingClass theMappingClass ) {
         // System.out.println("[MappingAdapterFilter.getDetailedMappingExtents] TOP");
-        ArgCheck.isNotNull(theMappingClass);
+        CoreArgCheck.isNotNull(theMappingClass);
 
         // the detailed mapping extents are gathered the same way the Coarse extents are, except
         // one is built for every row (tree node) that is visible and mappable.

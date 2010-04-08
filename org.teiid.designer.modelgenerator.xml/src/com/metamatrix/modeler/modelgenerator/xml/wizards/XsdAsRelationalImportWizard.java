@@ -32,10 +32,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.core.extension.XPackage;
@@ -619,7 +619,7 @@ public class XsdAsRelationalImportWizard extends AbstractWizard implements IImpo
      * @since 4.0
      */
     void setFolder( final IContainer folder ) {
-        ArgCheck.isNotNull(folder);
+        CoreArgCheck.isNotNull(folder);
         this.folder = folder;
     }
 
@@ -627,7 +627,7 @@ public class XsdAsRelationalImportWizard extends AbstractWizard implements IImpo
      * @since 4.0
      */
     void setModelName( final String name ) {
-        ArgCheck.isNotEmpty(name);
+        CoreArgCheck.isNotEmpty(name);
         this.modelName = name;
     }
 
@@ -697,7 +697,7 @@ public class XsdAsRelationalImportWizard extends AbstractWizard implements IImpo
                 modelName = db.getName();
             }
             modelName = FileUtils.toFileNameWithExtension(modelName, ModelerCore.MODEL_FILE_EXTENSION);
-            if (!StringUtil.isEmpty(modelName) && ResourcesPlugin.getWorkspace().validateName(modelName, IResource.FILE).isOK()) {
+            if (!CoreStringUtil.isEmpty(modelName) && ResourcesPlugin.getWorkspace().validateName(modelName, IResource.FILE).isOK()) {
                 setModelName(modelName);
                 if (this.folder != null) {
                     final IResource resrc = this.folder.findMember(modelName);

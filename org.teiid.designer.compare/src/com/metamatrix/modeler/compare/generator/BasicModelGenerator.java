@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.core.UserCancelledException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.compare.DifferenceProcessor;
 import com.metamatrix.modeler.compare.DifferenceReport;
 import com.metamatrix.modeler.compare.ModelProducer;
@@ -60,8 +60,8 @@ public class BasicModelGenerator extends AbstractModelGenerator {
                                 final ModelProducer outputProducer,
                                 final List mappingAdapters ) {
         super(mappingAdapters);
-        ArgCheck.isNotNull(original);
-        ArgCheck.isNotNull(outputProducer);
+        CoreArgCheck.isNotNull(original);
+        CoreArgCheck.isNotNull(outputProducer);
         this.original = original;
         this.producer = outputProducer;
     }
@@ -89,7 +89,7 @@ public class BasicModelGenerator extends AbstractModelGenerator {
     @Override
     protected void doGenerateOutput( final IProgressMonitor monitor,
                                      final LinkedList problems ) throws UserCancelledException {
-        ArgCheck.isNotNull(monitor);
+        CoreArgCheck.isNotNull(monitor);
 
         // Set up the progress monitor
         final Object[] taskParams = new Object[] {this.getDescription()};
@@ -188,7 +188,7 @@ public class BasicModelGenerator extends AbstractModelGenerator {
     @Override
     protected void doComputeDifferenceReport( final IProgressMonitor monitor,
                                               final LinkedList problems ) throws UserCancelledException {
-        ArgCheck.isNotNull(monitor);
+        CoreArgCheck.isNotNull(monitor);
 
         // Set up the progress monitor
         final Object[] taskParams = new Object[] {this.getDescription()};
@@ -249,7 +249,7 @@ public class BasicModelGenerator extends AbstractModelGenerator {
     @Override
     protected void doMergeOutputIntoOriginal( final IProgressMonitor monitor,
                                               final LinkedList problems ) throws UserCancelledException {
-        ArgCheck.isNotNull(monitor);
+        CoreArgCheck.isNotNull(monitor);
 
         // Set up the progress monitor
         final Object[] taskParams = new Object[] {this.getDescription()};

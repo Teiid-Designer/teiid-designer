@@ -39,8 +39,8 @@ import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.InvalidIDException;
 import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.util.Assertion;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.metamodels.core.Identifiable;
@@ -212,7 +212,7 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
         final MetamodelRegistry registry = this.getMetamodelRegistry();
         if (registry != null && registry.containsURI(uri)) {
             final Resource r = this.registry.getResource(uri);
-            Assertion.assertTrue(r.isLoaded());
+            CoreArgCheck.isTrue(r.isLoaded(), "Resource " + r.getURI() + " must be loaded"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         // Otherwise load the resource using it's URI
         if (ModelerCore.DEBUG || ModelerCore.DEBUG_METAMODEL) {
@@ -492,7 +492,7 @@ public class MtkXmiResourceImpl extends XMIResourceImpl implements EmfResource, 
                 primaryMetamodelUri = header.getPrimaryMetamodelURI();
             }
         }
-        if (StringUtil.isEmpty(primaryMetamodelUri)) {
+        if (CoreStringUtil.isEmpty(primaryMetamodelUri)) {
             return null;
         }
         return URI.createURI(primaryMetamodelUri);

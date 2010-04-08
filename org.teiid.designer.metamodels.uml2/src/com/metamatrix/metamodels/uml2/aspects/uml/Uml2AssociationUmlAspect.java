@@ -20,8 +20,8 @@ import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.VisibilityKind;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.uml2.Uml2MetamodelConstants;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
@@ -53,7 +53,7 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
         final Property aEnd = getOppositeEnd(a, end);
         final String roleName = aEnd.getName();
         if (roleName == null || roleName.length() == 0) {
-            return StringUtil.Constants.EMPTY_STRING;
+            return CoreStringUtil.Constants.EMPTY_STRING;
         }
         return getVisibilityString(aEnd) + roleName;
     }
@@ -69,7 +69,7 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
             final int lower = p.getLower();
             final int upper = p.getUpper();
             final StringBuffer sb = new StringBuffer(100);
-            sb.append(StringUtil.Constants.EMPTY_STRING);
+            sb.append(CoreStringUtil.Constants.EMPTY_STRING);
             sb.append(lower);
             if (upper != lower) {
                 sb.append(".."); //$NON-NLS-1$
@@ -81,7 +81,7 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
             }
             return sb.toString();
         }
-        return StringUtil.Constants.EMPTY_STRING;
+        return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     /* (non-Javadoc)
@@ -352,7 +352,7 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
     }
 
     protected Association assertAssociation( Object eObject ) {
-        ArgCheck.isInstanceOf(Association.class, eObject);
+        CoreArgCheck.isInstanceOf(Association.class, eObject);
         return (Association)eObject;
     }
 
@@ -403,7 +403,7 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
      */
     protected void appendProperties( final Property p, // NO_UCD
                                      final StringBuffer result ) {
-        ArgCheck.isNotNull(p);
+        CoreArgCheck.isNotNull(p);
         if (p.isOrdered()) {
             result.append("{ordered}"); //$NON-NLS-1$
         }
@@ -440,7 +440,7 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
      * @param result
      */
     protected String[] getPropertyStrings( final Property p ) {
-        ArgCheck.isNotNull(p);
+        CoreArgCheck.isNotNull(p);
         final List result = new ArrayList();
         if (p.isOrdered()) {
             result.add("{ordered}"); //$NON-NLS-1$
@@ -468,7 +468,7 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
             sb.append('}');
             result.add(sb.toString());
         }
-        return (result.isEmpty() ? StringUtil.Constants.EMPTY_STRING_ARRAY : (String[])result.toArray(new String[result.size()]));
+        return (result.isEmpty() ? CoreStringUtil.Constants.EMPTY_STRING_ARRAY : (String[])result.toArray(new String[result.size()]));
     }
 
     protected void appendListAsCommaDelimitedString( final List values,

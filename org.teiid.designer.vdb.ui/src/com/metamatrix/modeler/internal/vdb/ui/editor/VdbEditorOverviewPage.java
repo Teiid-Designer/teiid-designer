@@ -45,7 +45,7 @@ import org.eclipse.ui.part.EditorPart;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.editors.IRevertable;
@@ -60,7 +60,7 @@ import com.metamatrix.ui.text.StyledTextEditor;
  * @since 4.0
  */
 public final class VdbEditorOverviewPage extends EditorPart
-    implements StringUtil.Constants, VdbUiConstants, VdbEditor.Constants, IRevertable, IGotoMarker, IUndoManager {
+    implements CoreStringUtil.Constants, VdbUiConstants, VdbEditor.Constants, IRevertable, IGotoMarker, IUndoManager {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(VdbEditorOverviewPage.class);
 

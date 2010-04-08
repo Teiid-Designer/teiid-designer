@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingRoot;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.TransformationFactory;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -609,7 +609,7 @@ public class AttributeMappingHelper {
      * actual name.
      */
     public static String getSymbolFullName(final SingleElementSymbol symbol) {
-        ArgCheck.isNotNull(symbol);
+        CoreArgCheck.isNotNull(symbol);
         if(symbol instanceof ElementSymbol) {
             Object metadataID = ((ElementSymbol)symbol).getMetadataID();
             if(metadataID != null) {

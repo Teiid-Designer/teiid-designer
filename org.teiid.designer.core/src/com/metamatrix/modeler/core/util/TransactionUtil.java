@@ -11,7 +11,7 @@ import com.metamatrix.core.util.IOperation;
 import com.metamatrix.core.util.IReturningOperation;
 import com.metamatrix.core.util.ISafeOperation;
 import com.metamatrix.core.util.ISafeReturningOperation;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 
 /**
@@ -20,7 +20,7 @@ import com.metamatrix.modeler.core.ModelerCore;
  * @since 5.0.2
  */
 public class TransactionUtil implements
-                            StringUtil.Constants {
+                            CoreStringUtil.Constants {
 
     // ===========================================================================================================================
     // Static Methods

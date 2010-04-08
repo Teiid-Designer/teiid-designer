@@ -31,7 +31,7 @@ import org.eclipse.xsd.XSDTotalDigitsFacet;
 import org.eclipse.xsd.XSDWhiteSpaceFacet;
 import org.eclipse.xsd.impl.XSDFacetImpl;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
 import com.metamatrix.metamodels.xsd.XsdPlugin;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -321,7 +321,7 @@ public class XSDFacetAspect extends AbstractMetamodelAspect implements UmlProper
     }
 
     protected XSDFacetImpl assertFacet(Object eObject) {
-        ArgCheck.isInstanceOf(XSDFacetImpl.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDFacetImpl.class, eObject);
     
         return (XSDFacetImpl)eObject;
     }

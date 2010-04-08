@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.jdbc.metadata;
 
 import java.io.PrintStream;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * PathPrintingVisitor
@@ -31,7 +31,7 @@ public class PathPrintingVisitor implements JdbcNodeVisitor {
     public PathPrintingVisitor( final PrintStream stream,
                                 final String prefix ) {
         super();
-        Assertion.isNotNull(stream);
+        CoreArgCheck.isNotNull(stream);
         this.stream = stream;
         this.prefix = prefix != null ? prefix : ""; //$NON-NLS-1$
     }

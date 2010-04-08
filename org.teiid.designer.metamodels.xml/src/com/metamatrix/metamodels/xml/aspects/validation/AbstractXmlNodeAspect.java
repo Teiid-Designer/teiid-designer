@@ -8,8 +8,8 @@
 package com.metamatrix.metamodels.xml.aspects.validation;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.xml.XmlContainerNode;
 import com.metamatrix.metamodels.xml.XmlDocumentNode;
 import com.metamatrix.modeler.core.ValidationDescriptor;
@@ -37,12 +37,12 @@ public abstract class AbstractXmlNodeAspect extends AbstractXmlAspect {
      */
     @Override
     public boolean shouldValidate(EObject eObject, final ValidationContext context) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         String validationPref = context.getPreferenceValue(ValidationPreferences.XML_ELEMENT_VALIDATE_EXCLUDED);
         
         // If we are not validating excluded elements then return false for all EObjects
         // that are marked as excluded in the document
-        if (StringUtil.isEmpty(validationPref) || validationPref.equals(ValidationDescriptor.FALSE)) {
+        if (CoreStringUtil.isEmpty(validationPref) || validationPref.equals(ValidationDescriptor.FALSE)) {
 	        if(!context.shouldIgnore(eObject)) {
 	            // check if the eObject is excluded
 	            if(isExcluded(eObject, context)) {

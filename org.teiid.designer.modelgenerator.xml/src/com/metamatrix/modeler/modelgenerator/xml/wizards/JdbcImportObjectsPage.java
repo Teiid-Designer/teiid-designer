@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.data.Request;
 import com.metamatrix.modeler.jdbc.data.Results;
@@ -461,7 +461,7 @@ public class JdbcImportObjectsPage extends WizardPage {
                     public String getColumnText( final Object row,
                                                  final int column ) {
                         final Object obj = ((List)row).get(column);
-                        return (obj == null ? StringUtil.Constants.EMPTY_STRING : obj.toString());
+                        return (obj == null ? CoreStringUtil.Constants.EMPTY_STRING : obj.toString());
                     }
                 });
                 // Create content provider

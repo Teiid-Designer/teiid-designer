@@ -13,7 +13,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.extension.ExtensionPackage;
 import com.metamatrix.metamodels.core.extension.XEnumLiteral;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -47,7 +47,7 @@ public class XEnumLiteralNameRule extends StringNameRule {
                           Object value,
                           ValidationContext context ) {
 
-        ArgCheck.isInstanceOf(XEnumLiteral.class, eObject);
+        CoreArgCheck.isInstanceOf(XEnumLiteral.class, eObject);
         if (eStructuralFeature.getFeatureID() != this.getFeatureID()) {
             return;
         }

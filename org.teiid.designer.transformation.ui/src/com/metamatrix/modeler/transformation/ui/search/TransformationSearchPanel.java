@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -72,7 +72,7 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
     private static final String TABLE_STR = "<Table>"; //$NON-NLS-1$
     private static final String PROCEDURE_STR = "<Procedure>"; //$NON-NLS-1$
 
-    private static final String SQL_MESSAGE_SUFFIX = StringUtil.Constants.SPACE
+    private static final String SQL_MESSAGE_SUFFIX = CoreStringUtil.Constants.SPACE
                                                      + getString("TransformationSearchPanel.sqlMessageSuffix"); //$NON-NLS-1$
     private static final String SEARCH_STATUS = getString("TransformationSearchPanel.searchStatus"); //$NON-NLS-1$
     private static final String RESULTS_TITLE = getString("TransformationSearchPanel.resultsTitle"); //$NON-NLS-1$
@@ -101,7 +101,7 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
     TransformationSearchDialog parentDialog;
 
     private Collection lastResults = Collections.EMPTY_LIST;
-    private String lastSearchString = StringUtil.Constants.EMPTY_STRING;
+    private String lastSearchString = CoreStringUtil.Constants.EMPTY_STRING;
     EObject lastSelectedTarget;
 
     private static String getString( String id ) {
@@ -227,14 +227,14 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
         sqlDocument = new Document();
         sqlTextViewer.setInput(sqlDocument);
         sqlTextViewer.setEditable(false);
-        sqlDocument.set(StringUtil.Constants.EMPTY_STRING);
+        sqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
         sqlTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 
     }
 
     void setSqlText( Object obj ) {
-        String text = StringUtil.Constants.EMPTY_STRING;
-        String sqlMessage = StringUtil.Constants.EMPTY_STRING;
+        String text = CoreStringUtil.Constants.EMPTY_STRING;
+        String sqlMessage = CoreStringUtil.Constants.EMPTY_STRING;
 
         if (obj != null) {
             if (obj instanceof EObject) {
@@ -470,7 +470,7 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
      */
     public void modifyText( ModifyEvent e ) {
 
-        if (fFindField.getText().equals(StringUtil.Constants.EMPTY_STRING)) { 
+        if (fFindField.getText().equals(CoreStringUtil.Constants.EMPTY_STRING)) { 
             // empty selection
             // CLEAR
         } else {
@@ -511,7 +511,7 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
             if (lastResults.isEmpty()) {
                 setSqlTextMessage(getString("TransformationSearchPanel.noMatches", lastSearchString)); //$NON-NLS-1$
             } else {
-                String sizeStr = StringUtil.Constants.EMPTY_STRING + lastResults.size();
+                String sizeStr = CoreStringUtil.Constants.EMPTY_STRING + lastResults.size();
                 setSqlTextMessage(getString("TransformationSearchPanel.matchesFound", sizeStr, lastSearchString)); //$NON-NLS-1$
             }
 
@@ -539,7 +539,7 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
             setMessage(NO_STRING_ENTERED);
             performSearchButton.setEnabled(false);
         } else {
-            setMessage(StringUtil.Constants.EMPTY_STRING);
+            setMessage(CoreStringUtil.Constants.EMPTY_STRING);
         }
 
     }
@@ -709,7 +709,7 @@ public class TransformationSearchPanel extends Composite implements ModifyListen
                 if (showPath) {
                     String type = getType(eo);
                     if (type != null) {
-                        sText += StringUtil.Constants.SPACE + type + StringUtil.Constants.SPACE;
+                        sText += CoreStringUtil.Constants.SPACE + type + CoreStringUtil.Constants.SPACE;
                     }
                     String path = getAppendedPath(eo);
                     if (path != null) {

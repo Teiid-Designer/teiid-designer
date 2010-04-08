@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.association.AssociationDescriptor;
@@ -38,7 +38,7 @@ public abstract class AbstractAssociationDescriptor implements AssociationDescri
     // ==================================================================================
 
     protected AbstractAssociationDescriptor(final List eObjects) {
-        ArgCheck.isNotNull(eObjects);
+        CoreArgCheck.isNotNull(eObjects);
         this.eObjects  = eObjects;
         this.status    = new Status(IStatus.OK, PLUGIN_ID, -1, "", null); //$NON-NLS-1$
         this.children  = null;
@@ -163,7 +163,7 @@ public abstract class AbstractAssociationDescriptor implements AssociationDescri
     }
 
     public void updateStatus(final int severity, final int code, final String msg, final Throwable e){
-        ArgCheck.isNotNull(msg);
+        CoreArgCheck.isNotNull(msg);
         updateStatus( new Status(severity, PLUGIN_ID, code, msg, e) );
     }
 

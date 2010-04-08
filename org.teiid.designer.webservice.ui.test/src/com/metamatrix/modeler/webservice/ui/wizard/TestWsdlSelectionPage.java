@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
 import com.metamatrix.common.protocol.URLHelper;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.webservice.ui.wizard.WsdlSelectionPage;
 
 /**
@@ -77,7 +77,7 @@ public class TestWsdlSelectionPage extends TestCase {
         }
         URL newUrl = new URL("file", "", path + pathSegment + "testdata/HelloService.wsdl"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         String formattedPath = WsdlSelectionPage.formatPath(newUrl);
-        File wsdlFile = URLHelper.createFileFromUrl(newUrl, StringUtil.createFileName(formattedPath), XSD_SUFFIX);
+        File wsdlFile = URLHelper.createFileFromUrl(newUrl, CoreStringUtil.createFileName(formattedPath), XSD_SUFFIX);
         String name = wsdlFile.getName();
 
         if (name.startsWith("_")) { //$NON-NLS-1$

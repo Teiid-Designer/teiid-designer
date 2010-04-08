@@ -15,8 +15,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.index.IEntryResult;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.index.IndexSelector;
@@ -53,7 +53,7 @@ public class FindRelatedObjectsCommandImpl implements FindRelatedObjectsCommand 
 		String objectUUID = null;
 
 		// find the uuid of the object
-		if(!StringUtil.isEmpty(this.modelObjectUri)) {
+		if(!CoreStringUtil.isEmpty(this.modelObjectUri)) {
 			URI objectUri = URI.createURI(this.modelObjectUri);
 			// fragment of the uri is an UUID
 			objectUUID = objectUri.fragment();
@@ -93,7 +93,7 @@ public class FindRelatedObjectsCommandImpl implements FindRelatedObjectsCommand 
 	 * @see com.metamatrix.modeler.relationship.search.commands.FindRelatedObjectsCommand#setModelObjectUri(String)
 	 */
 	public void setModelObjectUri(String object) {
-		ArgCheck.isNotEmpty(object);
+		CoreArgCheck.isNotEmpty(object);
 		this.modelObjectUri = object;
 	}
 

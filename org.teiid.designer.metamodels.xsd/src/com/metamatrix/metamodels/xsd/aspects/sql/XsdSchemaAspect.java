@@ -14,8 +14,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.XSDSchema;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.index.IndexConstants;
@@ -47,7 +47,7 @@ public class XsdSchemaAspect extends AbstractMetamodelAspect implements SqlModel
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
     public String getName(EObject eObject) {
-        ArgCheck.isInstanceOf(XSDSchema.class, eObject); 
+        CoreArgCheck.isInstanceOf(XSDSchema.class, eObject); 
 
         Resource resource = eObject.eResource();
         if (resource != null && resource.getURI() != null) {
@@ -70,7 +70,7 @@ public class XsdSchemaAspect extends AbstractMetamodelAspect implements SqlModel
                 
             }
         }
-        return StringUtil.Constants.EMPTY_STRING;
+        return CoreStringUtil.Constants.EMPTY_STRING;
 //        XSDSchema schema = (XSDSchema)eObject;
 //        String targetNamespace = schema.getTargetNamespace();
 //        return (targetNamespace == null ? StringUtil.Constants.EMPTY_STRING : targetNamespace);
@@ -118,7 +118,7 @@ public class XsdSchemaAspect extends AbstractMetamodelAspect implements SqlModel
     @Override
     public Object getObjectID(EObject eObject) {
         // defect 18858 - Wrong value getting returned for OID:
-        ArgCheck.isInstanceOf(XSDSchema.class, eObject); 
+        CoreArgCheck.isInstanceOf(XSDSchema.class, eObject); 
         Object object = super.getObjectID(eObject);
         return object;
     }

@@ -10,7 +10,7 @@ package com.metamatrix.modeler.core.util;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCoreException;
 
 /**
@@ -82,7 +82,7 @@ public class ConcurrentModelVisitorProcessor extends ModelVisitorProcessor {
      */
     @Override
     public void walk( final Resource startingResource, final int depth ) throws ModelerCoreException {
-        ArgCheck.isNotNull(startingResource);
+        CoreArgCheck.isNotNull(startingResource);
         assertValidDepth(depth);
         
         // visit this resource      
@@ -113,7 +113,7 @@ public class ConcurrentModelVisitorProcessor extends ModelVisitorProcessor {
      */
     @Override
     public void walk( final EObject startingObject, final int depth ) throws ModelerCoreException {
-        ArgCheck.isNotNull(startingObject);
+        CoreArgCheck.isNotNull(startingObject);
         assertValidDepth(depth);
 
         // visit this resource      

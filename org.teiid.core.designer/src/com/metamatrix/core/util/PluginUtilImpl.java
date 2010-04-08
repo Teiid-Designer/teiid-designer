@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.BundleUtil;
 import com.metamatrix.core.PluginUtil;
+import com.metamatrix.core.log.LogListener;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 
 /**
@@ -275,7 +276,7 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
      */
     protected class DefaultRunner {
         public void run( final ISafeRunnable code ) {
-            Assertion.isNotNull(code);
+            CoreArgCheck.isNotNull(code);
             try {
                 code.run();
             } catch (Exception e) {

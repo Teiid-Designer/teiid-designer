@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 
@@ -44,7 +44,7 @@ public abstract class NewModelObjectHelperManager {
     
 
     public static INewModelObjectHelper[] getHelpers(Object newObject) {
-        ArgCheck.isNotNull(newObject);
+        CoreArgCheck.isNotNull(newObject);
             
         HashSet helpers = new HashSet();
         
@@ -100,7 +100,7 @@ public abstract class NewModelObjectHelperManager {
     }
     
     public static boolean helpCreate(Object newObject, Map properties) throws ModelerCoreException  {
-        ArgCheck.isNotNull(newObject);
+        CoreArgCheck.isNotNull(newObject);
         
         // Set default behavior to undoable. This is the behavior of the UnitOfWorkImpl.
         boolean canUndo = true;

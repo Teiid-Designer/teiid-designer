@@ -47,7 +47,7 @@ import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import com.metamatrix.common.xmi.XMIHeader;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.xsd.XsdUtil;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -547,7 +547,7 @@ public abstract class ModelObjectUtilities {
                                final boolean significance,
                                final boolean undoable,
                                final Object source ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         // Call the checkResource method call with "TRUE" default
         delete(eObject, significance, undoable, source, true);
 
@@ -558,7 +558,7 @@ public abstract class ModelObjectUtilities {
                                final boolean undoable,
                                final Object source,
                                final boolean checkResource ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
 
         boolean requiredStart = ModelerCore.startTxn(significance, undoable, DELETE, source);
         boolean succeeded = false;
@@ -621,7 +621,7 @@ public abstract class ModelObjectUtilities {
     public static void rename( EObject eObject,
                                String newName,
                                Object source ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
 
         boolean requiredStart = ModelerCore.startTxn(PluginConstants.Transactions.SIGNIFICANT,
                                                      PluginConstants.Transactions.UNDOABLE,
@@ -774,7 +774,7 @@ public abstract class ModelObjectUtilities {
     }
 
     public static boolean isStale( EObject eObj ) {
-        ArgCheck.isNotNull(eObj);
+        CoreArgCheck.isNotNull(eObj);
         return eObj.eResource() == null;
     }
 

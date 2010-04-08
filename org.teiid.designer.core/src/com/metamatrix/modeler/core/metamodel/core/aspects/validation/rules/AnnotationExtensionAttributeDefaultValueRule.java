@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -36,8 +36,8 @@ public class AnnotationExtensionAttributeDefaultValueRule implements ObjectValid
      */
     public void validate(EObject theObject,
                          ValidationContext theContext) {
-        ArgCheck.isNotNull(theContext);
-        ArgCheck.isInstanceOf(Annotation.class, theObject);
+        CoreArgCheck.isNotNull(theContext);
+        CoreArgCheck.isInstanceOf(Annotation.class, theObject);
 
         Annotation annotation = (Annotation)theObject;
         

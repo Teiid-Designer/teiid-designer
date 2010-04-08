@@ -8,7 +8,7 @@
 package com.metamatrix.metamodels.relationship.aspects.relationship;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relationship.RelationshipRole;
 import com.metamatrix.metamodels.relationship.RelationshipType;
 import com.metamatrix.modeler.core.index.IndexConstants;
@@ -35,7 +35,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipTypeAspect#getConstraint(org.eclipse.emf.ecore.EObject)
 	 */
 	public String getConstraint(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipType.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
 		return relationshipType.getConstraint();
 	}
@@ -44,7 +44,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipTypeAspect#getSourceRole(org.eclipse.emf.ecore.EObject)
 	 */
 	public Object getSourceRole(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipType.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
 		return relationshipType.getSourceRole();
 	}
@@ -53,7 +53,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipTypeAspect#getStereoType(org.eclipse.emf.ecore.EObject)
 	 */
 	public String getStereoType(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipType.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
 		return relationshipType.getStereotype();
 	}
@@ -62,7 +62,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipTypeAspect#getSuperType(org.eclipse.emf.ecore.EObject)
 	 */
 	public Object getSuperType(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipType.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
 		return relationshipType.getSuperType();
 	}
@@ -71,7 +71,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipTypeAspect#getTargetRole(org.eclipse.emf.ecore.EObject)
 	 */
 	public Object getTargetRole(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipType.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
 		return relationshipType.getTargetRole();
 	}
@@ -80,7 +80,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipTypeAspect#isAbstract(org.eclipse.emf.ecore.EObject)
 	 */
 	public boolean isAbstract(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipType.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
 		return relationshipType.isAbstract();
 	}
@@ -89,7 +89,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipTypeAspect#isDirected(org.eclipse.emf.ecore.EObject)
 	 */
 	public boolean isDirected(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipType.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
 		return relationshipType.isDirected();
 	}
@@ -98,7 +98,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipTypeAspect#isExclusive(org.eclipse.emf.ecore.EObject)
 	 */
 	public boolean isExclusive(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipType.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
 		return relationshipType.isExclusive();
 	}
@@ -107,7 +107,7 @@ public class RelationTypeAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipTypeAspect#isUserDefined(org.eclipse.emf.ecore.EObject)
 	 */
 	public boolean isUserDefined(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipType.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipType.class, eObject);
 		RelationshipType relationshipType = (RelationshipType) eObject;
 		return relationshipType.isUserDefined();
 	}

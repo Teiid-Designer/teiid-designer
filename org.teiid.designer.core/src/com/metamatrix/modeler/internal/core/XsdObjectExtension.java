@@ -43,8 +43,8 @@ import org.eclipse.xsd.util.XSDResourceImpl;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.extension.XAttribute;
 import com.metamatrix.metamodels.core.extension.XClass;
 import com.metamatrix.metamodels.core.extension.XPackage;
@@ -180,9 +180,9 @@ public class XsdObjectExtension extends ObjectExtension {
                 final EFactory fac = ePackage.getEFactoryInstance();
                 String value = XsdObjectExtension.getAppInfoAttributeValue(comp, name);
                 // if the value is null, get default value, if that is null get the type default value
-                if (value == null || StringUtil.Constants.EMPTY_STRING.equals(value)) {
+                if (value == null || CoreStringUtil.Constants.EMPTY_STRING.equals(value)) {
                     Object defaultValue = eFeature.getDefaultValue();
-                    if (defaultValue != null && !StringUtil.Constants.EMPTY_STRING.equals(defaultValue)) {
+                    if (defaultValue != null && !CoreStringUtil.Constants.EMPTY_STRING.equals(defaultValue)) {
                         value = defaultValue.toString();
                     } else {
                         Object typeDefault = dt.getDefaultValue();
@@ -272,7 +272,7 @@ public class XsdObjectExtension extends ObjectExtension {
      * false.
      */
     public static boolean canAnnotate( final XSDConcreteComponent comp ) {
-        ArgCheck.isNotNull(comp);
+        CoreArgCheck.isNotNull(comp);
         final boolean writable = XsdObjectExtension.isWritable(comp);
         if (!writable) {
             return false;
@@ -291,7 +291,7 @@ public class XsdObjectExtension extends ObjectExtension {
      * Return the XSDAnnotation instance associated with the XSDConcreteComponent or null if the component has no annotation.
      */
     public static XSDAnnotation getAnnotation( final XSDConcreteComponent comp ) {
-        ArgCheck.isNotNull(comp);
+        CoreArgCheck.isNotNull(comp);
         XSDAnnotation annotation = null;
 
         if (comp instanceof XSDSchema) {
@@ -346,7 +346,7 @@ public class XsdObjectExtension extends ObjectExtension {
      */
     public static void setAnnotation( final XSDConcreteComponent comp,
                                       final XSDAnnotation annotation ) {
-        ArgCheck.isNotNull(comp);
+        CoreArgCheck.isNotNull(comp);
         if (annotation == null) {
             return;
         }
@@ -397,7 +397,7 @@ public class XsdObjectExtension extends ObjectExtension {
     public static void addAppInfoAttribute( final XSDConcreteComponent comp,
                                             final String name,
                                             final String value ) {
-        ArgCheck.isNotNull(comp);
+        CoreArgCheck.isNotNull(comp);
 
         // If the XSDConcreteComponent is not a type that can be annotated then return immediately
         if (!canAnnotate(comp)) {
@@ -421,8 +421,8 @@ public class XsdObjectExtension extends ObjectExtension {
     public static void addAppInfoAttribute( final XSDAnnotation annotation,
                                             final String name,
                                             final String value ) {
-        ArgCheck.isNotNull(annotation);
-        ArgCheck.isNotZeroLength(name);
+        CoreArgCheck.isNotNull(annotation);
+        CoreArgCheck.isNotZeroLength(name);
 
         // Check if an attribute by this name already exists in the specified annotation
         List appInfos = annotation.getApplicationInformation();
@@ -431,7 +431,7 @@ public class XsdObjectExtension extends ObjectExtension {
 
             // If one is found then reset the value and return
             if (appInfo != null && appInfo.getAttribute(name) != null) {
-                if (value == null || StringUtil.Constants.EMPTY_STRING.equals(value)) {
+                if (value == null || CoreStringUtil.Constants.EMPTY_STRING.equals(value)) {
                     appInfo.removeAttribute(name);
                 } else {
                     appInfo.setAttribute(name, value);
@@ -459,8 +459,8 @@ public class XsdObjectExtension extends ObjectExtension {
      */
     public static void removeAppInfoAttribute( final XSDConcreteComponent comp,
                                                final String name ) {
-        ArgCheck.isNotNull(comp);
-        ArgCheck.isNotZeroLength(name);
+        CoreArgCheck.isNotNull(comp);
+        CoreArgCheck.isNotZeroLength(name);
 
         // If the XSDConcreteComponent is not a type that can be annotated then return immediately
         if (!canAnnotate(comp)) {
@@ -490,8 +490,8 @@ public class XsdObjectExtension extends ObjectExtension {
      */
     public static String getAppInfoAttributeValue( final XSDConcreteComponent comp,
                                                    final String name ) {
-        ArgCheck.isNotNull(comp);
-        ArgCheck.isNotZeroLength(name);
+        CoreArgCheck.isNotNull(comp);
+        CoreArgCheck.isNotZeroLength(name);
         return (String)getAppInfoAttributeMap(comp).get(name);
     }
 
@@ -499,7 +499,7 @@ public class XsdObjectExtension extends ObjectExtension {
      * Return a unmodifiable Map of the appInfo attribute names and values.
      */
     public static Map getAppInfoAttributeMap( final XSDConcreteComponent comp ) {
-        ArgCheck.isNotNull(comp);
+        CoreArgCheck.isNotNull(comp);
 
         // If the XSDConcreteComponent is not a type that can be annotated then return immediately
         if (!canAnnotate(comp)) {
@@ -534,7 +534,7 @@ public class XsdObjectExtension extends ObjectExtension {
     }
 
     public static XPackage getExtensionPackage( final XSDResourceImpl xsdResource ) throws ModelerCoreException {
-        ArgCheck.isNotNull(xsdResource);
+        CoreArgCheck.isNotNull(xsdResource);
         final XSDSchema schema = xsdResource.getSchema();
         if (schema != null) {
             return XsdObjectExtension.getExtensionPackage(schema);
@@ -543,7 +543,7 @@ public class XsdObjectExtension extends ObjectExtension {
     }
 
     public static XPackage getExtensionPackage( final XSDSchema schema ) throws ModelerCoreException {
-        ArgCheck.isNotNull(schema);
+        CoreArgCheck.isNotNull(schema);
 
         final Map extMap = XsdObjectExtension.getAppInfoAttributeMap(schema);
         final String extPkgLocation = (String)extMap.get(XsdObjectExtension.EXTENSION_PACKAGE);
@@ -579,7 +579,7 @@ public class XsdObjectExtension extends ObjectExtension {
     }
 
     public static void removeExtensionPackage( final XSDResourceImpl xsdResource ) throws ModelerCoreException {
-        ArgCheck.isNotNull(xsdResource);
+        CoreArgCheck.isNotNull(xsdResource);
         XPackage extPackage = XsdObjectExtension.getExtensionPackage(xsdResource);
         XSDSchema schema = xsdResource.getSchema();
         if (extPackage != null && schema != null) {
@@ -615,14 +615,14 @@ public class XsdObjectExtension extends ObjectExtension {
 
     public static void setExtensionPackage( final XSDResourceImpl xsdResource,
                                             final XPackage extPackage ) {
-        ArgCheck.isNotNull(xsdResource);
+        CoreArgCheck.isNotNull(xsdResource);
         XsdObjectExtension.setExtensionPackage(xsdResource.getSchema(), extPackage);
     }
 
     public static void setExtensionPackage( final XSDSchema schema,
                                             final XPackage extPackage ) {
-        ArgCheck.isNotNull(schema);
-        ArgCheck.isNotNull(extPackage);
+        CoreArgCheck.isNotNull(schema);
+        CoreArgCheck.isNotNull(extPackage);
 
         final Resource xsdResource = schema.eResource();
         final Resource extResource = extPackage.eResource();

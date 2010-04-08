@@ -10,7 +10,7 @@ package com.metamatrix.modeler.diagram.ui.util;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.diagram.DiagramEntity;
 import com.metamatrix.modeler.core.ModelerCore;
 
@@ -28,13 +28,13 @@ public class DiagramEntityAdapter {
     // ---------
 
     public static int getXPosition(final DiagramEntity diagramEntity) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         return diagramEntity.getXPosition();
     }
 
     public static int getYPosition(final DiagramEntity diagramEntity) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
         int yPos = diagramEntity.getYPosition();
         if( yPos < MAX_NEG_INT ) {
             yPos = 10;
@@ -44,49 +44,49 @@ public class DiagramEntityAdapter {
     }
 
     public static Point getPosition(final DiagramEntity diagramEntity) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         return new Point(diagramEntity.getXPosition(), diagramEntity.getYPosition());
     }
 
     public static String getName(final DiagramEntity diagramEntity) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         return diagramEntity.getName();
     }
 
     public static int getWidth(final DiagramEntity diagramEntity) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         return diagramEntity.getWidth();
     }
 
     public static int getHeight(final DiagramEntity diagramEntity) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         return diagramEntity.getHeight();
     }
 
     public static Dimension getSize(final DiagramEntity diagramEntity) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         return new Dimension(diagramEntity.getWidth(), diagramEntity.getHeight());
     }
 
     public static String getUserString(final DiagramEntity diagramEntity) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         return diagramEntity.getUserString();
     }
 
     public static String getUserType(final DiagramEntity diagramEntity) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         return diagramEntity.getUserType();
     }
 
     public static String getAlias(final DiagramEntity diagramEntity) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         return diagramEntity.getAlias();
     }
@@ -95,7 +95,7 @@ public class DiagramEntityAdapter {
     // SETTER METHODS
     // -----------
     public static void setXPosition(final DiagramEntity diagramEntity, final int iValue) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         boolean requiredStart = ModelerCore.startTxn(false, false, "Set DE X Position", diagramEntity); //$NON-NLS-1$
         boolean succeeded = false;
@@ -118,7 +118,7 @@ public class DiagramEntityAdapter {
         final int iValue,
         final boolean significance,
         final boolean undoable) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         boolean requiredStart = ModelerCore.startTxn(significance, undoable, "Set DE X Position", diagramEntity); //$NON-NLS-1$
         boolean succeeded = false;
@@ -137,7 +137,7 @@ public class DiagramEntityAdapter {
     }
 
     public static void setYPosition(final DiagramEntity diagramEntity, final int iValue) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         boolean requiredStart = ModelerCore.startTxn(false, false, "Set DE Y Position", diagramEntity); //$NON-NLS-1$
         boolean succeeded = false;
@@ -160,7 +160,7 @@ public class DiagramEntityAdapter {
         final int iValue,
         final boolean significance,
         final boolean undoable) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         boolean requiredStart = ModelerCore.startTxn(significance, undoable, "Set DE Y Position", diagramEntity); //$NON-NLS-1$
         boolean succeeded = false;
@@ -179,7 +179,7 @@ public class DiagramEntityAdapter {
     }
 
     public static void setPosition(final DiagramEntity diagramEntity, final int xValue, final int yValue) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         boolean requiredStart = ModelerCore.startTxn(false, false, "Set DE Position", diagramEntity); //$NON-NLS-1$
         boolean succeeded = false;
@@ -204,7 +204,7 @@ public class DiagramEntityAdapter {
         final int yValue,
         final boolean significance,
         final boolean undoable) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         boolean requiredStart = ModelerCore.startTxn(significance, undoable, "Set DE Position", diagramEntity); //$NON-NLS-1$
         boolean succeeded = false;
@@ -224,7 +224,7 @@ public class DiagramEntityAdapter {
     }
 
     public static void setName(final DiagramEntity diagramEntity, final String sValue) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         boolean requiredStart = ModelerCore.startTxn(false, false, "Set DE Name", diagramEntity); //$NON-NLS-1$
         boolean succeeded = false;
@@ -243,7 +243,7 @@ public class DiagramEntityAdapter {
     }
 
     public static void setWidth(final DiagramEntity diagramEntity, final int iValue) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         boolean requiredStart = ModelerCore.startTxn(false, false, "Set DE Width", diagramEntity); //$NON-NLS-1$
         boolean succeeded = false;
@@ -262,7 +262,7 @@ public class DiagramEntityAdapter {
     }
 
     public static void setHeight(final DiagramEntity diagramEntity, final int iValue) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         boolean requiredStart = ModelerCore.startTxn(false, false, "Set DE Height", diagramEntity); //$NON-NLS-1$
         boolean succeeded = false;
@@ -281,7 +281,7 @@ public class DiagramEntityAdapter {
     }
 
     public static void setSize(final DiagramEntity diagramEntity, final int wValue, final int hValue) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         boolean requiredStart = ModelerCore.startTxn(false, false, "Set DE Size", diagramEntity); //$NON-NLS-1$
         boolean succeeded = false;
@@ -301,7 +301,7 @@ public class DiagramEntityAdapter {
     }
 
     public static void setUserString(final DiagramEntity diagramEntity, final String sValue) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         boolean requiredStart = ModelerCore.startTxn(false, false, "Set DE User String", diagramEntity); //$NON-NLS-1$
         boolean succeeded = false;
@@ -320,7 +320,7 @@ public class DiagramEntityAdapter {
     }
 
     public static void setUserType(final DiagramEntity diagramEntity, final String sValue) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         boolean requiredStart = ModelerCore.startTxn(false, false, "Set DE User Type", diagramEntity); //$NON-NLS-1$
         boolean succeeded = false;
@@ -339,7 +339,7 @@ public class DiagramEntityAdapter {
     }
 
     public static void setAlias(final DiagramEntity diagramEntity, final String sValue) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         boolean requiredStart = ModelerCore.startTxn(false, false, "Set DE Alias", diagramEntity); //$NON-NLS-1$
         boolean succeeded = false;
@@ -360,7 +360,7 @@ public class DiagramEntityAdapter {
     
 
     public static void setModelObject(final DiagramEntity diagramEntity, final EObject eObject) {
-        ArgCheck.isNotNull(diagramEntity);
+        CoreArgCheck.isNotNull(diagramEntity);
 
         boolean requiredStart = ModelerCore.startTxn(false, false, "Set Model Object", diagramEntity); //$NON-NLS-1$
         boolean succeeded = false;

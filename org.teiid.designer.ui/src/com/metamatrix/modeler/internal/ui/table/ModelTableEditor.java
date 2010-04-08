@@ -66,9 +66,9 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -283,7 +283,7 @@ public class ModelTableEditor extends NavigableEditor
             item.setData(tabClass);
 
             String tabName = tabClass.getName();
-            tabName = StringUtil.computePluralForm(StringUtil.computeDisplayableForm(tabName));
+            tabName = CoreStringUtil.computePluralForm(CoreStringUtil.computeDisplayableForm(tabName));
             setTabText(tabIndex, tabName);
             setTabToolTipText(tabIndex, tabName);
             Object o = instanceList.get(0);
@@ -1709,7 +1709,7 @@ public class ModelTableEditor extends NavigableEditor
      */
     protected boolean renameToUniqueName( final EObject eObject,
                                           final String newName ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         final EStructuralFeature nameFeature = ModelerCore.getModelEditor().getNameFeature(eObject);
         if (nameFeature != null) {
             generateUniqueInternalName(eObject.eContainer() == null ? eObject.eResource().getContents() : eObject.eContainer().eContents(),

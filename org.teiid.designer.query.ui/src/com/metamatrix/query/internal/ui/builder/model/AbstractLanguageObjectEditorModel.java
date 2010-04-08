@@ -9,8 +9,7 @@ package com.metamatrix.query.internal.ui.builder.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
 import com.metamatrix.query.sql.LanguageObject;
@@ -56,7 +55,7 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
      * @see com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModel#addModelListeners(com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener)
      */
     public boolean addModelListener( ILanguageObjectEditorModelListener theListener ) {
-        ArgCheck.isNotNull(theListener);
+        CoreArgCheck.isNotNull(theListener);
 
         boolean result = false;
 
@@ -149,7 +148,7 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
      * @see com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModel#removeModelListener(com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener)
      */
     public boolean removeModelListener( ILanguageObjectEditorModelListener theListener ) {
-        ArgCheck.isNotNull(theListener);
+        CoreArgCheck.isNotNull(theListener);
 
         boolean result = false;
 
@@ -185,9 +184,9 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
     public void setLanguageObject( LanguageObject theLangObj ) {
         if (theLangObj != null) {
             if (!modelType.isAssignableFrom(theLangObj.getClass())) {
-                Assertion.assertTrue(modelType.isAssignableFrom(theLangObj.getClass()),
-                                     Util.getString(PREFIX + "wrongLangObjType", //$NON-NLS-1$
-                                                    new Object[] {theLangObj.getClass().getName(), modelType.getName()}));
+                CoreArgCheck.isTrue(modelType.isAssignableFrom(theLangObj.getClass()),
+                                    Util.getString(PREFIX + "wrongLangObjType", //$NON-NLS-1$
+                                                   new Object[] {theLangObj.getClass().getName(), modelType.getName()}));
             }
         }
 
@@ -199,8 +198,8 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
      * @see com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModel#setType(java.lang.Class)
      */
     public void setModelType( Class theLanguageObjectClass ) {
-        Assertion.isNotNull(theLanguageObjectClass, PREFIX + "nullType"); //$NON-NLS-1$
-        Assertion.assertTrue(LanguageObject.class.isAssignableFrom(theLanguageObjectClass), PREFIX + "modelTypeNotLangObj"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(theLanguageObjectClass, PREFIX + "nullType"); //$NON-NLS-1$
+        CoreArgCheck.isTrue(LanguageObject.class.isAssignableFrom(theLanguageObjectClass), PREFIX + "modelTypeNotLangObj"); //$NON-NLS-1$
 
         modelType = theLanguageObjectClass;
     }

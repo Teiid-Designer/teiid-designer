@@ -10,7 +10,7 @@ package com.metamatrix.modeler.internal.webservice.procedure;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.webservice.procedure.ProcedureCriteriaMapping;
 import com.metamatrix.query.sql.LanguageVisitor;
 import com.metamatrix.query.sql.lang.AbstractCompareCriteria;
@@ -42,7 +42,7 @@ public class ProcedureUpdateVisitor extends LanguageVisitor {
      * @since 4.3
      */
     public ProcedureUpdateVisitor(final Collection procCriteriaMappings) {
-        ArgCheck.isNotNull(procCriteriaMappings);
+        CoreArgCheck.isNotNull(procCriteriaMappings);
         // read in the mappings and tranlate info into language objects
         init(procCriteriaMappings);
     }

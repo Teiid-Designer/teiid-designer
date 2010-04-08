@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import com.metamatrix.core.index.IEntryResult;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.index.IndexSelector;
@@ -184,7 +184,7 @@ public class FindTypedObjectCommandImpl implements FindTypedObjectCommand {
         final String metaclassCriteria   = (metaClassUri != null && metaClassUri.length() != 0) ? 
                                             metaClassUri : 
                                             IndexConstants.RECORD_STRING.MATCH_CHAR_STRING;
-        pattern = StringUtil.Constants.EMPTY_STRING 
+        pattern = CoreStringUtil.Constants.EMPTY_STRING 
                 + IndexConstants.SEARCH_RECORD_TYPE.TYPED_OBJECT  // recordType
                 + IndexConstants.RECORD_STRING.RECORD_DELIMITER
                 + IndexConstants.RECORD_STRING.MATCH_CHAR_STRING  // objectID

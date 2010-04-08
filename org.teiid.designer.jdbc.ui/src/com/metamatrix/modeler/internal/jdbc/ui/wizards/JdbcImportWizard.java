@@ -39,11 +39,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.Stopwatch;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.RelationalPackage;
@@ -736,7 +736,7 @@ public class JdbcImportWizard extends AbstractWizard
      * @since 4.0
      */
     void setFolder( final IContainer folder ) {
-        ArgCheck.isNotNull(folder);
+        CoreArgCheck.isNotNull(folder);
         this.folder = folder;
     }
 
@@ -744,7 +744,7 @@ public class JdbcImportWizard extends AbstractWizard
      * @since 4.0
      */
     void setModelName( final String name ) {
-        ArgCheck.isNotEmpty(name);
+        CoreArgCheck.isNotEmpty(name);
         this.modelName = name;
     }
 
@@ -787,7 +787,7 @@ public class JdbcImportWizard extends AbstractWizard
                     }
                     tempModelName = validName;
 
-                    if (!StringUtil.isEmpty(tempModelName)
+                    if (!CoreStringUtil.isEmpty(tempModelName)
                         && ResourcesPlugin.getWorkspace().validateName(tempModelName, IResource.FILE).isOK()) {
                         this.modelName = tempModelName;
                     }

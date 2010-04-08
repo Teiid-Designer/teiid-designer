@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import com.metamatrix.common.protocol.URLHelper;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.ui.IHelpContextIds;
 import com.metamatrix.modeler.xsd.ui.ModelerXsdUiConstants;
 import com.metamatrix.ui.internal.util.UiUtil;
@@ -338,7 +338,7 @@ public class XsdUrlDialog extends Dialog implements IHelpContextIds, ModelerXsdU
     void handleModifyText( ModifyEvent theEvent ) {
         this.newValue = ((Text)theEvent.widget).getText();
         this.currentStatus = new Status(IStatus.OK, ModelerXsdUiConstants.PLUGIN_ID, IStatus.OK,
-                                        StringUtil.Constants.EMPTY_STRING, null);
+                                        CoreStringUtil.Constants.EMPTY_STRING, null);
 
         URL url = null;
         try {

@@ -9,7 +9,7 @@ package com.metamatrix.modeler.mapping.ui.connection;
 
 import java.util.Collections;
 import java.util.List;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.connection.AbstractNodeConnectionModel;
@@ -83,7 +83,7 @@ public class EnumeratedTypeLink extends AbstractNodeConnectionModel
      */
     @Override
     public void setSourceNode(Object theNode) {
-        ArgCheck.isInstanceOf(DiagramModelNode.class, theNode);
+        CoreArgCheck.isInstanceOf(DiagramModelNode.class, theNode);
         this.sourceNode = (DiagramModelNode)theNode;
     }
     
@@ -93,7 +93,7 @@ public class EnumeratedTypeLink extends AbstractNodeConnectionModel
      */
     @Override
     public void setTargetNode(Object theNode) {
-        ArgCheck.isInstanceOf(DiagramModelNode.class, theNode);
+        CoreArgCheck.isInstanceOf(DiagramModelNode.class, theNode);
         this.targetNode = (DiagramModelNode)theNode;
     }
 

@@ -9,7 +9,7 @@ package com.metamatrix.modeler.core.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -32,8 +32,8 @@ public class EObjectUuidRule implements ObjectValidationRule {
      * @since 4.2
      */
     public void validate(final EObject eObject, final ValidationContext context) {
-        ArgCheck.isNotNull(context);
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(context);
+        CoreArgCheck.isNotNull(eObject);
 
         // get uniqueness preference status
         final int status = context.getPreferenceStatus(ValidationPreferences.EOBJECT_UUID_UNIQUENESS, IStatus.ERROR);

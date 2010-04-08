@@ -22,7 +22,7 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.api.exception.query.QueryMetadataException;
 import com.metamatrix.common.types.DataTypeManager;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.InputSet;
 import com.metamatrix.metamodels.transformation.SqlAlias;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
@@ -2108,7 +2108,7 @@ public class TransformationSqlHelper implements SqlConstants {
      * @return the generated FROM clause
      */
     private static FromClause createFromClause( EObject eObject ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
 
         FromClause fromClause = new UnaryFromClause(createGroupSymbol(eObject));
 
@@ -2142,7 +2142,7 @@ public class TransformationSqlHelper implements SqlConstants {
      * @return the generated StoredProcedure
      */
     public static StoredProcedure createStoredProc( EObject eObj ) {
-        ArgCheck.isNotNull(eObj);
+        CoreArgCheck.isNotNull(eObj);
 
         StoredProcedure storedProc = null;
 
@@ -2265,7 +2265,7 @@ public class TransformationSqlHelper implements SqlConstants {
         Object elemID = null;
         // try {
         SqlAspect sqlAspect = AspectManager.getSqlAspect(elmntObj);
-        ArgCheck.isInstanceOf(SqlColumnAspect.class, sqlAspect);
+        CoreArgCheck.isInstanceOf(SqlColumnAspect.class, sqlAspect);
         elemID = new ColumnRecordImpl((SqlColumnAspect)sqlAspect, elmntObj);
         // Defect 17972: The following call was done many times and opened/closed model files to peek at
         // the Header (isModelFile()) Dennis F. Suggested replacing with the above code
@@ -2299,7 +2299,7 @@ public class TransformationSqlHelper implements SqlConstants {
         // QueryMetadataInterface resolver = TransformationMetadataFactory.getInstance().getModelerMetadata(grpObj);
         // groupID = resolver.getGroupID(groupFullName);
         SqlAspect sqlAspect = AspectManager.getSqlAspect(grpObj);
-        ArgCheck.isInstanceOf(SqlTableAspect.class, sqlAspect);
+        CoreArgCheck.isInstanceOf(SqlTableAspect.class, sqlAspect);
         groupID = new TableRecordImpl((SqlTableAspect)sqlAspect, grpObj);
         // } catch (QueryMetadataException e) {
         //            String message = TransformationPlugin.Util.getString("TransformationSqlHelper.groupIDNotFoundError",     //$NON-NLS-1$

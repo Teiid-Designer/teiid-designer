@@ -8,7 +8,7 @@
 package com.metamatrix.core.modeler.util;
 
 import java.io.File;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.FileUtils.Constants;
 
 public final class FileUtil {
@@ -88,7 +88,7 @@ public final class FileUtil {
      * @since 4.2
      */
     public static String getExtension( String theFileName ) {
-        String result = StringUtil.Constants.EMPTY_STRING;
+        String result = CoreStringUtil.Constants.EMPTY_STRING;
         final int index = theFileName.lastIndexOf(Constants.FILE_EXTENSION_SEPARATOR_CHAR);
 
         // make sure extension char is found and is not the last char in the path

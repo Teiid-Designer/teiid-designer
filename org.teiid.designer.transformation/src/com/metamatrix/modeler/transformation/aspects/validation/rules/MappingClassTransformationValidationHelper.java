@@ -16,8 +16,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDTypeDefinition;
-import com.metamatrix.core.util.Assertion;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.MappingClassColumn;
 import com.metamatrix.metamodels.transformation.MappingClassSet;
@@ -131,7 +131,7 @@ public class MappingClassTransformationValidationHelper {
                 Collection elementSymbols = ElementCollectorVisitor.getElements(criteriaClause, true);
                 for (final Iterator iter = elementSymbols.iterator(); iter.hasNext();) {
                     ElementSymbol symbol = (ElementSymbol)iter.next();
-                    if (StringUtil.startsWithIgnoreCase(symbol.getName(), ProcedureReservedWords.INPUT)) {
+                    if (CoreStringUtil.startsWithIgnoreCase(symbol.getName(), ProcedureReservedWords.INPUT)) {
                         foundInParam = true;
                     }
                 }
@@ -174,7 +174,7 @@ public class MappingClassTransformationValidationHelper {
                 if (obj instanceof TreeMappingRoot) {
                     TreeMappingRoot tmr = (TreeMappingRoot)obj;
                     // TreeMappingRoot.getInputs() returns a reference to its source MappingClass
-                    Assertion.isEqual(1, tmr.getInputs().size());
+                    CoreArgCheck.isEqual(1, tmr.getInputs().size());
                     for (final Iterator outIter = tmr.getOutputs().iterator(); outIter.hasNext();) {
                         xmlDocNodeToMappingClass.put(outIter.next(), tmr.getInputs().get(0));
                     }

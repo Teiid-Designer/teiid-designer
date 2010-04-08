@@ -9,7 +9,7 @@ package com.metamatrix.modeler.internal.core.util;
 
 import java.util.Arrays;
 import org.eclipse.emf.common.util.URI;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.util.UriPathConverter;
 
 /**
@@ -42,7 +42,7 @@ public class BasicUriPathConverter implements UriPathConverter {
      * @see com.metamatrix.modeler.internal.core.resource.EmfUriHelper#makeAbsolute(java.lang.String, java.lang.String)
      */
     public String makeAbsolute(final String relativePath, final String basePath) {
-        ArgCheck.isNotNull(relativePath);
+        CoreArgCheck.isNotNull(relativePath);
         
         final URI relativeURI = URI.createURI(relativePath);
         
@@ -52,7 +52,7 @@ public class BasicUriPathConverter implements UriPathConverter {
             return relativePath;
         }
         
-        ArgCheck.isNotNull(basePath);
+        CoreArgCheck.isNotNull(basePath);
         final URI baseURI = URI.createURI(basePath);
         
         // Use the URI class to make the relative path absolute
@@ -63,7 +63,7 @@ public class BasicUriPathConverter implements UriPathConverter {
      * @see com.metamatrix.modeler.internal.core.resource.EmfUriHelper#makeAbsolute(org.eclipse.emf.common.util.URI, org.eclipse.emf.common.util.URI)
      */
     public URI makeAbsolute(final URI relativeURI, final URI baseURI) {
-        ArgCheck.isNotNull(relativeURI);
+        CoreArgCheck.isNotNull(relativeURI);
         
         // If relativePath is a workspace relative path of the form "/Project/.../File"
         // then return this path as the absolute path
@@ -72,7 +72,7 @@ public class BasicUriPathConverter implements UriPathConverter {
         }
         
         // Use the URI class to make the relative path absolute
-        ArgCheck.isNotNull(baseURI);
+        CoreArgCheck.isNotNull(baseURI);
         if (baseURI.isRelative()) {
             String[] segments = mergePath(relativeURI,baseURI,true);
             StringBuffer sb = new StringBuffer(200);
@@ -90,7 +90,7 @@ public class BasicUriPathConverter implements UriPathConverter {
      * @see com.metamatrix.modeler.internal.core.resource.EmfUriHelper#makeRelative(java.lang.String, java.lang.String)
      */
     public String makeRelative(final String absolutePath, final String basePath) {
-        ArgCheck.isNotNull(absolutePath);
+        CoreArgCheck.isNotNull(absolutePath);
         
         final URI absoluteURI = URI.createURI(absolutePath);
         final URI baseURI = URI.createURI(basePath);
@@ -103,11 +103,11 @@ public class BasicUriPathConverter implements UriPathConverter {
      * @see com.metamatrix.modeler.internal.core.resource.EmfUriHelper#makeRelative(org.eclipse.emf.common.util.URI, org.eclipse.emf.common.util.URI)
      */
     public URI makeRelative(final URI absoluteURI, final URI baseURI) {
-        ArgCheck.isNotNull(absoluteURI);
-        ArgCheck.isNotNull(baseURI);
+        CoreArgCheck.isNotNull(absoluteURI);
+        CoreArgCheck.isNotNull(baseURI);
         
         // Use the URI class to make the relative path absolute
-        ArgCheck.isNotNull(baseURI);
+        CoreArgCheck.isNotNull(baseURI);
         if (baseURI.isRelative()) {
             String[] segments = findRelativePath(absoluteURI,baseURI,true);
             StringBuffer sb = new StringBuffer(200);

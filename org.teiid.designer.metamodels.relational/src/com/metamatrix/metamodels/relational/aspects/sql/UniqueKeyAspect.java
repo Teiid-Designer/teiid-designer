@@ -9,7 +9,7 @@ package com.metamatrix.metamodels.relational.aspects.sql;
 
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.UniqueKey;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.metadata.runtime.MetadataConstants;
@@ -36,7 +36,7 @@ public class UniqueKeyAspect extends RelationalEntityAspect implements SqlUnique
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnSetAspect#getColumns(org.eclipse.emf.ecore.EObject)
      */
     public List getColumns(EObject eObject) {
-        ArgCheck.isInstanceOf(UniqueKey.class, eObject); 
+        CoreArgCheck.isInstanceOf(UniqueKey.class, eObject); 
         UniqueKey uniqueKey = (UniqueKey) eObject;        
         return uniqueKey.getColumns();
     }
@@ -45,7 +45,7 @@ public class UniqueKeyAspect extends RelationalEntityAspect implements SqlUnique
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlUniqueKeyAspect#getForeignKeys(org.eclipse.emf.ecore.EObject)
      */
     public List getForeignKeys(EObject eObject) {
-        ArgCheck.isInstanceOf(UniqueKey.class, eObject); 
+        CoreArgCheck.isInstanceOf(UniqueKey.class, eObject); 
         UniqueKey uniqueKey = (UniqueKey) eObject;
         return uniqueKey.getForeignKeys();
     }

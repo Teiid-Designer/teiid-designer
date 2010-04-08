@@ -17,8 +17,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.mapping.MappingHelper;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.metamodels.core.CoreFactory;
@@ -128,7 +128,7 @@ public class ModelResourceContainerFactory {
      */
     public static Collection getAllContainers( final Resource resource,
                                                final boolean forceCreate ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         if (!(resource instanceof EmfResource)) return Collections.EMPTY_LIST;
 
@@ -176,7 +176,7 @@ public class ModelResourceContainerFactory {
      * @since 4.3
      */
     public static MappingClassSetContainer createMappingClassSetContainer( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         if (!(resource instanceof EmfResource) || !supportsMappingClassSets(resource)) return null;
 
@@ -202,7 +202,7 @@ public class ModelResourceContainerFactory {
      */
     public static MappingClassSetContainer getMappingClassSetContainer( final Resource resource,
                                                                         final boolean forceCreate ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         if (!(resource instanceof EmfResource) || !supportsMappingClassSets(resource)) return null;
 
@@ -222,7 +222,7 @@ public class ModelResourceContainerFactory {
      * @return the MappingClassSetContainer for this resource
      */
     public static MappingClassSetContainer getMappingClassSetContainer( final List rootEObjects ) {
-        ArgCheck.isNotNull(rootEObjects);
+        CoreArgCheck.isNotNull(rootEObjects);
 
         if (rootEObjects.isEmpty()) return null;
 
@@ -247,7 +247,7 @@ public class ModelResourceContainerFactory {
      * @return the MappingClassSetContainer for this resource
      */
     public static MappingClassSetContainer getMappingClassSetContainer( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         if (!(resource instanceof EmfResource)) return null;
 
@@ -266,7 +266,7 @@ public class ModelResourceContainerFactory {
      * @since 4.3
      */
     public static TransformationContainer createTransformationContainer( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         if (!(resource instanceof EmfResource) || !supportsTransformations(resource)) return null;
 
@@ -292,7 +292,7 @@ public class ModelResourceContainerFactory {
      */
     public static TransformationContainer getTransformationContainer( final Resource resource,
                                                                       final boolean forceCreate ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         if (!(resource instanceof EmfResource) || !supportsTransformations(resource)) return null;
 
@@ -312,7 +312,7 @@ public class ModelResourceContainerFactory {
      * @return the TransformationContainer for this resource
      */
     public static TransformationContainer getTransformationContainer( final List rootEObjects ) {
-        ArgCheck.isNotNull(rootEObjects);
+        CoreArgCheck.isNotNull(rootEObjects);
 
         if (rootEObjects.isEmpty()) return null;
 
@@ -337,7 +337,7 @@ public class ModelResourceContainerFactory {
      * @return the TransformationContainer for this resource
      */
     public static TransformationContainer getTransformationContainer( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         if (!(resource instanceof EmfResource)) return null;
 
@@ -356,7 +356,7 @@ public class ModelResourceContainerFactory {
      * @since 4.3
      */
     public static DiagramContainer createDiagramContainer( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         if (!(resource instanceof EmfResource) || !supportsDiagrams(resource)) return null;
 
@@ -382,7 +382,7 @@ public class ModelResourceContainerFactory {
      */
     public static DiagramContainer getDiagramContainer( final Resource resource,
                                                         final boolean forceCreate ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         if (!(resource instanceof EmfResource) || !supportsDiagrams(resource)) return null;
 
@@ -401,7 +401,7 @@ public class ModelResourceContainerFactory {
      * @return the DiagramContainer for this resource
      */
     public static DiagramContainer getDiagramContainer( final List rootEObjects ) {
-        ArgCheck.isNotNull(rootEObjects);
+        CoreArgCheck.isNotNull(rootEObjects);
 
         if (rootEObjects.isEmpty()) return null;
 
@@ -426,7 +426,7 @@ public class ModelResourceContainerFactory {
      * @return the DiagramContainer for this resource
      */
     public static DiagramContainer getDiagramContainer( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         if (!(resource instanceof EmfResource)) return null;
 
@@ -445,7 +445,7 @@ public class ModelResourceContainerFactory {
      * @since 4.3
      */
     public static AnnotationContainer createAnnotationContainer( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         if (!(resource instanceof EmfResource) || !supportsAnnotations(resource)) return null;
 
@@ -471,7 +471,7 @@ public class ModelResourceContainerFactory {
      */
     public static AnnotationContainer getAnnotationContainer( final Resource resource,
                                                               final boolean forceCreate ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         if (!(resource instanceof EmfResource) || !supportsAnnotations(resource)) return null;
 
@@ -491,7 +491,7 @@ public class ModelResourceContainerFactory {
      * @return the AnnotationContainer for this resource
      */
     public static AnnotationContainer getAnnotationContainer( final List rootEObjects ) {
-        ArgCheck.isNotNull(rootEObjects);
+        CoreArgCheck.isNotNull(rootEObjects);
 
         if (rootEObjects.isEmpty()) return null;
 
@@ -516,7 +516,7 @@ public class ModelResourceContainerFactory {
      * @return the AnnotationContainer for this resource
      */
     public static AnnotationContainer getAnnotationContainer( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         if (!(resource instanceof EmfResource)) return null;
 
@@ -540,7 +540,7 @@ public class ModelResourceContainerFactory {
         if (emfResource.getModelAnnotation() != null) {
             // Check URI
             String stringURI = emfResource.getModelAnnotation().getPrimaryMetamodelUri();
-            if (!StringUtil.isEmpty(stringURI)) {
+            if (!CoreStringUtil.isEmpty(stringURI)) {
                 MetamodelDescriptor descriptor = ModelerCore.getMetamodelRegistry().getMetamodelDescriptor(stringURI);
 
                 if (descriptor != null) {
@@ -656,7 +656,7 @@ public class ModelResourceContainerFactory {
      * @since 4.3
      */
     public static Annotation createNewAnnotation( final EObject target ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
 
         Annotation newAnnotation = createNewAnnotation();
         newAnnotation.setAnnotatedObject(target);
@@ -674,8 +674,8 @@ public class ModelResourceContainerFactory {
      */
     public static Annotation createNewAnnotation( final EObject target,
                                                   final AnnotationContainer container ) {
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(container);
 
         Annotation newAnnotation = createNewAnnotation(target);
         // newAnnotation.setAnnotationContainer(container);
@@ -697,8 +697,8 @@ public class ModelResourceContainerFactory {
      */
     public static Annotation createNewAnnotation( final EObject target,
                                                   final Resource resource ) {
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(resource);
 
         Annotation annotation = null;
 
@@ -725,7 +725,7 @@ public class ModelResourceContainerFactory {
      * @since 4.3
      */
     public static boolean deleteAnnotation( final Annotation annotation ) {
-        ArgCheck.isNotNull(annotation);
+        CoreArgCheck.isNotNull(annotation);
 
         AnnotationContainer ac = (AnnotationContainer)annotation.eContainer();
         boolean successful = false;
@@ -759,7 +759,7 @@ public class ModelResourceContainerFactory {
      * @since 4.3
      */
     public static Diagram createNewDiagram( final EObject target ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
         Diagram newDiagram = createNewDiagram();
         newDiagram.setTarget(target);
         return newDiagram;
@@ -775,8 +775,8 @@ public class ModelResourceContainerFactory {
      */
     public static Diagram createNewDiagram( final EObject target,
                                             final DiagramContainer container ) {
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(container);
 
         Diagram newDiagram = createNewDiagram(target);
         // newDiagram.setDiagramContainer(container);
@@ -797,8 +797,8 @@ public class ModelResourceContainerFactory {
      */
     public static Diagram createNewDiagram( final EObject target,
                                             final Resource resource ) {
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(resource);
 
         if (supportsDiagrams(resource)) {
             return createNewDiagram(target, getDiagramContainer(resource, true));
@@ -824,8 +824,8 @@ public class ModelResourceContainerFactory {
     public static Diagram createNewDiagram( final EObject target,
                                             final Resource resource,
                                             final boolean persistent ) {
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(resource);
 
         if (supportsDiagrams(resource)) {
             if (persistent) {
@@ -855,7 +855,7 @@ public class ModelResourceContainerFactory {
      */
     public static boolean deleteDiagram( final Diagram diagram ) {
 
-        ArgCheck.isNotNull(diagram);
+        CoreArgCheck.isNotNull(diagram);
 
         DiagramContainer dc = (DiagramContainer)diagram.eContainer();
         boolean successful = false;
@@ -879,8 +879,8 @@ public class ModelResourceContainerFactory {
     public static void setDiagramPersistence( final Diagram diagram,
                                               final Resource resource,
                                               final boolean persistent ) {
-        ArgCheck.isNotNull(diagram);
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(diagram);
+        CoreArgCheck.isNotNull(resource);
 
         if (persistent == isPersistent(diagram)) {
             return;
@@ -924,7 +924,7 @@ public class ModelResourceContainerFactory {
      * @since 4.3
      */
     public static boolean isPersistent( final Diagram diagram ) {
-        ArgCheck.isNotNull(diagram);
+        CoreArgCheck.isNotNull(diagram);
 
         return diagram.eContainer() != null;
     }
@@ -942,7 +942,7 @@ public class ModelResourceContainerFactory {
      * @since 4.3
      */
     public static boolean deleteTransformation( final TransformationMappingRoot transformation ) {
-        ArgCheck.isNotNull(transformation);
+        CoreArgCheck.isNotNull(transformation);
 
         TransformationContainer tc = (TransformationContainer)transformation.eContainer();
         boolean successful = false;
@@ -982,7 +982,7 @@ public class ModelResourceContainerFactory {
     public static SqlTransformationMappingRoot createNewSqlTransformationMappingRoot( final EObject target,
                                                                                       final boolean isSignificant,
                                                                                       final Object txnSource ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
 
         if (!SqlAspectHelper.isValidSqlTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(SQL_ROOT_TARGET_NOT_VALID_KEY, target));
@@ -1024,7 +1024,7 @@ public class ModelResourceContainerFactory {
      * @since 4.3
      */
     public static SqlTransformationMappingRoot createNewSqlTransformationMappingRoot( final EObject target ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
 
         if (!SqlAspectHelper.isValidSqlTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(SQL_ROOT_TARGET_NOT_VALID_KEY, target));
@@ -1051,8 +1051,8 @@ public class ModelResourceContainerFactory {
      */
     public static SqlTransformationMappingRoot createNewSqlTransformationMappingRoot( final EObject target,
                                                                                       final TransformationContainer container ) {
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(container);
 
         if (!SqlAspectHelper.isValidSqlTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(SQL_ROOT_TARGET_NOT_VALID_KEY, target));
@@ -1075,8 +1075,8 @@ public class ModelResourceContainerFactory {
      */
     public static SqlTransformationMappingRoot createNewSqlTransformationMappingRoot( final EObject target,
                                                                                       final Resource resource ) {
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(resource);
 
         if (!SqlAspectHelper.isValidSqlTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(SQL_ROOT_TARGET_NOT_VALID_KEY, target));
@@ -1120,7 +1120,7 @@ public class ModelResourceContainerFactory {
     public static XQueryTransformationMappingRoot createNewXQueryTransformationMappingRoot( final EObject target,
                                                                                             final boolean isSignificant,
                                                                                             final Object txnSource ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
 
         if (!SqlAspectHelper.isValidSqlTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(SQL_ROOT_TARGET_NOT_VALID_KEY, target));
@@ -1162,7 +1162,7 @@ public class ModelResourceContainerFactory {
      * @since 5.0.1
      */
     public static XQueryTransformationMappingRoot createNewXQueryTransformationMappingRoot( final EObject target ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
 
         if (!SqlAspectHelper.isValidSqlTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(SQL_ROOT_TARGET_NOT_VALID_KEY, target));
@@ -1189,8 +1189,8 @@ public class ModelResourceContainerFactory {
      */
     public static XQueryTransformationMappingRoot createNewXQueryTransformationMappingRoot( final EObject target,
                                                                                             final TransformationContainer container ) {
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(container);
 
         if (!SqlAspectHelper.isValidSqlTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(SQL_ROOT_TARGET_NOT_VALID_KEY, target));
@@ -1213,8 +1213,8 @@ public class ModelResourceContainerFactory {
      */
     public static XQueryTransformationMappingRoot createNewXQueryTransformationMappingRoot( final EObject target,
                                                                                             final Resource resource ) {
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(resource);
 
         if (!SqlAspectHelper.isValidSqlTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(SQL_ROOT_TARGET_NOT_VALID_KEY, target));
@@ -1236,7 +1236,7 @@ public class ModelResourceContainerFactory {
      * @return the mapping helper
      */
     public static MappingHelper addMappingHelper( Object transMappingRoot ) {
-        ArgCheck.isNotNull(transMappingRoot);
+        CoreArgCheck.isNotNull(transMappingRoot);
 
         MappingHelper helper = null;
         if (isSqlTransformationMappingRoot(transMappingRoot)) {
@@ -1281,7 +1281,7 @@ public class ModelResourceContainerFactory {
     public static MappingHelper addMappingHelper( final Object transMappingRoot,
                                                   final boolean isSignificant,
                                                   final Object txnSource ) {
-        ArgCheck.isNotNull(transMappingRoot);
+        CoreArgCheck.isNotNull(transMappingRoot);
 
         MappingHelper helper = null;
 
@@ -1329,7 +1329,7 @@ public class ModelResourceContainerFactory {
      * @return the created SqlTransformation
      */
     public static SqlTransformation createNestedUserSqlTransformation( MappingHelper sqlTransformation ) {
-        ArgCheck.isNotNull(sqlTransformation);
+        CoreArgCheck.isNotNull(sqlTransformation);
 
         // Create Nested SqlTransformation for User SQL
         SqlTransformation userSqlTrans = transformationFactory.createSqlTransformation();
@@ -1366,7 +1366,7 @@ public class ModelResourceContainerFactory {
     public static TreeMappingRoot createNewTreeMappingRoot( final EObject target,
                                                             final boolean isSignificant,
                                                             final Object txnSource ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
 
         if (!SqlAspectHelper.isValidTreeTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(TREE_ROOT_TARGET_NOT_VALID_KEY, target));
@@ -1408,7 +1408,7 @@ public class ModelResourceContainerFactory {
      * @since 4.3
      */
     public static TreeMappingRoot createNewTreeMappingRoot( final EObject target ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
         if (!SqlAspectHelper.isValidTreeTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(TREE_ROOT_TARGET_NOT_VALID_KEY, target));
         }
@@ -1431,8 +1431,8 @@ public class ModelResourceContainerFactory {
      */
     public static TreeMappingRoot createNewTreeMappingRoot( final EObject target,
                                                             final TransformationContainer container ) {
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(container);
 
         if (!SqlAspectHelper.isValidTreeTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(TREE_ROOT_TARGET_NOT_VALID_KEY, target));
@@ -1456,8 +1456,8 @@ public class ModelResourceContainerFactory {
      */
     public static TreeMappingRoot createNewTreeMappingRoot( final EObject target,
                                                             final Resource resource ) {
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(resource);
 
         if (!SqlAspectHelper.isValidTreeTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(TREE_ROOT_TARGET_NOT_VALID_KEY, target));
@@ -1499,7 +1499,7 @@ public class ModelResourceContainerFactory {
     public static FragmentMappingRoot createNewFragmentMappingRoot( final EObject target,
                                                                     final boolean isSignificant,
                                                                     final Object txnSource ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
         if (!SqlAspectHelper.isValidTreeTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(FRAGMENT_ROOT_TARGET_NOT_VALID_KEY, target));
         }
@@ -1539,7 +1539,7 @@ public class ModelResourceContainerFactory {
      * @since 4.3
      */
     public static FragmentMappingRoot createNewFragmentMappingRoot( final EObject target ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
         if (!SqlAspectHelper.isValidTreeTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(FRAGMENT_ROOT_TARGET_NOT_VALID_KEY, target));
         }
@@ -1561,8 +1561,8 @@ public class ModelResourceContainerFactory {
 
     public static FragmentMappingRoot createNewFragmentMappingRoot( final EObject target,
                                                                     final TransformationContainer container ) {
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(container);
 
         if (!SqlAspectHelper.isValidTreeTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(FRAGMENT_ROOT_TARGET_NOT_VALID_KEY, target));
@@ -1586,8 +1586,8 @@ public class ModelResourceContainerFactory {
      */
     public static FragmentMappingRoot createNewFragmentMappingRoot( final EObject target,
                                                                     final Resource resource ) {
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(resource);
 
         if (!SqlAspectHelper.isValidTreeTransformationTarget(target)) {
             throw new IllegalArgumentException(getString(FRAGMENT_ROOT_TARGET_NOT_VALID_KEY, target));
@@ -1621,7 +1621,7 @@ public class ModelResourceContainerFactory {
      * @since 4.3
      */
     public static MappingClassSet createNewMappingClassSet( final EObject target ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
 
         if (!SqlAspectHelper.isXmlDocument(target)) {
             throw new IllegalArgumentException(getString(XML_DOCUCUMENT_TARGET_NOT_VALID_KEY, target));
@@ -1644,8 +1644,8 @@ public class ModelResourceContainerFactory {
      */
     public static MappingClassSet createNewMappingClassSet( final EObject target,
                                                             MappingClassSetContainer container ) {
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(container);
 
         if (!SqlAspectHelper.isXmlDocument(target)) {
             throw new IllegalArgumentException(getString(XML_DOCUCUMENT_TARGET_NOT_VALID_KEY, target));
@@ -1670,8 +1670,8 @@ public class ModelResourceContainerFactory {
      */
     public static MappingClassSet createNewMappingClassSet( final EObject target,
                                                             final Resource resource ) {
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(resource);
 
         MappingClassSet mappingClassSet = null;
 
@@ -1690,7 +1690,7 @@ public class ModelResourceContainerFactory {
     }
 
     public static boolean deleteMappingClassSet( final MappingClassSet mappingClassSet ) {
-        ArgCheck.isNotNull(mappingClassSet);
+        CoreArgCheck.isNotNull(mappingClassSet);
 
         MappingClassSetContainer mcsc = (MappingClassSetContainer)mappingClassSet.eContainer();
         boolean successful = false;
@@ -1711,7 +1711,7 @@ public class ModelResourceContainerFactory {
      */
     public static MappingClassSet getMappingClassSet( final EObject target,
                                                       boolean forceCreate ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
 
         if (!SqlAspectHelper.isXmlDocument(target)) {
             throw new IllegalArgumentException(getString(XML_DOCUCUMENT_TARGET_NOT_VALID_KEY, target));

@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.InputBinding;
 import com.metamatrix.metamodels.transformation.InputParameter;
 import com.metamatrix.metamodels.transformation.MappingClass;
@@ -37,7 +37,7 @@ public class InputParameterValidationRule implements ObjectValidationRule {
 	 * @see com.metamatrix.modeler.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, com.metamatrix.modeler.core.validation.ValidationContext)
 	 */
 	public void validate(EObject eObject, ValidationContext context) {
-		ArgCheck.isInstanceOf(InputParameter.class, eObject);
+		CoreArgCheck.isInstanceOf(InputParameter.class, eObject);
 		InputParameter inputParam = (InputParameter) eObject;
 		if(inputParam != null) {
 			MappingClass mappingClass = inputParam.getInputSet().getMappingClass();
@@ -61,9 +61,9 @@ public class InputParameterValidationRule implements ObjectValidationRule {
 				context.addResult(validationResult);
 			} else {
                 EObject mcs = mappingClass.eContainer();
-                ArgCheck.isInstanceOf(MappingClassSet.class, mcs);
+                CoreArgCheck.isInstanceOf(MappingClassSet.class, mcs);
                 EObject target = ((MappingClassSet)mcs).getTarget();
-                ArgCheck.isInstanceOf(XmlDocument.class, target);       
+                CoreArgCheck.isInstanceOf(XmlDocument.class, target);       
                 XmlDocument document = (XmlDocument)target;
                 TreeMappingAdapter mappingAdapter = new TreeMappingAdapter(document);
                 IMappableTree mappableTree = new DefaultMappableTree(document);

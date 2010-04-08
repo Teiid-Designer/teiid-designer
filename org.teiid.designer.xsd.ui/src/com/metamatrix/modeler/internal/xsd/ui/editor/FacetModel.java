@@ -28,7 +28,7 @@ import org.eclipse.xsd.XSDConstrainingFacet;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleFinal;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.xsd.XsdUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -188,7 +188,7 @@ public class FacetModel implements ComponentSetMonitor {
         // ID:
         getComponentSet(GUIFacetHelper.FAKE_FACET_NAME).setValue(simpleType.getName());
         getComponentSet(GUIFacetHelper.FAKE_FACET_NAMESPACE).setValue(simpleType.getTargetNamespace());
-        getComponentSet(GUIFacetHelper.FAKE_FACET_DESCRIPTION).setValue(StringUtil.collapseWhitespace(ModelObjectUtilities.getDescription(simpleType)));
+        getComponentSet(GUIFacetHelper.FAKE_FACET_DESCRIPTION).setValue(CoreStringUtil.collapseWhitespace(ModelObjectUtilities.getDescription(simpleType)));
 
         // Inherit:
         getComponentSet(GUIFacetHelper.FAKE_FACET_BASETYPE).setValue(simpleType.getBaseTypeDefinition());

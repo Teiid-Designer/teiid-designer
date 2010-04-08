@@ -32,7 +32,7 @@ import org.eclipse.emf.mapping.MappingFactory;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.emf.mapping.impl.MappingFactoryImpl;
 import org.w3c.dom.Node;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.compare.CompareFactory;
 import com.metamatrix.modeler.compare.DifferenceDescriptor;
 import com.metamatrix.modeler.compare.DifferenceGuidelines;
@@ -142,8 +142,8 @@ public class DifferenceProcessorImpl implements DifferenceProcessor {
                                     final ModelSelector afterSelector,
                                     final HashMap mappings ) {
         super();
-        ArgCheck.isNotNull(beforeSelector);
-        ArgCheck.isNotNull(afterSelector);
+        CoreArgCheck.isNotNull(beforeSelector);
+        CoreArgCheck.isNotNull(afterSelector);
         this.beforeSelector = beforeSelector;
         this.afterSelector = afterSelector;
         this.closed = false;

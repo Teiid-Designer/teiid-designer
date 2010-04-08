@@ -28,7 +28,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 
 /** 
@@ -70,7 +70,7 @@ public class ExcelDatabaseMetaDataHandler implements
     protected Map columns = new HashMap(); //table name -> column result set
 
     protected ExcelDatabaseMetaDataHandler(DatabaseMetaData metadata, File excelFile) throws SQLException{
-        ArgCheck.isNotNull(excelFile);
+        CoreArgCheck.isNotNull(excelFile);
         this.metadata = metadata;
         this.excelFile = excelFile;
         loadExcelDocument();

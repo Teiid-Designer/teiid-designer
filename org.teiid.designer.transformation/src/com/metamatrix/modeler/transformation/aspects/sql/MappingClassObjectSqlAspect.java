@@ -10,7 +10,7 @@ package com.metamatrix.modeler.transformation.aspects.sql;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.MappingClassObject;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 
@@ -40,7 +40,7 @@ public abstract class MappingClassObjectSqlAspect extends AbstractTransformation
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
     public String getName(EObject eObject) {
-        ArgCheck.isInstanceOf(MappingClassObject.class, eObject); 
+        CoreArgCheck.isInstanceOf(MappingClassObject.class, eObject); 
         MappingClassObject entity = (MappingClassObject) eObject;       
         return entity.getName();
     }
@@ -49,7 +49,7 @@ public abstract class MappingClassObjectSqlAspect extends AbstractTransformation
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect#getNameInSource(org.eclipse.emf.ecore.EObject)
      */
     public String getNameInSource(EObject eObject) {
-        ArgCheck.isInstanceOf(MappingClassObject.class, eObject); 
+        CoreArgCheck.isInstanceOf(MappingClassObject.class, eObject); 
         MappingClassObject entity = (MappingClassObject) eObject;       
         return entity.getName();
     }

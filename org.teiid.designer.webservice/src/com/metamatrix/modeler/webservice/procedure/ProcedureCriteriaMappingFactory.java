@@ -10,8 +10,8 @@ package com.metamatrix.modeler.webservice.procedure;
 import java.util.Collection;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
@@ -44,8 +44,8 @@ public class ProcedureCriteriaMappingFactory {
      * @since 4.3
      */
     public ProcedureCriteriaMapping createMapping(final Input operationInput, final EObject xsdElement) {
-        ArgCheck.isNotNull(operationInput);
-        ArgCheck.isNotNull(xsdElement);
+        CoreArgCheck.isNotNull(operationInput);
+        CoreArgCheck.isNotNull(xsdElement);
         
         // get the path for the xsd element to be used in XPath expression
         IPath xsdElementPath = ModelerCore.getModelEditor().getModelRelativePath(xsdElement);
@@ -73,8 +73,8 @@ public class ProcedureCriteriaMappingFactory {
      * @since 4.3
      */
     public String generateXPathExpression(final String operationInputName, final String xsdElementPath) {
-        ArgCheck.isNotEmpty(operationInputName);
-        ArgCheck.isNotEmpty(xsdElementPath);
+        CoreArgCheck.isNotEmpty(operationInputName);
+        CoreArgCheck.isNotEmpty(xsdElementPath);
 
         // get the expression replacing the tokens with the needed names
         String xPathExpression = XPATH_FUNCTION.replaceAll(OPERATION_INPUT_PARAM_NAME, operationInputName);
@@ -91,7 +91,7 @@ public class ProcedureCriteriaMappingFactory {
      */
     public String generateVariableName(final IPath xsdElementPath) {
         String xsdElementName = xsdElementPath.lastSegment();
-        return ProcedureReservedWords.VARIABLES + StringUtil.Constants.DOT+xsdElementName;
+        return ProcedureReservedWords.VARIABLES + CoreStringUtil.Constants.DOT+xsdElementName;
     }
 
     /**
@@ -102,7 +102,7 @@ public class ProcedureCriteriaMappingFactory {
      * @since 4.3
      */
     public Collection createMappings(final CreateUpdateProcedureCommand command) {
-        ArgCheck.isNotNull(command);
+        CoreArgCheck.isNotNull(command);
         return GenerateProcedureCriteriaMappingsVisitor.getMappins(command);
     }
 }

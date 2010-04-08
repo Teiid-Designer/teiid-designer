@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import com.metamatrix.core.CorePlugin;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 
 abstract public class AbstractEventSource implements EventSource {
 
@@ -28,8 +28,8 @@ abstract public class AbstractEventSource implements EventSource {
 
     public synchronized void addListener( Class eventClass,
                                           EventObjectListener listener ) {
-        Assertion.isNotNull(listener, LISTENER_MAY_NOT_BE_NULL);
-        Assertion.isNotNull(eventClass, EVENT_CLASS_MAY_NOT_BE_NULL);
+        CoreArgCheck.isNotNull(listener, LISTENER_MAY_NOT_BE_NULL);
+        CoreArgCheck.isNotNull(eventClass, EVENT_CLASS_MAY_NOT_BE_NULL);
 
         if (!eventClassListeners.containsKey(eventClass)) {
             List listenerList = new ArrayList(1);
@@ -44,7 +44,7 @@ abstract public class AbstractEventSource implements EventSource {
     }
 
     public synchronized void addListener( EventObjectListener listener ) {
-        Assertion.isNotNull(listener, LISTENER_MAY_NOT_BE_NULL);
+        CoreArgCheck.isNotNull(listener, LISTENER_MAY_NOT_BE_NULL);
         if (!eventListeners.contains(listener)) {
             eventListeners.add(listener);
         }
@@ -52,8 +52,8 @@ abstract public class AbstractEventSource implements EventSource {
 
     public synchronized void removeListener( Class eventClass,
                                              EventObjectListener listener ) {
-        Assertion.isNotNull(listener, LISTENER_MAY_NOT_BE_NULL);
-        Assertion.isNotNull(eventClass, EVENT_CLASS_MAY_NOT_BE_NULL);
+        CoreArgCheck.isNotNull(listener, LISTENER_MAY_NOT_BE_NULL);
+        CoreArgCheck.isNotNull(eventClass, EVENT_CLASS_MAY_NOT_BE_NULL);
 
         if (eventClassListeners.containsKey(eventClass)) {
             List listenerList = (List)eventClassListeners.get(eventClass);
@@ -62,7 +62,7 @@ abstract public class AbstractEventSource implements EventSource {
     }
 
     public synchronized void removeListener( EventObjectListener listener ) {
-        Assertion.isNotNull(listener, LISTENER_MAY_NOT_BE_NULL);
+        CoreArgCheck.isNotNull(listener, LISTENER_MAY_NOT_BE_NULL);
 
         eventListeners.remove(listener);
 
@@ -97,7 +97,7 @@ abstract public class AbstractEventSource implements EventSource {
     }
 
     public synchronized List getListeners( Class eventClass ) {
-        Assertion.isNotNull(eventClass, EVENT_CLASS_MAY_NOT_BE_NULL);
+        CoreArgCheck.isNotNull(eventClass, EVENT_CLASS_MAY_NOT_BE_NULL);
 
         // Always include those listeners that listen to all events ...
         List returnList = new ArrayList(eventListeners);

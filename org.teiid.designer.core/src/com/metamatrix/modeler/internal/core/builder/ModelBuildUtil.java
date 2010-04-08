@@ -25,8 +25,8 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.plugin.PluginUtilities;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.Stopwatch;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -134,8 +134,8 @@ public class ModelBuildUtil {
     public static void validateResources( final IProgressMonitor monitor,
                                           final Resource[] eResources,
                                           final ValidationContext context ) {
-        ArgCheck.isNotNull(eResources);
-        ArgCheck.isNotNull(context);
+        CoreArgCheck.isNotNull(eResources);
+        CoreArgCheck.isNotNull(context);
 
         // create a monitor if needed
         final IProgressMonitor progresssMonitor = (monitor != null ? monitor : new NullProgressMonitor());
@@ -161,8 +161,8 @@ public class ModelBuildUtil {
     public static void validateResource( final IProgressMonitor monitor,
                                          final Resource eResource,
                                          final ValidationContext context ) {
-        ArgCheck.isNotNull(eResource);
-        ArgCheck.isNotNull(context);
+        CoreArgCheck.isNotNull(eResource);
+        CoreArgCheck.isNotNull(context);
 
         // get all validators and validate
         for (final Iterator validateIter = VALIDATORS.iterator(); validateIter.hasNext();) {
@@ -184,9 +184,9 @@ public class ModelBuildUtil {
                                           final Resource eResource,
                                           final ResourceValidator validator,
                                           final ValidationContext context ) {
-        ArgCheck.isNotNull(eResource);
-        ArgCheck.isNotNull(validator);
-        ArgCheck.isNotNull(context);
+        CoreArgCheck.isNotNull(eResource);
+        CoreArgCheck.isNotNull(validator);
+        CoreArgCheck.isNotNull(context);
 
         // create a monitor if needed
         final IProgressMonitor progresssMonitor = (monitor != null ? monitor : new NullProgressMonitor());

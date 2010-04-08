@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xml.XmlDocumentPlugin;
 import com.metamatrix.metamodels.xml.XmlFragment;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -110,7 +110,7 @@ public class XmlFragmentAspect extends AbstractMetamodelAspect implements UmlPac
     }
 
     protected XmlFragment assertXmlFragment(Object eObject) {
-        ArgCheck.isInstanceOf(XmlFragment.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlFragment.class, eObject);
     
         return (XmlFragment)eObject;
     }

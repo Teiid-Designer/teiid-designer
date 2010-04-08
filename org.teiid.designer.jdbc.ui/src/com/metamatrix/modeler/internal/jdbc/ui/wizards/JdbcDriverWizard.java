@@ -52,7 +52,7 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 import com.metamatrix.modeler.internal.jdbc.ui.ModelerJdbcUiPlugin;
 import com.metamatrix.modeler.internal.jdbc.ui.util.JdbcUiUtil;
@@ -73,7 +73,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
  */
 public final class JdbcDriverWizard extends AbstractWizard
     implements InternalModelerJdbcUiPluginConstants, InternalModelerJdbcUiPluginConstants.Widgets, InternalUiConstants.Widgets,
-    ListPanel.Constants, StringUtil.Constants {
+    ListPanel.Constants, CoreStringUtil.Constants {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(JdbcDriverWizard.class);
 

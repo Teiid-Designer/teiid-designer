@@ -8,13 +8,13 @@
 package com.metamatrix.ui.internal.widget;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * @since 4.0
  */
 public class ListPanelAdapter
-implements IListPanelController, StringUtil.Constants {
+implements IListPanelController, CoreStringUtil.Constants {
     //============================================================================================================================
 	// ListEditPanelController Methods
 

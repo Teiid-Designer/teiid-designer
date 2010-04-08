@@ -19,7 +19,7 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDSimpleTypeDefinition.Assessment;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.relational.NullableType;
 import com.metamatrix.metamodels.relational.aspects.sql.ProcedureParameterAspect;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -109,7 +109,7 @@ public class ParameterValueValidator implements
             return EMPTY_STATUS;
         }
 
-        if (StringUtil.isEmpty(value)) {
+        if (CoreStringUtil.isEmpty(value)) {
             return EMPTY_STATUS;
         }
 
@@ -152,7 +152,7 @@ public class ParameterValueValidator implements
                     if (diagnostic.getSeverity() == XSDDiagnosticSeverity.ERROR_LITERAL) {
                         String name = ModelerCore.getModelEditor().getName(object);
 
-                        if (StringUtil.isEmpty(name)) {
+                        if (CoreStringUtil.isEmpty(name)) {
                             name = object.getClass().getSimpleName();
                         }
 

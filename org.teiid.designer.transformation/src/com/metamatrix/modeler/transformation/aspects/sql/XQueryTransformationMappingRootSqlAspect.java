@@ -14,8 +14,8 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.XQueryTransformation;
 import com.metamatrix.metamodels.transformation.XQueryTransformationMappingRoot;
@@ -43,7 +43,7 @@ public class XQueryTransformationMappingRootSqlAspect extends TransformationMapp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTransformationAspect#getTransformedObject(org.eclipse.emf.ecore.EObject)
      */
     public Object getTransformedObject( EObject eObject ) {
-        ArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         EObject targetEObj = root.getTarget();
         if (targetEObj == null) {
@@ -58,7 +58,7 @@ public class XQueryTransformationMappingRootSqlAspect extends TransformationMapp
      * @since 4.2
      */
     public List getInputObjects( EObject eObject ) {
-        ArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         return root.getInputs();
     }
@@ -68,7 +68,7 @@ public class XQueryTransformationMappingRootSqlAspect extends TransformationMapp
      * @since 4.2
      */
     public List getNestedInputObjects( EObject eObject ) {
-        ArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         if (root.getNested() == null) {
             return Collections.EMPTY_LIST;
@@ -88,7 +88,7 @@ public class XQueryTransformationMappingRootSqlAspect extends TransformationMapp
      * @since 4.2
      */
     public List getNestedOutputObjects( EObject eObject ) {
-        ArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         if (root.getNested() == null) {
             return Collections.EMPTY_LIST;
@@ -110,7 +110,7 @@ public class XQueryTransformationMappingRootSqlAspect extends TransformationMapp
      */
     public List getNestedInputsForOutput( EObject eObject,
                                           EObject output ) {
-        ArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         if (root.getNested() != null) {
             for (final Iterator iter = root.getNested().iterator(); iter.hasNext();) {
@@ -130,7 +130,7 @@ public class XQueryTransformationMappingRootSqlAspect extends TransformationMapp
      */
     public List getNestedOutputsForInput( EObject eObject,
                                           EObject input ) {
-        ArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         if (root.getNested() != null) {
             for (final Iterator iter = root.getNested().iterator(); iter.hasNext();) {
@@ -148,7 +148,7 @@ public class XQueryTransformationMappingRootSqlAspect extends TransformationMapp
      * @since 4.2
      */
     public List getOutputObjects( EObject eObject ) {
-        ArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         return root.getOutputs();
     }
@@ -217,14 +217,14 @@ public class XQueryTransformationMappingRootSqlAspect extends TransformationMapp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTransformationAspect#getTransformationTypes(org.eclipse.emf.ecore.EObject)
      */
     public String[] getTransformationTypes( final EObject eObject ) {
-        ArgCheck.isInstanceOf(XQueryTransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(XQueryTransformationMappingRoot.class, eObject);
         final XQueryTransformationMappingRoot root = (XQueryTransformationMappingRoot)eObject;
 
         // get the XQuery expression of the XQueryTransformation
         final XQueryTransformation transformation = (XQueryTransformation)root.getHelper();
         if (transformation != null) {
             final String expression = transformation.getExpression();
-            if (!StringUtil.isEmpty(expression)) {
+            if (!CoreStringUtil.isEmpty(expression)) {
                 final EObject transformedObject = (EObject)getTransformedObject(eObject);
                 if (transformedObject == null) {
                     return null;
@@ -244,7 +244,7 @@ public class XQueryTransformationMappingRootSqlAspect extends TransformationMapp
      */
     public String getTransformation( EObject eObject,
                                      String type ) {
-        ArgCheck.isInstanceOf(XQueryTransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(XQueryTransformationMappingRoot.class, eObject);
         final XQueryTransformationMappingRoot root = (XQueryTransformationMappingRoot)eObject;
 
         // get the XQuery expression of the XQueryTransformation
@@ -262,7 +262,7 @@ public class XQueryTransformationMappingRootSqlAspect extends TransformationMapp
      * @since 4.3
      */
     public boolean isDeleteAllowed( EObject eObject ) {
-        ArgCheck.isInstanceOf(XQueryTransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(XQueryTransformationMappingRoot.class, eObject);
         return false;
     }
 
@@ -271,7 +271,7 @@ public class XQueryTransformationMappingRootSqlAspect extends TransformationMapp
      * @since 4.3
      */
     public boolean isInsertAllowed( EObject eObject ) {
-        ArgCheck.isInstanceOf(XQueryTransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(XQueryTransformationMappingRoot.class, eObject);
         return false;
     }
 
@@ -280,7 +280,7 @@ public class XQueryTransformationMappingRootSqlAspect extends TransformationMapp
      * @since 4.3
      */
     public boolean isUpdateAllowed( EObject eObject ) {
-        ArgCheck.isInstanceOf(XQueryTransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(XQueryTransformationMappingRoot.class, eObject);
         return false;
     }
 
@@ -291,7 +291,7 @@ public class XQueryTransformationMappingRootSqlAspect extends TransformationMapp
                                                         final IndexingContext context,
                                                         final String type ) {
 
-        ArgCheck.isInstanceOf(XQueryTransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(XQueryTransformationMappingRoot.class, eObject);
 
         final XQueryTransformationMappingRoot root = (XQueryTransformationMappingRoot)eObject;
 
@@ -307,7 +307,7 @@ public class XQueryTransformationMappingRootSqlAspect extends TransformationMapp
 
                 // Get the expression
                 final String expression = transformation.getExpression();
-                if (StringUtil.isEmpty(expression)) {
+                if (CoreStringUtil.isEmpty(expression)) {
                     return null;
                 }
                 return new SqlTransformationInfo(expression);

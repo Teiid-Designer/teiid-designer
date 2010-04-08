@@ -20,7 +20,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.util.ModelStatisticsVisitor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -98,9 +98,9 @@ public class ModelStatisticsDialog extends Dialog {
             buff.append(count);
             buff.append('\t');
             if ( count == 1 ) {
-                buff.append(StringUtil.computeDisplayableForm(eClass.getName()));
+                buff.append(CoreStringUtil.computeDisplayableForm(eClass.getName()));
             } else {
-                buff.append(StringUtil.computePluralForm(StringUtil.computeDisplayableForm(eClass.getName())));
+                buff.append(CoreStringUtil.computePluralForm(CoreStringUtil.computeDisplayableForm(eClass.getName())));
             }
             buff.append(LF);
         }

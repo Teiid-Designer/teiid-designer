@@ -29,7 +29,7 @@ import org.eclipse.ui.part.EditorPart;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.validation.ProblemMarker;
 import com.metamatrix.modeler.ui.editors.IRevertable;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
@@ -43,7 +43,7 @@ import com.metamatrix.ui.table.TableViewerSorter;
  * @since 4.0
  */
 public class VdbEditorProblemPage extends EditorPart
-    implements Images, VdbUiConstants, StringUtil.Constants, VdbEditor.Constants, IRevertable, IGotoMarker {
+    implements Images, VdbUiConstants, CoreStringUtil.Constants, VdbEditor.Constants, IRevertable, IGotoMarker {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(VdbEditorProblemPage.class);
 

@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Text;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnSetAspect;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -289,7 +289,7 @@ public class PreviewParameterPanel extends ScrolledComposite implements DqpUiCon
 
         if ((fieldStatus == null) || (fieldStatus.getSeverity() != IStatus.ERROR)) {
             image = UiPlugin.getDefault().getImage(PluginConstants.Images.BLANK_ICON);
-            toolTip = StringUtil.Constants.EMPTY_STRING;
+            toolTip = CoreStringUtil.Constants.EMPTY_STRING;
         } else {
             image = UiPlugin.getDefault().getImage(PluginConstants.Images.ERROR_ICON);
             toolTip = fieldStatus.getMessage();

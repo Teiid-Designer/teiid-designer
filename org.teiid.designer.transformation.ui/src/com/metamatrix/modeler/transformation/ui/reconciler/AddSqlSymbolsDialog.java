@@ -13,7 +13,7 @@ import java.util.List;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.ui.internal.widget.ExtendedTitleAreaDialog;
@@ -96,7 +96,7 @@ public class AddSqlSymbolsDialog extends ExtendedTitleAreaDialog {
      * @since 4.0
      */
     public void setDialogTitle(final String title) {
-        ArgCheck.isNotNull(title);
+        CoreArgCheck.isNotNull(title);
         final Shell shell = getShell();
         if (shell == null) {
             this.dialogTitle = title;

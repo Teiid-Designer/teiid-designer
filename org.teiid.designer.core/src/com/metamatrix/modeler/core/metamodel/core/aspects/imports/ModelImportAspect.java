@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelImport;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AbstractMetamodelAspect;
@@ -34,7 +34,7 @@ public class ModelImportAspect extends AbstractMetamodelAspect implements Import
      * @since 4.3
      */
     public String getModelLocation(EObject eObject) {
-        ArgCheck.isInstanceOf(ModelImport.class, eObject);
+        CoreArgCheck.isInstanceOf(ModelImport.class, eObject);
         // the modelImport object
         ModelImport modelImport = (ModelImport) eObject;
         return modelImport.getModelLocation();
@@ -44,7 +44,7 @@ public class ModelImportAspect extends AbstractMetamodelAspect implements Import
 	 * @see com.metamatrix.modeler.core.metamodel.aspect.ImportsAspect#getModelImportPaths(org.eclipse.emf.ecore.EObject)
 	 */
 	public IPath getModelPath(EObject eObject) {
-		ArgCheck.isInstanceOf(ModelImport.class, eObject);
+		CoreArgCheck.isInstanceOf(ModelImport.class, eObject);
 		// the modelImport object
 		ModelImport modelImport = (ModelImport) eObject;
 		String importPath = modelImport.getPath();
@@ -59,7 +59,7 @@ public class ModelImportAspect extends AbstractMetamodelAspect implements Import
 	 * @see com.metamatrix.modeler.core.metamodel.aspect.ImportsAspect#getImportedModelObjectID(org.eclipse.emf.ecore.EObject)
 	 */
 	public String getModelUuid(EObject eObject) {
-		ArgCheck.isInstanceOf(ModelImport.class, eObject);
+		CoreArgCheck.isInstanceOf(ModelImport.class, eObject);
 		// the modelImport object
 		return ((ModelImport)eObject).getUuid();
 	}
@@ -68,7 +68,7 @@ public class ModelImportAspect extends AbstractMetamodelAspect implements Import
 	 * @see com.metamatrix.modeler.core.metamodel.aspect.ImportsAspect#getModelType(org.eclipse.emf.ecore.EObject)
 	 */
 	public String getModelType(EObject eObject) {
-		ArgCheck.isInstanceOf(ModelImport.class, eObject);
+		CoreArgCheck.isInstanceOf(ModelImport.class, eObject);
 		// the modelImport object
 		ModelImport modelImport = (ModelImport) eObject;
 		return modelImport.getModelType().getName();
@@ -78,7 +78,7 @@ public class ModelImportAspect extends AbstractMetamodelAspect implements Import
 	 * @see com.metamatrix.modeler.core.metamodel.aspect.ImportsAspect#getPrimaryMetaModelUri(org.eclipse.emf.ecore.EObject)
 	 */
 	public String getPrimaryMetaModelUri(EObject eObject) {
-		ArgCheck.isInstanceOf(ModelImport.class, eObject);
+		CoreArgCheck.isInstanceOf(ModelImport.class, eObject);
 		// the modelImport object
 		ModelImport modelImport = (ModelImport) eObject;
 		return modelImport.getPrimaryMetamodelUri();
@@ -100,8 +100,8 @@ public class ModelImportAspect extends AbstractMetamodelAspect implements Import
      * @since 4.3
      */
     public void setModelLocation(EObject eObject, URI uri) {
-        ArgCheck.isInstanceOf(ModelImport.class, eObject);
-        ArgCheck.isNotNull(uri);
+        CoreArgCheck.isInstanceOf(ModelImport.class, eObject);
+        CoreArgCheck.isNotNull(uri);
         // the modelImport object
         ModelImport modelImport = (ModelImport) eObject;
         

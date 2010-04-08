@@ -146,8 +146,8 @@ public class SmartAllTestsSuite extends SmartTestSuite {
      */
     protected Collection collectTests( String theDirectoryName ) throws IOException {
         File directory = new File(theDirectoryName);
-        Assertion.assertTrue(directory.exists(), "Test source path <" + theDirectoryName + "> does not exist"); //$NON-NLS-1$ //$NON-NLS-2$
-        Assertion.assertTrue(directory.isDirectory(), "Parameter <" + theDirectoryName + "> is not a director"); //$NON-NLS-1$ //$NON-NLS-2$
+        CoreArgCheck.isTrue(directory.exists(), "Test source path <" + theDirectoryName + "> does not exist"); //$NON-NLS-1$ //$NON-NLS-2$
+        CoreArgCheck.isTrue(directory.isDirectory(), "Parameter <" + theDirectoryName + "> is not a director"); //$NON-NLS-1$ //$NON-NLS-2$
 
         Collection result = new ArrayList();
         File[] files = directory.listFiles();
@@ -161,10 +161,10 @@ public class SmartAllTestsSuite extends SmartTestSuite {
                 } else if (files[i].isFile()) {
                     String name = files[i].getName();
 
-                    if (StringUtil.startsWithIgnoreCase(name, TEST_FILE_NAME_PREFIX) && FileUtils.isJavaFileName(name)) {
+                    if (CoreStringUtil.startsWithIgnoreCase(name, TEST_FILE_NAME_PREFIX) && FileUtils.isJavaFileName(name)) {
                         String path = files[i].getCanonicalPath();
 
-                        if (StringUtil.startsWithIgnoreCase(path, sourcePath)) {
+                        if (CoreStringUtil.startsWithIgnoreCase(path, sourcePath)) {
                             String testClassName = getClassName(path);
 
                             if (!getExcludedTests().contains(testClassName)) {

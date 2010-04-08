@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelStatus;
 import com.metamatrix.modeler.core.workspace.ModelStatusConstants;
@@ -26,25 +26,22 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
     private static final String DEFAULT_STATUS_NAME = "ModelStatus"; //$NON-NLS-1$
 
     /**
-     * The elements related to the failure, or <code>null</code>
-     * if no elements are involved.
+     * The elements related to the failure, or <code>null</code> if no elements are involved.
      */
     protected ModelWorkspaceItem[] fElements = new ModelWorkspaceItem[0];
     /**
-     * The path related to the failure, or <code>null</code>
-     * if no path is involved.
+     * The path related to the failure, or <code>null</code> if no path is involved.
      */
     protected IPath fPath;
     /**
-     * The <code>String</code> related to the failure, or <code>null</code>
-     * if no <code>String</code> is involved.
+     * The <code>String</code> related to the failure, or <code>null</code> if no <code>String</code> is involved.
      */
     protected String fString;
     /**
      * Empty children
      */
     protected final static IStatus[] fgEmptyChildren = new IStatus[] {};
-    protected IStatus[] fChildren= fgEmptyChildren;
+    protected IStatus[] fChildren = fgEmptyChildren;
 
     /**
      * Singleton OK object
@@ -56,98 +53,119 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
      */
     public ModelStatusImpl() {
         // no code for an multi-status
-        super(ERROR, ModelerCore.PLUGIN_ID, 0, DEFAULT_STATUS_NAME, null); 
+        super(ERROR, ModelerCore.PLUGIN_ID, 0, DEFAULT_STATUS_NAME, null);
     }
+
     /**
      * Constructs a model status with no corresponding elements.
      */
-    public ModelStatusImpl(int code) {
-        super(ERROR, ModelerCore.PLUGIN_ID, code, DEFAULT_STATUS_NAME, null); 
-        fElements= ModelWorkspaceItemInfo.fgEmptyChildren;
+    public ModelStatusImpl( int code ) {
+        super(ERROR, ModelerCore.PLUGIN_ID, code, DEFAULT_STATUS_NAME, null);
+        fElements = ModelWorkspaceItemInfo.fgEmptyChildren;
     }
+
     /**
-     * Constructs a model status with the given corresponding
-     * elements.
+     * Constructs a model status with the given corresponding elements.
      */
-    public ModelStatusImpl(int code, ModelWorkspaceItem[] elements) {
-        super(ERROR, ModelerCore.PLUGIN_ID, code, DEFAULT_STATUS_NAME, null); 
-        fElements= elements;
-        fPath= null;
+    public ModelStatusImpl( int code,
+                            ModelWorkspaceItem[] elements ) {
+        super(ERROR, ModelerCore.PLUGIN_ID, code, DEFAULT_STATUS_NAME, null);
+        fElements = elements;
+        fPath = null;
     }
+
     /**
      * Constructs a model status with no corresponding elements.
      */
-    public ModelStatusImpl(int code, String string) {
+    public ModelStatusImpl( int code,
+                            String string ) {
         this(ERROR, code, string);
     }
+
     /**
      * Constructs a model status with no corresponding elements.
      */
-    public ModelStatusImpl(int severity, int code, String string) {
-        super(severity, ModelerCore.PLUGIN_ID, code, DEFAULT_STATUS_NAME, null); 
-        fElements= ModelWorkspaceItemInfo.fgEmptyChildren;
-        fPath= null;
-        fString = string;
-    }   
-    /**
-     * Constructs a model status with no corresponding elements.
-     */
-    public ModelStatusImpl(int code, Throwable throwable) {
-        super(ERROR, ModelerCore.PLUGIN_ID, code, DEFAULT_STATUS_NAME, throwable); 
-        fElements= ModelWorkspaceItemInfo.fgEmptyChildren;
-    }
-    /**
-     * Constructs a model status with no corresponding elements.
-     */
-    public ModelStatusImpl(int code, Throwable throwable, String msg ) {
-        super(ERROR, ModelerCore.PLUGIN_ID, code, DEFAULT_STATUS_NAME, throwable); 
-        fElements= ModelWorkspaceItemInfo.fgEmptyChildren;
-        fString = msg;
-    }
-    /**
-     * Constructs a model status with no corresponding elements.
-     */
-    public ModelStatusImpl(int code, IPath path) {
-        super(ERROR, ModelerCore.PLUGIN_ID, code, DEFAULT_STATUS_NAME, null); 
-        fElements= ModelWorkspaceItemInfo.fgEmptyChildren;
-        fPath= path;
-    }
-    /**
-     * Constructs a model status with the given corresponding
-     * element.
-     */
-    public ModelStatusImpl(int code, ModelWorkspaceItem element) {
-        this(code, new ModelWorkspaceItem[]{element});
-    }
-    /**
-     * Constructs a model status with the given corresponding
-     * element and string
-     */
-    public ModelStatusImpl(int code, ModelWorkspaceItem element, String string) {
-        this(code, new ModelWorkspaceItem[]{element});
+    public ModelStatusImpl( int severity,
+                            int code,
+                            String string ) {
+        super(severity, ModelerCore.PLUGIN_ID, code, DEFAULT_STATUS_NAME, null);
+        fElements = ModelWorkspaceItemInfo.fgEmptyChildren;
+        fPath = null;
         fString = string;
     }
 
     /**
-     * Constructs a model status with the given corresponding
-     * element and path
+     * Constructs a model status with no corresponding elements.
      */
-    public ModelStatusImpl(int code, ModelWorkspaceItem element, IPath path) {
-        this(code, new ModelWorkspaceItem[]{element});
-        fPath = path;
-    }   
+    public ModelStatusImpl( int code,
+                            Throwable throwable ) {
+        super(ERROR, ModelerCore.PLUGIN_ID, code, DEFAULT_STATUS_NAME, throwable);
+        fElements = ModelWorkspaceItemInfo.fgEmptyChildren;
+    }
+
     /**
      * Constructs a model status with no corresponding elements.
      */
-    public ModelStatusImpl(CoreException coreException) {
-        super(ERROR, ModelerCore.PLUGIN_ID, CORE_EXCEPTION, DEFAULT_STATUS_NAME, coreException); 
-        fElements= ModelWorkspaceItemInfo.fgEmptyChildren;
+    public ModelStatusImpl( int code,
+                            Throwable throwable,
+                            String msg ) {
+        super(ERROR, ModelerCore.PLUGIN_ID, code, DEFAULT_STATUS_NAME, throwable);
+        fElements = ModelWorkspaceItemInfo.fgEmptyChildren;
+        fString = msg;
     }
+
+    /**
+     * Constructs a model status with no corresponding elements.
+     */
+    public ModelStatusImpl( int code,
+                            IPath path ) {
+        super(ERROR, ModelerCore.PLUGIN_ID, code, DEFAULT_STATUS_NAME, null);
+        fElements = ModelWorkspaceItemInfo.fgEmptyChildren;
+        fPath = path;
+    }
+
+    /**
+     * Constructs a model status with the given corresponding element.
+     */
+    public ModelStatusImpl( int code,
+                            ModelWorkspaceItem element ) {
+        this(code, new ModelWorkspaceItem[] {element});
+    }
+
+    /**
+     * Constructs a model status with the given corresponding element and string
+     */
+    public ModelStatusImpl( int code,
+                            ModelWorkspaceItem element,
+                            String string ) {
+        this(code, new ModelWorkspaceItem[] {element});
+        fString = string;
+    }
+
+    /**
+     * Constructs a model status with the given corresponding element and path
+     */
+    public ModelStatusImpl( int code,
+                            ModelWorkspaceItem element,
+                            IPath path ) {
+        this(code, new ModelWorkspaceItem[] {element});
+        fPath = path;
+    }
+
+    /**
+     * Constructs a model status with no corresponding elements.
+     */
+    public ModelStatusImpl( CoreException coreException ) {
+        super(ERROR, ModelerCore.PLUGIN_ID, CORE_EXCEPTION, DEFAULT_STATUS_NAME, coreException);
+        fElements = ModelWorkspaceItemInfo.fgEmptyChildren;
+    }
+
     protected int getBits() {
         int severity = 1 << (getCode() % 100 / 33);
         int category = 1 << ((getCode() / 100) + 3);
         return severity | category;
     }
+
     /**
      * @see IStatus
      */
@@ -155,12 +173,14 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
     public IStatus[] getChildren() {
         return fChildren;
     }
+
     /**
      * @see IJavaModelStatus
      */
     public ModelWorkspaceItem[] getModelWorkspaceItems() {
         return fElements;
     }
+
     /**
      * Returns the message that is relevant to the code of this status.
      */
@@ -169,11 +189,11 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
         Throwable exception = getException();
         if (exception == null) {
             switch (getCode()) {
-                case CORE_EXCEPTION :
+                case CORE_EXCEPTION:
                     return ModelerCore.Util.getString("status.coreException"); //$NON-NLS-1$
 
                 case ITEM_DOES_NOT_EXIST:
-                    return ModelerCore.Util.getString("element.doesNotExist",((ModelWorkspaceItemImpl)fElements[0]).toStringWithAncestors()); //$NON-NLS-1$
+                    return ModelerCore.Util.getString("element.doesNotExist", ((ModelWorkspaceItemImpl)fElements[0]).toStringWithAncestors()); //$NON-NLS-1$
 
                 case INDEX_OUT_OF_BOUNDS:
                     return ModelerCore.Util.getString("status.indexOutOfBounds"); //$NON-NLS-1$
@@ -185,8 +205,8 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
                     return ModelerCore.Util.getString("status.invalidDestination", ((ModelWorkspaceItemImpl)fElements[0]).toStringWithAncestors()); //$NON-NLS-1$
 
                 case INVALID_ITEM_TYPES:
-                    StringBuffer buff= new StringBuffer(ModelerCore.Util.getString("operation.notSupported")); //$NON-NLS-1$
-                    for (int i= 0; i < fElements.length; i++) {
+                    StringBuffer buff = new StringBuffer(ModelerCore.Util.getString("operation.notSupported")); //$NON-NLS-1$
+                    for (int i = 0; i < fElements.length; i++) {
                         if (i > 0) {
                             buff.append(", "); //$NON-NLS-1$
                         }
@@ -255,7 +275,7 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
                 case UPDATE_CONFLICT:
                     return ModelerCore.Util.getString("status.updateConflict"); //$NON-NLS-1$
 
-                case NO_LOCAL_CONTENTS :
+                case NO_LOCAL_CONTENTS:
                     return ModelerCore.Util.getString("status.noLocalContents", getPath().toString()); //$NON-NLS-1$
 
             }
@@ -270,12 +290,14 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
         }
         return exception.toString();
     }
+
     /**
      * @see IJavaModelStatus#getPath()
      */
     public IPath getPath() {
         return fPath;
     }
+
     /**
      * @see IStatus#getSeverity()
      */
@@ -291,12 +313,14 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
         }
         return severity;
     }
+
     /**
      * @see IJavaModelStatus#isDoesNotExist()
      */
     public boolean isDoesNotExist() {
         return getCode() == ITEM_DOES_NOT_EXIST;
     }
+
     /**
      * @see IStatus#isMultiStatus()
      */
@@ -304,6 +328,7 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
     public boolean isMultiStatus() {
         return fChildren != fgEmptyChildren;
     }
+
     /**
      * @see IStatus#isOK()
      */
@@ -311,24 +336,26 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
     public boolean isOK() {
         return getCode() == OK;
     }
+
     /**
      * @see IStatus#matches(int)
      */
     @Override
-    public boolean matches(int mask) {
-        if (! isMultiStatus()) {
+    public boolean matches( int mask ) {
+        if (!isMultiStatus()) {
             return matches(this, mask);
         }
         for (int i = 0, max = fChildren.length; i < max; i++) {
-            if (matches((ModelStatusImpl) fChildren[i], mask))
-                return true;
+            if (matches((ModelStatusImpl)fChildren[i], mask)) return true;
         }
         return false;
     }
+
     /**
      * Helper for matches(int).
      */
-    protected boolean matches(ModelStatusImpl status, int mask) {
+    protected boolean matches( ModelStatusImpl status,
+                               int mask ) {
         int severityMask = mask & 0x7;
         int categoryMask = mask & ~0x7;
         int bits = status.getBits();
@@ -337,11 +364,11 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
 
     /**
      * Adds the given status to this multi-status.
-     *
+     * 
      * @param status the new child status
      */
-    public void add(IStatus status) {
-        Assertion.isNotNull(status);
+    public void add( IStatus status ) {
+        CoreArgCheck.isNotNull(status);
         IStatus[] result = new IStatus[fChildren.length + 1];
         System.arraycopy(fChildren, 0, result, 0, fChildren.length);
         result[result.length - 1] = status;
@@ -351,15 +378,15 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
             setSeverity(newSev);
         }
     }
+
     /**
-     * Adds all of the children of the given status to this multi-status.
-     * Does nothing if the given status has no children (which includes
-     * the case where it is not a multi-status).
-     *
+     * Adds all of the children of the given status to this multi-status. Does nothing if the given status has no children (which
+     * includes the case where it is not a multi-status).
+     * 
      * @param status the status whose children are to be added to this one
      */
-    public void addAll(IStatus status) {
-        Assertion.isNotNull(status);
+    public void addAll( IStatus status ) {
+        CoreArgCheck.isNotNull(status);
         IStatus[] statuses = status.getChildren();
         for (int i = 0; i < statuses.length; i++) {
             add(statuses[i]);
@@ -367,23 +394,22 @@ public class ModelStatusImpl extends Status implements ModelStatus, ModelStatusC
     }
 
     /**
-     * Creates and returns a new <code>IJavaModelStatus</code> that is a
-     * a multi-status status.
-     *
+     * Creates and returns a new <code>IJavaModelStatus</code> that is a a multi-status status.
+     * 
      * @see IStatus#isMultiStatus()
      */
-    public static ModelStatus newMultiStatus(ModelStatus[] children) {
+    public static ModelStatus newMultiStatus( ModelStatus[] children ) {
         ModelStatusImpl result = new ModelStatusImpl();
         result.fChildren = children;
         return result;
     }
+
     /**
-     * Returns a printable representation of this exception for debugging
-     * purposes.
+     * Returns a printable representation of this exception for debugging purposes.
      */
     @Override
     public String toString() {
-        if (this == VERIFIED_OK){
+        if (this == VERIFIED_OK) {
             return "ModelStatusImpl[OK]"; //$NON-NLS-1$
         }
         StringBuffer buffer = new StringBuffer();

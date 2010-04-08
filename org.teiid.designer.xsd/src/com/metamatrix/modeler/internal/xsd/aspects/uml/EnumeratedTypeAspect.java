@@ -17,7 +17,7 @@ import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import com.metamatrix.core.MetaMatrixRuntimeException;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlClassifier;
@@ -84,7 +84,7 @@ public class EnumeratedTypeAspect extends AbstractXsdEntityAspect
                 // Name
                 String name = type.getName();
                 
-                if (StringUtil.isEmpty(name)) {
+                if (CoreStringUtil.isEmpty(name)) {
                     EObject parent = type.eContainer();
                     
                     if (parent instanceof XSDNamedComponent) {

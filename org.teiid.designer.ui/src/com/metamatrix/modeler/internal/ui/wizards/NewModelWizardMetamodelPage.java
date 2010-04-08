@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
@@ -451,7 +451,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
 
     private boolean checkStatus() {
         String container = getContainerName();
-        if (StringUtil.isEmpty(container)) {
+        if (CoreStringUtil.isEmpty(container)) {
             currentStatus = STATUS_NO_LOCATION;
             return false;
         }
@@ -573,7 +573,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
         IResource result = null;
         String containerName = getContainerName();
 
-        if (!StringUtil.isEmpty(containerName)) {
+        if (!CoreStringUtil.isEmpty(containerName)) {
             IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
             IResource resource = root.findMember(new Path(containerName));
 
@@ -589,7 +589,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
         IProject result = null;
         String containerName = getContainerName();
 
-        if (!StringUtil.isEmpty(containerName)) {
+        if (!CoreStringUtil.isEmpty(containerName)) {
             IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
             IResource resource = root.findMember(new Path(containerName));
 
@@ -704,7 +704,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
      */
     @Override
     public boolean canFlipToNextPage() {
-        return (currentStatus == STATUS_OK && (this.getSelectedBuilder() != null) && (!StringUtil.isEmpty(getContainerName())) && (getFileName().length() > 0));
+        return (currentStatus == STATUS_OK && (this.getSelectedBuilder() != null) && (!CoreStringUtil.isEmpty(getContainerName())) && (getFileName().length() > 0));
     }
 
     /* (non-Javadoc)

@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingRoot;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.transformation.FragmentMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -57,7 +57,7 @@ public class FragmentMappingAdapter implements PluginConstants {
      * @throws IllegalArgumentException if input is <code>null</code>
      */
     public FragmentMappingAdapter( EObject theTreeRoot ) {
-        ArgCheck.isNotNull(theTreeRoot);
+        CoreArgCheck.isNotNull(theTreeRoot);
 
         root = theTreeRoot;
 
@@ -95,7 +95,7 @@ public class FragmentMappingAdapter implements PluginConstants {
      */
     public FragmentMappingAdapter( EObject theTreeRoot,
                                    List theFragmentRoots ) {
-        ArgCheck.isNotNull(theTreeRoot);
+        CoreArgCheck.isNotNull(theTreeRoot);
 
         root = theTreeRoot;
         setFragmentRoots(theFragmentRoots);
@@ -114,8 +114,8 @@ public class FragmentMappingAdapter implements PluginConstants {
      */
     public void addFragment( EObject theFragmentReference, // NO_UCD
                              EObject theFragment ) {
-        ArgCheck.isNotNull(theFragmentReference);
-        ArgCheck.isNotNull(theFragment);
+        CoreArgCheck.isNotNull(theFragmentReference);
+        CoreArgCheck.isNotNull(theFragment);
 
         if (fragmentRoot == null) {
             ModelContents mc = ModelerCore.getModelEditor().getModelContents(root);
@@ -169,7 +169,7 @@ public class FragmentMappingAdapter implements PluginConstants {
      * @throws IllegalArgumentException if input is <code>null</code>
      */
     public EObject getFragment( EObject theFragmentReference ) {
-        ArgCheck.isNotNull(theFragmentReference);
+        CoreArgCheck.isNotNull(theFragmentReference);
 
         EObject result = null;
 
@@ -201,7 +201,7 @@ public class FragmentMappingAdapter implements PluginConstants {
      * @throws IllegalArgumentException if input is <code>null</code>
      */
     private EObject getFragment( Mapping theMapping ) {
-        ArgCheck.isNotNull(theMapping);
+        CoreArgCheck.isNotNull(theMapping);
 
         List inputs = theMapping.getInputs();
 
@@ -225,7 +225,7 @@ public class FragmentMappingAdapter implements PluginConstants {
      * @throws IllegalArgumentException if input is <code>null</code>
      */
     private EObject getFragmentReference( Mapping theMapping ) {
-        ArgCheck.isNotNull(theMapping);
+        CoreArgCheck.isNotNull(theMapping);
 
         List outputs = theMapping.getOutputs();
 
@@ -243,7 +243,7 @@ public class FragmentMappingAdapter implements PluginConstants {
     }
 
     public EObject getInputSet( EObject theFragmentReference ) { // NO_UCD
-        ArgCheck.isNotNull(theFragmentReference);
+        CoreArgCheck.isNotNull(theFragmentReference);
 
         EObject result = null;
 
@@ -281,7 +281,7 @@ public class FragmentMappingAdapter implements PluginConstants {
      * @throws IllegalArgumentException if input is <code>null</code>
      */
     public void removeFragment( EObject theFragmentReference ) { // NO_UCD
-        ArgCheck.isNotNull(theFragmentReference);
+        CoreArgCheck.isNotNull(theFragmentReference);
 
         if (containsFragments()) {
             boolean foundIt = false;
@@ -313,7 +313,7 @@ public class FragmentMappingAdapter implements PluginConstants {
      * @throws IllegalArgumentException if input is <code>null</code>
      */
     private void setFragmentRoots( List theFragmentRoots ) {
-        ArgCheck.isNotNull(theFragmentRoots);
+        CoreArgCheck.isNotNull(theFragmentRoots);
 
         if (!theFragmentRoots.isEmpty()) {
             for (int size = theFragmentRoots.size(), i = 0; i < size; i++) {

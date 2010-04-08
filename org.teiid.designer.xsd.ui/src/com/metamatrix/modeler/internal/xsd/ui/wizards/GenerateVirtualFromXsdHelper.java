@@ -33,7 +33,7 @@ import org.eclipse.xsd.XSDParticleContent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDWildcard;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xsd.XsdUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -67,8 +67,8 @@ public class GenerateVirtualFromXsdHelper {
     public static boolean HEADLESS = false;//Flag to allow for JUnit testing
     
     public GenerateVirtualFromXsdHelper(final MultiStatus status, Resource resource, Collection types) {
-        ArgCheck.isNotNull(status);
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(status);
+        CoreArgCheck.isNotNull(resource);
         this.status = status;
         this.resource = resource;
         this.builder = new RelationalObjectBuilder(resource);

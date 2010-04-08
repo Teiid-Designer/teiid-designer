@@ -25,7 +25,7 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.internal.jdbc.JdbcManagerImpl;
 import com.metamatrix.modeler.jdbc.metadata.Includes;
@@ -159,8 +159,8 @@ public class JdbcPlugin extends Plugin {
      */
     public static JdbcDatabase getJdbcDatabase( final JdbcSource source,
                                                 final Connection connection ) {
-        ArgCheck.isNotNull(source);
-        ArgCheck.isNotNull(connection);
+        CoreArgCheck.isNotNull(source);
+        CoreArgCheck.isNotNull(connection);
         final JdbcNodeSelections selectionsCache = new JdbcNodeSelections();
 
         // See if there are import settings ...
@@ -208,7 +208,7 @@ public class JdbcPlugin extends Plugin {
      * @return the {@link JdbcImportSettings} object on the source; never null
      */
     public static JdbcImportSettings ensureNonNullImportSettings( final JdbcSource source ) {
-        ArgCheck.isNotNull(source);
+        CoreArgCheck.isNotNull(source);
 
         // Get (or create) the import settings on the source
         JdbcImportSettings settings = source.getImportSettings();
@@ -231,8 +231,8 @@ public class JdbcPlugin extends Plugin {
      */
     public static void recordJdbcDatabaseSelections( final JdbcSource source,
                                                      final JdbcDatabase database ) throws JdbcException {
-        ArgCheck.isNotNull(source);
-        ArgCheck.isNotNull(database);
+        CoreArgCheck.isNotNull(source);
+        CoreArgCheck.isNotNull(database);
 
         // Get (or create) the import settings on the source
         final JdbcImportSettings settings = ensureNonNullImportSettings(source);

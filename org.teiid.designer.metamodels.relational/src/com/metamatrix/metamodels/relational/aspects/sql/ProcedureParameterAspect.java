@@ -11,7 +11,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.DirectionKind;
 import com.metamatrix.metamodels.relational.NullableType;
 import com.metamatrix.metamodels.relational.ProcedureParameter;
@@ -35,7 +35,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getDatatypeName(org.eclipse.emf.ecore.EObject)
      */
     public String getDatatypeName(EObject eObject) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         final EObject dataType = proc.getType();
         final DatatypeManager dtMgr = ModelerCore.getDatatypeManager(proc,true);
@@ -48,7 +48,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getDatatype(org.eclipse.emf.ecore.EObject)
      */
     public EObject getDatatype(EObject eObject) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         return proc.getType();
     }
@@ -57,7 +57,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getRuntimeType(org.eclipse.emf.ecore.EObject)
      */
     public String getRuntimeType(EObject eObject) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         final EObject datatype = proc.getType();
         return datatype == null ? "" : ModelerCore.getDatatypeManager(eObject,true).getRuntimeTypeName(datatype); //$NON-NLS-1$
@@ -68,7 +68,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getDefaultValue(org.eclipse.emf.ecore.EObject)
      */
     public Object getDefaultValue(EObject eObject) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         return proc.getDefaultValue();
     }
@@ -77,7 +77,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getType(org.eclipse.emf.ecore.EObject)
      */
     public int getType(EObject eObject) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         DirectionKind direction = proc.getDirection();
 
@@ -89,7 +89,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getLength(org.eclipse.emf.ecore.EObject)
      */
     public int getLength(EObject eObject) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         return proc.getLength();
     }
@@ -98,7 +98,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getPrecision(org.eclipse.emf.ecore.EObject)
      */
     public int getPrecision(EObject eObject) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         return proc.getPrecision();
     }
@@ -107,7 +107,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getRadix(org.eclipse.emf.ecore.EObject)
      */
     public int getRadix(EObject eObject) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         return proc.getRadix();
     }
@@ -116,7 +116,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getPosition(org.eclipse.emf.ecore.EObject)
      */
     public int getPosition(EObject eObject) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         List params = proc.getProcedure().getParameters();
         // correct from '0' to '1' based position
@@ -127,7 +127,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getScale(org.eclipse.emf.ecore.EObject)
      */
     public int getScale(EObject eObject) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         return proc.getScale();
     }
@@ -136,7 +136,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getNullType(org.eclipse.emf.ecore.EObject)
      */
     public int getNullType(EObject eObject) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         NullableType nullType = proc.getNullable();
 
@@ -178,7 +178,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#isDatatypeFeature(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EStructuralFeature)
      */
     public boolean isDatatypeFeature(final EObject eObject, final EStructuralFeature eFeature) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject); 
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject); 
         final EObjectImpl eObjectImpl = super.getEObjectImpl(eObject);
         if (eObjectImpl != null) {
             switch (eObjectImpl.eDerivedStructuralFeatureID(eFeature)) {
@@ -201,7 +201,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @since 4.2
      */
     public void setDatatype(EObject eObject, EObject datatype) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter procParam = (ProcedureParameter) eObject;
         procParam.setType(datatype);
     }
@@ -219,7 +219,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @since 4.2
      */
     public void setLength(EObject eObject, int length) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter procParam = (ProcedureParameter) eObject;
         procParam.setLength(length);
     }
@@ -237,7 +237,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @since 4.2
      */
     public void setNullType(EObject eObject, int nullType) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter procParam = (ProcedureParameter) eObject;
         procParam.setNullable(convertMetadataConstantToNullableType(nullType));
     }
@@ -247,7 +247,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @since 4.3
      */
     public boolean isInputParam(final EObject eObject) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter procParam = (ProcedureParameter) eObject;
         final DirectionKind dir = procParam.getDirection();
         return DirectionKind.IN_LITERAL == dir || DirectionKind.INOUT_LITERAL == dir;
@@ -259,7 +259,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      */
     public void setDirection(EObject eObject,
                              int dir) {
-        ArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         proc.setDirection(convertMetadataContantToDirectionKind(dir));
     }

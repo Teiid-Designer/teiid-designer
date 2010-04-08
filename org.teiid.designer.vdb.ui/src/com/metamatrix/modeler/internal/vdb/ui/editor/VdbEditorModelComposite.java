@@ -57,7 +57,7 @@ import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbEntry.SyncState;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
@@ -81,7 +81,7 @@ import com.metamatrix.ui.internal.widget.TablePanel;
  * @since 4.2
  */
 public final class VdbEditorModelComposite
-    implements ListPanel.Constants, StringUtil.Constants, VdbUiConstants, VdbEditor.Constants, Widgets {
+    implements ListPanel.Constants, CoreStringUtil.Constants, VdbUiConstants, VdbEditor.Constants, Widgets {
 
     private static final String I18N_PREFIX = "VdbEditorModelPage."; //$NON-NLS-1$
     private static final String MODEL_SELECTION_DIALOG_TITLE = getString("modelSelectionDialogTitle"); //$NON-NLS-1$

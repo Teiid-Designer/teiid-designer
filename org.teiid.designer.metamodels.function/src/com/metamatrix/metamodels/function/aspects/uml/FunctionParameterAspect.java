@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.function.aspects.uml;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.function.FunctionParameter;
 import com.metamatrix.metamodels.function.FunctionPlugin;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
@@ -195,7 +195,7 @@ public class FunctionParameterAspect extends AbstractFunctionAspect implements U
     }
 
     protected FunctionParameter assertFunctionParameter(Object eObject) {
-        ArgCheck.isInstanceOf(FunctionParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(FunctionParameter.class, eObject);
         return (FunctionParameter)eObject;
     }
 

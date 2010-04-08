@@ -11,8 +11,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.relational.LogicalRelationship;
 import com.metamatrix.metamodels.relational.LogicalRelationshipEnd;
 import com.metamatrix.metamodels.relational.MultiplicityKind;
@@ -222,7 +222,7 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
      */
     public String[] getProperties( Object assoc,
                                    int end ) {
-        return StringUtil.Constants.EMPTY_STRING_ARRAY;
+        return CoreStringUtil.Constants.EMPTY_STRING_ARRAY;
     }
 
     /* (non-Javadoc)
@@ -235,7 +235,7 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
     }
 
     protected LogicalRelationshipEnd assertLogicalRelationshipEnd( Object eObject ) { // NO_UCD
-        ArgCheck.isInstanceOf(LogicalRelationshipEnd.class, eObject);
+        CoreArgCheck.isInstanceOf(LogicalRelationshipEnd.class, eObject);
 
         return (LogicalRelationshipEnd)eObject;
     }
@@ -244,7 +244,7 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
      * @see com.metamatrix.modeler.core.metamodel.aspect.uml.UmlRelationship#getName(java.lang.Object)
      */
     public String getName( Object eObject ) {
-        return StringUtil.Constants.EMPTY_STRING;
+        return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     /**
@@ -257,7 +257,7 @@ public class LogicalRelationshipAspect extends RelationalEntityAspect implements
     }
 
     protected LogicalRelationship assertLogicalRelationship( Object eObject ) {
-        ArgCheck.isInstanceOf(LogicalRelationship.class, eObject);
+        CoreArgCheck.isInstanceOf(LogicalRelationship.class, eObject);
 
         return (LogicalRelationship)eObject;
     }

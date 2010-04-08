@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.util.ModelVisitor;
 
 /**
@@ -32,7 +32,7 @@ public class FindReferencesToDeletedObjects implements ModelVisitor {
      * Construct an instance of FindReferencesToDeletedObjects.
      */
     public FindReferencesToDeletedObjects( final Collection allDeletedObjects ) {
-        Assertion.isNotNull(allDeletedObjects);
+        CoreArgCheck.isNotNull(allDeletedObjects);
         this.allDeletedObjects = new HashSet(allDeletedObjects);
         this.referencesToDeleted = new HashSet();
     }

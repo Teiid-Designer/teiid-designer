@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.webservice.NonResolvableXSDSchema;
@@ -546,8 +546,8 @@ public class SchemaLocationPage extends AbstractWizardPage
                 }
             } else {
                 // should not happen
-                Assertion.failed(UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
-                                                new Object[] {theElement.getClass().getName()}));
+                CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
+                                                          new Object[] {theElement.getClass().getName()}));
             }
 
             return result;
@@ -589,13 +589,13 @@ public class SchemaLocationPage extends AbstractWizardPage
                     result = xsd.getDestinationPath().makeRelative().toOSString();
                 } else {
                     // should not happen
-                    Assertion.failed(UTIL.getString(PREFIX + "msg.unknownTableColumn", //$NON-NLS-1$
-                                                    new Object[] {Integer.toString(theIndex)}));
+                    CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unknownTableColumn", //$NON-NLS-1$
+                                                              new Object[] {Integer.toString(theIndex)}));
                 }
             } else {
                 // should not happen
-                Assertion.failed(UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
-                                                new Object[] {theElement.getClass().getName()}));
+                CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
+                                                          new Object[] {theElement.getClass().getName()}));
             }
 
             return result;

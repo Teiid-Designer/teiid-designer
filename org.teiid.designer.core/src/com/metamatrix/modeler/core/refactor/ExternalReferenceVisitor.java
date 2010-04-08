@@ -19,8 +19,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.diagram.DiagramEntity;
 import com.metamatrix.modeler.core.util.ModelVisitor;
@@ -46,7 +45,7 @@ public class ExternalReferenceVisitor implements ModelVisitor {
      */
     public ExternalReferenceVisitor( final Resource resource ) {
         super();
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         this.resource = resource;
         this.referencedObjectsByResourceUri = new HashMap();
     }
@@ -146,7 +145,7 @@ public class ExternalReferenceVisitor implements ModelVisitor {
             if (object instanceof InternalEObject) {
                 final InternalEObject iObject = (InternalEObject)object;
                 final URI proxyUri = iObject.eProxyURI();
-                Assertion.isNotNull(proxyUri);
+                CoreArgCheck.isNotNull(proxyUri);
                 recordResourceUsage(proxyUri, object);
             }
             return false;
@@ -243,7 +242,7 @@ public class ExternalReferenceVisitor implements ModelVisitor {
         private Resource resource;
 
         protected ExternalReferences( final URI resourceUri ) {
-            Assertion.isNotNull(resourceUri);
+            CoreArgCheck.isNotNull(resourceUri);
             this.resourceUri = resourceUri;
             this.objects = new HashSet();
         }
@@ -281,7 +280,7 @@ public class ExternalReferenceVisitor implements ModelVisitor {
          */
         protected void setResource( final Resource resource ) {
             if (this.resource != null) {
-                Assertion.assertTrue(resource == this.resource);
+                CoreArgCheck.isTrue(resource == this.resource, "Resource cannot be reset to itself"); //$NON-NLS-1$
                 return;
             }
             this.resource = resource;

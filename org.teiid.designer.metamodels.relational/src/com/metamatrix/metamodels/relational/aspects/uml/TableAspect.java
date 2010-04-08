@@ -12,7 +12,7 @@ import java.util.Collection;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.RelationalMetamodelConstants;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
 import com.metamatrix.metamodels.relational.Table;
@@ -96,7 +96,7 @@ public abstract class TableAspect extends RelationalEntityAspect implements UmlC
     }
 
     protected Table assertTable(Object eObject) {
-        ArgCheck.isInstanceOf(Table.class, eObject);
+        CoreArgCheck.isInstanceOf(Table.class, eObject);
     
         return (Table)eObject;
     }

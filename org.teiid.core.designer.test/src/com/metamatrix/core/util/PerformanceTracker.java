@@ -17,8 +17,8 @@ import java.util.Iterator;
  */
 public class PerformanceTracker {
 
-    private static final char RETURN_CHAR = StringUtil.Constants.NEW_LINE_CHAR;
-    static final char SPACE_CHAR = StringUtil.Constants.SPACE_CHAR;
+    private static final char RETURN_CHAR = CoreStringUtil.Constants.NEW_LINE_CHAR;
+    static final char SPACE_CHAR = CoreStringUtil.Constants.SPACE_CHAR;
 
     private String idOrTitle;
     private HashMap timingResultsMap = new HashMap(10);

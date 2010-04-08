@@ -11,7 +11,7 @@ import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Property;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 
@@ -30,7 +30,7 @@ public class ValidatingRelationalObjectNameStrategy implements RelationalObjectN
      */
     public ValidatingRelationalObjectNameStrategy(final RelationalObjectNamingStrategy strategy) {
         super();
-        ArgCheck.isNotNull(strategy);
+        CoreArgCheck.isNotNull(strategy);
         this.delegate = strategy;
         this.validator = new StringNameValidator();
     }

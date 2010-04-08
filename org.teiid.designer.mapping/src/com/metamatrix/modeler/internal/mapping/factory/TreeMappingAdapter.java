@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.MappingClassColumn;
@@ -64,7 +64,7 @@ public class TreeMappingAdapter implements PluginConstants {
      */
     public TreeMappingAdapter(EObject theTreeRoot) {
         //startTracking("TreeMappingAdapter()"); //$NON-NLS-1$
-        ArgCheck.isNotNull(theTreeRoot);
+        CoreArgCheck.isNotNull(theTreeRoot);
         
         mappingLocator = new TreeMappingClassLocator(theTreeRoot);
         
@@ -137,8 +137,8 @@ public class TreeMappingAdapter implements PluginConstants {
     public void addMappingClassLocation( MappingClass theMappingClass, EObject theTreeNode ) {
         //startTracking("addMappingClassLocation()"); //$NON-NLS-1$
 
-        ArgCheck.isNotNull(theMappingClass);
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theMappingClass);
+        CoreArgCheck.isNotNull(theTreeNode);
         
         if( ! mappingLocator.containsLocation(theMappingClass, theTreeNode) ) {
             try {
@@ -165,8 +165,8 @@ public class TreeMappingAdapter implements PluginConstants {
     public void addMappingClassColumnLocation(MappingClassColumn theMappingColumn, EObject theTreeNode) {
         //startTracking("addMappingClassColumnLocation()"); //$NON-NLS-1$
 
-        ArgCheck.isNotNull(theMappingColumn);
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theMappingColumn);
+        CoreArgCheck.isNotNull(theTreeNode);
 
         mappingLocator.addMappingClassColumnLocation(theMappingColumn, theTreeNode);
 
@@ -182,7 +182,7 @@ public class TreeMappingAdapter implements PluginConstants {
     public EObject createTreeMappingRoot(MappingClass theMappingClass) {
         //startTracking("createTreeMappingRoot(GENERATING)"); //$NON-NLS-1$
 
-        ArgCheck.isNotNull(theMappingClass);
+        CoreArgCheck.isNotNull(theMappingClass);
         if( mappingLocator.hasTreeRoot(theMappingClass) ) {
             return mappingLocator.getMappingRoot(theMappingClass);
         }
@@ -277,7 +277,7 @@ public class TreeMappingAdapter implements PluginConstants {
      * @return
      */
     public StagingTable getStagingTable(EObject theTreeNode) {
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theTreeNode);
         
         return (StagingTable)mappingLocator.getStagingTable(theTreeNode);
     }
@@ -291,7 +291,7 @@ public class TreeMappingAdapter implements PluginConstants {
      */
     public EObject getMappingClassLocation( MappingClass theMappingClass ) {
         //startTracking("getMappingClassLocation()"); //$NON-NLS-1$
-        ArgCheck.isNotNull( theMappingClass );
+        CoreArgCheck.isNotNull( theMappingClass );
         List locations = mappingLocator.getMappingClassLocations( theMappingClass );
         EObject location = null;
         if( !locations.isEmpty() ) {
@@ -307,13 +307,13 @@ public class TreeMappingAdapter implements PluginConstants {
      * @return
      */
     public MappingClass getMappingClass(EObject theTreeNode) {
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theTreeNode);
 
         return (MappingClass) mappingLocator.getMappingClass(theTreeNode);
     }
     
     public MappingClassColumn getMappingClassColumn(EObject theTreeNode, MappingClass theMappingClass) {
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theTreeNode);
         
         MappingClassColumn result = mappingLocator.getMappingClassColumn(theTreeNode, theMappingClass);
         
@@ -369,7 +369,7 @@ public class TreeMappingAdapter implements PluginConstants {
          *                  Yes: on NewMappingLinkAction and DeleteMappingLinksAction
          *                  [fixed 2/1/2006]         
          */
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theTreeNode);
         
         MappingClassColumn result = mappingLocator.getMappingClassColumn(theTreeNode);
 //        
@@ -385,7 +385,7 @@ public class TreeMappingAdapter implements PluginConstants {
      * @throws IllegalArgumentException if input parameter is <code>null</code>
      */
     public boolean isMapped(EObject theTreeNode) {
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theTreeNode);
         return getMappingClassColumn(theTreeNode) != null;              
     }
     
@@ -407,8 +407,8 @@ public class TreeMappingAdapter implements PluginConstants {
      */
     public void removeMappingClassLocation(MappingClass theMappingClass,
                                 EObject theTreeNode) {
-        ArgCheck.isNotNull(theMappingClass);
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theMappingClass);
+        CoreArgCheck.isNotNull(theTreeNode);
         
         try {
             mappingLocator.removeOutputLocation(theMappingClass, theTreeNode);
@@ -427,7 +427,7 @@ public class TreeMappingAdapter implements PluginConstants {
      * @throws ModelerCoreException
      */
     public void deleteMappingClass(MappingClass theMappingClass) throws ModelerCoreException {
-        ArgCheck.isNotNull(theMappingClass);
+        CoreArgCheck.isNotNull(theMappingClass);
         
         mappingLocator.deleteMappingClass(theMappingClass);
     }
@@ -441,8 +441,8 @@ public class TreeMappingAdapter implements PluginConstants {
     public void removeMappingClassColumnLocation(MappingClassColumn theMappingColumn,
                                 EObject theTreeNode) {
 
-       ArgCheck.isNotNull(theMappingColumn);
-       ArgCheck.isNotNull(theTreeNode);
+       CoreArgCheck.isNotNull(theMappingColumn);
+       CoreArgCheck.isNotNull(theTreeNode);
        
        mappingLocator.removeMappingClassColumnLocation(theMappingColumn, theTreeNode);
 

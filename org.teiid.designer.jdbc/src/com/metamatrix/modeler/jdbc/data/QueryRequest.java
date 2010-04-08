@@ -15,7 +15,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.internal.jdbc.JdbcUtil;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
 
@@ -32,8 +32,8 @@ public class QueryRequest extends Request {
      */
     public QueryRequest( final String name, final Connection connection, final String sql ) {
         super(name,connection);
-        ArgCheck.isNotNull(sql);
-        ArgCheck.isNotZeroLength(sql);
+        CoreArgCheck.isNotNull(sql);
+        CoreArgCheck.isNotZeroLength(sql);
         this.sql = sql;
     }
 

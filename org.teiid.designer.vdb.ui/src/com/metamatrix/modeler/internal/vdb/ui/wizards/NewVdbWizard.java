@@ -38,7 +38,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
@@ -59,7 +59,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
  * @since 4.0
  */
 public final class NewVdbWizard extends AbstractWizard
-    implements INewWizard, InternalUiConstants.Widgets, StringUtil.Constants, UiConstants {
+    implements INewWizard, InternalUiConstants.Widgets, CoreStringUtil.Constants, UiConstants {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(NewVdbWizard.class);
 
@@ -269,7 +269,7 @@ public final class NewVdbWizard extends AbstractWizard
         if (folder != null) {
             this.folderText.setText(folder.getFullPath().makeRelative().toString());
 
-            if (StringUtil.isEmpty(nameText.getText())) {
+            if (CoreStringUtil.isEmpty(nameText.getText())) {
                 nameText.setFocus();
             }
         }

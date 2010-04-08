@@ -21,8 +21,8 @@ import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.InvalidIDException;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;
@@ -122,9 +122,9 @@ public class SqlConverter {
     private static synchronized String convertSql(final String sqlString, final EObject transMappingRoot, 
                                                   final int cmdType, final boolean convertSymbolsToUUIDs, 
                                                   final boolean restrictSearch, final ValidationContext context) {
-		if(StringUtil.isEmpty(sqlString)) return null;
+		if(CoreStringUtil.isEmpty(sqlString)) return null;
 
-		ArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, transMappingRoot);
+		CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, transMappingRoot);
 
         final SqlTransformationMappingRoot sqlTransMappingRoot = (SqlTransformationMappingRoot)transMappingRoot;
         final TransformationValidator validator = new TransformationValidator(sqlTransMappingRoot, context, false, restrictSearch);
@@ -154,7 +154,7 @@ public class SqlConverter {
                 // If converting uuids to Names, and the string still contains uuids -
                 // Try to convert everything possible...
                 String newString = command.toString();
-                if( !convertSymbolsToUUIDs && StringUtil.indexOfIgnoreCase(newString,UUID.PROTOCOL) != -1 ) {
+                if( !convertSymbolsToUUIDs && CoreStringUtil.indexOfIgnoreCase(newString,UUID.PROTOCOL) != -1 ) {
                     final Container container = (context != null ? context.getResourceContainer() : ModelerCore.getContainer(sqlTransMappingRoot));
                     MAPPING_VISITOR.setQueryMetadata(null);
                     return convertUUIDsToFullNames(newString,container);
@@ -168,7 +168,7 @@ public class SqlConverter {
             //to brute force implementation below.
         }
 
-        if( !convertSymbolsToUUIDs && StringUtil.indexOfIgnoreCase(sqlString,UUID.PROTOCOL) != -1 ) { 
+        if( !convertSymbolsToUUIDs && CoreStringUtil.indexOfIgnoreCase(sqlString,UUID.PROTOCOL) != -1 ) { 
             final Container container = (context != null ? context.getResourceContainer() : ModelerCore.getContainer(sqlTransMappingRoot));
             return convertUUIDsToFullNames(sqlString,container);
         }
@@ -205,10 +205,10 @@ public class SqlConverter {
      * @return the user form of the SQL
      */
     public static synchronized String convertSql(final String sqlString, final Collection eResources, final int cmdType) {
-        if (StringUtil.isEmpty(sqlString)) {
+        if (CoreStringUtil.isEmpty(sqlString)) {
             return null;
         }
-        ArgCheck.isNotNull(eResources);
+        CoreArgCheck.isNotNull(eResources);
         
         // Get the command for the sql string
         Command command = null;
@@ -288,7 +288,7 @@ public class SqlConverter {
                         }
                     }
 
-                    if(!StringUtil.isEmpty(name)){
+                    if(!CoreStringUtil.isEmpty(name)){
                         buf.append(name);
                     }else{
                         if(uuidString.charAt(index + uuidLength) == ','){
@@ -321,7 +321,7 @@ public class SqlConverter {
 
         if(requiresSpecialProcessing){
             final String result = buf.toString().toUpperCase();
-            int i = StringUtil.indexOfIgnoreCase(result, ReservedWords.WHERE);
+            int i = CoreStringUtil.indexOfIgnoreCase(result, ReservedWords.WHERE);
             if(i > -1){
                 boolean done = false;
                 while(!done){
@@ -383,7 +383,7 @@ public class SqlConverter {
                         }
                     }
 
-                    if(!StringUtil.isEmpty(name)){
+                    if(!CoreStringUtil.isEmpty(name)){
                         buf.append(name);
                     }else{
                         if(uuidString.charAt(index + uuidLength) == ','){
@@ -413,7 +413,7 @@ public class SqlConverter {
 
         if(requiresSpecialProcessing){
             final String result = buf.toString().toUpperCase();
-            int i = StringUtil.indexOfIgnoreCase(result, ReservedWords.WHERE);
+            int i = CoreStringUtil.indexOfIgnoreCase(result, ReservedWords.WHERE);
             if(i > -1){
                 boolean done = false;
                 while(!done){

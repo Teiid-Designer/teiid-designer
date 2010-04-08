@@ -27,7 +27,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.WorkbenchPage;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.ui.AbstractUiPlugin;
 import com.metamatrix.ui.internal.InternalUiConstants;
 
@@ -61,7 +61,7 @@ public abstract class AbstractActionService implements ActionService, InternalUi
     public AbstractActionService( AbstractUiPlugin thePlugin,
                                   IWorkbenchPage page ) {
         plugin = thePlugin;
-        Assertion.isNotNull(page); // page should never be null
+        CoreArgCheck.isNotNull(page); // page should never be null
         myPage = page;
         setWorkbenchWindow(page.getWorkbenchWindow());
 
@@ -134,7 +134,7 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @see com.metamatrix.ui.actions.ActionService#getAction(String)
      */
     public IAction getAction( String theActionId ) throws CoreException {
-        Assertion.isNotNull(theActionId);
+        CoreArgCheck.isNotNull(theActionId);
 
         IAction result = actionMap.get(theActionId);
 
@@ -169,7 +169,7 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @throws com.metamatrix.core.util.AssertionError if action class is <code>null</code> or if not an {@link IAction}
      */
     public IAction getAction( Class<? extends IAction> theActionClass ) throws CoreException {
-        Assertion.isNotNull(theActionClass);
+        CoreArgCheck.isNotNull(theActionClass);
         //        System.out.println("[AbstractActionService.getAction] Action is: " + theActionClass.getName() ); //$NON-NLS-1$
 
         String actionName = theActionClass.getName();
@@ -279,9 +279,9 @@ public abstract class AbstractActionService implements ActionService, InternalUi
             return false;
         }
         if (!IAction.class.isAssignableFrom(theAction.getClass())) {
-            Assertion.assertTrue(IAction.class.isAssignableFrom(theAction.getClass()),
-                                 Util.getString(PREFIX + "ClassNotAssignableToIActionMessage", //$NON-NLS-1$
-                                                new Object[] {theAction}));
+            CoreArgCheck.isTrue(IAction.class.isAssignableFrom(theAction.getClass()),
+                                Util.getString(PREFIX + "ClassNotAssignableToIActionMessage", //$NON-NLS-1$
+                                               new Object[] {theAction}));
         }
 
         actionMap.put(sActionKey, theAction);
@@ -332,7 +332,7 @@ public abstract class AbstractActionService implements ActionService, InternalUi
      * @throws com.metamatrix.core.util.AssertionError if input is null
      */
     public void removeAction( String theActionId ) {
-        Assertion.isNotNull(theActionId);
+        CoreArgCheck.isNotNull(theActionId);
         actionMap.remove(theActionId);
     }
 

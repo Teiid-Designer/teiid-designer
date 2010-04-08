@@ -30,8 +30,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.extension.XClass;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.metamodel.MetamodelRegistry;
@@ -68,7 +68,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @since 5.0
      */
     public boolean containsURI( final String nsUriString ) {
-        if (StringUtil.isEmpty(nsUriString)) {
+        if (CoreStringUtil.isEmpty(nsUriString)) {
             return false;
         }
         final URI nsUri = getURI(nsUriString);
@@ -105,8 +105,8 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @since 5.0
      */
     public MetamodelDescriptor getMetamodelDescriptor( final String nsUriString ) {
-        ArgCheck.isNotNull(nsUriString);
-        ArgCheck.isNotZeroLength(nsUriString);
+        CoreArgCheck.isNotNull(nsUriString);
+        CoreArgCheck.isNotZeroLength(nsUriString);
 
         final URI nsUri = getURI(nsUriString);
         if (nsUri == null) {
@@ -120,7 +120,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @since 5.0
      */
     public MetamodelDescriptor getMetamodelDescriptor( final URI nsUri ) {
-        ArgCheck.isNotNull(nsUri);
+        CoreArgCheck.isNotNull(nsUri);
         return (MetamodelDescriptor)this.descriptorByUriMap.get(nsUri);
     }
 
@@ -138,7 +138,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @since 5.0
      */
     public EPackage getEPackage( final URI nsUri ) {
-        ArgCheck.isNotNull(nsUri);
+        CoreArgCheck.isNotNull(nsUri);
         MetamodelDescriptor descriptor = (MetamodelDescriptor)this.descriptorByUriMap.get(nsUri);
         if (descriptor != null) {
             return descriptor.getEPackage();
@@ -151,7 +151,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @since 5.0
      */
     public Resource getResource( final URI nsUri ) {
-        ArgCheck.isNotNull(nsUri);
+        CoreArgCheck.isNotNull(nsUri);
         MetamodelDescriptor descriptor = (MetamodelDescriptor)this.descriptorByUriMap.get(nsUri);
         if (descriptor != null) {
             EPackage ePkg = descriptor.getEPackage();
@@ -167,8 +167,8 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @since 5.0
      */
     public URI getURI( final String nsUriString ) {
-        ArgCheck.isNotNull(nsUriString);
-        ArgCheck.isNotZeroLength(nsUriString);
+        CoreArgCheck.isNotNull(nsUriString);
+        CoreArgCheck.isNotZeroLength(nsUriString);
         return (URI)this.uriByStringMap.get(nsUriString);
     }
 
@@ -185,7 +185,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @since 5.0
      */
     public URI register( final MetamodelDescriptor descriptor ) {
-        ArgCheck.isNotNull(descriptor);
+        CoreArgCheck.isNotNull(descriptor);
         addDescriptorMappings(descriptor);
         return getURI(descriptor.getNamespaceURI());
     }
@@ -195,7 +195,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @since 5.0
      */
     public void unregister( final URI nsUri ) {
-        ArgCheck.isNotNull(nsUri);
+        CoreArgCheck.isNotNull(nsUri);
         MetamodelDescriptor descriptor = getMetamodelDescriptor(nsUri);
         if (descriptor != null) {
             removeDescriptorMappings(descriptor);
@@ -237,8 +237,8 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      */
     public MetamodelAspect getMetamodelAspect( final EObject eObject,
                                                final Class type ) {
-        ArgCheck.isNotNull(eObject);
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(type);
         return getMetamodelAspect(getEClass(eObject), type);
     }
 
@@ -249,8 +249,8 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      */
     public MetamodelAspect getMetamodelAspect( final EClass eClass,
                                                final Class type ) {
-        ArgCheck.isNotNull(eClass);
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(eClass);
+        CoreArgCheck.isNotNull(type);
         if (this.aspectMgr == null) {
             this.aspectMgr = new MetamodelAspectManager(this);
         }
@@ -262,7 +262,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @since 5.0
      */
     public String getMetaClassLabel( final EClass eClass ) {
-        ArgCheck.isNotNull(eClass);
+        CoreArgCheck.isNotNull(eClass);
 
         final AdapterFactory factory = getAdapterFactory();
         final EFactory objectFactory = eClass.getEPackage().getEFactoryInstance();
@@ -286,7 +286,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @since 5.0
      */
     public String getMetaClassURI( final EClass eClass ) {
-        ArgCheck.isNotNull(eClass);
+        CoreArgCheck.isNotNull(eClass);
         return EcoreUtil.getURI(eClass).toString();
     }
 
@@ -295,8 +295,8 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @since 5.0
      */
     public EClass getMetaClass( final String metaClassUriString ) {
-        ArgCheck.isNotNull(metaClassUriString);
-        ArgCheck.isNotZeroLength(metaClassUriString);
+        CoreArgCheck.isNotNull(metaClassUriString);
+        CoreArgCheck.isNotZeroLength(metaClassUriString);
         URI metaClassUri = URI.createURI(metaClassUriString);
         URI nsUri = metaClassUri.trimFragment();
         if (nsUri != null) {
@@ -313,7 +313,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @since 5.0
      */
     public EClass[] getRootMetaClasses( final URI nsUri ) {
-        ArgCheck.isNotNull(nsUri);
+        CoreArgCheck.isNotNull(nsUri);
         MetamodelDescriptor d = getMetamodelDescriptor(nsUri);
         if (d != null) {
             final List metamodelRootClasses = getRootMetaClasses(d);
@@ -332,7 +332,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
      * @since 5.0
      */
     public MetamodelRootClass[] getMetamodelRootClasses( URI nsUri ) {
-        ArgCheck.isNotNull(nsUri);
+        CoreArgCheck.isNotNull(nsUri);
         MetamodelDescriptor d = getMetamodelDescriptor(nsUri);
         if (d != null) {
             final List result = getRootMetaClasses(d);
@@ -342,8 +342,8 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     protected URI createUri( final String uriString ) {
-        ArgCheck.isNotNull(uriString);
-        ArgCheck.isNotZeroLength(uriString);
+        CoreArgCheck.isNotNull(uriString);
+        CoreArgCheck.isNotZeroLength(uriString);
 
         // Return the existing URI instance if it exists
         if (this.uriByStringMap.containsKey(uriString)) {
@@ -362,7 +362,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     protected EClass getEClass( final EObject eObject ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         if (!(eObject instanceof XClass) && eObject instanceof EClass) {
             return (EClass)eObject;
         }
@@ -370,7 +370,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     protected void addDescriptorMappings( final MetamodelDescriptor descriptor ) {
-        ArgCheck.isNotNull(descriptor);
+        CoreArgCheck.isNotNull(descriptor);
 
         // Populate the maps with the primary namespace URI information
         String nsUriString = descriptor.getNamespaceURI();
@@ -394,7 +394,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     protected void removeDescriptorMappings( final MetamodelDescriptor descriptor ) {
-        ArgCheck.isNotNull(descriptor);
+        CoreArgCheck.isNotNull(descriptor);
 
         String nsUriString = descriptor.getNamespaceURI();
         URI nsUri = createUri(nsUriString);
@@ -415,7 +415,7 @@ public class MetamodelRegistryImpl implements MetamodelRegistry {
     }
 
     protected List getRootMetaClasses( final MetamodelDescriptor descriptor ) {
-        ArgCheck.isNotNull(descriptor);
+        CoreArgCheck.isNotNull(descriptor);
 
         final URI nsUri = getURI(descriptor.getNamespaceURI());
         final MetamodelRootClassDescriptor[] rootClasses = descriptor.getRootClassDescriptors();

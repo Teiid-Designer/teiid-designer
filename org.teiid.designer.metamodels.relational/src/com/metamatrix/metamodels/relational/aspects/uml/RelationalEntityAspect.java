@@ -9,7 +9,7 @@ package com.metamatrix.metamodels.relational.aspects.uml;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AbstractMetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlDiagramAspect;
@@ -43,7 +43,7 @@ public abstract class RelationalEntityAspect extends AbstractMetamodelAspect imp
     
     public String getArrayAsString(final String[] array) {
         if (array == null || array.length == 0) {
-            return StringUtil.Constants.EMPTY_STRING;
+            return CoreStringUtil.Constants.EMPTY_STRING;
         }
         final StringBuffer sb = new StringBuffer(100);
         for (int i = 0; i < array.length; i++) {

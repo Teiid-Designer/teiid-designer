@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.IPathComparator;
 import com.metamatrix.metamodels.core.CorePackage;
@@ -108,8 +108,8 @@ public class MetadataSearchImpl implements MetadataSearch {
     public MetadataSearchImpl( final ModelWorkspace workspace,
                                final IndexSelectorFactory selector ) {
         super();
-        ArgCheck.isNotNull(workspace);
-        ArgCheck.isNotNull(selector);
+        CoreArgCheck.isNotNull(workspace);
+        CoreArgCheck.isNotNull(selector);
         this.workspace = workspace;
 
         // Initialize the remainder ...
@@ -258,7 +258,7 @@ public class MetadataSearchImpl implements MetadataSearch {
      */
     public void setModelScope( final List modelWorkspaceItems ) {
 
-        ArgCheck.isNotNull(modelWorkspaceItems);
+        CoreArgCheck.isNotNull(modelWorkspaceItems);
 
         // jh fix for Defect 18513: use a set to prevent duplicates when overlapping containers
         // are selected

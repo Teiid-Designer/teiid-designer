@@ -12,7 +12,7 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ContentViewer;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -65,7 +65,7 @@ public final class SortModelContentsAction extends Action
         boolean sorting = false;
         String pref = getPreferenceStore().getString(PluginConstants.Prefs.General.SORT_MODEL_CONTENTS);
         
-        if (!StringUtil.isEmpty(pref) && pref.equals(MessageDialogWithToggle.ALWAYS)) {
+        if (!CoreStringUtil.isEmpty(pref) && pref.equals(MessageDialogWithToggle.ALWAYS)) {
             sorting = true;
         }
         

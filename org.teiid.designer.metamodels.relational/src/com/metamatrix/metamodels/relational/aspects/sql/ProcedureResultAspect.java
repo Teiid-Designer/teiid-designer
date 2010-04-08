@@ -9,7 +9,7 @@ package com.metamatrix.metamodels.relational.aspects.sql;
 
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.ProcedureResult;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.metadata.runtime.MetadataConstants;
@@ -29,7 +29,7 @@ public class ProcedureResultAspect extends RelationalEntityAspect implements Sql
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnSetAspect#getColumns(org.eclipse.emf.ecore.EObject)
      */
     public List getColumns(EObject eObject) {
-        ArgCheck.isInstanceOf(ProcedureResult.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureResult.class, eObject);
         ProcedureResult procResult = (ProcedureResult) eObject;
         return procResult.getColumns();
     }
@@ -61,7 +61,7 @@ public class ProcedureResultAspect extends RelationalEntityAspect implements Sql
      * @since 5.0.2
      */
     public Object getProcedure(EObject eObject) {
-        ArgCheck.isInstanceOf(ProcedureResult.class, eObject);
+        CoreArgCheck.isInstanceOf(ProcedureResult.class, eObject);
         return ((ProcedureResult)eObject).getProcedure();
     }
 }

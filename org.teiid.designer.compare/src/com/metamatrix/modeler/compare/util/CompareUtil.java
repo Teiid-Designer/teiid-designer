@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelImport;
@@ -364,8 +364,8 @@ public class CompareUtil {
     public static void print( final DifferenceReport report,
                               final PrintStream stream,
                               final boolean showSkips ) {
-        ArgCheck.isNotNull(report);
-        ArgCheck.isNotNull(stream);
+        CoreArgCheck.isNotNull(report);
+        CoreArgCheck.isNotNull(stream);
         stream.println(""); //$NON-NLS-1$
         if (report.getTitle() != null && report.getTitle().trim().length() != 0) {
             stream.println("DifferenceReport: " + report.getTitle()); //$NON-NLS-1$

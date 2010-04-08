@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.relationship.aspects.relationship;
 import java.util.Collection;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relationship.Relationship;
 import com.metamatrix.metamodels.relationship.RelationshipRole;
 import com.metamatrix.metamodels.relationship.RelationshipType;
@@ -33,7 +33,7 @@ public class RelationAspect
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipAspect#getSources(org.eclipse.emf.ecore.EObject)
 	 */
 	public Collection getSources(EObject eObject) {
-		ArgCheck.isInstanceOf(Relationship.class, eObject);
+		CoreArgCheck.isInstanceOf(Relationship.class, eObject);
 		Relationship relationship = (Relationship) eObject;
 		return relationship.getSources();
 	}
@@ -42,7 +42,7 @@ public class RelationAspect
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipAspect#getTargets(org.eclipse.emf.ecore.EObject)
 	 */
 	public Collection getTargets(EObject eObject) {
-		ArgCheck.isInstanceOf(Relationship.class, eObject);
+		CoreArgCheck.isInstanceOf(Relationship.class, eObject);
 		Relationship relationship = (Relationship) eObject;
 		return relationship.getTargets();
 	}
@@ -51,7 +51,7 @@ public class RelationAspect
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipAspect#getype(org.eclipse.emf.ecore.EObject)
 	 */
 	public Object getType(EObject eObject) {
-		ArgCheck.isInstanceOf(Relationship.class, eObject);
+		CoreArgCheck.isInstanceOf(Relationship.class, eObject);
 		Relationship relationship = (Relationship) eObject;
 		return relationship.getType();
 	}
@@ -60,7 +60,7 @@ public class RelationAspect
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipAspect#getSourceRole(org.eclipse.emf.ecore.EObject)
 	 */
 	public Object getSourceRole(EObject eObject) {
-		ArgCheck.isInstanceOf(Relationship.class, eObject);
+		CoreArgCheck.isInstanceOf(Relationship.class, eObject);
 		Relationship relationship = (Relationship) eObject;
 		return relationship.getSourceRole();
 	}
@@ -69,7 +69,7 @@ public class RelationAspect
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipAspect#getTargetRole(org.eclipse.emf.ecore.EObject)
 	 */
 	public Object getTargetRole(EObject eObject) {
-		ArgCheck.isInstanceOf(Relationship.class, eObject);
+		CoreArgCheck.isInstanceOf(Relationship.class, eObject);
 		Relationship relationship = (Relationship) eObject;
 		return relationship.getTargetRole();
 	}
@@ -78,7 +78,7 @@ public class RelationAspect
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipAspect#isValid(org.eclipse.emf.ecore.EObject)
 	 */
 	public IStatus isValid(EObject eObject) {
-		ArgCheck.isInstanceOf(Relationship.class, eObject);
+		CoreArgCheck.isInstanceOf(Relationship.class, eObject);
 		Relationship relationship = (Relationship) eObject;
 		return relationship.isValid();
 	}

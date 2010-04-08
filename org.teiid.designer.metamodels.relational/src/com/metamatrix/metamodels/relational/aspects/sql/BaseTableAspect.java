@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 
@@ -32,7 +32,7 @@ public class BaseTableAspect extends TableAspect {
         final Collection results = new ArrayList();
         
         // Add the primary key
-        ArgCheck.isInstanceOf(BaseTable.class, eObject); 
+        CoreArgCheck.isInstanceOf(BaseTable.class, eObject); 
         BaseTable baseTable = (BaseTable) eObject; 
         Object value = baseTable.getPrimaryKey();
         if(value != null) {
@@ -53,7 +53,7 @@ public class BaseTableAspect extends TableAspect {
      */
     @Override
     public Collection getForeignKeys(EObject eObject) {
-        ArgCheck.isInstanceOf(BaseTable.class, eObject); 
+        CoreArgCheck.isInstanceOf(BaseTable.class, eObject); 
         BaseTable baseTable = (BaseTable) eObject; 
         return baseTable.getForeignKeys();
     }
@@ -63,7 +63,7 @@ public class BaseTableAspect extends TableAspect {
      */
     @Override
     public Object getPrimaryKey(EObject eObject) {
-        ArgCheck.isInstanceOf(BaseTable.class, eObject); 
+        CoreArgCheck.isInstanceOf(BaseTable.class, eObject); 
         BaseTable baseTable = (BaseTable) eObject; 
         return baseTable.getPrimaryKey();
     }

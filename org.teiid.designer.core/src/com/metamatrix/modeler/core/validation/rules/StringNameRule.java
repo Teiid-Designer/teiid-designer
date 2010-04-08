@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.validation.StructuralFeatureValidationRule;
 import com.metamatrix.modeler.core.validation.ValidationContext;
 import com.metamatrix.modeler.core.validation.ValidationResult;
@@ -38,7 +38,7 @@ public class StringNameRule implements StructuralFeatureValidationRule {
      */
     public StringNameRule( char[] invalidChars,
                            int featureID ) {
-        ArgCheck.isNotNull(invalidChars);
+        CoreArgCheck.isNotNull(invalidChars);
         this.invalidChars = invalidChars;
         this.featureID = featureID;
     }

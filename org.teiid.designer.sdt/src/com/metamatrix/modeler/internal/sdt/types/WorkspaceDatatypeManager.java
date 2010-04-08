@@ -27,8 +27,8 @@ import com.metamatrix.core.MetaMatrixRuntimeException;
 import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.InvalidIDException;
 import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.xsd.XsdUtil;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.container.Container;
@@ -319,7 +319,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      * @see com.metamatrix.modeler.core.types.DatatypeManager#getDatatypeForXsdType
      */
     public EObject getDatatypeForXsdType( final EObject eObject ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
 
         // If the object is a simple type ...
         if (eObject instanceof XSDSimpleTypeDefinition) {
@@ -489,7 +489,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      * @see com.metamatrix.modeler.core.types.DatatypeManager#getSubtypes(org.eclipse.emf.ecore.EObject)
      */
     public EObject[] getSubtypes( final EObject datatype ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, datatype);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, datatype);
 
         // Create a collection of only the datatypes with the correct basetype
         List tmp = new ArrayList();
@@ -546,7 +546,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
         if (aspect != null) {
             description = aspect.getDescription(type);
         }
-        return (description == null ? StringUtil.Constants.EMPTY_STRING : description);
+        return (description == null ? CoreStringUtil.Constants.EMPTY_STRING : description);
     }
 
     // ==================================================================================
@@ -554,7 +554,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     // ==================================================================================
 
     protected EObject getDatatypeForXsdType( final XSDSimpleTypeDefinition simpleType ) {
-        ArgCheck.isNotNull(simpleType);
+        CoreArgCheck.isNotNull(simpleType);
 
         // While the simple type is not a built-in simple type (i.e., one in the schema of schemas) ...
         EObject builtInType = simpleType;
@@ -577,7 +577,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     }
 
     protected EObject getDatatypeForXsdType( final XSDComplexTypeDefinition complexType ) {
-        ArgCheck.isNotNull(complexType);
+        CoreArgCheck.isNotNull(complexType);
 
         // See if this can have character content ...
         // mtkTODO: Implement getDatatypeForXsdType(XSDComplexTypeDefinition)
@@ -601,7 +601,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      * @return
      */
     protected EObject[] getDatatypes( final List emfResources ) {
-        ArgCheck.isNotNull(emfResources);
+        CoreArgCheck.isNotNull(emfResources);
 
         ArrayList tmp = new ArrayList();
         final Iterator iter = emfResources.iterator();
@@ -622,7 +622,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      * @return
      */
     protected EObject[] getDatatypes( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         // Iterate over the resource roots to find the schema instance ...
         ArrayList tmp = new ArrayList();

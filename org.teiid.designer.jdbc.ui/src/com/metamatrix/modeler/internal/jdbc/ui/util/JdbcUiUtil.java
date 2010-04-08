@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.jdbc.relational.util.JdbcRelationalUtil;
 import com.metamatrix.modeler.internal.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 import com.metamatrix.modeler.jdbc.JdbcException;
@@ -34,7 +34,7 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
  */
 public final class JdbcUiUtil
     implements InternalModelerJdbcUiPluginConstants, InternalModelerJdbcUiPluginConstants.Widgets, InternalUiConstants.Widgets,
-    StringUtil.Constants {
+    CoreStringUtil.Constants {
 
     static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(JdbcUiUtil.class);
 

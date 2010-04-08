@@ -42,7 +42,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.FindReplaceAction;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.ui.UiConstants;
 import com.metamatrix.ui.UiPlugin;
@@ -369,7 +369,7 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
      */
     private IAction getAction( String id ) {
         if (id.equals(COPY_ID)) {
-            Assertion.assertTrue(isAllowCopy());
+            CoreArgCheck.isTrue(isAllowCopy(), "Editor does not allow Copy"); //$NON-NLS-1$
 
             if (this.copyAction == null) {
                 this.copyAction = new ContextMenuAction(COPY_ID);
@@ -380,7 +380,7 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
         }
 
         if (id.equals(CUT_ID)) {
-            Assertion.assertTrue(isAllowCut());
+            CoreArgCheck.isTrue(isAllowCut(), "Editor does not allow Cut"); //$NON-NLS-1$
 
             if (this.cutAction == null) {
                 this.cutAction = new ContextMenuAction(CUT_ID);
@@ -391,7 +391,7 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
         }
 
         if (id.equals(FIND_ID)) {
-            Assertion.assertTrue(isAllowFind());
+            CoreArgCheck.isTrue(isAllowFind(), "Editor does not allow Find"); //$NON-NLS-1$
 
             if (this.findAction == null) {
                 this.findAction = new ContextMenuAction(FIND_ID);
@@ -402,7 +402,7 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
         }
 
         if (id.equals(PASTE_ID)) {
-            Assertion.assertTrue(isAllowPaste());
+            CoreArgCheck.isTrue(isAllowPaste(), "Editor does not allow Paste"); //$NON-NLS-1$
 
             if (this.pasteAction == null) {
                 this.pasteAction = new ContextMenuAction(PASTE_ID);
@@ -413,7 +413,7 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
         }
 
         if (id.equals(REDO_ID)) {
-            Assertion.assertTrue(isAllowUndoRedo());
+            CoreArgCheck.isTrue(isAllowUndoRedo(), "Editor does not allow Redo"); //$NON-NLS-1$
 
             if (this.redoAction == null) {
                 this.redoAction = new ContextMenuAction(REDO_ID);
@@ -424,7 +424,7 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
         }
 
         if (id.equals(SELECT_ALL_ID)) {
-            Assertion.assertTrue(isAllowSelectAll());
+            CoreArgCheck.isTrue(isAllowSelectAll(), "Editor does not allow Select All"); //$NON-NLS-1$
 
             if (this.selectAllAction == null) {
                 this.selectAllAction = new ContextMenuAction(SELECT_ALL_ID);
@@ -435,7 +435,7 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
         }
 
         if (id.equals(UNDO_ID)) {
-            Assertion.assertTrue(isAllowUndoRedo());
+            CoreArgCheck.isTrue(isAllowUndoRedo(), "Editor does not allow Redo"); //$NON-NLS-1$
 
             if (this.undoAction == null) {
                 this.undoAction = new ContextMenuAction(UNDO_ID);

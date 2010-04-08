@@ -17,7 +17,7 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDFeature;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.xml.BuildStatus;
 import com.metamatrix.metamodels.xml.ProcessingInstruction;
 import com.metamatrix.metamodels.xml.XmlAll;
@@ -152,7 +152,7 @@ public class XmlDocumentUtil {
                 }
             }
             if ( segment == null ) {
-                segment = StringUtil.Constants.EMPTY_STRING;
+                segment = CoreStringUtil.Constants.EMPTY_STRING;
             }
             if ( path == null ) {
                 path = segment;
@@ -194,7 +194,7 @@ public class XmlDocumentUtil {
                 continue;       // skip container nodes
             }
             if ( segment == null ) {
-                segment = StringUtil.Constants.EMPTY_STRING;
+                segment = CoreStringUtil.Constants.EMPTY_STRING;
             }
             if ( path == null ) {
                 path = segment;

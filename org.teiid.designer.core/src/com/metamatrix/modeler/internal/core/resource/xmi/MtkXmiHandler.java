@@ -45,7 +45,7 @@ import org.eclipse.xsd.XSDPackage;
 import org.xml.sax.Attributes;
 import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.InvalidIDException;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.DateUtil;
 import com.metamatrix.core.util.ReflectionHelper;
 import com.metamatrix.metamodels.core.CorePackage;
@@ -154,7 +154,7 @@ public class MtkXmiHandler extends SAXXMIHandler {
 
         // Load the metamodel if it is not yet loaded
         final Resource resource = registry.getResource(metamodelURI);
-        Assertion.assertTrue(resource.isLoaded());
+        CoreArgCheck.isTrue(resource.isLoaded(), "Resource " + resource.getURI() + " must be loaded"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     private boolean isXsdPrefix( final String prefix ) {

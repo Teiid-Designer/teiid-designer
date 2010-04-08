@@ -34,7 +34,7 @@ import org.jdom.input.DOMBuilder;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.internal.core.xml.JdomHelper;
 import com.metamatrix.metamodels.wsdl.Attribute;
 import com.metamatrix.metamodels.wsdl.Binding;
@@ -124,8 +124,8 @@ public class WsdlLoader implements XMLLoad, WsdlConstants {
     public void load( final XMLResource resource,
                       final InputStream inputStream,
                       final Map loadOptions ) throws IOException {
-        ArgCheck.isNotNull(resource);
-        ArgCheck.isNotNull(inputStream);
+        CoreArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(inputStream);
         init(resource, loadOptions);
         // final Map options = loadOptions != null ? loadOptions : Collections.EMPTY_MAP;
 

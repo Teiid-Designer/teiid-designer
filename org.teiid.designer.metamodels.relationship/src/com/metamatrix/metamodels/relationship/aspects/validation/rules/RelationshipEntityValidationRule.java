@@ -9,7 +9,7 @@ package com.metamatrix.metamodels.relationship.aspects.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relationship.RelationshipEntity;
 import com.metamatrix.modeler.core.validation.ObjectValidationRule;
 import com.metamatrix.modeler.core.validation.ValidationContext;
@@ -27,7 +27,7 @@ public class RelationshipEntityValidationRule implements ObjectValidationRule {
 	 * @see com.metamatrix.modeler.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, com.metamatrix.modeler.core.validation.ValidationContext)
 	 */
 	public void validate(EObject eObject, ValidationContext context) {
-		ArgCheck.isInstanceOf(RelationshipEntity.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipEntity.class, eObject);
 		// validate the relationship		
 		RelationshipEntity relationshipEntity = (RelationshipEntity) eObject;
 		// get the status on the relationship		

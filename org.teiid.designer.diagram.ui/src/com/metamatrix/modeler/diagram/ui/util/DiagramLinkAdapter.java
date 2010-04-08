@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.draw2d.geometry.Point;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.diagram.DiagramLink;
 import com.metamatrix.metamodels.diagram.DiagramLinkType;
 import com.metamatrix.metamodels.diagram.DiagramPosition;
@@ -25,7 +25,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 public class DiagramLinkAdapter extends DiagramEntityAdapter {
 
     public static List getBendpoints( DiagramLink diagramLink ) {
-        ArgCheck.isNotNull(diagramLink);
+        CoreArgCheck.isNotNull(diagramLink);
 
         List positions = diagramLink.getRoutePoints();
         if (positions != null && !positions.isEmpty()) {
@@ -44,7 +44,7 @@ public class DiagramLinkAdapter extends DiagramEntityAdapter {
 
     public static void setBendpoints( DiagramLink diagramLink,
                                       List bendpoints ) {
-        ArgCheck.isNotNull(diagramLink);
+        CoreArgCheck.isNotNull(diagramLink);
         boolean requiredStart = ModelerCore.startTxn(false, false, "Set Link Bendpoints", diagramLink); //$NON-NLS-1$
         boolean succeeded = false;
         try {
@@ -69,7 +69,7 @@ public class DiagramLinkAdapter extends DiagramEntityAdapter {
     public static void addBendpoint( DiagramLink diagramLink,
                                      int index,
                                      Point newBendpoint ) {
-        ArgCheck.isNotNull(diagramLink);
+        CoreArgCheck.isNotNull(diagramLink);
         boolean requiredStart = ModelerCore.startTxn(false, false, "Add Link Bendpoint", diagramLink); //$NON-NLS-1$
         boolean succeeded = false;
         try {
@@ -89,7 +89,7 @@ public class DiagramLinkAdapter extends DiagramEntityAdapter {
 
     public static void removeBendpoint( DiagramLink diagramLink,
                                         int index ) {
-        ArgCheck.isNotNull(diagramLink);
+        CoreArgCheck.isNotNull(diagramLink);
         boolean requiredStart = ModelerCore.startTxn(false, false, "Remove Link Bendpoint", diagramLink); //$NON-NLS-1$
         boolean succeeded = false;
         try {
@@ -109,7 +109,7 @@ public class DiagramLinkAdapter extends DiagramEntityAdapter {
     }
 
     public static void clearBendpoints( DiagramLink diagramLink ) {
-        ArgCheck.isNotNull(diagramLink);
+        CoreArgCheck.isNotNull(diagramLink);
         boolean requiredStart = ModelerCore.startTxn(false, false, "Remove Link Bendpoint", diagramLink); //$NON-NLS-1$
         boolean succeeded = false;
         try {
@@ -135,7 +135,7 @@ public class DiagramLinkAdapter extends DiagramEntityAdapter {
     public static void setBendpoint( DiagramLink diagramLink,
                                      int index,
                                      Point newLocation ) {
-        ArgCheck.isNotNull(diagramLink);
+        CoreArgCheck.isNotNull(diagramLink);
         boolean requiredStart = ModelerCore.startTxn(false, false, "Add Link Bendpoint", diagramLink); //$NON-NLS-1$
         boolean succeeded = false;
         try {
@@ -165,7 +165,7 @@ public class DiagramLinkAdapter extends DiagramEntityAdapter {
 
     public static void setType( DiagramLink diagramLink,
                                 int newType ) {
-        ArgCheck.isNotNull(diagramLink);
+        CoreArgCheck.isNotNull(diagramLink);
         boolean requiredStart = ModelerCore.startTxn(false, false, "Set Link Type", diagramLink); //$NON-NLS-1$
         boolean succeeded = false;
         try {

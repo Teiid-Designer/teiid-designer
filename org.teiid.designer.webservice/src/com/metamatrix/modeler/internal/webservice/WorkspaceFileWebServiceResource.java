@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.InputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 
 /** 
@@ -27,7 +27,7 @@ public class WorkspaceFileWebServiceResource extends AbstractWebServiceResource 
      */
     public WorkspaceFileWebServiceResource( final String namespace, final IFile file ) {
         super(namespace,file == null ? null : file.getFullPath().toString() );
-        ArgCheck.isNotNull(file);
+        CoreArgCheck.isNotNull(file);
         this.file = file;
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.index.IEntryResult;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.index.IndexSelector;
@@ -85,7 +85,7 @@ public class FindRelationshipsCommandImpl implements FindRelationshipsCommand {
 
  		try {
  			// search by UUID
-			if(!StringUtil.isEmpty(this.relationshipUUID)) {
+			if(!CoreStringUtil.isEmpty(this.relationshipUUID)) {
 				String prefix = IndexUtil.getPrefixPattern(IndexConstants.SEARCH_RECORD_TYPE.RELATIONSHIP, this.relationshipUUID);
 				IEntryResult[] results = IndexUtil.queryIndex(getIndexSelector().getIndexes(), prefix.toCharArray(), true, true);
 				relationsInfo = new HashSet(results.length);
@@ -118,7 +118,7 @@ public class FindRelationshipsCommandImpl implements FindRelationshipsCommand {
 		String pattern = null;
 		
 		if(this.namePattern == null) {
-			this.namePattern = StringUtil.Constants.EMPTY_STRING;
+			this.namePattern = CoreStringUtil.Constants.EMPTY_STRING;
 		}
 
 		if(this.caseSensitive) {
@@ -173,7 +173,7 @@ public class FindRelationshipsCommandImpl implements FindRelationshipsCommand {
 					}
             	}
 			}
-            if (!StringUtil.isEmpty(this.relationshipTypeName)) {
+            if (!CoreStringUtil.isEmpty(this.relationshipTypeName)) {
                 FindRelationshipTypesCommand command = new FindRelationshipTypesCommandImpl();
 				command.setIndexSelector(this.selector);
                 command.setRelationshipTypeName(this.relationshipTypeName);

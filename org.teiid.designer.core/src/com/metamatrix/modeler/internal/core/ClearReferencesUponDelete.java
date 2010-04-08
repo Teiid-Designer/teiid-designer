@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.search.runtime.ReferencesRecord;
@@ -65,9 +65,9 @@ public class ClearReferencesUponDelete implements ModelVisitor {
     public ClearReferencesUponDelete( final Collection allDeletedObjects,
                                       final EditingDomain editingDomain,
                                       final ModelWorkspaceSearch workspaceSearch ) {
-        Assertion.isNotNull(editingDomain);
-        Assertion.isNotNull(allDeletedObjects);
-        Assertion.isNotNull(workspaceSearch);
+        CoreArgCheck.isNotNull(editingDomain);
+        CoreArgCheck.isNotNull(allDeletedObjects);
+        CoreArgCheck.isNotNull(workspaceSearch);
         this.additionalCommands = new LinkedList();
         this.editingDomain = editingDomain;
         this.allDeletedObjects = allDeletedObjects;

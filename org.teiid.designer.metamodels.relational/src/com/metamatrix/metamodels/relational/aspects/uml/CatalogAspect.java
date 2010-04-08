@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.relational.aspects.uml;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.Catalog;
 import com.metamatrix.metamodels.relational.RelationalMetamodelConstants;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
@@ -83,7 +83,7 @@ public class CatalogAspect extends RelationalEntityAspect implements UmlPackage 
     }
 
     protected Catalog assertCatalog(Object eObject) {
-        ArgCheck.isInstanceOf(Catalog.class, eObject);
+        CoreArgCheck.isInstanceOf(Catalog.class, eObject);
     
         return (Catalog)eObject;
     }

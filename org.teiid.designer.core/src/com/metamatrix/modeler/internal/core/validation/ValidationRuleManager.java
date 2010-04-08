@@ -12,7 +12,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.LRUCache;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
@@ -61,8 +61,8 @@ public class ValidationRuleManager {
      * @param ruleSet the set of validation rules to associate with this EClass - may not be null.
      */
     public void addRuleSet(final EClass eClass, final ValidationRuleSet ruleSet) {
-        ArgCheck.isNotNull(eClass);
-        ArgCheck.isNotNull(ruleSet);
+        CoreArgCheck.isNotNull(eClass);
+        CoreArgCheck.isNotNull(ruleSet);
 
         this.cache.put(eClass,ruleSet);
     }
@@ -75,8 +75,8 @@ public class ValidationRuleManager {
      * @param ruleSet the set of validation rules to associate with this Resource - may not be null.
      */
     public void addRuleSet(final Resource eResource, final ValidationRuleSet ruleSet) {
-        ArgCheck.isNotNull(eResource);
-        ArgCheck.isNotNull(ruleSet);
+        CoreArgCheck.isNotNull(eResource);
+        CoreArgCheck.isNotNull(ruleSet);
 
         this.cache.put(eResource.getClass(),ruleSet);
     }

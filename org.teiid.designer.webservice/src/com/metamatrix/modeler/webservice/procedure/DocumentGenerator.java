@@ -16,13 +16,13 @@ import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDConstraint;
 import org.eclipse.xsd.XSDFeature;
 import org.eclipse.xsd.XSDModelGroup;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * @since 5.0.1
  */
 public class DocumentGenerator implements
-                              StringUtil.Constants {
+                              CoreStringUtil.Constants {
 
     // ===========================================================================================================================
     // Constants

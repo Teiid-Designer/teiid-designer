@@ -13,7 +13,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.xml.XmlDocument;
 import com.metamatrix.metamodels.xml.XmlDocumentPlugin;
@@ -130,7 +130,7 @@ public class XmlDocumentAspect extends AbstractMetamodelAspect implements UmlPac
     }
 
     protected XmlDocument assertXmlDocument(Object eObject) {
-        ArgCheck.isInstanceOf(XmlDocument.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlDocument.class, eObject);
     
         return (XmlDocument)eObject;
     }

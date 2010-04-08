@@ -11,8 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Dependency;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlDependency;
 
 /**
@@ -30,7 +30,7 @@ public abstract class AbstractUml2DependencyUmlAspect extends AbstractUml2UmlAsp
     public String getName(Object eObject) {
         Dependency d = assertDependency(eObject);
         final String name = d.getName();
-        return ( name != null ? name : StringUtil.Constants.EMPTY_STRING);
+        return ( name != null ? name : CoreStringUtil.Constants.EMPTY_STRING);
     }
 
     /** 
@@ -66,7 +66,7 @@ public abstract class AbstractUml2DependencyUmlAspect extends AbstractUml2UmlAsp
     }
     
     protected Dependency assertDependency(Object eObject) {
-        ArgCheck.isInstanceOf(Dependency.class, eObject);
+        CoreArgCheck.isInstanceOf(Dependency.class, eObject);
         return (Dependency) eObject;
     }
 

@@ -19,7 +19,8 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import com.metamatrix.core.util.Assertion;
+import org.eclipse.ui.IWorkbenchWizard;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
@@ -114,7 +115,7 @@ public class GenerateWebServiceModelWizard extends AbstractWizard implements INe
      */
 
     public void doFinish( final IProgressMonitor monitor ) {
-        Assertion.isNotNull(this.webServiceBuilderHelper);
+        CoreArgCheck.isNotNull(this.webServiceBuilderHelper);
 
         this.monitor = monitor == null ? new NullProgressMonitor() : monitor;
 

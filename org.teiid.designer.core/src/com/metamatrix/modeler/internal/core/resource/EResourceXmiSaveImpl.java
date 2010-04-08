@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMISaveImpl;
 import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.Identifiable;
 import com.metamatrix.modeler.core.ModelerCore;
 
@@ -65,7 +65,7 @@ public class EResourceXmiSaveImpl extends XMISaveImpl {
      */
     public EResourceXmiSaveImpl(XMLHelper helper, EResourceImpl theEResource) {
         super(helper);
-        ArgCheck.isNotNull(theEResource);
+        CoreArgCheck.isNotNull(theEResource);
         this.eResource = theEResource;
     }
 

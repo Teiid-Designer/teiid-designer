@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.execution.VdbExecutionValidator;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -55,8 +55,8 @@ public class ConnectorBindingsDialog extends ExtendedTitleAreaDialog implements 
                                     final VdbExecutionValidator theValidator ) {
         super(theParentShell, DqpUiPlugin.getDefault());
 
-        Assertion.isNotNull(theVdbFile);
-        Assertion.isNotNull(vdb);
+        CoreArgCheck.isNotNull(theVdbFile);
+        CoreArgCheck.isNotNull(vdb);
 
         this.vdbFile = theVdbFile;
         this.vdb = vdb;

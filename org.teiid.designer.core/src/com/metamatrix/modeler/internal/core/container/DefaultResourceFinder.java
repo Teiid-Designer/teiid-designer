@@ -39,8 +39,8 @@ import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.InvalidIDException;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.util.Assertion;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelImport;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;
@@ -542,7 +542,7 @@ public class DefaultResourceFinder implements ResourceFinder {
             // A ModelImport that references an EResource instance
             // will have the UUID of that EResource
             final String uuidString = theImport.getUuid();
-            if (!StringUtil.isEmpty(uuidString)) {
+            if (!CoreStringUtil.isEmpty(uuidString)) {
                 final ObjectID uuid = stringToObjectID(uuidString);
                 if (uuid != null) {
                     result = findResourceByUUID(uuid, eResources);
@@ -555,7 +555,7 @@ public class DefaultResourceFinder implements ResourceFinder {
             // A ModelImport that references a Resource instance will have
             // the relative path to that resource in its location
             final String modelLocation = theImport.getModelLocation();
-            if (!StringUtil.isEmpty(modelLocation) && theImport.eResource() != null) {
+            if (!CoreStringUtil.isEmpty(modelLocation) && theImport.eResource() != null) {
                 // Defect 23340 - Simplifying this check.
                 URI modelLocationURI = URI.createURI(modelLocation);
                 if (modelLocationURI.isRelative()) {
@@ -573,8 +573,8 @@ public class DefaultResourceFinder implements ResourceFinder {
             // A ModelImport that references an XSDResource instance
             // will have the name of that XSDResource in its path/location
             final String path = theImport.getPath();
-            final String modelPath = (StringUtil.isEmpty(path) ? modelLocation : path);
-            if (!StringUtil.isEmpty(modelPath)) {
+            final String modelPath = (CoreStringUtil.isEmpty(path) ? modelLocation : path);
+            if (!CoreStringUtil.isEmpty(modelPath)) {
 
                 // Check if the path represents a logic URI that can be found
                 final URI uri = URI.createURI(modelPath);
@@ -614,7 +614,7 @@ public class DefaultResourceFinder implements ResourceFinder {
             // An XSDSchemaDirective referencing an XSDResource instance will have
             // the relative path to that resource in its location
             final String schemaLocation = theImport.getSchemaLocation();
-            if (!StringUtil.isEmpty(schemaLocation) && theImport.eResource() != null) {
+            if (!CoreStringUtil.isEmpty(schemaLocation) && theImport.eResource() != null) {
 
                 // Check if the path represents a logic URI that can be found
                 final URI uri = URI.createURI(schemaLocation);
@@ -962,7 +962,7 @@ public class DefaultResourceFinder implements ResourceFinder {
             // XSDResource using the schema location information in the directive
             String location = directive.getSchemaLocation();
             XSDResourceImpl eResource = (XSDResourceImpl)directive.eResource();
-            if (resolvedSchema == null && eResource != null && !StringUtil.isEmpty(location)) {
+            if (resolvedSchema == null && eResource != null && !CoreStringUtil.isEmpty(location)) {
                 XSDResourceImpl refdResource = null;
 
                 URI schemaLocationUri = UriHelper.makeAbsoluteUri(eResource.getURI(), location);
@@ -1045,7 +1045,7 @@ public class DefaultResourceFinder implements ResourceFinder {
             if (value instanceof InternalEObject) {
                 final InternalEObject iObject = (InternalEObject)value;
                 final URI proxyUri = iObject.eProxyURI();
-                Assertion.isNotNull(proxyUri);
+                CoreArgCheck.isNotNull(proxyUri);
 
                 // Get the URI of the resource ...
                 URI resourceUri = proxyUri.trimFragment();

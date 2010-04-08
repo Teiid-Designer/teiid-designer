@@ -39,9 +39,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import com.metamatrix.core.classloader.URLClassLoaderRegistry;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.ClassLoaderUtil;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.jdbc.JdbcDriver;
@@ -162,9 +161,9 @@ public class JdbcManagerImpl implements JdbcManager {
     public JdbcManagerImpl( final String name,
                             final Resource resource ) {
         super();
-        ArgCheck.isNotNull(name);
-        ArgCheck.isNotZeroLength(name);
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(name);
+        CoreArgCheck.isNotZeroLength(name);
+        CoreArgCheck.isNotNull(resource);
         this.name = name;
         this.resource = resource;
         this.classLoaderRegistry = new URLClassLoaderRegistry();
@@ -224,7 +223,7 @@ public class JdbcManagerImpl implements JdbcManager {
         if (!hasChanges()) {
             return;
         }
-        Assertion.isNotNull(this.resource);
+        CoreArgCheck.isNotNull(this.resource);
         this.resource.save(new HashMap());
     }
 
@@ -305,13 +304,13 @@ public class JdbcManagerImpl implements JdbcManager {
      * @see com.metamatrix.modeler.jdbc.JdbcManager#findBestDriver(com.metamatrix.modeler.jdbc.JdbcSource)
      */
     public JdbcDriver findBestDriver( final JdbcSource source ) {
-        ArgCheck.isNotNull(source);
+        CoreArgCheck.isNotNull(source);
         return findBestDriver(source, false);
     }
 
     public JdbcDriver findBestDriver( final JdbcSource source,
                                       final boolean requireDriverClass ) {
-        ArgCheck.isNotNull(source);
+        CoreArgCheck.isNotNull(source);
         final JdbcDriver[] bestDrivers = findDrivers(source, requireDriverClass);
         return bestDrivers.length != 0 ? bestDrivers[0] : null;
     }
@@ -328,7 +327,7 @@ public class JdbcManagerImpl implements JdbcManager {
      */
     protected JdbcDriver[] findDrivers( final JdbcSource source,
                                         final boolean requireDriverClass ) {
-        ArgCheck.isNotNull(source);
+        CoreArgCheck.isNotNull(source);
         final String sourceDriverName = source.getDriverName();
         final String sourceDriverClass = source.getDriverClass();
         final JdbcDriver sourceDriver = source.getJdbcDriver();
@@ -427,7 +426,7 @@ public class JdbcManagerImpl implements JdbcManager {
      * @see com.metamatrix.modeler.jdbc.JdbcManager#getClassLoader(com.metamatrix.modeler.jdbc.JdbcDriver, boolean)
      */
     public URLClassLoader getClassLoader( final JdbcDriver driver ) throws JdbcException {
-        ArgCheck.isNotNull(driver);
+        CoreArgCheck.isNotNull(driver);
         // We actually do want to create a class loader for a potentially invalid driver -
         // otherwise, there's no way to get the available driver/datasource classes in the jars
         // and set them on the JdbcDriver object to make it valid!
@@ -460,7 +459,7 @@ public class JdbcManagerImpl implements JdbcManager {
      */
     public IStatus computeAvailableDriverClasses( final JdbcDriver driver,
                                                   final boolean driverOnly ) {
-        ArgCheck.isNotNull(driver);
+        CoreArgCheck.isNotNull(driver);
         final URLClassLoader loader;
         try {
             loader = getClassLoader(driver);
@@ -634,16 +633,16 @@ public class JdbcManagerImpl implements JdbcManager {
     public Connection createConnection( final JdbcSource jdbcSource,
                                         final JdbcDriver jdbcDriver,
                                         final String password ) throws JdbcException, SQLException {
-        ArgCheck.isNotNull(jdbcSource);
+        CoreArgCheck.isNotNull(jdbcSource);
         // By default, use the non-null one passed in
         JdbcDriver theDriver = jdbcDriver;
         if (theDriver == null) {
             // If no driver passed in, find and use the best one ...
             theDriver = findBestDriver(jdbcSource);
         }
-        ArgCheck.isNotNull(theDriver);
+        CoreArgCheck.isNotNull(theDriver);
         final URLClassLoader loader = getClassLoader(theDriver);
-        ArgCheck.isNotNull(loader);
+        CoreArgCheck.isNotNull(loader);
         // need to handle excel in a special way
         if (jdbcSource.getDriverName().equalsIgnoreCase("Microsoft Excel")) {//$NON-NLS-1$
             return (Connection)Proxy.newProxyInstance(loader,
@@ -657,8 +656,8 @@ public class JdbcManagerImpl implements JdbcManager {
     protected Connection createConnection( final JdbcSource jdbcSource,
                                            final ClassLoader loader,
                                            final String password ) throws JdbcException, SQLException {
-        ArgCheck.isNotNull(jdbcSource);
-        ArgCheck.isNotNull(loader);
+        CoreArgCheck.isNotNull(jdbcSource);
+        CoreArgCheck.isNotNull(loader);
         Connection result = null;
         final Object driverObject = createDriverObject(jdbcSource, loader, password);
         if (driverObject instanceof DataSource) {
@@ -677,7 +676,7 @@ public class JdbcManagerImpl implements JdbcManager {
             }
             result = driver.connect(url, props);
         } else {
-            Assertion.assertTrue(false, JdbcPlugin.Util.getString("JdbcManagerImpl.Unexpected_driver_object")); //$NON-NLS-1$
+            CoreArgCheck.isTrue(false, JdbcPlugin.Util.getString("JdbcManagerImpl.Unexpected_driver_object")); //$NON-NLS-1$
             return null; // never gets here
         }
         // Check that the connection is not null. The Oracle driver returns null if the "jdbc:oracle:thin:" is
@@ -803,7 +802,7 @@ public class JdbcManagerImpl implements JdbcManager {
      * @since 4.2
      */
     public JdbcDriverProperty[] getPropertyDescriptions( final JdbcSource jdbcSource ) throws JdbcException {
-        ArgCheck.isNotNull(jdbcSource);
+        CoreArgCheck.isNotNull(jdbcSource);
 
         final JdbcDriver jdbcDriver = jdbcSource.getJdbcDriver();
         if (jdbcDriver != null) {
@@ -831,8 +830,8 @@ public class JdbcManagerImpl implements JdbcManager {
 
     protected JdbcDriverProperty[] getPropertyDescriptions( final Driver driver,
                                                             final JdbcSource jdbcSource ) throws SQLException {
-        ArgCheck.isNotNull(driver);
-        ArgCheck.isNotNull(jdbcSource);
+        CoreArgCheck.isNotNull(driver);
+        CoreArgCheck.isNotNull(jdbcSource);
 
         DriverPropertyInfo[] propInfo = null;
         final String url = jdbcSource.getUrl() != null ? jdbcSource.getUrl() : ""; //$NON-NLS-1$
@@ -888,13 +887,13 @@ public class JdbcManagerImpl implements JdbcManager {
      * @see com.metamatrix.modeler.jdbc.JdbcManager#isValid(com.metamatrix.modeler.jdbc.JdbcDriver)
      */
     public IStatus isValid( final JdbcSource jdbcSource ) {
-        ArgCheck.isNotNull(jdbcSource);
+        CoreArgCheck.isNotNull(jdbcSource);
         return isValid(jdbcSource, null);
     }
 
     protected IStatus isValid( final JdbcSource jdbcSource,
                                ClassLoader loader ) {
-        ArgCheck.isNotNull(jdbcSource);
+        CoreArgCheck.isNotNull(jdbcSource);
 
         // A JdbcDriver is considered valid if all of the following conditions are true:
         // - There is a {@link JdbcSource#getName() name} that is not zero-length.
@@ -987,7 +986,7 @@ public class JdbcManagerImpl implements JdbcManager {
      * @see com.metamatrix.modeler.jdbc.JdbcManager#isValid(com.metamatrix.modeler.jdbc.JdbcDriver)
      */
     public IStatus isValid( final JdbcDriver driver ) {
-        ArgCheck.isNotNull(driver);
+        CoreArgCheck.isNotNull(driver);
         return isValid(driver, true);
     }
 
@@ -997,7 +996,7 @@ public class JdbcManagerImpl implements JdbcManager {
      */
     protected IStatus isValid( final JdbcDriver driver,
                                final boolean checkDriverClasses ) {
-        ArgCheck.isNotNull(driver);
+        CoreArgCheck.isNotNull(driver);
 
         // A JdbcDriver is considered valid if all of the following conditions are true:
         // - There is a {@link JdbcDriver#getName() name} that is not zero-length.

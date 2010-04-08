@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.transformation.aspects.validation;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.MappingClassColumn;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
@@ -47,7 +47,7 @@ public class MappingClassColumnAspect extends TransformationAspect {
      */
     @Override
     public boolean shouldValidate(final EObject eObject, final ValidationContext context) {
-        ArgCheck.isInstanceOf(MappingClassColumn.class, eObject);
+        CoreArgCheck.isInstanceOf(MappingClassColumn.class, eObject);
         // Defect 23839 - this method previously called it's parent MappingClass's validation aspect shouldValidate() method.
         // This method is not quick. So we needed a way to NOT call this method for ALL Mapping Class Columns.
         // Since the Mapping Class is guaranteed to be check for shouldValidate() first it will end up in the context's shouldIgnore()

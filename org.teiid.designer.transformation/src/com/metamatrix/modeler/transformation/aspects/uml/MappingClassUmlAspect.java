@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlClassifier;
@@ -78,7 +78,7 @@ public class MappingClassUmlAspect extends AbstractTransformationUmlAspect imple
     }
 
     protected MappingClass assertMappingClass(Object eObject) {
-        ArgCheck.isInstanceOf(MappingClass.class, eObject);
+        CoreArgCheck.isInstanceOf(MappingClass.class, eObject);
         return (MappingClass)eObject;
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.ForeignKey;
@@ -205,8 +205,8 @@ public class ForeignKeyAssociationProvider implements AssociationProvider {
      */
     static boolean containsValidObjects( final List eObjects,
                                          final Class[] validClasses ) {
-        ArgCheck.isNotNull(eObjects);
-        ArgCheck.isNotNull(validClasses);
+        CoreArgCheck.isNotNull(eObjects);
+        CoreArgCheck.isNotNull(validClasses);
 
         for (Iterator iter = eObjects.iterator(); iter.hasNext();) {
 
@@ -250,7 +250,7 @@ public class ForeignKeyAssociationProvider implements AssociationProvider {
      * @return
      */
     static List getTables( final List eObjects ) {
-        ArgCheck.isNotNull(eObjects);
+        CoreArgCheck.isNotNull(eObjects);
         final List result = new ArrayList(eObjects.size());
         for (Iterator iter = eObjects.iterator(); iter.hasNext();) {
             final Object obj = iter.next();
@@ -281,8 +281,8 @@ public class ForeignKeyAssociationProvider implements AssociationProvider {
      */
     static List getColumns( final List eObjects,
                             final Table container ) {
-        ArgCheck.isNotNull(eObjects);
-        ArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(eObjects);
+        CoreArgCheck.isNotNull(container);
         final List result = new ArrayList(eObjects.size());
         for (Iterator iter = eObjects.iterator(); iter.hasNext();) {
             final Object obj = iter.next();
@@ -300,8 +300,8 @@ public class ForeignKeyAssociationProvider implements AssociationProvider {
      */
     static List getForeignKeys( final List eObjects,
                                 final Table container ) {
-        ArgCheck.isNotNull(eObjects);
-        ArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(eObjects);
+        CoreArgCheck.isNotNull(container);
         final List result = new ArrayList(eObjects.size());
         for (Iterator iter = eObjects.iterator(); iter.hasNext();) {
             final Object obj = iter.next();
@@ -319,8 +319,8 @@ public class ForeignKeyAssociationProvider implements AssociationProvider {
      */
     static ForeignKey getForeignKey( final List eObjects,
                                      final Table container ) {
-        ArgCheck.isNotNull(eObjects);
-        ArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(eObjects);
+        CoreArgCheck.isNotNull(container);
         for (Iterator iter = eObjects.iterator(); iter.hasNext();) {
             final Object obj = iter.next();
             if (obj instanceof ForeignKey && ((ForeignKey)obj).eContainer() == container) {
@@ -337,8 +337,8 @@ public class ForeignKeyAssociationProvider implements AssociationProvider {
      */
     static PrimaryKey getPrimaryKey( final List eObjects,
                                      final Table container ) {
-        ArgCheck.isNotNull(eObjects);
-        ArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(eObjects);
+        CoreArgCheck.isNotNull(container);
         for (Iterator iter = eObjects.iterator(); iter.hasNext();) {
             final Object obj = iter.next();
             if (obj instanceof PrimaryKey && ((PrimaryKey)obj).eContainer() == container) {

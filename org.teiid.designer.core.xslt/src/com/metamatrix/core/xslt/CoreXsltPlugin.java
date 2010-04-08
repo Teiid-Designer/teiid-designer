@@ -20,7 +20,7 @@ import org.jdom.output.XMLOutputter;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.MetaMatrixCoreException;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.PluginUtilImpl;
 
 /**
@@ -76,7 +76,7 @@ public class CoreXsltPlugin extends Plugin {
      * @param output the stream to which the transformed
      */
     public static Source createSource(final Document sourceDoc) throws MetaMatrixCoreException {
-        ArgCheck.isNotNull(sourceDoc);
+        CoreArgCheck.isNotNull(sourceDoc);
 
         /*
         * Here we convert the JDOM Document to an outputStream and feed it

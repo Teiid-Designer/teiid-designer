@@ -12,7 +12,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import com.metamatrix.core.index.AbstractIndexSelector;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.internal.core.index.Index;
 
 /**
@@ -30,7 +30,7 @@ public class TargetLocationIndexSelector extends AbstractIndexSelector {
      * @since 4.2
      */
     public TargetLocationIndexSelector( final String indexLocation ) {
-        ArgCheck.isNotNull(indexLocation);
+        CoreArgCheck.isNotNull(indexLocation);
         this.indexLocation = indexLocation;
     }
 

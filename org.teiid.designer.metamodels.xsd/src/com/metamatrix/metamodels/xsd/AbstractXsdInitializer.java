@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelInitializer;
 
 /**
@@ -43,7 +43,7 @@ public abstract class AbstractXsdInitializer implements ModelInitializer {
      * @see com.metamatrix.modeler.core.ModelInitializer#execute(org.eclipse.emf.ecore.resource.Resource)
      */
     public IStatus execute( final Resource model) {
-        ArgCheck.isNotNull(model);
+        CoreArgCheck.isNotNull(model);
         // Check the resource type ...
         if ( !(model instanceof XSDResourceImpl) ) {
             final Object[] params = new Object[]{model.getClass().getName(),XSDResourceImpl.class.getName()};

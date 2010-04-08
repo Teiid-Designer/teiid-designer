@@ -14,7 +14,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import com.metamatrix.core.CorePlugin;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 
 abstract public class AbstractEventBroker extends AbstractEventSource implements EventBroker {
     private static final String CANNOT_ADD_SELF_AS_LISTENER_MESSAGE = CorePlugin.Util.getString("AbstractEventBroker.CannotAddSelfAsListener"); //$NON-NLS-1$
@@ -54,12 +54,12 @@ abstract public class AbstractEventBroker extends AbstractEventSource implements
 
     protected void setName( String name ) {
         if (name == null) {
-            Assertion.isNotNull(name,
-                                CorePlugin.Util.getString("AbstractEventBroker.The_name_of_the_event_broker_may_not_be_null")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(name,
+                                   CorePlugin.Util.getString("AbstractEventBroker.The_name_of_the_event_broker_may_not_be_null")); //$NON-NLS-1$
         }
         if (name.length() == 0) {
-            Assertion.isNotZeroLength(name,
-                                      CorePlugin.Util.getString("AbstractEventBroker.The_name_of_the_event_broker_may_not_be_zero-length")); //$NON-NLS-1$
+            CoreArgCheck.isNotZeroLength(name,
+                                         CorePlugin.Util.getString("AbstractEventBroker.The_name_of_the_event_broker_may_not_be_zero-length")); //$NON-NLS-1$
         }
         this.name = name;
     }
@@ -78,7 +78,7 @@ abstract public class AbstractEventBroker extends AbstractEventSource implements
                              EventObjectListener listener ) {
 
         // Do not allow add EventBroker to add itself to the list of listeners
-        Assertion.isNotNull(listener, CANNOT_ADD_SELF_AS_LISTENER_MESSAGE);
+        CoreArgCheck.isNotNull(listener, CANNOT_ADD_SELF_AS_LISTENER_MESSAGE);
 
         // Do not allow a listener to be added if the event broker is shutdown
         assertReady();
@@ -89,7 +89,7 @@ abstract public class AbstractEventBroker extends AbstractEventSource implements
     public void addListener( EventObjectListener listener ) {
 
         // Do not allow add EventBroker to add itself to the list of listeners
-        Assertion.isNotNull(listener, CANNOT_ADD_SELF_AS_LISTENER_MESSAGE);
+        CoreArgCheck.isNotNull(listener, CANNOT_ADD_SELF_AS_LISTENER_MESSAGE);
 
         // Do not allow a listener to be added if the event broker is shutdown
         assertReady();

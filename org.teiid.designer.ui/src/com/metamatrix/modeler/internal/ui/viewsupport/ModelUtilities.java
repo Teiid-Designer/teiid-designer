@@ -35,7 +35,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.ResourceNameUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
@@ -232,7 +232,7 @@ public abstract class ModelUtilities implements UiConstants {
      * @since 5.0.1
      */
     public static boolean isModelingRelatedFile( IResource theResource ) {
-        Assertion.isNotNull(theResource);
+        CoreArgCheck.isNotNull(theResource);
 
         return (theResource instanceof IFile)
                && (ModelUtilities.isModelFile(theResource) || ModelUtilities.isVdbFile(theResource) || ModelUtilities.isWsdlFile(theResource));

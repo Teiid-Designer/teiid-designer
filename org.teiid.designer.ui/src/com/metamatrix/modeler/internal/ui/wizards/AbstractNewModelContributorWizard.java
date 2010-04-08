@@ -20,7 +20,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -184,7 +184,7 @@ public abstract class AbstractNewModelContributorWizard extends AbstractWizard i
             success = false;
             String msg = theException.getTargetException().getLocalizedMessage();
             
-            if (StringUtil.isEmpty(msg)) {
+            if (CoreStringUtil.isEmpty(msg)) {
                 msg = Util.getString(PREFIX + "noDetailsMsg"); //$NON-NLS-1$
             }
             

@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.ResourceNameUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.ResourceValidationRule;
@@ -33,8 +33,8 @@ public class ModelFileExtensionRule implements ResourceValidationRule {
      */
     public void validate( final Resource resource,
                           final ValidationContext context ) {
-        ArgCheck.isNotNull(resource);
-        ArgCheck.isNotNull(context);
+        CoreArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(context);
 
         // Run this rule only on file based resources
         final URI uri = resource.getURI();
@@ -82,8 +82,8 @@ public class ModelFileExtensionRule implements ResourceValidationRule {
      * @since 4.3
      */
     public static IStatus validate( final String fileNameWithExtension ) {
-        ArgCheck.isNotNull(fileNameWithExtension);
-        ArgCheck.isNotZeroLength(fileNameWithExtension);
+        CoreArgCheck.isNotNull(fileNameWithExtension);
+        CoreArgCheck.isNotZeroLength(fileNameWithExtension);
 
         String actualExtension = null;
         int beginIndex = fileNameWithExtension.lastIndexOf('.') + 1;

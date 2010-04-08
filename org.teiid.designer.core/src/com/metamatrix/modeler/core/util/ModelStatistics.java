@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 
 /**
@@ -81,7 +81,7 @@ public class ModelStatistics {
      * @param count the number of instances of the metaclass
      */
     public void set( final EClass metaclass, final int count ) {
-        ArgCheck.isNotNull(metaclass);
+        CoreArgCheck.isNotNull(metaclass);
         if ( count == 0 ) {
             statsByMetaclass.remove(metaclass);
             return;     // do nothing
@@ -101,7 +101,7 @@ public class ModelStatistics {
      * @param increment the number of additional instances of the metaclass
      */
     public void add( final EClass metaclass, final int increment ) {
-        ArgCheck.isNotNull(metaclass);
+        CoreArgCheck.isNotNull(metaclass);
         if ( increment == 0 ) {
             return;     // do nothing
         }
@@ -146,7 +146,7 @@ public class ModelStatistics {
     }
     
     public IStatus compare( final ModelStatistics that ) {
-        ArgCheck.isNotNull(that);
+        CoreArgCheck.isNotNull(that);
         final List problems = new ArrayList();
         
         // Do the comparison only if the argument is not exactly the same object as this

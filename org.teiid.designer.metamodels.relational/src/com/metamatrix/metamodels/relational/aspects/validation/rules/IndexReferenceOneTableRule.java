@@ -14,7 +14,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.ColumnSet;
 import com.metamatrix.metamodels.relational.Index;
@@ -38,7 +38,7 @@ public class IndexReferenceOneTableRule implements ObjectValidationRule {
      * @see com.metamatrix.modeler.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, com.metamatrix.modeler.core.validation.ValidationContext)
      */
     public void validate(EObject eObject, ValidationContext context) {
-        ArgCheck.isInstanceOf(Index.class, eObject);
+        CoreArgCheck.isInstanceOf(Index.class, eObject);
 
         // See what the preference is ...
         int status = IStatus.WARNING;

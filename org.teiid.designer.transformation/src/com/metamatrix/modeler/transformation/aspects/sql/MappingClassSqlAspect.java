@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import com.metamatrix.common.vdb.SystemVdbUtility;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.transformation.InputSet;
 import com.metamatrix.metamodels.transformation.MappingClass;
@@ -66,7 +66,7 @@ public class MappingClassSqlAspect extends MappingClassObjectSqlAspect implement
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#isVirtual(org.eclipse.emf.ecore.EObject)
      */
     public boolean isVirtual(EObject eObject) {
-        ArgCheck.isInstanceOf(MappingClass.class, eObject);
+        CoreArgCheck.isInstanceOf(MappingClass.class, eObject);
         MappingClass operation = (MappingClass) eObject;    
         try {    
             Resource eResource = operation.eResource();
@@ -92,7 +92,7 @@ public class MappingClassSqlAspect extends MappingClassObjectSqlAspect implement
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#isSystem(org.eclipse.emf.ecore.EObject)
      */
     public boolean isSystem(EObject eObject) {
-        ArgCheck.isInstanceOf(MappingClass.class, eObject);
+        CoreArgCheck.isInstanceOf(MappingClass.class, eObject);
         String modelName = getModelName(eObject);
         if (modelName != null && SystemVdbUtility.isSystemModelWithSystemTableType(modelName)) {
             return true;
@@ -104,7 +104,7 @@ public class MappingClassSqlAspect extends MappingClassObjectSqlAspect implement
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#getColumns(org.eclipse.emf.ecore.EObject)
      */
     public List getColumns(EObject eObject) {
-        ArgCheck.isInstanceOf(MappingClass.class, eObject); 
+        CoreArgCheck.isInstanceOf(MappingClass.class, eObject); 
         MappingClass mappingClass = (MappingClass) eObject;       
         return mappingClass.getColumns();
     }
@@ -155,7 +155,7 @@ public class MappingClassSqlAspect extends MappingClassObjectSqlAspect implement
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#getTableType(org.eclipse.emf.ecore.EObject)
      */
     public int getTableType(EObject eObject) {
-        ArgCheck.isInstanceOf(MappingClass.class, eObject);
+        CoreArgCheck.isInstanceOf(MappingClass.class, eObject);
         if(eObject instanceof StagingTable) {
             return MetadataConstants.TABLE_TYPES.XML_STAGING_TABLE_TYPE;
         }
@@ -186,8 +186,8 @@ public class MappingClassSqlAspect extends MappingClassObjectSqlAspect implement
      * @since 4.3
      */
     public boolean canAcceptTransformationSource(EObject target, EObject source) {
-        ArgCheck.isInstanceOf(MappingClass.class, target);
-        ArgCheck.isNotNull(source);
+        CoreArgCheck.isInstanceOf(MappingClass.class, target);
+        CoreArgCheck.isNotNull(source);
         // no object should be source of itself
         if(source == target) {
             return false;
@@ -215,8 +215,8 @@ public class MappingClassSqlAspect extends MappingClassObjectSqlAspect implement
      * @since 4.3
      */
     public boolean canBeTransformationSource(EObject source, EObject target) {
-        ArgCheck.isInstanceOf(MappingClass.class, source);
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isInstanceOf(MappingClass.class, source);
+        CoreArgCheck.isNotNull(target);
         // no object should be source of itself
         if(source == target) {
             return false;

@@ -13,8 +13,8 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.util.Assertion;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.TransformationContainer;
@@ -203,7 +203,7 @@ public class TransformationSearchHelper {
     }
 
     public static Collection getTransformations( final Resource resource ) {
-        Assertion.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         Collection transformations = new ArrayList();
         Collection contents = resource.getContents();
         Iterator cIter = contents.iterator();
@@ -263,7 +263,7 @@ public class TransformationSearchHelper {
 
             }
         }
-        return StringUtil.Constants.EMPTY_STRING;
+        return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     public Collection getAllTransformationTargets( Collection allTransforms ) {

@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.ExpressionBuilder;
 import com.metamatrix.query.internal.ui.builder.actions.AddSetCriteriaItemAction;
@@ -378,7 +378,7 @@ public class SetCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
 
     @Override
     public void setLanguageObject( LanguageObject obj ) {
-        ArgCheck.isInstanceOf(SetCriteria.class, obj);
+        CoreArgCheck.isInstanceOf(SetCriteria.class, obj);
         setCriteria = (SetCriteria)obj;
         editor.setLanguageObject(getLeftExpression());
     }

@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import com.metamatrix.core.index.IDocument;
 import com.metamatrix.core.index.IIndex;
 import com.metamatrix.core.index.IIndexerOutput;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.internal.core.index.WordEntry;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -119,8 +119,8 @@ public class ModelIndexer implements ResourceIndexer {
      */
     public final void index( final IDocument document,
                              final IIndexerOutput output ) {
-        ArgCheck.isNotNull(document);
-        ArgCheck.isNotNull(output);
+        CoreArgCheck.isNotNull(document);
+        CoreArgCheck.isNotNull(output);
 
         if (!this.shouldIndex(document)) {
             return;
@@ -187,7 +187,7 @@ public class ModelIndexer implements ResourceIndexer {
     public void indexResource( final IResource resource,
                                final boolean reuseExistingFile,
                                final boolean addResource ) throws ModelerCoreException {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         ModelWorkspace workspace = ModelerCore.getModelWorkspace();
         ModelResource mResource = workspace.findModelResource(resource);
 
@@ -259,7 +259,7 @@ public class ModelIndexer implements ResourceIndexer {
     public void indexResource( IPath path,
                                boolean reuseExistingFile,
                                boolean addResource ) throws ModelerCoreException {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         IResource resource = WorkspaceResourceFinderUtil.findIResourceByPath(path);
         indexResource(resource, reuseExistingFile, addResource);
     }
@@ -274,7 +274,7 @@ public class ModelIndexer implements ResourceIndexer {
      * @param resource The modelResource whose index type is set
      */
     protected void setIndexType( final ModelResource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         if (resource.getIndexType() == ModelResource.NOT_INDEXED) {
             resource.setIndexType(ModelResource.METADATA_INDEXED);
         } else if (resource.getIndexType() == ModelResource.SEARCH_INDEXED) {

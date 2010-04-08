@@ -10,7 +10,7 @@ package com.metamatrix.modeler.core.util;
 import java.io.File;
 import org.eclipse.emf.common.util.URI;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 
 /** 
@@ -34,8 +34,8 @@ public class UriHelper {
     // ==================================================================================
     
     public static URI makeAbsoluteUri(final URI baseUri, final URI theImportUri) {
-        ArgCheck.isNotNull(baseUri);
-        ArgCheck.isNotNull(theImportUri);
+        CoreArgCheck.isNotNull(baseUri);
+        CoreArgCheck.isNotNull(theImportUri);
         String importUriString = URI.decode(theImportUri.toString());
         
         // If the import URI represents a remote URL then return it unaltered
@@ -58,8 +58,8 @@ public class UriHelper {
     }
     
     public static URI makeAbsoluteUri(final URI baseUri, final String theImportUriString) {
-        ArgCheck.isNotNull(baseUri);
-        ArgCheck.isNotNull(theImportUriString);
+        CoreArgCheck.isNotNull(baseUri);
+        CoreArgCheck.isNotNull(theImportUriString);
         String importUriString = URI.decode(theImportUriString);
         
         // If the import URI represents a remote URL then return it unaltered
@@ -83,8 +83,8 @@ public class UriHelper {
     }
     
     public static String makeAbsolutePath(final URI baseUri, final URI theImportUri) {
-        ArgCheck.isNotNull(baseUri);
-        ArgCheck.isNotNull(theImportUri);
+        CoreArgCheck.isNotNull(baseUri);
+        CoreArgCheck.isNotNull(theImportUri);
         String importUriString = URI.decode(theImportUri.toString());
                 
         // If the import URI represents a remote URL then return it unaltered
@@ -105,14 +105,14 @@ public class UriHelper {
     }
     
     public static String makeAbsolutePath(final URI baseUri, final String theImportUriString) {
-        ArgCheck.isNotNull(baseUri);
-        ArgCheck.isNotNull(theImportUriString);
+        CoreArgCheck.isNotNull(baseUri);
+        CoreArgCheck.isNotNull(theImportUriString);
         return makeAbsolutePath(baseUri.toFileString(),theImportUriString);
     }
     
     public static String makeAbsolutePath(final String theBaseUriString, final String theImportUriString) {
-        ArgCheck.isNotNull(theBaseUriString);
-        ArgCheck.isNotNull(theImportUriString);
+        CoreArgCheck.isNotNull(theBaseUriString);
+        CoreArgCheck.isNotNull(theImportUriString);
         String baseUriString   = URI.decode(theBaseUriString);
         String importUriString = URI.decode(theImportUriString);
         
@@ -147,8 +147,8 @@ public class UriHelper {
     }
     
     public static URI makeRelativeUri(final URI baseUri, final URI theImportUri) {
-        ArgCheck.isNotNull(baseUri);
-        ArgCheck.isNotNull(theImportUri);
+        CoreArgCheck.isNotNull(baseUri);
+        CoreArgCheck.isNotNull(theImportUri);
         String importUriString = URI.decode(theImportUri.toString());
         
         // If the import URI represents a remote URL then return it unaltered
@@ -178,8 +178,8 @@ public class UriHelper {
     }
     
     public static URI makeRelativeUri(final URI baseUri, final String theImportUriString) {
-        ArgCheck.isNotNull(baseUri);
-        ArgCheck.isNotNull(theImportUriString);
+        CoreArgCheck.isNotNull(baseUri);
+        CoreArgCheck.isNotNull(theImportUriString);
         String importUriString = URI.decode(theImportUriString);
         
         // If the import URI represents a remote URL then return it unaltered
@@ -204,8 +204,8 @@ public class UriHelper {
     }
     
     public static String makeRelativePath(final URI baseUri, final URI theImportUri) {
-        ArgCheck.isNotNull(baseUri);
-        ArgCheck.isNotNull(theImportUri);
+        CoreArgCheck.isNotNull(baseUri);
+        CoreArgCheck.isNotNull(theImportUri);
         String importUriString = URI.decode(theImportUri.toString());
         
         // If the import URI represents a remote URL then return it unaltered
@@ -223,14 +223,14 @@ public class UriHelper {
     }
     
     public static String makeRelativePath(final URI baseUri, final String theImportUriString) {
-        ArgCheck.isNotNull(baseUri);
-        ArgCheck.isNotNull(theImportUriString);
+        CoreArgCheck.isNotNull(baseUri);
+        CoreArgCheck.isNotNull(theImportUriString);
         return makeRelativePath(baseUri.toFileString(),theImportUriString);
     }
     
     public static String makeRelativePath(final String theBaseUriString, final String theImportUriString) {
-        ArgCheck.isNotNull(theBaseUriString);
-        ArgCheck.isNotNull(theImportUriString);
+        CoreArgCheck.isNotNull(theBaseUriString);
+        CoreArgCheck.isNotNull(theImportUriString);
         String baseUriString   = URI.decode(theBaseUriString);
         String importUriString = URI.decode(theImportUriString);
         

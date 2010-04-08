@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import com.metamatrix.core.event.EventObjectListener;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.modelgenerator.ui.ModelGeneratorUiConstants;
@@ -51,7 +51,7 @@ import com.metamatrix.ui.internal.widget.ListPanelAdapter;
  * This panel contains the generated key options.
  */
 public class GeneratedKeyOptionsWizardPanel extends Composite
-    implements EventObjectListener, ModelGeneratorUiConstants, StringUtil.Constants {
+    implements EventObjectListener, ModelGeneratorUiConstants, CoreStringUtil.Constants {
 
     private static final String DATATYPE_DIALOG_TITLE = Util.getString("GenerationOptions.datatypeDialog.title"); //$NON-NLS-1$
     private static final String DATATYPE_DIALOG_LABEL_TEXT = Util.getString("GenerationOptions.datatypeDialog.label.text"); //$NON-NLS-1$

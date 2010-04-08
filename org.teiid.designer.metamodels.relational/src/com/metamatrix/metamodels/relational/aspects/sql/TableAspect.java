@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.BaseTable;
@@ -48,7 +48,7 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlBaseTableAspect#supportsUpdate(org.eclipse.emf.ecore.EObject)
      */
     public boolean supportsUpdate(final EObject eObject) {
-        ArgCheck.isInstanceOf(Table.class, eObject); 
+        CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table table = (Table) eObject;       
         return table.isSupportsUpdate();
     }
@@ -57,7 +57,7 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#getTableType(org.eclipse.emf.ecore.EObject)
      */
     public int getTableType(final EObject eObject) {
-        ArgCheck.isInstanceOf(Table.class, eObject); 
+        CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table table = (Table) eObject;
         if(table instanceof View) {
             return MetadataConstants.TABLE_TYPES.VIEW_TYPE;
@@ -78,7 +78,7 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#isSystem(org.eclipse.emf.ecore.EObject)
      */
     public boolean isSystem(final EObject eObject) {
-        ArgCheck.isInstanceOf(Table.class, eObject); 
+        CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table table = (Table) eObject;       
         return table.isSystem();
     }
@@ -88,7 +88,7 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @since 4.2
      */
     public boolean isMaterialized(EObject eObject) {
-        ArgCheck.isInstanceOf(Table.class, eObject); 
+        CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table table = (Table) eObject;       
         return table.isMaterialized();
     }    
@@ -97,7 +97,7 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlBaseTableAspect#isVirtual(org.eclipse.emf.ecore.EObject)
      */
     public boolean isVirtual(final EObject eObject) {
-        ArgCheck.isInstanceOf(Table.class, eObject); 
+        CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table table = (Table) eObject;
     	try {    
 			ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(table);
@@ -113,7 +113,7 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlBaseTableAspect#getColumns(org.eclipse.emf.ecore.EObject)
      */
     public List getColumns(final EObject eObject) {
-        ArgCheck.isInstanceOf(Table.class, eObject); 
+        CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table baseTable = (Table) eObject;       
         return baseTable.getColumns();
     }
@@ -149,7 +149,7 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlBaseTableAspect#getForeignKeys(org.eclipse.emf.ecore.EObject)
      */
     public Collection getForeignKeys(final EObject eObject) {
-        ArgCheck.isInstanceOf(Table.class, eObject);
+        CoreArgCheck.isInstanceOf(Table.class, eObject);
         if(eObject instanceof BaseTable){ 
             BaseTable baseTable = (BaseTable) eObject;        
             return baseTable.getForeignKeys();
@@ -162,7 +162,7 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlBaseTableAspect#getPrimaryKey(org.eclipse.emf.ecore.EObject)
      */
     public Object getPrimaryKey(final EObject eObject) {
-        ArgCheck.isInstanceOf(Table.class, eObject); 
+        CoreArgCheck.isInstanceOf(Table.class, eObject); 
 		if(eObject instanceof BaseTable){ 
 			BaseTable baseTable = (BaseTable) eObject;        
 			return baseTable.getPrimaryKey();
@@ -174,7 +174,7 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#getUniqueKeys(org.eclipse.emf.ecore.EObject)
      */
     public Collection getUniqueKeys(final EObject eObject) {
-        ArgCheck.isInstanceOf(Table.class, eObject); 
+        CoreArgCheck.isInstanceOf(Table.class, eObject); 
         // Go through the columns and grab the indexes used by each column
         final List results = new ArrayList();
         if ( eObject instanceof BaseTable ) {
@@ -202,7 +202,7 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlBaseTableAspect#getAccessPatterns(org.eclipse.emf.ecore.EObject)
      */
     public Collection getAccessPatterns(final EObject eObject) {
-        ArgCheck.isInstanceOf(Table.class, eObject); 
+        CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table baseTable = (Table) eObject;       
         return baseTable.getAccessPatterns();
     }
@@ -211,7 +211,7 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlBaseTableAspect#getCardinality(org.eclipse.emf.ecore.EObject)
      */
     public int getCardinality(final EObject eObject) {
-        ArgCheck.isInstanceOf(Table.class, eObject);
+        CoreArgCheck.isInstanceOf(Table.class, eObject);
         Table baseTable = (Table) eObject;       
         return baseTable.getCardinality();
     }
@@ -245,8 +245,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @since 4.3
      */
     public boolean canAcceptTransformationSource(EObject target, EObject source) {
-        ArgCheck.isInstanceOf(Table.class, target);
-        ArgCheck.isNotNull(source);
+        CoreArgCheck.isInstanceOf(Table.class, target);
+        CoreArgCheck.isNotNull(source);
         // no object should be source of itself
         if(source == target) {
             return false;
@@ -265,8 +265,8 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @since 4.3
      */
     public boolean canBeTransformationSource(EObject source, EObject target) {
-        ArgCheck.isInstanceOf(Table.class, source);
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isInstanceOf(Table.class, source);
+        CoreArgCheck.isNotNull(target);
         // no object should be source of itself
         if(source == target) {
             return false;
@@ -291,7 +291,7 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#setSupportsUpdate(org.eclipse.emf.ecore.EObject, boolean)
      */
     public void setSupportsUpdate(final EObject eObject, final boolean supportsUpdate) {
-        ArgCheck.isInstanceOf(Table.class, eObject); 
+        CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table baseTable = (Table) eObject;
         baseTable.setSupportsUpdate(supportsUpdate);
     }

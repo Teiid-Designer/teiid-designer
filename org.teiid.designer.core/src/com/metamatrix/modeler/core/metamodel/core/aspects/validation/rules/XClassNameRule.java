@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.extension.ExtensionPackage;
 import com.metamatrix.metamodels.core.extension.XClass;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -42,7 +42,7 @@ public class XClassNameRule extends StringNameRule {
      */
     public void validate( EObject eObject,
                           ValidationContext context ) {
-        ArgCheck.isInstanceOf(XClass.class, eObject);
+        CoreArgCheck.isInstanceOf(XClass.class, eObject);
 
         final XClass xclass = (XClass)eObject;
 

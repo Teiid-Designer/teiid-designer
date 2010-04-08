@@ -20,7 +20,7 @@ import org.eclipse.emf.importer.rose.builder.RoseStrings;
 import org.eclipse.emf.importer.rose.parser.RoseNode;
 import org.eclipse.emf.importer.rose.parser.Util;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -45,7 +45,7 @@ import com.metamatrix.rose.internal.impl.Unit;
  * 
  * @since 4.1
  */
-public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandler, StringUtil.Constants {
+public abstract class AbstractRoseHandler implements IRoseConstants, IRoseHandler, CoreStringUtil.Constants {
 
     private static final char MULTIPLICITY_START_DELIMITER = '[';
     private static final char MULTIPLICITY_END_DELIMITER = ']';

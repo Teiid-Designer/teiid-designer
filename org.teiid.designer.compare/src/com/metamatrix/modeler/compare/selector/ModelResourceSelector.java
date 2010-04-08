@@ -11,7 +11,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.util.ModelContents;
@@ -36,7 +36,7 @@ public class ModelResourceSelector extends AbstractModelSelector {
      */
     public ModelResourceSelector(final ModelResource modelResource) {
         super();
-        ArgCheck.isNotNull(modelResource);
+        CoreArgCheck.isNotNull(modelResource);
         this.modelResource = modelResource;
     }
 

@@ -11,7 +11,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xmlservice.XmlInput;
 import com.metamatrix.metamodels.xmlservice.XmlServiceMetamodelPlugin;
 import com.metamatrix.metamodels.xmlservice.XmlServicePackage;
@@ -49,7 +49,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      * @since 4.2
      */
     public EObject getDatatype(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         XmlInput input = (XmlInput) eObject;
         if (input.getType() != null) {
             return input.getType();
@@ -69,7 +69,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      * @since 4.2
      */
     public String getDatatypeName(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         XmlInput input = (XmlInput) eObject;
         if (input.getType() != null) {
             final EObject dataType = input.getType();
@@ -98,7 +98,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      * @since 4.2
      */
     public String getRuntimeType(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         XmlInput input = (XmlInput) eObject;
         if (input.getType() != null) {
             final EObject datatype = input.getType();
@@ -112,7 +112,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      * @since 4.2
      */
     public Object getDefaultValue(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         return DEFAULT_VALUE;
     }
 
@@ -121,7 +121,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      * @since 4.2
      */
     public int getNullType(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         return NULL_TYPE;
     }
 
@@ -130,7 +130,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      * @since 4.2
      */
     public int getLength(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         return LENGTH;
     }
 
@@ -139,7 +139,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      * @since 4.2
      */
     public int getPosition(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         XmlInput input = (XmlInput) eObject;
         List inputs = input.getOperation().getInputs();
         // correct from '0' to '1' based position
@@ -151,7 +151,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      * @since 4.2
      */
     public int getRadix(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         return RADIX;
     }
 
@@ -160,7 +160,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      * @since 4.2
      */
     public int getScale(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         return SCALE;
     }
 
@@ -169,7 +169,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      * @since 4.2
      */
     public int getPrecision(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         return PRECISION;
     }
 
@@ -178,7 +178,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      * @since 4.2
      */
     public int getType(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         return MetadataConstants.PARAMETER_TYPES.IN_PARM;
     }
 
@@ -187,7 +187,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      * @since 4.2
      */
     public boolean isOptional(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         return false;
     }
 
@@ -197,7 +197,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      */
     public boolean isDatatypeFeature(final EObject eObject,
                                      final EStructuralFeature eFeature) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject); 
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject); 
         final EObjectImpl eObjectImpl = super.getEObjectImpl(eObject);
         if (eObjectImpl != null) {
             switch (eObjectImpl.eDerivedStructuralFeatureID(eFeature)) {
@@ -229,7 +229,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      */
     public void setDatatype(EObject eObject,
                             EObject datatype) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         XmlInput input = (XmlInput) eObject;
         input.setType(datatype);
     }
@@ -246,7 +246,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      * @since 4.2
      */
     public void setLength(EObject eObject, int length) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         final String msg = XmlServiceMetamodelPlugin.Util.getString("XmlInputAspect.setLengthNotSupported"); //$NON-NLS-1$
         throw new UnsupportedOperationException(msg);
     }
@@ -264,7 +264,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      * @since 4.2
      */
     public void setNullType(EObject eObject, int nullType) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         final String msg = XmlServiceMetamodelPlugin.Util.getString("XmlInputAspect.setNullTypeNotSupported"); //$NON-NLS-1$
         throw new UnsupportedOperationException(msg);
     }
@@ -283,7 +283,7 @@ public class XmlInputAspect extends XmlServiceComponentAspect implements SqlProc
      */
     public void setDirection(EObject eObject,
                              int dir) {
-        ArgCheck.isInstanceOf(XmlInput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlInput.class, eObject);
         final String msg = XmlServiceMetamodelPlugin.Util.getString("XmlInputAspect.setDirectionNotSupported"); //$NON-NLS-1$
         throw new UnsupportedOperationException(msg);
     }

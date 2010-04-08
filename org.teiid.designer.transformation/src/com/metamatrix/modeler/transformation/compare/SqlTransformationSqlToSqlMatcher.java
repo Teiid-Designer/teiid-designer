@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingFactory;
 import com.metamatrix.core.util.HashCodeUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.modeler.core.compare.AbstractEObjectMatcher;
 import com.metamatrix.modeler.core.compare.TwoPhaseEObjectMatcher;
@@ -246,9 +246,9 @@ public class SqlTransformationSqlToSqlMatcher extends AbstractEObjectMatcher imp
 
         private boolean equalsIgnoreCase( String string1,
                                           String string2 ) {
-            if (StringUtil.isEmpty(string1) && StringUtil.isEmpty(string2)) {
+            if (CoreStringUtil.isEmpty(string1) && CoreStringUtil.isEmpty(string2)) {
                 return true;
-            } else if (StringUtil.isEmpty(string1) || StringUtil.isEmpty(string2)) {
+            } else if (CoreStringUtil.isEmpty(string1) || CoreStringUtil.isEmpty(string2)) {
                 return false;
             }
             return string1.equalsIgnoreCase(string2);

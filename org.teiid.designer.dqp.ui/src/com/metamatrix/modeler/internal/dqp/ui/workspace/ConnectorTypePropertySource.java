@@ -14,7 +14,7 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.designer.runtime.ConnectorType;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * @since 4.2
@@ -70,7 +70,7 @@ public final class ConnectorTypePropertySource implements IPropertySource {
         Object defValue = ((PropertyDefinition)id).getDefaultValue();
 
         if (defValue == null) {
-            defValue = StringUtil.Constants.EMPTY_STRING;
+            defValue = CoreStringUtil.Constants.EMPTY_STRING;
         }
 
         return defValue;

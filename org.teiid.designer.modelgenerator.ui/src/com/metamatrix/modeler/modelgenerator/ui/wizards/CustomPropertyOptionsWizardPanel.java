@@ -42,7 +42,7 @@ import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Stereotype;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceSelections;
@@ -53,7 +53,7 @@ import com.metamatrix.ui.internal.util.WidgetFactory;
 /**
  * CustomPropertyOptionsWizardPanel. This panel contains options for applying custom properties.
  */
-public class CustomPropertyOptionsWizardPanel extends Composite implements ModelGeneratorUiConstants, StringUtil.Constants {
+public class CustomPropertyOptionsWizardPanel extends Composite implements ModelGeneratorUiConstants, CoreStringUtil.Constants {
 
     /** Column headers for the custom property table. */
     static final String[] CUSTOM_PROPS_TBL_HDRS;

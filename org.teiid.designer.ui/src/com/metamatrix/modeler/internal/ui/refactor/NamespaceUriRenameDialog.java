@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.util.UriValidator;
 import com.metamatrix.modeler.ui.IHelpContextIds;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -315,11 +315,11 @@ public class NamespaceUriRenameDialog extends Dialog implements IHelpContextIds,
                         result = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, StatusCodes.NO_CHANGE,
                                             getString("valueUnchanged"), //$NON-NLS-1$
                                             null); // no exception
-                    } else if (!StringUtil.isEmpty(oldValue) && StringUtil.isEmpty(theNewValue)) {
+                    } else if (!CoreStringUtil.isEmpty(oldValue) && CoreStringUtil.isEmpty(theNewValue)) {
                         result = new Status(IStatus.WARNING, UiConstants.PLUGIN_ID, StatusCodes.CLEAR_VALUE,
                                             getString("valueCleared"), //$NON-NLS-1$
                                             null); // no exception
-                    } else if (!StringUtil.isEmpty(oldValue) && !StringUtil.isEmpty(theNewValue) && !oldValue.equals(theNewValue)) {
+                    } else if (!CoreStringUtil.isEmpty(oldValue) && !CoreStringUtil.isEmpty(theNewValue) && !oldValue.equals(theNewValue)) {
                         result = new Status(IStatus.WARNING, UiConstants.PLUGIN_ID, StatusCodes.CHANGED_VALUE,
                                             Util.getString(PREFIX + "valueChanged", oldValue), //$NON-NLS-1$
                                             null); // no exception

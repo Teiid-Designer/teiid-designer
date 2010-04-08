@@ -17,8 +17,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.ValidationProblem;
 import com.metamatrix.modeler.core.validation.ValidationResult;
@@ -95,7 +95,7 @@ implements UiConstants {
             desc.setNatureIds(MODEL_NATURES);
             if (ProductCustomizerMgr.getInstance() != null) {
                 String productName = ProductCustomizerMgr.getInstance().getProductName();
-                if (!StringUtil.isEmpty(productName)) {
+                if (!CoreStringUtil.isEmpty(productName)) {
                     desc.setComment(productName + ", version " + ModelerCore.ILicense.VERSION); //$NON-NLS-1$
                 }
             }
@@ -138,8 +138,8 @@ implements UiConstants {
     }
 
     private void checkInvalidChars(final ValidationResult result,final String stringToValidate, final char[] invalidChars) {
-        ArgCheck.isNotNull(stringToValidate);                
-        ArgCheck.isNotNull(result);
+        CoreArgCheck.isNotNull(stringToValidate);                
+        CoreArgCheck.isNotNull(result);
         final StringNameValidator validator = new StringNameValidator(invalidChars);
         final String reasonInvalid = validator.checkInvalidCharacters(stringToValidate);
         if ( reasonInvalid != null ) {
@@ -150,8 +150,8 @@ implements UiConstants {
     }
     
     private void checkReservedProjName(final ValidationResult result,final String name) {
-        ArgCheck.isNotNull(name);                
-        ArgCheck.isNotNull(result);
+        CoreArgCheck.isNotNull(name);                
+        CoreArgCheck.isNotNull(result);
         if(ModelerCore.isReservedProjectName(name)) {
             String reservedProjMsg = Util.getString("NewModelProjectWizard.reservedProjNameError",name); //$NON-NLS-1$
 

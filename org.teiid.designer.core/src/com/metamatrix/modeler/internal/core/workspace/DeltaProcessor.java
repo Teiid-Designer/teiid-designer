@@ -17,7 +17,7 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.notify.Notification;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreRuntimeException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceNotification;
@@ -196,9 +196,9 @@ public class DeltaProcessor implements IResourceChangeListener {
      */
     private void fireRename( final IResourceDelta[] deltas,
                              IResourceChangeEvent event ) {
-        ArgCheck.isNotNull(deltas);
+        CoreArgCheck.isNotNull(deltas);
         if (deltas.length != 2) {
-            ArgCheck.isTrue(deltas.length == 2,
+            CoreArgCheck.isTrue(deltas.length == 2,
                             ModelerCore.Util.getString("DeltaProcessor.Deltas_length_must_be_2_for_a_rename_1")); //$NON-NLS-1$
         }
 

@@ -10,7 +10,7 @@ package com.metamatrix.modeler.jdbc.relational.aspects.sql;
 import java.util.Iterator;
 import java.util.Properties;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AbstractMetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
@@ -41,7 +41,7 @@ public class JdbcSourceAspect extends AbstractMetamodelAspect implements SqlMode
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
     public String getName(final EObject eObject) {
-        ArgCheck.isInstanceOf(JdbcSource.class, eObject); 
+        CoreArgCheck.isInstanceOf(JdbcSource.class, eObject); 
         JdbcSource entity = (JdbcSource) eObject;   
         return entity.getName();
     }
@@ -50,7 +50,7 @@ public class JdbcSourceAspect extends AbstractMetamodelAspect implements SqlMode
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect#getNameInSource(org.eclipse.emf.ecore.EObject)
      */
     public String getNameInSource(final EObject eObject) {
-        ArgCheck.isInstanceOf(JdbcSource.class, eObject); 
+        CoreArgCheck.isInstanceOf(JdbcSource.class, eObject); 
         JdbcSource entity = (JdbcSource) eObject;       
         return entity.getName();
     }
@@ -73,7 +73,7 @@ public class JdbcSourceAspect extends AbstractMetamodelAspect implements SqlMode
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlModelSourceAspect#getProperties(org.eclipse.emf.ecore.EObject)
      */
     public Properties getProperties(final EObject eObject) {
-        ArgCheck.isInstanceOf(JdbcSource.class, eObject); 
+        CoreArgCheck.isInstanceOf(JdbcSource.class, eObject); 
 
         Properties props = new Properties();
         this.addJdbcSourceProperties((JdbcSource)eObject, props);

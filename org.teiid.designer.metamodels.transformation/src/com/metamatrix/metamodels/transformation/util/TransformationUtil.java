@@ -11,7 +11,7 @@ import java.util.Iterator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * RelationalUtil
@@ -36,7 +36,7 @@ public class TransformationUtil {
      * there is no name feature
      */
     public static String getName(final EObject eObject) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         final EStructuralFeature nameFeature = getNameFeature(eObject);
         if ( nameFeature == null ) {
             return EMPTY_STRING;
@@ -52,7 +52,7 @@ public class TransformationUtil {
      * @see com.metamatrix.modeler.core.ModelEditor#getNameFeature(org.eclipse.emf.ecore.EObject)
      */
     public static EStructuralFeature getNameFeature(final EObject eObject) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         final EClass eClass = eObject.eClass();
         for (Iterator iter = eClass.getEAllStructuralFeatures().iterator(); iter.hasNext();) {
             final EStructuralFeature feature = (EStructuralFeature)iter.next();

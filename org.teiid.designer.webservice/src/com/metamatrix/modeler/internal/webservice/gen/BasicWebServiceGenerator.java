@@ -27,8 +27,8 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
@@ -84,7 +84,7 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @since 4.2
      */
     public void setWebServiceResource( Resource wsModel ) {
-        ArgCheck.isNotNull(wsModel);
+        CoreArgCheck.isNotNull(wsModel);
         this.webServiceResource = wsModel;
     }
 
@@ -101,7 +101,7 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @since 4.2
      */
     public void addWsdlDefinitions( final Definitions wsdlDefinitions ) {
-        ArgCheck.isNotNull(wsdlDefinitions);
+        CoreArgCheck.isNotNull(wsdlDefinitions);
         if (!this.wsdlDefinitions.contains(wsdlDefinitions)) {
             this.wsdlDefinitions.add(wsdlDefinitions);
         }
@@ -112,7 +112,7 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @since 4.2
      */
     public void addWsdlDefinitions( List wsdlDefinitions ) {
-        ArgCheck.isNotNull(wsdlDefinitions);
+        CoreArgCheck.isNotNull(wsdlDefinitions);
         final Iterator iter = wsdlDefinitions.iterator();
         while (iter.hasNext()) {
             final Object obj = iter.next();
@@ -135,7 +135,7 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @since 4.2
      */
     public void addXsdSchema( XSDSchema schema ) {
-        ArgCheck.isNotNull(schema);
+        CoreArgCheck.isNotNull(schema);
         if (!this.xsdSchemas.contains(schema)) {
             this.xsdSchemas.add(schema);
         }
@@ -146,7 +146,7 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
      * @since 4.2
      */
     public void addXsdSchemas( List schemas ) {
-        ArgCheck.isNotNull(schemas);
+        CoreArgCheck.isNotNull(schemas);
         final Iterator iter = schemas.iterator();
         while (iter.hasNext()) {
             final Object obj = iter.next();
@@ -264,7 +264,7 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
                         final String name = defns.getTargetNamespace();
                         final String targetNs = defns.getTargetNamespace();
                         final String line = WebServicePlugin.Util.getString("BasicWebServiceGenerator.DescriptionWsdlNameAndTargetNS", name, targetNs); //$NON-NLS-1$
-                        sb.append(StringUtil.LINE_SEPARATOR);
+                        sb.append(CoreStringUtil.LINE_SEPARATOR);
                         sb.append(line);
                     }
                     modelAnnotation.setDescription(sb.toString());
@@ -401,7 +401,7 @@ public class BasicWebServiceGenerator implements IWebServiceGenerator {
         }
 
         protected Identifier parseIdentifier( final String identifier ) {
-            final List idParts = StringUtil.split(identifier, ":"); //$NON-NLS-1$
+            final List idParts = CoreStringUtil.split(identifier, ":"); //$NON-NLS-1$
             if (idParts.isEmpty()) {
                 return null;
             }

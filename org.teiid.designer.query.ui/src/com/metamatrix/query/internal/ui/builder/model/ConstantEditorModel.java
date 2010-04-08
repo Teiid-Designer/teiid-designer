@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import org.eclipse.core.runtime.IStatus;
 import com.metamatrix.common.types.DataTypeManager.DefaultDataTypes;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
 import com.metamatrix.query.sql.LanguageObject;
@@ -74,8 +74,8 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      */
     public boolean getBoolean() {
         if (!isBoolean()) {
-            Assertion.assertTrue(isBoolean(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
-                                                             new Object[] {"getBoolean()", type})); //$NON-NLS-1$
+            CoreArgCheck.isTrue(isBoolean(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
+                                                            new Object[] {"getBoolean()", type})); //$NON-NLS-1$
         }
 
         return booleanValue.booleanValue();
@@ -153,8 +153,8 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      */
     public Date getDate() {
         if (!isDate()) {
-            Assertion.assertTrue(isDate(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
-                                                          new Object[] {"getDate()", type})); //$NON-NLS-1$
+            CoreArgCheck.isTrue(isDate(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
+                                                         new Object[] {"getDate()", type})); //$NON-NLS-1$
         }
         return dateValue;
     }
@@ -171,8 +171,8 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      */
     public String getText() {
         if (!isText()) {
-            Assertion.assertTrue(isText(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
-                                                          new Object[] {"getText()", type})); //$NON-NLS-1$
+            CoreArgCheck.isTrue(isText(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
+                                                         new Object[] {"getText()", type})); //$NON-NLS-1$
         }
         return textValue;
     }
@@ -188,8 +188,8 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      * @throws com.metamatrix.core.util.AssertionError if type is not time #see BuilderUtils#DATE_TYPES
      */
     public Time getTime() {
-        Assertion.assertTrue(isTime(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
-                                                      new Object[] {"getTime()", type})); //$NON-NLS-1$
+        CoreArgCheck.isTrue(isTime(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
+                                                     new Object[] {"getTime()", type})); //$NON-NLS-1$
 
         // zero out the seconds and milliseconds
         if (timeValue != null) {
@@ -211,8 +211,8 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      */
     public Timestamp getTimestamp() {
         if (!isTimestamp()) {
-            Assertion.assertTrue(isTimestamp(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
-                                                               new Object[] {"getTimestamp()", type})); //$NON-NLS-1$
+            CoreArgCheck.isTrue(isTimestamp(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
+                                                              new Object[] {"getTimestamp()", type})); //$NON-NLS-1$
         }
 
         // zero out the seconds and milliseconds
@@ -333,8 +333,8 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
 
     public void setBoolean( boolean theFlag ) {
         if (!isBoolean()) {
-            Assertion.assertTrue(isBoolean(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
-                                                             new Object[] {"setBoolean()", type})); //$NON-NLS-1$
+            CoreArgCheck.isTrue(isBoolean(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
+                                                            new Object[] {"setBoolean()", type})); //$NON-NLS-1$
         }
 
         if ((booleanValue == null) || (getBoolean() != theFlag)) {
@@ -391,8 +391,8 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
 
     public void setDate( Date theDate ) {
         if (!isDate()) {
-            Assertion.assertTrue(isDate(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
-                                                          new Object[] {"setDate()", type})); //$NON-NLS-1$
+            CoreArgCheck.isTrue(isDate(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
+                                                         new Object[] {"setDate()", type})); //$NON-NLS-1$
         }
 
         if ((dateValue == null) || !dateValue.equals(theDate)) {
@@ -420,8 +420,8 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
 
     public void setNull() {
         if (!isNull()) {
-            Assertion.assertTrue(isNull(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
-                                                          new Object[] {"setNull()", type})); //$NON-NLS-1$
+            CoreArgCheck.isTrue(isNull(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
+                                                         new Object[] {"setNull()", type})); //$NON-NLS-1$
         }
 
         // does nothing since only the type we care about
@@ -429,8 +429,8 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
 
     public void setText( String theText ) {
         if (!isText()) {
-            Assertion.assertTrue(isText(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
-                                                          new Object[] {"setText()", type})); //$NON-NLS-1$
+            CoreArgCheck.isTrue(isText(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
+                                                         new Object[] {"setText()", type})); //$NON-NLS-1$
         }
 
         if ((textValue == null) || !getText().equals(theText)) {
@@ -441,8 +441,8 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
 
     public void setTime( Time theTime ) {
         if (!isTime()) {
-            Assertion.assertTrue(isTime(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
-                                                          new Object[] {"setTime()", type})); //$NON-NLS-1$
+            CoreArgCheck.isTrue(isTime(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
+                                                         new Object[] {"setTime()", type})); //$NON-NLS-1$
         }
 
         if ((timeValue == null) || !timeValue.equals(theTime)) {
@@ -453,8 +453,8 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
 
     public void setTimestamp( Timestamp theTimestamp ) {
         if (!isTimestamp()) {
-            Assertion.assertTrue(isTimestamp(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
-                                                               new Object[] {"setTimestamp()", type})); //$NON-NLS-1$
+            CoreArgCheck.isTrue(isTimestamp(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
+                                                              new Object[] {"setTimestamp()", type})); //$NON-NLS-1$
         }
 
         if ((timestampValue == null) || !timestampValue.equals(theTimestamp)) {

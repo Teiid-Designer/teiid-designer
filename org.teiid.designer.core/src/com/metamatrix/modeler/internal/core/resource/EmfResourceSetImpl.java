@@ -27,7 +27,7 @@ import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.InvalidIDException;
 import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.container.Container;
@@ -269,7 +269,7 @@ public class EmfResourceSetImpl extends ResourceSetImpl implements EmfResourceSe
     public EObject getEObject( URI uri,
                                boolean loadOnDemand ) {
         // super.getEObject(uri, loadOnDemand);
-        ArgCheck.isNotNull(uri);
+        CoreArgCheck.isNotNull(uri);
         if (uri != null) {
             URI resourceURI = uri.trimFragment();
             String resourceUriString = resourceURI.toString();

@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.Stopwatch;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;
@@ -223,7 +223,7 @@ public class ModelBufferManager implements ModelBufferFactory {
      * @see ModelBufferFactory#createBuffer(IOpenable)
      */
     public ModelBuffer createBuffer( final Openable owner) throws ModelWorkspaceException {
-        ArgCheck.isInstanceOf(ModelWorkspaceItem.class,owner);
+        CoreArgCheck.isInstanceOf(ModelWorkspaceItem.class,owner);
         ModelWorkspaceItem item = (ModelWorkspaceItem)owner;
         IResource resource = item.getResource();
         ResourceSet emfResourceSet = this.resourceSetFinder.getResourceSet(resource);
@@ -248,7 +248,7 @@ public class ModelBufferManager implements ModelBufferFactory {
      * buffer associated with it.
      */
     public ModelBuffer getOpenBuffer(Openable owner) {
-        ArgCheck.isNotNull(owner);
+        CoreArgCheck.isNotNull(owner);
         return (ModelBuffer)openBuffers.get(owner);
     }
 

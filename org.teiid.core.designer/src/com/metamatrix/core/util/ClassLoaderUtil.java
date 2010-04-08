@@ -20,7 +20,6 @@ import java.util.zip.ZipInputStream;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
-import com.metamatrix.core.modeler.util.ArgCheck;
 
 /**
  * This ClassLoaderUtil class attempts to find classes that are accessible via the supplied ClassLoader and that are assignable
@@ -37,7 +36,7 @@ public class ClassLoaderUtil {
      * Construct an instance of ClassLoaderUtil.
      */
     public ClassLoaderUtil( final URLClassLoader loader ) {
-        ArgCheck.isNotNull(loader);
+        CoreArgCheck.isNotNull(loader);
         this.loader = loader;
         this.problems = new ArrayList();
     }

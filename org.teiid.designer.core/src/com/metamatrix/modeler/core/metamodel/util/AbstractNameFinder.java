@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.util.ModelVisitor;
 
 /**
@@ -25,7 +25,7 @@ public abstract class AbstractNameFinder implements ModelVisitor {
 
     public AbstractNameFinder( final String nameToMatch,
                                final boolean isPartialName ) {
-        ArgCheck.isNotEmpty(nameToMatch);
+        CoreArgCheck.isNotEmpty(nameToMatch);
         this.nameToMatch = nameToMatch.toUpperCase();
         this.isPartialName = isPartialName;
         this.matchingEObjects = new HashSet();

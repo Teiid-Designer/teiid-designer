@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.diagram.DiagramContainer;
@@ -50,7 +50,7 @@ public class TxnNotificationFilter {
      * @since 5.0
      */
     public TxnNotificationFilter( final ResourceSet theResourceSet ) {
-        ArgCheck.isNotNull(theResourceSet);
+        CoreArgCheck.isNotNull(theResourceSet);
         this.eventSets = new ArrayList();
         this.resourceSet = theResourceSet;
     }

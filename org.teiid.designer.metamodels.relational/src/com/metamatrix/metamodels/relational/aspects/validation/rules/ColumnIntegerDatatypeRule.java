@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.relational.aspects.validation.rules;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
 import com.metamatrix.modeler.core.ValidationDescriptor;
@@ -33,7 +33,7 @@ public class ColumnIntegerDatatypeRule implements ObjectValidationRule {
      * @see com.metamatrix.modeler.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, com.metamatrix.modeler.core.validation.ValidationContext)
      */
     public void validate(EObject eObject, ValidationContext context) {
-        ArgCheck.isInstanceOf(Column.class, eObject);
+        CoreArgCheck.isInstanceOf(Column.class, eObject);
 
         Column column = (Column) eObject;
 

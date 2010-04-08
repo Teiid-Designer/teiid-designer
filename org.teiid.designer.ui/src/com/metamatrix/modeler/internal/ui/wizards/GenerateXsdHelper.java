@@ -33,7 +33,7 @@ import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingRoot;
 import org.eclipse.xsd.XSDElementDeclaration;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.internal.xml.XmlDocumentBuilderImpl;
@@ -114,8 +114,8 @@ public class GenerateXsdHelper {
     public GenerateXsdHelper( final XsdSchemaBuilderImpl xsdBuilder,
                               final XsdBuilderOptions ops,
                               final MultiStatus result ) {
-        ArgCheck.isNotNull(xsdBuilder);
-        ArgCheck.isNotNull(ops);
+        CoreArgCheck.isNotNull(xsdBuilder);
+        CoreArgCheck.isNotNull(ops);
 
         this.xsdBuilder = xsdBuilder;
         this.ops = ops;
@@ -826,8 +826,8 @@ public class GenerateXsdHelper {
 
     public Collection createWebServiceBuildOptions( final HashMap outDocToInElementMappings,
                                                     final XsdBuilderOptions ops ) {
-        ArgCheck.isNotNull(outDocToInElementMappings);
-        ArgCheck.isNotNull(ops);
+        CoreArgCheck.isNotNull(outDocToInElementMappings);
+        CoreArgCheck.isNotNull(ops);
 
         if (!ops.genWs()) {
             return Collections.EMPTY_LIST;

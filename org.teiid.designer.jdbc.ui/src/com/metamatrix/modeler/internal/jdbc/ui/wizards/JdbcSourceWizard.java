@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.notification.util.DefaultIgnorableNotificationSource;
 import com.metamatrix.modeler.internal.jdbc.ui.InternalModelerJdbcUiPluginConstants;
@@ -70,7 +70,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
  */
 public class JdbcSourceWizard extends AbstractWizard
     implements ListPanel.Constants, InternalModelerJdbcUiPluginConstants, InternalModelerJdbcUiPluginConstants.Widgets,
-    InternalUiConstants.Widgets, StringUtil.Constants {
+    InternalUiConstants.Widgets, CoreStringUtil.Constants {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(JdbcSourceWizard.class);
 

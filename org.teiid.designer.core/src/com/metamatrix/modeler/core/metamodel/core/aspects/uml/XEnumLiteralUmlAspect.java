@@ -10,7 +10,7 @@ package com.metamatrix.modeler.core.metamodel.core.aspects.uml;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.CoreMetamodelPlugin;
 import com.metamatrix.metamodels.core.extension.XEnumLiteral;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -171,7 +171,7 @@ public class XEnumLiteralUmlAspect extends AbstractExtensionUmlAspect implements
     }
 
     protected XEnumLiteral assertXEnumLiteral(Object eObject) {
-        ArgCheck.isInstanceOf(XEnumLiteral.class, eObject);
+        CoreArgCheck.isInstanceOf(XEnumLiteral.class, eObject);
         
         return (XEnumLiteral)eObject;
     }

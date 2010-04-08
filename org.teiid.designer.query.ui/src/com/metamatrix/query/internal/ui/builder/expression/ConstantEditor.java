@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.AbstractLanguageObjectEditor;
 import com.metamatrix.query.internal.ui.builder.model.ConstantEditorModel;
@@ -469,9 +469,9 @@ public final class ConstantEditor extends AbstractLanguageObjectEditor {
         if (theLanguageObject == null) {
             clear();
         } else {
-            Assertion.assertTrue((theLanguageObject instanceof Constant),
-                                 Util.getString(PREFIX + "invalidLanguageObject", //$NON-NLS-1$
-                                                new Object[] {theLanguageObject.getClass().getName()}));
+            CoreArgCheck.isTrue((theLanguageObject instanceof Constant),
+                                Util.getString(PREFIX + "invalidLanguageObject", //$NON-NLS-1$
+                                               new Object[] {theLanguageObject.getClass().getName()}));
 
             model.setLanguageObject(theLanguageObject);
         }

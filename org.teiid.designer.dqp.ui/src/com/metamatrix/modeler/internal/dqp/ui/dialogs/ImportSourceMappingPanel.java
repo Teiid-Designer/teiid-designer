@@ -43,7 +43,7 @@ import org.teiid.designer.vdb.VdbModelEntry;
 import com.metamatrix.common.vdb.ModelInfo;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
@@ -116,10 +116,10 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
                                      final ModelSource theImportSource ) {
         super(theParent);
 
-        ArgCheck.isNotNull(theParent);
-        ArgCheck.isNotNull(vdb);
-        ArgCheck.isNotNull(theModelInfo);
-        ArgCheck.isNotNull(theImportSource);
+        CoreArgCheck.isNotNull(theParent);
+        CoreArgCheck.isNotNull(vdb);
+        CoreArgCheck.isNotNull(theModelInfo);
+        CoreArgCheck.isNotNull(theImportSource);
 
         this.vdb = vdb;
         this.modelInfo = theModelInfo;

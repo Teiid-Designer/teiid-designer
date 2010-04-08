@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import com.metamatrix.core.index.AbstractIndexSelector;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.DateUtil;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.internal.core.index.Index;
@@ -64,7 +64,7 @@ public class ResourceFileIndexSelector extends AbstractIndexSelector {
      */
     public ResourceFileIndexSelector( String filepath ) throws ModelerCoreException {
         if (filepath == null) {
-            ArgCheck.isNotNull(filepath,
+            CoreArgCheck.isNotNull(filepath,
                                ModelerCore.Util.getString("ResourceFileIndexSelector.The_filepath_string_may_not_be_null_1")); //$NON-NLS-1$
         }
 

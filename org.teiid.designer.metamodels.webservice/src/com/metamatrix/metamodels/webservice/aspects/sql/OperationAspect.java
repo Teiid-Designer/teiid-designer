@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.webservice.aspects.sql;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
@@ -34,7 +34,7 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @since 4.2
      */
     public boolean isVirtual(final EObject eObject) {
-        ArgCheck.isInstanceOf(Operation.class, eObject);
+        CoreArgCheck.isInstanceOf(Operation.class, eObject);
         return true;
     }
 
@@ -43,7 +43,7 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @since 4.2
      */
     public boolean isFunction(final EObject eObject) {
-        ArgCheck.isInstanceOf(Operation.class, eObject);
+        CoreArgCheck.isInstanceOf(Operation.class, eObject);
         return false;
     }
 
@@ -52,7 +52,7 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @since 4.2
      */
     public List getParameters(final EObject eObject) {
-        ArgCheck.isInstanceOf(Operation.class, eObject);
+        CoreArgCheck.isInstanceOf(Operation.class, eObject);
         Operation opearation = (Operation) eObject;
         List params = new ArrayList(1);
         params.add(opearation.getInput());
@@ -64,7 +64,7 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @since 4.2
      */
     public Object getResult(final EObject eObject) {
-        ArgCheck.isInstanceOf(Operation.class, eObject);
+        CoreArgCheck.isInstanceOf(Operation.class, eObject);
         Operation opearation = (Operation) eObject;
         return opearation.getOutput();
     }
@@ -98,8 +98,8 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @since 4.3
      */
     public boolean canAcceptTransformationSource(EObject target, EObject source) {
-        ArgCheck.isInstanceOf(Operation.class, target);
-        ArgCheck.isNotNull(source);
+        CoreArgCheck.isInstanceOf(Operation.class, target);
+        CoreArgCheck.isNotNull(source);
         // no object should be source of itself
         if(source == target) {
             return false;
@@ -122,7 +122,7 @@ public class OperationAspect extends WebServiceComponentAspect implements SqlPro
      * @since 4.3
      */
     public boolean canBeTransformationSource(EObject source, EObject target) {
-        ArgCheck.isInstanceOf(Operation.class, source);
+        CoreArgCheck.isInstanceOf(Operation.class, source);
         return false;
     }
 }

@@ -19,8 +19,8 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import com.metamatrix.common.xsd.XsdHeader;
 import com.metamatrix.common.xsd.XsdHeaderReader;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.xsd.XsdPlugin;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.ResourceValidationRule;
@@ -42,8 +42,8 @@ public class XsdResourceValidationRule implements ResourceValidationRule {
      */
     public void validate( final Resource resource,
                           final ValidationContext context ) {
-        ArgCheck.isNotNull(resource);
-        ArgCheck.isNotNull(context);
+        CoreArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(context);
 
         if (!(resource instanceof XSDResourceImpl)) {
             return;
@@ -68,7 +68,7 @@ public class XsdResourceValidationRule implements ResourceValidationRule {
 
                             for (Iterator i = declarations.iterator(); i.hasNext();) {
                                 String location = (String)i.next();
-                                if (StringUtil.isEmpty(location) || location.startsWith("http")) { //$NON-NLS-1$
+                                if (CoreStringUtil.isEmpty(location) || location.startsWith("http")) { //$NON-NLS-1$
                                     continue;
                                 }
                                 URI baseUri = URI.createFileURI(f.getAbsolutePath());

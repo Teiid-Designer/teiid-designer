@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.extension.XClass;
 import com.metamatrix.metamodels.core.extension.XPackage;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -39,7 +39,7 @@ public class XClassUniqueExtendedClassInXPackageRule implements ObjectValidation
      * @since 4.2
      */
     public void validate(EObject eObject, ValidationContext context) {
-        ArgCheck.isInstanceOf(XPackage.class, eObject);
+        CoreArgCheck.isInstanceOf(XPackage.class, eObject);
 
         final XPackage xpackage = (XPackage) eObject;
         final Resource resource = xpackage.eResource();

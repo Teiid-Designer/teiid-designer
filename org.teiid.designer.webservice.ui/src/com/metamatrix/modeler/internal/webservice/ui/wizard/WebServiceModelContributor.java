@@ -20,8 +20,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.compare.ModelGenerator;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
@@ -133,11 +132,11 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
      * @since 4.2
      */
     public void doCancel() {
-    	List newResources = this.builder.getAllNewResources();
-    	
-    	if( newResources != null && !newResources.isEmpty() ) {
-    		dispose();
-    	}
+        List newResources = this.builder.getAllNewResources();
+
+        if (newResources != null && !newResources.isEmpty()) {
+            dispose();
+        }
     }
 
     /**
@@ -148,10 +147,10 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
     public void doFinish( ModelResource theModelResource,
                           IProgressMonitor theMonitor ) {
         int severity = this.builder.validateWSDLNamespaces().getSeverity();
-        Assertion.assertTrue(severity < IStatus.ERROR);
+        CoreArgCheck.isTrue(severity < IStatus.ERROR, "ERROR validating WSDL Namespaces"); //$NON-NLS-1$
 
         severity = this.builder.validateXSDNamespaces().getSeverity();
-        Assertion.assertTrue(severity < IStatus.ERROR);
+        CoreArgCheck.isTrue(severity < IStatus.ERROR, "ERROR validating XSD Namespaces"); //$NON-NLS-1$;
 
         try {
             IStatus status = this.builder.getModelGenerator(true).execute(theMonitor);
@@ -270,7 +269,7 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
     }
 
     public IWizardPage getNextPage( IWizardPage page ) {
-        ArgCheck.isNotNull(page);
+        CoreArgCheck.isNotNull(page);
         final int ndx = indexOf(page);
         List pgs = Arrays.asList(getPages());
         // Return null if last page or page not found
@@ -313,7 +312,7 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
     }
 
     public IWizardPage getPreviousPage( IWizardPage page ) {
-        ArgCheck.isNotNull(page);
+        CoreArgCheck.isNotNull(page);
         final int ndx = indexOf(page);
         // Return null if last page or page not found
         if (ndx <= 0) {

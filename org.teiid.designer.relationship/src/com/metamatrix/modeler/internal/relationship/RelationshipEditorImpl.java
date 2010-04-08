@@ -13,7 +13,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relationship.Relationship;
 import com.metamatrix.metamodels.relationship.RelationshipRole;
 import com.metamatrix.metamodels.relationship.RelationshipType;
@@ -42,7 +42,7 @@ public class RelationshipEditorImpl implements RelationshipEditor {
     public RelationshipEditorImpl( final Relationship relationship,
                                    final boolean useTransactions ) {
         super();
-        ArgCheck.isNotNull(relationship);
+        CoreArgCheck.isNotNull(relationship);
         this.relationship = relationship;
         this.useTransactions = useTransactions;
     }
@@ -357,7 +357,7 @@ public class RelationshipEditorImpl implements RelationshipEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipEditor#addSourceParticipant(org.eclipse.emf.ecore.EObject)
      */
     public void addSourceParticipant( final EObject newSourceParticipant ) throws ModelerCoreException {
-        ArgCheck.isNotNull(newSourceParticipant);
+        CoreArgCheck.isNotNull(newSourceParticipant);
         final EList values = this.relationship.getSources();
         ModelerCore.getModelEditor().addValue(this.relationship, newSourceParticipant, values);
     }
@@ -389,7 +389,7 @@ public class RelationshipEditorImpl implements RelationshipEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipEditor#removeSourceParticipant(org.eclipse.emf.ecore.EObject)
      */
     public boolean removeSourceParticipant( final EObject sourceParticipant ) throws ModelerCoreException {
-        ArgCheck.isNotNull(sourceParticipant);
+        CoreArgCheck.isNotNull(sourceParticipant);
         final EList values = this.relationship.getSources();
         if (!values.contains(sourceParticipant)) {
             return false;
@@ -428,7 +428,7 @@ public class RelationshipEditorImpl implements RelationshipEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipEditor#addTargetParticipant(org.eclipse.emf.ecore.EObject)
      */
     public void addTargetParticipant( final EObject newTargetParticipant ) throws ModelerCoreException {
-        ArgCheck.isNotNull(newTargetParticipant);
+        CoreArgCheck.isNotNull(newTargetParticipant);
         final EList values = this.relationship.getTargets();
         ModelerCore.getModelEditor().addValue(this.relationship, newTargetParticipant, values);
     }
@@ -460,7 +460,7 @@ public class RelationshipEditorImpl implements RelationshipEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipEditor#removeTargetParticipant(org.eclipse.emf.ecore.EObject)
      */
     public boolean removeTargetParticipant( final EObject targetParticipant ) throws ModelerCoreException {
-        ArgCheck.isNotNull(targetParticipant);
+        CoreArgCheck.isNotNull(targetParticipant);
         final EList values = this.relationship.getTargets();
         if (!values.contains(targetParticipant)) {
             return false;

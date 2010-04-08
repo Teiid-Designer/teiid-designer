@@ -16,7 +16,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import com.metamatrix.common.types.DataTypeManager;
 import com.metamatrix.common.types.DataTypeManager.DefaultDataTypes;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.query.sql.LanguageObject;
 import com.metamatrix.query.sql.symbol.Constant;
 import com.metamatrix.query.sql.symbol.Function;
@@ -158,7 +158,7 @@ public final class BuilderUtils implements UiConstants {
      * @throws IllegalArgumentException if parameter is null
      */
     public static LanguageObject getBuilderLanguageObject( LanguageObject theLangObj ) {
-        ArgCheck.isNotNull(theLangObj);
+        CoreArgCheck.isNotNull(theLangObj);
 
         LanguageObject result = theLangObj;
 

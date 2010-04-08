@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -148,7 +148,7 @@ public class EditTransformationHelper {
                 if( showPath ) {
                     String type = getType(eo);
                     if( type != null ) {
-                        sText += StringUtil.Constants.SPACE + type + StringUtil.Constants.SPACE;
+                        sText += CoreStringUtil.Constants.SPACE + type + CoreStringUtil.Constants.SPACE;
                     }
                     String path = getAppendedPath(eo);
                     if( path != null ) {

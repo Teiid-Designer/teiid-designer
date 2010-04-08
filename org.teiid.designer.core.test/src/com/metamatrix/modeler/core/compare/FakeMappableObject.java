@@ -13,7 +13,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * FakeMappableObject
@@ -57,7 +57,7 @@ public class FakeMappableObject extends EObjectImpl {
      */
     public FakeMappableObject( final String name, final int type ) {
         super();
-        ArgCheck.isNotNull(name);
+        CoreArgCheck.isNotNull(name);
         this.name = name;
         this.type = type;
         this.children = new BasicEList();

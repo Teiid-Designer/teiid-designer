@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.mapping.Mapping;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.diagram.DiagramEntity;
@@ -93,9 +93,9 @@ public class FindRelatedObjectsToDeleted implements ModelVisitor {
                                         final Collection deletedObjects,
                                         final ModelWorkspaceSearch workspaceSearch ) {
         super();
-        Assertion.isNotNull(objectsForDeleteProcess);
-        Assertion.isNotNull(editingDomain);
-        Assertion.isNotNull(workspaceSearch);
+        CoreArgCheck.isNotNull(objectsForDeleteProcess);
+        CoreArgCheck.isNotNull(editingDomain);
+        CoreArgCheck.isNotNull(workspaceSearch);
         this.additionalDeleteCommands = new ArrayList();
         this.editingDomain = editingDomain;
         this.objectsForDeleteProcess = objectsForDeleteProcess;

@@ -16,7 +16,7 @@ import java.util.Map;
 import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.api.exception.query.QueryMetadataException;
 import com.metamatrix.common.types.DataTypeManager;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.metadata.runtime.ColumnRecord;
 import com.metamatrix.query.metadata.QueryMetadataInterface;
 import com.metamatrix.query.metadata.StoredProcedureInfo;
@@ -31,74 +31,77 @@ import com.metamatrix.query.sql.symbol.GroupSymbol;
 public class ExternalMetadataUtil {
 
     // Can't construct
-    private ExternalMetadataUtil() {}
+    private ExternalMetadataUtil() {
+    }
 
-    public static List resolveElementsInGroup(GroupSymbol group, QueryMetadataInterface metadata)
-    throws QueryMetadataException, MetaMatrixComponentException {
+    public static List resolveElementsInGroup( GroupSymbol group,
+                                               QueryMetadataInterface metadata )
+        throws QueryMetadataException, MetaMatrixComponentException {
 
-		String groupName = group.getName();
-		
-		boolean isUUID = UuidUtil.isStringifiedUUID(groupName);
+        String groupName = group.getName();
+
+        boolean isUUID = UuidUtil.isStringifiedUUID(groupName);
 
         // get all elements from the metadata
         List elementIDs = metadata.getElementIDsInGroupID(group.getMetadataID());
 
-		if(elementIDs != null) {
-	        // ok for each ELEMENT...
-	        List elements = new ArrayList(elementIDs.size());
-	        Iterator elementIter = elementIDs.iterator();
-	        while(elementIter.hasNext()){
-	            Object elementID = elementIter.next();
-	            Assertion.isInstanceOf(elementID, ColumnRecord.class, null);
-				ColumnRecord columnRecord = (ColumnRecord) elementID;
-				String fullName = null;
-				if(isUUID) {
-					fullName = columnRecord.getUUID();
-				} else {
-					fullName = columnRecord.getFullName();				
-				}
-	
-	            // Form an element symbol from the ID
-	            ElementSymbol element = new ElementSymbol(fullName);
-	            element.setGroupSymbol(group);
-	            element.setMetadataID(elementID);
-	            element.setType( DataTypeManager.getDataTypeClass(metadata.getElementType(element.getMetadataID())) );
-	
-	            elements.add(element);
-	        }
+        if (elementIDs != null) {
+            // ok for each ELEMENT...
+            List elements = new ArrayList(elementIDs.size());
+            Iterator elementIter = elementIDs.iterator();
+            while (elementIter.hasNext()) {
+                Object elementID = elementIter.next();
+                CoreArgCheck.isInstanceOf(ColumnRecord.class, elementID, null);
+                ColumnRecord columnRecord = (ColumnRecord)elementID;
+                String fullName = null;
+                if (isUUID) {
+                    fullName = columnRecord.getUUID();
+                } else {
+                    fullName = columnRecord.getFullName();
+                }
 
-	        return elements;
-		}
+                // Form an element symbol from the ID
+                ElementSymbol element = new ElementSymbol(fullName);
+                element.setGroupSymbol(group);
+                element.setMetadataID(elementID);
+                element.setType(DataTypeManager.getDataTypeClass(metadata.getElementType(element.getMetadataID())));
+
+                elements.add(element);
+            }
+
+            return elements;
+        }
 
         return Collections.EMPTY_LIST;
     }
 
-	public static Map getProcedureExternalMetadata(GroupSymbol virtualGroup, QueryMetadataInterface metadata)
-    throws QueryMetadataException, MetaMatrixComponentException {
-		Map externalMetadata = new HashMap();
+    public static Map getProcedureExternalMetadata( GroupSymbol virtualGroup,
+                                                    QueryMetadataInterface metadata )
+        throws QueryMetadataException, MetaMatrixComponentException {
+        Map externalMetadata = new HashMap();
 
         // Look up elements for the virtual group
         List elements = ExternalMetadataUtil.resolveElementsInGroup(virtualGroup, metadata);
-		// virtual group metadata info
+        // virtual group metadata info
         externalMetadata.put(virtualGroup, elements);
 
-		// INPUT group metadata info
-		GroupSymbol inputGroup = new GroupSymbol(ProcedureReservedWords.INPUT);
+        // INPUT group metadata info
+        GroupSymbol inputGroup = new GroupSymbol(ProcedureReservedWords.INPUT);
         List inputElments = new ArrayList(elements.size());
-        for(int i=0; i<elements.size(); i++) {
-        	ElementSymbol virtualElmnt = (ElementSymbol)elements.get(i);
-        	ElementSymbol inputElement = (ElementSymbol)virtualElmnt.clone();
+        for (int i = 0; i < elements.size(); i++) {
+            ElementSymbol virtualElmnt = (ElementSymbol)elements.get(i);
+            ElementSymbol inputElement = (ElementSymbol)virtualElmnt.clone();
             inputElments.add(inputElement);
         }
 
         externalMetadata.put(inputGroup, inputElments);
 
-		// CHANGING group metadata info
+        // CHANGING group metadata info
         // Switch type to be boolean for all CHANGING variables
-		GroupSymbol changeGroup = new GroupSymbol(ProcedureReservedWords.CHANGING);
+        GroupSymbol changeGroup = new GroupSymbol(ProcedureReservedWords.CHANGING);
         List changingElments = new ArrayList(elements.size());
-        for(int i=0; i<elements.size(); i++) {
-        	ElementSymbol changeElement = (ElementSymbol)((ElementSymbol)elements.get(i)).clone();
+        for (int i = 0; i < elements.size(); i++) {
+            ElementSymbol changeElement = (ElementSymbol)((ElementSymbol)elements.get(i)).clone();
             changeElement.setType(DataTypeManager.DefaultDataClasses.BOOLEAN);
             changingElments.add(changeElement);
         }
@@ -106,15 +109,16 @@ public class ExternalMetadataUtil {
         externalMetadata.put(changeGroup, changingElments);
 
         return externalMetadata;
-	}
+    }
 
-    public static Map getStoredProcedureExternalMetadata(GroupSymbol virtualProc, QueryMetadataInterface metadata)
-    throws QueryMetadataException, MetaMatrixComponentException {
+    public static Map getStoredProcedureExternalMetadata( GroupSymbol virtualProc,
+                                                          QueryMetadataInterface metadata )
+        throws QueryMetadataException, MetaMatrixComponentException {
 
         Map externalMetadata = new HashMap();
 
         StoredProcedureInfo info = metadata.getStoredProcedureInfoForProcedure(virtualProc.getName());
-        if(info!=null) {
+        if (info != null) {
             virtualProc.setMetadataID(info.getProcedureID());
 
             // List of ElementSymbols - Map Values
@@ -122,10 +126,9 @@ public class ExternalMetadataUtil {
             Iterator iter = paramList.iterator();
             // Create Symbol List from parameter list
             List symbolList = new ArrayList();
-            while(iter.hasNext()) {
-                SPParameter param = (SPParameter) iter.next();
-                if(param.getParameterType() == SPParameter.IN ||
-                    param.getParameterType() == SPParameter.INOUT) {
+            while (iter.hasNext()) {
+                SPParameter param = (SPParameter)iter.next();
+                if (param.getParameterType() == SPParameter.IN || param.getParameterType() == SPParameter.INOUT) {
                     // Create Element Symbol
                     ElementSymbol eSymbol = new ElementSymbol(param.getName());
                     eSymbol.setMetadataID(param.getMetadataID());
@@ -141,10 +144,11 @@ public class ExternalMetadataUtil {
 
         return externalMetadata;
     }
-    
+
     /**
-     * Create external metadata objects for virtual procedure input params added to mapping class
-     * when a proc is the source for a mapping class 
+     * Create external metadata objects for virtual procedure input params added to mapping class when a proc is the source for a
+     * mapping class
+     * 
      * @param virtualProc - GroupSymbol for the Procedure
      * @param mappingClass - GroupSymbol for the MappingClass
      * @param metadata - QMI to use for metadata retrieval
@@ -152,13 +156,15 @@ public class ExternalMetadataUtil {
      * @throws QueryMetadataException
      * @throws MetaMatrixComponentException
      */
-    public static Map getStoredProcedureExternalMetadataForMappingClass(GroupSymbol virtualProc, GroupSymbol mappingClass, QueryMetadataInterface metadata)
-    throws QueryMetadataException, MetaMatrixComponentException {
+    public static Map getStoredProcedureExternalMetadataForMappingClass( GroupSymbol virtualProc,
+                                                                         GroupSymbol mappingClass,
+                                                                         QueryMetadataInterface metadata )
+        throws QueryMetadataException, MetaMatrixComponentException {
 
         Map externalMetadata = new HashMap();
 
         StoredProcedureInfo info = metadata.getStoredProcedureInfoForProcedure(virtualProc.getName());
-        if(info!=null) {
+        if (info != null) {
             virtualProc.setMetadataID(info.getProcedureID());
 
             // List of ElementSymbols - Map Values
@@ -166,10 +172,9 @@ public class ExternalMetadataUtil {
             Iterator iter = paramList.iterator();
             // Create Symbol List from parameter list
             List symbolList = new ArrayList();
-            while(iter.hasNext()) {
-                SPParameter param = (SPParameter) iter.next();
-                if(param.getParameterType() == SPParameter.IN ||
-                    param.getParameterType() == SPParameter.INOUT) {
+            while (iter.hasNext()) {
+                SPParameter param = (SPParameter)iter.next();
+                if (param.getParameterType() == SPParameter.IN || param.getParameterType() == SPParameter.INOUT) {
                     // Create Element Symbol
                     ElementSymbol eSymbol = new ElementSymbol(param.getName());
                     eSymbol.setMetadataID(param);
@@ -184,5 +189,5 @@ public class ExternalMetadataUtil {
         }
 
         return externalMetadata;
-    }    
+    }
 }

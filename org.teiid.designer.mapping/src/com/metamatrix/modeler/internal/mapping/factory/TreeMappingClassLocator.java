@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.MappingRoot;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.FragmentMappingRoot;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.MappingClassColumn;
@@ -758,7 +758,7 @@ public class TreeMappingClassLocator implements PluginConstants {
      * @throws IllegalArgumentException if input parameter is <code>null</code>
      */
     private MappingClass getMappingClass(MappingRoot theMappingRoot) {
-        ArgCheck.isNotNull(theMappingRoot);
+        CoreArgCheck.isNotNull(theMappingRoot);
         
         MappingClass result = null;
         List inputs = theMappingRoot.getInputs();

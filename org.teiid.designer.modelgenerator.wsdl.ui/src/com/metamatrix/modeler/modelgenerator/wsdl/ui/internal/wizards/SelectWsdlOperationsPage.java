@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Binding;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Fault;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Message;
@@ -61,7 +61,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
  * wsdl that will be used to generate the relational entities.
  */
 public class SelectWsdlOperationsPage extends AbstractWizardPage
-    implements Listener, FileUtils.Constants, StringUtil.Constants, ModelGeneratorWsdlUiConstants,
+    implements Listener, FileUtils.Constants, CoreStringUtil.Constants, ModelGeneratorWsdlUiConstants,
     ModelGeneratorWsdlUiConstants.Images {
 
     /** Used as a prefix to properties file keys. */

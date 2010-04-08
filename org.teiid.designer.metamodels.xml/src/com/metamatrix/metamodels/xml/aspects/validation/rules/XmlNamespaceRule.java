@@ -11,7 +11,7 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.jdom.Verifier;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xml.XmlDocumentPlugin;
 import com.metamatrix.metamodels.xml.XmlElement;
 import com.metamatrix.metamodels.xml.XmlNamespace;
@@ -43,7 +43,7 @@ public class XmlNamespaceRule implements ObjectValidationRule {
      * @see com.metamatrix.modeler.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, com.metamatrix.modeler.core.validation.ValidationContext)
      */
     public void validate(EObject eObject, ValidationContext context) {
-        ArgCheck.isInstanceOf(XmlNamespace.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlNamespace.class, eObject);
 
         final XmlNamespace ns = (XmlNamespace) eObject;
         final String uri = ns.getUri();

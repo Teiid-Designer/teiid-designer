@@ -11,8 +11,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Generalization;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlGeneralization;
@@ -51,7 +51,7 @@ public class Uml2GeneralizationUmlAspect
 	}
 	
 	protected Generalization assertGeneralization(Object eObject) {
-		ArgCheck.isInstanceOf(Generalization.class, eObject);
+		CoreArgCheck.isInstanceOf(Generalization.class, eObject);
 		return (Generalization) eObject;
 	}
 
@@ -87,7 +87,7 @@ public class Uml2GeneralizationUmlAspect
      * @see com.metamatrix.modeler.core.metamodel.aspect.uml.UmlRelationship#getName(java.lang.Object)
      */
     public String getName(Object eObject) {
-        return StringUtil.Constants.EMPTY_STRING;
+        return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     /** 

@@ -12,8 +12,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModel;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import com.metamatrix.query.sql.LanguageObject;
@@ -64,9 +63,9 @@ public abstract class AbstractLanguageObjectEditor implements ILanguageObjectEdi
     protected AbstractLanguageObjectEditor( Composite theParent,
                                             Class theEditorType,
                                             ILanguageObjectEditorModel theModel ) {
-        ArgCheck.isNotNull(theParent);
-        ArgCheck.isNotNull(theEditorType);
-        ArgCheck.isNotNull(theModel);
+        CoreArgCheck.isNotNull(theParent);
+        CoreArgCheck.isNotNull(theEditorType);
+        CoreArgCheck.isNotNull(theModel);
 
         setEditorType(theEditorType);
         setModel(theModel);
@@ -203,12 +202,11 @@ public abstract class AbstractLanguageObjectEditor implements ILanguageObjectEdi
      * @see com.metamatrix.query.ui.builder.ILanguageObjectEditor#setEditorType(java.lang.Class)
      */
     public void setEditorType( Class theEditorType ) {
-        if (theEditorType == null) {
-            Assertion.isNotNull(theEditorType, Util.getString(PREFIX + "nullEditorType")); //$NON-NLS-1$
-        }
+        CoreArgCheck.isNotNull(theEditorType, Util.getString(PREFIX + "nullEditorType")); //$NON-NLS-1$
+
         if (!LanguageObject.class.isAssignableFrom(theEditorType)) {
-            Assertion.assertTrue(LanguageObject.class.isAssignableFrom(theEditorType), Util.getString(PREFIX
-                                                                                                      + "editorTypeNotLangObj")); //$NON-NLS-1$
+            CoreArgCheck.isTrue(LanguageObject.class.isAssignableFrom(theEditorType), Util.getString(PREFIX
+                                                                                                     + "editorTypeNotLangObj")); //$NON-NLS-1$
         }
 
         editorType = theEditorType;
@@ -229,8 +227,8 @@ public abstract class AbstractLanguageObjectEditor implements ILanguageObjectEdi
      * @see com.metamatrix.query.ui.builder.ILanguageObjectEditor#setModel(com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModel)
      */
     public void setModel( ILanguageObjectEditorModel theModel ) {
-        Assertion.isNotNull(theModel);
-        Assertion.isEqual(editorType, theModel.getModelType());
+        CoreArgCheck.isNotNull(theModel);
+        CoreArgCheck.isEqual(editorType, theModel.getModelType());
         model = theModel;
     }
 

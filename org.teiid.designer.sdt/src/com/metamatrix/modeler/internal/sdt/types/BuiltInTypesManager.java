@@ -31,8 +31,8 @@ import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.TransactionRunnable;
@@ -335,7 +335,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
      * @see com.metamatrix.modeler.core.types.DatatypeManager#getDatatypeForXsdType
      */
     public EObject getDatatypeForXsdType( final EObject eObject ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
 
         // If the object is a simple type ...
         if (eObject instanceof XSDSimpleTypeDefinition) {
@@ -450,7 +450,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
      * @see com.metamatrix.modeler.core.types.DatatypeManager#getBuiltInDatatype(java.lang.String)
      */
     public EObject getBuiltInDatatype( final String name ) {
-        ArgCheck.isNotNull(name);
+        CoreArgCheck.isNotNull(name);
         String id = name;
 
         // If the name is the URI of an XMLSchema built-in datatype like
@@ -584,7 +584,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
      * @see com.metamatrix.modeler.core.types.DatatypeManager#getBuiltInPrimitiveType(org.eclipse.emf.ecore.EObject)
      */
     public EObject getBuiltInPrimitiveType( final EObject type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
 
         // While the datatype type is not a built-in primitive type ...
         final List primTypes = this.getPrimitiveTypesList();
@@ -604,7 +604,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
      * @see com.metamatrix.modeler.core.types.DatatypeManager#isBinary(org.eclipse.emf.ecore.EObject)
      */
     public boolean isBinary( final EObject type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition)this.getExtendedBuiltInBaseType(type);
         if (simpleType != null) {
             final String typeName = simpleType.getName();
@@ -628,7 +628,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
      * @see com.metamatrix.modeler.core.types.DatatypeManager#isCharacter(org.eclipse.emf.ecore.EObject)
      */
     public boolean isCharacter( final EObject type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         final XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition)this.getBuiltInPrimitiveType(type);
         if (simpleType != null && DatatypeConstants.BuiltInNames.STRING.equals(simpleType.getName())) {
             return true;
@@ -640,7 +640,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
      * @see com.metamatrix.modeler.core.types.DatatypeManager#isNumeric(org.eclipse.emf.ecore.EObject)
      */
     public boolean isNumeric( final EObject type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         final XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition)this.getBuiltInPrimitiveType(type);
         if (simpleType != null && simpleType.getNumericFacet().isValue()) {
             return true;
@@ -649,7 +649,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
     }
 
     public boolean isBounded( final EObject type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         final XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition)this.getBuiltInPrimitiveType(type);
         if (simpleType != null && simpleType.getBoundedFacet().isValue()) {
             return true;
@@ -658,7 +658,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
     }
 
     public boolean isEnumeration( final EObject type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         if (type instanceof XSDSimpleTypeDefinition) {
             final XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition)type;
             if (simpleType.getEnumerationFacets().size() > 0) {
@@ -677,11 +677,11 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
         if (aspect != null) {
             description = aspect.getDescription(type);
         }
-        return (description == null ? StringUtil.Constants.EMPTY_STRING : description);
+        return (description == null ? CoreStringUtil.Constants.EMPTY_STRING : description);
     }
 
     public EObject getDatatypeForXsdType( final XSDSimpleTypeDefinition simpleType ) {
-        ArgCheck.isNotNull(simpleType);
+        CoreArgCheck.isNotNull(simpleType);
 
         // While the simple type is not a built-in simple type (i.e., one in the schema of schemas) ...
         EObject builtInType = simpleType;
@@ -704,7 +704,7 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
     }
 
     public EObject getDatatypeForXsdType( final XSDComplexTypeDefinition complexType ) {
-        ArgCheck.isNotNull(complexType);
+        CoreArgCheck.isNotNull(complexType);
 
         // See if this can have character content ...
         // mtkTODO: Implement getDatatypeForXsdType(XSDComplexTypeDefinition)
@@ -721,8 +721,8 @@ public class BuiltInTypesManager extends AbstractDatatypeManager {
      * @return
      */
     public EObject getExtendedBuiltInBaseType( final EObject type ) {
-        ArgCheck.isNotNull(type);
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, type);
+        CoreArgCheck.isNotNull(type);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, type);
 
         // Check the type hierarchy for a extended built-in type ...
         final List mmExtendedTypes = this.getExtendedTypesList();

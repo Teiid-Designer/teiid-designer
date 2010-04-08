@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
@@ -117,7 +117,7 @@ public class MatchCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
 
     @Override
     public void setLanguageObject( LanguageObject obj ) {
-        ArgCheck.isInstanceOf(MatchCriteria.class, obj);
+        CoreArgCheck.isInstanceOf(MatchCriteria.class, obj);
         matchCriteria = (MatchCriteria)obj;
         if (leftEditor != null) {
             leftEditor.setLanguageObject(getLeftExpression());

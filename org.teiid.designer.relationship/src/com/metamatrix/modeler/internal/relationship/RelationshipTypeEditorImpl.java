@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relationship.RelationshipFactory;
 import com.metamatrix.metamodels.relationship.RelationshipMetamodelPlugin;
 import com.metamatrix.metamodels.relationship.RelationshipRole;
@@ -50,8 +50,8 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
     public RelationshipTypeEditorImpl( final RelationshipType relationshipType, final boolean useTransactions,
                                        final RelationshipFactory factory ) {
         super();
-        ArgCheck.isNotNull(relationshipType);
-        ArgCheck.isNotNull(factory);
+        CoreArgCheck.isNotNull(relationshipType);
+        CoreArgCheck.isNotNull(factory);
         this.relationshipType = relationshipType;
 //        this.useTransactions = useTransactions;
         this.factory = factory;
@@ -303,7 +303,7 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#getRoleName(com.metamatrix.metamodels.relationship.RelationshipRole)
      */
     public String getRoleName(final RelationshipRole role) {
-        ArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(role);
         return role.getName();
     }
 
@@ -311,7 +311,7 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#setRoleName(com.metamatrix.metamodels.relationship.RelationshipRole,java.lang.String)
      */
     public void setRoleName(final RelationshipRole role, final String name) {
-        ArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(role);
         role.setName(name);
     }
 
@@ -319,7 +319,7 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#isNavigable(com.metamatrix.metamodels.relationship.RelationshipRole)
      */
     public boolean isNavigable(final RelationshipRole role) {
-        ArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(role);
         return role.isNavigable();
     }
 
@@ -327,7 +327,7 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#setNavigable(com.metamatrix.metamodels.relationship.RelationshipRole, boolean)
      */
     public void setNavigable(final RelationshipRole role, final boolean navigable) {
-        ArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(role);
         role.setNavigable(navigable);
     }
 
@@ -335,7 +335,7 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#isOrdered(com.metamatrix.metamodels.relationship.RelationshipRole)
      */
     public boolean isOrdered(final RelationshipRole role) {
-        ArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(role);
         return role.isOrdered();
     }
 
@@ -343,7 +343,7 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#setOrdered(com.metamatrix.metamodels.relationship.RelationshipRole, boolean)
      */
     public void setOrdered(final RelationshipRole role, final boolean ordered) {
-        ArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(role);
         role.setOrdered(ordered);
     }
 
@@ -351,7 +351,7 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#isUnique(com.metamatrix.metamodels.relationship.RelationshipRole)
      */
     public boolean isUnique(final RelationshipRole role) {
-        ArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(role);
         return role.isUnique();
     }
 
@@ -359,7 +359,7 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#setUnique(com.metamatrix.metamodels.relationship.RelationshipRole, boolean)
      */
     public void setUnique(final RelationshipRole role, final boolean unique) {
-        ArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(role);
         role.setUnique(unique);
     }
 
@@ -367,7 +367,7 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#getLowerBound(com.metamatrix.metamodels.relationship.RelationshipRole)
      */
     public int getLowerBound(final RelationshipRole role) {
-        ArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(role);
         return role.getLowerBound();
     }
 
@@ -375,7 +375,7 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#setLowerBound(com.metamatrix.metamodels.relationship.RelationshipRole, int)
      */
     public void setLowerBound(final RelationshipRole role, final int lowerBound) {
-        ArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(role);
         role.setLowerBound(lowerBound);
     }
 
@@ -383,7 +383,7 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#getUpperBound(com.metamatrix.metamodels.relationship.RelationshipRole)
      */
     public int getUpperBound(final RelationshipRole role) {
-        ArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(role);
         return role.getUpperBound();
     }
 
@@ -391,7 +391,7 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#setUpperBound(com.metamatrix.metamodels.relationship.RelationshipRole, int)
      */
     public void setUpperBound(final RelationshipRole role, final int upperBound) {
-        ArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(role);
         role.setUpperBound(upperBound);
     }
 
@@ -399,7 +399,7 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#getIncludedMetaclasses(com.metamatrix.metamodels.relationship.RelationshipRole)
      */
     public List getIncludedMetaclasses(final RelationshipRole role) {
-        ArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(role);
         return role.getIncludeTypes();
     }
 
@@ -407,8 +407,8 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#canAddIncludedMetaclass(com.metamatrix.metamodels.relationship.RelationshipRole, org.eclipse.emf.ecore.EClass)
      */
     public boolean canAddIncludedMetaclass(final RelationshipRole role, final EClass metaclass) {
-        ArgCheck.isNotNull(role);
-        ArgCheck.isNotNull(metaclass);
+        CoreArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(metaclass);
         final List includedTypes = role.getIncludeTypes();
         if ( includedTypes.contains(metaclass) ) {
             return false;
@@ -432,8 +432,8 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#addIncludedMetaclass(com.metamatrix.metamodels.relationship.RelationshipRole, org.eclipse.emf.ecore.EClass)
      */
     public void addIncludedMetaclass(final RelationshipRole role, final EClass metaclass) throws ModelerCoreException {
-        ArgCheck.isNotNull(role);
-        ArgCheck.isNotNull(metaclass);
+        CoreArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(metaclass);
         ModelerCore.getModelEditor().addValue(role,metaclass,role.getIncludeTypes());
     }
 
@@ -441,8 +441,8 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#removeIncludedMetaclass(com.metamatrix.metamodels.relationship.RelationshipRole, org.eclipse.emf.ecore.EClass)
      */
     public boolean removeIncludedMetaclass(final RelationshipRole role, final EClass metaclass) throws ModelerCoreException {
-        ArgCheck.isNotNull(role);
-        ArgCheck.isNotNull(metaclass);
+        CoreArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(metaclass);
         if ( !role.getIncludeTypes().contains(metaclass) ) {
             return false;
         }
@@ -454,7 +454,7 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#getExcludedMetaclasses(com.metamatrix.metamodels.relationship.RelationshipRole)
      */
     public List getExcludedMetaclasses(final RelationshipRole role) {
-        ArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(role);
         return role.getExcludeTypes();
     }
 
@@ -462,8 +462,8 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#canAddExcludedMetaclass(com.metamatrix.metamodels.relationship.RelationshipRole, org.eclipse.emf.ecore.EClass)
      */
     public boolean canAddExcludedMetaclass(final RelationshipRole role, final EClass metaclass) {
-        ArgCheck.isNotNull(role);
-        ArgCheck.isNotNull(metaclass);
+        CoreArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(metaclass);
         final List excludedTypes = role.getExcludeTypes();
         if ( excludedTypes.contains(metaclass) ) {
             return false;
@@ -487,8 +487,8 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#addExcludedMetaclass(com.metamatrix.metamodels.relationship.RelationshipRole, org.eclipse.emf.ecore.EClass)
      */
     public void addExcludedMetaclass(final RelationshipRole role, final EClass metaclass) throws ModelerCoreException {
-        ArgCheck.isNotNull(role);
-        ArgCheck.isNotNull(metaclass);
+        CoreArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(metaclass);
         ModelerCore.getModelEditor().addValue(role,metaclass,role.getExcludeTypes());
     }
 
@@ -496,8 +496,8 @@ public class RelationshipTypeEditorImpl implements RelationshipTypeEditor {
      * @see com.metamatrix.modeler.relationship.RelationshipTypeEditor#removeExcludedMetaclass(com.metamatrix.metamodels.relationship.RelationshipRole, org.eclipse.emf.ecore.EClass)
      */
     public boolean removeExcludedMetaclass(final RelationshipRole role, final EClass metaclass) throws ModelerCoreException {
-        ArgCheck.isNotNull(role);
-        ArgCheck.isNotNull(metaclass);
+        CoreArgCheck.isNotNull(role);
+        CoreArgCheck.isNotNull(metaclass);
         if ( !role.getExcludeTypes().contains(metaclass) ) {
             return false;
         }

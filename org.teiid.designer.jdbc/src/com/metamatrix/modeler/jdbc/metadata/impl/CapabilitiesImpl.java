@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
 import com.metamatrix.modeler.jdbc.metadata.Capabilities;
 
@@ -29,7 +29,7 @@ public class CapabilitiesImpl implements Capabilities {
      */
     public CapabilitiesImpl( final DatabaseMetaData metadata ) {
         super();
-        ArgCheck.isNotNull(metadata);
+        CoreArgCheck.isNotNull(metadata);
         this.metadata = metadata;
     }
 

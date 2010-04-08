@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.internal.wizards.newresource.ResourceMessages;
 import com.metamatrix.core.util.OSPlatformUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelProject;
 import com.metamatrix.modeler.core.workspace.ModelWorkspace;
@@ -111,7 +111,7 @@ public class NewModelProjectWorker {
             desc.setNatureIds(MODEL_NATURES);
             if (ProductCustomizerMgr.getInstance() != null) {
                 String productName = ProductCustomizerMgr.getInstance().getProductName();
-                if (!StringUtil.isEmpty(productName)) {
+                if (!CoreStringUtil.isEmpty(productName)) {
                     desc.setComment(productName + ", version " + ModelerCore.ILicense.VERSION); //$NON-NLS-1$
                 }
             }

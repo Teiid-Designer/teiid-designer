@@ -32,7 +32,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.Model;
 import org.teiid.adminapi.VDB;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.refactor.IRefactorResourceListener;
 import com.metamatrix.modeler.core.refactor.RefactorResourceEvent;
@@ -62,7 +62,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @param admin the execution admin associated with this manager (never <code>null</code>)
      */
     public SourceBindingsManager( ExecutionAdmin admin ) {
-        ArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
         this.admin = admin;
         this.bindingsByModelNameMap = new HashMap<String, SourceBinding>();
 
@@ -85,8 +85,8 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      */
     public void createSourceBinding( ModelResource modelResource,
                                      Connector connector ) {
-        ArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
-        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
 
         String modelName = modelResource.getItemName();
         String sourceName = connector.getName();
@@ -195,7 +195,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @since 5.0
      */
     public Collection<Connector> getConnectorsForModel( String modelName ) {
-        ArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
         SourceBinding binding = this.bindingsByModelNameMap.get(modelName);
         if (binding == null) return Collections.emptyList();
         return binding.getConnectors();
@@ -214,7 +214,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @since 5.0
      */
     public JdbcSource getJdbcSource( ModelResource modelResource ) {
-        ArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$v
+        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$v
 
         Collection allEObjects = null;
 
@@ -241,7 +241,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @since 5.0
      */
     public SourceBinding getSourceBinding( String modelName ) {
-        ArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
         return this.bindingsByModelNameMap.get(modelName);
     }
 
@@ -251,7 +251,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @since 7.0
      */
     public Collection<SourceBinding> getSourceBindings( Connector connector ) {
-        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
         Collection<SourceBinding> result = new ArrayList<SourceBinding>();
 
         for (SourceBinding binding : this.bindingsByModelNameMap.values()) {
@@ -270,7 +270,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @since 5.0
      */
     public boolean hasSourceBinding( ModelResource modelResource ) {
-        ArgCheck.isNotNull(modelResource, "modelResource.getItemName()"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(modelResource, "modelResource.getItemName()"); //$NON-NLS-1$
         return (getSourceBinding(modelResource.getItemName()) != null);
     }
 
@@ -279,7 +279,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @since 5.0
      */
     public void notifyRefactored( RefactorResourceEvent theEvent ) {
-        ArgCheck.isNotNull(theEvent, "theEvent"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(theEvent, "theEvent"); //$NON-NLS-1$
 
         switch (theEvent.getType()) {
             case RefactorResourceEvent.TYPE_MOVE: {
@@ -356,7 +356,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @since 5.0
      */
     public void removeSourceBinding( ModelResource modelResource ) {
-        ArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
         String modelName = modelResource.getItemName();
         removeSourceBinding(modelName);
     }
@@ -368,7 +368,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @since 5.0
      */
     public void removeSourceBinding( String modelName ) {
-        ArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
 
         if (this.bindingsByModelNameMap.containsKey(modelName)) {
             try {
@@ -399,7 +399,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @since 5.0
      */
     public void removeSourceBinding( SourceBinding binding ) {
-        ArgCheck.isNotNull(binding, "binding"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(binding, "binding"); //$NON-NLS-1$
 
         removeSourceBinding(binding.getName());
     }
@@ -412,7 +412,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @since 5.0
      */
     private void removeSourceBindingsForProject( String projectName ) {
-        ArgCheck.isNotEmpty(projectName, "projectName"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(projectName, "projectName"); //$NON-NLS-1$
         Collection<SourceBinding> allBindings = new ArrayList<SourceBinding>(this.bindingsByModelNameMap.values());
 
         for (SourceBinding binding : allBindings) {
@@ -426,7 +426,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @param modelResource the model whose binding is being reset (never <code>null</code>)
      */
     private void resetSourceBinding( ModelResource modelResource ) {
-        ArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
 
         SourceBinding binding = getSourceBinding(modelResource.getItemName());
 
@@ -485,7 +485,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
      * @since 4.2
      */
     public void resourceChanged( IResourceChangeEvent theEvent ) {
-        ArgCheck.isNotNull(theEvent, "theEvent"); //$NON-NLS-1$v
+        CoreArgCheck.isNotNull(theEvent, "theEvent"); //$NON-NLS-1$v
 
         IResource resource = theEvent.getResource();
 

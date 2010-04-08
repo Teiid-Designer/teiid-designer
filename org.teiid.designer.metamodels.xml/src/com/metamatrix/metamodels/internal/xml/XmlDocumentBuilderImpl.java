@@ -39,7 +39,7 @@ import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
 import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xml.BuildStatus;
 import com.metamatrix.metamodels.xml.ValueType;
 import com.metamatrix.metamodels.xml.XmlAll;
@@ -130,7 +130,7 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
      */
     public void setFragments(final Collection xmlFragments) throws ModelerCoreException {
         //Check arguements and initialize variables
-        ArgCheck.isNotNull(xmlFragments);
+        CoreArgCheck.isNotNull(xmlFragments);
         final Iterator iter = xmlFragments.iterator();
         while (iter.hasNext()) {
             final Object next = iter.next();
@@ -162,7 +162,7 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
      * @see com.metamatrix.metamodels.xml.XmlDocumentBuilder#buildDocument(com.metamatrix.metamodels.xml.XmlElement, org.eclipse.core.runtime.IProgressMonitor)
      */
     public int buildDocument(final XmlElement rootElement, final IProgressMonitor progressMonitor) throws ModelerCoreException {
-        ArgCheck.isNotNull(rootElement);
+        CoreArgCheck.isNotNull(rootElement);
         this.root = rootElement;
         this.monitor = progressMonitor != null ? progressMonitor : new NullProgressMonitor();
 
@@ -292,7 +292,7 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
      * @see com.metamatrix.metamodels.xml.XmlDocumentBuilder#updateFromSchema(com.metamatrix.metamodels.xml.XmlElement, org.eclipse.core.runtime.IProgressMonitor)
      */
     public int updateFromSchema(final XmlElement rootElement, IProgressMonitor progressMonitor) throws ModelerCoreException {
-        ArgCheck.isNotNull(rootElement);
+        CoreArgCheck.isNotNull(rootElement);
         this.root = rootElement;
         int count = 0;
         this.monitor = progressMonitor != null ? progressMonitor : new NullProgressMonitor();
@@ -360,7 +360,7 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
      * @see com.metamatrix.metamodels.xml.XmlDocumentBuilder#buildXmlFragments(org.eclipse.xsd.XSDSchema)
      */
     public Collection buildXmlFragments(final XSDSchema schema) throws ModelerCoreException {
-        ArgCheck.isNotNull(schema);
+        CoreArgCheck.isNotNull(schema);
         final Collection fragments = new ArrayList();
         final Iterator iter = schema.getContents().iterator();
         while (iter.hasNext()) {
@@ -1923,7 +1923,7 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
     }
 
     private boolean isProhibited(final XSDAttributeDeclaration attribute){
-        ArgCheck.isNotNull(attribute);
+        CoreArgCheck.isNotNull(attribute);
         final XSDAttributeUse attUse = (XSDAttributeUse)attribute.eContainer();
         if(attUse == null){
             return false;

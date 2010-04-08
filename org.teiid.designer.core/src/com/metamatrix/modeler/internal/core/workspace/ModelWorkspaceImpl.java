@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.refactor.ModelResourceCollectorVisitor;
@@ -167,7 +167,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      * @see com.metamatrix.modeler.core.workspace.ModelWorkspace#findModelProject(java.lang.String)
      */
     public ModelProject findModelProject( final String name ) {
-        ArgCheck.isNotNull(name);
+        CoreArgCheck.isNotNull(name);
         try {
             final ModelProject[] projects = getModelProjects();
             for (int ndx = projects.length; --ndx >= 0;) {
@@ -186,7 +186,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      * @see com.metamatrix.modeler.core.workspace.ModelWorkspace#findModelProject(IResource)
      */
     public ModelProject findModelProject( final IResource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         // if(!ModelerCore.hasModelNature(resource.getProject())) {
         // return null;
@@ -223,7 +223,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     }
 
     public ModelWorkspaceItem getParent( final IResource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         IProject project = resource.getProject();
         if (project.isAccessible() && !ModelerCore.hasModelNature(project)) {
@@ -251,7 +251,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
 
     public ModelWorkspaceItem getWorkspaceItem( final IPath path,
                                                 int resourceType ) {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         try {
             // first get all the projects
             ModelProject[] projects = getModelProjects();
@@ -302,7 +302,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     }
 
     public ModelWorkspaceItem getWorkspaceItem( final IPath path ) {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         try {
             // first get all the projects
             ModelProject[] projects = getModelProjects();
@@ -369,7 +369,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     public ModelProject createModelProject( final String name,
                                             final IPath path,
                                             final IProgressMonitor monitor ) throws CoreException {
-        ArgCheck.isNotNull(name);
+        CoreArgCheck.isNotNull(name);
         // Check if project already exists
         if (findModelProject(name) != null) {
             throw new ModelWorkspaceException(ModelerCore.Util.getString("ModelWorkspaceImpl.cannotCreateModelProject", name)); //$NON-NLS-1$
@@ -510,7 +510,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      * @see com.metamatrix.modeler.core.workspace.ModelWorkspace#findModelResource(org.eclipse.emf.ecore.resource.Resource)
      */
     public ModelResource findModelResource( final IResource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         if (!ModelUtil.isModelFile(resource)) {
             return null;
         }
@@ -521,7 +521,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      * @see com.metamatrix.modeler.core.workspace.ModelWorkspace#findModelResource(org.eclipse.emf.ecore.resource.Resource)
      */
     public ModelResource findModelResource( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         return ModelWorkspaceManager.getModelWorkspaceManager().findModelResource(resource);
     }
 
@@ -529,7 +529,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      * @see com.metamatrix.modeler.core.workspace.ModelWorkspace#findModelResource(IPath)
      */
     public ModelResource findModelResource( final IPath pathInWorkspace ) {
-        ArgCheck.isNotNull(pathInWorkspace);
+        CoreArgCheck.isNotNull(pathInWorkspace);
         try {
             ModelWorkspaceItem item = this;
             final String[] segments = pathInWorkspace.segments();
@@ -554,7 +554,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      * @see com.metamatrix.modeler.core.workspace.ModelWorkspace#findModelResource(org.eclipse.emf.ecore.EObject)
      */
     public ModelResource findModelResource( final EObject eObject ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         try {
             final Container container = ModelerCore.getModelContainer();
             Resource resource = ModelerCore.getModelEditor().findResource(container, eObject, false);
@@ -571,7 +571,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      * @see com.metamatrix.modeler.core.workspace.ModelWorkspace#addNotificationListener(com.metamatrix.modeler.core.workspace.ModelWorkspaceNotificationListener)
      */
     public void addNotificationListener( ModelWorkspaceNotificationListener listener ) {
-        ArgCheck.isNotNull(listener);
+        CoreArgCheck.isNotNull(listener);
         ModelWorkspaceManager.getModelWorkspaceManager().addNotificationListener(listener);
     }
 
@@ -579,7 +579,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      * @see com.metamatrix.modeler.core.workspace.ModelWorkspace#removeNotificationListener(com.metamatrix.modeler.core.workspace.ModelWorkspaceNotificationListener)
      */
     public void removeNotificationListener( ModelWorkspaceNotificationListener listener ) {
-        ArgCheck.isNotNull(listener);
+        CoreArgCheck.isNotNull(listener);
         ModelWorkspaceManager.getModelWorkspaceManager().removeNotificationListener(listener);
     }
 
@@ -588,7 +588,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      * @since 4.2
      */
     public void addModelResourceReloadVetoListener( ModelResourceReloadVetoListener listener ) {
-        ArgCheck.isNotNull(listener);
+        CoreArgCheck.isNotNull(listener);
         ModelWorkspaceManager.getModelWorkspaceManager().addModelResourceReloadVetoListener(listener);
     }
 
@@ -597,7 +597,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
      * @since 4.2
      */
     public void removeModelResourceReloadVetoListener( ModelResourceReloadVetoListener listener ) {
-        ArgCheck.isNotNull(listener);
+        CoreArgCheck.isNotNull(listener);
         ModelWorkspaceManager.getModelWorkspaceManager().removeModelResourceReloadVetoListener(listener);
     }
 

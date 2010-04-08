@@ -17,8 +17,8 @@ import java.util.Set;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.selection.TreeSelection;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 
 /**
@@ -147,7 +147,7 @@ public class ModelWorkspaceSelections implements TreeSelection {
      * {@link #PARTIALLY_SELECTED} or {@link #UNKNOWN_SELECTION}.
      */
     public int getSelectionMode( final IPath path ) {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         
         if ( this.selecteds.contains(path) ) {
             return SELECTED;
@@ -202,7 +202,7 @@ public class ModelWorkspaceSelections implements TreeSelection {
      * {@link #PARTIALLY_SELECTED} or {@link #UNKNOWN_SELECTION}.
      */
     public int getSelectionMode( final Object modelObject ) {
-        ArgCheck.isNotNull(modelObject);
+        CoreArgCheck.isNotNull(modelObject);
         assertNonNullView();
         final IPath path = this.modelWorkspaceView.getPath(modelObject);
         if ( path != null ) {
@@ -224,7 +224,7 @@ public class ModelWorkspaceSelections implements TreeSelection {
      * @param selectionMode
      */
     public void setSelected( final Object modelObject, final boolean selected ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(modelObject);
+        CoreArgCheck.isNotNull(modelObject);
         final int mode = selected ? SELECTED : UNSELECTED;
         setSelected(modelObject,mode);
     }
@@ -251,7 +251,7 @@ public class ModelWorkspaceSelections implements TreeSelection {
      * @param selectionMode
      */
     protected void setSelected( final IPath path, final int selectionMode ) {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         if ( selectionMode == SELECTED ) {
             this.selecteds.add(path);
             this.unselecteds.remove(path);

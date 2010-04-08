@@ -58,7 +58,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.xslt.Style;
 import com.metamatrix.core.xslt.StyleRegistry;
 import com.metamatrix.metamodels.relational.Index;
@@ -93,7 +93,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
  * @since 4.0
  */
 public final class ExportDdlWizard extends AbstractWizard
-    implements FileUtils.Constants, IExportWizard, InternalUiConstants.Widgets, PluginConstants.Images, StringUtil.Constants,
+    implements FileUtils.Constants, IExportWizard, InternalUiConstants.Widgets, PluginConstants.Images, CoreStringUtil.Constants,
     UiConstants {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ExportDdlWizard.class);

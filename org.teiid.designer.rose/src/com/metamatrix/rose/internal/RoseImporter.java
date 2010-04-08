@@ -44,10 +44,10 @@ import org.eclipse.emf.importer.rose.parser.Util;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.compare.DifferenceDescriptor;
@@ -79,7 +79,7 @@ import com.metamatrix.rose.internal.impl.Unit;
  * 
  * @since 4.1
  */
-public final class RoseImporter implements FileUtils.Constants, IRoseConstants, ModelerCore.ILicense, StringUtil.Constants {
+public final class RoseImporter implements FileUtils.Constants, IRoseConstants, ModelerCore.ILicense, CoreStringUtil.Constants {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(RoseImporter.class);
 
@@ -153,7 +153,7 @@ public final class RoseImporter implements FileUtils.Constants, IRoseConstants, 
      * @since 4.1
      */
     public RoseImporter( final IRoseHandler handler ) {
-        ArgCheck.isNotNull(handler);
+        CoreArgCheck.isNotNull(handler);
         // Initialize handler
         handler.initialize(this.matcherFactories);
         this.handler = handler;
@@ -168,7 +168,7 @@ public final class RoseImporter implements FileUtils.Constants, IRoseConstants, 
      * @since 4.1
      */
     public void addUnitSourceMessageListener( final IMessageListener listener ) {
-        ArgCheck.isNotNull(listener);
+        CoreArgCheck.isNotNull(listener);
         this.sourceMsgListener.add(listener);
     }
 
@@ -240,7 +240,7 @@ public final class RoseImporter implements FileUtils.Constants, IRoseConstants, 
      * @since 4.1
      */
     public void removeUnitSourceMessageListener( final IMessageListener listener ) {
-        ArgCheck.isNotNull(listener);
+        CoreArgCheck.isNotNull(listener);
         this.sourceMsgListener.remove(listener);
     }
 
@@ -415,7 +415,7 @@ public final class RoseImporter implements FileUtils.Constants, IRoseConstants, 
      */
     public IUnit loadUnit( final String path,
                            IProgressMonitor monitor ) {
-        ArgCheck.isNotEmpty(path);
+        CoreArgCheck.isNotEmpty(path);
         // Ensure monitor is not null
         if (monitor == null) {
             monitor = new NullProgressMonitor();
@@ -491,7 +491,7 @@ public final class RoseImporter implements FileUtils.Constants, IRoseConstants, 
      */
     public void loadUnit( final IUnit unit,
                           IProgressMonitor monitor ) {
-        ArgCheck.isNotNull(unit);
+        CoreArgCheck.isNotNull(unit);
         // Ensure monitor is not null
         if (monitor == null) {
             monitor = new NullProgressMonitor();
@@ -552,7 +552,7 @@ public final class RoseImporter implements FileUtils.Constants, IRoseConstants, 
      */
     public void mapPath( final String variable,
                          final String path ) {
-        ArgCheck.isNotNull(variable);
+        CoreArgCheck.isNotNull(variable);
         this.pathMap.put(variable, path);
         if (this.unit != null) {
             // Re-resolve paths for each unit that contains variables in its path
@@ -631,7 +631,7 @@ public final class RoseImporter implements FileUtils.Constants, IRoseConstants, 
      */
     public boolean resolveAmbiguousReference( final IAmbiguousReference reference,
                                               Object element ) {
-        ArgCheck.isNotNull(reference);
+        CoreArgCheck.isNotNull(reference);
         final Object referencer = reference.getReferencer();
         final String type = reference.getType();
         final String name = reference.getName();

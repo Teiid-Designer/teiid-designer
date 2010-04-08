@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.ui.internal.InternalUiConstants.Widgets;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -91,7 +91,7 @@ public class TablePanel extends AbstractVerticalButtonPanel implements Widgets {
     protected void constructEditPanel( final IListPanelController controller,
                                        final int itemStyle,
                                        final int gridStyle ) {
-        ArgCheck.isNotNull(controller);
+        CoreArgCheck.isNotNull(controller);
         this.ctrlr = controller;
         final TableViewer viewer = getTableViewer();
 
@@ -248,7 +248,7 @@ public class TablePanel extends AbstractVerticalButtonPanel implements Widgets {
      * @since 4.0
      */
     public boolean contains( final Object element ) {
-        ArgCheck.isNotNull(element);
+        CoreArgCheck.isNotNull(element);
         final TableItem[] items = getTableViewer().getTable().getItems();
         for (int ndx = items.length; --ndx >= 0;) {
             if (element.equals(items[ndx].getData())) {

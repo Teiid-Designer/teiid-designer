@@ -30,7 +30,7 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.xml.XmlDocumentPackage;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -228,7 +228,7 @@ public class CreateXmlViewFromXsdAction extends SortableSelectionAction implemen
                 Throwable realException = theException.getTargetException();
                 String msg = realException.getMessage();
 
-                if (StringUtil.isEmpty(msg)) {
+                if (CoreStringUtil.isEmpty(msg)) {
                     msg = Util.getString(PREFIX + "noDetailsMsg"); //$NON-NLS-1$
                 }
 

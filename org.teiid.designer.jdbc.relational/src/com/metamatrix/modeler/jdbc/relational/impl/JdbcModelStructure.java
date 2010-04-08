@@ -13,8 +13,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.JdbcImportSettings;
 import com.metamatrix.modeler.jdbc.metadata.JdbcCatalog;
@@ -143,7 +142,7 @@ public class JdbcModelStructure {
      */
     public boolean addChild( final JdbcNode parent,
                              final JdbcNode child ) {
-        ArgCheck.isNotNull(child);
+        CoreArgCheck.isNotNull(child);
 
         // Ensure the child is not already registered under another object ...
         final Object existingParent = this.parentForChild.get(child);
@@ -183,14 +182,14 @@ public class JdbcModelStructure {
      *         parent.
      */
     public JdbcNode removeChild( final JdbcNode child ) {
-        ArgCheck.isNotNull(child);
+        CoreArgCheck.isNotNull(child);
         final JdbcNode parent = (JdbcNode)this.parentForChild.remove(child);
         if (parent != null) {
             // Get the children for the parent and remove the child from the list
             final List children = this.getChildren(parent);
-            Assertion.isNull(children);
+            CoreArgCheck.isNotNull(children);
             final boolean removed = children.remove(child);
-            Assertion.assertTrue(removed, "There were no children for child even though child had a parent"); //$NON-NLS-1$
+            CoreArgCheck.isTrue(removed, "There were no children for child even though child had a parent"); //$NON-NLS-1$
         }
         return parent;
     }

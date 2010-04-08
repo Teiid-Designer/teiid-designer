@@ -7,7 +7,7 @@
  */
 package com.metamatrix.modeler.jdbc.metadata.impl;
 
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.jdbc.metadata.Includes;
 import com.metamatrix.modeler.jdbc.metadata.JdbcDatabase;
 
@@ -32,7 +32,7 @@ public class IncludesImpl implements Includes {
      */
     public IncludesImpl( final JdbcDatabase database ) {
         super();
-        ArgCheck.isNotNull(database);
+        CoreArgCheck.isNotNull(database);
         this.database = database;
     }
 

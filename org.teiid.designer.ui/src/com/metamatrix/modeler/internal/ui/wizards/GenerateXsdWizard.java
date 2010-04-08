@@ -21,10 +21,11 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.xsd.XSDElementDeclaration;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xsd.XsdBuilderOptions;
 import com.metamatrix.metamodels.xsd.XsdSchemaBuilderImpl;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -143,7 +144,7 @@ public class GenerateXsdWizard extends AbstractWizard implements INewWizard, UiC
      */
 
     public void doFinish( final IProgressMonitor monitor ) {
-        Assertion.isNotNull(this.ops);
+        CoreArgCheck.isNotNull(this.ops);
         // Create the XSD BUilder and capture state from the Options
         final XsdSchemaBuilderImpl builder = new XsdSchemaBuilderImpl(this.ops);
         this.monitor = monitor == null ? new NullProgressMonitor() : monitor;

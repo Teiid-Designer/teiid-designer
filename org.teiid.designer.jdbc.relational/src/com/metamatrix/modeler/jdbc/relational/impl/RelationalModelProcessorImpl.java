@@ -32,8 +32,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.mapping.Mapping;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.Stopwatch;
 import com.metamatrix.metamodels.core.Annotation;
@@ -165,7 +164,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
     public RelationalModelProcessorImpl( final RelationalFactory factory,
                                          final RelationalTypeMapping mapping ) {
         super();
-        ArgCheck.isNotNull(factory);
+        CoreArgCheck.isNotNull(factory);
         this.factory = factory;
         this.typeMapping = mapping;
         this.nameValidator = new StringNameValidator();
@@ -805,7 +804,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 if (parentNode != null) {
                     // Find the existing(!) model object that corresponds to the parent
                     parent = (RelationalEntity)nodesToModelObjects.get(parentNode);
-                    Assertion.isNotNull(parent);
+                    CoreArgCheck.isNotNull(parent);
                 }
 
                 // Create the real object ...
@@ -1002,9 +1001,9 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                                 final IProgressMonitor monitor,
                                                 final List problems,
                                                 final List newTableObjects ) throws JdbcException {
-        Assertion.isNotNull(node);
-        Assertion.isNotNull(modelStructure);
-        Assertion.isNotNull(context);
+        CoreArgCheck.isNotNull(node);
+        CoreArgCheck.isNotNull(modelStructure);
+        CoreArgCheck.isNotNull(context);
         final ModelContents contents = context.getModelContents();
         final int nodeType = node.getType();
         final String nodeName = node.getName();
@@ -1055,10 +1054,10 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 final String tableType = tableNode.getTypeName();
                 final String eclassName = JdbcRelationalPlugin.getJdbcNodeToRelationalMapping().getRelationalClassForJdbcTableType(tableType);
                 final RelationalPackage pkg = RelationalPackage.eINSTANCE;
-                if (pkg == null) {
-                    Assertion.isNotNull(pkg,
-                                        ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.RelationalPackageNotFound")); //$NON-NLS-1$
-                }
+
+                CoreArgCheck.isNotNull(pkg,
+                                       ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.RelationalPackageNotFound")); //$NON-NLS-1$
+
                 EClass eclass = (EClass)pkg.getEClassifier(eclassName);
                 if (eclass == null) {
                     eclass = pkg.getBaseTable();
@@ -1158,7 +1157,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                   final Table table,
                                   final Context context,
                                   final List problems ) {
-        Assertion.isNotNull(context);
+        CoreArgCheck.isNotNull(context);
         final ModelContents contents = context.getModelContents();
         try {
             // Get the column information ...
@@ -1986,7 +1985,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             }
         } else {
             final Resource resource = table.eResource();
-            Assertion.isNotNull(resource);
+            CoreArgCheck.isNotNull(resource);
             resource.getContents().add(index);
         }
         setNameAndNameInSource(index, spec.indexName, tableNode, context);
@@ -2071,7 +2070,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                      final Procedure proc,
                                      final Context context,
                                      final List problems ) {
-        Assertion.isNotNull(context);
+        CoreArgCheck.isNotNull(context);
         final ModelContents contents = context.getModelContents();
         try {
             // Get the parameter information ...
@@ -2320,10 +2319,10 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                   final JdbcModelStructure structure,
                                   final ObjectMatcher matcher,
                                   final IProgressMonitor monitor ) {
-        ArgCheck.isNotNull(jdbcNodes);
-        ArgCheck.isNotNull(modelObjs);
-        ArgCheck.isNotNull(structure);
-        ArgCheck.isNotNull(matcher);
+        CoreArgCheck.isNotNull(jdbcNodes);
+        CoreArgCheck.isNotNull(modelObjs);
+        CoreArgCheck.isNotNull(structure);
+        CoreArgCheck.isNotNull(matcher);
 
         // Find the best matches between the JdbcNodes and the RelationalEntity objects ...
         if (parentOfNodes == null) {

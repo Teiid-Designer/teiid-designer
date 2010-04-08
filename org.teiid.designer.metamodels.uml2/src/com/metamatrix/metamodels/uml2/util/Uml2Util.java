@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.AggregationKind;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Type;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.util.ModelVisitor;
@@ -110,7 +110,7 @@ public class Uml2Util {
                                                  final String end2Name,
                                                  final int end2LowerBound,
                                                  final int end2UpperBound ) {
-        ArgCheck.isNotNull(type1);
+        CoreArgCheck.isNotNull(type1);
 
         return type1.createAssociation(end1IsNavigable,
                                        end1Aggregation,

@@ -38,9 +38,9 @@ import com.metamatrix.common.xmi.XMIHeaderReader;
 import com.metamatrix.common.xsd.XsdHeader;
 import com.metamatrix.common.xsd.XsdHeaderReader;
 import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.ChecksumUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.CoreFactory;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelImport;
@@ -377,7 +377,7 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
      */
     public synchronized Resource getEmfResource() throws ModelWorkspaceException {
         final Resource resource = super.getBuffer().getEmfResource();
-        Assertion.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         return resource;
     }
 
@@ -719,9 +719,9 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
             final MetamodelDescriptor[] descriptors = ModelerCore.getMetamodelRegistry().getMetamodelDescriptors();
             for (int i = 0; i < descriptors.length; i++) {
                 final MetamodelDescriptor mmd = descriptors[i];
-                if (mmd.isPrimary() && !StringUtil.isEmpty(mmd.getNamespaceURI())) {
+                if (mmd.isPrimary() && !CoreStringUtil.isEmpty(mmd.getNamespaceURI())) {
                     sb.append(mmd.getNamespaceURI());
-                    sb.append(StringUtil.Constants.SPACE);
+                    sb.append(CoreStringUtil.Constants.SPACE);
                 }
             } // for
             final Object[] params = new Object[] {primaryMetamodelUri, sb.toString()};
@@ -809,10 +809,10 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
 
                     String location = infos[i].getLocation();
                     String path = infos[i].getPath();
-                    if (!StringUtil.isEmpty(location)) {
+                    if (!CoreStringUtil.isEmpty(location)) {
                         modelImport.setModelLocation(location);
 
-                    } else if (!StringUtil.isEmpty(path)) {
+                    } else if (!CoreStringUtil.isEmpty(path)) {
                         if (WorkspaceResourceFinderUtil.isGlobalResource(path)) {
                             modelImport.setModelLocation(location);
 

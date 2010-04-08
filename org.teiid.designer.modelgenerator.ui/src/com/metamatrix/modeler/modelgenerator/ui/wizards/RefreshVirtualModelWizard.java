@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.workspace.ModelProject;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -34,7 +34,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
  * @since 4.0
  */
 public final class RefreshVirtualModelWizard extends AbstractWizard
-    implements INewWizard, InternalUiConstants.Widgets, StringUtil.Constants, ModelGeneratorUiConstants {
+    implements INewWizard, InternalUiConstants.Widgets, CoreStringUtil.Constants, ModelGeneratorUiConstants {
 
     private static final String TITLE = Util.getString("RefreshVirtualModelWizard.title"); //$NON-NLS-1$    private static final String EMPTY_PAGE_TITLE = "Empty Page"; 
 

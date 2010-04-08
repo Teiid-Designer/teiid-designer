@@ -44,7 +44,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import com.metamatrix.core.event.EventObjectListener;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.ui.IModelerCacheListener;
 import com.metamatrix.modeler.internal.ui.ModelerCacheEvent;
@@ -70,7 +70,7 @@ import com.metamatrix.ui.internal.widget.AbstractTableLabelProvider;
  * objects can be added to this table in various ways and removed or cleared via the actions and toolbar buttons provided.
  */
 public class FavoritesView extends ViewPart
-    implements ISelectionProvider, ISelectionListener, IModelerCacheListener, StringUtil.Constants {
+    implements ISelectionProvider, ISelectionListener, IModelerCacheListener, CoreStringUtil.Constants {
 
     private static final int NAME_COLUMN = 0;
     private static final int LOCATION_COLUMN = 1;

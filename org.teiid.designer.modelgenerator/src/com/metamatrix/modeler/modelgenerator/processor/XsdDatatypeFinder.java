@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.compare.selector.ModelSelector;
 
 /**
@@ -39,7 +39,7 @@ public class XsdDatatypeFinder implements DatatypeFinder {
      */
     public XsdDatatypeFinder( final ModelSelector modelSelector, final DatatypeFinder bidtSelector ) {
         super();
-        ArgCheck.isNotNull(modelSelector);
+        CoreArgCheck.isNotNull(modelSelector);
         this.datatypeModelSelector = modelSelector;
         this.bidtSelector = bidtSelector != null ? bidtSelector : new NullDatatypeFinder();
         this.initialized = false;

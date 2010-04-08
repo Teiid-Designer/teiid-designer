@@ -20,7 +20,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.xsd.XSDDiagnosticSeverity;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.impl.XSDDiagnosticImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.webservice.IWebServiceModelBuilder;
 import com.metamatrix.modeler.webservice.IWebServiceXsdResource;
 import com.metamatrix.modeler.webservice.WebServicePlugin;
@@ -51,7 +51,7 @@ public class WebServiceXsdResource implements IWebServiceXsdResource, IInternalW
      */
     public WebServiceXsdResource( final XSDSchema schema, final String targetNamespace, final String originalPath, final Validator validator ) {
         super();
-        ArgCheck.isNotNull(schema);
+        CoreArgCheck.isNotNull(schema);
         this.schema = schema;
         this.targetNamespace = targetNamespace;
         this.originalPath = originalPath;

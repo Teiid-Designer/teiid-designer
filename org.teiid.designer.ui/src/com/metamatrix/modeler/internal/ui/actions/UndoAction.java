@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.undo.IUndoManager;
 
@@ -43,9 +43,9 @@ public class UndoAction extends AbstractUndoRedoAction {
      * @since 5.5
      */
     @Override
-    protected void performAction(IUndoManager undoMgr,
-                                 IProgressMonitor monitor) {
-        Assertion.assertTrue((undoMgr != null) && undoMgr.canUndo());
+    protected void performAction( IUndoManager undoMgr,
+                                  IProgressMonitor monitor ) {
+        CoreArgCheck.isTrue((undoMgr != null) && undoMgr.canUndo(), "Undo Manager cannot be null"); //$NON-NLS-1$
         undoMgr.undo(monitor);
     }
 
@@ -54,7 +54,7 @@ public class UndoAction extends AbstractUndoRedoAction {
      * @since 5.5
      */
     @Override
-    protected void updateState(IUndoManager undoMgr) {
+    protected void updateState( IUndoManager undoMgr ) {
         boolean enable = false;
         String text = null;
 

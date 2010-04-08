@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.AbstractLanguageObjectEditor;
 import com.metamatrix.query.internal.ui.builder.ExpressionBuilder;
@@ -155,9 +155,9 @@ public class FunctionDisplayEditor extends AbstractLanguageObjectEditor {
             clear();
         } else {
             if (!(theLanguageObject instanceof Function)) {
-                Assertion.assertTrue((theLanguageObject instanceof Function),
-                                     Util.getString(PREFIX + "invalidLanguageObject", //$NON-NLS-1$
-                                                    new Object[] {theLanguageObject.getClass().getName()}));
+                CoreArgCheck.isTrue((theLanguageObject instanceof Function),
+                                    Util.getString(PREFIX + "invalidLanguageObject", //$NON-NLS-1$
+                                                   new Object[] {theLanguageObject.getClass().getName()}));
             }
 
             model.setLanguageObject(theLanguageObject);

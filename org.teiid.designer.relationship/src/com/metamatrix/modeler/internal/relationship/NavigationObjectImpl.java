@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.internal.relationship;
 
 import org.eclipse.emf.common.util.URI;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.relationship.NavigationObject;
 
 /**
@@ -24,7 +24,7 @@ public abstract class NavigationObjectImpl implements NavigationObject {
      * 
      */
     protected NavigationObjectImpl(final URI modelObjectUri, final String label) {
-        ArgCheck.isNotNull(label);
+        CoreArgCheck.isNotNull(label);
         this.modelObjectUri = modelObjectUri;
         this.label = label;
     }

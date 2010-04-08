@@ -11,8 +11,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.relational.AccessPattern;
 import com.metamatrix.metamodels.relational.RelationalMetamodelConstants;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
@@ -68,7 +68,7 @@ public class AccessPatternAspect extends RelationalEntityAspect implements UmlAs
      * @see com.metamatrix.modeler.core.metamodels.aspects.UmlAssociation#getProperties(java.lang.Object, int)
      */
     public String[] getProperties(Object assoc, int end) {
-        return StringUtil.Constants.EMPTY_STRING_ARRAY;
+        return CoreStringUtil.Constants.EMPTY_STRING_ARRAY;
     }
 
     /* (non-Javadoc)
@@ -197,7 +197,7 @@ public class AccessPatternAspect extends RelationalEntityAspect implements UmlAs
      * @see com.metamatrix.modeler.core.metamodel.aspect.uml.UmlRelationship#getName(java.lang.Object)
      */
     public String getName(Object eObject) {
-        return StringUtil.Constants.EMPTY_STRING;
+        return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     /** 
@@ -210,7 +210,7 @@ public class AccessPatternAspect extends RelationalEntityAspect implements UmlAs
     }
 
     protected AccessPattern assertAccessPattern(Object eObject) {
-        ArgCheck.isInstanceOf(AccessPattern.class, eObject);
+        CoreArgCheck.isInstanceOf(AccessPattern.class, eObject);
         return (AccessPattern)eObject;
     }
 

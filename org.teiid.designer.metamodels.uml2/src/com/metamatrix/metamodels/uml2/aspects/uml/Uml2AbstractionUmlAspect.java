@@ -10,8 +10,8 @@ package com.metamatrix.metamodels.uml2.aspects.uml;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.uml2.uml.Abstraction;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 
@@ -105,14 +105,14 @@ public class Uml2AbstractionUmlAspect extends AbstractUml2DependencyUmlAspect {
      */
     public String getSignature( Object eObject,
                                 int showMask ) {
-        return StringUtil.Constants.EMPTY_STRING;
+        return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.core.metamodel.aspect.uml.UmlDiagramAspect#getEditableSignature(java.lang.Object)
      */
     public String getEditableSignature( Object eObject ) {
-        return StringUtil.Constants.EMPTY_STRING;
+        return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     /* (non-Javadoc)
@@ -124,7 +124,7 @@ public class Uml2AbstractionUmlAspect extends AbstractUml2DependencyUmlAspect {
     }
 
     protected Abstraction assertAbstraction( Object eObject ) {
-        ArgCheck.isInstanceOf(Abstraction.class, eObject);
+        CoreArgCheck.isInstanceOf(Abstraction.class, eObject);
         return (Abstraction)eObject;
     }
 

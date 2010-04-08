@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
 import com.metamatrix.modeler.webservice.IWebServiceModelBuilder;
@@ -227,13 +227,13 @@ public final class ShowDependenciesDialog extends Dialog implements IInternalUiC
                     }
                 } else {
                     // should not happen
-                    Assertion.failed(UTIL.getString(PREFIX + "msg.unknownTableColumn", //$NON-NLS-1$
-                                                    new Object[] {Integer.toString(theIndex)}));
+                    CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unknownTableColumn", //$NON-NLS-1$
+                                                              new Object[] {Integer.toString(theIndex)}));
                 }
             } else {
                 // should not happen
-                Assertion.failed(UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
-                                                new Object[] {theElement.getClass().getName()}));
+                CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
+                                                          new Object[] {theElement.getClass().getName()}));
             }
 
             return result;
@@ -254,13 +254,13 @@ public final class ShowDependenciesDialog extends Dialog implements IInternalUiC
                     result = WebServiceUiUtil.getText(((TableRow)theElement).uses);
                 } else {
                     // should not happen
-                    Assertion.failed(UTIL.getString(PREFIX + "msg.unknownTableColumn", //$NON-NLS-1$
-                                                    new Object[] {Integer.toString(theIndex)}));
+                    CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unknownTableColumn", //$NON-NLS-1$
+                                                              new Object[] {Integer.toString(theIndex)}));
                 }
             } else {
                 // should not happen
-                Assertion.failed(UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
-                                                new Object[] {theElement.getClass().getName()}));
+                CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
+                                                          new Object[] {theElement.getClass().getName()}));
             }
 
             return result;

@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Type;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.rose.internal.IAmbiguousReference;
 import com.metamatrix.rose.internal.RoseImporter;
@@ -475,7 +475,7 @@ public final class AmbiguousTypeNamePage extends AbstractWizardPage implements I
     public void setVisible( boolean theShowFlag ) {
         if (theShowFlag) {
             // list should not be empty. if it is then this page shouldn't be displayed.
-            Assertion.assertTrue(!this.importer.getAmbiguousReferences().isEmpty());
+            CoreArgCheck.isTrue(!this.importer.getAmbiguousReferences().isEmpty(), "Importer discovered ambiguous references"); //$NON-NLS-1$
 
             // load viewer
             this.viewer.setInput(this);
@@ -552,13 +552,13 @@ public final class AmbiguousTypeNamePage extends AbstractWizardPage implements I
                     }
                 } else {
                     // should not happen
-                    Assertion.failed(UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
-                                                    new Object[] {theElement.getClass().getName()}));
+                    CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
+                                                              new Object[] {theElement.getClass().getName()}));
                 }
             } else {
                 // should not happen
-                Assertion.failed(UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
-                                                new Object[] {theElement.getClass().getName()}));
+                CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
+                                                          new Object[] {theElement.getClass().getName()}));
             }
 
             return result;

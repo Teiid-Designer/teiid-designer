@@ -23,7 +23,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -209,7 +209,7 @@ public class ModelMarkerManager implements IResourceChangeListener {
      * @since 5.0
      */
     public EObject getMarkedEObject(IResource resrc, IMarker iMarker) {
-        ArgCheck.isNotNull(resrc);
+        CoreArgCheck.isNotNull(resrc);
 
         EObject theMarkedEObject = null;
         

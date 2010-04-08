@@ -14,8 +14,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.mapping.Mapping;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.TransformationMapping;
 import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -38,7 +38,7 @@ public class TransformationMappingValidationRule implements ObjectValidationRule
      * @see com.metamatrix.modeler.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, com.metamatrix.modeler.core.validation.ValidationContext)
      */
     public void validate(EObject eObject, ValidationContext context) {
-        ArgCheck.isInstanceOf(TransformationMapping.class, eObject);
+        CoreArgCheck.isInstanceOf(TransformationMapping.class, eObject);
 
         Mapping transMapping = (Mapping) eObject;
         String problemMessage = getProblem(transMapping);
@@ -73,12 +73,12 @@ public class TransformationMappingValidationRule implements ObjectValidationRule
         String inputElements = getInputNames(inputs);        
 
         if(outputs.size() < 1) {
-            if(!inputElements.equals(StringUtil.Constants.EMPTY_STRING)) { 
+            if(!inputElements.equals(CoreStringUtil.Constants.EMPTY_STRING)) { 
                 return TransformationPlugin.Util.getString("TransformationMappingValidationRule.Sql_transformation_in_the_model__1")+modelName+TransformationPlugin.Util.getString("TransformationMappingValidationRule._does_not_have_targets_mapped_for_source_element/s__2")+inputElements; //$NON-NLS-1$ //$NON-NLS-2$
             }
             return TransformationPlugin.Util.getString("TransformationMappingValidationRule.Sql_transformation_in_the_model__3")+modelName+TransformationPlugin.Util.getString("TransformationMappingValidationRule._does_not_have_target_elements._4"); //$NON-NLS-1$ //$NON-NLS-2$
         } else if(outputs.size() > 1) {
-            if(!inputElements.equals(StringUtil.Constants.EMPTY_STRING)) { 
+            if(!inputElements.equals(CoreStringUtil.Constants.EMPTY_STRING)) { 
                 return TransformationPlugin.Util.getString("TransformationMappingValidationRule.Sql_transformation_in_the_model__5")+modelName+TransformationPlugin.Util.getString("TransformationMappingValidationRule._cannot_have_multiple_targets_mapped_for_source_element/s__6")+inputElements; //$NON-NLS-1$ //$NON-NLS-2$
             }
             return TransformationPlugin.Util.getString("TransformationMappingValidationRule.Sql_transformation_in_the_model__7")+modelName+TransformationPlugin.Util.getString("TransformationMappingValidationRule._cannot_have_multiple_target_elements._8"); //$NON-NLS-1$ //$NON-NLS-2$

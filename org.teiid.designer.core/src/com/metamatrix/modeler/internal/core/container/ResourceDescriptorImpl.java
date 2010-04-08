@@ -16,8 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.osgi.framework.Bundle;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.container.ResourceDescriptor;
@@ -34,8 +33,8 @@ public class ResourceDescriptorImpl implements ResourceDescriptor {
     private final List extensions;
 
     public ResourceDescriptorImpl( final String uniqueID ) {
-        Assertion.isNotNull(uniqueID);
-        Assertion.isNotZeroLength(uniqueID);
+        CoreArgCheck.isNotNull(uniqueID);
+        CoreArgCheck.isNotZeroLength(uniqueID);
         this.uniqueID = uniqueID;
         this.protocols = new ArrayList();
         this.extensions = new ArrayList();
@@ -43,6 +42,7 @@ public class ResourceDescriptorImpl implements ResourceDescriptor {
 
     /**
      * Return the unique identifier of the resource type.
+     * 
      * @return the unique identifier
      */
     public String getUniqueIdentifier() {
@@ -69,39 +69,40 @@ public class ResourceDescriptorImpl implements ResourceDescriptor {
     public Resource.Factory getResourceFactory() throws ModelerCoreException {
         try {
             final Class factoryClass = this.factoryBundle.loadClass(this.factoryClassName);
-            return (Resource.Factory) factoryClass.newInstance();
+            return (Resource.Factory)factoryClass.newInstance();
         } catch (ClassNotFoundException e) {
             final Object[] params = new Object[] {this.factoryClassName, this.factoryBundle};
             throw new ModelerCoreException(e,
-			                               ModelerCore.Util.getString("ResourceDescriptorImpl.Unable_to_load_class_using_bundle", //$NON-NLS-1$
-			                                                          params));
+                                           ModelerCore.Util.getString("ResourceDescriptorImpl.Unable_to_load_class_using_bundle", //$NON-NLS-1$
+                                                                      params));
         } catch (InstantiationException e) {
             final Object[] params = new Object[] {this.factoryClassName, this.factoryBundle};
             throw new ModelerCoreException(
-			                               e,
-			                               ModelerCore.Util.getString("ResourceDescriptorImpl.Unable_to_instantiate_class_using_bundle", //$NON-NLS-1$
-			                                                          params));
+                                           e,
+                                           ModelerCore.Util.getString("ResourceDescriptorImpl.Unable_to_instantiate_class_using_bundle", //$NON-NLS-1$
+                                                                      params));
         } catch (IllegalAccessException e) {
             final Object[] params = new Object[] {this.factoryClassName, this.factoryBundle};
             throw new ModelerCoreException(
-			                               e,
-			                               ModelerCore.Util.getString("ResourceDescriptorImpl.Unable_to_instantiate_and_access_class_using_bundle", //$NON-NLS-1$
-			                                                          params));
+                                           e,
+                                           ModelerCore.Util.getString("ResourceDescriptorImpl.Unable_to_instantiate_and_access_class_using_bundle", //$NON-NLS-1$
+                                                                      params));
         }
     }
 
-    public void setResourceFactoryClass(final String className) {
-        this.setResourceFactoryClass(className,null);
+    public void setResourceFactoryClass( final String className ) {
+        this.setResourceFactoryClass(className, null);
     }
 
     public void setResourceFactoryClass( final String className,
-	                                     final Bundle bundle ) {
-        if(className == null){
-            ArgCheck.isNotNull(className,ModelerCore.Util.getString("ResourceDescriptorImpl.The_class_name_string_may_not_be_null")); //$NON-NLS-1$
+                                         final Bundle bundle ) {
+        if (className == null) {
+            CoreArgCheck.isNotNull(className,
+                                   ModelerCore.Util.getString("ResourceDescriptorImpl.The_class_name_string_may_not_be_null")); //$NON-NLS-1$
         }
 
         if (bundle != null) {
-			this.factoryBundle = bundle;
+            this.factoryBundle = bundle;
         }
         this.factoryClassName = className;
     }
@@ -110,14 +111,15 @@ public class ResourceDescriptorImpl implements ResourceDescriptor {
         return this.factoryClassName;
     }
 
-    public static void register(final ResourceDescriptor resourceDescriptor, final ResourceSet resourceSet ) throws ModelerCoreException {
+    public static void register( final ResourceDescriptor resourceDescriptor,
+                                 final ResourceSet resourceSet ) throws ModelerCoreException {
         final List protocols = resourceDescriptor.getProtocols();
         final List fileExtensions = resourceDescriptor.getExtensions();
         final String factoryExtensionID = resourceDescriptor.getUniqueIdentifier();
 
-        if ( protocols.size() != 0 || fileExtensions.size() != 0 ) {
+        if (protocols.size() != 0 || fileExtensions.size() != 0) {
             try {
-                final Resource.Factory factory = resourceDescriptor.getResourceFactory();   // may throw exception
+                final Resource.Factory factory = resourceDescriptor.getResourceFactory(); // may throw exception
                 final String factoryClassName = factory.getClass().getName();
 
                 // Get references to useful things ...
@@ -128,52 +130,55 @@ public class ResourceDescriptorImpl implements ResourceDescriptor {
                 // Add the factory for each of the protocols ...
                 final Iterator iter = protocols.iterator();
                 while (iter.hasNext()) {
-                    final String protocol = (String) iter.next();
-                    if ( ModelerCore.DEBUG ) {
-                        ModelerCore.Util.log(IStatus.INFO,ModelerCore.Util.getString("ResourceDescriptorImpl.DEBUG.Registering_resource_factory_for_URI_protocol",factoryClassName,protocol)); //$NON-NLS-1$
+                    final String protocol = (String)iter.next();
+                    if (ModelerCore.DEBUG) {
+                        ModelerCore.Util.log(IStatus.INFO,
+                                             ModelerCore.Util.getString("ResourceDescriptorImpl.DEBUG.Registering_resource_factory_for_URI_protocol", factoryClassName, protocol)); //$NON-NLS-1$
                     }
-                    final Object prevFactory = protocolToFactoryMap.put(protocol,factory);
-                    if ( prevFactory != null && prevFactory.getClass() != factory.getClass() ) {
-                        ModelerCore.Util.log(IStatus.WARNING,ModelerCore.Util.getString("ResourceDescriptorImpl.Replaced_resource_factory_for_URI_protocol",prevFactory.getClass().getName(),factoryClassName,protocol)); //$NON-NLS-1$
+                    final Object prevFactory = protocolToFactoryMap.put(protocol, factory);
+                    if (prevFactory != null && prevFactory.getClass() != factory.getClass()) {
+                        ModelerCore.Util.log(IStatus.WARNING,
+                                             ModelerCore.Util.getString("ResourceDescriptorImpl.Replaced_resource_factory_for_URI_protocol", prevFactory.getClass().getName(), factoryClassName, protocol)); //$NON-NLS-1$
                     }
                 }
 
                 // Add the factory for each of the extensions ...
                 final Iterator iter2 = fileExtensions.iterator();
                 while (iter2.hasNext()) {
-                    final String fileExtension = (String) iter2.next();
-                    if ( ModelerCore.DEBUG ) {
-                        ModelerCore.Util.log(IStatus.INFO,ModelerCore.Util.getString("ResourceDescriptorImpl.DEBUG.Registering_resource_factory_for_URI_extension",factoryClassName,fileExtension)); //$NON-NLS-1$
+                    final String fileExtension = (String)iter2.next();
+                    if (ModelerCore.DEBUG) {
+                        ModelerCore.Util.log(IStatus.INFO,
+                                             ModelerCore.Util.getString("ResourceDescriptorImpl.DEBUG.Registering_resource_factory_for_URI_extension", factoryClassName, fileExtension)); //$NON-NLS-1$
                     }
-                    final Object prevFactory = extensionToFactoryMap.put(fileExtension,factory);
-                    if ( prevFactory != null && prevFactory.getClass() != factory.getClass() ) {
-                        ModelerCore.Util.log(IStatus.WARNING,ModelerCore.Util.getString("ResourceDescriptorImpl.Replaced_resource_factory_for_URI_extension",prevFactory.getClass().getName(),factoryClassName,fileExtension)); //$NON-NLS-1$
+                    final Object prevFactory = extensionToFactoryMap.put(fileExtension, factory);
+                    if (prevFactory != null && prevFactory.getClass() != factory.getClass()) {
+                        ModelerCore.Util.log(IStatus.WARNING,
+                                             ModelerCore.Util.getString("ResourceDescriptorImpl.Replaced_resource_factory_for_URI_extension", prevFactory.getClass().getName(), factoryClassName, fileExtension)); //$NON-NLS-1$
                     }
                 }
-            } catch ( CoreException e ) {
-                final String msg = ModelerCore.Util.getString("ResourceDescriptorImpl.Error_while_loading_resource_factory_extension",factoryExtensionID); //$NON-NLS-1$
+            } catch (CoreException e) {
+                final String msg = ModelerCore.Util.getString("ResourceDescriptorImpl.Error_while_loading_resource_factory_extension", factoryExtensionID); //$NON-NLS-1$
                 throw new ModelerCoreException(msg);
             }
         }
     }
 
-
     /* (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals( Object obj ) {
         final ResourceDescriptorImpl that = (ResourceDescriptorImpl)obj;
-        if ( !this.uniqueID.equals(that.uniqueID) ) {
+        if (!this.uniqueID.equals(that.uniqueID)) {
             return false;
         }
-        if ( !this.factoryClassName.equals(that.factoryClassName) ) {
+        if (!this.factoryClassName.equals(that.factoryClassName)) {
             return false;
         }
-        if ( !this.protocols.containsAll(that.protocols) || !that.protocols.containsAll(this.protocols) ) {
+        if (!this.protocols.containsAll(that.protocols) || !that.protocols.containsAll(this.protocols)) {
             return false;
         }
-        if ( !this.extensions.containsAll(that.extensions) || !that.extensions.containsAll(this.extensions) ) {
+        if (!this.extensions.containsAll(that.extensions) || !that.extensions.containsAll(this.extensions)) {
             return false;
         }
         if (!this.factoryBundle.equals(that.factoryBundle)) {
@@ -201,7 +206,7 @@ public class ResourceDescriptorImpl implements ResourceDescriptor {
         sb.append(" protocols=["); //$NON-NLS-1$
         boolean first = true;
         for (Iterator iter = this.protocols.iterator(); iter.hasNext();) {
-            if ( !first ) {
+            if (!first) {
                 sb.append(',');
             }
             sb.append(iter.next());
@@ -210,7 +215,7 @@ public class ResourceDescriptorImpl implements ResourceDescriptor {
         sb.append("], extensions=["); //$NON-NLS-1$
         first = true;
         for (Iterator iter = this.extensions.iterator(); iter.hasNext();) {
-            if ( !first ) {
+            if (!first) {
                 sb.append(',');
             }
             sb.append(iter.next());
@@ -221,4 +226,3 @@ public class ResourceDescriptorImpl implements ResourceDescriptor {
     }
 
 }
-

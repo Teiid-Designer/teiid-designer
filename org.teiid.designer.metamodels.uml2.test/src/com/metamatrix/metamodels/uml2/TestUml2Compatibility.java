@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.uml2.uml.UMLPackage;
 import com.metamatrix.core.util.SmartTestSuite;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * TestUml2Compatibility
@@ -78,7 +78,7 @@ public class TestUml2Compatibility extends TestCase {
             in.close();
             return (String[])names.toArray(new String[names.size()]);
         }
-        return StringUtil.Constants.EMPTY_STRING_ARRAY;
+        return CoreStringUtil.Constants.EMPTY_STRING_ARRAY;
     }
 
     private static void sortAndOutputStrings( final List<String> strings ) {

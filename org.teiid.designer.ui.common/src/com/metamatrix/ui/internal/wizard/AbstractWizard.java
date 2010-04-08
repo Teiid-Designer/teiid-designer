@@ -22,7 +22,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.ui.internal.util.WizardUtil;
 
 /**
@@ -120,7 +120,7 @@ public abstract class AbstractWizard extends Wizard {
      */
     public void createPageControls( final Composite pageContainer,
                                     boolean restorePrevSize ) {
-        ArgCheck.isNotNull(pageContainer);
+        CoreArgCheck.isNotNull(pageContainer);
         for (final Iterator iter = this.pgs.iterator(); iter.hasNext();) {
             final IWizardPage pg = (IWizardPage)iter.next();
             pg.createControl(pageContainer);
@@ -195,7 +195,7 @@ public abstract class AbstractWizard extends Wizard {
      */
     @Override
     public IWizardPage getNextPage( final IWizardPage page ) {
-        ArgCheck.isNotNull(page);
+        CoreArgCheck.isNotNull(page);
         final int ndx = indexOf(page);
         // Return null if last page or page not found
         if (ndx == this.pgs.size() - 1 || ndx < 0) {
@@ -213,7 +213,7 @@ public abstract class AbstractWizard extends Wizard {
      */
     @Override
     public final IWizardPage getPage( String name ) {
-        ArgCheck.isNotNull(name);
+        CoreArgCheck.isNotNull(name);
         for (final Iterator iter = this.pgs.iterator(); iter.hasNext();) {
             final IWizardPage pg = (IWizardPage)iter.next();
             if (name.equals(pg.getName())) {
@@ -256,7 +256,7 @@ public abstract class AbstractWizard extends Wizard {
      */
     @Override
     public IWizardPage getPreviousPage( final IWizardPage page ) {
-        ArgCheck.isNotNull(page);
+        CoreArgCheck.isNotNull(page);
         final int ndx = indexOf(page);
         // Return null if last page or page not found
         if (ndx <= 0) {
@@ -319,8 +319,8 @@ public abstract class AbstractWizard extends Wizard {
      */
     public final void addPage( final IWizardPage page,
                                final int index ) {
-        ArgCheck.isNotNull(page);
-        ArgCheck.isNonNegative(index);
+        CoreArgCheck.isNotNull(page);
+        CoreArgCheck.isNonNegative(index);
         this.pgs.add(index, page);
         page.setWizard(this);
     }
@@ -332,7 +332,7 @@ public abstract class AbstractWizard extends Wizard {
      * @since 4.0
      */
     public final void removePage( final IWizardPage page ) {
-        ArgCheck.isNotNull(page);
+        CoreArgCheck.isNotNull(page);
         this.pgs.remove(page);
     }
 

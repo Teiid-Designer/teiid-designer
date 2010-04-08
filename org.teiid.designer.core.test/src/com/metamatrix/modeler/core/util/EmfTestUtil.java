@@ -37,7 +37,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * @since 3.1
@@ -188,8 +188,8 @@ public class EmfTestUtil {
     }
     
     public static List getEObjectsByClassName(final Resource resrc, final String className) {
-        ArgCheck.isNotNull(resrc);
-        ArgCheck.isNotNull(className);
+        CoreArgCheck.isNotNull(resrc);
+        CoreArgCheck.isNotNull(className);
 
         final List result = new ArrayList();
         for (Iterator iter = resrc.getAllContents(); iter.hasNext();) {
@@ -202,13 +202,13 @@ public class EmfTestUtil {
     }
     
     public static List getEObjectsByName(final Resource resrc, final String objName) {
-        ArgCheck.isNotNull(resrc);
-        ArgCheck.isNotNull(objName);
+        CoreArgCheck.isNotNull(resrc);
+        CoreArgCheck.isNotNull(objName);
         return getEObjectsByName(resrc.getAllContents(),objName);
     }
     public static List getEObjectsByName(final Iterator iter, final String objName) {
-        ArgCheck.isNotNull(iter);
-        ArgCheck.isNotNull(objName);
+        CoreArgCheck.isNotNull(iter);
+        CoreArgCheck.isNotNull(objName);
 
         final List result = new ArrayList();
         while (iter.hasNext()) {
@@ -221,8 +221,8 @@ public class EmfTestUtil {
     }
     
     public static EStructuralFeature getEStructuralFeatureByName( final EObject container, final String objName ) {
-        ArgCheck.isNotNull(container);
-        ArgCheck.isNotNull(objName);
+        CoreArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(objName);
 
         final Iterator iter = container.eContents().iterator();
         while (iter.hasNext()) {
@@ -234,8 +234,8 @@ public class EmfTestUtil {
         return null;
     }
     public static List getEObjectsByInstance(final Resource resrc, final Class targetClass) {
-        ArgCheck.isNotNull(resrc);
-        ArgCheck.isNotNull(targetClass);
+        CoreArgCheck.isNotNull(resrc);
+        CoreArgCheck.isNotNull(targetClass);
 
         final List result = new ArrayList();
         for (Iterator iter = resrc.getAllContents(); iter.hasNext();) {
@@ -265,8 +265,8 @@ public class EmfTestUtil {
      * @since 3.1
      */
     public static void printContents(final Resource resrc, final PrintStream stream, final String desc) {
-        ArgCheck.isNotNull(resrc);
-        ArgCheck.isNotNull(stream);
+        CoreArgCheck.isNotNull(resrc);
+        CoreArgCheck.isNotNull(stream);
 
         printDescription(desc, stream);
         stream.println("Resource URI= "+resrc.getURI()); //$NON-NLS-1$
@@ -285,8 +285,8 @@ public class EmfTestUtil {
      * @since 3.1
      */
     public static void printContents(final List eList, final PrintStream stream, final String desc) {
-        ArgCheck.isNotNull(eList);
-        ArgCheck.isNotNull(stream);
+        CoreArgCheck.isNotNull(eList);
+        CoreArgCheck.isNotNull(stream);
 
         printDescription(desc, stream);
         final Iterator iter = eList.iterator();
@@ -311,8 +311,8 @@ public class EmfTestUtil {
      */
     public static void printContents(final EClass eClass, final PrintStream stream, 
     							       final String desc, boolean includeInherited) {
-        ArgCheck.isNotNull(eClass);
-        ArgCheck.isNotNull(stream);
+        CoreArgCheck.isNotNull(eClass);
+        CoreArgCheck.isNotNull(stream);
 
         printDescription(desc, stream);
 		stream.println("EClass name: "+eClass.getName()); //$NON-NLS-1$
@@ -351,8 +351,8 @@ public class EmfTestUtil {
      */
     public static void printFeatures(final EObject eObject, final PrintStream stream, 
     							       final String desc, boolean includeInherited) {
-        ArgCheck.isNotNull(eObject);
-        ArgCheck.isNotNull(stream);
+        CoreArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(stream);
 
         printDescription(desc, stream);
 		EClass eClass = eObject.eClass();
@@ -697,7 +697,7 @@ public class EmfTestUtil {
     }
 
     public static void printCollection( java.io.PrintStream stream, String desc, Collection objs ) {
-        ArgCheck.isNotNull(stream,"The PrintStream reference may not be null"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(stream,"The PrintStream reference may not be null"); //$NON-NLS-1$
         if (desc != null) {
             stream.println(desc);
         }

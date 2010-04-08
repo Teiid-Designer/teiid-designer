@@ -9,7 +9,7 @@ package com.metamatrix.modeler.internal.webservice;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.webservice.compare.WebServiceMatcherFactory;
 import com.metamatrix.metamodels.xml.compare.XmlMatcherFactory;
 import com.metamatrix.modeler.compare.ModelGenerator;
@@ -44,7 +44,7 @@ public class WebServiceModelGenerator extends CompositeModelGenerator {
     public WebServiceModelGenerator( final IWebServiceModelBuilder builder, 
                                       final ModelSelector wsSelector, final ModelSelector xmlSelector ) {
         super(new ArrayList());
-        ArgCheck.isNotNull(builder);
+        CoreArgCheck.isNotNull(builder);
         this.builder = builder;
         
         // Add the other generator(s) ...

@@ -17,11 +17,10 @@ import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
-import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.modeler.util.FileUtils;
-import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.AutoMultiStatus;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -96,7 +95,7 @@ public class VdbExecutionValidatorImpl implements VdbExecutionValidator {
         try {
 
             // must have a defn for this class to function
-            Assertion.isNotNull(vdb, "vdb"); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
 
             // get the vdb definition file
             status.merge(validateVdbModels(vdb));
@@ -106,7 +105,7 @@ public class VdbExecutionValidatorImpl implements VdbExecutionValidator {
             }
 
         } catch (Exception e) {
-            String message = (e.getMessage() != null) ? e.getMessage() : StringUtil.Constants.EMPTY_STRING;
+            String message = (e.getMessage() != null) ? e.getMessage() : CoreStringUtil.Constants.EMPTY_STRING;
             status.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, EXECPTION_ERROR_CODE, message, e));
         } finally {
 
@@ -126,7 +125,7 @@ public class VdbExecutionValidatorImpl implements VdbExecutionValidator {
      * @since 4.3
      */
     public IStatus validateVdbModels( final Vdb vdb ) {
-        ArgCheck.isNotNull(vdb);
+        CoreArgCheck.isNotNull(vdb);
 
         // validate the virtual database
         AutoMultiStatus vdbStatus = new AutoMultiStatus(OK_STATUS);
@@ -181,7 +180,7 @@ public class VdbExecutionValidatorImpl implements VdbExecutionValidator {
                                     String value = connector.getPropertyValue(id);
 
                                     // look at type for default values as connectors inherit default values
-                                    if ((value == null || StringUtil.isEmpty(value)) && typeDefn.getDefaultValue() == null) {
+                                    if ((value == null || CoreStringUtil.isEmpty(value)) && typeDefn.getDefaultValue() == null) {
                                         vdbStatus.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, BINDING_PROPERTY_ERROR_CODE,
                                                                  getString("bindingPropertyError", //$NON-NLS-1$
                                                                            new Object[] {id, connector.getName()}), null));

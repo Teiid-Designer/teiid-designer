@@ -13,7 +13,7 @@ import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.metamodels.webservice.Message;
 import com.metamatrix.metamodels.webservice.WebServiceMetamodelPlugin;
@@ -48,8 +48,8 @@ public class GlobalSchemaReferenceRule implements
      */
     public void validate(final EObject eObject,
                          final ValidationContext context) {
-        ArgCheck.isInstanceOf(Message.class, eObject);
-        ArgCheck.isNotNull(context);
+        CoreArgCheck.isInstanceOf(Message.class, eObject);
+        CoreArgCheck.isNotNull(context);
 
         final Message message = (Message)eObject;
         // get the content element for the message

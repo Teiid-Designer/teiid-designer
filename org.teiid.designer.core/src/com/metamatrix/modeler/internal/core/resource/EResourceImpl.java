@@ -39,8 +39,8 @@ import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.InvalidIDException;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.metamodels.core.ModelAnnotation;
@@ -92,7 +92,7 @@ public class EResourceImpl extends XMIResourceImpl
      */
     public EResourceImpl( final URI uri ) {
         super(uri);
-        ArgCheck.isNotNull(uri);
+        CoreArgCheck.isNotNull(uri);
 
         this.loadedCount = 0;
         this.modelContents = new ModelContents(this);
@@ -157,7 +157,7 @@ public class EResourceImpl extends XMIResourceImpl
     @Override
     public void doLoad( final InputStream inputStream,
                         final Map options ) throws IOException {
-        ArgCheck.isNotNull(inputStream);
+        CoreArgCheck.isNotNull(inputStream);
         if (DEBUG) {
             ModelerCore.Util.log("EResourceImpl.doLoad(InputStream,Map): Start load " + getURI()); //$NON-NLS-1$
         }
@@ -429,7 +429,7 @@ public class EResourceImpl extends XMIResourceImpl
                 primaryMetamodelUri = header.getPrimaryMetamodelURI();
             }
         }
-        if (StringUtil.isEmpty(primaryMetamodelUri)) {
+        if (CoreStringUtil.isEmpty(primaryMetamodelUri)) {
             return null;
         }
         return URI.createURI(primaryMetamodelUri);

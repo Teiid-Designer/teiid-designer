@@ -10,7 +10,7 @@ package org.teiid.designer.runtime;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 import java.util.Collection;
 import org.teiid.adminapi.PropertyDefinition;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  *
@@ -29,9 +29,9 @@ public class ConnectorType implements Comparable<ConnectorType> {
     public ConnectorType( String name,
                           Collection<PropertyDefinition> propDefs,
                           ExecutionAdmin admin ) {
-        ArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
-        ArgCheck.isNotNull(propDefs, "propDefs"); //$NON-NLS-1$
-        ArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(propDefs, "propDefs"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
 
         this.name = name;
         this.propDefs = propDefs;
@@ -45,7 +45,7 @@ public class ConnectorType implements Comparable<ConnectorType> {
      */
     @Override
     public int compareTo( ConnectorType type ) {
-        ArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
         return getName().compareTo(type.getName());
     }
 

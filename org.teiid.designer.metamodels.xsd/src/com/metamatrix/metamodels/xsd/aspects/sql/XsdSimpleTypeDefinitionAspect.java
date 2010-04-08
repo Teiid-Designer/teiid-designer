@@ -39,8 +39,8 @@ import com.metamatrix.common.types.DataTypeManager;
 import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.InvalidIDException;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.xsd.XsdConstants;
 import com.metamatrix.metamodels.xsd.XsdPlugin;
 import com.metamatrix.metamodels.xsd.XsdUtil;
@@ -95,7 +95,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
     public String getName( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
         return entity.getName();
     }
@@ -104,7 +104,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect#getNameInSource(org.eclipse.emf.ecore.EObject)
      */
     public String getNameInSource( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
         return entity.getName();
     }
@@ -114,7 +114,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      */
     @Override
     public Object getObjectID( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         // If the datatype is a built-in datatype then use the Teiid Designer
         // instance since the instance found in the org.eclipse.xsd plugin
         // does not have UUID information. If the datatype is not a
@@ -127,7 +127,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
         if (isEnterpriseDataType(entity)) {
             uuidString = getEnterpriseAttributeValue(entity, UUID_ATTRIBUTE_NAME);
         }
-        if (!StringUtil.isEmpty(uuidString)) {
+        if (!CoreStringUtil.isEmpty(uuidString)) {
             try {
                 return IDGenerator.getInstance().stringToObject(uuidString, UUID.PROTOCOL);
             } catch (InvalidIDException e) {
@@ -160,7 +160,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      */
     @Override
     public String getFullName( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
         return this.getURI(entity);
     }
@@ -257,7 +257,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect#getUuidString(org.eclipse.emf.ecore.EObject)
      */
     public String getUuidString( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         // If the datatype is a built-in datatype then use the Teiid Designer
         // instance since the instance found in the org.eclipse.xsd plugin
         // does not have UUID information. If the datatype is not a
@@ -276,7 +276,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect#getJavaClassName(org.eclipse.emf.ecore.EObject)
      */
     public String getJavaClassName( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
         // Retrieve the runtime type name from the appInfo
         String runtimeTypeName = this.getRuntimeTypeName(entity);
@@ -294,7 +294,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect#getRuntimeTypeName(org.eclipse.emf.ecore.EObject)
      */
     public String getRuntimeTypeName( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         // If the datatype is a ur-type return a predefined runtime type
         if (this.isURType(eObject)) {
             return DatatypeConstants.RuntimeTypeNames.OBJECT;
@@ -325,7 +325,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect#getRuntimeTypeFixed(org.eclipse.emf.ecore.EObject)
      */
     public Boolean getRuntimeTypeFixed( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         Boolean fixed = Boolean.FALSE;
         // If the datatype is a ur-type return a predefined runtime type
         if (!this.isURType(eObject)) {
@@ -356,7 +356,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect#getDatatypeID(org.eclipse.emf.ecore.EObject)
      */
     public String getDatatypeID( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
         return this.getURI(entity);
     }
@@ -365,7 +365,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect#getBasetypeID(org.eclipse.emf.ecore.EObject)
      */
     public String getBasetypeID( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
 
         XSDSimpleTypeDefinition basetype = (XSDSimpleTypeDefinition)getBasetype(eObject);
         if (basetype != null) {
@@ -378,7 +378,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect#getBasetype(org.eclipse.emf.ecore.EObject)
      */
     public Object getBasetype( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition type = (XSDSimpleTypeDefinition)eObject;
         XSDSimpleTypeDefinition basetype = null;
 
@@ -415,7 +415,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     }
 
     private boolean isPrimitiveType( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition type = (XSDSimpleTypeDefinition)eObject;
         if (isBuiltInDatatype(type) && DatatypeConstants.getPrimitivedBuiltInTypeNames().contains(type.getName())) {
             return true;
@@ -428,7 +428,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @since 4.3
      */
     public Object getPrimitiveType( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
 
         // While the datatype type is not a built-in primitive type ...
         EObject simpleType = eObject;
@@ -454,7 +454,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @since 4.3
      */
     public String getPrimitiveTypeID( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
 
         XSDSimpleTypeDefinition primitiveType = (XSDSimpleTypeDefinition)getPrimitiveType(eObject);
         if (primitiveType != null) {
@@ -467,7 +467,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect#getEnterpriseExtensionsMap(org.eclipse.emf.ecore.EObject)
      */
     public Map getEnterpriseExtensionsMap( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         // If the datatype is a built-in datatype then use the Teiid Designer
         // instance since the instance found in the org.eclipse.xsd plugin
         // does not have extension map information. If the datatype is not a
@@ -482,7 +482,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect#getDescription(org.eclipse.emf.ecore.EObject)
      */
     public String getDescription( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         // If the datatype is a built-in datatype then use the Teiid Designer
         // instance since the instance found in the org.eclipse.xsd plugin
         // does not have description information. If the datatype is not a
@@ -501,14 +501,14 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
                 }
             }
         }
-        return StringUtil.Constants.EMPTY_STRING;
+        return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     /**
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect#isBuiltInDatatype(org.eclipse.emf.ecore.EObject)
      */
     public boolean isBuiltInDatatype( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
 
         if (XSDConstants.isURType(entity)) {
@@ -557,7 +557,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect#isComplexDatatype(org.eclipse.emf.ecore.EObject)
      */
     public boolean isComplexDatatype( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         return false;
     }
 
@@ -565,7 +565,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect#isXSDSimpleTypeDefinition(org.eclipse.emf.ecore.EObject)
      */
     public boolean isSimpleDatatype( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         return true;
     }
 
@@ -573,7 +573,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect#isURType(org.eclipse.emf.ecore.EObject)
      */
     public boolean isURType( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
         return XSDConstants.isURType(entity);
     }
@@ -582,7 +582,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect#getVarietyType(org.eclipse.emf.ecore.EObject)
      */
     public short getVarietyType( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
 
         XSDVariety variety = entity.getVariety();
@@ -602,7 +602,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect#getVarietyProps(org.eclipse.emf.ecore.EObject)
      */
     public List getVarietyProps( EObject eObject ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         XSDSimpleTypeDefinition entity = (XSDSimpleTypeDefinition)eObject;
 
         XSDVariety variety = entity.getVariety();
@@ -645,7 +645,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      */
     public boolean isDatatypeFeature( final EObject eObject,
                                       final EStructuralFeature eFeature ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, eObject);
         final EObjectImpl eObjectImpl = super.getEObjectImpl(eObject);
         if (eObjectImpl != null) {
             switch (eObjectImpl.eDerivedStructuralFeatureID(eFeature)) {
@@ -669,7 +669,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @return success true if this is an enterprise datatype
      */
     public boolean isEnterpriseDataType( final EObject type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         argCheckIsResolved(type);
         boolean success = false;
         if (type instanceof XSDSimpleTypeDefinition) {
@@ -700,7 +700,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      */
     public void setEnterpriseDataAttributes( final XSDSimpleTypeDefinition type,
                                              final EnterpriseDatatypeInfo edtInfo ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         argCheckIsResolved(type);
 
         if (edtInfo.isValid()) {
@@ -750,7 +750,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @param type
      */
     public void unSetEnterpriseDataAttributes( final XSDSimpleTypeDefinition type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         argCheckIsResolved(type);
 
         final Element element = type.getElement();
@@ -774,7 +774,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @return edtInfo
      */
     public EnterpriseDatatypeInfo getEnterpriseDatatypeInfo( final XSDSimpleTypeDefinition type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         argCheckIsResolved(type);
 
         XsdUtil.checkForEnterpriseConversion(type);
@@ -796,7 +796,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @param type
      */
     public void convertEnterpriseDatatype( final XSDSimpleTypeDefinition type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         argCheckIsResolved(type);
 
         if (!isEnterpriseDataType(type)) {
@@ -816,8 +816,8 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      */
     public void setBasetype( final XSDSimpleTypeDefinition simpleType,
                              final XSDSimpleTypeDefinition baseType ) {
-        ArgCheck.isNotNull(simpleType);
-        ArgCheck.isNotNull(baseType);
+        CoreArgCheck.isNotNull(simpleType);
+        CoreArgCheck.isNotNull(baseType);
         argCheckIsResolved(simpleType);
         argCheckIsResolved(baseType);
 
@@ -951,7 +951,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @param type
      */
     public EnterpriseDatatypeInfo getEnterpriseAttributesFromAppInfo( final XSDSimpleTypeDefinition type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         EnterpriseDatatypeInfo edtInfo = new EnterpriseDatatypeInfo();
         final XSDAnnotation annotation = type.getAnnotation();
         if (annotation != null) {
@@ -973,7 +973,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @param type
      */
     private void removeEnterpriseAttributesFromAppInfo( final XSDSimpleTypeDefinition type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         final XSDAnnotation annotation = type.getAnnotation();
         if (annotation != null) {
             for (final Iterator it = annotation.getApplicationInformation().iterator(); it.hasNext();) {
@@ -1002,7 +1002,7 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
      * @return results map which contains the enterprise attributes as keys
      */
     private Map getEnterpriseAttributes( final XSDSimpleTypeDefinition type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         final Map results = new HashMap();
         final Element typeElement = type.getElement();
         if (typeElement != null) {
@@ -1034,11 +1034,11 @@ public class XsdSimpleTypeDefinitionAspect extends AbstractMetamodelAspect imple
     }
 
     private String getURI( final XSDSimpleTypeDefinition type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         XSDSchema xsdSchema = type.getSchema();
         String theTargetNamespace = xsdSchema == null ? type.getTargetNamespace() : xsdSchema.getTargetNamespace();
         if (theTargetNamespace == null) {
-            theTargetNamespace = StringUtil.Constants.EMPTY_STRING;
+            theTargetNamespace = CoreStringUtil.Constants.EMPTY_STRING;
         }
         if (theTargetNamespace.equals(DatatypeConstants.BUILTIN_DATATYPES_URI)) {
             // If this datatype is not one of the extended built-in types change the

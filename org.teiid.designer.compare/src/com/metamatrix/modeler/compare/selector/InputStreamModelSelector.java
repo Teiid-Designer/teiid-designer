@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.URIConverter;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
@@ -42,7 +42,7 @@ public class InputStreamModelSelector extends TemporaryResourceModelSelector {
     public InputStreamModelSelector( final InputStream stream,
                                      final URI uri ) {
         super();
-        ArgCheck.isNotNull(stream);
+        CoreArgCheck.isNotNull(stream);
         this.stream = stream;
         this.uri = uri;
     }

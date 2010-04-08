@@ -19,7 +19,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.core.event.EventSourceException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.internal.ui.IModelerCacheListener;
 import com.metamatrix.modeler.internal.ui.ModelerCacheEvent;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -77,8 +77,8 @@ public final class EObjectModelerCache extends AbstractSet
      */
     @Override
     public boolean add(Object theEObject) {
-        ArgCheck.isNotNull(theEObject);
-        ArgCheck.isInstanceOf(EObject.class, theEObject);
+        CoreArgCheck.isNotNull(theEObject);
+        CoreArgCheck.isInstanceOf(EObject.class, theEObject);
         
         boolean result = this.cache.add(theEObject);
         
@@ -96,7 +96,7 @@ public final class EObjectModelerCache extends AbstractSet
      */
     @Override
     public boolean addAll(Collection theEObjects) {
-        ArgCheck.isNotNull(theEObjects);
+        CoreArgCheck.isNotNull(theEObjects);
 
         boolean result = false;
         
@@ -106,7 +106,7 @@ public final class EObjectModelerCache extends AbstractSet
             
             while (itr.hasNext()) {
                 Object obj = itr.next();
-                ArgCheck.isInstanceOf(EObject.class, obj);
+                CoreArgCheck.isInstanceOf(EObject.class, obj);
                 
                 if (this.cache.add(obj)) {
                     addedObjs.add(obj);
@@ -240,7 +240,7 @@ public final class EObjectModelerCache extends AbstractSet
      */
     @Override
     public boolean removeAll(Collection theEObjects) {
-        ArgCheck.isNotNull(theEObjects);
+        CoreArgCheck.isNotNull(theEObjects);
 
         boolean result = false;
         

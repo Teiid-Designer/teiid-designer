@@ -73,7 +73,7 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.ide.IGotoMarker;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -1854,9 +1854,8 @@ public class DiagramEditor extends GraphicalEditor
     }
 
     private boolean isCurrentResource( ModelResource modelResource ) {
-        if (modelResource == null) {
-            Assertion.isNotNull(modelResource, DiagramUiConstants.Util.getString("DiagramEditor.isCurrentResourceNullCheck")); //$NON-NLS-1$
-        }
+        CoreArgCheck.isNotNull(modelResource, DiagramUiConstants.Util.getString("DiagramEditor.isCurrentResourceNullCheck")); //$NON-NLS-1$
+
         // Check cached model resource
         if (currentModelResource != null && modelResource == currentModelResource) {
             return true;

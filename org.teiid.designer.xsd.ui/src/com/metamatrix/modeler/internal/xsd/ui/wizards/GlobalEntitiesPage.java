@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
@@ -250,7 +250,7 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
      */
     void checkStatus() {
         String container = getContainerName();
-        if (StringUtil.isEmpty(container)) {
+        if (CoreStringUtil.isEmpty(container)) {
             setMessage("No Model Location Selected", IMessageProvider.ERROR); //$NON-NLS-1$
             currentStatus = STATUS_NO_LOCATION;
             setPageComplete(false);
@@ -391,7 +391,7 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         IProject result = null;
         String containerName = getContainerName();
 
-        if (!StringUtil.isEmpty(containerName)) {
+        if (!CoreStringUtil.isEmpty(containerName)) {
             IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
             IResource resource = root.findMember(new Path(containerName));
 
@@ -407,7 +407,7 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         IResource result = null;
         String containerName = getContainerName();
 
-        if (!StringUtil.isEmpty(containerName)) {
+        if (!CoreStringUtil.isEmpty(containerName)) {
             IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
             IResource resource = root.findMember(new Path(containerName));
 

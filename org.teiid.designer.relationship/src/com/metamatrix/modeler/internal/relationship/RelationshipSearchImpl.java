@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.IPathComparator;
 import com.metamatrix.metamodels.relationship.RelationshipType;
@@ -58,8 +58,8 @@ public class RelationshipSearchImpl implements RelationshipSearch {
     public RelationshipSearchImpl( final ModelWorkspace workspace,
                                    final IndexSelectorFactory selector ) {
         super();
-        ArgCheck.isNotNull(workspace);
-        ArgCheck.isNotNull(selector);
+        CoreArgCheck.isNotNull(workspace);
+        CoreArgCheck.isNotNull(selector);
         this.workspace = workspace;
         // this.indexSelector = selector;
 
@@ -199,7 +199,7 @@ public class RelationshipSearchImpl implements RelationshipSearch {
      */
     public void setRelationshipModelScope( final List modelWorkspaceItems ) {
 
-        ArgCheck.isNotNull(modelWorkspaceItems);
+        CoreArgCheck.isNotNull(modelWorkspaceItems);
 
         noResourceSelected = false;
         HashSet hsSet = new HashSet();

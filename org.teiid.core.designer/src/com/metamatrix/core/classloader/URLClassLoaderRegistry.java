@@ -14,7 +14,7 @@ import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * This class acts as a registry of URL class loaders. The registry maintains a single URLClassLoader for each distinct URL, and
@@ -40,7 +40,7 @@ public class URLClassLoaderRegistry {
 
     public URLClassLoader getClassLoader( final String[] urlStrings,
                                           final ClassLoader parent ) throws MalformedURLException {
-        ArgCheck.isNotNull(urlStrings);
+        CoreArgCheck.isNotNull(urlStrings);
 
         final Object key = doCreateKey(urlStrings);
 
@@ -57,7 +57,7 @@ public class URLClassLoaderRegistry {
 
     public URLClassLoader getClassLoader( final URL[] urls,
                                           final ClassLoader parent ) {
-        ArgCheck.isNotNull(urls);
+        CoreArgCheck.isNotNull(urls);
 
         final Object key = doCreateKey(urls);
         return doGetOrCreateClassLoader(key, urls, parent);

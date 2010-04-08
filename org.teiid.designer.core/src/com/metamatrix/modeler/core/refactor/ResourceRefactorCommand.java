@@ -38,7 +38,7 @@ import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
@@ -693,28 +693,28 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
                             // Convert select SQL
                             String uuidFormSql = helper.getSelectSql();
                             String convertedSql = null;
-                            if (!StringUtil.isEmpty(uuidFormSql)) {
+                            if (!CoreStringUtil.isEmpty(uuidFormSql)) {
                                 convertedSql = SqlStringConverter.convertUUIDsToFullNames(uuidFormSql, eResources);
                                 nested.setSelectSql(convertedSql);
                             }
 
                             // Convert insert SQL
                             uuidFormSql = helper.getInsertSql();
-                            if (!StringUtil.isEmpty(uuidFormSql)) {
+                            if (!CoreStringUtil.isEmpty(uuidFormSql)) {
                                 convertedSql = SqlStringConverter.convertUUIDsToFullNames(uuidFormSql, eResources);
                                 nested.setInsertSql(convertedSql);
                             }
 
                             // Convert update SQL
                             uuidFormSql = helper.getUpdateSql();
-                            if (!StringUtil.isEmpty(uuidFormSql)) {
+                            if (!CoreStringUtil.isEmpty(uuidFormSql)) {
                                 convertedSql = SqlStringConverter.convertUUIDsToFullNames(uuidFormSql, eResources);
                                 nested.setUpdateSql(convertedSql);
                             }
 
                             // Convert delete SQL
                             uuidFormSql = helper.getDeleteSql();
-                            if (!StringUtil.isEmpty(uuidFormSql)) {
+                            if (!CoreStringUtil.isEmpty(uuidFormSql)) {
                                 convertedSql = SqlStringConverter.convertUUIDsToFullNames(uuidFormSql, eResources);
                                 nested.setDeleteSql(convertedSql);
                             }

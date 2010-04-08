@@ -10,7 +10,7 @@ package com.metamatrix.modeler.core.metamodel.core.aspects.validation.rules;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelImport;
 import com.metamatrix.metamodels.core.ModelType;
@@ -31,7 +31,7 @@ public class AmbiguousModelImportsRule implements ObjectValidationRule {
 	 * @see com.metamatrix.modeler.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, com.metamatrix.modeler.core.validation.ValidationContext)
 	 */
 	public void validate(EObject eObject, ValidationContext context) {
-		ArgCheck.isInstanceOf(ModelAnnotation.class, eObject);
+		CoreArgCheck.isInstanceOf(ModelAnnotation.class, eObject);
 
 		final ModelAnnotation modelAnnotation = (ModelAnnotation) eObject;
 		

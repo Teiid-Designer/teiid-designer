@@ -32,9 +32,9 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.teiid.designer.vdb.Vdb;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.dqp.execution.VdbExecutionValidator;
 import com.metamatrix.modeler.dqp.internal.execution.VdbExecutionValidatorImpl;
@@ -50,7 +50,8 @@ import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
 /**
  * @since 4.2
  */
-public class ExecuteVdbAction extends ActionDelegate implements DqpUiConstants, IWorkbenchWindowActionDelegate, IViewActionDelegate {
+public class ExecuteVdbAction extends ActionDelegate
+    implements DqpUiConstants, IWorkbenchWindowActionDelegate, IViewActionDelegate {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ExecuteVdbAction.class);
 
@@ -185,7 +186,8 @@ public class ExecuteVdbAction extends ActionDelegate implements DqpUiConstants, 
     }
 
     /**
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+     *      org.eclipse.jface.viewers.ISelection)
      * @since 4.2
      */
     @Override
@@ -196,7 +198,8 @@ public class ExecuteVdbAction extends ActionDelegate implements DqpUiConstants, 
         if (!SelectionUtilities.isMultiSelection(selection)) {
             final Object obj = SelectionUtilities.getSelectedObject(selection);
 
-            if (obj instanceof IFile) if (StringUtil.endsWithIgnoreCase(((IFile)obj).getName(), ModelerCore.VDB_FILE_EXTENSION)) {
+            if (obj instanceof IFile) if (CoreStringUtil.endsWithIgnoreCase(((IFile)obj).getName(),
+                                                                            ModelerCore.VDB_FILE_EXTENSION)) {
                 setSelectedVdbFile((IFile)obj);
                 enable = true;
             }
@@ -216,7 +219,7 @@ public class ExecuteVdbAction extends ActionDelegate implements DqpUiConstants, 
     public void setupVdbForExecution() {
         final Vdb vdb = getCurrentVdb();
 
-        Assertion.isNotNull(vdb);
+        CoreArgCheck.isNotNull(vdb);
 
         // if not saved show dialog and exit
         if (vdb.isModified()) {

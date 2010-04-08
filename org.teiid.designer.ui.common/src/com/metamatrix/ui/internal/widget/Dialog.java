@@ -11,7 +11,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Shell;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * A resizable dialog
@@ -125,7 +125,7 @@ public class Dialog extends org.eclipse.jface.dialogs.Dialog {
 	 * @since 4.0
 	 */
 	public void setTitle(final String title) {
-        ArgCheck.isNotNull(title);
+        CoreArgCheck.isNotNull(title);
         final Shell shell = getShell();
         if (shell == null) {
             this.title = title;

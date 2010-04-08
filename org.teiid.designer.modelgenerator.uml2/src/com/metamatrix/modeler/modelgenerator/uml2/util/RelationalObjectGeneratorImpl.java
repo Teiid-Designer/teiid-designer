@@ -38,7 +38,7 @@ import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.UMLPackage;
 import com.metamatrix.core.selection.TreeSelection;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.ForeignKey;
@@ -157,7 +157,7 @@ public class RelationalObjectGeneratorImpl implements RelationalObjectGenerator 
                 final List ancillaryTables = processPropertiesForClassifier(table,
                                                                             klass,
                                                                             associationsToBeProcessed,
-                                                                            StringUtil.Constants.EMPTY_STRING,
+                                                                            CoreStringUtil.Constants.EMPTY_STRING,
                                                                             problems);
 
                 tables.addAll(ancillaryTables);
@@ -203,7 +203,7 @@ public class RelationalObjectGeneratorImpl implements RelationalObjectGenerator 
             final Column datatypeValueColumn = factory.createColumn();
             datatypeValueColumn.setName(namingStrategy.getNameForDatatypeValueColumn(referringProperty,
                                                                                      datatype,
-                                                                                     StringUtil.Constants.EMPTY_STRING));
+                                                                                     CoreStringUtil.Constants.EMPTY_STRING));
 
             // Apply column custom properties, if any defined
             applyCustomPropertiesToColumn(datatypeValueColumn);
@@ -238,7 +238,7 @@ public class RelationalObjectGeneratorImpl implements RelationalObjectGenerator 
                 tables.addAll(processPropertiesForClassifier(table,
                                                              datatype,
                                                              associationsToBeProcessed,
-                                                             StringUtil.Constants.EMPTY_STRING,
+                                                             CoreStringUtil.Constants.EMPTY_STRING,
                                                              problems));
             }
             addAnnotationForElement(referringProperty, table, problems);
@@ -590,7 +590,7 @@ public class RelationalObjectGeneratorImpl implements RelationalObjectGenerator 
                         } else {
 
                             // add the unsupported type to the problems list
-                            String className = StringUtil.getLastToken(type.getClass().getName(), "."); //$NON-NLS-1$
+                            String className = CoreStringUtil.getLastToken(type.getClass().getName(), "."); //$NON-NLS-1$
                             String[] params = new String[] {className,
                                 property.getNamespace().getName() + '.' + property.getName()};
                             final String message = Uml2ModelGeneratorPlugin.Util.getString("RelationalObjectGeneratorImpl.UnsupportedPropertyType", (Object[])params); //$NON-NLS-1$
@@ -678,11 +678,11 @@ public class RelationalObjectGeneratorImpl implements RelationalObjectGenerator 
          */
         String differentiatorSuffix = property.getName();
 
-        if (StringUtil.isEmpty(differentiatorSuffix)) {
+        if (CoreStringUtil.isEmpty(differentiatorSuffix)) {
             final Association association = property.getAssociation();
             if (association != null) {
                 differentiatorSuffix = association.getName();
-                if (StringUtil.isEmpty(differentiatorSuffix)) {
+                if (CoreStringUtil.isEmpty(differentiatorSuffix)) {
                     differentiatorSuffix = property.getType().getName();
                 }
             }
@@ -1363,7 +1363,7 @@ public class RelationalObjectGeneratorImpl implements RelationalObjectGenerator 
                                  * stereotypes assigned which are delimited in
                                  * some manner.
                                  */
-                                if (StringUtil.indexOfIgnoreCase(stereotype.getName(), string) >= 0) {
+                                if (CoreStringUtil.indexOfIgnoreCase(stereotype.getName(), string) >= 0) {
                                     return true;
                                 }
                             }

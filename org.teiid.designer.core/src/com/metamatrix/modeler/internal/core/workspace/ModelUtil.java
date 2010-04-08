@@ -35,12 +35,12 @@ import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.common.xsd.XsdHeader;
 import com.metamatrix.common.xsd.XsdHeaderReader;
 import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.modeler.util.FileUtil;
 import com.metamatrix.core.modeler.util.FileUtils;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.FileSeparatorUtil;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.ResourceFinder;
@@ -91,7 +91,7 @@ public class ModelUtil {
      * @since 4.0
      */
     public static IContainer getContainer( final Object object ) {
-        ArgCheck.isNotNull(object);
+        CoreArgCheck.isNotNull(object);
         Object obj = object;
         if (obj instanceof EObject) {
             ModelResource resource = ModelerCore.getModelEditor().findModelResource((EObject)obj);
@@ -118,7 +118,7 @@ public class ModelUtil {
      * @since 4.0
      */
     public static ModelResource getModel( final Object object ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(object);
+        CoreArgCheck.isNotNull(object);
         if (object instanceof ModelResource) {
             return (ModelResource)object;
         }
@@ -144,7 +144,7 @@ public class ModelUtil {
      * @since 4.0
      */
     public static Collection getModels( final List objects ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(objects);
+        CoreArgCheck.isNotNull(objects);
         Collection<Object> modelResourceSet = new HashSet<Object>();
         for (Iterator i = objects.iterator(); i.hasNext();) {
             Object nextObj = i.next();
@@ -736,7 +736,7 @@ public class ModelUtil {
             String[] pathSegments = baseResource.getURI().segments();
             String baseURI = baseResource.getURI().toString();
             String fileSep = FileSeparatorUtil.getFileSeparator(baseURI);
-            String deviceLocation = StringUtil.Constants.EMPTY_STRING;
+            String deviceLocation = CoreStringUtil.Constants.EMPTY_STRING;
             // find vdbWorkingFolder index
             int vdbFolderIndex = -1;
             IPath projectPath = null;

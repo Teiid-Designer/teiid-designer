@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ValidationDescriptor;
 import com.metamatrix.modeler.core.ValidationPreferences;
@@ -72,7 +72,7 @@ public class ValidationPreferencesImpl implements ValidationPreferences {
                 // get current value of preference. if one does not exist use the default
                 String value = getCurrentPreferenceValue(preferences, descriptor);
                 
-                if (StringUtil.isEmpty(value)) {
+                if (CoreStringUtil.isEmpty(value)) {
                     value = descriptor.getDefaultOption();
                 }
                 

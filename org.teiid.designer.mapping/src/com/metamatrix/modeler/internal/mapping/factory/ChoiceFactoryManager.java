@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.mapping.PluginConstants;
 import com.metamatrix.modeler.mapping.factory.IChoiceFactory;
@@ -104,7 +104,7 @@ public class ChoiceFactoryManager implements PluginConstants, PluginConstants.Ex
         //
         //        System.out.println( "[ChoiceFactoryManager.getChoiceFactory] choiceHandlerMap.size() is: " + choiceHandlerMap.size() ); //$NON-NLS-1$  
 
-        ArgCheck.isNotNull(eo);
+        CoreArgCheck.isNotNull(eo);
 
         Iterator it = choiceHandlerMap.values().iterator();
 

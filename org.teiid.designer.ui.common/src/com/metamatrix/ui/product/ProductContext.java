@@ -7,7 +7,7 @@
  */
 package com.metamatrix.ui.product;
 
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 
 /**
@@ -37,8 +37,8 @@ public class ProductContext implements IProductContext {
      */
     public ProductContext(String theCategory,
                                  String theContextId) {
-        ArgCheck.isNotEmpty(theCategory);
-        ArgCheck.isNotEmpty(theContextId);
+        CoreArgCheck.isNotEmpty(theCategory);
+        CoreArgCheck.isNotEmpty(theContextId);
 
         this.category = theCategory;
         this.id = theContextId;

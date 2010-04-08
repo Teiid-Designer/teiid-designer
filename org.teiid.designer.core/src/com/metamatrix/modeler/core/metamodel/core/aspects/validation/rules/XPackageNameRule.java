@@ -13,7 +13,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.extension.ExtensionPackage;
 import com.metamatrix.metamodels.core.extension.XPackage;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -48,7 +48,7 @@ public class XPackageNameRule extends StringNameRule {
                           Object value,
                           ValidationContext context ) {
 
-        ArgCheck.isInstanceOf(XPackage.class, eObject);
+        CoreArgCheck.isInstanceOf(XPackage.class, eObject);
         if (eStructuralFeature.getFeatureID() != this.getFeatureID()) {
             return;
         }

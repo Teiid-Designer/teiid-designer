@@ -12,7 +12,7 @@ import java.util.Map;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelImport;
 import com.metamatrix.metamodels.core.ModelType;
@@ -32,8 +32,8 @@ public class ModelImportReferenceUpdator implements ReferenceUpdator {
      * @since 4.2
      */
     public void updateEObject(final EObject eObject, final Map oldToNewObjects) {
-        ArgCheck.isNotNull(eObject);
-        ArgCheck.isNotNull(oldToNewObjects);
+        CoreArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(oldToNewObjects);
 
         if(eObject instanceof ModelImport) {
             // model import that needs to be updated
@@ -137,7 +137,7 @@ public class ModelImportReferenceUpdator implements ReferenceUpdator {
      * @return
      */
     private String getResourceName(final Resource resource) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         final URI resourceUri = resource.getURI();
         final String modelNameWithExt = resourceUri.lastSegment();

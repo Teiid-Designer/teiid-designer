@@ -12,7 +12,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.modelgenerator.GeneratorOptions;
 import com.metamatrix.modeler.modelgenerator.uml2.Uml2ModelGeneratorPlugin;
 
@@ -115,7 +115,7 @@ public final class Uml2RelationalOptions implements GeneratorOptions {
     }
     
     public void setPackageUsage( PackageUsage usage ) {
-        ArgCheck.isNotNull(usage);
+        CoreArgCheck.isNotNull(usage);
         this.packageUsage = usage;
     }
 

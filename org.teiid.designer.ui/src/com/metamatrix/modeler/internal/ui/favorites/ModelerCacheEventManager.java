@@ -26,7 +26,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import com.metamatrix.core.event.EventObjectListener;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
@@ -113,7 +113,7 @@ class ModelerCacheEventManager
      */
     private Collection getAffectedItems( Notification theNotification ) {
         if (theNotification instanceof SourcedNotification) {
-            ArgCheck.isTrue(false, "Input should not be a SourcedNotification."); //$NON-NLS-1$
+            CoreArgCheck.isTrue(false, "Input should not be a SourcedNotification."); //$NON-NLS-1$
         }
 
         Collection result = Collections.EMPTY_LIST;
@@ -384,7 +384,7 @@ class ModelerCacheEventManager
      */
     private Collection removeAffectedItems( Notification theNotification ) {
         if (theNotification instanceof SourcedNotification) {
-            ArgCheck.isTrue(false, "Input should not be a SourcedNotification."); //$NON-NLS-1$
+            CoreArgCheck.isTrue(false, "Input should not be a SourcedNotification."); //$NON-NLS-1$
         }
 
         Collection result = Collections.EMPTY_LIST;

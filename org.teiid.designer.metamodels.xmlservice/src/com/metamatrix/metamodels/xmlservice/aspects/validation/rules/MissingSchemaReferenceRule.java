@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.xmlservice.XmlInput;
 import com.metamatrix.metamodels.xmlservice.XmlOperation;
@@ -53,8 +53,8 @@ public class MissingSchemaReferenceRule implements ObjectValidationRule {
      */
     public void validate(final EObject eObject,
                          final ValidationContext context) {
-        ArgCheck.isInstanceOf(XmlOperation.class, eObject);
-        ArgCheck.isNotNull(context);
+        CoreArgCheck.isInstanceOf(XmlOperation.class, eObject);
+        CoreArgCheck.isNotNull(context);
         
         final XmlOperation op = (XmlOperation)eObject;
         boolean exposeXmlServiceInWsdl = false;

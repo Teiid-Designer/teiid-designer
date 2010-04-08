@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.webservice.aspects.uml;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.webservice.SampleMessages;
 import com.metamatrix.metamodels.webservice.WebServiceComponent;
 import com.metamatrix.metamodels.webservice.WebServiceMetamodelPlugin;
@@ -48,7 +48,7 @@ public class SampleMessagesAspect extends WebServiceComponentAspect implements
      */
     @Override
     protected WebServiceComponent assertWebServiceComponent(Object eObject) {
-        ArgCheck.isInstanceOf(SampleMessages.class, eObject);
+        CoreArgCheck.isInstanceOf(SampleMessages.class, eObject);
         return null;
     }
 

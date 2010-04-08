@@ -9,7 +9,7 @@ package com.metamatrix.modeler.relationship;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * The NavigationContextInfo represents a serializable and durable unique reference to a navigation context focused on a
@@ -31,14 +31,14 @@ public class NavigationContextInfo {
      */
     public NavigationContextInfo( final EObject obj,
                                   final String uri ) {
-        ArgCheck.isNotNull(obj);
-        ArgCheck.isNotNull(uri);
+        CoreArgCheck.isNotNull(obj);
+        CoreArgCheck.isNotNull(uri);
         this.focusNodeUri = uri;
         this.focusNodeMetaclassUri = EcoreUtil.getURI(obj.eClass()).toString();
     }
 
     public NavigationContextInfo( final String uri ) {
-        ArgCheck.isNotNull(uri);
+        CoreArgCheck.isNotNull(uri);
         this.focusNodeUri = uri;
         this.focusNodeMetaclassUri = ""; //$NON-NLS-1$
     }

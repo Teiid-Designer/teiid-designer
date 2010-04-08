@@ -24,8 +24,8 @@ import org.eclipse.emf.mapping.MappingHelper;
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -479,12 +479,12 @@ public class SqlMappingRootCache implements SqlConstants {
         } else if(oldSql!=null) {
             StringBuffer newSb = new StringBuffer(newSql.trim());
             StringBuffer oldSb = new StringBuffer(oldSql.trim());
-            StringUtil.replaceAll(newSb,CR,BLANK);
-            StringUtil.replaceAll(newSb,TAB,BLANK);
-            StringUtil.replaceAll(newSb,DBL_SPACE,SPACE);
-            StringUtil.replaceAll(oldSb,CR,BLANK);
-            StringUtil.replaceAll(oldSb,TAB,BLANK);
-            StringUtil.replaceAll(oldSb,DBL_SPACE,SPACE);
+            CoreStringUtil.replaceAll(newSb,CR,BLANK);
+            CoreStringUtil.replaceAll(newSb,TAB,BLANK);
+            CoreStringUtil.replaceAll(newSb,DBL_SPACE,SPACE);
+            CoreStringUtil.replaceAll(oldSb,CR,BLANK);
+            CoreStringUtil.replaceAll(oldSb,TAB,BLANK);
+            CoreStringUtil.replaceAll(oldSb,DBL_SPACE,SPACE);
             if(newSb.toString().equals(oldSb.toString())) {
                 isDifferent=false;
             }
@@ -659,7 +659,7 @@ public class SqlMappingRootCache implements SqlConstants {
     public static SqlTransformationResult getSqlTransformationStatus(final SqlTransformationMappingRoot transMappingRoot, 
                                                                      final int cmdType, final int statusType, 
                                                                      final boolean restrictSearch, final ValidationContext context) {
-        ArgCheck.isNotNull(transMappingRoot);
+        CoreArgCheck.isNotNull(transMappingRoot);
         return getStatus(transMappingRoot, cmdType, statusType, restrictSearch, context);
     }
 
@@ -937,7 +937,7 @@ public class SqlMappingRootCache implements SqlConstants {
         //-----------------------------------------------------------------
         // If the statement (UUID version) exists, try to convert it first
         //-----------------------------------------------------------------
-        if(!StringUtil.isEmpty(sqlUUIDString)) {
+        if(!CoreStringUtil.isEmpty(sqlUUIDString)) {
             // Get the mmuid version first.  It is unaffected by any name changes which may have
             // occurred.
             String sqlStatementConverted = SqlConverter.convertToString(sqlUUIDString, (EObject)transMappingRoot, cmdType, restrictSearch, context);

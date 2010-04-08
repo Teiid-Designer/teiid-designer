@@ -40,8 +40,7 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.compare.ModelGenerator;
@@ -344,10 +343,10 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
         boolean wasCancelled = false;
 
         int severity = this.builder.validateWSDLNamespaces().getSeverity();
-        Assertion.assertTrue(severity < IStatus.ERROR);
+        CoreArgCheck.isTrue(severity < IStatus.ERROR, "ERROR validating WSDL Namespaces"); //$NON-NLS-1$
 
         severity = this.builder.validateXSDNamespaces().getSeverity();
-        Assertion.assertTrue(severity < IStatus.ERROR);
+        CoreArgCheck.isTrue(severity < IStatus.ERROR, "ERROR validating XSD Namespaces"); //$NON-NLS-1$;
 
         // Check if user canceled yet (Defect 23075)
         if (!theMonitor.isCanceled()) {
@@ -503,7 +502,7 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
      */
     @Override
     public IWizardPage getNextPage( IWizardPage page ) {
-        ArgCheck.isNotNull(page);
+        CoreArgCheck.isNotNull(page);
         final int ndx = indexOf(page);
         List pgs = Arrays.asList(getPages());
         // Return null if last page or page not found
@@ -523,8 +522,8 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
                  * if there are no validation messages, we skip this page and move on
                  * to the next.  nothing to show.
                  */
-                // If page complete isn't set to 
-            	validationPage.setPageComplete(true);
+                // If page complete isn't set to
+                validationPage.setPageComplete(true);
                 nextPage = (IWizardPage)pgs.get(ndx + 2);
             }
         }

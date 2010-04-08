@@ -21,7 +21,7 @@ import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
@@ -50,7 +50,7 @@ public class NewConnectorDialog extends ExtendedTitleAreaDialog implements IChan
                                       ExecutionAdmin admin,
                                       ConnectorType type) {
         super(parentShell, DqpUiPlugin.getDefault());
-        ArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
         this.admin = admin;
         this.type = type;
     }

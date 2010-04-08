@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.uml2.aspects.uml;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.uml2.uml.NamedElement;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
@@ -51,7 +51,7 @@ public abstract class AbstractUml2NamedElementUmlAspect extends AbstractUml2Elem
     }
 
     protected NamedElement assertNamedElement( Object eObject ) {
-        ArgCheck.isInstanceOf(NamedElement.class, eObject);
+        CoreArgCheck.isInstanceOf(NamedElement.class, eObject);
         return (NamedElement)eObject;
     }
 

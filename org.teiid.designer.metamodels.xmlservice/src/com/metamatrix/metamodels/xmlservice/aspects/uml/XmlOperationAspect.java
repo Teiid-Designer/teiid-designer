@@ -9,7 +9,7 @@ package com.metamatrix.metamodels.xmlservice.aspects.uml;
 
 import java.util.Collection;
 import java.util.Collections;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xmlservice.XmlOperation;
 import com.metamatrix.metamodels.xmlservice.XmlServiceComponent;
 import com.metamatrix.metamodels.xmlservice.XmlServiceMetamodelPlugin;
@@ -63,7 +63,7 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Uml
     }
 
     protected XmlOperation assertOperation(Object eObject) {
-        ArgCheck.isInstanceOf(XmlOperation.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlOperation.class, eObject);
         return (XmlOperation)eObject;
     }    
 
@@ -73,7 +73,7 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Uml
      */
     @Override
     protected XmlServiceComponent assertXmlServiceComponent(Object eObject) {
-        ArgCheck.isInstanceOf(XmlOperation.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlOperation.class, eObject);
         return (XmlOperation)eObject;
     }
 }

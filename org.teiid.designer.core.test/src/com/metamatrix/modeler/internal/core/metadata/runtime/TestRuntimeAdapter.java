@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.eclipse.core.runtime.Path;
 import com.metamatrix.core.index.IEntryResult;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.internal.core.index.EntryResult;
 import com.metamatrix.internal.core.index.WordEntry;
 import com.metamatrix.metadata.runtime.impl.RecordFactory;
@@ -291,7 +291,7 @@ public class TestRuntimeAdapter extends TestCase {
         
         // Ensure that the field value delimiter switches with index version number
         String str = new String(word.getWord());
-        List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         List values = RecordFactory.getStrings((String)tokens.get(2), RecordFactory.CURRENT_INDEX_VERSION);
         assertEquals(1,values.size());
         assertEquals("value1,value2,value3",values.get(0)); //$NON-NLS-1$
@@ -309,7 +309,7 @@ public class TestRuntimeAdapter extends TestCase {
         
         // Ensure that the field value delimiter switches with index version number
         str = new String(word.getWord());
-        tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         Properties props = RuntimeAdapter.getProperties((String)tokens.get(2), RecordFactory.CURRENT_INDEX_VERSION);
         assertEquals(1,props.size());
         assertEquals("value1,value2,value3",props.get("name")); //$NON-NLS-1$ //$NON-NLS-2$

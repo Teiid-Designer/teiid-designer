@@ -8,7 +8,7 @@
 package com.metamatrix.rose.internal.impl;
 
 import org.eclipse.core.runtime.IStatus;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.rose.internal.IMessage;
 import com.metamatrix.rose.internal.IRoseConstants;
 
@@ -374,7 +374,7 @@ public final class Message implements
         if (text == null && error != null) {
             this.text = error.getLocalizedMessage();
             if (this.text == null) {
-                this.text = StringUtil.computeDisplayableForm(error.getClass().getSimpleName());
+                this.text = CoreStringUtil.computeDisplayableForm(error.getClass().getSimpleName());
             }
         } else {
             this.text = text;

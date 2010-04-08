@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExtension;
-import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.plugin.PluginUtilities;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.reader.StreamReader;
 import com.metamatrix.modeler.core.writer.StreamWriter;
 
@@ -85,7 +85,7 @@ public class MetabaseToolKitPlugin /*extends Plugin*/ {
      */
     public static StreamReader createStreamReaderService(final String uniqueID) throws ModelerCoreException {
         if(uniqueID == null){
-            ArgCheck.isNotNull(uniqueID,ModelerCore.Util.getString("MetabaseToolKitPlugin.The_unique_identifier_for_the_Service_may_not_be_null_24")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(uniqueID,ModelerCore.Util.getString("MetabaseToolKitPlugin.The_unique_identifier_for_the_Service_may_not_be_null_24")); //$NON-NLS-1$
         }
         
         // Initialize the map of streamReader extensions
@@ -105,7 +105,7 @@ public class MetabaseToolKitPlugin /*extends Plugin*/ {
      */
     public static StreamWriter createStreamWriterService(final String uniqueID) throws ModelerCoreException {
         if(uniqueID == null){
-            ArgCheck.isNotNull(uniqueID,ModelerCore.Util.getString("MetabaseToolKitPlugin.The_unique_identifier_for_the_Service_may_not_be_null_26")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(uniqueID,ModelerCore.Util.getString("MetabaseToolKitPlugin.The_unique_identifier_for_the_Service_may_not_be_null_26")); //$NON-NLS-1$
         }
         
         // Initialize the map of streamReader extensions
@@ -128,10 +128,10 @@ public class MetabaseToolKitPlugin /*extends Plugin*/ {
      */
     private static void loadExtensionMap(final String extensionPointID, final Map extensionMap) {
         if(extensionPointID == null){
-            ArgCheck.isNotNull(extensionPointID, ModelerCore.Util.getString("MetabaseToolKitPlugin.The_extension_ID_may_not_be_null_28")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(extensionPointID, ModelerCore.Util.getString("MetabaseToolKitPlugin.The_extension_ID_may_not_be_null_28")); //$NON-NLS-1$
         }
         if(extensionMap == null){
-            ArgCheck.isNotNull(extensionMap,ModelerCore.Util.getString("MetabaseToolKitPlugin.The_Map_reference_may_not_be_null_29")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(extensionMap,ModelerCore.Util.getString("MetabaseToolKitPlugin.The_Map_reference_may_not_be_null_29")); //$NON-NLS-1$
         }
         
 //System.err.println("loadExtensionMap for ID \""+extensionPointID+"\"");
@@ -153,10 +153,10 @@ public class MetabaseToolKitPlugin /*extends Plugin*/ {
      */
     private static Object createExtensionInstance(final String uniqueID, final Map extensionMap) throws ModelerCoreException {
         if(uniqueID == null){
-            ArgCheck.isNotNull(uniqueID, ModelerCore.Util.getString("MetabaseToolKitPlugin.The_extension_uniqueID_may_not_be_null_30")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(uniqueID, ModelerCore.Util.getString("MetabaseToolKitPlugin.The_extension_uniqueID_may_not_be_null_30")); //$NON-NLS-1$
         }
         if(extensionMap == null){
-            ArgCheck.isNotNull(extensionMap,ModelerCore.Util.getString("MetabaseToolKitPlugin.The_Map_reference_may_not_be_null_31")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(extensionMap,ModelerCore.Util.getString("MetabaseToolKitPlugin.The_Map_reference_may_not_be_null_31")); //$NON-NLS-1$
         }
         
         // Attempt to lookup the extension by name
@@ -171,7 +171,7 @@ public class MetabaseToolKitPlugin /*extends Plugin*/ {
     
     private static Object createExecutableExtension(IExtension extension) throws ModelerCoreException {
         if(extension == null){
-            ArgCheck.isNotNull(extension,ModelerCore.Util.getString("MetabaseToolKitPlugin.The_IExtension_reference_may_not_be_null_34")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(extension,ModelerCore.Util.getString("MetabaseToolKitPlugin.The_IExtension_reference_may_not_be_null_34")); //$NON-NLS-1$
         }
         
         try {

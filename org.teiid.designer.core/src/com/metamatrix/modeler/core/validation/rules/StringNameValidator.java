@@ -20,7 +20,7 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreRuntimeException;
 
@@ -180,7 +180,7 @@ public class StringNameValidator {
      * @return a message stating what is wrong with the name, or null if the name is considered valid
      */
     public String checkNameLength( final String name ) {
-        ArgCheck.isNotNull(name);
+        CoreArgCheck.isNotNull(name);
         final int strLength = name.length();
         if (strLength < getMinimumLength()) {
             final Object[] params = new Object[] {new Integer(getMinimumLength())};
@@ -206,7 +206,7 @@ public class StringNameValidator {
      * @return a message stating what is wrong with the name, or null if the name is considered valid
      */
     public String checkNameCharacters( final String name ) {
-        ArgCheck.isNotNull(name);
+        CoreArgCheck.isNotNull(name);
 
         // Go through the string and ensure that each character is valid ...
         CharacterIterator charIter = new StringCharacterIterator(name);
@@ -257,7 +257,7 @@ public class StringNameValidator {
      * @return a message stating what is wrong with the name, or null if the name is considered valid
      */
     public String checkInvalidCharacters( final String name ) {
-        ArgCheck.isNotNull(name);
+        CoreArgCheck.isNotNull(name);
 
         // Go through the string and ensure that each character is valid ...
         CharacterIterator charIter = new StringCharacterIterator(name);
@@ -369,9 +369,9 @@ public class StringNameValidator {
                                    final List siblings,
                                    final int nameFeatureID ) {
 
-        ArgCheck.isNotNull(name);
-        ArgCheck.isNotNull(eObject);
-        ArgCheck.isNotNull(siblings);
+        CoreArgCheck.isNotNull(name);
+        CoreArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(siblings);
 
         // get the metamodel URI for the eObject
         final String eObjUri = eObject.eClass().getEPackage().getNsURI();
@@ -422,7 +422,7 @@ public class StringNameValidator {
      */
     public Map getDuplicateNamesMap( final List siblings,
                                      final int nameFeatureID ) {
-        ArgCheck.isNotNull(siblings);
+        CoreArgCheck.isNotNull(siblings);
 
         // ---------------------------------------------
         // Defect 22095 - needed to improve validation performance
@@ -494,7 +494,7 @@ public class StringNameValidator {
      */
     public Map getDuplicateNamesMap( final List features ) {
 
-        ArgCheck.isNotNull(features);
+        CoreArgCheck.isNotNull(features);
 
         Map objectCountMap = new HashMap();
 
@@ -564,7 +564,7 @@ public class StringNameValidator {
      */
     public String createValidName( final String name,
                                    final boolean performValidityCheck ) {
-        ArgCheck.isNotNull(name);
+        CoreArgCheck.isNotNull(name);
         if (performValidityCheck) {
             // Check whether the name is valid ...
             if (isValidName(name)) {
@@ -658,7 +658,7 @@ public class StringNameValidator {
      */
     public String createUniqueName( final String name,
                                     final Collection existingNames ) {
-        ArgCheck.isNotNull(name);
+        CoreArgCheck.isNotNull(name);
         if (existingNames == null || existingNames.isEmpty()) {
             return null;
         }

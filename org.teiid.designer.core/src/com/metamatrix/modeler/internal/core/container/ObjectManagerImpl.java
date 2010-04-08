@@ -11,7 +11,7 @@ import java.util.Collection;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.container.ObjectManager;
 import com.metamatrix.modeler.core.resource.XResource;
 import com.metamatrix.modeler.internal.core.resource.xmi.MtkXmiResourceImpl;
@@ -25,7 +25,7 @@ public class ObjectManagerImpl implements ObjectManager {
 	private final ContainerImpl container;
 
 	public ObjectManagerImpl( final ContainerImpl container ) {
-		ArgCheck.isNotNull(container);
+		CoreArgCheck.isNotNull(container);
 		this.container = container;
 	}
 
@@ -45,7 +45,7 @@ public class ObjectManagerImpl implements ObjectManager {
 	 * @see com.metamatrix.modeler.core.container.ObjectManager#findEObject(java.lang.String)
 	 */
 	public EObject findEObject( String id ) {
-		ArgCheck.isNotNull(id);
+		CoreArgCheck.isNotNull(id);
 
 		// loop through resource sets resources, calling resource.getEObject()
 		for (Resource resrc : container.getResources()) {
@@ -69,7 +69,7 @@ public class ObjectManagerImpl implements ObjectManager {
 	 */
 	public EObject findEObject( String id,
 	                            Resource resource ) {
-		ArgCheck.isNotNull(resource);
+		CoreArgCheck.isNotNull(resource);
 		return resource.getEObject(id);
 	}
 
@@ -79,7 +79,7 @@ public class ObjectManagerImpl implements ObjectManager {
 	 * @see com.metamatrix.modeler.core.container.ObjectManager#getObjectId(org.eclipse.emf.ecore.EObject)
 	 */
 	public String getObjectId( EObject object ) {
-		ArgCheck.isNotNull(object);
+		CoreArgCheck.isNotNull(object);
 		Resource resrc = object.eResource();
 		if (resrc == null) {
 

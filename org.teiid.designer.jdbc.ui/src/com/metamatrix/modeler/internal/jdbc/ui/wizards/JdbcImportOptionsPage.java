@@ -47,7 +47,7 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -423,7 +423,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
                     // check if supports catalogs.  (i.e. catalog name == NULL or empty);
                     String finalCatalogTerm = catalogTerm;
                     if( !supportsCatalogs ) {
-                        finalCatalogTerm = StringUtil.Constants.EMPTY_STRING;
+                        finalCatalogTerm = CoreStringUtil.Constants.EMPTY_STRING;
                     }
 
                     initializeIncludeCheckBox(this.catalogCheckBox, finalCatalogTerm, this.importSettings.isCreateCatalogsInModel());
@@ -871,7 +871,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
             checkBox.dispose();
             ((Composite)getControl()).layout();
         } else {
-            checkBox.setText(StringUtil.computeDisplayableForm(term));
+            checkBox.setText(CoreStringUtil.computeDisplayableForm(term));
             checkBox.setSelection(selected);
         }
     }

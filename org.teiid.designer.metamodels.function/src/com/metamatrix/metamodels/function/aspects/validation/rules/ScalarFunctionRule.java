@@ -9,8 +9,8 @@ package com.metamatrix.metamodels.function.aspects.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.function.FunctionPlugin;
 import com.metamatrix.metamodels.function.PushDownType;
@@ -36,7 +36,7 @@ public class ScalarFunctionRule implements ObjectValidationRule {
      * @see com.metamatrix.modeler.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, com.metamatrix.modeler.core.validation.ValidationContext)
      */
     public void validate(EObject eObject, ValidationContext context) {
-        ArgCheck.isInstanceOf(ScalarFunction.class, eObject);
+        CoreArgCheck.isInstanceOf(ScalarFunction.class, eObject);
 
         // create a validationResult to add problems to        
         ValidationResult result = new ValidationResultImpl(eObject);
@@ -52,7 +52,7 @@ public class ScalarFunctionRule implements ObjectValidationRule {
 
         // validate invocation class 
         String invocationClass = sFunction.getInvocationClass();
-        if(StringUtil.isEmpty(invocationClass) && !sFunction.getPushDown().equals(PushDownType.REQUIRED_LITERAL)) {
+        if(CoreStringUtil.isEmpty(invocationClass) && !sFunction.getPushDown().equals(PushDownType.REQUIRED_LITERAL)) {
             ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR ,FunctionPlugin.Util.getString("ScalarFunctionRule.Invocation_class_must_be_specified_on_a_scalar_function._1")); //$NON-NLS-1$
             result.addProblem(problem);
         } else {
@@ -61,7 +61,7 @@ public class ScalarFunctionRule implements ObjectValidationRule {
 
         //  validate invocation method
         String invocationMethod = sFunction.getInvocationMethod();
-        if(StringUtil.isEmpty(invocationMethod) && !sFunction.getPushDown().equals(PushDownType.REQUIRED_LITERAL)) {
+        if(CoreStringUtil.isEmpty(invocationMethod) && !sFunction.getPushDown().equals(PushDownType.REQUIRED_LITERAL)) {
             ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR ,FunctionPlugin.Util.getString("ScalarFunctionRule.Invocation_method_must_be_specified_on_a_scalar_function._2")); //$NON-NLS-1$
             result.addProblem(problem);
         } else {
@@ -70,7 +70,7 @@ public class ScalarFunctionRule implements ObjectValidationRule {
 
         // validate function category
         String category = sFunction.getCategory();
-        if (StringUtil.isEmpty(category)) {
+        if (CoreStringUtil.isEmpty(category)) {
             ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR , FunctionPlugin.Util.getString("ScalarFunctionRule.Category_can_not_be_null_or_empty")); //$NON-NLS-1$
             result.addProblem(problem);
         } else {
@@ -106,7 +106,7 @@ public class ScalarFunctionRule implements ObjectValidationRule {
         // if null already validated by multiplycity rule
         if(rParam != null) {
             String paramType = rParam.getType();
-            if(StringUtil.isEmpty(paramType)) {
+            if(CoreStringUtil.isEmpty(paramType)) {
                 ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR ,FunctionPlugin.Util.getString("ScalarFunctionRule.Type_should_be_specified_on_the_return_parameter_of_a_scalar_function._7")); //$NON-NLS-1$
                 result.addProblem(problem);                
             }
@@ -122,7 +122,7 @@ public class ScalarFunctionRule implements ObjectValidationRule {
      */
     private final void validateJavaIdentifier(String identifier, String strName, boolean allowMultiple, ValidationResult result) {
         // First check first character
-        if(!StringUtil.isEmpty(identifier)) {
+        if(!CoreStringUtil.isEmpty(identifier)) {
             char firstChar = identifier.charAt(0);
             if(! Character.isJavaIdentifierStart(firstChar)) {
                 ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR , strName+FunctionPlugin.Util.getString("ScalarFunctionRule._has_invalid_first_character___10")+firstChar); //$NON-NLS-1$

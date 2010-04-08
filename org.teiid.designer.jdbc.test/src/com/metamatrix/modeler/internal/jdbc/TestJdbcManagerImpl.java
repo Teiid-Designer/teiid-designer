@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IStatus;
 import com.metamatrix.core.util.SmartTestSuite;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.jdbc.JdbcDriver;
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.JdbcFactory;
@@ -341,7 +341,7 @@ public class TestJdbcManagerImpl extends TestCase {
                 assertNotNull(c);
             } catch (ClassNotFoundException e1) {
                 fail("Unable to find class " + className + "\nin class loader over " + //$NON-NLS-1$ //$NON-NLS-2$
-                     StringUtil.toString(((URLClassLoader)loader).getURLs()));
+                     CoreStringUtil.toString(((URLClassLoader)loader).getURLs()));
             }
         }
     }

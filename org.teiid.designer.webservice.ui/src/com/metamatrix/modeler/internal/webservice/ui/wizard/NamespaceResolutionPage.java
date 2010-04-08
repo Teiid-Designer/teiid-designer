@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import com.metamatrix.core.io.FileUrl;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
 import com.metamatrix.modeler.webservice.IWebServiceModelBuilder;
@@ -530,13 +530,13 @@ public final class NamespaceResolutionPage extends AbstractWizardPage
                 } else if (theIndex == PATH_COLUMN) {
                 } else {
                     // should not happen
-                    Assertion.failed(UTIL.getString(PREFIX + "msg.unknownTableColumn", //$NON-NLS-1$
-                                                    new Object[] {Integer.toString(theIndex)}));
+                    CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unknownTableColumn", //$NON-NLS-1$
+                                                              new Object[] {Integer.toString(theIndex)}));
                 }
             } else {
                 // should not happen
-                Assertion.failed(UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
-                                                new Object[] {theElement.getClass().getName()}));
+                CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
+                                                          new Object[] {theElement.getClass().getName()}));
             }
 
             return result;
@@ -561,13 +561,13 @@ public final class NamespaceResolutionPage extends AbstractWizardPage
                     result = WebServiceUiUtil.getText(getFile(resource.getFile()));
                 } else {
                     // should not happen
-                    Assertion.failed(UTIL.getString(PREFIX + "msg.unknownTableColumn", //$NON-NLS-1$
-                                                    new Object[] {Integer.toString(theIndex)}));
+                    CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unknownTableColumn", //$NON-NLS-1$
+                                                              new Object[] {Integer.toString(theIndex)}));
                 }
             } else {
                 // should not happen
-                Assertion.failed(UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
-                                                new Object[] {theElement.getClass().getName()}));
+                CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
+                                                          new Object[] {theElement.getClass().getName()}));
             }
 
             return result;

@@ -15,7 +15,7 @@ import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**
@@ -63,7 +63,7 @@ public class SystemClipboardUtilities {
      * @throws IllegalArgumentException if the input is <code>null</code>
      */
     public static List<List<String>> convertTableData(String theTableData) {
-        ArgCheck.isNotNull(theTableData);
+        CoreArgCheck.isNotNull(theTableData);
 
         ArrayList<List<String>> arylResult = new ArrayList<List<String>>();
         final String DELIMITER = "\r\n"; //$NON-NLS-1$
@@ -117,7 +117,7 @@ public class SystemClipboardUtilities {
      */
 
     public static List<String> convertColumnData(String theRowData) {
-        ArgCheck.isNotNull(theRowData);
+        CoreArgCheck.isNotNull(theRowData);
 
         String sThisToken = ""; //$NON-NLS-1$
         String sLastToken = ""; //$NON-NLS-1$
@@ -211,7 +211,7 @@ public class SystemClipboardUtilities {
      * @return the contents or <code>null</code>
      */
     public static Object getContents(Transfer theTransferType) {
-        ArgCheck.isNotNull(theTransferType);
+        CoreArgCheck.isNotNull(theTransferType);
         return getSystemClipboard().getContents(theTransferType);
     }
     
@@ -247,7 +247,7 @@ public class SystemClipboardUtilities {
      */
     public static void setContents(Object theContent,
                                    Transfer theTransferType) {
-        ArgCheck.isNotNull(theTransferType);
+        CoreArgCheck.isNotNull(theTransferType);
         
         Clipboard cb = getSystemClipboard();
         cb.setContents(new Object[] {theContent}, new Transfer[] {theTransferType});

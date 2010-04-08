@@ -12,7 +12,7 @@ import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
 import com.metamatrix.modeler.jdbc.data.JdbcConversionException;
 import com.metamatrix.modeler.jdbc.data.Response;
@@ -82,7 +82,7 @@ public class ResultsImpl implements Results {
      */
     public Object getObject( Object row,
                              int columnIndex ) {
-        ArgCheck.isNotNull(row);
+        CoreArgCheck.isNotNull(row);
         final List record = (List)row;
         if (columnIndex >= record.size()) {
             return null;

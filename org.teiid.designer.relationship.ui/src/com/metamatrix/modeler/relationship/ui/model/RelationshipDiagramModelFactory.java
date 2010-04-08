@@ -19,7 +19,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.swt.graphics.Image;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.diagram.DiagramEntity;
@@ -844,7 +844,7 @@ public class RelationshipDiagramModelFactory extends DiagramModelFactoryImpl imp
         RelationshipLink newLink = null;
 
         if (sourceNode != null && targetNode != null) {
-            String linkRole = StringUtil.Constants.EMPTY_STRING;
+            String linkRole = CoreStringUtil.Constants.EMPTY_STRING;
             if (sourceNode instanceof FocusModelNode) {
                 linkRole = ((FocusModelNode)sourceNode).getRole();
             } else if (targetNode instanceof FocusModelNode) {

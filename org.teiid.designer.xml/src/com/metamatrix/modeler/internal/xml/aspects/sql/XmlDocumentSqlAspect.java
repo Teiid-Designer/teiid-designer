@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.common.vdb.SystemVdbUtility;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xml.XmlAttribute;
 import com.metamatrix.metamodels.xml.XmlDocument;
 import com.metamatrix.metamodels.xml.XmlElement;
@@ -55,7 +55,7 @@ public class XmlDocumentSqlAspect extends AbstractXmlDocumentEntitySqlAspect imp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#isSystem(org.eclipse.emf.ecore.EObject)
      */
     public boolean isSystem(EObject eObject) {
-        ArgCheck.isInstanceOf(XmlDocument.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlDocument.class, eObject);
         String modelName = getModelName(eObject);
         if (modelName != null && SystemVdbUtility.isSystemModelWithSystemTableType(modelName)) {
             return true;
@@ -82,7 +82,7 @@ public class XmlDocumentSqlAspect extends AbstractXmlDocumentEntitySqlAspect imp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
     public String getName(EObject eObject) {
-        ArgCheck.isInstanceOf(XmlDocument.class,eObject);
+        CoreArgCheck.isInstanceOf(XmlDocument.class,eObject);
         final XmlDocument doc = (XmlDocument)eObject;
         return doc.getName();
     }
@@ -105,7 +105,7 @@ public class XmlDocumentSqlAspect extends AbstractXmlDocumentEntitySqlAspect imp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#getColumns(org.eclipse.emf.ecore.EObject)
      */
     public List getColumns(EObject eObject) {
-        ArgCheck.isInstanceOf(XmlDocument.class,eObject);
+        CoreArgCheck.isInstanceOf(XmlDocument.class,eObject);
         final XmlDocument doc = (XmlDocument)eObject;
         // collect all the elements and attributes of the document
         // as columns
@@ -192,7 +192,7 @@ public class XmlDocumentSqlAspect extends AbstractXmlDocumentEntitySqlAspect imp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#getTableType(org.eclipse.emf.ecore.EObject)
      */
     public int getTableType(EObject eObject) {
-        ArgCheck.isInstanceOf(XmlDocument.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlDocument.class, eObject);
         return MetadataConstants.TABLE_TYPES.DOCUMENT_TYPE;
     }
 
@@ -216,8 +216,8 @@ public class XmlDocumentSqlAspect extends AbstractXmlDocumentEntitySqlAspect imp
      * @since 4.3
      */
     public boolean canAcceptTransformationSource(EObject target, EObject source) {
-        ArgCheck.isInstanceOf(XmlDocument.class,target);
-        ArgCheck.isNotNull(source);
+        CoreArgCheck.isInstanceOf(XmlDocument.class,target);
+        CoreArgCheck.isNotNull(source);
         return false;
     }
 
@@ -226,8 +226,8 @@ public class XmlDocumentSqlAspect extends AbstractXmlDocumentEntitySqlAspect imp
      * @since 4.3
      */
     public boolean canBeTransformationSource(EObject source, EObject target) {
-        ArgCheck.isInstanceOf(XmlDocument.class,source);
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isInstanceOf(XmlDocument.class,source);
+        CoreArgCheck.isNotNull(target);
         // no object should be source of itself
         if(source == target) {
             return false;

@@ -40,7 +40,7 @@ import com.metamatrix.common.namedobject.BaseID;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -207,7 +207,7 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
         // bindings must have a type
         if (this.currentType != null) {
             // bindings must have a name
-            if (!StringUtil.isEmpty(getNewBindingName())) {
+            if (!CoreStringUtil.isEmpty(getNewBindingName())) {
                 if (this.binding == null) createBinding = true;
                 else if (this.binding.getComponentTypeID() == this.currentTypeID) {
                     // types are the same. only create if adding to configuration

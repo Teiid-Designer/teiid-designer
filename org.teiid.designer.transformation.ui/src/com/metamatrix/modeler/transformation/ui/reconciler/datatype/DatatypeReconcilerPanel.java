@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect;
 import com.metamatrix.modeler.internal.transformation.util.RuntimeTypeConverter;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
@@ -354,7 +354,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         Label rtTypeLabel = WidgetFactory.createLabel(attrGroup, RUNTIME_TYPE_TXT);
         GridData gdRT = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.VERTICAL_ALIGN_BEGINNING, false, false, 2, 1);
         rtTypeLabel.setLayoutData(gdRT);
-        WidgetFactory.createLabel(attrGroup, StringUtil.Constants.EMPTY_STRING);
+        WidgetFactory.createLabel(attrGroup, CoreStringUtil.Constants.EMPTY_STRING);
 
         // --------------------------------------
         // Attribute RuntimeType Label
@@ -593,7 +593,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
 
         String convertedSymbol = binding.getSqlConversionText();
         int lossOfPrecIndex = convertedSymbol.indexOf('\n');
-        String warningText = StringUtil.Constants.EMPTY_STRING;
+        String warningText = CoreStringUtil.Constants.EMPTY_STRING;
         if (lossOfPrecIndex > -1) {
             warningText = convertedSymbol.substring(lossOfPrecIndex + 1, convertedSymbol.length());
             convertedSymbol = convertedSymbol.substring(0, lossOfPrecIndex);
@@ -728,7 +728,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
             // Update the available conversion label
             String convertedSymbol = binding.getSqlConversionText();
             int lossOfPrecIndex = convertedSymbol.indexOf('\n');
-            String warningText = StringUtil.Constants.EMPTY_STRING;
+            String warningText = CoreStringUtil.Constants.EMPTY_STRING;
             if (lossOfPrecIndex > -1) {
                 warningText = convertedSymbol.substring(lossOfPrecIndex + 1, convertedSymbol.length());
                 convertedSymbol = convertedSymbol.substring(0, lossOfPrecIndex);

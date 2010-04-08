@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.relationship.NavigationContext;
 import com.metamatrix.modeler.relationship.NavigationContextException;
 import com.metamatrix.modeler.relationship.NavigationContextInfo;
@@ -38,7 +38,7 @@ public class NavigationHistoryImpl implements NavigationHistory {
      */
     public NavigationHistoryImpl(final NavigationContextCache cache) {
         super();
-        ArgCheck.isNotNull(cache);
+        CoreArgCheck.isNotNull(cache);
         this.navContextCache = cache;
         this.backInfos = new LinkedList();
         this.forwardInfos = new LinkedList();
@@ -226,7 +226,7 @@ public class NavigationHistoryImpl implements NavigationHistory {
      * @see com.metamatrix.modeler.relationship.NavigationHistory#navigateTo(com.metamatrix.modeler.relatoinship.NavigationNode)
      */
     public NavigationContext navigateTo(NavigationNode focusObject) throws NavigationContextException {
-        ArgCheck.isNotNull(focusObject);
+        CoreArgCheck.isNotNull(focusObject);
         final URI uri = focusObject.getModelObjectUri();
         if (uri == null) {
             final String msg = RelationshipPlugin.Util.getString("NavigationContextInfo.Unable_to_obtain_URI_for_supplied_object", focusObject); //$NON-NLS-1$
@@ -239,7 +239,7 @@ public class NavigationHistoryImpl implements NavigationHistory {
       * @see com.metamatrix.modeler.relationship.NavigationHistory#navigateTo(org.eclipse.emf.ecore.EObject)
       */
     public NavigationContext navigateTo(EObject focusObject) throws NavigationContextException {
-        ArgCheck.isNotNull(focusObject);
+        CoreArgCheck.isNotNull(focusObject);
         final URI uri = this.navContextCache.getResolver().getUri(focusObject);
         if (uri == null) {
             final String msg = RelationshipPlugin.Util.getString("NavigationContextInfo.Unable_to_obtain_URI_for_supplied_object", focusObject); //$NON-NLS-1$
@@ -252,7 +252,7 @@ public class NavigationHistoryImpl implements NavigationHistory {
      * @see com.metamatrix.modeler.relationship.NavigationHistory#navigateTo(org.eclipse.emf.common.util.URI)
      */
     public synchronized NavigationContext navigateTo(final URI focusObjectUri) throws NavigationContextException {
-        ArgCheck.isNotNull(focusObjectUri);
+        CoreArgCheck.isNotNull(focusObjectUri);
 
         EObject eObject = null;
         try {
@@ -288,7 +288,7 @@ public class NavigationHistoryImpl implements NavigationHistory {
      */
     public synchronized NavigationContext navigateTo(final URI focusObjectUri, final EObject eObject)
         throws NavigationContextException {
-        ArgCheck.isNotNull(focusObjectUri);
+        CoreArgCheck.isNotNull(focusObjectUri);
         final NavigationContextInfo info = new NavigationContextInfo(eObject,focusObjectUri.toString());
         // Get the navigation context for the info ...
         final NavigationContext selected = this.navContextCache.getNavigationContext(info);

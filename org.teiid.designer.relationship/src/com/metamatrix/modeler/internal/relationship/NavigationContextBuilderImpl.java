@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.MetamodelRegistry;
 import com.metamatrix.modeler.core.search.commands.FindRelatedObjectsCommand;
@@ -47,7 +47,7 @@ public class NavigationContextBuilderImpl implements NavigationContextBuilder {
      * @see com.metamatrix.modeler.relationship.NavigationContextBuilder#buildNavigationContext(com.metamatrix.modeler.relationship.NavigationContextInfo)
      */
     public NavigationContext buildNavigationContext( NavigationContextInfo info ) {
-        Assertion.isNotNull(info);
+        CoreArgCheck.isNotNull(info);
         this.info = info;
 
         setFocusNode(null);

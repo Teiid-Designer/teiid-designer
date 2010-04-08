@@ -20,8 +20,8 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EPackage;
 import org.osgi.framework.Bundle;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelInitializer;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -99,9 +99,9 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
     public MetamodelDescriptorImpl(final String theNamespaceURI,
                                    final String ePackageClassName,
                                    final Bundle bundle ) {
-        ArgCheck.isNotZeroLength(theNamespaceURI);
-        ArgCheck.isNotZeroLength(ePackageClassName);
-        ArgCheck.isNotNull(bundle);
+        CoreArgCheck.isNotZeroLength(theNamespaceURI);
+        CoreArgCheck.isNotZeroLength(ePackageClassName);
+        CoreArgCheck.isNotNull(bundle);
 
         this.namespaceURI = theNamespaceURI;
         this.ePackageClassLoader = new DescriptorClassLoader(ePackageClassName, bundle);
@@ -212,7 +212,7 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      */
     public String[] getAlternateNamespaceURIs() {
         if (this.alternateNamespaceURIs == null || this.alternateNamespaceURIs.isEmpty()) {
-            return StringUtil.Constants.EMPTY_STRING_ARRAY;
+            return CoreStringUtil.Constants.EMPTY_STRING_ARRAY;
         }
         String[] result = new String[this.alternateNamespaceURIs.size()];
         return (String[])this.alternateNamespaceURIs.toArray(result);
@@ -349,7 +349,7 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @since 5.0
      */
     public MetamodelAspectFactory getAspectFactory(final Class theType) {
-        ArgCheck.isNotNull(theType);
+        CoreArgCheck.isNotNull(theType);
         if (this.aspectFactoryMap.isEmpty()) {
             initializeAspectFactoryMap();
         }
@@ -361,7 +361,7 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * @since 5.0
      */
     public MetamodelAspectFactory getAspectFactory(final String extensionID) {
-        ArgCheck.isNotZeroLength(extensionID);
+        CoreArgCheck.isNotZeroLength(extensionID);
         final Class type = (Class)EXTENSION_ID_TO_ASPECT_INTERFACE_MAP.get(extensionID);
         if (type == null) {
             final String msg = ModelerCore.Util.getString("MetamodelDescriptorImpl.Extension_ID_does_not_match_any_metamodel_aspect_class",extensionID); //$NON-NLS-1$
@@ -383,7 +383,7 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
     }
 
     public void setFileExtension(final String string) {
-        ArgCheck.isNotZeroLength(string);
+        CoreArgCheck.isNotZeroLength(string);
         final String extension = string.trim();
         this.fileExtension = (extension.charAt(0) == '.' ? extension : "."+extension); //$NON-NLS-1$
     }
@@ -393,14 +393,14 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
     }
 
     public void setProperties(final Properties properties) {
-        ArgCheck.isNotNull(properties);
+        CoreArgCheck.isNotNull(properties);
         this.properties = properties;
 
         addDefaultPropertyValues(this.properties);
     }
 
     public void addAlternateNamespaceURI(final String alternateNamespaceURI) {
-        ArgCheck.isNotZeroLength(alternateNamespaceURI);
+        CoreArgCheck.isNotZeroLength(alternateNamespaceURI);
 
         if ( !this.alternateNamespaceURIs.contains(alternateNamespaceURI) ) {
             this.alternateNamespaceURIs.add(alternateNamespaceURI);
@@ -408,7 +408,7 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
     }
 
     public void addAllowableModelType(final String modelTypeName) {
-        ArgCheck.isNotZeroLength(modelTypeName);
+        CoreArgCheck.isNotZeroLength(modelTypeName);
 
         ModelType type = ModelType.get(modelTypeName);
         if (type != null && !this.allowableModelTypes.contains(type)) {
@@ -417,7 +417,7 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
     }
 
     public void addRootClassDescriptor(final MetamodelRootClassDescriptor descriptor) {
-        ArgCheck.isNotNull(descriptor);
+        CoreArgCheck.isNotNull(descriptor);
 
         for (Iterator i = this.rootClassDescriptors.iterator(); i.hasNext();) {
             final MetamodelRootClassDescriptor d = (MetamodelRootClassDescriptor)i.next();
@@ -440,10 +440,10 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
     public void addAspectFactoryBundle( final String extensionPointID,
 	                                    final String className,
 	                                    final Bundle bundle ) {
-        ArgCheck.isNotZeroLength(extensionPointID);
+        CoreArgCheck.isNotZeroLength(extensionPointID);
 
         // Map the extensionPointID to the metamodel aspect that it represents
-        final String extensionID = StringUtil.getLastToken(extensionPointID,ModelerCore.DELIMITER);
+        final String extensionID = CoreStringUtil.getLastToken(extensionPointID,ModelerCore.DELIMITER);
         final Class type = (Class)EXTENSION_ID_TO_ASPECT_INTERFACE_MAP.get(extensionID);
         if (type == null) {
             final String msg = ModelerCore.Util.getString("MetamodelDescriptorImpl.Extension_ID_does_not_match_any_metamodel_aspect_class",extensionID); //$NON-NLS-1$
@@ -509,7 +509,7 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
      * ERegister.getPackage() or null.
      */
     protected EPackage getPackageForURI(final String uriString) {
-        if (StringUtil.isEmpty(uriString)) {
+        if (CoreStringUtil.isEmpty(uriString)) {
             return null;
         }
 
@@ -647,8 +647,8 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
 
         public DescriptorClassLoader( final String className,
 		                              final Bundle bundle ) {
-            ArgCheck.isNotZeroLength(className);
-            ArgCheck.isNotNull(bundle);
+            CoreArgCheck.isNotZeroLength(className);
+            CoreArgCheck.isNotNull(bundle);
             this.className          = className;
             this.bundle = bundle;
             this.loadClassFailure   = false;

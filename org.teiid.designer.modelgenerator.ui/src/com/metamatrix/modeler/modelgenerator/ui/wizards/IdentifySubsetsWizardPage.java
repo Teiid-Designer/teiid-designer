@@ -13,7 +13,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import com.metamatrix.core.event.EventObjectListener;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceSelections;
 import com.metamatrix.modeler.modelgenerator.ui.ModelGeneratorUiConstants;
 import com.metamatrix.ui.internal.util.WizardUtil;
@@ -24,7 +24,7 @@ import com.metamatrix.ui.internal.util.WizardUtil;
  */
 public class IdentifySubsetsWizardPage extends WizardPage implements EventObjectListener,
                                                                      ModelGeneratorUiConstants,
-                                                                     StringUtil.Constants {
+                                                                     CoreStringUtil.Constants {
 	//////////////////////////////////////////////////////////////////////////////////////
 	// Static variables
 	//////////////////////////////////////////////////////////////////////////////////////

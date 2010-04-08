@@ -10,7 +10,7 @@ package com.metamatrix.modeler.core.metamodel.core.aspects.uml;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.CoreMetamodelPlugin;
 import com.metamatrix.metamodels.core.extension.XPackage;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -83,7 +83,7 @@ public class XPackageUmlAspect extends AbstractExtensionUmlAspect implements Uml
     }
 
     protected XPackage assertXPackage(Object eObject) {
-        ArgCheck.isInstanceOf(XPackage.class, eObject);
+        CoreArgCheck.isInstanceOf(XPackage.class, eObject);
     
         return (XPackage)eObject;
     }

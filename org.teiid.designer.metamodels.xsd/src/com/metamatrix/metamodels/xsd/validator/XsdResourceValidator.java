@@ -33,8 +33,7 @@ import org.eclipse.xsd.XSDDiagnosticSeverity;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xsd.XsdPlugin;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -188,7 +187,7 @@ public class XsdResourceValidator implements ResourceValidator {
                           final Resource resource,
                           final IResource iResource,
                           final ValidationContext context ) throws ModelerCoreException {
-        ArgCheck.isNotNull(iResource);
+        CoreArgCheck.isNotNull(iResource);
 
         if (!ModelUtil.isXsdFile(iResource)) {
             final String msg = XsdPlugin.Util.getString("XsdResourceValidator.XsdResourceValidator_may_only_be_used_to_validate_XsdResources_1"); //$NON-NLS-1$
@@ -325,7 +324,7 @@ public class XsdResourceValidator implements ResourceValidator {
                                              final ResourceSet container ) throws Exception {
 
         // Get a ResourceFinder to use when resolving dependent resource references
-        Assertion.isNotNull(ModelerCore.getContainer(resource));
+        CoreArgCheck.isNotNull(ModelerCore.getContainer(resource));
         ResourceFinder finder = ModelerCore.getContainer(resource).getResourceFinder();
 
         if (!resource.isLoaded()) {
@@ -360,7 +359,7 @@ public class XsdResourceValidator implements ResourceValidator {
     private void validate( final IProgressMonitor monitor,
                            final Resource resource,
                            final ValidationContext context ) throws ModelerCoreException {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         // If not already done via multiple resources being validated simultaneously,
         // determine all XSD's involved, and unload & reload them.

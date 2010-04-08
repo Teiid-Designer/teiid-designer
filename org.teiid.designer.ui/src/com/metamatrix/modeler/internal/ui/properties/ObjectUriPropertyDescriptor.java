@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -99,7 +99,7 @@ class ObjectUriPropertyDescriptor implements ITransientPropertyDescriptor,
             try {
                 String namespaceUri = model.getModelAnnotation().getNamespaceUri();
 
-                if (!StringUtil.isEmpty(namespaceUri)) {
+                if (!CoreStringUtil.isEmpty(namespaceUri)) {
                     result = new StringBuffer().append(namespaceUri)
                                                .append(DatatypeConstants.URI_REFERENCE_DELIMITER)
                                                .append(ModelerCore.getObjectIdString(obj))

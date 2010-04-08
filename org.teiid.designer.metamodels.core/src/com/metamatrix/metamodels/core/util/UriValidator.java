@@ -10,9 +10,9 @@ package com.metamatrix.metamodels.core.util;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metamodels.core.CoreMetamodelPlugin;
 
 /**
@@ -374,7 +374,7 @@ public class UriValidator {
     public static boolean isValid( String theUri ) { // NO_UCD
         boolean result = false;
 
-        if (StringUtil.isEmpty(theUri)) {
+        if (CoreStringUtil.isEmpty(theUri)) {
             // clearing the URI is OK
             result = true;
         } else {
@@ -399,7 +399,7 @@ public class UriValidator {
     public static IStatus validate( String theUri ) {
         IStatus result = null;
 
-        if (!StringUtil.isEmpty(theUri)) {
+        if (!CoreStringUtil.isEmpty(theUri)) {
             try {
                 URI.createURI(theUri);
             } catch (IllegalArgumentException theException) {
@@ -418,7 +418,7 @@ public class UriValidator {
                     } else if (uriMsg.indexOf("opaquePart") != -1) { //$NON-NLS-1$
                         component = UriComponents.OPAQUE_PART;
                     } else if (uriMsg.indexOf("authority") != -1) { //$NON-NLS-1$
-                        if (StringUtil.startsWithIgnoreCase(theUri, "jar")) { //$NON-NLS-1$
+                        if (CoreStringUtil.startsWithIgnoreCase(theUri, "jar")) { //$NON-NLS-1$
                             component = UriComponents.JAR_AUTHORITY;
                         } else {
                             component = UriComponents.AUTHORITY;
@@ -660,7 +660,7 @@ public class UriValidator {
      * @see URI#validSegments(java.lang.String[])
      */
     public static boolean isValidSegments( String[] theSegments ) throws AssertionError { // NO_UCD
-        Assertion.isNotNull(theSegments, createNullValueMessage(UriComponents.SEGMENTS));
+        CoreArgCheck.isNotNull(theSegments, createNullValueMessage(UriComponents.SEGMENTS));
         return URI.validSegments(theSegments);
     }
 
@@ -674,7 +674,7 @@ public class UriValidator {
      * @see URI#validSegments(java.lang.String[])
      */
     public static IStatus validateSegments( String[] theSegments ) throws AssertionError { // NO_UCD
-        Assertion.isNotNull(theSegments, createNullValueMessage(UriComponents.SEGMENTS));
+        CoreArgCheck.isNotNull(theSegments, createNullValueMessage(UriComponents.SEGMENTS));
 
         IStatus result = null;
 

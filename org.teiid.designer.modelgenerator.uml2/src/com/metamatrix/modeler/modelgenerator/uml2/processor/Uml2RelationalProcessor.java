@@ -10,8 +10,8 @@ package com.metamatrix.modeler.modelgenerator.uml2.processor;
 import java.util.LinkedList;
 import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
-import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.selection.TreeSelection;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.compare.ModelProducer;
@@ -55,14 +55,14 @@ public class Uml2RelationalProcessor implements ModelProducer {
                                     final DatatypeFinder datatypeFinder, final String desc,
                                     final RelationalFragmentGenerator fragmentGenerator ) {
         super();
-        ArgCheck.isNotNull(uml2InputSelections);
-        ArgCheck.isNotNull(inputModelSelectors);
-        ArgCheck.isPositive(inputModelSelectors.size());
-        ArgCheck.isNotNull(relationalOutputModelSelector);
-        ArgCheck.isNotNull(options);
-        ArgCheck.isNotNull(relationTracker);
-        ArgCheck.isNotNull(datatypeFinder);
-        ArgCheck.isNotNull(fragmentGenerator);
+        CoreArgCheck.isNotNull(uml2InputSelections);
+        CoreArgCheck.isNotNull(inputModelSelectors);
+        CoreArgCheck.isPositive(inputModelSelectors.size());
+        CoreArgCheck.isNotNull(relationalOutputModelSelector);
+        CoreArgCheck.isNotNull(options);
+        CoreArgCheck.isNotNull(relationTracker);
+        CoreArgCheck.isNotNull(datatypeFinder);
+        CoreArgCheck.isNotNull(fragmentGenerator);
         this.uml2InputSelections = uml2InputSelections;
         this.inputModelSelectors = inputModelSelectors;
         this.relationalOutputModelSelector = relationalOutputModelSelector;

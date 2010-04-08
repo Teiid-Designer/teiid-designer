@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.modeler.util.FileUtil;
 import com.metamatrix.core.modeler.util.FileUtil.Extensions;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 
 public class UdfModelImporter {
@@ -206,7 +206,7 @@ public class UdfModelImporter {
     private void updateState() {
         this.sourceStatus = null;
 
-        if (StringUtil.isEmpty(this.sourcePath)) {
+        if (CoreStringUtil.isEmpty(this.sourcePath)) {
             this.sourceStatus = UdfPlugin.createErrorStatus(PREFIX + "missingImportArchivePath"); //$NON-NLS-1$;
         } else {
             File importZip = new File(this.sourcePath);

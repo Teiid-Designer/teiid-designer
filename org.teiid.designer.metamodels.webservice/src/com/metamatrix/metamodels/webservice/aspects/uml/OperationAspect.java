@@ -9,7 +9,7 @@ package com.metamatrix.metamodels.webservice.aspects.uml;
 
 import java.util.Collection;
 import java.util.Collections;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.metamodels.webservice.WebServiceComponent;
 import com.metamatrix.metamodels.webservice.WebServiceMetamodelPlugin;
@@ -62,7 +62,7 @@ public class OperationAspect extends WebServiceComponentAspect implements UmlCla
     }
 
     protected Operation assertOperation( Object eObject ) { // NO_UCD
-        ArgCheck.isInstanceOf(Operation.class, eObject);
+        CoreArgCheck.isInstanceOf(Operation.class, eObject);
         return (Operation)eObject;
     }
 
@@ -72,7 +72,7 @@ public class OperationAspect extends WebServiceComponentAspect implements UmlCla
      */
     @Override
     protected WebServiceComponent assertWebServiceComponent( Object eObject ) {
-        ArgCheck.isInstanceOf(Operation.class, eObject);
+        CoreArgCheck.isInstanceOf(Operation.class, eObject);
         return (Operation)eObject;
     }
 }

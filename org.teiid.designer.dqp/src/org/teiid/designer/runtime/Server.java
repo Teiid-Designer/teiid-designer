@@ -8,7 +8,7 @@
 package org.teiid.designer.runtime;
 
 import org.teiid.adminapi.AdminFactory;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.HashCodeUtil;
 
 /**
@@ -86,9 +86,9 @@ public class Server {
                    String password,
                    boolean persistPassword,
                    EventManager eventManager ) {
-        ArgCheck.isNotNull(url, "url"); //$NON-NLS-1$
-        ArgCheck.isNotNull(user, "user"); //$NON-NLS-1$
-        ArgCheck.isNotNull(eventManager, "eventManager"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(url, "url"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(user, "user"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(eventManager, "eventManager"); //$NON-NLS-1$
 
         this.url = url;
         this.user = user;
@@ -176,7 +176,7 @@ public class Server {
      * @throws IllegalArgumentException if the argument is <code>null</code>
      */
     public boolean hasSameKey( Server otherServer ) {
-        ArgCheck.isNotNull(otherServer, "otherServer"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(otherServer, "otherServer"); //$NON-NLS-1$
         return (equivalent(this.url, otherServer.url) && equivalent(this.user, otherServer.user));
     }
 

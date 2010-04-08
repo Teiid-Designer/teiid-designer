@@ -21,9 +21,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingRoot;
 import com.metamatrix.common.types.DataTypeManager;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Column;
@@ -100,7 +99,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
      */
     public void validate( final EObject eObject,
                           final ValidationContext context ) {
-        ArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
         SqlTransformationMappingRoot transRoot = (SqlTransformationMappingRoot)eObject;
 
         // create a validation result for the virtual group
@@ -185,7 +184,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
     public void validateSourcesAndTargets( final SqlTransformationMappingRoot transRoot,
                                            final ValidationResult validationResult ) {
         EObject target = transRoot.getTarget();
-        Assertion.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
         final Container container = ModelerCore.getContainer(transRoot);
         if (container == null) {
             return;
@@ -1168,7 +1167,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                                 result.addProblem(warningProblem);
                                 return;
                             }
-                        } else if (StringUtil.endsWithIgnoreCase(tableFullName, groupName)) {
+                        } else if (CoreStringUtil.endsWithIgnoreCase(tableFullName, groupName)) {
                             if (!partialNamesMatched.contains(tableFullName.toUpperCase())) {
                                 partialNamesMatched.add(tableFullName.toUpperCase());
                                 if (isMaterialized) {

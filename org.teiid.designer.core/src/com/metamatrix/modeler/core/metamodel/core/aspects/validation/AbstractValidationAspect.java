@@ -10,7 +10,7 @@ package com.metamatrix.modeler.core.metamodel.core.aspects.validation;
 import java.util.Collection;
 import java.util.Iterator;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AbstractMetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
@@ -39,7 +39,7 @@ public abstract class AbstractValidationAspect extends AbstractMetamodelAspect i
 	}    
 
 	protected void addRule(final ValidationRule rule) {
-		ArgCheck.isNotNull(rule);
+		CoreArgCheck.isNotNull(rule);
 		if(ruleSet == null) {
 			ruleSet = new ValidationRuleSetImpl();
 		}
@@ -47,7 +47,7 @@ public abstract class AbstractValidationAspect extends AbstractMetamodelAspect i
 	}
 
 	protected void addRules(final Collection rules) {
-		ArgCheck.isNotNull(rules);
+		CoreArgCheck.isNotNull(rules);
 		if(rules == null) {
 			return;
 		}

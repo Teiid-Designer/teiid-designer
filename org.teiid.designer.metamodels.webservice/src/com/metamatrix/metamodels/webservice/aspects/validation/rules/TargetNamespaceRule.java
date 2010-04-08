@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.webservice.aspects.validation.rules;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDComponent;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.webservice.Message;
 import com.metamatrix.metamodels.webservice.WebServiceMetamodelPlugin;
 import com.metamatrix.modeler.core.validation.ObjectValidationRule;
@@ -40,8 +40,8 @@ public final class TargetNamespaceRule implements
      */
     public void validate(final EObject eObject,
                          final ValidationContext context) {
-        ArgCheck.isInstanceOf(Message.class, eObject);
-        ArgCheck.isNotNull(context);
+        CoreArgCheck.isInstanceOf(Message.class, eObject);
+        CoreArgCheck.isNotNull(context);
 
         final Message msg = (Message)eObject;
         XSDComponent comp = msg.getContentElement();

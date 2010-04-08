@@ -22,8 +22,8 @@ import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
 import com.metamatrix.common.vdb.ModelInfo;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
@@ -54,7 +54,7 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
      * @since 4.3
      */
     public ModelConnectorBindingMapperImpl( final Vdb vdb ) throws Exception {
-        ArgCheck.isNotNull(vdb);
+        CoreArgCheck.isNotNull(vdb);
         this.vdb = vdb;
     }
 
@@ -140,9 +140,9 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
                 final ConnectorType connectorType = (ConnectorType)iter1.next();
                 final Properties connectorTypeProps = connectorType.getDefaultPropertyValues();
                 final String driverClassName = connectorTypeProps.getProperty(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
-                if (StringUtil.isEmpty(driverClassName)) continue;
+                if (CoreStringUtil.isEmpty(driverClassName)) continue;
                 final String jdbcClassName = (String)jdbcProperties.get(JDBCConnectionPropertyNames.JDBC_IMPORT_DRIVER_CLASS);
-                if (StringUtil.isEmpty(jdbcClassName) || !driverClassName.equalsIgnoreCase(jdbcClassName)) continue;
+                if (CoreStringUtil.isEmpty(jdbcClassName) || !driverClassName.equalsIgnoreCase(jdbcClassName)) continue;
                 connTypes.add(connectorType);
             }
         }
@@ -239,17 +239,17 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
                 if ((defn != null) && defn.getDefaultValue() != null) user = defn.getDefaultValue().toString();
             }
 
-            if (StringUtil.isEmpty(driverClassName) || StringUtil.isEmpty(url)) continue;
+            if (CoreStringUtil.isEmpty(driverClassName) || CoreStringUtil.isEmpty(url)) continue;
             final String jdbcClassName = (String)jdbcProperties.get(JDBCConnectionPropertyNames.JDBC_IMPORT_DRIVER_CLASS);
-            if (StringUtil.isEmpty(jdbcClassName) || !driverClassName.equals(jdbcClassName)) continue;
+            if (CoreStringUtil.isEmpty(jdbcClassName) || !driverClassName.equals(jdbcClassName)) continue;
 
             final String jdbcUrl = (String)jdbcProperties.get(JDBCConnectionPropertyNames.JDBC_IMPORT_URL);
-            if (StringUtil.isEmpty(jdbcUrl) || !url.equalsIgnoreCase(jdbcUrl)) continue;
+            if (CoreStringUtil.isEmpty(jdbcUrl) || !url.equalsIgnoreCase(jdbcUrl)) continue;
 
             final String userName = (String)jdbcProperties.get(JDBCConnectionPropertyNames.JDBC_IMPORT_USERNAME);
-            if ((StringUtil.isEmpty(userName) && !StringUtil.isEmpty(user))
-                || (!StringUtil.isEmpty(userName) && StringUtil.isEmpty(user))
-                || ((!StringUtil.isEmpty(userName) && !StringUtil.isEmpty(user)) && !user.equalsIgnoreCase(userName))) continue;
+            if ((CoreStringUtil.isEmpty(userName) && !CoreStringUtil.isEmpty(user))
+                || (!CoreStringUtil.isEmpty(userName) && CoreStringUtil.isEmpty(user))
+                || ((!CoreStringUtil.isEmpty(userName) && !CoreStringUtil.isEmpty(user)) && !user.equalsIgnoreCase(userName))) continue;
 
             bindingMatches.add(connector);
         }

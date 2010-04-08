@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.jdbc.ui.ModelerJdbcUiPlugin;
 import com.metamatrix.modeler.internal.jdbc.ui.util.JdbcUiUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
@@ -81,7 +81,7 @@ import com.metamatrix.ui.internal.widget.AbstractTableLabelProvider;
  * @since 4.0
  */
 public class JdbcImportObjectsPage extends WizardPage
-    implements InternalUiConstants.Widgets, ModelerJdbcUiConstants.Images, PluginConstants.Images, StringUtil.Constants,
+    implements InternalUiConstants.Widgets, ModelerJdbcUiConstants.Images, PluginConstants.Images, CoreStringUtil.Constants,
     UiConstants {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(JdbcImportObjectsPage.class);

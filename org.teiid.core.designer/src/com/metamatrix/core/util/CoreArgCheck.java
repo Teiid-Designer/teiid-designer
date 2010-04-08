@@ -5,9 +5,10 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package com.metamatrix.core.modeler.util;
+package com.metamatrix.core.util;
 
 import java.util.Collection;
+import com.metamatrix.core.CorePlugin;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 
 /**
@@ -15,12 +16,12 @@ import com.metamatrix.core.modeler.CoreModelerPlugin;
  * are done, such as checking that an Object is non-null, checking the range of a value, etc. All of these methods throw
  * {@link #java.lang.IllegalArgumentException}.
  */
-public class ArgCheck {
+public class CoreArgCheck {
 
     /**
      * Can't construct - utility class
      */
-    private ArgCheck() {
+    private CoreArgCheck() {
     }
 
     /**
@@ -247,4 +248,163 @@ public class ArgCheck {
             throw new IllegalArgumentException(msg);
         }
     }
+
+    /**
+     * Check that two boolean values are equal
+     * 
+     * @param value1 the first boolean value
+     * @param value2 the second boolean value
+     * @throws IllegalArgumentException if booleans are not equal
+     */
+    public static final void isEqual( boolean value1,
+                                      boolean value2 ) {
+        isEqual(value1, value2, null);
+    }
+
+    /**
+     * Check that two boolean values are equal
+     * 
+     * @param value1 the first boolean value
+     * @param value2 the second boolean value
+     * @param message Exception message if check fails
+     * @throws IllegalArgumentException if booleans are not equal
+     */
+    public static final void isEqual( boolean value1,
+                                      boolean value2,
+                                      String message ) {
+        if (value1 != value2) {
+            final String msg = message != null ? message : CorePlugin.Util.getString("Assertion.isEqual", new Object[] {new Boolean(value1), new Boolean(value2)}); //$NON-NLS-1$
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
+    /**
+     * Checks if two booleans are NOT equal
+     * 
+     * @param value1 the first boolean value
+     * @param value2 the second boolean value
+     * @throws IllegalArgumentException if booleans are equal
+     */
+    public static final void isNotEqual( boolean value1,
+                                         boolean value2 ) {
+        isNotEqual(value1, value2, null);
+    }
+
+    /**
+     * Checks if two booleans are NOT equal
+     * 
+     * @param value1 the first boolean value
+     * @param value2 the second boolean value
+     * @param message Exception message if check fails
+     * @throws IllegalArgumentException if booleans are equal
+     */
+    public static final void isNotEqual( boolean value1,
+                                         boolean value2,
+                                         String message ) {
+        if (value1 == value2) {
+            final String msg = message != null ? message : CorePlugin.Util.getString("Assertion.isNotEqual", new Object[] {new Boolean(value1), new Boolean(value2)}); //$NON-NLS-1$
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
+    /**
+     * Checks if two integer values are equal
+     * 
+     * @param value1 the first integer value
+     * @param value2 the second integer value
+     * @throws IllegalArgumentException if booleans are equal
+     */
+    public static final void isEqual( int value1,
+                                      int value2 ) {
+        isEqual(value1, value2, null);
+    }
+
+    /**
+     * Checks if two integer values are equal
+     * 
+     * @param value1 the first integer value
+     * @param value2 the second integer value
+     * @param message Exception message if check fails
+     * @throws IllegalArgumentException if booleans are equal
+     */
+    public static final void isEqual( int value1,
+                                      int value2,
+                                      String message ) {
+        if (value1 != value2) {
+            final String msg = message != null ? message : CorePlugin.Util.getString("Assertion.isEqual", new Object[] {new Integer(value1), new Integer(value2)}); //$NON-NLS-1$
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
+    /**
+     * Checks if two integer values are NOT equal
+     * 
+     * @param value1 the first integer value
+     * @param value2 the second integer value
+     * @throws IllegalArgumentException if booleans are equal
+     */
+    public static final void isNotEqual( int value1,
+                                         int value2 ) {
+        isNotEqual(value1, value2, null);
+    }
+
+    /**
+     * Checks if two integer values are NOT equal
+     * 
+     * @param value1 the first integer value
+     * @param value2 the second integer value
+     * @param message Exception message if check fails
+     * @throws IllegalArgumentException if booleans are equal
+     */
+    public static final void isNotEqual( int value1,
+                                         int value2,
+                                         String message ) {
+        if (value1 == value2) {
+            final String msg = message != null ? message : CorePlugin.Util.getString("Assertion.isNotEqual", new Object[] {new Integer(value1), new Integer(value2)}); //$NON-NLS-1$
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
+    /**
+     * Compares with object1.equals(object2).
+     * 
+     * @param object1 the first object
+     * @param object2 the second object
+     * @throws IllegalArgumentException if booleans are equal
+     */
+    public static final void isEqual( Object object1,
+                                      Object object2 ) {
+        isEqual(object1, object2, null);
+    }
+
+    /**
+     * Compares with object1.equals(object2).
+     * 
+     * @param object1 the first object
+     * @param object2 the second object
+     * @param message Exception message if check fails
+     * @throws IllegalArgumentException if booleans are equal
+     */
+    public static final void isEqual( Object object1,
+                                      Object object2,
+                                      String message ) {
+        if (object1 == null) {
+            if (object2 != null) {
+                final String msg = message != null ? message : CorePlugin.Util.getString("Assertion.isEqual", new Object[] {object1, object2}); //$NON-NLS-1$
+                throw new IllegalArgumentException(msg);
+            }
+            // else both are null
+        } else {
+            if (object2 == null) {
+                final String msg = message != null ? message : CorePlugin.Util.getString("Assertion.isEqual", new Object[] {object1, object2}); //$NON-NLS-1$
+                throw new IllegalArgumentException(msg);
+            }
+            // else both are not null
+            if (!object1.equals(object2)) {
+                final String msg = message != null ? message : CorePlugin.Util.getString("Assertion.isEqual", new Object[] {object1, object2}); //$NON-NLS-1$
+                throw new IllegalArgumentException(msg);
+            }
+        }
+    }
+
 }

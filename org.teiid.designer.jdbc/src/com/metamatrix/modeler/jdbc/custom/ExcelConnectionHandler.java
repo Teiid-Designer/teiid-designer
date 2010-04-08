@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
 
 
@@ -27,8 +27,8 @@ public class ExcelConnectionHandler implements
     private File excelFile;
 
     public ExcelConnectionHandler(Connection connection, String url) {
-        ArgCheck.isNotNull(connection);
-        ArgCheck.isNotNull(url);
+        CoreArgCheck.isNotNull(connection);
+        CoreArgCheck.isNotNull(url);
         this.connection = connection;
         String fileName = getFilePath(url);
         excelFile = new File(fileName);

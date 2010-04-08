@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Text;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 import com.metamatrix.modeler.internal.jdbc.ui.util.JdbcUiUtil;
@@ -55,7 +55,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
                                                                InternalModelerJdbcUiPluginConstants,
                                                                InternalModelerJdbcUiPluginConstants.Widgets,
                                                                InternalUiConstants.Widgets,
-                                                               StringUtil.Constants {
+                                                               CoreStringUtil.Constants {
 
     // ===========================================================================================================================
     // Constants

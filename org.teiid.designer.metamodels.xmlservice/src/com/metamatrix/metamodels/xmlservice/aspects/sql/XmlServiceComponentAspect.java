@@ -8,7 +8,7 @@
 package com.metamatrix.metamodels.xmlservice.aspects.sql;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xmlservice.XmlServiceComponent;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AbstractMetamodelAspect;
@@ -33,7 +33,7 @@ public abstract class XmlServiceComponentAspect extends AbstractMetamodelAspect 
      * @since 4.2
      */
     public boolean isQueryable(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlServiceComponent.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlServiceComponent.class, eObject);
         return true;
     }
 
@@ -42,7 +42,7 @@ public abstract class XmlServiceComponentAspect extends AbstractMetamodelAspect 
      * @since 4.2
      */
     public String getName(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlServiceComponent.class, eObject); 
+        CoreArgCheck.isInstanceOf(XmlServiceComponent.class, eObject); 
         XmlServiceComponent entity = (XmlServiceComponent) eObject;       
         return entity.getName();
     }
@@ -52,7 +52,7 @@ public abstract class XmlServiceComponentAspect extends AbstractMetamodelAspect 
      * @since 4.2
      */
     public String getNameInSource(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlServiceComponent.class, eObject); 
+        CoreArgCheck.isInstanceOf(XmlServiceComponent.class, eObject); 
         XmlServiceComponent entity = (XmlServiceComponent) eObject;       
         return entity.getNameInSource();
     }

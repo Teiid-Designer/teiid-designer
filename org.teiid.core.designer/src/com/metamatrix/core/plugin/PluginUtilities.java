@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * This class provides static methods to perform the following plugin-related activities:
@@ -164,7 +164,7 @@ public abstract class PluginUtilities {
                                 String metadataPath )
         throws ClassNotFoundException, CoreException, IllegalAccessException, InvocationTargetException, MalformedURLException,
         NoSuchMethodException {
-        ArgCheck.isNotEmpty(installPath,
+        CoreArgCheck.isNotEmpty(installPath,
                             CoreModelerPlugin.Util.getString("PluginUtilities.The_installation_path_must_not_be_empty._18")); //$NON-NLS-1$
         // If it hasn't already been done, get the boot loader needed to instantiate the application extension. The boot loader
         // must be loaded using reflection since it also is defined as a plugin, and the plugin directory is not typically in the

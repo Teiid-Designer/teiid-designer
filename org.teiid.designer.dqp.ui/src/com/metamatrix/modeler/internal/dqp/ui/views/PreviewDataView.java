@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ViewPart;
 import com.metamatrix.core.util.HashCodeUtil;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.dqp.ui.actions.CopySqlResultsToClipboardAction;
 import com.metamatrix.modeler.internal.dqp.ui.actions.CopyXmlResultsToClipboardAction;
@@ -417,7 +417,7 @@ public class PreviewDataView extends AbstractPreviewDataView implements IResults
 
                     if (this.previewSaveAction.wasSaveSuccessful()) {
                         String key = UTIL.getString(prefix + "tooLargeDocumentSaved"); //$NON-NLS-1$
-                        text = key + StringUtil.Constants.DBL_SPACE + this.previewSaveAction.getFileName();
+                        text = key + CoreStringUtil.Constants.DBL_SPACE + this.previewSaveAction.getFileName();
                     } else {
                         text = UTIL.getString(prefix + "tooLargeDocumentSaveCancelled"); //$NON-NLS-1$
                     }

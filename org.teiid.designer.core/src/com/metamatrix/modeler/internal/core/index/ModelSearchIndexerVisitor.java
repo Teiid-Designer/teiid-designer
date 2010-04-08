@@ -10,7 +10,7 @@ package com.metamatrix.modeler.internal.core.index;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.util.ModelVisitor;
 import com.metamatrix.modeler.internal.core.search.runtime.SearchRuntimeAdapter;
 
@@ -67,8 +67,8 @@ public class ModelSearchIndexerVisitor implements ModelVisitor {
     protected void addIndexWord( final EObject eObject,
                                  final String modelPath,
                                  final List wordEntries ) {
-        ArgCheck.isNotNull(eObject);
-        ArgCheck.isNotNull(wordEntries);
+        CoreArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(wordEntries);
 
         // add all search words for the EObject
         SearchRuntimeAdapter.addObjectSearchWords(eObject, modelPath, wordEntries);

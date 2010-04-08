@@ -9,7 +9,7 @@ package com.metamatrix.metamodels.function.aspects.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.function.FunctionParameter;
 import com.metamatrix.metamodels.function.FunctionPlugin;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -30,7 +30,7 @@ public class FunctionParameterRule implements ObjectValidationRule {
      * @see com.metamatrix.modeler.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, com.metamatrix.modeler.core.validation.ValidationContext)
      */
     public void validate(EObject eObject, ValidationContext context) {
-        ArgCheck.isInstanceOf(FunctionParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(FunctionParameter.class, eObject);
 
         // create a validationResult to add problems to        
         ValidationResult result = new ValidationResultImpl(eObject);

@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.rose.internal.IMessage;
@@ -627,13 +627,13 @@ public final class TargetModelPage extends AbstractWizardPage implements IRoseUi
                     result = (modelName == null) ? "" : modelName; //$NON-NLS-1$
                 } else {
                     // should not happen
-                    Assertion.failed(UTIL.getString(PREFIX + "msg.unknownTableColumn", //$NON-NLS-1$
-                                                    new Object[] {Integer.toString(theIndex)}));
+                    CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unknownTableColumn", //$NON-NLS-1$
+                                                              new Object[] {Integer.toString(theIndex)}));
                 }
             } else {
                 // should not happen
-                Assertion.failed(UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
-                                                new Object[] {theElement.getClass().getName()}));
+                CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unknownObjectType", //$NON-NLS-1$
+                                                          new Object[] {theElement.getClass().getName()}));
             }
 
             return result;

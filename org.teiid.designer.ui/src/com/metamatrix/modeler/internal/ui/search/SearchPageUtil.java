@@ -23,7 +23,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.ui.IWorkingSet;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -34,15 +34,14 @@ import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.search.IModelObjectMatch;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
-
 /**
  * @since 4.2
  */
 public final class SearchPageUtil implements UiConstants {
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTANTS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////////////////////
 
     private static final String PREFIX = I18nUtil.getPropertyPrefix(SearchPageUtil.class);
 
@@ -50,50 +49,53 @@ public final class SearchPageUtil implements UiConstants {
 
     public static final String MULTIPLE_MATCHES_MSG = Util.getString(PREFIX + "msg.searchMultipleMatches"); //$NON-NLS-1$
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Don't allow instance construction.
      */
-    private SearchPageUtil() {}
+    private SearchPageUtil() {
+    }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////////////////////
     // METHODS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Gets the <code>IResource</code> for a specified object URI.
+     * 
      * @param theObjectUri the object's URI
      * @return the object's resource or <code>null</code> if not found
      */
-    public static IResource getResource(String theObjectUri) {
+    public static IResource getResource( String theObjectUri ) {
         // an object's URI includes the objects's UUID. to find the resource need to strip off the
         // UUID portion.
         int index = theObjectUri.indexOf('#'); // delimeter before UUID
-        String uri = (index == -1) ? theObjectUri
-                                   : theObjectUri.substring(0, index);
+        String uri = (index == -1) ? theObjectUri : theObjectUri.substring(0, index);
 
         return WorkspaceResourceFinderUtil.findIResource(uri);
     }
 
     /**
      * Gets the currently selected {@link com.metamatrix.modeler.core.workspace.ModelWorkspaceItem}s.
+     * 
      * @param theSearchContainer the access point to the search dialog
      * @return the model workspace items selected in the workspace
      */
-    public static List getSelectedModelWorkspaceItems(ISearchPageContainer theSearchContainer) {
+    public static List getSelectedModelWorkspaceItems( ISearchPageContainer theSearchContainer ) {
         return getModelWorkspaceItemSelection(theSearchContainer).toList();
     }
 
     /**
-     * Gets the current active selection filtered to only contain
-     * {@link com.metamatrix.modeler.core.workspace.ModelWorkspaceItem}s.
+     * Gets the current active selection filtered to only contain {@link com.metamatrix.modeler.core.workspace.ModelWorkspaceItem}
+     * s.
+     * 
      * @param theSearchContainer the access point to the search dialog
      * @return the current filtered selection
      */
-    public static IStructuredSelection getModelWorkspaceItemSelection(ISearchPageContainer theSearchContainer) {
+    public static IStructuredSelection getModelWorkspaceItemSelection( ISearchPageContainer theSearchContainer ) {
         IStructuredSelection result = null;
         ISelection tempSelection = theSearchContainer.getSelection();
 
@@ -112,22 +114,21 @@ public final class SearchPageUtil implements UiConstants {
             }
 
             // create new selection
-            result = (validSelections.isEmpty() ? StructuredSelection.EMPTY
-                                                : new StructuredSelection(validSelections));
+            result = (validSelections.isEmpty() ? StructuredSelection.EMPTY : new StructuredSelection(validSelections));
         }
 
         return result;
     }
 
     /**
-     * Gets the collection of {@link com.metamatrix.modeler.core.workspace.ModelWorkspaceItem}s within the
-     * selected working sets.
+     * Gets the collection of {@link com.metamatrix.modeler.core.workspace.ModelWorkspaceItem}s within the selected working sets.
+     * 
      * @return the collection of model workspace items
      */
-    public static List getWorkingSetWorkspaceItems(ISearchPageContainer theSearchContainer) {
+    public static List getWorkingSetWorkspaceItems( ISearchPageContainer theSearchContainer ) {
         IWorkingSet[] workingSets = theSearchContainer.getSelectedWorkingSets();
         Set allElements = new HashSet();
-        if( workingSets != null ) {
+        if (workingSets != null) {
             for (int i = 0; i < workingSets.length; i++) {
                 IAdaptable[] elements = workingSets[i].getElements();
 
@@ -141,13 +142,13 @@ public final class SearchPageUtil implements UiConstants {
             }
         }
 
-        if( allElements.isEmpty()) {
+        if (allElements.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
         return new ArrayList(allElements);
     }
 
-    public static ModelWorkspaceItem getModelWorkspaceResource(Object theObject) {
+    public static ModelWorkspaceItem getModelWorkspaceResource( Object theObject ) {
         ModelWorkspaceItem result = null;
 
         if (theObject != null) {
@@ -155,13 +156,10 @@ public final class SearchPageUtil implements UiConstants {
                 result = (ModelWorkspaceItem)theObject;
             } else if (theObject instanceof IResource) {
                 try {
-                    result = ModelWorkspaceManager.getModelWorkspaceManager()
-                                                  .findModelWorkspaceItem((IResource)theObject);
+                    result = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem((IResource)theObject);
                 } catch (ModelWorkspaceException theException) {
-                    Util.log(IStatus.ERROR,
-                             theException,
-                             Util.getString(PREFIX + "msg.resourceProblem", //$NON-NLS-1$
-                                            new Object[] {theObject, theObject.getClass()}));
+                    Util.log(IStatus.ERROR, theException, Util.getString(PREFIX + "msg.resourceProblem", //$NON-NLS-1$
+                                                                         new Object[] {theObject, theObject.getClass()}));
                 }
             } else if (theObject instanceof IAdaptable) {
                 result = getModelWorkspaceResource(((IAdaptable)theObject).getAdapter(IResource.class));
@@ -173,11 +171,14 @@ public final class SearchPageUtil implements UiConstants {
 
     /**
      * Gets the current workspace scope.
-     * <p><strong>Should not be called until {@link #setContainer(ISearchPageContainer)} is called by the Eclipse
-     * search framework.</strong></p>
+     * <p>
+     * <strong>Should not be called until {@link #setContainer(ISearchPageContainer)} is called by the Eclipse search
+     * framework.</strong>
+     * </p>
+     * 
      * @return the list of {@link ModelWorkspaceItem}s defining the scope of the search
      */
-    public static List getModelWorkspaceScope(ISearchPageContainer theSearchContainer) {
+    public static List getModelWorkspaceScope( ISearchPageContainer theSearchContainer ) {
         List result = null;
 
         switch (theSearchContainer.getSelectedScope()) {
@@ -196,7 +197,7 @@ public final class SearchPageUtil implements UiConstants {
             }
             default: {
                 // should not happen
-                Assertion.isNotNull(result);
+                CoreArgCheck.isNotNull(result);
                 break;
             }
         }
@@ -204,17 +205,17 @@ public final class SearchPageUtil implements UiConstants {
         return result;
     }
 
-    public static List getEObjectsFromSearchSelection(ISelection theSelection) {
+    public static List getEObjectsFromSearchSelection( ISelection theSelection ) {
 
         List objs = SelectionUtilities.getSelectedObjects(theSelection);
         Set<EObject> eObjs = new HashSet<EObject>();
         boolean isSearchResult = false;
 
-        if( objs != null && !objs.isEmpty() ) {
+        if (objs != null && !objs.isEmpty()) {
             Object nextObj = null;
             Iterator iter = objs.iterator();
 
-            while( iter.hasNext() ) {
+            while (iter.hasNext()) {
                 nextObj = iter.next();
 
                 if (nextObj instanceof IModelObjectMatch) {
@@ -228,8 +229,7 @@ public final class SearchPageUtil implements UiConstants {
             }
         }
 
-        if( !isSearchResult )
-            return null;
+        if (!isSearchResult) return null;
 
         return new ArrayList(eObjs);
     }

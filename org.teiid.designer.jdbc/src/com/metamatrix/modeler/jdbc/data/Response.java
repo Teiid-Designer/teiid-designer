@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.internal.jdbc.JdbcUtil;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
 
@@ -38,7 +38,7 @@ public class Response {
      * 
      */
     public Response( final Request request ) {
-        ArgCheck.isNotNull(request);
+        CoreArgCheck.isNotNull(request);
         this.request = request;
         this.records = new LinkedList();
         this.numColumns = NUM_COLUMNS_NOT_SET;
@@ -67,7 +67,7 @@ public class Response {
         } else {
             // Otherwise the number of columns have already been set, 
             // so ensure the record has the same number of columns ...
-            ArgCheck.isTrue(record.size() == this.numColumns,
+            CoreArgCheck.isTrue(record.size() == this.numColumns,
                             JdbcPlugin.Util.getString("Response.Add_error_column_count_mismatch",record,new Integer(this.numColumns))); //$NON-NLS-1$
         }
         this.records.add(record);

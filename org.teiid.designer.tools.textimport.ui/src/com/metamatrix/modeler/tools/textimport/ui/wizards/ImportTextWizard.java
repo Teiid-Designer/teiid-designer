@@ -17,9 +17,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.tools.textimport.ui.PluginConstants;
 import com.metamatrix.modeler.tools.textimport.ui.TextImportContributionManager;
 import com.metamatrix.modeler.tools.textimport.ui.TextImportPlugin;
@@ -30,7 +30,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
  * @since 4.2
  */
 public class ImportTextWizard extends AbstractWizard
-    implements PluginConstants.Images, IImportWizard, StringUtil.Constants, UiConstants {
+    implements PluginConstants.Images, IImportWizard, CoreStringUtil.Constants, UiConstants {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ImportTextWizard.class);
     private static final String WIDTH = "width"; //$NON-NLS-1$
@@ -168,7 +168,7 @@ public class ImportTextWizard extends AbstractWizard
                     break;
                 }
             }
-            if (!isContributed) Assertion.failed("Unexpected TextImport Wizard Page:" + thePage); //$NON-NLS-1$
+            if (!isContributed) CoreArgCheck.isTrue(false, "Unexpected TextImport Wizard Page:" + thePage); //$NON-NLS-1$
         }
 
         return result;

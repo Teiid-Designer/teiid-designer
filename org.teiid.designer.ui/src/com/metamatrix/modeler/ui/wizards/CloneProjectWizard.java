@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.ValidationProblem;
 import com.metamatrix.modeler.core.validation.ValidationResult;
@@ -93,7 +93,7 @@ implements UiConstants {
             desc.setNatureIds(MODEL_NATURES);
             if (ProductCustomizerMgr.getInstance() != null) {
                 String productName = ProductCustomizerMgr.getInstance().getProductName();
-                if (!StringUtil.isEmpty(productName)) {
+                if (!CoreStringUtil.isEmpty(productName)) {
                     desc.setComment(productName + ", version " + ModelerCore.ILicense.VERSION); //$NON-NLS-1$
                 }
             }
@@ -124,8 +124,8 @@ implements UiConstants {
     }
 
     private void checkInvalidChars(final ValidationResult result,final String stringToValidate, final char[] invalidChars) {
-        ArgCheck.isNotNull(stringToValidate);                
-        ArgCheck.isNotNull(result);
+        CoreArgCheck.isNotNull(stringToValidate);                
+        CoreArgCheck.isNotNull(result);
         final StringNameValidator validator = new StringNameValidator(invalidChars);
         final String reasonInvalid = validator.checkInvalidCharacters(stringToValidate);
         if ( reasonInvalid != null ) {

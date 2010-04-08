@@ -9,7 +9,7 @@ package com.metamatrix.query.internal.ui.builder.util;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.query.internal.ui.builder.ILanguageObjectInputProvider;
 import com.metamatrix.query.sql.LanguageObject;
 import com.metamatrix.query.sql.lang.CompoundCriteria;
@@ -220,7 +220,9 @@ public class LanguageObjectContentProvider implements ITreeContentProvider, UiCo
             /*
              * Note: See documentation for ILanguageObjectInputProvider for reason why input cannot be the LanguageObject
              */
-            Assertion.isInstanceOf(theNewInput, ILanguageObjectInputProvider.class, ILanguageObjectInputProvider.class.getName());
+            CoreArgCheck.isInstanceOf(ILanguageObjectInputProvider.class,
+                                      theNewInput,
+                                      ILanguageObjectInputProvider.class.getName());
 
             // viewer = theViewer;
             langObj = ((ILanguageObjectInputProvider)theNewInput).getLanguageObject();

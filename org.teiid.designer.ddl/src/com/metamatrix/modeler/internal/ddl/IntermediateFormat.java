@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
@@ -320,8 +320,8 @@ public class IntermediateFormat {
                                final DdlOptions options,
                                final IProgressMonitor monitor ) {
         super();
-        ArgCheck.isNotNull(modelWrapper);
-        ArgCheck.isNotNull(options);
+        CoreArgCheck.isNotNull(modelWrapper);
+        CoreArgCheck.isNotNull(options);
         this.modelWrappers = new ArrayList();
         this.modelWrappers.add(modelWrapper);
         this.options = options;
@@ -337,8 +337,8 @@ public class IntermediateFormat {
                                final DdlOptions options,
                                final IProgressMonitor monitor ) {
         super();
-        ArgCheck.isNotNull(modelWrappers);
-        ArgCheck.isNotNull(options);
+        CoreArgCheck.isNotNull(modelWrappers);
+        CoreArgCheck.isNotNull(options);
         this.modelWrappers = new ArrayList(modelWrappers);
         this.options = options;
         // this.monitor = monitor != null ? monitor : new NullProgressMonitor();
@@ -555,8 +555,8 @@ public class IntermediateFormat {
     protected void create( final Element parent,
                            final Catalog catalog,
                            final ModelWrapper wrapper ) {
-        ArgCheck.isNotNull(parent);
-        ArgCheck.isNotNull(catalog);
+        CoreArgCheck.isNotNull(parent);
+        CoreArgCheck.isNotNull(catalog);
 
         // Skip this object if it is not to be exported ...
         if (!wrapper.isSelected(catalog)) {
@@ -580,8 +580,8 @@ public class IntermediateFormat {
     protected void create( final Element parent,
                            final Schema schema,
                            final ModelWrapper wrapper ) {
-        ArgCheck.isNotNull(parent);
-        ArgCheck.isNotNull(schema);
+        CoreArgCheck.isNotNull(parent);
+        CoreArgCheck.isNotNull(schema);
 
         // Skip this object if it is not to be exported ...
         if (!wrapper.isSelected(schema)) {
@@ -617,8 +617,8 @@ public class IntermediateFormat {
     protected void create( final Element parent,
                            final Table table,
                            final ModelWrapper wrapper ) {
-        ArgCheck.isNotNull(parent);
-        ArgCheck.isNotNull(table);
+        CoreArgCheck.isNotNull(parent);
+        CoreArgCheck.isNotNull(table);
 
         // Skip this object if it is not to be exported ...
         if (!wrapper.isSelected(table)) {
@@ -676,8 +676,8 @@ public class IntermediateFormat {
     protected void create( final Element parent,
                            final Column column,
                            final ModelWrapper wrapper ) {
-        ArgCheck.isNotNull(parent);
-        ArgCheck.isNotNull(column);
+        CoreArgCheck.isNotNull(parent);
+        CoreArgCheck.isNotNull(column);
         final Element columnElement = new Element(Xml.Column.TAG);
         parent.addContent(columnElement);
         setAttribute(columnElement, Xml.Column.Attributes.NAME, getObjectNameInDdl(column));
@@ -788,8 +788,8 @@ public class IntermediateFormat {
     protected void create( final Element parent,
                            final PrimaryKey pkey,
                            final ModelWrapper wrapper ) {
-        ArgCheck.isNotNull(parent);
-        ArgCheck.isNotNull(pkey);
+        CoreArgCheck.isNotNull(parent);
+        CoreArgCheck.isNotNull(pkey);
         final Element pkElement = new Element(Xml.PrimaryKey.TAG);
         parent.addContent(pkElement);
 
@@ -825,8 +825,8 @@ public class IntermediateFormat {
     protected void create( final Element parent,
                            final UniqueKey ukey,
                            final ModelWrapper wrapper ) {
-        ArgCheck.isNotNull(parent);
-        ArgCheck.isNotNull(ukey);
+        CoreArgCheck.isNotNull(parent);
+        CoreArgCheck.isNotNull(ukey);
         final Element pkElement = new Element(Xml.UniqueKey.TAG);
         parent.addContent(pkElement);
         setAttribute(pkElement, Xml.UniqueKey.Attributes.NAME, getUniqueObjectName(ukey));
@@ -861,8 +861,8 @@ public class IntermediateFormat {
     protected void create( final Element parent,
                            final ForeignKey fkey,
                            final ModelWrapper wrapper ) {
-        ArgCheck.isNotNull(parent);
-        ArgCheck.isNotNull(fkey);
+        CoreArgCheck.isNotNull(parent);
+        CoreArgCheck.isNotNull(fkey);
         final Element fkElement = new Element(Xml.ForeignKey.TAG);
         parent.addContent(fkElement);
         setAttribute(fkElement, Xml.ForeignKey.Attributes.NAME, getUniqueObjectName(fkey));
@@ -915,8 +915,8 @@ public class IntermediateFormat {
     protected void create( final Element parent,
                            final Index index,
                            final ModelWrapper wrapper ) {
-        ArgCheck.isNotNull(parent);
-        ArgCheck.isNotNull(index);
+        CoreArgCheck.isNotNull(parent);
+        CoreArgCheck.isNotNull(index);
 
         // Skip this object if it is not to be exported ...
         if (!wrapper.isSelected(index)) {

@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relationship.RelationshipMetamodelPlugin;
 import com.metamatrix.metamodels.relationship.RelationshipType;
 import com.metamatrix.modeler.core.ExternalResourceDescriptor;
@@ -89,7 +89,7 @@ public class RelationshipTypeManager {
      */
     public RelationshipTypeManager( final URI uri ) {
         super();
-        ArgCheck.isNotNull(uri);
+        CoreArgCheck.isNotNull(uri);
         this.uri = uri;
         // this.resource =
         doLoad(this.uri);
@@ -100,7 +100,7 @@ public class RelationshipTypeManager {
      */
     public RelationshipTypeManager( final Resource resource ) { // NO_UCD
         super();
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         this.uri = resource.getURI();
         // this.resource = resource;
     }
@@ -149,7 +149,7 @@ public class RelationshipTypeManager {
      */
     public RelationshipType getBuiltInRelationshipType( final String name,
                                                         final boolean caseSensitive ) {
-        ArgCheck.isNotZeroLength(name);
+        CoreArgCheck.isNotZeroLength(name);
         if (caseSensitive) {
             return (RelationshipType)this.nameToType.get(name);
         }
@@ -178,7 +178,7 @@ public class RelationshipTypeManager {
      */
     public boolean hasBuiltInRelationshipType( final String name,
                                                final boolean caseSensitive ) {
-        ArgCheck.isNotZeroLength(name);
+        CoreArgCheck.isNotZeroLength(name);
         if (caseSensitive) {
             return this.nameToType.containsKey(name);
         }
@@ -192,7 +192,7 @@ public class RelationshipTypeManager {
      * @return
      */
     public boolean isBuiltInRelationshipType( final RelationshipType type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         final Resource resource = type.eResource();
         if (resource != null) {
             final URI typeResourceUri = resource.getURI();
@@ -204,7 +204,7 @@ public class RelationshipTypeManager {
     }
 
     public boolean isBuiltInAnyRelationshipType( final RelationshipType type ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         final String name = type.getName();
         if (ANY_TYPE_NAME.equals(name)) {
             if (isBuiltInRelationshipType(type)) {

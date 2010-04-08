@@ -255,13 +255,13 @@ public class Stopwatch implements Serializable {
     }
 
     private static String getTimeString( long time ) {
-        String timeString = StringUtil.Constants.EMPTY_STRING + time;
+        String timeString = CoreStringUtil.Constants.EMPTY_STRING + time;
         int nSpaces = 8 - timeString.length();
         StringBuffer buff = new StringBuffer();
 
         buff.append("Time = ["); //$NON-NLS-1$
         for (int i = 0; i < nSpaces; i++) {
-            buff.append(StringUtil.Constants.SPACE);
+            buff.append(CoreStringUtil.Constants.SPACE);
         }
         buff.append(timeString + "] ms : "); //$NON-NLS-1$
 

@@ -46,10 +46,10 @@ import com.metamatrix.core.aspects.DeclarativeTransactionManager;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.interceptor.InvocationFactoryHelper;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.core.util.Stopwatch;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.container.ResourceDescriptor;
 import com.metamatrix.modeler.core.index.IndexSelectorFactory;
@@ -708,7 +708,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return <code>true</code> if listener was added
      */
     public boolean addRefactorResourceListener( IRefactorResourceListener listener ) {
-        ArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
         return this.refactorListeners.addIfAbsent(listener);
     }
 
@@ -717,7 +717,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return <code>true</code> if listener was removed
      */
     public boolean removeRefactorResourceListener( IRefactorResourceListener listener ) {
-        ArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
         return this.refactorListeners.remove(listener);
     }
 
@@ -939,7 +939,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
             // Short circuit so that when 'object' is null be we will accept the workspace, just return the workspace ...
             return ModelerCore.getWorkspaceDatatypeManager();
         }
-        ArgCheck.isNotNull(object);
+        CoreArgCheck.isNotNull(object);
 
         // if DatatypeManager is set (thru UnitTest, use it)
         if (dTypeManager != null) return dTypeManager;
@@ -1104,7 +1104,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @return the Container in which the resource is loaded, or null if the resource is not loaded in a Container.
      */
     public static Container getContainer( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         if (resource instanceof EmfResource) {
             return ((EmfResource)resource).getContainer();
         } else if (resource instanceof XSDResourceImpl) {
@@ -1826,7 +1826,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @since 4.0
      */
     public static boolean hasModelNature( IProject project ) {
-        ArgCheck.isNotNull(project);
+        CoreArgCheck.isNotNull(project);
         try {
             return project.hasNature(NATURE_ID);
         } catch (CoreException e) {
@@ -1869,7 +1869,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      * @since 6.0.0
      */
     public static boolean isReservedProjectName( String proposedName ) {
-        if (StringUtil.isEmpty(proposedName)) {
+        if (CoreStringUtil.isEmpty(proposedName)) {
             return false;
         }
 

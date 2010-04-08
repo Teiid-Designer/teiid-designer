@@ -53,7 +53,7 @@ import org.eclipse.ui.forms.HyperlinkSettings;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.widget.DefaultTreeViewerController;
 import com.metamatrix.ui.internal.widget.IListPanelController;
@@ -389,7 +389,7 @@ public final class WidgetFactory implements
                                     final Object selection,
                                     final ILabelProvider provider,
                                     final boolean sort) {
-        ArgCheck.isNotNull(parent);
+        CoreArgCheck.isNotNull(parent);
         final Combo combo = new Combo(parent, style | SWT.BORDER);
         final GridData gridData = new GridData(gridStyle);
         gridData.horizontalSpan = span;
@@ -637,8 +637,8 @@ public final class WidgetFactory implements
      */
     public static WizardDialog createOnePageWizardDialog(final Shell shell,
                                                          final IWizard wizard) {
-        ArgCheck.isNotNull(shell);
-        ArgCheck.isNotNull(wizard);
+        CoreArgCheck.isNotNull(shell);
+        CoreArgCheck.isNotNull(wizard);
         final WizardDialog dlg = new WizardDialog(shell, wizard) {
 
             // Overridden to make wizard resizable
@@ -1265,8 +1265,8 @@ public final class WidgetFactory implements
      */
     public static WizardDialog createWizardDialog(final Shell shell,
                                                   final IWizard wizard) {
-        ArgCheck.isNotNull(shell);
-        ArgCheck.isNotNull(wizard);
+        CoreArgCheck.isNotNull(shell);
+        CoreArgCheck.isNotNull(wizard);
         return new WizardDialog(shell, wizard) {
 
             // Overridden to make wizard resizable

@@ -20,7 +20,7 @@ import java.util.TreeSet;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.properties.ModelObjectPropertySourceProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 
@@ -143,7 +143,7 @@ public class EObjectPropertiesOrderPreferences implements Serializable {
 
     public void initializeFromString( String stringRep ) {
         this.eObjectMap.clear();
-        List lines = StringUtil.split(stringRep, newLine);
+        List lines = CoreStringUtil.split(stringRep, newLine);
         int count = 0;
         while (count < lines.size()) {
             String eObject = (String)lines.get(count);

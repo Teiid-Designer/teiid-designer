@@ -10,8 +10,8 @@ package com.metamatrix.metamodels.relational.aspects.uml;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.relational.PrimaryKey;
 import com.metamatrix.metamodels.relational.RelationalMetamodelConstants;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
@@ -34,7 +34,7 @@ public abstract class UniqueKeyAspect extends RelationalEntityAspect implements 
      * @see com.metamatrix.modeler.core.metamodels.aspects.UmlAssociation#getProperties(java.lang.Object, int)
      */
     public String[] getProperties(Object assoc, int end) {
-        return StringUtil.Constants.EMPTY_STRING_ARRAY; 
+        return CoreStringUtil.Constants.EMPTY_STRING_ARRAY; 
     }
 
     /* (non-Javadoc)
@@ -169,7 +169,7 @@ public abstract class UniqueKeyAspect extends RelationalEntityAspect implements 
    
 
     protected UniqueKey assertUniqueKey(Object eObject) {
-        ArgCheck.isInstanceOf(UniqueKey.class, eObject);
+        CoreArgCheck.isInstanceOf(UniqueKey.class, eObject);
     
         return (UniqueKey)eObject;
     }

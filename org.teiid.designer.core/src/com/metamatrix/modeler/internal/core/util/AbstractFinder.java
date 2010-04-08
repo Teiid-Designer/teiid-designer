@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.internal.core.util;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.EObjectFinder;
 
@@ -30,8 +30,8 @@ public abstract class AbstractFinder implements EObjectFinder {
      * @since 3.1
 	 */
 	public Object findKey(final Object eObject) {
-        ArgCheck.isNotNull(eObject);
-        ArgCheck.isInstanceOf(EObject.class, eObject);
+        CoreArgCheck.isNotNull(eObject);
+        CoreArgCheck.isInstanceOf(EObject.class, eObject);
         return ModelerCore.getObjectId((EObject)eObject);
 	}
 }

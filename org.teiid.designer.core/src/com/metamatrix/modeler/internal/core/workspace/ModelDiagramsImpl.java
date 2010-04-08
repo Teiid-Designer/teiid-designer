@@ -11,7 +11,7 @@ import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.util.ModelContents;
@@ -83,7 +83,7 @@ public class ModelDiagramsImpl extends NonOpenableModelWorkspaceItemImpl impleme
         if (contents == null) {
             final Object[] params = new Object[] {this.getParent().getPath()};
             final String msg = ModelerCore.Util.getString("ModelDiagramsImpl.No_ModelContents_found_for_resource", params); //$NON-NLS-1$
-            Assertion.assertTrue(false, msg);
+            CoreArgCheck.isTrue(false, msg);
         }
         return contents.getDiagrams(target);
     }

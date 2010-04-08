@@ -33,7 +33,7 @@ import org.eclipse.xsd.XSDImport;
 import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.InvalidIDException;
 import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.metamodel.aspect.ImportsAspect;
@@ -85,7 +85,7 @@ public class OrganizeImportCommandFinderHelper {
      */
     protected URI findModelUri( final URI uri,
                                 final Resource resource ) {
-        Assertion.isNotNull(uri);
+        CoreArgCheck.isNotNull(uri);
         String path = URI.decode(uri.toString());
         if (resource != null) {
             return getModelUri(resource, path);

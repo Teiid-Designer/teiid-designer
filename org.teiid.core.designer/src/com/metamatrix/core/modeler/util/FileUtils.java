@@ -19,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import com.metamatrix.core.MetaMatrixCoreException;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.ChecksumUtil;
 
 public class FileUtils {
@@ -348,7 +349,7 @@ public class FileUtils {
      * @since 4.3
      */
     public static long getCheckSum( final File f ) throws Exception {
-        ArgCheck.isNotNull(f);
+        CoreArgCheck.isNotNull(f);
         FileInputStream is = null;
         try {
             is = new FileInputStream(f);

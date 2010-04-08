@@ -16,7 +16,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.preference.IPreferenceStore;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.IResultsProvider;
@@ -66,10 +66,10 @@ public class SaveSqlResultsToFileAction extends Action implements
 
         StringBuffer buf = new StringBuffer(model.getSql().length() * 2);
         buf.append(UTIL.getString(prefix + "header.line_1")); //$NON-NLS-1$
-        buf.append(UTIL.getString(prefix + "header.line_2") + date + StringUtil.Constants.LINE_FEED_CHAR); //$NON-NLS-1$
-        buf.append(UTIL.getString(prefix + "header.line_3") + model.getTotalRowCount() + StringUtil.Constants.LINE_FEED_CHAR); //$NON-NLS-1$
+        buf.append(UTIL.getString(prefix + "header.line_2") + date + CoreStringUtil.Constants.LINE_FEED_CHAR); //$NON-NLS-1$
+        buf.append(UTIL.getString(prefix + "header.line_3") + model.getTotalRowCount() + CoreStringUtil.Constants.LINE_FEED_CHAR); //$NON-NLS-1$
         buf.append(UTIL.getString(prefix + "header.line_4")); //$NON-NLS-1$
-        buf.append(model.getSql()).append(StringUtil.Constants.LINE_FEED_CHAR);
+        buf.append(model.getSql()).append(CoreStringUtil.Constants.LINE_FEED_CHAR);
         buf.append(UTIL.getString(prefix + "header.line_5")); //$NON-NLS-1$
         buf.append(UTIL.getString(prefix + "header.line_6")); //$NON-NLS-1$
 

@@ -10,7 +10,7 @@ package com.metamatrix.modeler.jdbc.metadata.impl;
 import java.sql.DatabaseMetaData;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
 import com.metamatrix.modeler.jdbc.data.MetadataRequest;
@@ -36,7 +36,7 @@ public class JdbcProcedureImpl extends JdbcNodeImpl implements JdbcProcedure {
     public JdbcProcedureImpl( final JdbcProcedureType parent,
                               final String name ) {
         super(PROCEDURE, name, parent);
-        ArgCheck.isNotNull(parent);
+        CoreArgCheck.isNotNull(parent);
     }
 
     /* (non-Javadoc)
@@ -178,7 +178,7 @@ public class JdbcProcedureImpl extends JdbcNodeImpl implements JdbcProcedure {
     }
 
     public void setProcedureType( final short type ) {
-        ArgCheck.isTrue(type == RESULT_UNKNOWN || type == RETURNS_RESULT || type == NO_RESULT,
+        CoreArgCheck.isTrue(type == RESULT_UNKNOWN || type == RETURNS_RESULT || type == NO_RESULT,
                         JdbcPlugin.Util.getString("JdbcProcedureImpl.Invalid_procedure_type")); //$NON-NLS-1$
         this.procType = type;
     }

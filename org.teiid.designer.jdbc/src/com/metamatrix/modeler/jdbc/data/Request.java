@@ -10,7 +10,7 @@ package com.metamatrix.modeler.jdbc.data;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.internal.jdbc.JdbcUtil;
 import com.metamatrix.modeler.internal.jdbc.data.ResultsImpl;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
@@ -54,7 +54,7 @@ public abstract class Request {
      */
     public Request( final String name, final Object target  ) {
         super();
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
         this.target = target;
         this.name = name;
     }

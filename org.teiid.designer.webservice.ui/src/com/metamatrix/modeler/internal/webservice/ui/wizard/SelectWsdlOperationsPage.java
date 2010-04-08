@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.wsdl.Definitions;
 import com.metamatrix.metamodels.wsdl.Operation;
 import com.metamatrix.metamodels.wsdl.PortType;
@@ -58,7 +58,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
  * wsdl that will be used to generate the relational entities.
  */
 public class SelectWsdlOperationsPage extends AbstractWizardPage
-    implements Listener, FileUtils.Constants, StringUtil.Constants, IInternalUiConstants.Images {
+    implements Listener, FileUtils.Constants, CoreStringUtil.Constants, IInternalUiConstants.Images {
 
     /** Used as a prefix to properties file keys. */
     private static final String PREFIX = I18nUtil.getPropertyPrefix(SelectWsdlOperationsPage.class);

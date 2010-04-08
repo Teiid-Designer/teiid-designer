@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import com.metamatrix.core.event.EventObjectListener;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.modelgenerator.ui.ModelGeneratorUiConstants;
@@ -56,7 +56,7 @@ import com.metamatrix.ui.internal.widget.ListPanelAdapter;
  * GeneralOptionsWizardPanel. This panel contains the general options.
  */
 public class GeneralOptionsWizardPanel extends Composite
-    implements EventObjectListener, ModelGeneratorUiConstants, StringUtil.Constants {
+    implements EventObjectListener, ModelGeneratorUiConstants, CoreStringUtil.Constants {
 
     private static final String GENERATE_ALL_REACHABLE_RECURSIVE_STR = Util.getString("GeneralOptionsWizardPanel.reachConstraint.generateAll.text"); //$NON-NLS-1$
     private static final String IGNORE_REACHABLE_NOT_IN_SELECTION_STR = Util.getString("GeneralOptionsWizardPanel.reachConstraint.ignoreUnselected.text"); //$NON-NLS-1$

@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.refactor.ObjectDeleteCommand;
@@ -199,7 +199,7 @@ public class DeleteWorker extends ModelObjectWorker {
                     ((SubProgressMonitor)monitor).getWrappedProgressMonitor().setTaskName(deleteTitle);
                 }
 
-                monitor.beginTask(StringUtil.Constants.EMPTY_STRING, 100);
+                monitor.beginTask(CoreStringUtil.Constants.EMPTY_STRING, 100);
                 monitor.worked(5);
                 // execute the command
                 IStatus status = odcDeleteCommand.execute(monitor);

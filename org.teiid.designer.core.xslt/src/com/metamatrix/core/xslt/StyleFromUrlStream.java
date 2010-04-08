@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.net.URL;
 import javax.xml.transform.stream.StreamSource;
 import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * StyleFromUrlStream is a style that loads the XSLT via the {@link java.net.URL#openStream()}.
@@ -39,11 +39,11 @@ public class StyleFromUrlStream implements Style {
                                final String xsltUri,
                                final String desc ) {
         super();
-        ArgCheck.isNotNull(name);
-        ArgCheck.isNotZeroLength(name);
-        ArgCheck.isNotNull(xsltUri);
-        ArgCheck.isNotZeroLength(xsltUri);
-        ArgCheck.isNotNull(xsltUri);
+        CoreArgCheck.isNotNull(name);
+        CoreArgCheck.isNotZeroLength(name);
+        CoreArgCheck.isNotNull(xsltUri);
+        CoreArgCheck.isNotZeroLength(xsltUri);
+        CoreArgCheck.isNotNull(xsltUri);
         this.name = name;
         this.xsltUrl = xsltUri;
         this.description = desc != null ? desc : ""; //$NON-NLS-1$

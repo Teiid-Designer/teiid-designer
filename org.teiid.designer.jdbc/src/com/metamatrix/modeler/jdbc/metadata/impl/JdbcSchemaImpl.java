@@ -14,7 +14,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
 import com.metamatrix.modeler.jdbc.metadata.JdbcCatalog;
@@ -33,7 +33,7 @@ public class JdbcSchemaImpl extends JdbcNodeImpl implements JdbcSchema {
      */
     public JdbcSchemaImpl( final JdbcNode parent, final String name ) {
         super(SCHEMA,name,parent);
-        ArgCheck.isNotNull(parent);
+        CoreArgCheck.isNotNull(parent);
     }
 
     /* (non-Javadoc)

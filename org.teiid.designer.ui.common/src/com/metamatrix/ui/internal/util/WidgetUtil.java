@@ -66,9 +66,9 @@ import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.ui.UiConstants;
 import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.widget.ITreeViewerController;
@@ -78,7 +78,7 @@ import com.metamatrix.ui.internal.widget.ITreeViewerController;
  */
 public final class WidgetUtil implements
                              InternalUiConstants.Widgets,
-                             StringUtil.Constants,
+                             CoreStringUtil.Constants,
                              UiConstants {
 
     // ============================================================================================================================
@@ -125,11 +125,11 @@ public final class WidgetUtil implements
      * @since 4.0
      */
     public static Map disable(final Control[] controls) {
-        ArgCheck.isNotNull(controls);
+        CoreArgCheck.isNotNull(controls);
         final Map map = new HashMap(0);
         for (int ndx = controls.length; --ndx >= 0;) {
             final Control ctrl = controls[ndx];
-            ArgCheck.isNotNull(ctrl);
+            CoreArgCheck.isNotNull(ctrl);
             disable(ctrl, map);
         }
         return map;
@@ -170,7 +170,7 @@ public final class WidgetUtil implements
      * @since 4.0
      */
     public static Map disable(final Composite container) {
-        ArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(container);
         return disable(new Control[] {
             container
         });
@@ -184,10 +184,10 @@ public final class WidgetUtil implements
      * @since 4.0
      */
     public static void enable(final Control[] controls) {
-        ArgCheck.isNotNull(controls);
+        CoreArgCheck.isNotNull(controls);
         for (int ndx = controls.length; --ndx >= 0;) {
             final Control ctrl = controls[ndx];
-            ArgCheck.isNotNull(ctrl);
+            CoreArgCheck.isNotNull(ctrl);
             if (ctrl instanceof Composite) {
                 enable(((Composite)ctrl).getChildren());
             }
@@ -223,8 +223,8 @@ public final class WidgetUtil implements
      */
     public static TreeItem findTreeItem(final Object node,
                                         final Tree tree) {
-        ArgCheck.isNotNull(node);
-        ArgCheck.isNotNull(tree);
+        CoreArgCheck.isNotNull(node);
+        CoreArgCheck.isNotNull(tree);
         return findTreeItem(node, tree.getItems());
     }
 
@@ -235,7 +235,7 @@ public final class WidgetUtil implements
      */
     public static TreeItem findTreeItem(final Object node,
                                         final TreeViewer viewer) {
-        ArgCheck.isNotNull(viewer);
+        CoreArgCheck.isNotNull(viewer);
         return findTreeItem(node, viewer.getTree());
     }
 
@@ -292,7 +292,7 @@ public final class WidgetUtil implements
      * @since 4.0
      */
     public static int getCheckedState(final TreeItem item) {
-        ArgCheck.isNotNull(item);
+        CoreArgCheck.isNotNull(item);
         final Object obj = item.getData(CHECKED_STATE_PROPERTY);
         if (obj == null || !(obj instanceof Integer)) {
             return UNCHECKED;
@@ -379,7 +379,7 @@ public final class WidgetUtil implements
      * @since 4.0
      */
     public static String getMessage(Throwable error) {
-        ArgCheck.isNotNull(error);
+        CoreArgCheck.isNotNull(error);
         if (error instanceof WrappedException) {
             final Throwable err = ((WrappedException)error).exception();
             if (err != null) {
@@ -413,7 +413,7 @@ public final class WidgetUtil implements
      */
     public static boolean hasStyle(final Widget widget,
                                    final int style) {
-        ArgCheck.isNotNull(widget);
+        CoreArgCheck.isNotNull(widget);
         return hasState(widget.getStyle(), style);
     }
 
@@ -523,8 +523,8 @@ public final class WidgetUtil implements
      */
     public static void removeMissingResources(final IDialogSettings settings,
                                               final String id) {
-        ArgCheck.isNotNull(settings);
-        ArgCheck.isNotNull(id);
+        CoreArgCheck.isNotNull(settings);
+        CoreArgCheck.isNotNull(id);
 
         String[] resourceItems = settings.getArray(id);
 
@@ -574,7 +574,7 @@ public final class WidgetUtil implements
      * @since 4.0
      */
     public static void restore(final Map map) {
-        ArgCheck.isNotNull(map);
+        CoreArgCheck.isNotNull(map);
         for (final Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
             final Entry entry = (Entry)iter.next();
             ((Control)entry.getKey()).setEnabled(((Boolean)entry.getValue()).booleanValue());
@@ -617,10 +617,10 @@ public final class WidgetUtil implements
                                     final String theId,
                                     final Combo theCombo,
                                     final int theLimit) {
-        ArgCheck.isNotNull(theSettings);
-        ArgCheck.isNotNull(theId);
-        ArgCheck.isNotNull(theCombo);
-        ArgCheck.isPositive(theLimit);
+        CoreArgCheck.isNotNull(theSettings);
+        CoreArgCheck.isNotNull(theId);
+        CoreArgCheck.isNotNull(theCombo);
+        CoreArgCheck.isPositive(theLimit);
 
         String currentValue = theCombo.getText();
 
@@ -666,8 +666,8 @@ public final class WidgetUtil implements
      *             if button is <code>null</code> or if button does not have radio style
      */
     public static void selectRadioButton(final Button button) {
-        ArgCheck.isNotNull(button);
-        ArgCheck.isTrue(hasStyle(button, SWT.RADIO), NOT_RADIO_BUTTON_MESSAGE);
+        CoreArgCheck.isNotNull(button);
+        CoreArgCheck.isTrue(hasStyle(button, SWT.RADIO), NOT_RADIO_BUTTON_MESSAGE);
 
         // first deselect currently selected button
         Composite parent = button.getParent();
@@ -712,8 +712,8 @@ public final class WidgetUtil implements
                                        final int state,
                                        final boolean selected,
                                        final ITreeViewerController controller) {
-        ArgCheck.isNotNull(item);
-        ArgCheck.isNotNull(controller);
+        CoreArgCheck.isNotNull(item);
+        CoreArgCheck.isNotNull(controller);
         item.setData(CHECKED_STATE_PROPERTY, new Integer(state));
         controller.update(item, selected);
     }
@@ -784,7 +784,7 @@ public final class WidgetUtil implements
                                      final List items,
                                      final ILabelProvider provider,
                                      final boolean sort) {
-        ArgCheck.isNotNull(combo);
+        CoreArgCheck.isNotNull(combo);
         setComboItems(combo, items, provider, sort, combo.getText());
     }
 
@@ -796,8 +796,8 @@ public final class WidgetUtil implements
                                      final ILabelProvider provider,
                                      final boolean sort,
                                      final String selection) {
-        ArgCheck.isNotNull(combo);
-        ArgCheck.isNotNull(items);
+        CoreArgCheck.isNotNull(combo);
+        CoreArgCheck.isNotNull(items);
 
         combo.removeAll();
 
@@ -854,7 +854,7 @@ public final class WidgetUtil implements
                                     Object selection,
                                     final ILabelProvider provider,
                                     final boolean add) {
-        ArgCheck.isNotNull(combo);
+        CoreArgCheck.isNotNull(combo);
         // Get string value of selection, using provider if provided
         final String text = (selection == null ? EMPTY_STRING : (provider == null ? selection.toString()
                         : provider.getText(selection)));
@@ -898,7 +898,7 @@ public final class WidgetUtil implements
      *             if input is <code>null</code>
      */
     public static int[] getSashFormWeights(SashForm theSash) {
-        ArgCheck.isNotNull(theSash);
+        CoreArgCheck.isNotNull(theSash);
 
         Control[] kids = theSash.getChildren();
         boolean vertical = hasStyle(theSash, SWT.VERTICAL);
@@ -956,7 +956,7 @@ public final class WidgetUtil implements
      * @since 4.0
      */
     public static void show(final IStatus status) {
-        ArgCheck.isNotNull(status);
+        CoreArgCheck.isNotNull(status);
         switch (status.getSeverity()) {
             case IStatus.ERROR: {
                 showError(status.getMessage());
@@ -1003,9 +1003,9 @@ public final class WidgetUtil implements
     public static void showCause(final String prefix,
                                  final Throwable throwable,
                                  final int severity) {
-        ArgCheck.isNotNull(prefix);
-        ArgCheck.isNotNull(throwable);
-        ArgCheck.isTrue(severity == IStatus.ERROR || severity == IStatus.WARNING, INVALID_SEVERITY_MESSAGE);
+        CoreArgCheck.isNotNull(prefix);
+        CoreArgCheck.isNotNull(throwable);
+        CoreArgCheck.isTrue(severity == IStatus.ERROR || severity == IStatus.WARNING, INVALID_SEVERITY_MESSAGE);
         show(new Status(severity, PLUGIN_ID, 0, getCauseMessage(prefix, throwable), throwable));
     }
 
@@ -1017,7 +1017,7 @@ public final class WidgetUtil implements
      * @since 4.0
      */
     public static boolean showConfirmation(final String message) {
-        ArgCheck.isNotNull(message);
+        CoreArgCheck.isNotNull(message);
         final Shell shell = Display.getCurrent().getActiveShell();
         return MessageDialog.openConfirm(shell, CONFIRM_MESSAGE_TITLE, message);
     }
@@ -1030,7 +1030,7 @@ public final class WidgetUtil implements
      * @since 4.0
      */
     public static void showError(final String message) {
-        ArgCheck.isNotNull(message);
+        CoreArgCheck.isNotNull(message);
         final Shell shell = Display.getCurrent().getActiveShell();
         MessageDialog.openError(shell, ERROR_MESSAGE_TITLE, message);
     }
@@ -1087,7 +1087,7 @@ public final class WidgetUtil implements
      * @since 4.0
      */
     public static void showNotification(final String message) {
-        ArgCheck.isNotNull(message);
+        CoreArgCheck.isNotNull(message);
         final Shell shell = Display.getCurrent().getActiveShell();
         MessageDialog.openInformation(shell, NOTIFICATION_MESSAGE_TITLE, message);
     }
@@ -1100,7 +1100,7 @@ public final class WidgetUtil implements
      * @since 4.0
      */
     public static void showWarning(final String message) {
-        ArgCheck.isNotNull(message);
+        CoreArgCheck.isNotNull(message);
         final Shell shell = Display.getCurrent().getActiveShell();
         MessageDialog.openWarning(shell, WARNING_MESSAGE_TITLE, message);
     }

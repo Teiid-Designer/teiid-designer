@@ -23,7 +23,7 @@ import org.teiid.adminapi.ConnectionFactory;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.vdb.Vdb;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 
 /**
@@ -48,9 +48,9 @@ public class ExecutionAdmin {
     public ExecutionAdmin( Admin admin,
                            Server server,
                            EventManager eventManager ) throws Exception {
-        ArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
-        ArgCheck.isNotNull(server, "server"); //$NON-NLS-1$
-        ArgCheck.isNotNull(eventManager, "eventManager"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(server, "server"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(eventManager, "eventManager"); //$NON-NLS-1$
 
         this.admin = admin;
         this.eventManager = eventManager;
@@ -71,9 +71,9 @@ public class ExecutionAdmin {
     public void addConnector( String name,
                               ConnectorType type,
                               Properties properties ) throws Exception {
-        ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
-        ArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
-        ArgCheck.isNotNull(properties, "properties"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(properties, "properties"); //$NON-NLS-1$
 
         this.admin.addConnectionFactory(name, type.getName(), properties); // TODO get server guys to return the binding
         // TODO ask server guys if type needs to also be in properties
@@ -90,7 +90,7 @@ public class ExecutionAdmin {
      * @return
      */
     public VDB deployVdb( Vdb vdb ) throws Exception {
-        ArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
 
         VDB deployedVdb = null; // this.admin.deployVDB(vdb.getName(), vdb);
 
@@ -102,7 +102,7 @@ public class ExecutionAdmin {
      * @return
      */
     public VDB deployVdb( IFile vdbFile ) throws Exception {
-        ArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
 
         VDB deployedVdb = null; // this.admin.deployVDB(vdb.getName(), vdb);
 
@@ -118,7 +118,7 @@ public class ExecutionAdmin {
      * @see ModelerDqpUtils#isValidBindingName(String)
      */
     public String ensureUniqueConnectorName( String proposedName ) throws Exception {
-        ArgCheck.isNotEmpty(proposedName, "proposedName"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(proposedName, "proposedName"); //$NON-NLS-1$
 
         String result = proposedName;
         boolean validName = false;
@@ -152,7 +152,7 @@ public class ExecutionAdmin {
      * @throws Exception
      */
     public Connector getConnector( String name ) {
-        ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
         return this.connectorByNameMap.get(name);
     }
 
@@ -165,7 +165,7 @@ public class ExecutionAdmin {
      * @return the connectors (never <code>null</code> or empty)
      */
     public Collection<Connector> getConnectors( ConnectorType type ) {
-        ArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
 
         List<Connector> connectors = new ArrayList<Connector>();
         for (Connector connector : connectorByNameMap.values()) {
@@ -180,7 +180,7 @@ public class ExecutionAdmin {
      * @throws Exception
      */
     public ConnectorType getConnectorType( String name ) {
-        ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
         return this.connectorTypeByNameMap.get(name);
     }
 
@@ -221,7 +221,7 @@ public class ExecutionAdmin {
      * @return the VDB or <code>null</code> if not found
      */
     public VDB getVdb( String name ) {
-        ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
 
         for (VDB vdb : this.vdbs) {
             if (vdb.getName().equals(name)) return vdb;
@@ -266,7 +266,7 @@ public class ExecutionAdmin {
     }
 
     public void removeConnector( Connector connector ) throws Exception {
-        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
         this.admin.deleteConnectionFactory(connector.getName());
         this.connectorByNameMap.remove(connector.getName());
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createRemoveConnectorEvent(connector));
@@ -299,9 +299,9 @@ public class ExecutionAdmin {
     public void setPropertyValue( Connector connector,
                                   String propName,
                                   String value ) throws Exception {
-        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
-        ArgCheck.isNotEmpty(propName, "propName"); //$NON-NLS-1$
-        ArgCheck.isNotEmpty(value, "value"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(propName, "propName"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(value, "value"); //$NON-NLS-1$
         internalSetPropertyValue(connector, propName, value, true);
     }
 
@@ -336,9 +336,9 @@ public class ExecutionAdmin {
      */
     public void setProperties( Connector connector,
                                Properties changedProperties ) throws Exception {
-        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
-        ArgCheck.isNotNull(changedProperties, "changedProperties"); //$NON-NLS-1$
-        ArgCheck.isNotEmpty(changedProperties.entrySet(), "changedProperties"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(changedProperties, "changedProperties"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(changedProperties.entrySet(), "changedProperties"); //$NON-NLS-1$
 
         if (changedProperties.size() == 1) {
             String name = changedProperties.stringPropertyNames().iterator().next();

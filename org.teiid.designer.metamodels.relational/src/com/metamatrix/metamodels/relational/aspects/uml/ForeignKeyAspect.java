@@ -11,8 +11,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.relational.ForeignKey;
 import com.metamatrix.metamodels.relational.MultiplicityKind;
 import com.metamatrix.metamodels.relational.RelationalMetamodelConstants;
@@ -250,7 +250,7 @@ public class ForeignKeyAspect extends RelationalEntityAspect implements UmlAssoc
      * @see com.metamatrix.modeler.core.metamodels.aspects.UmlAssociation#getProperties(java.lang.Object, int)
      */
     public String[] getProperties(Object assoc, int end) {
-        return StringUtil.Constants.EMPTY_STRING_ARRAY;
+        return CoreStringUtil.Constants.EMPTY_STRING_ARRAY;
     }
 
     /* (non-Javadoc)
@@ -264,7 +264,7 @@ public class ForeignKeyAspect extends RelationalEntityAspect implements UmlAssoc
      * @see com.metamatrix.modeler.core.metamodel.aspect.uml.UmlRelationship#getName(java.lang.Object)
      */
     public String getName(Object eObject) {
-        return StringUtil.Constants.EMPTY_STRING;
+        return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     /** 
@@ -277,7 +277,7 @@ public class ForeignKeyAspect extends RelationalEntityAspect implements UmlAssoc
     }
 
     protected ForeignKey assertForeignKey(Object eObject) {
-        ArgCheck.isInstanceOf(ForeignKey.class, eObject);
+        CoreArgCheck.isInstanceOf(ForeignKey.class, eObject);
 
         return (ForeignKey)eObject;
     }

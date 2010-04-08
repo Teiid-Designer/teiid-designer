@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.uml2.aspects.uml;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.uml2.uml.Substitution;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 
@@ -119,7 +119,7 @@ public class Uml2SubstitutionUmlAspect extends AbstractUml2DependencyUmlAspect {
     }
 
     protected Substitution assertSubstitution( Object eObject ) {
-        ArgCheck.isInstanceOf(Substitution.class, eObject);
+        CoreArgCheck.isInstanceOf(Substitution.class, eObject);
         return (Substitution)eObject;
     }
 

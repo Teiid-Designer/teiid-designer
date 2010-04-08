@@ -15,16 +15,16 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.plugin.PluginUtilities;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.ui.UiConstants;
 
 /**<p>
  * </p>
  * @since 4.0
  */
-public abstract class AbstractSelectionWizard extends AbstractWizard implements StringUtil.Constants,
+public abstract class AbstractSelectionWizard extends AbstractWizard implements CoreStringUtil.Constants,
                                                                                 UiConstants.Images {
     //============================================================================================================================
     // Variables
@@ -51,9 +51,9 @@ public abstract class AbstractSelectionWizard extends AbstractWizard implements 
                                    final String id,
                                    final ViewerSorter sorter) {
         super(plugin, title, null);
-        ArgCheck.isNotNull(workbench);
-        ArgCheck.isNotNull(selection);
-        ArgCheck.isNotNull(id);
+        CoreArgCheck.isNotNull(workbench);
+        CoreArgCheck.isNotNull(selection);
+        CoreArgCheck.isNotNull(id);
         this.workbench = workbench;
         this.selection = selection;
         this.id = id;

@@ -28,9 +28,8 @@ import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDVariety;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.MappingClassColumn;
@@ -108,7 +107,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
      */
     public synchronized void validate( final EObject eObject,
                                        final ValidationContext context ) {
-        ArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
 
         // Defect 23839 - improved XML Document model validation by moving some of this methods code further down in the method.
         // Basically, each tree root is validated, but we were returning if the Document for the tree root was already validated.
@@ -238,7 +237,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
     }
 
     private boolean isLogicalModel( final EObject eObject ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         Resource r = eObject.eResource();
         if (r instanceof EmfResource) {
             EmfResource eResource = (EmfResource)r;
@@ -475,7 +474,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
 
                     // criteria must be defined
                     String choiceCriteria = option.getChoiceCriteria();
-                    if (StringUtil.isEmpty(choiceCriteria)) {
+                    if (CoreStringUtil.isEmpty(choiceCriteria)) {
                         // The entity is the default for the owner
                         if (ModelerCore.getModelEditor().equals(option, defaultOption)) {
                             continue;
@@ -695,7 +694,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
                 int status = context.getPreferenceStatus(ValidationPreferences.XML_ELEMENT_SCHEMA_REFERENCE, IStatus.WARNING);
                 if (status != IStatus.OK) {
                     EObject containerNode = node.eContainer();
-                    ArgCheck.isInstanceOf(XmlDocumentEntity.class, containerNode);
+                    CoreArgCheck.isInstanceOf(XmlDocumentEntity.class, containerNode);
                     Object containerComponent = getXsdComponent((XmlDocumentEntity)containerNode);
                     if (containerComponent != null) {
                         ValidationProblem problem = new ValidationProblemImpl(
@@ -773,7 +772,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
         // 2) The element/attribute exists below an element that is optional
         if (node.isExcludeFromDocument()) {
             Object container = node.eContainer();
-            ArgCheck.isInstanceOf(XmlDocumentEntity.class, container);
+            CoreArgCheck.isInstanceOf(XmlDocumentEntity.class, container);
             XmlDocumentEntity containerNode = (XmlDocumentEntity)container;
             if (!isOptional(node) && !isOptional(containerNode)) {
                 boolean isProcMapping = false;
@@ -995,7 +994,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
     private boolean isOptional( final XmlDocumentEntity node ) {
         if (isElementOrAttribute(node)) {
             XSDComponent xsdComponent = getXsdComponent(node);
-            Assertion.isNotNull(xsdComponent);
+            CoreArgCheck.isNotNull(xsdComponent);
             if (XsdUtil.getMinOccurs(xsdComponent) == 0) {
                 return true;
             }

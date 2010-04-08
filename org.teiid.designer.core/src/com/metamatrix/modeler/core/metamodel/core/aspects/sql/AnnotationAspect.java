@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -38,7 +38,7 @@ public class AnnotationAspect extends AbstractMetamodelAspect implements SqlAnno
     }
 
     private Annotation getAnnotation(EObject eObject) {
-        ArgCheck.isInstanceOf(Annotation.class, eObject);
+        CoreArgCheck.isInstanceOf(Annotation.class, eObject);
         return (Annotation) eObject;
     }
 

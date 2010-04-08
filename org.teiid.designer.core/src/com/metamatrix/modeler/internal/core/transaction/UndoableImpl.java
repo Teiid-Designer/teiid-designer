@@ -9,8 +9,8 @@ package com.metamatrix.modeler.internal.core.transaction;
 
 import java.util.Collection;
 import org.eclipse.emf.common.command.CompoundCommand;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -42,10 +42,10 @@ public class UndoableImpl implements Undoable {
      * 
      */
     public UndoableImpl(final Container container, final CompoundCommand command, final Collection resources, Object id, final Object source) {
-        ArgCheck.isNotNull(container);
-        ArgCheck.isNotNull(command);
-        ArgCheck.isNotNull(resources);
-        ArgCheck.isNotNull(id);
+        CoreArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(command);
+        CoreArgCheck.isNotNull(resources);
+        CoreArgCheck.isNotNull(id);
         
         this.container = container;
         this.command = command;
@@ -157,7 +157,7 @@ public class UndoableImpl implements Undoable {
      * @see com.metamatrix.modeler.core.transaction.Undoable#getUndoPresentationName()
      */
     public String getUndoPresentationName() {
-        String undoPresentationName = StringUtil.Constants.EMPTY_STRING;
+        String undoPresentationName = CoreStringUtil.Constants.EMPTY_STRING;
         
         if(description == null){
             undoPresentationName = StringUtilities.condenseToLength(command.getLabel(), MAX_LABEL_LENGTH, END_LABEL_LENGTH, ELIPSIS);
@@ -172,7 +172,7 @@ public class UndoableImpl implements Undoable {
      * @see com.metamatrix.modeler.core.transaction.Undoable#getRedoPresentationName()
      */
     public String getRedoPresentationName() {
-        String undoPresentationName = StringUtil.Constants.EMPTY_STRING;
+        String undoPresentationName = CoreStringUtil.Constants.EMPTY_STRING;
         
         if(description == null){
             undoPresentationName = StringUtilities.condenseToLength(command.getLabel(), MAX_LABEL_LENGTH, END_LABEL_LENGTH, ELIPSIS);

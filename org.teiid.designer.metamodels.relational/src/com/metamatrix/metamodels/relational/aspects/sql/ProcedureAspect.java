@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.relational.aspects.sql;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Procedure;
@@ -36,7 +36,7 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect#isVirtual(org.eclipse.emf.ecore.EObject)
      */
     public boolean isVirtual(final EObject eObject) {
-        ArgCheck.isInstanceOf(Procedure.class, eObject); 
+        CoreArgCheck.isInstanceOf(Procedure.class, eObject); 
         Procedure procedure = (Procedure) eObject;       
 		try {    
 			ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(procedure);
@@ -52,7 +52,7 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect#isFunction(org.eclipse.emf.ecore.EObject)
      */
     public boolean isFunction(final EObject eObject) {
-        ArgCheck.isInstanceOf(Procedure.class, eObject);
+        CoreArgCheck.isInstanceOf(Procedure.class, eObject);
         Procedure proc = (Procedure) eObject;
         return proc.isFunction();
     }
@@ -61,7 +61,7 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect#getParameters(org.eclipse.emf.ecore.EObject)
      */
     public List getParameters(final EObject eObject) {
-        ArgCheck.isInstanceOf(Procedure.class, eObject);
+        CoreArgCheck.isInstanceOf(Procedure.class, eObject);
         Procedure proc = (Procedure) eObject;
         return proc.getParameters();
     }
@@ -70,7 +70,7 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect#getResult(org.eclipse.emf.ecore.EObject)
      */
     public Object getResult(final EObject eObject) {
-        ArgCheck.isInstanceOf(Procedure.class, eObject);
+        CoreArgCheck.isInstanceOf(Procedure.class, eObject);
         Procedure proc = (Procedure) eObject;
         return proc.getResult();
     }
@@ -80,7 +80,7 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
      * @since 5.5.3
      */
     public int getUpdateCount(EObject eObject) {
-        ArgCheck.isInstanceOf(Procedure.class, eObject);
+        CoreArgCheck.isInstanceOf(Procedure.class, eObject);
         return ((Procedure)eObject).getUpdateCount().getValue();
     }
     
@@ -106,8 +106,8 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
      * @since 4.3
      */
     public boolean canAcceptTransformationSource(EObject target, EObject source) {
-        ArgCheck.isInstanceOf(Procedure.class, target);
-        ArgCheck.isNotNull(source);
+        CoreArgCheck.isInstanceOf(Procedure.class, target);
+        CoreArgCheck.isNotNull(source);
         // no object should be source of itself
         if(source == target) {
             return false;
@@ -126,8 +126,8 @@ public class ProcedureAspect extends RelationalEntityAspect implements SqlProced
      * @since 4.3
      */
     public boolean canBeTransformationSource(EObject source, EObject target) {
-        ArgCheck.isInstanceOf(Procedure.class, source);
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isInstanceOf(Procedure.class, source);
+        CoreArgCheck.isNotNull(target);
         // no object should be source of itself
         if(source == target) {
             return false;

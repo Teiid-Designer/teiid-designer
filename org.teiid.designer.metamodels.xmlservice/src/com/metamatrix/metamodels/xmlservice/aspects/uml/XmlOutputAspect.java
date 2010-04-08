@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.xmlservice.aspects.uml;
 import java.util.Collection;
 import java.util.Collections;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xmlservice.XmlOutput;
 import com.metamatrix.metamodels.xmlservice.XmlServiceComponent;
 import com.metamatrix.metamodels.xmlservice.XmlServiceMetamodelPlugin;
@@ -61,7 +61,7 @@ public class XmlOutputAspect extends XmlServiceComponentAspect implements UmlCla
      */
     @Override
     protected XmlServiceComponent assertXmlServiceComponent(Object eObject) {
-        ArgCheck.isInstanceOf(XmlOutput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlOutput.class, eObject);
         return (XmlOutput)eObject;
     }
 

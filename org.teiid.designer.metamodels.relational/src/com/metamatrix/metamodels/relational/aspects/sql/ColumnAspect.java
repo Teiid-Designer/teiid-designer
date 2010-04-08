@@ -11,8 +11,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Column;
@@ -46,7 +46,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#isSelectable(org.eclipse.emf.ecore.EObject)
      */
     public boolean isSelectable(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.isSelectable();
     }
@@ -55,7 +55,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#isUpdatable(org.eclipse.emf.ecore.EObject)
      */
     public boolean isUpdatable(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.isUpdateable();
     }
@@ -64,7 +64,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#isNullable(org.eclipse.emf.ecore.EObject)
      */
     public int getNullType(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;
         NullableType nullType = column.getNullable();
 
@@ -76,7 +76,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#isAutoIncrementable(org.eclipse.emf.ecore.EObject)
      */
     public boolean isAutoIncrementable(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.isAutoIncremented();
     }
@@ -85,7 +85,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#isCaseSensitive(org.eclipse.emf.ecore.EObject)
      */
     public boolean isCaseSensitive(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.isCaseSensitive();
     }
@@ -94,7 +94,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#isSigned(org.eclipse.emf.ecore.EObject)
      */
     public boolean isSigned(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.isSigned();
     }
@@ -103,7 +103,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#isCurrency(org.eclipse.emf.ecore.EObject)
      */
     public boolean isCurrency(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.isCurrency();
     }
@@ -112,7 +112,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#isFixedLength(org.eclipse.emf.ecore.EObject)
      */
     public boolean isFixedLength(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.isFixedLength();
     }
@@ -122,7 +122,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @since 4.2
      */
     public boolean isTranformationInputParameter(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         
         // First, only process virtual models ...
@@ -144,7 +144,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getSearchTye(org.eclipse.emf.ecore.EObject)
      */
     public int getSearchType(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         SearchabilityType searchType = column.getSearchability();
 
@@ -156,7 +156,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getDefaultValue(org.eclipse.emf.ecore.EObject)
      */
     public Object getDefaultValue(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.getDefaultValue();
     }
@@ -165,7 +165,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getMinValue(org.eclipse.emf.ecore.EObject)
      */
     public Object getMinValue(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.getMinimumValue();
     }
@@ -174,7 +174,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getMaxValue(org.eclipse.emf.ecore.EObject)
      */
     public Object getMaxValue(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.getMaximumValue();
     }
@@ -183,7 +183,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getFormat(org.eclipse.emf.ecore.EObject)
      */
     public String getFormat(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.getFormat();
     }    
@@ -192,7 +192,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getLength(org.eclipse.emf.ecore.EObject)
      */
     public int getLength(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.getLength();
     }
@@ -201,7 +201,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getScale(org.eclipse.emf.ecore.EObject)
      */
     public int getScale(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.getScale();
     }
@@ -211,7 +211,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @since 4.3
      */
     public int getDistinctValues(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.getDistinctValueCount();
     }
@@ -221,7 +221,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @since 4.3
      */
     public int getNullValues(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.getNullValueCount();
     }
@@ -238,7 +238,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#setDatatype(org.eclipse.emf.ecore.EObject, com.metamatrix.metamodels.core.Datatype)
      */
     public void setDatatype(EObject eObject, EObject datatype) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         final Column column = (Column) eObject;       
         column.setType(datatype);
     }
@@ -247,7 +247,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getDatatype(org.eclipse.emf.ecore.EObject)
      */
     public EObject getDatatype(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         final Column column = (Column) eObject;       
         return column.getType();
     }
@@ -257,7 +257,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @since 4.2
      */
     public String getNativeType(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         final Column column = (Column) eObject;       
         return column.getNativeType();
     }
@@ -265,26 +265,26 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getDatatypeName(org.eclipse.emf.ecore.EObject)
      */
     public String getDatatypeName(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         final Column column = (Column) eObject;       
         final EObject datatype = column.getType();
         if (datatype == null) {
-            return StringUtil.Constants.EMPTY_STRING;
+            return CoreStringUtil.Constants.EMPTY_STRING;
         }
         final DatatypeManager dtMgr = ModelerCore.getDatatypeManager(column,true);
         final String dtName = dtMgr.getName(datatype);
-        return dtName == null ? StringUtil.Constants.EMPTY_STRING : dtName; 
+        return dtName == null ? CoreStringUtil.Constants.EMPTY_STRING : dtName; 
     }
     
     /**
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getRuntimeType(org.eclipse.emf.ecore.EObject)
      */
     public String getRuntimeType(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         final Column column = (Column) eObject;       
         final EObject datatype = column.getType();
         return datatype == null ? 
-                            StringUtil.Constants.EMPTY_STRING : 
+                            CoreStringUtil.Constants.EMPTY_STRING : 
                             ModelerCore.getDatatypeManager(eObject,true).getRuntimeTypeName(datatype); 
     }
 
@@ -301,7 +301,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getPrecision(org.eclipse.emf.ecore.EObject)
      */
     public int getPrecision(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.getPrecision();
     }
@@ -310,7 +310,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getPosition(org.eclipse.emf.ecore.EObject)
      */
     public int getPosition(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject; 
         ColumnSet columnSet = (ColumnSet) column.eContainer();
         // correct from '0' to '1' based position
@@ -321,7 +321,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getCharOctetLength(org.eclipse.emf.ecore.EObject)
      */
     public int getCharOctetLength(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.getLength();
     }
@@ -337,7 +337,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getRadix(org.eclipse.emf.ecore.EObject)
      */
     public int getRadix(EObject eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.getRadix();
     }
@@ -354,7 +354,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#setLength(org.eclipse.emf.ecore.EObject, int)
      */
     public void setLength(EObject eObject, int length) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         final Column column = (Column) eObject;       
         column.setLength(length);
     }
@@ -371,7 +371,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#setNullType(org.eclipse.emf.ecore.EObject, int)
      */
     public void setNullType(EObject eObject, int nullType) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         final Column column = (Column) eObject;     
         column.setNullable(convertMetadataConstantToNullableType(nullType));
     }
@@ -380,12 +380,12 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
     public void updateObject(EObject targetObject, EObject sourceObject) {
-        ArgCheck.isInstanceOf(Column.class, targetObject);
-        ArgCheck.isNotNull(sourceObject);
+        CoreArgCheck.isInstanceOf(Column.class, targetObject);
+        CoreArgCheck.isNotNull(sourceObject);
         
         // look up the sqlAspect for the source
         MetamodelAspect aspect = AspectManager.getSqlAspect(sourceObject);       
-        ArgCheck.isInstanceOf(SqlColumnAspect.class, aspect);
+        CoreArgCheck.isInstanceOf(SqlColumnAspect.class, aspect);
         
         final Column tgtColumn = (Column) targetObject;
         final SqlColumnAspect srcColumnAspect = (SqlColumnAspect) aspect;
@@ -421,7 +421,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#isDatatypeFeature(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EStructuralFeature)
      */
     public boolean isDatatypeFeature(final EObject eObject, final EStructuralFeature eFeature) {
-        ArgCheck.isInstanceOf(Column.class, eObject); 
+        CoreArgCheck.isInstanceOf(Column.class, eObject); 
         final EObjectImpl eObjectImpl = super.getEObjectImpl(eObject);
         if (eObjectImpl != null) {
             switch (eObjectImpl.eDerivedStructuralFeatureID(eFeature)) {

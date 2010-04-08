@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
 import com.metamatrix.metamodels.relational.SearchabilityType;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -168,8 +168,8 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
      */
     public void register( final int jdbcTypeInt, final String jdbcTypeName, final EObject datatype ) {
         initialize();
-        ArgCheck.isNotNull(jdbcTypeName);
-        ArgCheck.isNotNull(datatype);
+        CoreArgCheck.isNotNull(jdbcTypeName);
+        CoreArgCheck.isNotNull(datatype);
         final String identifier = getIdentifier(datatype);
         register(jdbcTypeInt,jdbcTypeName,identifier);
     }
@@ -183,8 +183,8 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
      */
     public void register( final int jdbcTypeInt, final String jdbcTypeName, final String datatypeUri ) {
         initialize();
-        ArgCheck.isNotNull(jdbcTypeName);
-        ArgCheck.isNotNull(datatypeUri);
+        CoreArgCheck.isNotNull(jdbcTypeName);
+        CoreArgCheck.isNotNull(datatypeUri);
         final String jdbcUpperTypeName = jdbcTypeName.toUpperCase();
         this.jdbcToBuiltInType.put(jdbcUpperTypeName,datatypeUri);
         this.builtInTypeToJdbc.put(datatypeUri,jdbcUpperTypeName);
@@ -194,7 +194,7 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
     }
     
     protected String getIdentifier( final EObject datatype ) {
-        ArgCheck.isNotNull(datatype);
+        CoreArgCheck.isNotNull(datatype);
         final SqlAspect sqlAspect = (SqlAspect)ModelerCore.getMetamodelRegistry().getMetamodelAspect(datatype,SqlAspect.class);
         if ( sqlAspect == null ) {
             return this.datatypeManager.getName(datatype);
@@ -258,7 +258,7 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
      * @throws ModelerCoreException if there is a problem with the datatype manager
      */
     public String getJdbcTypeName( final EObject type ) throws ModelerCoreException {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         initialize();
         String name = (String)datatypeToJdbcName.get(type);
         if ( name == null ) {
@@ -276,12 +276,12 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
             }
             if ( name == null ) {
                 final EObject objType = findDatatype(DatatypeConstants.BuiltInNames.OBJECT);
-                ArgCheck.isNotNull(objType);
+                CoreArgCheck.isNotNull(objType);
                 final String id = getIdentifier(objType);
-                ArgCheck.isNotNull(id);
+                CoreArgCheck.isNotNull(id);
                 name = (String) this.builtInTypeToJdbc.get(id);
             }
-            ArgCheck.isNotNull(name);
+            CoreArgCheck.isNotNull(name);
 
             this.datatypeToJdbcName.put(type,name);
         }

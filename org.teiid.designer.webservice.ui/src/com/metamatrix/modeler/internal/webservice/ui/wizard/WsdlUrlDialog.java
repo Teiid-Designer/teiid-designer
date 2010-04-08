@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import com.metamatrix.common.protocol.URLHelper;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.util.UriValidator;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
 import com.metamatrix.modeler.ui.IHelpContextIds;
@@ -287,7 +287,7 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, IInternalU
      */
     void handleModifyText( ModifyEvent theEvent ) {
         this.newValue = ((Text)theEvent.widget).getText();
-        this.currentStatus = new Status(IStatus.OK, IUiConstants.PLUGIN_ID, IStatus.OK, StringUtil.Constants.EMPTY_STRING, null);
+        this.currentStatus = new Status(IStatus.OK, IUiConstants.PLUGIN_ID, IStatus.OK, CoreStringUtil.Constants.EMPTY_STRING, null);
 
         URL url = null;
         try {
@@ -376,11 +376,11 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, IInternalU
                         result = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, StatusCodes.NO_CHANGE,
                                             getString("valueUnchanged"), //$NON-NLS-1$
                                             null); // no exception
-                    } else if (!StringUtil.isEmpty(oldValue) && StringUtil.isEmpty(theNewValue)) {
+                    } else if (!CoreStringUtil.isEmpty(oldValue) && CoreStringUtil.isEmpty(theNewValue)) {
                         result = new Status(IStatus.WARNING, UiConstants.PLUGIN_ID, StatusCodes.CLEAR_VALUE,
                                             getString("valueCleared"), //$NON-NLS-1$
                                             null); // no exception
-                    } else if (!StringUtil.isEmpty(oldValue) && !StringUtil.isEmpty(theNewValue) && !oldValue.equals(theNewValue)) {
+                    } else if (!CoreStringUtil.isEmpty(oldValue) && !CoreStringUtil.isEmpty(theNewValue) && !oldValue.equals(theNewValue)) {
                         result = new Status(IStatus.WARNING, UiConstants.PLUGIN_ID, StatusCodes.CHANGED_VALUE,
                                             UTIL.getString(PREFIX + "valueChanged", oldValue), //$NON-NLS-1$
                                             null); // no exception

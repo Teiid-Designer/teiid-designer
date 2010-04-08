@@ -43,7 +43,7 @@ import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
@@ -86,7 +86,7 @@ public class NewConnectorPanel extends Composite implements IChangeNotifier, IPr
                               ExecutionAdmin admin,
                               ConnectorType type ) {
         super(parent, SWT.NONE);
-        ArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
 
         this.changeListeners = new ListenerList(ListenerList.IDENTITY);
         this.admin = admin;

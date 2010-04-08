@@ -10,7 +10,7 @@ package com.metamatrix.modeler.transformation.aspects.sql;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.SearchabilityType;
 import com.metamatrix.metamodels.transformation.InputParameter;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
@@ -57,7 +57,7 @@ public class InputParameterSqlAspect extends AbstractTransformationSqlAspect imp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
     public String getName(EObject eObject) {
-        ArgCheck.isInstanceOf(InputParameter.class, eObject); 
+        CoreArgCheck.isInstanceOf(InputParameter.class, eObject); 
         InputParameter param = (InputParameter) eObject;       
         return param.getName();
     }
@@ -67,7 +67,7 @@ public class InputParameterSqlAspect extends AbstractTransformationSqlAspect imp
      */
     @Override
     public String getFullName(EObject eObject) {
-        ArgCheck.isInstanceOf(InputParameter.class, eObject); 
+        CoreArgCheck.isInstanceOf(InputParameter.class, eObject); 
         return INPUT_SET_FULL_NAME + FULL_NAME_DELIMITER + this.getName(eObject);
     }
 
@@ -234,7 +234,7 @@ public class InputParameterSqlAspect extends AbstractTransformationSqlAspect imp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getDatatypeName(org.eclipse.emf.ecore.EObject)
      */
     public String getDatatypeName(EObject eObject) {
-        ArgCheck.isInstanceOf(InputParameter.class, eObject); 
+        CoreArgCheck.isInstanceOf(InputParameter.class, eObject); 
         InputParameter param = (InputParameter) eObject;       
         final EObject datatype = param.getType();
         final DatatypeManager dtMgr = ModelerCore.getDatatypeManager(param,true);
@@ -254,7 +254,7 @@ public class InputParameterSqlAspect extends AbstractTransformationSqlAspect imp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#setDatatype(org.eclipse.emf.ecore.EObject, com.metamatrix.metamodels.core.Datatype)
      */
     public void setDatatype(EObject eObject, EObject datatype) {
-        ArgCheck.isInstanceOf(InputParameter.class, eObject); 
+        CoreArgCheck.isInstanceOf(InputParameter.class, eObject); 
         InputParameter param = (InputParameter) eObject;       
         param.setType(datatype);
     }
@@ -263,7 +263,7 @@ public class InputParameterSqlAspect extends AbstractTransformationSqlAspect imp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getDatatype(org.eclipse.emf.ecore.EObject)
      */
     public EObject getDatatype(EObject eObject) {
-        ArgCheck.isInstanceOf(InputParameter.class, eObject); 
+        CoreArgCheck.isInstanceOf(InputParameter.class, eObject); 
         InputParameter param = (InputParameter) eObject;       
         return param.getType();
     }
@@ -272,7 +272,7 @@ public class InputParameterSqlAspect extends AbstractTransformationSqlAspect imp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getRuntimeType(org.eclipse.emf.ecore.EObject)
      */
     public String getRuntimeType(EObject eObject) {
-        ArgCheck.isInstanceOf(InputParameter.class, eObject); 
+        CoreArgCheck.isInstanceOf(InputParameter.class, eObject); 
         InputParameter param = (InputParameter) eObject;       
         final EObject datatype = param.getType();
         final DatatypeManager dtMgr = ModelerCore.getDatatypeManager(param,true);
@@ -283,7 +283,7 @@ public class InputParameterSqlAspect extends AbstractTransformationSqlAspect imp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#getDatatypeObjectID(org.eclipse.emf.ecore.EObject)
      */
     public String getDatatypeObjectID(EObject eObject) {
-        ArgCheck.isInstanceOf(InputParameter.class, eObject); 
+        CoreArgCheck.isInstanceOf(InputParameter.class, eObject); 
         InputParameter param = (InputParameter) eObject;       
         final EObject datatype = param.getType();
         final DatatypeManager dtMgr = ModelerCore.getDatatypeManager(param,true);
@@ -345,9 +345,9 @@ public class InputParameterSqlAspect extends AbstractTransformationSqlAspect imp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect#updateObject(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */
     public void updateObject(EObject targetObject, EObject sourceObject) {
-        ArgCheck.isNotNull(sourceObject);
+        CoreArgCheck.isNotNull(sourceObject);
         SqlAspect columnAspect = AspectManager.getSqlAspect(sourceObject);
-        ArgCheck.isInstanceOf(SqlColumnAspect.class, columnAspect);
+        CoreArgCheck.isInstanceOf(SqlColumnAspect.class, columnAspect);
         // get the source column type
         EObject srcType = ((SqlColumnAspect) columnAspect).getDatatype(sourceObject);
         setDatatype(targetObject, srcType);
@@ -357,7 +357,7 @@ public class InputParameterSqlAspect extends AbstractTransformationSqlAspect imp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect#isDatatypeFeature(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EStructuralFeature)
      */
     public boolean isDatatypeFeature(final EObject eObject, final EStructuralFeature eFeature) {
-        ArgCheck.isInstanceOf(InputParameter.class, eObject); 
+        CoreArgCheck.isInstanceOf(InputParameter.class, eObject); 
         final EObjectImpl eObjectImpl = super.getEObjectImpl(eObject);
         if (eObjectImpl != null) {
             switch (eObjectImpl.eDerivedStructuralFeatureID(eFeature)) {

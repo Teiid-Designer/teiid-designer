@@ -9,7 +9,7 @@ package com.metamatrix.modeler.mapping.ui.util;
 
 import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.util.INewModelObjectHelper;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
@@ -35,7 +35,7 @@ public class MappingUiNewModelObjectHelper implements INewModelObjectHelper {
      * @since 4.3
      */
     public boolean canHelpCreate( Object newObject ) {
-        ArgCheck.isNotNull(newObject);
+        CoreArgCheck.isNotNull(newObject);
 
         // First case is a standard mapping class table
         if (newObject != null && newObject instanceof EObject) {
@@ -62,7 +62,7 @@ public class MappingUiNewModelObjectHelper implements INewModelObjectHelper {
      */
     public boolean helpCreate( Object newObject,
                                Map properties ) {
-        ArgCheck.isNotNull(newObject);
+        CoreArgCheck.isNotNull(newObject);
 
         if (newObject instanceof EObject) {
             EObject newTarget = (EObject)newObject;

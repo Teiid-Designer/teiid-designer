@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.jdbc.metadata.JdbcCatalog;
 import com.metamatrix.modeler.jdbc.metadata.JdbcNode;
@@ -52,7 +52,7 @@ public class JdbcNodeToRelationalMappingImpl implements JdbcNodeToRelationalMapp
      * @see com.metamatrix.modeler.jdbc.relational.JdbcNodeToRelationalMapping#getRelationalClassForJdbcNode(com.metamatrix.modeler.jdbc.metadata.JdbcNode)
      */
     public EClass getRelationalClassForJdbcNode(final JdbcNode jdbcNode) {
-        ArgCheck.isNotNull(jdbcNode);
+        CoreArgCheck.isNotNull(jdbcNode);
         
         if ( jdbcNode instanceof JdbcCatalog ) {
             return findClassifierById(RelationalPackage.CATALOG);
@@ -84,9 +84,9 @@ public class JdbcNodeToRelationalMappingImpl implements JdbcNodeToRelationalMapp
      * @see com.metamatrix.modeler.jdbc.relational.JdbcNodeToRelationalMapping#setRelationalClassForJdbcTableType(java.lang.String, java.lang.String)
      */
     public void setRelationalClassForJdbcTableType(final String tableType, final String eClassName) {
-        ArgCheck.isNotNull(tableType);
-        ArgCheck.isNotNull(eClassName);
-        ArgCheck.isNotZeroLength(eClassName);
+        CoreArgCheck.isNotNull(tableType);
+        CoreArgCheck.isNotNull(eClassName);
+        CoreArgCheck.isNotZeroLength(eClassName);
         this.tableTypeNameToEClassName.put(tableType,eClassName);
         this.upperTableTypeNameToEClassName.put(tableType.toUpperCase(),eClassName);
     }

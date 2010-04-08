@@ -48,7 +48,7 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.xsd.XSDElementDeclaration;
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.xml.XmlDocument;
 import com.metamatrix.metamodels.xml.XmlRoot;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -1047,7 +1047,7 @@ public class InterfaceDefinitionPage extends WizardPage
             containerName = locationContainerText.getText().trim();
         }
 
-        if (containerName != null && !StringUtil.isEmpty(containerName)) {
+        if (containerName != null && !CoreStringUtil.isEmpty(containerName)) {
             IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
             IResource resource = root.findMember(new Path(containerName));
 

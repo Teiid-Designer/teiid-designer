@@ -10,7 +10,7 @@ package com.metamatrix.modeler.webservice.util;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.xsd.XSDNamedComponent;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xml.XmlValueHolder;
 
 
@@ -46,7 +46,7 @@ public class InputVariable {
      */
     public InputVariable( final XSDNamedComponent schemaComponent, final String name, final String xpath ) {
         super();
-        ArgCheck.isNotNull(schemaComponent);
+        CoreArgCheck.isNotNull(schemaComponent);
         this.schemaComponent = schemaComponent;
         this.name = name;
         this.xpath = xpath;

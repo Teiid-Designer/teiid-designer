@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.uml2.uml.EnumerationLiteral;
 import org.eclipse.uml2.uml.VisibilityKind;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.uml2.Uml2MetamodelConstants;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -159,7 +159,7 @@ public class Uml2EnumerationLiteralUmlAspect extends AbstractUml2NamedElementUml
     }
 
     private EnumerationLiteral assertEnumerationLiteral( Object eObject ) {
-        ArgCheck.isInstanceOf(EnumerationLiteral.class, eObject);
+        CoreArgCheck.isInstanceOf(EnumerationLiteral.class, eObject);
         return (EnumerationLiteral)eObject;
     }
 

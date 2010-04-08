@@ -30,7 +30,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.query.QueryValidator;
@@ -153,8 +153,8 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
     public Collection getSqlRowsFromFile( String fileString ) {
         // PERFORM ARG CHECK
         // Look for NULL or EMPTY strings
-        ArgCheck.isNotNull(fileString);
-        ArgCheck.isNotEmpty(fileString);
+        CoreArgCheck.isNotNull(fileString);
+        CoreArgCheck.isNotEmpty(fileString);
 
         Collection sqlRows = new ArrayList();
         FileReader fileReader = null;
@@ -209,9 +209,9 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
         Collection unusedSqlRows = Collections.EMPTY_LIST;
         // PERFORM ARG CHECK
         // Look for NULL or EMPTY strings
-        ArgCheck.isNotNull(fileString);
-        ArgCheck.isNotNull(modelResource);
-        ArgCheck.isNotEmpty(fileString);
+        CoreArgCheck.isNotNull(fileString);
+        CoreArgCheck.isNotNull(modelResource);
+        CoreArgCheck.isNotEmpty(fileString);
 
         Collection sqlRows = getSqlRowsFromFile(fileString);
 

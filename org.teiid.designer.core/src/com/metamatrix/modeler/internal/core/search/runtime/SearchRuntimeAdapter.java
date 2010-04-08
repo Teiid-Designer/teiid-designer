@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelImport;
 import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -822,7 +822,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	 */
 	public static ResourceObjectRecord createResourceObjectRecord(final char[] record) {
 		final String str = new String(record);
-		final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+		final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
 		final ResourceObjectRecordImpl objRecord = new ResourceObjectRecordImpl();
 
 		// read each token and set it on the record
@@ -862,7 +862,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
      */
     public static TypedObjectRecord createTypedObjectRecord(final char[] record) {
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final TypedObjectRecordImpl objRecord = new TypedObjectRecordImpl();
 
         // read each token and set it on the record
@@ -908,7 +908,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
      */
     public static AnnotatedObjectRecord createAnnotatedObjectRecord(final char[] record) {
         final String str = new String(record);
-        final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+        final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
         final AnnotatedObjectRecordImpl annotRecord = new AnnotatedObjectRecordImpl();
 
         // read each token and set it on the record
@@ -949,7 +949,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	 */
 	public static ReferencesRecord createResourceObjRefRecord(final char[] record) {
 		final String str = new String(record);
-		final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+		final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
 		final ReferencesRecordImpl refRecord = new ReferencesRecordImpl();
 
 		// read each token and set it on the record
@@ -1006,7 +1006,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	 */
 	public static ResourceRecord createResourceRecord(final char[] record) {
 		final String str = new String(record);
-		final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+		final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
 		final ResourceRecordImpl resourceRecord = new ResourceRecordImpl();
 
 		// read each token and set it on the record
@@ -1038,7 +1038,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	 */
 	public static ResourceImportRecord createResourceImportRecord(final char[] record) {
 		final String str = new String(record);
-		final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+		final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
 		final ResourceImportRecordImpl importRecord = new ResourceImportRecordImpl();
 
 		// read each token and set it on the record
@@ -1064,7 +1064,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	 */
 	public static RelationshipRecord createRelationshipRecord(final char[] record) {
 		final String str = new String(record);
-		final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+		final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
 		final RelationshipRecordImpl relationRecord = new RelationshipRecordImpl();
 
 		// read each token and set it on the record
@@ -1102,7 +1102,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	 */
 	public static RelationshipTypeRecord createRelationshipTypeRecord(final char[] record) {
 		final String str = new String(record);
-		final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+		final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
 		final RelationshipTypeRecordImpl relationTypeRecord = new RelationshipTypeRecordImpl();
 
 		// read each token and set it on the record
@@ -1137,7 +1137,7 @@ public class SearchRuntimeAdapter extends RuntimeAdapter {
 	 */
 	public static RelatedObjectRecord createRelatedObjectRecord(final char[] record) {
 		final String str = new String(record);
-		final List tokens = StringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
+		final List tokens = CoreStringUtil.split(str,String.valueOf(IndexConstants.RECORD_STRING.RECORD_DELIMITER));
 		final RelatedObjectRecordImpl relatedRecord = new RelatedObjectRecordImpl();
 
 		// The tokens are the standard header values

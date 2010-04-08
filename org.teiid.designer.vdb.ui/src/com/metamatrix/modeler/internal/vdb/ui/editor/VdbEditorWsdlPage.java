@@ -39,7 +39,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.EditorPart;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.editors.IRevertable;
 import com.metamatrix.modeler.ui.undo.IUndoManager;
@@ -59,7 +59,7 @@ import com.metamatrix.ui.text.StyledTextEditor;
  * @since 4.2
  */
 public class VdbEditorWsdlPage extends EditorPart
-    implements Images, VdbUiConstants, StringUtil.Constants, VdbEditor.Constants, IRevertable, IGotoMarker, IUndoManager {
+    implements Images, VdbUiConstants, CoreStringUtil.Constants, VdbEditor.Constants, IRevertable, IGotoMarker, IUndoManager {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(VdbEditorWsdlPage.class);
 

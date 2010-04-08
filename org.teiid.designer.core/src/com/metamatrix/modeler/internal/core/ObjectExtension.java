@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.metamodels.core.CoreFactory;
@@ -251,7 +251,7 @@ public class ObjectExtension extends EObjectImpl {
         if ( annotation != null ) {
             final EMap tags = annotation.getTags();
             final Object key = eFeature.getName();
-            if ( newValue == null  || StringUtil.Constants.EMPTY_STRING.equals(newValue)) {
+            if ( newValue == null  || CoreStringUtil.Constants.EMPTY_STRING.equals(newValue)) {
                 tags.removeKey(key);
             } else {
                 final EDataType dt = (EDataType)eFeature.getEType();
@@ -310,9 +310,9 @@ public class ObjectExtension extends EObjectImpl {
             final EFactory fac = ePackage.getEFactoryInstance();
             String value = (String)tags.get(key);
             // if the value is null, get default value, if that is null get the type default value                
-            if(value == null || StringUtil.Constants.EMPTY_STRING.equals(value)) {
+            if(value == null || CoreStringUtil.Constants.EMPTY_STRING.equals(value)) {
                 Object defaultValue = eFeature.getDefaultValue();
-                if(defaultValue != null && !StringUtil.Constants.EMPTY_STRING.equals(defaultValue)) {
+                if(defaultValue != null && !CoreStringUtil.Constants.EMPTY_STRING.equals(defaultValue)) {
                     value = defaultValue.toString();
                 } else {
                     Object typeDefault = dt.getDefaultValue();

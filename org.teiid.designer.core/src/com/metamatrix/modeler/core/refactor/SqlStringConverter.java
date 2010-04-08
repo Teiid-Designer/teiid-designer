@@ -20,7 +20,7 @@ import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.InvalidIDException;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
@@ -43,8 +43,8 @@ public class SqlStringConverter {
      * in the specified MetadataSession, it is left as a uuid.
      */
     public static String convertUUIDsToFullNames(final String uuidString, final Collection eResources) {
-        if (StringUtil.isEmpty(uuidString)) {
-            return StringUtil.Constants.EMPTY_STRING;
+        if (CoreStringUtil.isEmpty(uuidString)) {
+            return CoreStringUtil.Constants.EMPTY_STRING;
         }
         final StringBuffer sb = new StringBuffer();
         
@@ -74,7 +74,7 @@ public class SqlStringConverter {
                         } else {
                             name = aspect.getFullName(obj);
                         }
-                        if (!StringUtil.isEmpty(name)) {
+                        if (!CoreStringUtil.isEmpty(name)) {
                             sb.append(name);
                         }
                     }

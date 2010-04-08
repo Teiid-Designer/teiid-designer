@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.core.workspace;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * FakeOpenable
@@ -24,8 +24,8 @@ public class FakeOpenable implements Openable {
      */
     public FakeOpenable( final String key ) {
         super();
-        ArgCheck.isNotNull(key);
-        ArgCheck.isNotZeroLength(key);
+        CoreArgCheck.isNotNull(key);
+        CoreArgCheck.isNotZeroLength(key);
         this.key = key;
         this.closed = true;
     }

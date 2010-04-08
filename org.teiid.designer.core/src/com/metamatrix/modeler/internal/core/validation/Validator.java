@@ -12,7 +12,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.util.ModelObjectCollector;
 import com.metamatrix.modeler.core.validation.ValidationContext;
@@ -38,8 +38,8 @@ public class Validator {
      * @param context The validation context for the EObject.
      */
     public static void validate(IProgressMonitor monitor, final EmfResource emfResource, final ValidationContext context) {
-        ArgCheck.isNotNull(emfResource);
-        ArgCheck.isNotNull(context);        
+        CoreArgCheck.isNotNull(emfResource);
+        CoreArgCheck.isNotNull(context);        
 		// create a monitor if needed
 		monitor = monitor != null ? monitor : new NullProgressMonitor();
         // clear any existing results on the context
@@ -101,8 +101,8 @@ public class Validator {
      * @param context The validation context for the EObject.
      */
     public static void validateObject(IProgressMonitor monitor, final Object object, final ValidationContext context) {
-        ArgCheck.isNotNull(object);
-        ArgCheck.isNotNull(context);
+        CoreArgCheck.isNotNull(object);
+        CoreArgCheck.isNotNull(context);
 		// create a monitor if needed
 		monitor = monitor != null ? monitor : new NullProgressMonitor();        
         // path to the object in the workspcase

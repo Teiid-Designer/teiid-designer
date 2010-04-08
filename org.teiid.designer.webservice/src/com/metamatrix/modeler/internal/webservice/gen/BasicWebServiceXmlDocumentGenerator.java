@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDNamedComponent;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.internal.xml.XmlDocumentBuilderImpl;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
@@ -75,7 +75,7 @@ public class BasicWebServiceXmlDocumentGenerator implements IWebServiceXmlDocume
      * @since 4.2
      */
     public void addWebServiceComponent( WebServiceComponent webServiceComponent ) {
-        ArgCheck.isNotNull(webServiceComponent);
+        CoreArgCheck.isNotNull(webServiceComponent);
         if (!this.webServiceComponents.contains(webServiceComponent)) {
             this.webServiceComponents.add(webServiceComponent);
         }
@@ -86,7 +86,7 @@ public class BasicWebServiceXmlDocumentGenerator implements IWebServiceXmlDocume
      * @since 4.2
      */
     public void addWebServiceComponents( List webServiceComponents ) {
-        ArgCheck.isNotNull(webServiceComponents);
+        CoreArgCheck.isNotNull(webServiceComponents);
         final Iterator iter = webServiceComponents.iterator();
         while (iter.hasNext()) {
             final WebServiceComponent webServiceComponent = (WebServiceComponent)iter.next();
@@ -125,7 +125,7 @@ public class BasicWebServiceXmlDocumentGenerator implements IWebServiceXmlDocume
      * @since 4.2
      */
     public void setXmlDocumentResource( Resource wsModel ) {
-        ArgCheck.isNotNull(wsModel);
+        CoreArgCheck.isNotNull(wsModel);
         this.xmlDocResource = wsModel;
     }
 

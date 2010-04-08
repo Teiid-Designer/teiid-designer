@@ -26,7 +26,7 @@ import org.jdom.Document;
 import org.jdom.output.XMLOutputter;
 import com.metamatrix.core.log.Logger;
 import com.metamatrix.core.log.NullLogger;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.xslt.Style;
 import com.metamatrix.core.xslt.XsltTransform;
 import com.metamatrix.internal.core.xml.JdomHelper;
@@ -122,9 +122,9 @@ public class DdlWriterImpl implements DdlWriter {
                           final String modelFilename,
                           final OutputStream stream,
                           final IProgressMonitor monitor ) {
-        ArgCheck.isNotNull(emfResource);
-        ArgCheck.isNotNull(stream);
-        ArgCheck.isNotNull(modelName);
+        CoreArgCheck.isNotNull(emfResource);
+        CoreArgCheck.isNotNull(stream);
+        CoreArgCheck.isNotNull(modelName);
         final ModelContents contents = emfResource instanceof EmfResource ? ((EmfResource)emfResource).getModelContents() : new ModelContents(
                                                                                                                                               emfResource);
         final ModelWrapper wrapper = new ModelWrapper(emfResource, contents, null, modelName, modelFilename);
@@ -138,8 +138,8 @@ public class DdlWriterImpl implements DdlWriter {
     public IStatus write( final ModelResource model,
                           final OutputStream stream,
                           final IProgressMonitor monitor ) {
-        ArgCheck.isNotNull(model);
-        ArgCheck.isNotNull(stream);
+        CoreArgCheck.isNotNull(model);
+        CoreArgCheck.isNotNull(stream);
 
         // Get the emf resource from the model ...
         try {
@@ -165,9 +165,9 @@ public class DdlWriterImpl implements DdlWriter {
     public IStatus write( final ModelWorkspaceSelections selections,
                           final OutputStream stream,
                           final IProgressMonitor monitor ) {
-        ArgCheck.isNotNull(selections);
-        ArgCheck.isNotNull(selections.getModelWorkspaceView());
-        ArgCheck.isNotNull(stream);
+        CoreArgCheck.isNotNull(selections);
+        CoreArgCheck.isNotNull(selections.getModelWorkspaceView());
+        CoreArgCheck.isNotNull(stream);
 
         // Get the selected objects ...
         List modelResources = null;
@@ -221,8 +221,8 @@ public class DdlWriterImpl implements DdlWriter {
     protected IStatus doWrite( final IntermediateFormat formatter,
                                final OutputStream stream,
                                final IProgressMonitor monitor ) {
-        ArgCheck.isNotNull(formatter);
-        ArgCheck.isNotNull(stream);
+        CoreArgCheck.isNotNull(formatter);
+        CoreArgCheck.isNotNull(stream);
 
         // Start the progress monitor tasks ...
         final String taskName = DdlPlugin.Util.getString("DdlWriterImpl.ProgressMonitor_main_task_name"); //$NON-NLS-1$

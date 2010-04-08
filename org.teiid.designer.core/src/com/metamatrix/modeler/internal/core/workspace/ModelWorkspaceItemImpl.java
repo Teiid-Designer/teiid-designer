@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.HashCodeUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelProject;
@@ -525,7 +525,7 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
      */
     public void accept( ModelWorkspaceVisitor visitor,
                         int depth ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(visitor);
+        CoreArgCheck.isNotNull(visitor);
         if (depth != DEPTH_INFINITE && depth != DEPTH_ONE && depth != DEPTH_ZERO) {
             throw new IllegalArgumentException(ModelerCore.Util.getString("ModelWorkspaceItemImpl.Invalid_visitor_depth")); //$NON-NLS-1$            
         }
@@ -545,7 +545,7 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
      * @see com.metamatrix.modeler.core.workspace.ModelWorkspaceItem#getChild(org.eclipse.core.resources.IResource)
      */
     public ModelWorkspaceItem getChild( final IResource resource ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         final String resourceName = resource.getName();
         return getChild(resourceName);
     }
@@ -554,7 +554,7 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
      * @see com.metamatrix.modeler.core.workspace.ModelWorkspaceItem#getChild(java.lang.String)
      */
     public ModelWorkspaceItem getChild( final String childName ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(childName);
+        CoreArgCheck.isNotNull(childName);
         final ModelWorkspaceItem[] children = this.getChildren();
         for (int j = 0; j < children.length; ++j) {
             final ModelWorkspaceItem child = children[j];

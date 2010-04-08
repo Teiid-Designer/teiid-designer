@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.net.URL;
 import javax.xml.transform.stream.StreamSource;
 import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * StyleFromResource
@@ -39,9 +39,9 @@ public class StyleFromResource implements Style {
                               final String name,
                               final String desc ) {
         super();
-        ArgCheck.isNotNull(name);
-        ArgCheck.isNotZeroLength(name);
-        ArgCheck.isNotNull(url);
+        CoreArgCheck.isNotNull(name);
+        CoreArgCheck.isNotZeroLength(name);
+        CoreArgCheck.isNotNull(url);
         this.url = url;
         this.name = name;
         this.description = desc != null ? desc : ""; //$NON-NLS-1$

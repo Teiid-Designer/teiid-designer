@@ -9,7 +9,7 @@ package com.metamatrix.metamodels.relational.aspects.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
 import com.metamatrix.modeler.core.validation.ObjectValidationRule;
@@ -37,7 +37,7 @@ public class ColumnNativeTypeRule implements ObjectValidationRule {
      */
     public void validate(EObject theObject,
                          ValidationContext theContext) {
-        ArgCheck.isInstanceOf(Column.class, theObject);
+        CoreArgCheck.isInstanceOf(Column.class, theObject);
 
         // validate the native type
         String validationMsg = validate((Column)theObject);

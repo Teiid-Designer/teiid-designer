@@ -77,7 +77,7 @@ public final class DateUtil {
      * @throws ParseException if the string is not of the expected format
      */
     public static final Date convertStringToDate( String dateString ) throws ParseException {
-        ArgCheck.isNotEmpty(dateString);
+        CoreArgCheck.isNotEmpty(dateString);
         int badIndex = 0;
         int millis = 0;
         try {

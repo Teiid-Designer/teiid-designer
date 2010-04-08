@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.modeler.util.FileUtil;
 import com.metamatrix.core.modeler.util.FileUtil.Extensions;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 
 public class UdfModelExporter {
@@ -90,7 +90,7 @@ public class UdfModelExporter {
         }
 
         // make sure export file path has been set
-        if (StringUtil.isEmpty(this.exportZipFilePath)) {
+        if (CoreStringUtil.isEmpty(this.exportZipFilePath)) {
             return UdfPlugin.createErrorStatus(PREFIX + "missingExportFile"); //$NON-NLS-1$
         }
 

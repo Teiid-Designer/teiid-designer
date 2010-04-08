@@ -12,7 +12,7 @@ import java.util.Collection;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.workspace.ModelWorkspace;
@@ -50,7 +50,7 @@ public class TransformationMetadataFactory extends ServerMetadataFactory {
      * @return the QueryMetadataInterface implementation; never null
      */
     public QueryMetadataInterface getModelerMetadata(final EObject eObject) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         return getModelerMetadata(eObject, false);
     }
     
@@ -64,7 +64,7 @@ public class TransformationMetadataFactory extends ServerMetadataFactory {
      * @return the QueryMetadataInterface implementation; never null
      */
     public QueryMetadataInterface getModelerMetadata(final EObject eObject, final boolean restrictSearch) {
-		ArgCheck.isNotNull(eObject);
+		CoreArgCheck.isNotNull(eObject);
 		QueryMetadataContext context = buildQueryMetadataContext(eObject, restrictSearch);
 		Container container = null;
         try {
@@ -110,7 +110,7 @@ public class TransformationMetadataFactory extends ServerMetadataFactory {
      * @return the QueryMetadataInterface implementation; never null
      */
     public QueryMetadataInterface getVdbMetadata(final QueryMetadataContext context, Container container) {
-        ArgCheck.isNotNull(context);
+        CoreArgCheck.isNotNull(context);
         // Create the QueryMetadataInterface implementation to use
         // for query validation and resolution
         return new TransformationMetadataFacade(new VdbMetadata(context, container));

@@ -11,7 +11,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.reconciler.BindingList;
 import com.metamatrix.modeler.transformation.ui.reconciler.ColorManager;
@@ -108,7 +108,7 @@ public class DatatypeReconcilerDialog extends ExtendedTitleAreaDialog {
      * @since 4.0
      */
     public void setDialogTitle(final String title) {
-        ArgCheck.isNotNull(title);
+        CoreArgCheck.isNotNull(title);
         final Shell shell = getShell();
         if (shell == null) {
             this.dialogTitle = title;

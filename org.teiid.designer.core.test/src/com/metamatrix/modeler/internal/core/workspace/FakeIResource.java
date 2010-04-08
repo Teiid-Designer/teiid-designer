@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * @since 4.2
@@ -47,7 +47,7 @@ public class FakeIResource implements IResource {
      */
     public FakeIResource( final String pathInWorkspace,
                           final String workspaceRootPath ) {
-        ArgCheck.isNotZeroLength(pathInWorkspace);
+        CoreArgCheck.isNotZeroLength(pathInWorkspace);
         this.path = new Path(pathInWorkspace);
         if (workspaceRootPath != null && workspaceRootPath.length() > 0) {
             this.workspaceRootPath = new Path(workspaceRootPath);

@@ -11,13 +11,13 @@ import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 
 /**
  * @since 4.0
  */
-public final class TestJdbcImporter extends TestCase implements StringUtil.Constants {
+public final class TestJdbcImporter extends TestCase implements CoreStringUtil.Constants {
 
     /**
      * @since 4.0

@@ -32,9 +32,8 @@ import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.api.exception.query.QueryMetadataException;
 import com.metamatrix.common.util.SqlUtil;
 import com.metamatrix.common.xmi.XMIHeader;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.DirectionKind;
@@ -357,7 +356,7 @@ public class TransformationHelper implements SqlConstants {
      * @since 4.3
      */
     public static boolean isTableThatSupportsUpdate( EObject target ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
 
         SqlAspect sqlAspect = com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.getSqlAspect(target);
         if (sqlAspect != null && sqlAspect instanceof SqlTableAspect) {
@@ -678,8 +677,8 @@ public class TransformationHelper implements SqlConstants {
     public static SqlAlias createSqlAlias( Object transMappingRoot,
                                            EObject eObj,
                                            String aliasName ) {
-        ArgCheck.isNotNull(eObj);
-        ArgCheck.isNotNull(aliasName);
+        CoreArgCheck.isNotNull(eObj);
+        CoreArgCheck.isNotNull(aliasName);
 
         SqlAlias sqlAlias = null;
         MappingHelper helper = getMappingHelper(transMappingRoot);
@@ -1062,7 +1061,7 @@ public class TransformationHelper implements SqlConstants {
             try {
                 Column tgtColumn = (Column)targetEObj;
                 MetamodelAspect aspect = AspectManager.getSqlAspect(sourceEObj);
-                ArgCheck.isInstanceOf(SqlProcedureParameterAspect.class, aspect);
+                CoreArgCheck.isInstanceOf(SqlProcedureParameterAspect.class, aspect);
                 final ProcedureParameter param = (ProcedureParameter)sourceEObj;
                 // set all the properties by looking up the sql aspect
                 tgtColumn.setLength(param.getLength());
@@ -1747,7 +1746,7 @@ public class TransformationHelper implements SqlConstants {
      * @return the list of mappingRoots
      */
     public static List getAllTransformations( final Resource resource ) {
-        Assertion.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         List transformations = new ArrayList();
         List contents = resource.getContents();
         Iterator cIter = contents.iterator();
@@ -4560,12 +4559,12 @@ public class TransformationHelper implements SqlConstants {
         } else if (oldSql != null) {
             StringBuffer newSb = new StringBuffer(newSql.trim());
             StringBuffer oldSb = new StringBuffer(oldSql.trim());
-            StringUtil.replaceAll(newSb, CR, BLANK);
-            StringUtil.replaceAll(newSb, TAB, BLANK);
-            String newSbString = StringUtil.collapseWhitespace(newSb.toString());
-            StringUtil.replaceAll(oldSb, CR, BLANK);
-            StringUtil.replaceAll(oldSb, TAB, BLANK);
-            String oldSbString = StringUtil.collapseWhitespace(oldSb.toString());
+            CoreStringUtil.replaceAll(newSb, CR, BLANK);
+            CoreStringUtil.replaceAll(newSb, TAB, BLANK);
+            String newSbString = CoreStringUtil.collapseWhitespace(newSb.toString());
+            CoreStringUtil.replaceAll(oldSb, CR, BLANK);
+            CoreStringUtil.replaceAll(oldSb, TAB, BLANK);
+            String oldSbString = CoreStringUtil.collapseWhitespace(oldSb.toString());
             if (newSbString != null && newSbString.equals(oldSbString)) {
                 isDifferent = false;
             }

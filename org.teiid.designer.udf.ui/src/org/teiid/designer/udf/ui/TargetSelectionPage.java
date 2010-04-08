@@ -25,7 +25,7 @@ import org.teiid.designer.udf.UdfModelExporter;
 import com.metamatrix.core.modeler.util.FileUtil;
 import com.metamatrix.core.modeler.util.FileUtil.Extensions;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
@@ -248,7 +248,7 @@ public final class TargetSelectionPage extends AbstractWizardPage {
         String errorMsg = null;
         String selectedPath = this.exporter.getExportZipFilePath();
 
-        if (StringUtil.isEmpty(selectedPath)) {
+        if (CoreStringUtil.isEmpty(selectedPath)) {
             if (this.chkOverwrite.isEnabled()) {
                 this.chkOverwrite.setEnabled(false);
             }

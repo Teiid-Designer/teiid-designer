@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelInitializer;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
@@ -42,7 +42,7 @@ public class XsdSchemaUiNewModelObjectHelper implements
      * @since 4.3
      */
     public boolean canHelpCreate(Object newObject) {
-        ArgCheck.isNotNull(newObject);
+        CoreArgCheck.isNotNull(newObject);
         if(newObject instanceof XSDSchemaImpl) {
             return true;
         }

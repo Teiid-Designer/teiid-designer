@@ -10,7 +10,7 @@ package com.metamatrix.modeler.core.metamodel.core.aspects.uml;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.CoreMetamodelPlugin;
 import com.metamatrix.metamodels.core.extension.XAttribute;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -201,7 +201,7 @@ public class XAttributeUmlAspect extends AbstractExtensionUmlAspect implements U
     }
 
     protected XAttribute assertXAttribute(Object eObject) {
-        ArgCheck.isInstanceOf(XAttribute.class, eObject);
+        CoreArgCheck.isInstanceOf(XAttribute.class, eObject);
         
         return (XAttribute)eObject;
     }

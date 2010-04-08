@@ -14,8 +14,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.xsd.provider.XSDSimpleTypeDefinitionItemProvider;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.transformation.MappingClassColumn;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -37,7 +37,7 @@ public class MappingClassColumnUmlAspect extends AbstractTransformationUmlAspect
     }
 
     protected MappingClassColumn assertMappingClassColumn(Object eObject) {
-        ArgCheck.isInstanceOf(MappingClassColumn.class, eObject);
+        CoreArgCheck.isInstanceOf(MappingClassColumn.class, eObject);
         return (MappingClassColumn)eObject;
     }
 
@@ -106,7 +106,7 @@ public class MappingClassColumnUmlAspect extends AbstractTransformationUmlAspect
             }
         }
         if (typeName == null) {
-            typeName = StringUtil.Constants.EMPTY_STRING;
+            typeName = CoreStringUtil.Constants.EMPTY_STRING;
         }
         
         StringBuffer result = new StringBuffer();

@@ -41,9 +41,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -59,7 +59,7 @@ public class ClipboardPasteProblemDialog extends ExtendedTitleAreaDialog
 
     private static final String PREFIX = I18nUtil.getPropertyPrefix(ClipboardPasteProblemDialog.class);
 
-    private static final String[] MESSAGE_TBL_HDRS = new String[] {StringUtil.Constants.EMPTY_STRING,
+    private static final String[] MESSAGE_TBL_HDRS = new String[] {CoreStringUtil.Constants.EMPTY_STRING,
         Util.getString(PREFIX + "pasteColumnHdr"), //$NON-NLS-1$
         Util.getString(PREFIX + "pasteDataHdr"), //$NON-NLS-1$
         Util.getString(PREFIX + "descriptionHdr")}; //$NON-NLS-1$
@@ -484,7 +484,7 @@ public class ClipboardPasteProblemDialog extends ExtendedTitleAreaDialog
     }
 
     public void setDialogTitle( String theTitle ) {
-        ArgCheck.isNotNull(theTitle);
+        CoreArgCheck.isNotNull(theTitle);
 
         Shell shell = getShell();
 

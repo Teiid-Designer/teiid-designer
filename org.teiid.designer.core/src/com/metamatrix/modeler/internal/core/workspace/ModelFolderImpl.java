@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelFolder;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -265,7 +265,7 @@ public class ModelFolderImpl extends OpenableImpl implements ModelFolder {
      * @throws ModelWorkspaceException
      */
     public ModelWorkspaceItem getModelWorkspaceItem( IResource resource ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         final ModelWorkspaceItem[] children = getChildren();
         for (int i = 0; i < children.length; i++) {
             final ModelWorkspaceItem child = children[i];

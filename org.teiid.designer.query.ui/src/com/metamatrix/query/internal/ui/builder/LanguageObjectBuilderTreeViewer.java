@@ -15,8 +15,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
 import com.metamatrix.query.internal.ui.builder.util.LanguageObjectContentProvider;
@@ -55,7 +54,7 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
 
     private void addUndefinedCriteria( Criteria theCriteria,
                                        boolean theAndFlag ) {
-        Assertion.isNotNull(theCriteria); // should not be calling if null
+        CoreArgCheck.isNotNull(theCriteria); // should not be calling if null
 
         Object newSelection = StructuredSelection.EMPTY;
 
@@ -101,8 +100,8 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
                 // select undefined criteria
                 newSelection = contentProvider.getChildAt(1, compoundCriteria);
             } else {
-                Assertion.failed(Util.getString(PREFIX + "unexpectedType", //$NON-NLS-1$
-                                                new Object[] {"addUndefinedCriteria", parent.getClass()})); //$NON-NLS-1$
+                CoreArgCheck.isTrue(false, Util.getString(PREFIX + "unexpectedType", //$NON-NLS-1$
+                                                          new Object[] {"addUndefinedCriteria", parent.getClass()})); //$NON-NLS-1$
             }
         }
 
@@ -319,7 +318,7 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
     private void modifyLanguageObject( Object theObject,
                                        LanguageObject theNewValue,
                                        boolean retainSelection ) {
-        ArgCheck.isNotNull(theNewValue); // should not be null when modifying
+        CoreArgCheck.isNotNull(theNewValue); // should not be null when modifying
 
         //
         // set the parent object to reflect the change in it's child. parent's can't be undefined
@@ -406,9 +405,9 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
                     }
                 }
             } else {
-                Assertion.failed(Util.getString(PREFIX + "unexpectedType", //$NON-NLS-1$
-                                                new Object[] {"modifyLanguageObject", //$NON-NLS-1$
-                                                    parent.getClass().getName()}));
+                CoreArgCheck.isTrue(false, Util.getString(PREFIX + "unexpectedType", //$NON-NLS-1$
+                                                          new Object[] {"modifyLanguageObject", //$NON-NLS-1$
+                                                              parent.getClass().getName()}));
             }
 
             expandToLevel(parent, ALL_LEVELS);
@@ -420,18 +419,18 @@ public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILang
 
     public void modifyNotCriteriaStatus() {
         Object selectedObj = getSelectedObject();
-        Assertion.isNotNull(selectedObj); // should not be calling if no row selected
+        CoreArgCheck.isNotNull(selectedObj); // should not be calling if no row selected
 
         if (selectedObj instanceof NotCriteria) {
             modifySelectedItem(((NotCriteria)selectedObj).getCriteria(), true);
         } else if (selectedObj instanceof Criteria) {
             modifySelectedItem(new NotCriteria((Criteria)selectedObj), true);
         } else if (isUndefined(selectedObj)) {
-            Assertion.failed(Util.getString(PREFIX + "unexpectedType", //$NON-NLS-1$
-                                            new Object[] {"modifyNotCriteriaStatus", BuilderUtils.UNDEFINED})); //$NON-NLS-1$
+            CoreArgCheck.isTrue(false, Util.getString(PREFIX + "unexpectedType", //$NON-NLS-1$
+                                                      new Object[] {"modifyNotCriteriaStatus", BuilderUtils.UNDEFINED})); //$NON-NLS-1$
         } else {
-            Assertion.failed(Util.getString(PREFIX + "unexpectedType", //$NON-NLS-1$
-                                            new Object[] {"modifyNotCriteriaStatus", selectedObj.getClass()})); //$NON-NLS-1$
+            CoreArgCheck.isTrue(false, Util.getString(PREFIX + "unexpectedType", //$NON-NLS-1$
+                                                      new Object[] {"modifyNotCriteriaStatus", selectedObj.getClass()})); //$NON-NLS-1$
         }
     }
 

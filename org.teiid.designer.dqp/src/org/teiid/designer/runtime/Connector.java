@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 import org.teiid.adminapi.ConnectionFactory;
 import org.teiid.adminapi.PropertyDefinition;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  */
@@ -39,7 +39,7 @@ public class Connector implements Comparable<Connector> {
      */
     @Override
     public int compareTo( Connector connector ) {
-        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
         return getName().compareTo(connector.getName());
     }
 
@@ -191,7 +191,7 @@ public class Connector implements Comparable<Connector> {
      */
     public void setPropertyValue( String name,
                                   String value ) throws Exception {
-        ArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
         this.type.getAdmin().setPropertyValue(this, name, value);
         getProperties().setProperty(name, value); // TODO does the admin call do this
     }
@@ -202,9 +202,9 @@ public class Connector implements Comparable<Connector> {
      * @since 7.0
      */
     public void setProperties( Properties changedProperties ) throws Exception {
-        ArgCheck.isNotNull(changedProperties, "changedProperties"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(changedProperties, "changedProperties"); //$NON-NLS-1$
         Set<Entry<Object, Object>> entrySet = changedProperties.entrySet();
-        ArgCheck.isNotEmpty(entrySet, "changedProperties"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(entrySet, "changedProperties"); //$NON-NLS-1$
         this.type.getAdmin().setProperties(this, changedProperties);
 
         // TODO does the admin call do this

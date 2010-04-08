@@ -32,10 +32,9 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.teiid.designer.vdb.Vdb;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.execution.VdbExecutionValidator;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
@@ -80,8 +79,8 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
      */
     public VdbExecutor( final Vdb vdb,
                         final VdbExecutionValidator validator ) {
-        ArgCheck.isNotNull(vdb);
-        ArgCheck.isNotNull(validator);
+        CoreArgCheck.isNotNull(vdb);
+        CoreArgCheck.isNotNull(validator);
         this.vdb = vdb;
         this.validator = validator;
         // initialize the VDB
@@ -160,7 +159,7 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
         final String vdbName = defn.getName();
         String vdbVersion = defn.getVersion();
 
-        if (StringUtil.isEmpty(vdbVersion)) vdbVersion = "1"; //$NON-NLS-1$
+        if (CoreStringUtil.isEmpty(vdbVersion)) vdbVersion = "1"; //$NON-NLS-1$
 
         final File vdbFile = getVdbFile();
 
@@ -178,7 +177,7 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
 
         final String aliasName = vdbFile.getAbsolutePath();
 
-        Assertion.isNotNull(aliasName);
+        CoreArgCheck.isNotNull(aliasName);
 
         ISQLAlias alias = getSqlAlias(aliasName);
 

@@ -14,7 +14,7 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.index.IEntryResult;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.index.IndexSelector;
@@ -77,7 +77,7 @@ public class FindRelationshipTypesCommandImpl implements FindRelationshipTypesCo
 			Collection types = getRelationshipTypes(this.typeNamePattern);
 			// if all types are not searched for
 			// and if sub types need to be included in the results
-			if(!StringUtil.isEmpty(this.typeNamePattern) && this.includeSubtypes) {
+			if(!CoreStringUtil.isEmpty(this.typeNamePattern) && this.includeSubtypes) {
 				Iterator typeIter = types.iterator();
 				// collect all children
 				Collection children = new ArrayList();

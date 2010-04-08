@@ -12,7 +12,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import com.metamatrix.core.util.FileUtils;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.rose.internal.IUnit;
 import com.metamatrix.rose.internal.ui.IRoseUiConstants;
 import com.metamatrix.rose.internal.ui.RoseUiPlugin;
@@ -26,7 +26,7 @@ public final class RoseImporterUiUtils implements
                                       FileUtils.Constants,
                                       IRoseUiConstants,
                                       IRoseUiConstants.Images,
-                                      StringUtil.Constants {
+                                      CoreStringUtil.Constants {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTANTS

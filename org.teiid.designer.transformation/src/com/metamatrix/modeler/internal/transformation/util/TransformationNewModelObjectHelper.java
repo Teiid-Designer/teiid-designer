@@ -9,7 +9,7 @@ package com.metamatrix.modeler.internal.transformation.util;
 
 import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
@@ -35,7 +35,7 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
      * @see com.metamatrix.modeler.core.util.INewModelObjectHelper#canHelpCreate(java.lang.Object)
      */
     public boolean canHelpCreate( Object newObject ) {
-        ArgCheck.isNotNull(newObject);
+        CoreArgCheck.isNotNull(newObject);
         // First case is a standard virtual table
         // If the createdObject is VirtualTable, set supportsUpdate to false
         if (newObject instanceof EObject) {
@@ -70,7 +70,7 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
      */
     public boolean helpCreate( Object newObject,
                                Map properties ) {
-        ArgCheck.isNotNull(newObject);
+        CoreArgCheck.isNotNull(newObject);
 
         if (newObject instanceof EObject) {
             EObject newTarget = (EObject)newObject;

@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.Map;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.writer.StreamWriter;
 
@@ -40,14 +40,14 @@ public class XmiStreamWriter implements StreamWriter {
                        Map options,
                        Collection objects ) throws IOException {
         if (outputstream == null) {
-            ArgCheck.isNotNull(outputstream,
+            CoreArgCheck.isNotNull(outputstream,
                                ModelerCore.Util.getString("XmiStreamWriter.The_OutputStream_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
         if (options == null) {
-            ArgCheck.isNotNull(options, ModelerCore.Util.getString("XmiStreamWriter.The_Map_reference_may_not_be_null_2")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(options, ModelerCore.Util.getString("XmiStreamWriter.The_Map_reference_may_not_be_null_2")); //$NON-NLS-1$
         }
         if (objects == null) {
-            ArgCheck.isNotNull(objects, ModelerCore.Util.getString("XmiStreamWriter.The_Collection_reference_may_not_be_null_3")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(objects, ModelerCore.Util.getString("XmiStreamWriter.The_Collection_reference_may_not_be_null_3")); //$NON-NLS-1$
         }
         Resource temp = new XMIResourceImpl();
         temp.getContents().addAll(objects);

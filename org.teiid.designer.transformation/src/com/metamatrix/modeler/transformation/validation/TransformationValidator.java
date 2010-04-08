@@ -23,8 +23,7 @@ import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.api.exception.query.QueryMetadataException;
 import com.metamatrix.api.exception.query.QueryResolverException;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.relational.Table;
@@ -383,7 +382,7 @@ public class TransformationValidator implements QueryValidator {
      * @return the SqlTransformationResult object
      */
     public SqlTransformationResult validateCommand( final Command command ) {
-        ArgCheck.isNotNull(command);
+        CoreArgCheck.isNotNull(command);
         Collection statusList = null;
         try {
             // Validate
@@ -467,7 +466,7 @@ public class TransformationValidator implements QueryValidator {
                 this.metadata = factory.getModelerMetadata(queryContext, container);
                 // Validating within the vdb(server) context
             } else {
-                Assertion.isNotNull(this.validationContext);
+                CoreArgCheck.isNotNull(this.validationContext);
                 IndexSelector selector = null;
                 if (this.validationContext.useIndexesToResolve()) {
                     if (this.validationContext.getData(QUERY_METADATA_INTERFACE) != null) {
@@ -509,8 +508,8 @@ public class TransformationValidator implements QueryValidator {
     public static IStatus checkCommandType( final Command command,
                                             final int transformType,
                                             final Object targetGroup ) {
-        ArgCheck.isNotNull(command);
-        ArgCheck.isNotNull(targetGroup);
+        CoreArgCheck.isNotNull(command);
+        CoreArgCheck.isNotNull(targetGroup);
 
         int cmdType = command.getType();
         switch (transformType) {
@@ -581,7 +580,7 @@ public class TransformationValidator implements QueryValidator {
                                                       final Map externalMetadata ) {
         IStatus status = null;
 
-        ArgCheck.isNotNull(command);
+        CoreArgCheck.isNotNull(command);
         String commandSQL = command.toString();
         // ------------------------------------------------------------
         // Resolve the Command

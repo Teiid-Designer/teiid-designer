@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
 import com.metamatrix.modeler.jdbc.metadata.Capabilities;
@@ -33,7 +33,7 @@ public class JdbcCatalogImpl extends JdbcNodeImpl implements JdbcCatalog {
      */
     public JdbcCatalogImpl( final JdbcNode parent, final String name ) {
         super(CATALOG,name,parent);
-        ArgCheck.isNotNull(parent);
+        CoreArgCheck.isNotNull(parent);
     }
 
     /* (non-Javadoc)

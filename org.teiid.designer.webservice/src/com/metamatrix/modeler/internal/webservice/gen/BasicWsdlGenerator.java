@@ -44,7 +44,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import com.metamatrix.core.CoreConstants;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.metamodels.webservice.Interface;
@@ -147,7 +147,7 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
     }
 
     public BasicWsdlGenerator( final URI uri ) {
-        ArgCheck.isNotNull(uri);
+        CoreArgCheck.isNotNull(uri);
 
         this.webServiceModels = new ArrayList();
         this.xmlSchemas = new ArrayList();
@@ -285,7 +285,7 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      * @since 4.2
      */
     public boolean addWebServiceModel( Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         // See if already added ...
         if (this.webServiceModels.contains(resource)) {
@@ -306,7 +306,7 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      */
     public boolean addXsdModel( XSDSchema xmlSchema,
                                 final IPath pathForLocation ) {
-        ArgCheck.isNotNull(xmlSchema);
+        CoreArgCheck.isNotNull(xmlSchema);
 
         // See if already added ...
         if (this.xmlSchemas.contains(xmlSchema)) {

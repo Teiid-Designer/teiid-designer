@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
 import com.metamatrix.metamodels.relational.Table;
@@ -33,7 +33,7 @@ public class TableUniqueKeysRule implements ObjectValidationRule {
      * @see com.metamatrix.modeler.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, com.metamatrix.modeler.core.validation.ValidationContext)
      */
     public void validate(EObject eObject, ValidationContext context) {
-        ArgCheck.isInstanceOf(Table.class, eObject);
+        CoreArgCheck.isInstanceOf(Table.class, eObject);
 
         Table table = (Table) eObject;
 

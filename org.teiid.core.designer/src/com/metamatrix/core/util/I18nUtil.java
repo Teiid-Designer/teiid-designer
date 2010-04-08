@@ -7,7 +7,6 @@
  */
 package com.metamatrix.core.util;
 
-import com.metamatrix.core.modeler.util.ArgCheck;
 
 /**
  * @since 4.0
@@ -35,7 +34,7 @@ public final class I18nUtil {
      * @since 4.0
      */
     public static String getPropertyPrefix(final Class clazz) {
-    	ArgCheck.isNotNull(clazz);
+    	CoreArgCheck.isNotNull(clazz);
         return clazz.getSimpleName() + Constants.PROPERTY_NAME_SEPARATOR_CHAR;
     }
 
@@ -48,7 +47,7 @@ public final class I18nUtil {
      * @since 4.0
      */
     public static String getPropertyPrefix(final Object object) {
-        ArgCheck.isNotNull(object);
+        CoreArgCheck.isNotNull(object);
         return getPropertyPrefix(object.getClass());
     }
 

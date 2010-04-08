@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.uml2.aspects.uml;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.Comment;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlComment;
@@ -74,7 +74,7 @@ public class Uml2CommentUmlAspect extends AbstractUml2UmlAspect implements UmlCo
 	}
 	
 	protected Comment assertComment(Object eObject) {
-		ArgCheck.isInstanceOf(Comment.class, eObject);
+		CoreArgCheck.isInstanceOf(Comment.class, eObject);
 		return (Comment) eObject;
 	}
 

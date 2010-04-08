@@ -13,7 +13,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
@@ -42,7 +42,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
      */
     public SetDefaultServerAction( ServerManager serverManager ) {
         super(UTIL.getString("setDefaultServerActionText")); //$NON-NLS-1$
-        ArgCheck.isNotNull(serverManager, "serverManager"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(serverManager, "serverManager"); //$NON-NLS-1$
 
         if (Platform.isRunning()) {
             setToolTipText(UTIL.getString("setDefaultServerActionToolTip")); //$NON-NLS-1$

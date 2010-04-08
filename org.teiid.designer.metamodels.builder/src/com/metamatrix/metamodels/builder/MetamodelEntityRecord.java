@@ -8,7 +8,7 @@
 package com.metamatrix.metamodels.builder;
 
 import java.util.Map;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.internal.builder.util.MetaClassUriHelper;
 
 /**
@@ -40,8 +40,8 @@ public class MetamodelEntityRecord {
 	 */
 	public MetamodelEntityRecord(String uri, String parentPath, String parentUri, Map featuresMap) {
 		super();
-		ArgCheck.isNotNull(uri);
-		ArgCheck.isNotNull(parentPath);
+		CoreArgCheck.isNotNull(uri);
+		CoreArgCheck.isNotNull(parentPath);
 		this.metaClassUri = uri;
 		this.parentPath = parentPath;
 		this.parentMetaClassUri = parentUri;
@@ -81,7 +81,7 @@ public class MetamodelEntityRecord {
 	 * @param metaClassUri the metaClass URI for this record
 	 */
 	public void setMetaClassUri(String metaClassUri) {
-		ArgCheck.isNotNull(metaClassUri);
+		CoreArgCheck.isNotNull(metaClassUri);
 		this.metaClassUri = metaClassUri;
 	}
 	
@@ -114,7 +114,7 @@ public class MetamodelEntityRecord {
 	 * @param parentPath the path to this object's parent
 	 */
 	public void setParentPath(String parentPath) {
-		ArgCheck.isNotNull(parentPath);
+		CoreArgCheck.isNotNull(parentPath);
 		this.parentPath = parentPath;
 	}
 	

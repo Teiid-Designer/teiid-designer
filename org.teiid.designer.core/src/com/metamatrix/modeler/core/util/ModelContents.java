@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -20,8 +21,7 @@ import org.eclipse.emf.mapping.MappingRoot;
 import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import com.metamatrix.core.id.IDGenerator;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.ISafeReturningOperation;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
@@ -49,6 +49,7 @@ import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.resource.XResource;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.core.workspace.Openable;
 import com.metamatrix.modeler.internal.core.XsdObjectExtension;
 import com.metamatrix.modeler.internal.core.workspace.ModelBufferImpl;
 import com.metamatrix.modeler.internal.core.workspace.ModelResourceImpl;
@@ -96,8 +97,8 @@ public class ModelContents {
      * @throws ModelWorkspaceException if there is an error getting the contents from the resource.
      */
     public static ModelContents getModelContents( final ModelResource modelResource ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(modelResource);
-        ArgCheck.isInstanceOf(ModelResourceImpl.class, modelResource);
+        CoreArgCheck.isNotNull(modelResource);
+        CoreArgCheck.isInstanceOf(ModelResourceImpl.class, modelResource);
         // Get the ModelContents wrapper/utility from the resource ...
         final ModelBufferImpl buffer = (ModelBufferImpl)((ModelResourceImpl)modelResource).getBuffer();
         return buffer.getModelContents();
@@ -110,7 +111,7 @@ public class ModelContents {
      */
     public ModelContents( final Resource resource ) {
         super();
-        Assertion.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         this.resource = resource;
         this.transientDiagrams = new LinkedList();
         this.diagramFactory = null;
@@ -435,8 +436,8 @@ public class ModelContents {
     protected void addDiagramsForTarget( final List diagrams,
                                          final EObject target,
                                          final List results ) {
-        Assertion.isNotNull(diagrams);
-        Assertion.isNotNull(results);
+        CoreArgCheck.isNotNull(diagrams);
+        CoreArgCheck.isNotNull(results);
         final Iterator diagIter = diagrams.iterator();
         while (diagIter.hasNext()) {
             final Diagram diagram = (Diagram)diagIter.next();
@@ -455,7 +456,7 @@ public class ModelContents {
      */
     protected boolean isDiagramForTarget( final Diagram diagram,
                                           final EObject target ) {
-        Assertion.isNotNull(diagram);
+        CoreArgCheck.isNotNull(diagram);
         final Object actualTarget = diagram.getTarget();
         if (actualTarget == null) {
             return target == null; // only equal if target is null, too
@@ -486,7 +487,7 @@ public class ModelContents {
      */
     @Deprecated
     public SqlTransformationMappingRoot createSqlTransformation( final EObject target ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
         final SqlTransformationMappingRoot t = getTransformationFactory().createSqlTransformationMappingRoot();
         t.getOutputs().add(target);
         // Defect 18433 - BML 8/31/05 - Changed to not call addNewTransformation()
@@ -505,7 +506,7 @@ public class ModelContents {
      */
     @Deprecated
     public FragmentMappingRoot createFragmentMapping( final EObject target ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
         final FragmentMappingRoot t = getTransformationFactory().createFragmentMappingRoot();
         // Defect 18433 - BML 8/31/05 - Changed to not call addNewTransformation()
         // This was not correctly adding the transformation using the ModelEditor.addValue() call
@@ -523,7 +524,7 @@ public class ModelContents {
      */
     @Deprecated
     public TreeMappingRoot createTreeMapping( final EObject target ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
         final TreeMappingRoot t = getTransformationFactory().createTreeMappingRoot();
         // Defect 18433 - BML 8/31/05 - Changed to not call addNewTransformation()
         // This was not correctly adding the transformation using the ModelEditor.addValue() call
@@ -543,7 +544,7 @@ public class ModelContents {
     @Deprecated
     public TransformationMappingRoot addNewTransformation( final EObject target,
                                                            final TransformationMappingRoot newMappingRoot ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
 
         // Set the target of the transformation
         newMappingRoot.setTarget(target);
@@ -711,8 +712,8 @@ public class ModelContents {
     protected void addTransformationsForOutput( final List transformations,
                                                 final EObject output,
                                                 final List results ) {
-        Assertion.isNotNull(transformations);
-        Assertion.isNotNull(results);
+        CoreArgCheck.isNotNull(transformations);
+        CoreArgCheck.isNotNull(results);
         final Iterator diagIter = transformations.iterator();
         while (diagIter.hasNext()) {
             final MappingRoot mappingRoot = (MappingRoot)diagIter.next();
@@ -733,8 +734,8 @@ public class ModelContents {
     protected void addTransformationsForInput( final List transformations,
                                                final EObject input,
                                                final List results ) {
-        Assertion.isNotNull(transformations);
-        Assertion.isNotNull(results);
+        CoreArgCheck.isNotNull(transformations);
+        CoreArgCheck.isNotNull(results);
         final Iterator diagIter = transformations.iterator();
         while (diagIter.hasNext()) {
             final MappingRoot mappingRoot = (MappingRoot)diagIter.next();
@@ -755,8 +756,8 @@ public class ModelContents {
     protected void addTransformationsForTarget( final List transformations,
                                                 final EObject target,
                                                 final List results ) {
-        Assertion.isNotNull(transformations);
-        Assertion.isNotNull(results);
+        CoreArgCheck.isNotNull(transformations);
+        CoreArgCheck.isNotNull(results);
 
         // Make copy of transformations
         // Needed to prevent concurrent modifications
@@ -794,7 +795,7 @@ public class ModelContents {
      */
     protected boolean isOutputOfTransformation( final MappingRoot mappingRoot,
                                                 final EObject output ) {
-        Assertion.isNotNull(mappingRoot);
+        CoreArgCheck.isNotNull(mappingRoot);
         return mappingRoot.getOutputs().contains(output);
     }
 
@@ -807,7 +808,7 @@ public class ModelContents {
      */
     protected boolean isInputOfTransformation( final MappingRoot mappingRoot,
                                                final EObject input ) {
-        Assertion.isNotNull(mappingRoot);
+        CoreArgCheck.isNotNull(mappingRoot);
         return mappingRoot.getInputs().contains(input);
     }
 
@@ -1011,7 +1012,7 @@ public class ModelContents {
      */
     @Deprecated
     public MappingClassSet createNewMappingClassSet( final EObject target ) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
         // Create the new mapping class set ...
         final MappingClassSet mcSet = getTransformationFactory().createMappingClassSet();
         mcSet.setTarget(target);

@@ -10,7 +10,7 @@ package com.metamatrix.modeler.internal.core.index;
 import java.io.File;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.index.ModelDocument;
 import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 
@@ -36,7 +36,7 @@ public class ModelDocumentImpl extends ResourceDocumentImpl implements ModelDocu
 
 	public ModelDocumentImpl(String filePath, final IResource iResource, final Resource resource) {
 		super(new File(filePath), iResource);
-		ArgCheck.isNotNull(resource);
+		CoreArgCheck.isNotNull(resource);
 		this.resource = resource;
 	}
 

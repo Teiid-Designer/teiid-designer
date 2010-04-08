@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.relational.provider;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.metamodels.relational.ForeignKey;
 import com.metamatrix.metamodels.relational.PrimaryKey;
@@ -232,8 +232,8 @@ public class ForeignKeyAssociationDescriptor extends AbstractAssociationDescript
                                          final BaseTable fkTable,
                                          final List selectedObjs,
                                          boolean resetPkRefOnFk ) {
-        ArgCheck.isNotNull(pkTable);
-        ArgCheck.isNotNull(fkTable);
+        CoreArgCheck.isNotNull(pkTable);
+        CoreArgCheck.isNotNull(fkTable);
 
         // -----------------------------------------------
         // Process the primary key part of the association

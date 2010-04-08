@@ -25,7 +25,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import com.metamatrix.common.util.SqlUtil;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.query.QueryValidator;
@@ -126,13 +126,13 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
 
          // PERFORM ARG CHECK
          // Look for NULL or EMPTY strings
-         ArgCheck.isNotNull(fileNameString);
-         ArgCheck.isNotNull(fileExtension);
-         ArgCheck.isNotNull(fileOuputString);
+         CoreArgCheck.isNotNull(fileNameString);
+         CoreArgCheck.isNotNull(fileExtension);
+         CoreArgCheck.isNotNull(fileOuputString);
          
-         ArgCheck.isNotEmpty(fileNameString);
-         ArgCheck.isNotEmpty(fileExtension);
-         ArgCheck.isNotEmpty(fileOuputString);
+         CoreArgCheck.isNotEmpty(fileNameString);
+         CoreArgCheck.isNotEmpty(fileExtension);
+         CoreArgCheck.isNotEmpty(fileOuputString);
          
          // If there is no file extension, add .sql
          if(fileNameString.indexOf('.')==-1 && fileExtension != null) {

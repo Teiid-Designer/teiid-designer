@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.preferences.IPreferenceFilter;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import com.metamatrix.core.util.FileUtils;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.ui.UiConstants;
 
 
@@ -141,7 +141,7 @@ public class PreferencesUtils implements UiConstants {
         String result = thePath;
         String ext = FileUtils.getExtension(thePath);
         
-        if (StringUtil.isEmpty(ext)) {
+        if (CoreStringUtil.isEmpty(ext)) {
             result = new StringBuffer(thePath).append(ECLIPSE_PREFERENCE_FILE_EXTENSION).toString();
         } else if (!ext.equals(ECLIPSE_PREFERENCE_FILE_EXTENSION)) {
             result = ensurePathExtension(FileUtils.getFilenameWithoutExtension(thePath));

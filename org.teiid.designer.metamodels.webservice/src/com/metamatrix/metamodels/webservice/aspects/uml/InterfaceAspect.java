@@ -7,7 +7,7 @@
  */
 package com.metamatrix.metamodels.webservice.aspects.uml;
 
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.webservice.Interface;
 import com.metamatrix.metamodels.webservice.WebServiceComponent;
 import com.metamatrix.metamodels.webservice.WebServiceMetamodelPlugin;
@@ -42,7 +42,7 @@ public class InterfaceAspect extends WebServiceComponentAspect implements UmlPac
      */
     @Override
     protected WebServiceComponent assertWebServiceComponent(Object eObject) {
-        ArgCheck.isInstanceOf(Interface.class, eObject);
+        CoreArgCheck.isInstanceOf(Interface.class, eObject);
         return (Interface)eObject;
     }
 }

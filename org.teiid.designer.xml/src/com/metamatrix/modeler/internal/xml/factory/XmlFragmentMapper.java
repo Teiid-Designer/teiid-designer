@@ -17,7 +17,7 @@ import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.xml.XmlAttribute;
 import com.metamatrix.metamodels.xml.XmlChoice;
@@ -110,7 +110,7 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
      * @throws IllegalArgumentException if the tree node is not an <code>XmlDocumentEntity</code>
      */
     private void checkNodeIsXmlDocumentEntity(EObject theTreeNode) {
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theTreeNode);
 
         if (!(theTreeNode instanceof XmlDocumentEntity)) {
             throw new IllegalArgumentException(Util.getString(PREFIX + "invalidType", //$NON-NLS-1$
@@ -160,7 +160,7 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
      * @return
      */
     public boolean isMappable( final XmlAttribute attribute ) {
-        ArgCheck.isNotNull(attribute);
+        CoreArgCheck.isNotNull(attribute);
         if ( attribute.isValueFixed() ) {
             // The attribute has a fixed value, so it should not be mappable
             return false;
@@ -174,7 +174,7 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
      * @return
      */
     public boolean isMappable( final XmlElement element ) {
-        ArgCheck.isNotNull(element);
+        CoreArgCheck.isNotNull(element);
         
         // Obtain the schema component for the element ...
         final XSDComponent schemaComponent = element.getXsdComponent();
@@ -191,7 +191,7 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
      * @return
      */
     public boolean isElementMappable( final XSDComponent xsdComponent ) {
-        ArgCheck.isNotNull(xsdComponent);
+        CoreArgCheck.isNotNull(xsdComponent);
 
         if (xsdComponent instanceof XSDElementDeclaration) {
             final XSDElementDeclaration elementDecl = (XSDElementDeclaration)xsdComponent;
@@ -248,7 +248,7 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
      * @see com.metamatrix.modeler.mapping.factory.ITreeToRelationalMapper#isTreeRoot(org.eclipse.emf.ecore.EObject)
      */
     public boolean isTreeRoot(EObject theTreeNode) {
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theTreeNode);
         return (theTreeNode instanceof XmlFragment);
     }
 
@@ -256,7 +256,7 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
      * @see com.metamatrix.modeler.mapping.factory.ITreeToRelationalMapper#setTreeRoot(org.eclipse.emf.ecore.EObject)
      */
     public void setTreeRoot(EObject theFragment) {
-        ArgCheck.isNotNull(theFragment);
+        CoreArgCheck.isNotNull(theFragment);
         fragment = (XmlFragment) theFragment;
         
         // need to get all the transformations where the target is this fragment
@@ -271,14 +271,14 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
 	 * @see com.metamatrix.modeler.mapping.factory.ITreeToRelationalMapper#isTreeRoot(org.eclipse.emf.ecore.EObject)
 	 */
 	public boolean isTreeNode(EObject theTreeNode) {
-		ArgCheck.isNotNull(theTreeNode);
+		CoreArgCheck.isNotNull(theTreeNode);
 		return (theTreeNode instanceof XmlDocumentNode 
 				|| isTreeRoot(theTreeNode) 
 				|| theTreeNode instanceof XmlContainerNode );
 	}
 
 	public String getPathInDocument(EObject theTreeNode) {
-		ArgCheck.isNotNull(theTreeNode);
+		CoreArgCheck.isNotNull(theTreeNode);
 		if( theTreeNode instanceof XmlDocumentNode ) {
 			return ((XmlDocumentNode)theTreeNode).getPathInDocument();
 		}
@@ -289,7 +289,7 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
 	}
 	
 	public String getXsdQualifiedName(EObject theTreeNode) {
-		ArgCheck.isNotNull(theTreeNode);
+		CoreArgCheck.isNotNull(theTreeNode);
 		if( theTreeNode instanceof XmlDocumentNode ) {
 			XSDComponent xsdComponent = ((XmlDocumentNode)theTreeNode).getXsdComponent();
 			if ( xsdComponent != null && xsdComponent instanceof XSDNamedComponent ) {
@@ -300,7 +300,7 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
 	}
 	
 	public String getXsdTargetNamespace(EObject theTreeNode) {
-		ArgCheck.isNotNull(theTreeNode);
+		CoreArgCheck.isNotNull(theTreeNode);
 		if( theTreeNode instanceof XmlDocumentNode ) {
 			XSDComponent xsdComponent = ((XmlDocumentNode)theTreeNode).getXsdComponent();
 			if ( xsdComponent != null && xsdComponent instanceof XSDNamedComponent ) {
@@ -315,7 +315,7 @@ public class XmlFragmentMapper implements ITreeToRelationalMapper, PluginConstan
      * @since 4.3
      */
     public EObject getXsdComponent(EObject theTreeNode) {
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theTreeNode);
         if( theTreeNode instanceof XmlDocumentNode ) {
             EObject xsdComp = ((XmlDocumentNode)theTreeNode).getXsdComponent();
             EObject container = xsdComp.eContainer();

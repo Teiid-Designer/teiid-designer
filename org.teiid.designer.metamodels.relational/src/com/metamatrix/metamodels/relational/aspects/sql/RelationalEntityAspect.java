@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.DirectionKind;
 import com.metamatrix.metamodels.relational.NullableType;
 import com.metamatrix.metamodels.relational.RelationalEntity;
@@ -54,7 +54,7 @@ public abstract class RelationalEntityAspect extends AbstractMetamodelAspect imp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
     public String getName( EObject eObject ) {
-        ArgCheck.isInstanceOf(RelationalEntity.class, eObject);
+        CoreArgCheck.isInstanceOf(RelationalEntity.class, eObject);
         RelationalEntity entity = (RelationalEntity)eObject;
         return entity.getName();
     }
@@ -63,7 +63,7 @@ public abstract class RelationalEntityAspect extends AbstractMetamodelAspect imp
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect#getNameInSource(org.eclipse.emf.ecore.EObject)
      */
     public String getNameInSource( EObject eObject ) {
-        ArgCheck.isInstanceOf(RelationalEntity.class, eObject);
+        CoreArgCheck.isInstanceOf(RelationalEntity.class, eObject);
         RelationalEntity entity = (RelationalEntity)eObject;
         return entity.getNameInSource();
     }

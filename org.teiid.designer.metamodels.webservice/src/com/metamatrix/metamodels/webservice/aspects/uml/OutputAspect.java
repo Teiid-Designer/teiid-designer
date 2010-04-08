@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.webservice.aspects.uml;
 import java.util.Collection;
 import java.util.Collections;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.webservice.Output;
 import com.metamatrix.metamodels.webservice.WebServiceComponent;
 import com.metamatrix.metamodels.webservice.WebServiceMetamodelPlugin;
@@ -61,7 +61,7 @@ public class OutputAspect extends WebServiceComponentAspect implements UmlClassi
      */
     @Override
     protected WebServiceComponent assertWebServiceComponent(Object eObject) {
-        ArgCheck.isInstanceOf(Output.class, eObject);
+        CoreArgCheck.isInstanceOf(Output.class, eObject);
         return (Output)eObject;
     }
 

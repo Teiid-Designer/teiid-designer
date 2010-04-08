@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import org.eclipse.uml2.uml.Enumeration;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlClassifier;
@@ -79,7 +79,7 @@ public class Uml2EnumerationUmlAspect
 	}
 
 	protected Enumeration assertUmlEnumeration(Object eObject) {
-		ArgCheck.isInstanceOf(Enumeration.class, eObject);
+		CoreArgCheck.isInstanceOf(Enumeration.class, eObject);
 
 		return (Enumeration) eObject;
 	}

@@ -11,7 +11,7 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.Properties;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.jdbc.api.Connection;
 import com.metamatrix.ui.internal.util.UiUtil;
 
@@ -69,7 +69,7 @@ public class QueryClient {
 
         StringBuffer sb = new StringBuffer().append("jdbc:metamatrix:") //$NON-NLS-1$
         .append(theVdbName).append('@').append("mmrofile:") //$NON-NLS-1$
-        .append(StringUtil.replaceAll(propsFile.getAbsolutePath(), "\\", "/")) //$NON-NLS-1$ //$NON-NLS-2$
+        .append(CoreStringUtil.replaceAll(propsFile.getAbsolutePath(), "\\", "/")) //$NON-NLS-1$ //$NON-NLS-2$
         .append(";version=") //$NON-NLS-1$
         .append(theVersion).append(";XMLFormat=Tree;"); //$NON-NLS-1$
 

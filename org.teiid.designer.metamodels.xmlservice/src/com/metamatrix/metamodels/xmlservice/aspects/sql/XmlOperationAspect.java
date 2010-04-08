@@ -12,8 +12,8 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.xmlservice.XmlOperation;
 import com.metamatrix.metamodels.xmlservice.XmlServiceComponent;
@@ -38,10 +38,10 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      */
     @Override
     public String getNameInSource(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlServiceComponent.class, eObject); 
+        CoreArgCheck.isInstanceOf(XmlServiceComponent.class, eObject); 
         XmlServiceComponent entity = (XmlServiceComponent) eObject;    
         String nameInSource = entity.getNameInSource();
-        if (StringUtil.isEmpty(nameInSource)) {
+        if (CoreStringUtil.isEmpty(nameInSource)) {
             nameInSource =  super.getName(eObject);
         }
         return nameInSource;
@@ -52,7 +52,7 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @since 4.2
      */
     public boolean isVirtual(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlOperation.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlOperation.class, eObject);
         XmlOperation operation = (XmlOperation) eObject;    
         try {    
             Resource eResource = operation.eResource();
@@ -71,7 +71,7 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @since 4.2
      */
     public boolean isFunction(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlOperation.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlOperation.class, eObject);
         return false;
     }
 
@@ -80,7 +80,7 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @since 4.2
      */
     public List getParameters(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlOperation.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlOperation.class, eObject);
         XmlOperation operation = (XmlOperation) eObject;
         List params = new ArrayList();
         if (!operation.getInputs().isEmpty()) {
@@ -94,7 +94,7 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @since 4.2
      */
     public Object getResult(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlOperation.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlOperation.class, eObject);
         XmlOperation operation = (XmlOperation) eObject;
         return operation.getOutput();
     }
@@ -104,7 +104,7 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @since 5.5.3
      */
     public int getUpdateCount(EObject eObject) {
-        ArgCheck.isInstanceOf(XmlOperation.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlOperation.class, eObject);
         return ((XmlOperation)eObject).getUpdateCount().getValue();
     }
     
@@ -129,8 +129,8 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @since 4.3
      */
     public boolean canAcceptTransformationSource(EObject target, EObject source) {
-        ArgCheck.isInstanceOf(XmlOperation.class, target);
-        ArgCheck.isNotNull(source);
+        CoreArgCheck.isInstanceOf(XmlOperation.class, target);
+        CoreArgCheck.isNotNull(source);
         // no object should be source of itself
         if(source == target) {
             return false;
@@ -147,8 +147,8 @@ public class XmlOperationAspect extends XmlServiceComponentAspect implements Sql
      * @since 4.3
      */
     public boolean canBeTransformationSource(EObject source, EObject target) {
-        ArgCheck.isInstanceOf(XmlOperation.class, source);
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isInstanceOf(XmlOperation.class, source);
+        CoreArgCheck.isNotNull(target);
         // no object should be target of itself
         if(source == target) {
             return false;

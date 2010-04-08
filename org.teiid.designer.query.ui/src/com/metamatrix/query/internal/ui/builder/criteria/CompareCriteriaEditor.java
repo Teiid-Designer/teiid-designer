@@ -10,7 +10,7 @@ package com.metamatrix.query.internal.ui.builder.criteria;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.model.CompareCriteriaEditorModel;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
@@ -92,7 +92,7 @@ public class CompareCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
 
     @Override
     public void setLanguageObject( LanguageObject obj ) {
-        ArgCheck.isInstanceOf(CompareCriteria.class, obj);
+        CoreArgCheck.isInstanceOf(CompareCriteria.class, obj);
         theModel.setLanguageObject(obj);
     }
 

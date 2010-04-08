@@ -9,8 +9,7 @@ package com.metamatrix.query.internal.ui.builder.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.sql.LanguageObject;
 
@@ -66,10 +65,8 @@ public abstract class CompositeLanguageObjectEditorModel extends AbstractLanguag
      * @return the current model
      */
     public ILanguageObjectEditorModel getCurrentModel() {
-        if (models == null) {
-            Assertion.isNotNull(models, Util.getString(PREFIX + "noModelsFound", //$NON-NLS-1$
-                                                       new Object[] {"getCurrentModel"})); //$NON-NLS-1$
-        }
+        CoreArgCheck.isNotNull(models, Util.getString(PREFIX + "noModelsFound", //$NON-NLS-1$
+                                                      new Object[] {"getCurrentModel"})); //$NON-NLS-1$
 
         return currentModel;
     }
@@ -79,10 +76,8 @@ public abstract class CompositeLanguageObjectEditorModel extends AbstractLanguag
      */
     @Override
     public LanguageObject getLanguageObject() {
-        if (models == null) {
-            Assertion.isNotNull(models, Util.getString(PREFIX + "noModelsFound", //$NON-NLS-1$
-                                                       new Object[] {"getLanguageObject"})); //$NON-NLS-1$
-        }
+        CoreArgCheck.isNotNull(models, Util.getString(PREFIX + "noModelsFound", //$NON-NLS-1$
+                                                      new Object[] {"getLanguageObject"})); //$NON-NLS-1$
 
         LanguageObject langObj = null;
         if (currentModel != null) {
@@ -109,10 +104,8 @@ public abstract class CompositeLanguageObjectEditorModel extends AbstractLanguag
      */
     @Override
     public boolean isComplete() {
-        if (models == null) {
-            Assertion.isNotNull(models, Util.getString(PREFIX + "noModelsFound", //$NON-NLS-1$
-                                                       new Object[] {"isComplete"})); //$NON-NLS-1$
-        }
+        CoreArgCheck.isNotNull(models, Util.getString(PREFIX + "noModelsFound", //$NON-NLS-1$
+                                                      new Object[] {"isComplete"})); //$NON-NLS-1$
 
         boolean complete;
         if (getCurrentModel() == null) {
@@ -151,11 +144,11 @@ public abstract class CompositeLanguageObjectEditorModel extends AbstractLanguag
      */
     public void setCurrentModel( ILanguageObjectEditorModel theModel ) {
         if (models == null) {
-            ArgCheck.isNotNull(models, Util.getString(PREFIX + "noModelsFound", //$NON-NLS-1$
-                                                      new Object[] {"setCurrentModel"})); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(models, Util.getString(PREFIX + "noModelsFound", //$NON-NLS-1$
+                                                          new Object[] {"setCurrentModel"})); //$NON-NLS-1$
         }
 
-        ArgCheck.contains(models, theModel);
+        CoreArgCheck.contains(models, theModel);
 
         if ((currentModel == null) || (currentModel != theModel)) {
 
@@ -169,10 +162,8 @@ public abstract class CompositeLanguageObjectEditorModel extends AbstractLanguag
      */
     @Override
     public void setLanguageObject( LanguageObject theLangObj ) {
-        if (models == null) {
-            Assertion.isNotNull(models, Util.getString(PREFIX + "noModelsFound", //$NON-NLS-1$
-                                                       new Object[] {"setLanguageObject"})); //$NON-NLS-1$
-        }
+        CoreArgCheck.isNotNull(models, Util.getString(PREFIX + "noModelsFound", //$NON-NLS-1$
+                                                      new Object[] {"setLanguageObject"})); //$NON-NLS-1$
 
         super.setLanguageObject(theLangObj);
         LanguageObject langObj = getSavedLanguageObject();

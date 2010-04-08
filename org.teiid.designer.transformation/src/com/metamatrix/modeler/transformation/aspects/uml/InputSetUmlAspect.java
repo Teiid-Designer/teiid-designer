@@ -12,7 +12,7 @@ import java.util.Collections;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.InputSet;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlClassifier;
@@ -83,7 +83,7 @@ public class InputSetUmlAspect extends AbstractTransformationUmlAspect implement
     }
 
     protected InputSet assertInputSet(Object eObject) {
-        ArgCheck.isInstanceOf(InputSet.class, eObject);
+        CoreArgCheck.isInstanceOf(InputSet.class, eObject);
         return (InputSet)eObject;
     }
 

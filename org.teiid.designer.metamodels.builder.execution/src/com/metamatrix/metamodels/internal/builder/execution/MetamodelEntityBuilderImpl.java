@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.builder.MetamodelEntityBuilder;
 import com.metamatrix.metamodels.builder.MetamodelEntityRecord;
@@ -84,9 +84,9 @@ public class MetamodelEntityBuilderImpl implements MetamodelEntityBuilder, Metam
      */
     public MetamodelEntityBuilderImpl( final MultiStatus status,
                                        final ResourceSet resources ) {
-        ArgCheck.isNotNull(status);
-        ArgCheck.isNotNull(resources);
-        ArgCheck.isNotEmpty(resources.getResources());
+        CoreArgCheck.isNotNull(status);
+        CoreArgCheck.isNotNull(resources);
+        CoreArgCheck.isNotEmpty(resources.getResources());
 
         this.status = status;
         this.resources = resources;
@@ -101,7 +101,7 @@ public class MetamodelEntityBuilderImpl implements MetamodelEntityBuilder, Metam
      */
     public EObject create( MetamodelEntityRecord record,
                            IProgressMonitor monitor ) {
-        ArgCheck.isNotNull(record);
+        CoreArgCheck.isNotNull(record);
         this.currentRecord = record;
 
         EObject entity = null;
@@ -179,7 +179,7 @@ public class MetamodelEntityBuilderImpl implements MetamodelEntityBuilder, Metam
      */
     public List create( List records,
                         IProgressMonitor monitor ) {
-        ArgCheck.isNotNull(records);
+        CoreArgCheck.isNotNull(records);
 
         List eObjs = new ArrayList(records.size());
         Iterator iter = records.iterator();
@@ -247,7 +247,7 @@ public class MetamodelEntityBuilderImpl implements MetamodelEntityBuilder, Metam
     private boolean addEntity( final EObject entity,
                                final MetamodelEntityRecord entityRecord ) {
         final String path = entityRecord.getParentPath();
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
 
         // Find the rsrc using the path info - Log if null
         final Resource rsrc = MetamodelBuilderUtil.findResource(resources, path);

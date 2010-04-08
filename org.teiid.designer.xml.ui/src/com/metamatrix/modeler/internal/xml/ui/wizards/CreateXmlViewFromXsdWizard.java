@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.xml.ui.ModelerXmlUiConstants;
 import com.metamatrix.modeler.xml.ui.ModelerXmlUiPlugin;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
@@ -26,7 +26,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
  */
 public class CreateXmlViewFromXsdWizard extends AbstractWizard implements
                                                               IImportWizard,
-                                                              StringUtil.Constants,
+                                                              CoreStringUtil.Constants,
                                                               ModelerXmlUiConstants {
 
     // ============================================================================================================================

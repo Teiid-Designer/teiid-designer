@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.api.exception.query.QueryMetadataException;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.query.metadata.QueryMetadataInterface;
@@ -457,9 +457,9 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
      */
     private boolean isDefaultSql(String sqlString) {
         StringBuffer sb = new StringBuffer(sqlString);
-        StringUtil.replaceAll(sb,CR,BLANK);
-        StringUtil.replaceAll(sb,TAB,SPACE);
-        StringUtil.replaceAll(sb,DBLSPACE,SPACE);
+        CoreStringUtil.replaceAll(sb,CR,BLANK);
+        CoreStringUtil.replaceAll(sb,TAB,SPACE);
+        CoreStringUtil.replaceAll(sb,DBLSPACE,SPACE);
         String newString = sb.toString();
         if(newString!=null && DEFAULT_QUERY!=null && 
            newString.trim().equalsIgnoreCase(DEFAULT_QUERY.trim())) {
@@ -487,9 +487,9 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
     		result=true;
     	} else {
 	        StringBuffer sb = new StringBuffer(sqlString);
-	        StringUtil.replaceAll(sb,CR,BLANK);
-	        StringUtil.replaceAll(sb,TAB,BLANK);
-	        StringUtil.replaceAll(sb,DBLSPACE,SPACE);
+	        CoreStringUtil.replaceAll(sb,CR,BLANK);
+	        CoreStringUtil.replaceAll(sb,TAB,BLANK);
+	        CoreStringUtil.replaceAll(sb,DBLSPACE,SPACE);
 	        String newString = sb.toString();
 	        if(newString!=null && newString.trim().length()==0) {
 	            result = true;

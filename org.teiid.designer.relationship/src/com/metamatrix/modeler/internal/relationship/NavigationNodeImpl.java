@@ -11,7 +11,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.relationship.NavigationNode;
 
 /**
@@ -31,9 +31,9 @@ public class NavigationNodeImpl extends NavigationObjectImpl implements Navigati
     public NavigationNodeImpl(final EObject modelObject, final String label, 
                               final String pathInModel ) {
         super(EcoreUtil.getURI(modelObject),label);
-        ArgCheck.isNotNull(modelObject);
-        ArgCheck.isNotNull(EcoreUtil.getURI(modelObject));
-        ArgCheck.isNotNull(pathInModel); 
+        CoreArgCheck.isNotNull(modelObject);
+        CoreArgCheck.isNotNull(EcoreUtil.getURI(modelObject));
+        CoreArgCheck.isNotNull(pathInModel); 
         this.metaclass = modelObject.eClass(); 
         this.pathInModel = pathInModel;
         this.toolTip=""; //$NON-NLS-1$
@@ -47,9 +47,9 @@ public class NavigationNodeImpl extends NavigationObjectImpl implements Navigati
     public NavigationNodeImpl(final URI modelObjectUri, final String label, 
                               final EClass metaclass, final String pathInModel ) {
         super(modelObjectUri,label);
-        ArgCheck.isNotNull(modelObjectUri);
-        ArgCheck.isNotNull(metaclass); 
-        ArgCheck.isNotNull(pathInModel); 
+        CoreArgCheck.isNotNull(modelObjectUri);
+        CoreArgCheck.isNotNull(metaclass); 
+        CoreArgCheck.isNotNull(pathInModel); 
         this.metaclass = metaclass; 
         this.pathInModel = pathInModel;
         this.toolTip=""; //$NON-NLS-1$
@@ -64,9 +64,9 @@ public class NavigationNodeImpl extends NavigationObjectImpl implements Navigati
                               final EClass metaclass, final String pathInModel,
                               final String toolTip ) {
         super(modelObjectUri,label);
-        ArgCheck.isNotNull(modelObjectUri);
-        ArgCheck.isNotNull(metaclass); 
-        ArgCheck.isNotNull(pathInModel); 
+        CoreArgCheck.isNotNull(modelObjectUri);
+        CoreArgCheck.isNotNull(metaclass); 
+        CoreArgCheck.isNotNull(pathInModel); 
         this.metaclass = metaclass; 
         this.pathInModel = pathInModel;
         this.toolTip = toolTip;

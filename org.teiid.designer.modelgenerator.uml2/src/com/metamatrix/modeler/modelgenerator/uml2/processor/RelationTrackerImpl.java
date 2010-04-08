@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.UMLPackage;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.relationship.Relationship;
 import com.metamatrix.metamodels.relationship.RelationshipEntity;
@@ -63,7 +63,7 @@ public class RelationTrackerImpl extends TransientRelationTrackerImpl {
     public RelationTrackerImpl( final ModelSelector relationModelSelector,
                                 final RelationshipFactory factory ) {
         super();
-        ArgCheck.isNotNull(relationModelSelector);
+        CoreArgCheck.isNotNull(relationModelSelector);
         this.relationModelSelector = relationModelSelector;
         this.relationshipsByInput = new HashMap();
         this.relationshipsByOutput = new HashMap();

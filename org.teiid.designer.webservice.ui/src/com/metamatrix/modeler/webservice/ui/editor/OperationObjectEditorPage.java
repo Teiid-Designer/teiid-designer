@@ -50,7 +50,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.metamodels.webservice.Interface;
@@ -90,7 +90,7 @@ import com.metamatrix.ui.tree.AbstractTreeContentProvider;
  * OperationObjectEditorPage is the class for editing Transformation Objects.
  */
 public class OperationObjectEditorPage extends TransformationObjectEditorPage
-    implements ArrayUtil.Constants, IInternalUiConstants, IInternalUiConstants.Images, StringUtil.Constants {
+    implements ArrayUtil.Constants, IInternalUiConstants, IInternalUiConstants.Images, CoreStringUtil.Constants {
 
     private static final String I18N_PFX = I18nUtil.getPropertyPrefix(OperationObjectEditorPage.class);
 

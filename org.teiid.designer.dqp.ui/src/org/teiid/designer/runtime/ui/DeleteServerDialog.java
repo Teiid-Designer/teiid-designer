@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.runtime.Server;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 /**
@@ -51,7 +51,7 @@ public final class DeleteServerDialog extends MessageDialog {
               DqpUiPlugin.getDefault().getImage(DqpUiPlugin.Images.DELETE_SERVER_ICON), null, MessageDialog.QUESTION,
               new String[] {IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL}, 0);
 
-        ArgCheck.isNotNull(serversBeingDeleted, "serversBeingDeleted"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(serversBeingDeleted, "serversBeingDeleted"); //$NON-NLS-1$
         this.serversBeingDeleted = serversBeingDeleted;
 
         // make sure dialog is resizable

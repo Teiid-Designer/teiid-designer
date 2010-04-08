@@ -32,9 +32,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.query.internal.ui.builder.actions.DeleteViewerObjectAction;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
@@ -163,7 +163,7 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
      */
     @Override
     protected Control createDialogArea( Composite theParent ) {
-        originalLanguageObjLabel = WidgetFactory.createLabel(theParent, StringUtil.Constants.EMPTY_STRING);
+        originalLanguageObjLabel = WidgetFactory.createLabel(theParent, CoreStringUtil.Constants.EMPTY_STRING);
         Composite pnlContents = (Composite)super.createDialogArea(theParent);
 
         //
@@ -398,10 +398,9 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
         // need the editor's language object in order to update tree.
         // the language object should never be null. if it was this handler should not have been called
         LanguageObject langObj = editor.getLanguageObject();
-        if (langObj == null) {
-            Assertion.isNotNull(langObj, Util.getString(PREFIX + "nullLangObj", //$NON-NLS-1$
-                                                        new Object[] {"handleSetSelected"})); //$NON-NLS-1$
-        }
+
+        CoreArgCheck.isNotNull(langObj, Util.getString(PREFIX + "nullLangObj", //$NON-NLS-1$
+                                                       new Object[] {"handleSetSelected"})); //$NON-NLS-1$
 
         // update tree
         treeViewer.modifySelectedItem(langObj, false);
@@ -503,14 +502,15 @@ public abstract class AbstractLanguageObjectBuilder extends Dialog implements Ui
         // Defect 22003 - needed a context for the original expression
         // Providing a Lable at the top of the dialog.
         String labelText = Util.getString(PREFIX + "initialExpression") + //$NON-NLS-1$
-                           StringUtil.Constants.DBL_SPACE + StringUtil.Constants.DBL_SPACE + Util.getString(PREFIX + "undefined"); //$NON-NLS-1$
+                           CoreStringUtil.Constants.DBL_SPACE + CoreStringUtil.Constants.DBL_SPACE
+                           + Util.getString(PREFIX + "undefined"); //$NON-NLS-1$
         if (savedLangObj != null) {
             String loString = savedLangObj.toString();
             if (loString.length() > 50) {
                 loString = loString.substring(0, 50) + "..."; //$NON-NLS-1$ 
             }
             labelText = Util.getString(PREFIX + "initialExpression") + //$NON-NLS-1$
-                        StringUtil.Constants.DBL_SPACE + StringUtil.Constants.DBL_SPACE + loString;
+                        CoreStringUtil.Constants.DBL_SPACE + CoreStringUtil.Constants.DBL_SPACE + loString;
         }
         if (originalLanguageObjLabel != null) {
             originalLanguageObjLabel.setText(labelText);

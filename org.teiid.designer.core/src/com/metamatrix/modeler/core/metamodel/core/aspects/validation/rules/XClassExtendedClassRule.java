@@ -10,7 +10,7 @@ package com.metamatrix.modeler.core.metamodel.core.aspects.validation.rules;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.extension.XClass;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.ObjectValidationRule;
@@ -39,7 +39,7 @@ public class XClassExtendedClassRule implements ObjectValidationRule {
      * @since 4.2
      */
     public void validate(EObject eObject, ValidationContext context) {
-        ArgCheck.isInstanceOf(XClass.class, eObject);
+        CoreArgCheck.isInstanceOf(XClass.class, eObject);
 
         final XClass xclass = (XClass) eObject;
         //final Resource resource = xpackage.eResource();

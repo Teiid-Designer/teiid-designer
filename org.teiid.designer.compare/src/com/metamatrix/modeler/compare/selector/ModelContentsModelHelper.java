@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.compare.selector;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.modeler.core.util.ModelContents;
 
@@ -25,7 +25,7 @@ public class ModelContentsModelHelper implements ModelHelper {
      */
     public ModelContentsModelHelper( final ModelContents contents ) {
         super();
-        ArgCheck.isNotNull(contents);
+        CoreArgCheck.isNotNull(contents);
         this.contents = contents;
     }
 

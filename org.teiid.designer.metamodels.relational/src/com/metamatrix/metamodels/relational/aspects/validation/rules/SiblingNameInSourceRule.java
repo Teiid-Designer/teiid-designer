@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.AccessPattern;
@@ -69,11 +69,11 @@ public class SiblingNameInSourceRule implements ObjectValidationRule {
             String nameInSourceA = getNameInSource(siblingI);
             final ValidationResult result = validationResults.get(i,siblingI);
 
-            if(!StringUtil.isEmpty(nameInSourceA)) {
+            if(!CoreStringUtil.isEmpty(nameInSourceA)) {
                 for(int j=i+1; j < siblings.size(); j++) {
                     EObject siblingJ = (EObject)siblings.get(j);
                     String nameInSourceB = getNameInSource(siblings.get(j));
-                    if(!StringUtil.isEmpty(nameInSourceB)) {                    
+                    if(!CoreStringUtil.isEmpty(nameInSourceB)) {                    
                         if(nameInSourceA.equals(nameInSourceB)) {
                             // create validation problem and add it to the result
                             final Object[] params = new Object[]{getName(siblingI),getName(siblingJ),nameInSourceFeatureName};

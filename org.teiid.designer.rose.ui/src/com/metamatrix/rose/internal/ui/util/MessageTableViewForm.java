@@ -23,7 +23,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.rose.internal.IMessage;
 import com.metamatrix.rose.internal.ui.IRoseUiConstants;
@@ -225,7 +225,7 @@ public class MessageTableViewForm extends Composite implements IRoseUiConstants,
             } else if (theIndex == MSG_COLUMN) {
                 result = msg.getText();
             } else {
-                Assertion.failed(UTIL.getString(PREFIX + "msg.unexpectedColumnIndex")); //$NON-NLS-1$
+                CoreArgCheck.isTrue(false, UTIL.getString(PREFIX + "msg.unexpectedColumnIndex")); //$NON-NLS-1$
             }
 
             return result;

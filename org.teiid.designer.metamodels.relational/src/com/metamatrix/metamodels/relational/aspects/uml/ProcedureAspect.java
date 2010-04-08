@@ -12,7 +12,7 @@ import java.util.Collections;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.relational.RelationalMetamodelConstants;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
@@ -40,7 +40,7 @@ public class ProcedureAspect extends RelationalEntityAspect implements UmlClassi
     }
 
     protected Procedure assertProcedure(Object eObject) {
-        ArgCheck.isInstanceOf(Procedure.class, eObject);
+        CoreArgCheck.isInstanceOf(Procedure.class, eObject);
         
         return (Procedure)eObject;
     }

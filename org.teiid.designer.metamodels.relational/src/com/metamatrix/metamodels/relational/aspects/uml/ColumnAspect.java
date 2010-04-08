@@ -10,8 +10,8 @@ package com.metamatrix.metamodels.relational.aspects.uml;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.RelationalMetamodelConstants;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
@@ -66,7 +66,7 @@ public class ColumnAspect extends RelationalEntityAspect implements UmlProperty 
         final String tmpName = col.getType() != null ? 
                                 ModelerCore.getDatatypeManager(col,true).getName(col.getType()) : 
                                 null;
-        final String dtName  = (tmpName == null ? StringUtil.Constants.EMPTY_STRING : tmpName); 
+        final String dtName  = (tmpName == null ? CoreStringUtil.Constants.EMPTY_STRING : tmpName); 
         
         final boolean isStringType = col.getType() != null ?
                                        ModelerCore.getDatatypeManager(col, true).isCharacter(col.getType()) :
@@ -244,7 +244,7 @@ public class ColumnAspect extends RelationalEntityAspect implements UmlProperty 
     }
 
     protected Column assertColumn(Object eObject) {
-        ArgCheck.isInstanceOf(Column.class, eObject);
+        CoreArgCheck.isInstanceOf(Column.class, eObject);
         
         return (Column)eObject;
     }

@@ -27,8 +27,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.core.util.Assertion;
 import com.metamatrix.core.util.ChecksumUtil;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.StreamPipe;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.extension.XPackage;
@@ -248,7 +248,7 @@ public class ModelBufferImpl implements ModelBuffer {
                 if (this.emfResource != null) {
                     if (this.emfResource instanceof EmfResource) {
                         this.contents = ((EmfResource)this.emfResource).getModelContents();
-                        Assertion.isNotNull(this.contents);
+                        CoreArgCheck.isNotNull(this.contents);
                     }
                     if (this.contents == null) {
                         this.contents = new ModelContents(this.emfResource);

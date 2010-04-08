@@ -11,8 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Stereotype;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 
 /**
@@ -43,11 +43,11 @@ public abstract class AbstractUml2ElementUmlAspect extends AbstractUml2UmlAspect
             appendStereotype(element,sb,false);
             return sb.toString();
         }
-        return StringUtil.Constants.EMPTY_STRING;
+        return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     protected Element assertElement(Object eObject) {
-        ArgCheck.isInstanceOf(Element.class, eObject);
+        CoreArgCheck.isInstanceOf(Element.class, eObject);
         return (Element)eObject;
     }
 

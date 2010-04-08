@@ -13,7 +13,7 @@ import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import com.metamatrix.core.index.CompositeIndexSelector;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.index.IndexSelector;
 import com.metamatrix.modeler.core.index.IndexSelectorFactory;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -37,7 +37,7 @@ public class ModelWorkspaceIndexSelectorFactory implements IndexSelectorFactory 
      * @see com.metamatrix.modeler.core.index.IndexSelectorFactory#createIndexSelector(java.util.List)
      */
     public IndexSelector createIndexSelector( final List modelWorkspaceItems ) throws CoreException {
-        ArgCheck.isNotNull(modelWorkspaceItems);
+        CoreArgCheck.isNotNull(modelWorkspaceItems);
         final int numItems = modelWorkspaceItems.size();
         if ( numItems == 0 ) {
             return new ModelWorkspaceIndexSelector();

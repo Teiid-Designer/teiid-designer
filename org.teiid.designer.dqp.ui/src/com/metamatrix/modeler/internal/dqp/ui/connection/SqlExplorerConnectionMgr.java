@@ -18,14 +18,14 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.teiid.designer.vdb.Vdb;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.connection.IVdbConnectionMgr;
 
 /**
- * The <code>SqlExplorerConnectionUtils</code> class manages VDB connections when using the <code>net.sourceforge.sqlexplorer</code>
- * plugin.
+ * The <code>SqlExplorerConnectionUtils</code> class manages VDB connections when using the
+ * <code>net.sourceforge.sqlexplorer</code> plugin.
  * 
  * @since 5.0
  */
@@ -49,7 +49,7 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants, IVdbConne
         final Object[] connections = getAllConnections();
 
         if ((connections != null) && (connections.length != 0)) for (int i = 0; i < connections.length; ++i) {
-            Assertion.isInstanceOf(connections[i], SessionTreeNode.class, connections[i].getClass().getName());
+            CoreArgCheck.isInstanceOf(SessionTreeNode.class, connections[i], connections[i].getClass().getName());
             closeConnectionImpl((SessionTreeNode)connections[i]);
         }
     }
@@ -63,7 +63,7 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants, IVdbConne
         final Object connection = getConnection(theVdbContext);
 
         if (connection != null) {
-            Assertion.isInstanceOf(connection, SessionTreeNode.class, connection.getClass().getName());
+            CoreArgCheck.isInstanceOf(SessionTreeNode.class, connection, connection.getClass().getName());
             result = closeConnectionImpl((SessionTreeNode)connection);
         }
 
@@ -137,7 +137,7 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants, IVdbConne
      * @since 5.0.1
      */
     public String getConnectionName( final Object theConnection ) {
-        Assertion.isInstanceOf(theConnection, SessionTreeNode.class, theConnection.getClass().getName());
+        CoreArgCheck.isInstanceOf(SessionTreeNode.class, theConnection, theConnection.getClass().getName());
         return ((SessionTreeNode)theConnection).getAlias().getName();
     }
 
@@ -146,7 +146,7 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants, IVdbConne
      * @since 5.0.1
      */
     public Vdb getVdb( final Object connection ) {
-        Assertion.isInstanceOf(connection, SessionTreeNode.class, connection.getClass().getName());
+        CoreArgCheck.isInstanceOf(SessionTreeNode.class, connection, connection.getClass().getName());
         // find the associated VDB context for the connection
         return new Vdb(new Path(getConnectionName(connection)), new NullProgressMonitor());
     }
@@ -229,7 +229,7 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants, IVdbConne
         if (vdb != null) temp = getConnection(vdb);
 
         if (temp != null) {
-            Assertion.isInstanceOf(temp, SessionTreeNode.class, temp.getClass().getName());
+            CoreArgCheck.isInstanceOf(SessionTreeNode.class, temp, temp.getClass().getName());
             final SessionTreeNode connection = (SessionTreeNode)temp;
 
             if (!isConnectionClosed(connection)) {
@@ -256,7 +256,7 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants, IVdbConne
         final Object conn = getConnection(theVdb);
 
         if (conn != null) {
-            Assertion.isInstanceOf(conn, SessionTreeNode.class, conn.getClass().getName());
+            CoreArgCheck.isInstanceOf(SessionTreeNode.class, conn, conn.getClass().getName());
             final SessionTreeNode connection = (SessionTreeNode)conn;
 
             result = !isConnectionClosed(connection);
@@ -274,14 +274,14 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants, IVdbConne
         final Object temp = getConnection(theVdb);
 
         if (temp != null) {
-            Assertion.isInstanceOf(temp, SessionTreeNode.class, temp.getClass().getName());
+            CoreArgCheck.isInstanceOf(SessionTreeNode.class, temp, temp.getClass().getName());
             final SessionTreeNode connection = (SessionTreeNode)temp;
 
             if (!isConnectionClosed(connection)) {
                 final Date connTime = connection.getConnection().getTimeOpened();
 
                 if (connTime != null) {
-                    Assertion.isInstanceOf(theVdb, Vdb.class, theVdb.getClass().getName());
+                    CoreArgCheck.isInstanceOf(Vdb.class, theVdb, theVdb.getClass().getName());
                     final long vdbTime = getVdbLastSavedTime(theVdb);
                     result = (connTime.getTime() < vdbTime);
                 }

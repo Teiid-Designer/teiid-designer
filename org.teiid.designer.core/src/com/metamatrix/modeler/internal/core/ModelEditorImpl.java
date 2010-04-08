@@ -89,9 +89,9 @@ import com.metamatrix.core.id.InvalidIDException;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.ObjectIDFactory;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.DebuggingStopwatch;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.CoreFactory;
 import com.metamatrix.metamodels.core.ModelAnnotation;
@@ -280,7 +280,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @return the MetamodelDescriptor for the given EObject
      */
     public MetamodelDescriptor getMetamodelDescriptor( final EObject object ) {
-        ArgCheck.isNotNull(object);
+        CoreArgCheck.isNotNull(object);
         Container cntr = getContainer();
         String uri = object.eClass().getEPackage().getNsURI();
         // If the object is a proxy look up the descriptor
@@ -300,7 +300,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getPrimaryMetamodelDescriptor(com.metamatrix.modeler.core.workspace.ModelResource)
      */
     public MetamodelDescriptor getPrimaryMetamodelDescriptor( final ModelResource resource ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         return resource.getPrimaryMetamodelDescriptor();
     }
 
@@ -308,7 +308,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getPrimaryMetamodelDescriptor(org.eclipse.emf.ecore.resource.Resource)
      */
     public MetamodelDescriptor getPrimaryMetamodelDescriptor( final Resource resource ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         // See if this resource is an EmfResource; if so, there is a shortcut to not look up the Model Resource ...
         if (resource instanceof MMXmiResource) {
@@ -327,9 +327,9 @@ public class ModelEditorImpl implements ModelEditor {
                     final MetamodelDescriptor[] descriptors = ModelerCore.getMetamodelRegistry().getMetamodelDescriptors();
                     for (int i = 0; i < descriptors.length; i++) {
                         final MetamodelDescriptor mmd = descriptors[i];
-                        if (mmd.isPrimary() && !StringUtil.isEmpty(mmd.getNamespaceURI())) {
+                        if (mmd.isPrimary() && !CoreStringUtil.isEmpty(mmd.getNamespaceURI())) {
                             sb.append(mmd.getNamespaceURI());
-                            sb.append(StringUtil.Constants.SPACE);
+                            sb.append(CoreStringUtil.Constants.SPACE);
                         }
                     }
                     final Object[] params = new Object[] {primaryMetamodelUri, sb.toString()};
@@ -617,8 +617,8 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public EObject createNewRootObjectFromCommand( final Resource parent,
                                                    final Command cmd ) throws ModelerCoreException {
-        ArgCheck.isNotNull(parent);
-        ArgCheck.isNotNull(cmd);
+        CoreArgCheck.isNotNull(parent);
+        CoreArgCheck.isNotNull(cmd);
         final boolean isSignificant = true;
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Create_New_Child_for_{0}_1", //$NON-NLS-1$
                                                                        getPresentationValue(parent));
@@ -729,7 +729,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#copy(org.eclipse.emf.ecore.EObject)
      */
     public EObject copy( final EObject eObject ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         return copy(eObject, null);
     }
 
@@ -738,7 +738,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public EObject copy( final EObject eObject,
                          final Map originalsToCopies ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
 
         final boolean isSignificant = true;
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Copy_{0}_4", getPresentationValue(eObject)); //$NON-NLS-1$
@@ -778,8 +778,8 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public Collection copyMultiple( final EObject eObject,
                                     final int numCopies ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObject);
-        ArgCheck.isPositive(numCopies);
+        CoreArgCheck.isNotNull(eObject);
+        CoreArgCheck.isPositive(numCopies);
 
         final ArrayList copies = new ArrayList(numCopies);
 
@@ -812,7 +812,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#delete(java.util.Collecction)
      */
     public boolean delete( final Collection eObjects ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObjects);
+        CoreArgCheck.isNotNull(eObjects);
 
         if (eObjects.isEmpty()) {
             return false;
@@ -828,7 +828,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public boolean delete( final Collection eObjects,
                            final IProgressMonitor monitor ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObjects);
+        CoreArgCheck.isNotNull(eObjects);
 
         if (eObjects.isEmpty()) {
             return false;
@@ -1028,7 +1028,7 @@ public class ModelEditorImpl implements ModelEditor {
     public boolean delete( final EObject eObject,
                            final boolean performResourceCheck,
                            final boolean performRelatedObjectCheck ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
 
         // Check the parent (and resource) to see if the object is already deleted ...
         // Per defect 13042.
@@ -1129,7 +1129,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     protected static Command createDeleteCommand( final EditingDomain editingDomain,
                                                   final EObject eObject ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
 
         Command command = null;
         if (eObject.eContainer() == null) {
@@ -1215,9 +1215,9 @@ public class ModelEditorImpl implements ModelEditor {
             iInc = 100;
         }
 
-        String startMessage = ModelerCore.Util.getString("ModelEditorImpl.searchingReferencesMsg") + StringUtil.Constants.SPACE; //$NON-NLS-1$
-        String ofText = StringUtil.Constants.DBL_SPACE
-                        + ModelerCore.Util.getString("ModelEditorImpl.ofText") + StringUtil.Constants.SPACE; //$NON-NLS-1$
+        String startMessage = ModelerCore.Util.getString("ModelEditorImpl.searchingReferencesMsg") + CoreStringUtil.Constants.SPACE; //$NON-NLS-1$
+        String ofText = CoreStringUtil.Constants.DBL_SPACE
+                        + ModelerCore.Util.getString("ModelEditorImpl.ofText") + CoreStringUtil.Constants.SPACE; //$NON-NLS-1$
         // Construct and use the visitor ...
         final ClearReferencesUponDelete visitor = new ClearReferencesUponDelete(allDeleted, editingDomain, workspaceSearch);
         final ModelVisitorProcessor processor = new ModelVisitorProcessor(visitor);
@@ -1345,7 +1345,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public Collection findExternalReferencesToObjectsBeingDeleted( final EObject eObject,
                                                                    final Collection allDeleted ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
 
         final Resource resource = eObject.eResource();
         if (resource == null) {
@@ -1378,7 +1378,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     protected Collection findOtherObjectsToBeDeleted( final EObject eObject,
                                                       ModelWorkspaceSearch workspaceSearch ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
 
         final ContainerImpl cntr = getContainer();
         final EditingDomain ed = cntr.getEditingDomain();
@@ -1393,7 +1393,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @return the Collection of all objects that are being deleted
      */
     public Collection findOtherObjectsToBeDeleted( final EObject eObject ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         final ContainerImpl cntr = getContainer();
         final EditingDomain ed = cntr.getEditingDomain();
         final LinkedList additionalCommands = new LinkedList();
@@ -1446,13 +1446,13 @@ public class ModelEditorImpl implements ModelEditor {
         int halfWay = nObj / 2;
         boolean pastHalfWay = false;
 
-        String startMessage = ModelerCore.Util.getString("ModelEditorImpl.searchingRelatedMsg") + StringUtil.Constants.SPACE; //$NON-NLS-1$
-        String ofText = StringUtil.Constants.DBL_SPACE
-                        + ModelerCore.Util.getString("ModelEditorImpl.ofText") + StringUtil.Constants.SPACE; //$NON-NLS-1$
+        String startMessage = ModelerCore.Util.getString("ModelEditorImpl.searchingRelatedMsg") + CoreStringUtil.Constants.SPACE; //$NON-NLS-1$
+        String ofText = CoreStringUtil.Constants.DBL_SPACE
+                        + ModelerCore.Util.getString("ModelEditorImpl.ofText") + CoreStringUtil.Constants.SPACE; //$NON-NLS-1$
         Iterator itor = eObjects.iterator();
 
         while (itor.hasNext()) {
-            String message = startMessage + StringUtil.Constants.DBL_SPACE + iObj + ofText + nObj;
+            String message = startMessage + CoreStringUtil.Constants.DBL_SPACE + iObj + ofText + nObj;
             iObj++;
             monitor.subTask(message);
             EObject eObject = (EObject)itor.next();
@@ -1519,7 +1519,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public boolean rename( final EObject eObject,
                            final String newName ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         final EStructuralFeature nameFeature = getNameFeature(eObject);
         if (nameFeature == null) {
             return false;
@@ -1546,7 +1546,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getNameFeature(org.eclipse.emf.ecore.EObject)
      */
     public EStructuralFeature getNameFeature( final EObject eObject ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         final EClass eClass = eObject.eClass();
         for (Iterator iter = eClass.getEAllStructuralFeatures().iterator(); iter.hasNext();) {
             final EStructuralFeature feature = (EStructuralFeature)iter.next();
@@ -1561,7 +1561,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getName(org.eclipse.emf.ecore.EObject)
      */
     public String getName( final EObject eObject ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         final EStructuralFeature nameFeature = getNameFeature(eObject);
         if (nameFeature == null) {
             return null;
@@ -1574,7 +1574,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#hasName(org.eclipse.emf.ecore.EObject)
      */
     public boolean hasName( final EObject eObject ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         final EStructuralFeature nameFeature = getNameFeature(eObject);
         return nameFeature != null;
     }
@@ -1585,7 +1585,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     protected boolean renameInternal( final EObject eObject,
                                       final String newName ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         final EStructuralFeature nameFeature = getNameFeature(eObject);
         if (nameFeature != null) {
             generateUniqueInternalName(eObject.eContainer() == null ? eObject.eResource().getContents() : eObject.eContainer().eContents(),
@@ -1669,7 +1669,7 @@ public class ModelEditorImpl implements ModelEditor {
     protected void executeCommandInTransaction( final UnitOfWork uow,
                                                 final Object owner,
                                                 final Command cmd ) throws ModelerCoreException {
-        ArgCheck.isNotNull(uow);
+        CoreArgCheck.isNotNull(uow);
 
         if (cmd == null || !cmd.canExecute()) {
             final String nullMsg = ModelerCore.Util.getString("ModelEditorImpl.Can_not_execute_a_null_command_1"); //$NON-NLS-1$
@@ -1879,8 +1879,8 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public boolean move( final Object newParent,
                          final EObject eObject ) throws ModelerCoreException {
-        ArgCheck.isNotNull(newParent);
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(newParent);
+        CoreArgCheck.isNotNull(eObject);
 
         if (!isValidParent(newParent, eObject)) {
             throw new ModelerCoreException(ModelerCore.Util.getString("ModelEditorImpl.Invalid_parent_for_child_encountered_1")); //$NON-NLS-1$
@@ -1908,8 +1908,8 @@ public class ModelEditorImpl implements ModelEditor {
     public boolean move( final Object newParent,
                          final EObject eObject,
                          final int index ) throws ModelerCoreException {
-        ArgCheck.isNotNull(newParent);
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(newParent);
+        CoreArgCheck.isNotNull(eObject);
 
         if (!isValidParent(newParent, eObject)) {
             throw new ModelerCoreException(ModelerCore.Util.getString("ModelEditorImpl.Invalid_parent_for_child_encountered_1")); //$NON-NLS-1$
@@ -1945,7 +1945,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#copyToClipboard
      */
     public void copyToClipboard( final EObject eObject ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         Collection objects = new ArrayList(1);
         objects.add(eObject);
 
@@ -1956,7 +1956,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#copyAllToClipboard
      */
     public void copyAllToClipboard( final Collection eObjects ) throws ModelerCoreException {
-        ArgCheck.isNotEmpty(eObjects);
+        CoreArgCheck.isNotEmpty(eObjects);
 
         final EObject eObject = (EObject)eObjects.iterator().next();
         final boolean isSignificant = false;
@@ -1977,7 +1977,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#cutToClipboard
      */
     public void cutToClipboard( final EObject eObject ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         Collection objects = new ArrayList(1);
         objects.add(eObject);
 
@@ -1988,7 +1988,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#cutAllToClipboard
      */
     public void cutAllToClipboard( final Collection eObjects ) throws ModelerCoreException {
-        ArgCheck.isNotEmpty(eObjects);
+        CoreArgCheck.isNotEmpty(eObjects);
 
         final EObject eObject = (EObject)eObjects.iterator().next();
         final boolean isSignificant = true;
@@ -2010,7 +2010,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#pasteFromClipboard
      */
     public boolean pasteFromClipboard( final Object owner ) throws ModelerCoreException {
-        ArgCheck.isNotNull(owner);
+        CoreArgCheck.isNotNull(owner);
 
         final boolean isSignificant = true;
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Paste_{0}_10", getPresentationValue(owner)); //$NON-NLS-1$
@@ -2171,9 +2171,9 @@ public class ModelEditorImpl implements ModelEditor {
                           final Object value,
                           final EList feature,
                           final int index ) throws ModelerCoreException {
-        ArgCheck.isNotNull(owner);
-        ArgCheck.isNotNull(value);
-        ArgCheck.isNotNull(feature);
+        CoreArgCheck.isNotNull(owner);
+        CoreArgCheck.isNotNull(value);
+        CoreArgCheck.isNotNull(feature);
 
         // convert the value into a collection
         final Collection values = new ArrayList();
@@ -2215,8 +2215,8 @@ public class ModelEditorImpl implements ModelEditor {
                              final Map map,
                              final Object key,
                              final Object value ) throws ModelerCoreException {
-        ArgCheck.isNotNull(owner);
-        ArgCheck.isNotNull(map);
+        CoreArgCheck.isNotNull(owner);
+        CoreArgCheck.isNotNull(map);
 
         final ContainerImpl cntr = getContainer();
         if (cntr == null) {
@@ -2249,9 +2249,9 @@ public class ModelEditorImpl implements ModelEditor {
     public void removeValue( final Object owner,
                              final Object value,
                              final EList feature ) throws ModelerCoreException {
-        ArgCheck.isNotNull(owner);
-        ArgCheck.isNotNull(value);
-        ArgCheck.isNotNull(feature);
+        CoreArgCheck.isNotNull(owner);
+        CoreArgCheck.isNotNull(value);
+        CoreArgCheck.isNotNull(feature);
 
         // convert the value into a collection
         final Collection values = new ArrayList();
@@ -2292,8 +2292,8 @@ public class ModelEditorImpl implements ModelEditor {
     public void removeMapValue( final Object owner,
                                 final Map map,
                                 final Object key ) throws ModelerCoreException {
-        ArgCheck.isNotNull(owner);
-        ArgCheck.isNotNull(map);
+        CoreArgCheck.isNotNull(owner);
+        CoreArgCheck.isNotNull(map);
 
         final ContainerImpl cntr = getContainer();
         if (cntr == null) {
@@ -2519,7 +2519,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#clone(org.eclipse.emf.ecore.EObject)
      */
     public EObject clone( final EObject eObject ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
 
         final boolean isSignificant = true;
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Clone_{0}_12", getPresentationValue(eObject)); //$NON-NLS-1$
@@ -3326,8 +3326,8 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public Collection cloneMultiple( final EObject eObject,
                                      final int numClones ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObject);
-        ArgCheck.isPositive(numClones);
+        CoreArgCheck.isNotNull(eObject);
+        CoreArgCheck.isPositive(numClones);
 
         final boolean isSignificant = true;
         final String operationDescription = ModelerCore.Util.getString("ModelEditorImpl.Clone_{0}_12", getPresentationValue(eObject)); //$NON-NLS-1$
@@ -3510,7 +3510,7 @@ public class ModelEditorImpl implements ModelEditor {
     }
 
     private Collection getRootDescriptors( final Resource rsrc ) {
-        ArgCheck.isNotNull(rsrc);
+        CoreArgCheck.isNotNull(rsrc);
         final String primaryMetamodelURI = getPrimaryMetamodelURI(rsrc);
         if (primaryMetamodelURI == null) {
             // any older models may not have a primaryMetamodelURI... just return empty list
@@ -3527,9 +3527,9 @@ public class ModelEditorImpl implements ModelEditor {
             final MetamodelDescriptor[] descriptors = ModelerCore.getMetamodelRegistry().getMetamodelDescriptors();
             for (int i = 0; i < descriptors.length; i++) {
                 final MetamodelDescriptor mmd = descriptors[i];
-                if (mmd.isPrimary() && !StringUtil.isEmpty(mmd.getNamespaceURI())) {
+                if (mmd.isPrimary() && !CoreStringUtil.isEmpty(mmd.getNamespaceURI())) {
                     sb.append(mmd.getNamespaceURI());
-                    sb.append(StringUtil.Constants.SPACE);
+                    sb.append(CoreStringUtil.Constants.SPACE);
                 }
 
             }
@@ -3581,7 +3581,7 @@ public class ModelEditorImpl implements ModelEditor {
 
     static void setDescriptorOwner( final Collection descriptors,
                                     final Object owner ) {
-        ArgCheck.isNotNull(descriptors);
+        CoreArgCheck.isNotNull(descriptors);
         for (Iterator iter = descriptors.iterator(); iter.hasNext();) {
             final Object descriptor = iter.next();
             if (descriptor instanceof CommandParameter) {
@@ -3807,7 +3807,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getDescription(org.eclipse.emf.ecore.EObject)
      */
     public String getDescription( final EObject eObject ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         // Find the existing annotation object ...
         final Annotation annotation = getAnnotation(eObject, false);
         if (annotation != null) {
@@ -3822,7 +3822,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public void setDescription( final EObject eObject,
                                 final String desc ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         if (eObject.eIsProxy()) {
             return; // cannot resolve an eProxy without a container/resource set
         }
@@ -3888,8 +3888,8 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public Resource findResource( final Container container,
                                   final EObject eObject ) {
-        ArgCheck.isNotNull(container);
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(eObject);
         return this.findResource(container, eObject, true);
     }
 
@@ -3899,8 +3899,8 @@ public class ModelEditorImpl implements ModelEditor {
     public Resource findResource( final Container container,
                                   final EObject eObject,
                                   final boolean resolve ) {
-        ArgCheck.isNotNull(eObject);
-        ArgCheck.isNotNull(container);
+        CoreArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(container);
         Resource resource = eObject.eResource();
 
         // Obtain the resource by resolving the eProxy
@@ -3921,7 +3921,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#findModelResource(org.eclipse.core.resources.IResource)
      */
     public ModelResource findModelResource( final IFile resource ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         return (ModelResource)ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(resource);
     }
 
@@ -3969,8 +3969,8 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public ModelImport getExistingModelImportForLocation( final MMXmiResource resource,
                                                           String someModelLocation ) {
-        ArgCheck.isNotNull(resource);
-        ArgCheck.isNotNull(someModelLocation);
+        CoreArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(someModelLocation);
 
         // Cache the URI for the importedResource so we can look for it in the import list
         final Container cntr = ModelerCore.getContainer(resource);
@@ -3999,7 +3999,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public String createModelLocation( final MMXmiResource resource,
                                        final Resource importedResource ) {
-        ArgCheck.isNotNull(importedResource);
+        CoreArgCheck.isNotNull(importedResource);
 
         // Check if the resource being imported is a valid import
         if (!isValidImportResource(importedResource)) {
@@ -4076,7 +4076,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public ModelImport createModelImport( final MMXmiResource resource,
                                           final Resource importedResource ) {
-        ArgCheck.isNotNull(importedResource);
+        CoreArgCheck.isNotNull(importedResource);
 
         // Check if the resource being imported is a valid import
         if (!isValidImportResource(importedResource)) {
@@ -4134,8 +4134,8 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public void updateModelImport( final ModelImport modelImport,
                                    final Resource importedResource ) {
-        ArgCheck.isNotNull(modelImport);
-        ArgCheck.isNotNull(importedResource);
+        CoreArgCheck.isNotNull(modelImport);
+        CoreArgCheck.isNotNull(importedResource);
 
         Resource resource = modelImport.eResource();
         if (resource != null) {
@@ -4203,7 +4203,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public ModelImport findModelImport( final MMXmiResource resource,
                                         final Resource importedResource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         if (importedResource == null || resource.getURI().isRelative() || importedResource.getURI().isRelative()) {
             return null;
         }
@@ -4312,7 +4312,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getExtension(org.eclipse.emf.ecore.EObject)
      */
     public EObject getExtension( EObject eObject ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
 
         final EClass eClass = eObject.eClass();
 
@@ -4400,7 +4400,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#findModelResource(com.metamatrix.metamodels.core.ModelImport)
      */
     public ModelResource findModelResource( final ModelImport modelImport ) {
-        ArgCheck.isNotNull(modelImport);
+        CoreArgCheck.isNotNull(modelImport);
         String thePath = modelImport.getPath();
         if (thePath != null) {
             final IPath pathInWorkspace = new Path(modelImport.getPath());
@@ -4414,7 +4414,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getURI(org.eclipse.emf.ecore.EObject)
      */
     public URI getUri( final EObject object ) {
-        ArgCheck.isNotNull(object);
+        CoreArgCheck.isNotNull(object);
 
         // If the object is a metamodel EClass then we need to return a URI based on the metamodel's
         // logical URI (e.g. http://www.metamatrix.com/metamodels/Relational) and not the actual
@@ -4443,7 +4443,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getObjectID(org.eclipse.emf.ecore.EObject)
      */
     public ObjectID getObjectID( final EObject object ) {
-        ArgCheck.isNotNull(object);
+        CoreArgCheck.isNotNull(object);
 
         try {
             String uuid = getContainer().getObjectManager().getObjectId(object);
@@ -4469,7 +4469,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getObjectIdString(org.eclipse.emf.ecore.EObject)
      */
     public String getObjectIdString( EObject object ) {
-        ArgCheck.isNotNull(object);
+        CoreArgCheck.isNotNull(object);
         return getContainer().getObjectManager().getObjectId(object);
     }
 
@@ -4490,7 +4490,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public void setObjectID( EObject object,
                              String objectId ) {
-        ArgCheck.isNotNull(object);
+        CoreArgCheck.isNotNull(object);
 
         try {
             getContainer().getObjectManager().setObjectId(object, objectId);
@@ -4509,7 +4509,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @since 4.2
      */
     public String getSearchIndexObjectID( final EObject eObject ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         Object objId = null;
         SqlAspect sqlAspect = AspectManager.getSqlAspect(eObject);
         if (sqlAspect != null) {
@@ -4541,7 +4541,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#findObjectID(java.lang.Object)
      */
     public EObject findObject( final Object objectId ) {
-        ArgCheck.isNotNull(objectId);
+        CoreArgCheck.isNotNull(objectId);
 
         // Look in the main container ...
         final Container cntr = getContainer();
@@ -4591,8 +4591,8 @@ public class ModelEditorImpl implements ModelEditor {
     public EObject findObject( final Object objectId,
                                final ModelResource resource,
                                final IProgressMonitor monitor ) throws ModelerCoreException {
-        ArgCheck.isNotNull(objectId);
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(objectId);
+        CoreArgCheck.isNotNull(resource);
         if (!resource.isLoaded() || !resource.isOpen()) {
             resource.open(monitor);
             resource.getEmfResource(); // loads the model
@@ -4604,7 +4604,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getChangedObject(org.eclipse.emf.common.notify.Notification)
      */
     public Object getChangedObject( final Notification notification ) {
-        ArgCheck.isNotNull(notification);
+        CoreArgCheck.isNotNull(notification);
         return notification.getNotifier();
     }
 
@@ -4614,8 +4614,8 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public EObject findObjectByPath( final Resource resource,
                                      final IPath modelRelativePath ) {
-        ArgCheck.isNotNull(resource);
-        ArgCheck.isNotNull(modelRelativePath);
+        CoreArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(modelRelativePath);
         EObject object = null;
         Collection children = resource.getContents();
         final String[] segments = modelRelativePath.segments();
@@ -4653,8 +4653,8 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public EObject findObjectByPath( final ModelResource resource,
                                      final IPath modelRelativePath ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(resource);
-        ArgCheck.isNotNull(modelRelativePath);
+        CoreArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(modelRelativePath);
         final Resource emfResource = resource.getEmfResource();
         return findObjectByPath(emfResource, modelRelativePath);
     }
@@ -4672,7 +4672,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public IPath getModelRelativePath( EObject object,
                                        boolean includeUnnamedObjects ) {
-        ArgCheck.isNotNull(object);
+        CoreArgCheck.isNotNull(object);
         return computeModelRelativePath(object, false, includeUnnamedObjects);
     }
 
@@ -4689,7 +4689,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public IPath getModelRelativePathIncludingModel( EObject object,
                                                      boolean includeUnnamedObjects ) {
-        ArgCheck.isNotNull(object);
+        CoreArgCheck.isNotNull(object);
         return computeModelRelativePath(object, true, includeUnnamedObjects);
     }
 
@@ -4697,7 +4697,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getFullPathToParent(org.eclipse.emf.ecore.EObject)
      */
     public IPath getFullPathToParent( final EObject object ) {
-        ArgCheck.isNotNull(object);
+        CoreArgCheck.isNotNull(object);
         // Get the path to the resource ...
         final Resource resource = object.eResource();
         if (resource == null) {
@@ -4781,7 +4781,7 @@ public class ModelEditorImpl implements ModelEditor {
     }
 
     public String getModelName( final EObject object ) {
-        ArgCheck.isNotNull(object);
+        CoreArgCheck.isNotNull(object);
         if (object.eIsProxy()) {
             URI proxyUri = ((InternalEObject)object).eProxyURI();
             URI resourceUri = proxyUri.trimFragment();
@@ -4790,20 +4790,20 @@ public class ModelEditorImpl implements ModelEditor {
         if (object.eResource() != null) {
             return getModelName(object.eResource().getURI());
         }
-        return StringUtil.Constants.EMPTY_STRING;
+        return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     /**
      * @see com.metamatrix.modeler.core.ModelEditor#getModelName(org.eclipse.emf.ecore.resource.Resource)
      */
     public String getModelName( Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         // derive the model name from the EMF resource URI ...
         return getModelName(resource.getURI());
     }
 
     public String getModelName( final URI resourceUri ) {
-        ArgCheck.isNotNull(resourceUri);
+        CoreArgCheck.isNotNull(resourceUri);
         // derive the model name from the EMF resource URI ...
         return resourceUri.trimFileExtension().lastSegment();
     }
@@ -4812,7 +4812,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getModelName(com.metamatrix.modeler.core.workspace.ModelResource)
      */
     public String getModelName( ModelResource modelResource ) {
-        ArgCheck.isNotNull(modelResource);
+        CoreArgCheck.isNotNull(modelResource);
         final IResource modelFile = modelResource.getResource();
         String modelName = null;
         if (modelFile instanceof IFile) {
@@ -4855,7 +4855,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @return
      */
     public String getResourcePath( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         return WorkspaceResourceFinderUtil.getWorkspaceUri(resource);
     }
 
@@ -4866,7 +4866,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @return
      */
     private String getResourceName( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         final URI resourceUri = resource.getURI();
         final String modelNameWithExt = resourceUri.lastSegment();
@@ -4914,7 +4914,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getModelContents(org.eclipse.emf.ecore.EObject)
      */
     public ModelContents getModelContents( final EObject eObject ) {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         final Resource resource = eObject.eResource();
         return getModelContents(resource);
     }
@@ -4923,7 +4923,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getModelContents(org.eclipse.emf.ecore.resource.Resource)
      */
     public ModelContents getModelContents( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         if (resource instanceof MtkXmiResourceImpl) {
             return ((MtkXmiResourceImpl)resource).getModelContents();
         }
@@ -4935,7 +4935,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getModelContents(com.metamatrix.modeler.core.workspace.ModelResource)
      */
     public ModelContents getModelContents( final ModelResource modelResource ) {
-        ArgCheck.isNotNull(modelResource);
+        CoreArgCheck.isNotNull(modelResource);
         try {
             return ModelContents.getModelContents(modelResource);
         } catch (ModelWorkspaceException e) {
@@ -4948,7 +4948,7 @@ public class ModelEditorImpl implements ModelEditor {
      * @see com.metamatrix.modeler.core.ModelEditor#getModelAnnotation(org.eclipse.emf.ecore.EObject)
      */
     public ModelAnnotation getModelAnnotation( final EObject eObject ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
         final Resource resource = eObject.eResource();
         if (resource instanceof MMXmiResource) {
             return ((MMXmiResource)resource).getModelAnnotation();

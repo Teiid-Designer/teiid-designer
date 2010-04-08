@@ -12,8 +12,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.ValidationProblem;
 import com.metamatrix.modeler.core.validation.ValidationResult;
@@ -126,7 +126,7 @@ public class ValidationResultImpl implements ValidationResult {
      * @see com.metamatrix.modeler.core.validation.ValidationResult#setLocationPath(java.lang.String)
      */
     public void setLocationPath(final String locationPath) {
-        ArgCheck.isNotNull(locationPath);
+        CoreArgCheck.isNotNull(locationPath);
         this.locationPath = locationPath;
     }
 
@@ -166,7 +166,7 @@ public class ValidationResultImpl implements ValidationResult {
     }
 
     private void initTarget(final Object target) {
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(target);
         this.target = target;
         if (target instanceof EObject) {
             EObject eObj = (EObject) target;
@@ -232,16 +232,16 @@ public class ValidationResultImpl implements ValidationResult {
         if (this.hasProblems()) {
             StringBuffer sb = new StringBuffer();
             sb.append(this.getLocationPath());
-            sb.append(StringUtil.Constants.NEW_LINE_CHAR);
+            sb.append(CoreStringUtil.Constants.NEW_LINE_CHAR);
             ValidationProblem[] problems = this.getProblems();
             for (int i = 0; i !=problems.length; ++i) {
                 ValidationProblem problem = problems[i];
                 sb.append(problem.toString());
-                sb.append(StringUtil.Constants.NEW_LINE_CHAR);
+                sb.append(CoreStringUtil.Constants.NEW_LINE_CHAR);
             }
             return sb.toString();
         }
-        return StringUtil.Constants.EMPTY_STRING;
+        return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
 //    private void printUriValues(Object target) {

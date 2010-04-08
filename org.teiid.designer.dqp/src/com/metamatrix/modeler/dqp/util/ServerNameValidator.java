@@ -9,7 +9,7 @@ package com.metamatrix.modeler.dqp.util;
 
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 
@@ -39,7 +39,7 @@ public class ServerNameValidator extends StringNameValidator {
      */
     @Override
     public String checkNameCharacters( String name ) {
-        ArgCheck.isNotNull(name);
+        CoreArgCheck.isNotNull(name);
 
         // Go through the string and ensure that each character is valid ...
         CharacterIterator charIter = new StringCharacterIterator(name);

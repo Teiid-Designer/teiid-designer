@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.metamodels.xsd.XsdResourceFactory;
@@ -200,8 +200,8 @@ public class ModelerSdtPlugin extends Plugin {
 
     protected static void addLogicalToPhysicalUriMapping( final ResourceSet rs,
                                                           final Resource r ) {
-        ArgCheck.isNotNull(rs);
-        ArgCheck.isNotNull(r);
+        CoreArgCheck.isNotNull(rs);
+        CoreArgCheck.isNotNull(r);
         URI logicalURI = BUILTIN_DATATYPES_URI;
         URI physicalURI = r.getURI();
         rs.getURIConverter().getURIMap().put(logicalURI, physicalURI);

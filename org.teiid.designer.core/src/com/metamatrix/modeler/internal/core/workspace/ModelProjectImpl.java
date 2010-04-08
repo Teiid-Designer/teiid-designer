@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelFolder;
 import com.metamatrix.modeler.core.workspace.ModelProject;
@@ -339,7 +339,7 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
     }
 
     public ModelWorkspaceItem findModelWorkspaceItem( IResource resource ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         return ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(resource);
     }
 

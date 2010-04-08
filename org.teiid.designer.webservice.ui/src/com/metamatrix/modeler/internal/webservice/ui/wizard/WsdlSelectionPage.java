@@ -72,10 +72,10 @@ import org.eclipse.wst.wsdl.validation.internal.WSDLValidator;
 import org.jdom.JDOMException;
 import com.metamatrix.common.protocol.URLHelper;
 import com.metamatrix.core.io.FileUrl;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.metamodels.wsdl.io.WsdlHelper;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
@@ -312,7 +312,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
                     path = ((File)wsdl).getAbsolutePath();
                 } else {
                     // unexpected
-                    Assertion.failed("Unexpected WSDL object type of " + wsdl.getClass()); //$NON-NLS-1$
+                    CoreArgCheck.isTrue(false, "Unexpected WSDL object type of " + wsdl.getClass()); //$NON-NLS-1$
                 }
 
                 // don't add if it has already been added
@@ -840,7 +840,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
 
             try {
                 String filePath = formatPath(newUrl);
-                File wsdlFile = URLHelper.createFileFromUrl(newUrl, StringUtil.createFileName(filePath), WSDL_SUFFIX);
+                File wsdlFile = URLHelper.createFileFromUrl(newUrl, CoreStringUtil.createFileName(filePath), WSDL_SUFFIX);
                 urlMap.put(wsdlFile.getName(), newUrl.toString());
                 WsdlHelper.convertImportsToAbsolutePaths(wsdlFile, newUrl.toExternalForm(), list, urlMap, true);
             } catch (MalformedURLException theException) {

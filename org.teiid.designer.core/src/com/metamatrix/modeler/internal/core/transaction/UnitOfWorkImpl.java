@@ -30,8 +30,8 @@ import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.util.Assertion;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.ModelerCoreRuntimeException;
@@ -121,7 +121,7 @@ public class UnitOfWorkImpl implements UnitOfWork {
      */
     public void begin() {
         if (isStarted()) {
-            Assertion.failed(ModelerCore.Util.getString("UnitOfWorkImpl.Transaction_already_started_1")); //$NON-NLS-1$
+            CoreArgCheck.isTrue(false, ModelerCore.Util.getString("UnitOfWorkImpl.Transaction_already_started_1")); //$NON-NLS-1$
         }
 
         if (state != TransactionStateConstants.COMPLETE && state != TransactionStateConstants.UNINITIALIZED
@@ -162,7 +162,7 @@ public class UnitOfWorkImpl implements UnitOfWork {
             throw new ModelerCoreException(
                                            ModelerCore.Util.getString("UnitOfWorkImpl.Invalid_transaction_state_prior_to_processing_notification", TransactionStateConstants.getDisplayValue(preState))); //$NON-NLS-1$
         }
-        Assertion.isNotNull(notification);
+        CoreArgCheck.isNotNull(notification);
 
         // keep track of resources whose modified property has been modified.
         if (notification.getNotifier() instanceof Resource && notification.getEventType() == Notification.SET
@@ -278,7 +278,7 @@ public class UnitOfWorkImpl implements UnitOfWork {
         if (sns == null || sns.isEmpty()) {
             return;
         }
-        if (!StringUtil.isEmpty(description)) {
+        if (!CoreStringUtil.isEmpty(description)) {
             System.out.println("\n" + description); //$NON-NLS-1$
             System.out.println("TxnNotificationFilter result:"); //$NON-NLS-1$
         } else {

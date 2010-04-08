@@ -36,7 +36,7 @@ import com.metamatrix.common.xsd.XsdHeader;
 import com.metamatrix.common.xsd.XsdHeaderReader;
 import com.metamatrix.core.MetaMatrixCoreException;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.workspace.ResourceFilter;
@@ -146,7 +146,7 @@ public class WorkspaceResourceFinderUtil {
      * @return the IResource
      */
     public static IResource findIResourceByUUID( final String stringifiedUuid ) {
-        if (StringUtil.isEmpty(stringifiedUuid) || !stringifiedUuid.startsWith(UUID.PROTOCOL) || getWorkspace() == null) {
+        if (CoreStringUtil.isEmpty(stringifiedUuid) || !stringifiedUuid.startsWith(UUID.PROTOCOL) || getWorkspace() == null) {
             return null;
         }
 
@@ -330,9 +330,9 @@ public class WorkspaceResourceFinderUtil {
 
                         String location = infos[i].getLocation();
                         String path = infos[i].getPath();
-                        if (!StringUtil.isEmpty(path)) {
+                        if (!CoreStringUtil.isEmpty(path)) {
                             dependentIResource = findIResource(path);
-                        } else if (!StringUtil.isEmpty(location)) {
+                        } else if (!CoreStringUtil.isEmpty(location)) {
                             String depPath = iResource.getFullPath().removeLastSegments(1).append(location).toString();
                             if (!isGlobalResource(depPath)) {
                                 dependentIResource = findIResource(depPath);
@@ -360,9 +360,9 @@ public class WorkspaceResourceFinderUtil {
 
                         String location = infos[i].getLocation();
                         String path = infos[i].getPath();
-                        if (!StringUtil.isEmpty(path)) {
+                        if (!CoreStringUtil.isEmpty(path)) {
                             dependentIResource = findIResource(path);
-                        } else if (!StringUtil.isEmpty(location)) {
+                        } else if (!CoreStringUtil.isEmpty(location)) {
                             if (!isGlobalResource(location)) {
                                 dependentIResource = findIResource(location);
                                 if (dependentIResource == null) {

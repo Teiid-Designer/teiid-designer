@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.jdbc.JdbcImportSettings;
 import com.metamatrix.modeler.jdbc.metadata.JdbcDatabase;
@@ -55,7 +55,7 @@ public class ContextImpl implements Context {
      * @return the model object with the corresponding path; may be null only if no such object was found in the model
      */
     public EObject findObject( final IPath pathInModel ) {
-        ArgCheck.isNotNull(pathInModel);
+        CoreArgCheck.isNotNull(pathInModel);
 
         // First, attempt to find the object in the map (which means we have already found it) ...
         final EObject obj = (EObject)eObjectByIPath.get(pathInModel);

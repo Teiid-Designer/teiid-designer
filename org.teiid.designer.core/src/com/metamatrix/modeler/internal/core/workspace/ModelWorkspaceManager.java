@@ -36,8 +36,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import com.metamatrix.common.xmi.XMIHeader;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.IOperation;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -200,7 +199,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     }
 
     private void initModelWorkspace( final IWorkspace workspace ) throws CoreException {
-        ArgCheck.isNotNull(workspace);
+        CoreArgCheck.isNotNull(workspace);
 
         // collect all resources in open projects
         ModelIResourceCollectorVisitor resourceVisitor = new ModelIResourceCollectorVisitor();
@@ -238,7 +237,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * Add a listener that would listen to and possibly veto the reloading of a ModelResource from the underlying file.
      */
     public void addModelResourceReloadVetoListener( ModelResourceReloadVetoListener listener ) {
-        ArgCheck.isNotNull(listener);
+        CoreArgCheck.isNotNull(listener);
         if (this.resourceReloadVetoListeners.contains(listener)) {
             return;
         }
@@ -249,7 +248,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * Remove a listener that would listen to and possibly veto the reloading of a ModelResource from the underlying file.
      */
     public void removeModelResourceReloadVetoListener( ModelResourceReloadVetoListener listener ) {
-        ArgCheck.isNotNull(listener);
+        CoreArgCheck.isNotNull(listener);
         this.resourceReloadVetoListeners.remove(listener);
     }
 
@@ -301,7 +300,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * Add a listener that would listen to the workspace change events.
      */
     public void addNotificationListener( ModelWorkspaceNotificationListener listener ) {
-        ArgCheck.isNotNull(listener);
+        CoreArgCheck.isNotNull(listener);
         if (this.workspaceListeners.contains(listener)) {
             return;
         }
@@ -337,7 +336,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
         // System.out.println("\n[ModelWorkspaceManager.fire] TOP, notification is: " +
         // ((ModelWorkspaceNotificationImpl)notification).getNotificationTypePhrase() );
 
-        ArgCheck.isNotNull(notification);
+        CoreArgCheck.isNotNull(notification);
         IResourceDelta delta = notification.getDelta();
         int eventType = notification.getEventType();
         // The delta is null upon project close events
@@ -638,7 +637,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * @since 4.2
      */
     private void removeResourcesRecursively( final IResource resource ) throws CoreException {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         // type of resource
         int resourceType = resource.getType();
@@ -1010,7 +1009,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * @return the ModelResource; null only if the resource is not known to the {@link ModelWorkspace}.
      */
     public ModelResource findModelResource( final Resource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         return ModelBufferManager.getDefaultBufferManager().getModelResource(resource);
     }
 
@@ -1021,7 +1020,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * @return the ModelResource; null only if the resource is not known to the {@link ModelWorkspace}.
      */
     public ModelWorkspaceItem findModelWorkspaceItem( final IResource resource ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         return findModelWorkspaceItem(resource, false);
     }
 
@@ -1034,7 +1033,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      */
     public ModelWorkspaceItem findModelWorkspaceItem( final IPath resourcePath,
                                                       int resourceType ) {
-        ArgCheck.isNotNull(resourcePath);
+        CoreArgCheck.isNotNull(resourcePath);
         return modelWorkspace.getWorkspaceItem(resourcePath, resourceType);
     }
 
@@ -1046,7 +1045,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      */
     public ModelWorkspaceItem findModelWorkspaceItem( final IResource resource,
                                                       final boolean createIfRequired ) throws ModelWorkspaceException {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
 
         // Get the project and the path of the model file relative to the project ...
         final IProject proj = resource.getProject();
@@ -1081,7 +1080,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                 // i+1 is safe because i is always < numFolders, and uptoSegment takes a count,
                 // not a segment index or offset or anything.
                 final IFolder underlyingFolder = proj.getFolder(pathInProject.uptoSegment(i + 1));
-                Assertion.isNotNull(underlyingFolder);
+                CoreArgCheck.isNotNull(underlyingFolder);
                 final ModelFolder newFolder = new ModelFolderImpl(underlyingFolder, parent);
                 final Object parentInfo = ((ModelWorkspaceItemImpl)parent).getItemInfo();
                 if (parentInfo instanceof ModelFolderInfo) {
@@ -1127,7 +1126,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * @since 4.2
      */
     public boolean isModelOpen( final IResource theResource ) {
-        ArgCheck.isNotNull(theResource);
+        CoreArgCheck.isNotNull(theResource);
         boolean result = false;
 
         if (ModelUtil.isModelFile(theResource, true)) {
@@ -1218,8 +1217,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
 
         public int compare( Object rsc1,
                             Object rsc2 ) {
-            ArgCheck.isInstanceOf(IResource.class, rsc1);
-            ArgCheck.isInstanceOf(IResource.class, rsc2);
+            CoreArgCheck.isInstanceOf(IResource.class, rsc1);
+            CoreArgCheck.isInstanceOf(IResource.class, rsc2);
 
             IResource resource1 = (IResource)rsc1;
             IResource resource2 = (IResource)rsc2;

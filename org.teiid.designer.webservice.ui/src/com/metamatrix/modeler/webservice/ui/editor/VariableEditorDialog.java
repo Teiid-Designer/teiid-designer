@@ -50,7 +50,7 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticle;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.internal.core.xml.XPathHelper;
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.metamodels.webservice.Operation;
@@ -85,7 +85,7 @@ import com.metamatrix.ui.tree.AbstractTreeContentProvider;
  * @since 4.3
  */
 public class VariableEditorDialog extends Dialog
-    implements IInternalUiConstants, IInternalUiConstants.Images, StringUtil.Constants {
+    implements IInternalUiConstants, IInternalUiConstants.Images, CoreStringUtil.Constants {
 
     private static final String I18N_PFX = I18nUtil.getPropertyPrefix(VariableEditorDialog.class);
 

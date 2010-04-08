@@ -63,7 +63,7 @@ import org.teiid.designer.runtime.ui.NewServerAction;
 import org.teiid.designer.runtime.ui.ReconnectToServerAction;
 import org.teiid.designer.runtime.ui.SetDefaultServerAction;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -367,7 +367,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                             }
                             Object data = item.getData();
                             if (data != null) {
-                                String tooltip = StringUtil.Constants.EMPTY_STRING;
+                                String tooltip = CoreStringUtil.Constants.EMPTY_STRING;
                                 if (data instanceof Connector) {
                                     tooltip = getConnectorToolTip((Connector)data);
                                 } else {

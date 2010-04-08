@@ -28,7 +28,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.MappingClassColumn;
 import com.metamatrix.metamodels.transformation.StagingTable;
@@ -158,7 +158,7 @@ public final class DocumentTreeViewer extends TreeViewer implements UiConstants 
                 Util.log(e);
             }
         } else {
-            Assertion.isNotNull(target);
+            CoreArgCheck.isNotNull(target);
         }
     }
 

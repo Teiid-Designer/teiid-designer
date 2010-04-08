@@ -10,7 +10,7 @@ package com.metamatrix.modeler.transformation.aspects.validation;
 import java.util.Collection;
 import java.util.Iterator;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.TreeMappingRoot;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
@@ -54,7 +54,7 @@ public class TreeMappingRootAspect extends TransformationAspect {
      */
     @Override
     public boolean shouldValidate(final EObject eObject, final ValidationContext context) {
-        ArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TreeMappingRoot.class, eObject);
         if(!context.shouldIgnore(eObject)) {
 			// check if all of the outputs to the mapping root are excluded
 			// from the xmldocument

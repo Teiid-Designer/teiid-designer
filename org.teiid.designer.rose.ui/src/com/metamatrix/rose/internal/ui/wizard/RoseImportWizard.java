@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.rose.internal.IMessage;
 import com.metamatrix.rose.internal.RoseImporter;
@@ -317,7 +317,7 @@ public final class RoseImportWizard extends AbstractWizard
         } else if (thePage == this.messagesPage) {
             result = this.updatePage;
         } else if (thePage != this.updatePage) {
-            Assertion.failed("Unexpected Rose Import Wizard Page:" + thePage); //$NON-NLS-1$
+            CoreArgCheck.isTrue(false, "Unexpected Rose Import Wizard Page:" + thePage); //$NON-NLS-1$
         }
 
         return result;

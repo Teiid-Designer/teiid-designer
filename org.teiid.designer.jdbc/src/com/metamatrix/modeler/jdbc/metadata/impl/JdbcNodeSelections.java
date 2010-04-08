@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Set;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.jdbc.JdbcImportSettings;
 import com.metamatrix.modeler.jdbc.metadata.JdbcNode;
 
@@ -62,7 +62,7 @@ public class JdbcNodeSelections {
      * @param settings the settings; may not be null
      */
     public void initialize( final JdbcImportSettings settings ) {
-        ArgCheck.isNotNull(settings);
+        CoreArgCheck.isNotNull(settings);
 
         //-------------------------------------------------------------------------
         //  Step 1: Go through the excluded objects
@@ -138,7 +138,7 @@ public class JdbcNodeSelections {
 
     
     public int getSelectionMode( final IPath path ) {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         if ( this.selecteds.contains(path) ) {
             return SELECTED;
         }
@@ -189,7 +189,7 @@ public class JdbcNodeSelections {
     }
     
     public void setSelected( final IPath path, final int selectionMode ) {
-        ArgCheck.isNotNull(path);
+        CoreArgCheck.isNotNull(path);
         if ( selectionMode == SELECTED ) {
             this.selecteds.add(path);
             this.unselecteds.remove(path);

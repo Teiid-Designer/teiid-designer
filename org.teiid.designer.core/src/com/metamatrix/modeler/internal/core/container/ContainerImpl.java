@@ -37,15 +37,15 @@ import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.xsd.XSDPackage;
+import com.metamatrix.core.event.EventBroker;
 import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.InvalidIDException;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.RunnableState;
-import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.ModelerCoreRuntimeException;
@@ -159,7 +159,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      */
     public static ResourceAction getOrCreateResource( final ResourceSet resourceSet,
                                                       final URI uri ) throws ModelerCoreException {
-        ArgCheck.isNotNull(uri);
+        CoreArgCheck.isNotNull(uri);
 
         // See if the resource exists already ...
         final Resource existingResource = resourceSet.getResource(uri, false); // returns null if non-existant
@@ -287,7 +287,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @since 3.1
      */
     public void setChangeNotifier( final ChangeNotifier notifier ) {
-        ArgCheck.isNotNull(notifier);
+        CoreArgCheck.isNotNull(notifier);
         verifySetIsAllowed(this.changeNotifier);
         this.changeNotifier = notifier;
     }
@@ -454,7 +454,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
     protected EditingDomain createDefaultEditingDomain() {
         // Retrieve the adapter factory that yields item providers.
         final ComposedAdapterFactory adapterFactory = (ComposedAdapterFactory)ModelerCore.getMetamodelRegistry().getAdapterFactory();
-        Assertion.isNotNull(this.getEmfTransactionProvider());
+        CoreArgCheck.isNotNull(this.getEmfTransactionProvider());
 
         // Create the command stack
         final BasicCommandStack commandStack = new BasicCommandStack();
@@ -513,7 +513,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @since 4.3
      */
     public void setEObjectFinder( EObjectFinder finder ) {
-        ArgCheck.isNotNull(finder);
+        CoreArgCheck.isNotNull(finder);
         verifySetIsAllowed(this.finder);
         this.finder = finder;
     }
@@ -523,7 +523,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @since 4.3
      */
     public void setResourceFinder( ResourceFinder finder ) {
-        ArgCheck.isNotNull(finder);
+        CoreArgCheck.isNotNull(finder);
         verifySetIsAllowed(this.resourceFinder);
         this.resourceFinder = finder;
     }
@@ -549,8 +549,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      */
     protected void setEmfTransactionProvider( UnitOfWorkProvider emfTransactionProvider ) {
         if (emfTransactionProvider == null) {
-            ArgCheck.isNotNull(emfTransactionProvider,
-                               ModelerCore.Util.getString("ContainerImpl.The_UnitOfWorkProvider_may_not_be_null_8")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(emfTransactionProvider,
+                                   ModelerCore.Util.getString("ContainerImpl.The_UnitOfWorkProvider_may_not_be_null_8")); //$NON-NLS-1$
         }
         this.emfTransactionProvider = emfTransactionProvider;
     }
@@ -562,8 +562,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      */
     protected void setEditingDomain( final EditingDomain editingDomain ) {
         if (editingDomain == null) {
-            ArgCheck.isNotNull(editingDomain,
-                               ModelerCore.Util.getString("ContainerImpl.The_EditingDomain_reference_may_not_be_null_1")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(editingDomain,
+                                   ModelerCore.Util.getString("ContainerImpl.The_EditingDomain_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
         this.editingDomain = editingDomain;
     }
@@ -610,8 +610,8 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      */
     public void setMetamodelRegistry( MetamodelRegistry metamodelRegistry ) {
         if (metamodelRegistry == null) {
-            ArgCheck.isNotNull(metamodelRegistry,
-                               ModelerCore.Util.getString("ContainerImpl.The_reference_to_the_MetamodelRegistry_may_not_be_null_11")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(metamodelRegistry,
+                                   ModelerCore.Util.getString("ContainerImpl.The_reference_to_the_MetamodelRegistry_may_not_be_null_11")); //$NON-NLS-1$
         }
         this.metamodelRegistry = metamodelRegistry;
     }
@@ -628,7 +628,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
     }
 
     public void setDatatypeManager( final DatatypeManager datatypeManager ) {
-        ArgCheck.isNotNull(datatypeManager);
+        CoreArgCheck.isNotNull(datatypeManager);
         this.datatypeManager = datatypeManager;
     }
 
@@ -763,7 +763,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
     public Resource getResource( final URI uri,
                                  final boolean loadOnDemand ) {
         if (uri == null) {
-            ArgCheck.isNotNull(uri, ModelerCore.Util.getString("ContainerImpl.The_URI_to_load_may_not_be_null_12")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(uri, ModelerCore.Util.getString("ContainerImpl.The_URI_to_load_may_not_be_null_12")); //$NON-NLS-1$
         }
 
         if (!isStarted()) {
@@ -1168,7 +1168,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
         final Object notifier = msg.getNotifier();
         if (notifier instanceof EObject) {
             final String nsUriString = ((EObject)notifier).eClass().getEPackage().getNsURI();
-            if (!StringUtil.isEmpty(nsUriString)) {
+            if (!CoreStringUtil.isEmpty(nsUriString)) {
                 final MetamodelDescriptor descriptor = ModelerCore.getMetamodelRegistry().getMetamodelDescriptor(nsUriString);
                 if (descriptor != null) {
                     try {
@@ -1316,7 +1316,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * @see com.metamatrix.modeler.core.container.Container#addExternalResourceSet(org.eclipse.emf.ecore.resource.ResourceSet)
      */
     public void addExternalResourceSet( final ResourceSet rsrcSet ) {
-        ArgCheck.isNotNull(rsrcSet);
+        CoreArgCheck.isNotNull(rsrcSet);
         if (this.resourceSet instanceof EmfResourceSetImpl) {
             ((EmfResourceSetImpl)this.resourceSet).addExternalResourceSet(rsrcSet);
         }

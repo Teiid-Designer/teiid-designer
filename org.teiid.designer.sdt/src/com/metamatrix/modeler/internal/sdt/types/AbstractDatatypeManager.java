@@ -24,7 +24,7 @@ import org.eclipse.xsd.XSDVariety;
 import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xsd.aspects.sql.XsdSimpleTypeDefinitionAspect;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -271,7 +271,7 @@ public abstract class AbstractDatatypeManager implements DatatypeManager, Dataty
      * @return EObject[]
      */
     public EObject[] getTypeHierarchy( final EObject type ) {
-        ArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, type);
+        CoreArgCheck.isInstanceOf(XSDSimpleTypeDefinition.class, type);
 
         // If the simple type is not atomic then cannot navigate the hierarchy
         if (((XSDSimpleTypeDefinition)type).getVariety() != XSDVariety.ATOMIC_LITERAL) {

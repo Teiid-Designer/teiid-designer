@@ -16,8 +16,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.InputBinding;
 import com.metamatrix.metamodels.transformation.InputParameter;
 import com.metamatrix.metamodels.transformation.InputSet;
@@ -57,7 +57,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTransformationAspect#getTransformedObject(org.eclipse.emf.ecore.EObject)
      */
     public Object getTransformedObject( EObject eObject ) {
-        ArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         EObject targetEObj = root.getTarget();
         if (targetEObj == null) {
@@ -72,7 +72,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @since 4.2
      */
     public List getInputObjects( EObject eObject ) {
-        ArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         return root.getInputs();
     }
@@ -82,7 +82,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @since 4.2
      */
     public List getNestedInputObjects( EObject eObject ) {
-        ArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         if (root.getNested() == null) {
             return Collections.EMPTY_LIST;
@@ -102,7 +102,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @since 4.2
      */
     public List getNestedOutputObjects( EObject eObject ) {
-        ArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         if (root.getNested() == null) {
             return Collections.EMPTY_LIST;
@@ -124,7 +124,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      */
     public List getNestedInputsForOutput( EObject eObject,
                                           EObject output ) {
-        ArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         if (root.getNested() != null) {
             for (final Iterator iter = root.getNested().iterator(); iter.hasNext();) {
@@ -144,7 +144,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      */
     public List getNestedOutputsForInput( EObject eObject,
                                           EObject input ) {
-        ArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         if (root.getNested() != null) {
             for (final Iterator iter = root.getNested().iterator(); iter.hasNext();) {
@@ -162,7 +162,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @since 4.2
      */
     public List getOutputObjects( EObject eObject ) {
-        ArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(TransformationMappingRoot.class, eObject);
         final TransformationMappingRoot root = (TransformationMappingRoot)eObject;
         return root.getOutputs();
     }
@@ -234,7 +234,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTransformationAspect#getTransformationTypes(org.eclipse.emf.ecore.EObject)
      */
     public String[] getTransformationTypes( final EObject eObject ) {
-        ArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
         final SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)eObject;
 
         // get the UUID form of the SqlTransformation
@@ -245,7 +245,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
             final String updateSql = transformation.getUpdateSql();
             final String deleteSql = transformation.getDeleteSql();
             final List result = new ArrayList(4);
-            if (!StringUtil.isEmpty(selectSql)) {
+            if (!CoreStringUtil.isEmpty(selectSql)) {
                 final EObject transformedObject = (EObject)getTransformedObject(eObject);
                 if (transformedObject == null) {
                     return null;
@@ -257,13 +257,13 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
                     result.add(SqlTransformationAspect.Types.PROCEDURE);
                 }
             }
-            if (!StringUtil.isEmpty(insertSql)) {
+            if (!CoreStringUtil.isEmpty(insertSql)) {
                 result.add(SqlTransformationAspect.Types.INSERT);
             }
-            if (!StringUtil.isEmpty(updateSql)) {
+            if (!CoreStringUtil.isEmpty(updateSql)) {
                 result.add(SqlTransformationAspect.Types.UPDATE);
             }
-            if (!StringUtil.isEmpty(deleteSql)) {
+            if (!CoreStringUtil.isEmpty(deleteSql)) {
                 result.add(SqlTransformationAspect.Types.DELETE);
             }
             return (String[])result.toArray(new String[result.size()]);
@@ -277,7 +277,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      */
     public String getTransformation( EObject eObject,
                                      String type ) {
-        ArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
         final SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)eObject;
 
         // get the UUID form of the SqlTransformation
@@ -567,7 +567,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @since 4.3
      */
     public boolean isDeleteAllowed( EObject eObject ) {
-        ArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
         final SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)eObject;
         final SqlTransformation sqlTransformation = (SqlTransformation)root.getHelper();
         return sqlTransformation.isDeleteAllowed();
@@ -578,7 +578,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @since 4.3
      */
     public boolean isInsertAllowed( EObject eObject ) {
-        ArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
         final SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)eObject;
         final SqlTransformation sqlTransformation = (SqlTransformation)root.getHelper();
         return sqlTransformation.isInsertAllowed();
@@ -589,7 +589,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
      * @since 4.3
      */
     public boolean isUpdateAllowed( EObject eObject ) {
-        ArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
         final SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)eObject;
         final SqlTransformation sqlTransformation = (SqlTransformation)root.getHelper();
         return sqlTransformation.isUpdateAllowed();
@@ -602,7 +602,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
                                                         final IndexingContext context,
                                                         final String type ) {
 
-        ArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
+        CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
 
         final SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)eObject;
         final Collection eResources = (context != null ? context.getResourcesInContext() : Collections.EMPTY_LIST);
@@ -621,7 +621,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
 
                 // Get the UUID SQL string
                 final String uuidSql = uuidTransformation.getSelectSql();
-                if (StringUtil.isEmpty(uuidSql)) {
+                if (CoreStringUtil.isEmpty(uuidSql)) {
                     return null;
                 }
                 final String selectSql = SqlConverter.convertUUIDsToFullNames(uuidSql, eResources);
@@ -696,13 +696,13 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
 
                         // sql from the modified command
                         final String tranformedSql = command.toString();
-                        if (!StringUtil.isEmpty(tranformedSql)) {
+                        if (!CoreStringUtil.isEmpty(tranformedSql)) {
                             return new SqlTransformationInfo(tranformedSql, bindingNames);
                         }
                     }
                 }
 
-                if (!StringUtil.isEmpty(selectSql)) {
+                if (!CoreStringUtil.isEmpty(selectSql)) {
                     return new SqlTransformationInfo(selectSql);
                 }
             }
@@ -714,11 +714,11 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
 
                 // Get the UUID SQL string
                 final String uuidSql = uuidTransformation.getInsertSql();
-                if (StringUtil.isEmpty(uuidSql)) {
+                if (CoreStringUtil.isEmpty(uuidSql)) {
                     return null;
                 }
                 final String insertSql = SqlConverter.convertUUIDsToFullNames(uuidSql, eResources);
-                if (!StringUtil.isEmpty(insertSql)) {
+                if (!CoreStringUtil.isEmpty(insertSql)) {
                     return new SqlTransformationInfo(insertSql);
                 }
             }
@@ -730,11 +730,11 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
 
                 // Get the UUID SQL string
                 final String uuidSql = uuidTransformation.getUpdateSql();
-                if (StringUtil.isEmpty(uuidSql)) {
+                if (CoreStringUtil.isEmpty(uuidSql)) {
                     return null;
                 }
                 final String updateSql = SqlConverter.convertUUIDsToFullNames(uuidSql, eResources);
-                if (!StringUtil.isEmpty(updateSql)) {
+                if (!CoreStringUtil.isEmpty(updateSql)) {
                     return new SqlTransformationInfo(updateSql);
                 }
             }
@@ -746,11 +746,11 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
 
                 // Get the UUID SQL string
                 final String uuidSql = uuidTransformation.getDeleteSql();
-                if (StringUtil.isEmpty(uuidSql)) {
+                if (CoreStringUtil.isEmpty(uuidSql)) {
                     return null;
                 }
                 final String deleteSql = SqlConverter.convertUUIDsToFullNames(uuidSql, eResources);
-                if (!StringUtil.isEmpty(deleteSql)) {
+                if (!CoreStringUtil.isEmpty(deleteSql)) {
                     return new SqlTransformationInfo(deleteSql);
                 }
             }

@@ -40,7 +40,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xml.XmlFragment;
 import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -492,7 +492,7 @@ public class XMLDocumentWizard extends AbstractWizard implements INewModelObject
                                                      final ResourceSet container ) throws Exception {
 
                 // Get a ResourceFinder to use when resolving dependent resource references
-                Assertion.isNotNull(ModelerCore.getContainer(xsdSource));
+                CoreArgCheck.isNotNull(ModelerCore.getContainer(xsdSource));
                 ResourceFinder finder = ModelerCore.getContainer(xsdSource).getResourceFinder();
 
                 if (!xsdSource.isLoaded()) {

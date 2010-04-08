@@ -32,9 +32,9 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.product.IModelerProductContexts;
@@ -375,7 +375,7 @@ public final class GeneralPreferencePage extends PreferencePage
             categoryId = theExtension.getAttribute(GeneralPreferenceContributor.CATEGORY_ID_ATTRIBUTE);
 
             // category ID can't be null
-            if (StringUtil.isEmpty(categoryId)) {
+            if (CoreStringUtil.isEmpty(categoryId)) {
                 Util.log(IStatus.ERROR, Util.getString(PREFIX + "nullCategoryId", //$NON-NLS-1$
                                                        theExtension.getDeclaringExtension().getExtensionPointUniqueIdentifier()));
                 result = false;
@@ -393,7 +393,7 @@ public final class GeneralPreferencePage extends PreferencePage
                 categoryName = theExtension.getAttribute(GeneralPreferenceContributor.CATEGORY_NAME_ATTRIBUTE);
 
                 // category name can't be null
-                if (StringUtil.isEmpty(categoryName)) {
+                if (CoreStringUtil.isEmpty(categoryName)) {
                     Object[] params = new Object[] {categoryId,
                         theExtension.getDeclaringExtension().getExtensionPointUniqueIdentifier()};
                     Util.log(IStatus.ERROR, Util.getString(PREFIX + "nullCategoryName", params)); //$NON-NLS-1$
@@ -427,7 +427,7 @@ public final class GeneralPreferencePage extends PreferencePage
         IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(PLUGIN_ID,
                                                                                            GeneralPreferenceContributor.ID);
 
-        Assertion.isNotNull(extensionPoint, Util.getString(PREFIX + "noExtensionPointFound", GeneralPreferenceContributor.ID)); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(extensionPoint, Util.getString(PREFIX + "noExtensionPointFound", GeneralPreferenceContributor.ID)); //$NON-NLS-1$
 
         try {
             // get all extensions
@@ -443,7 +443,8 @@ public final class GeneralPreferencePage extends PreferencePage
                         } else if (elements[j].getName().equals(GeneralPreferenceContributor.PREFERENCE_ELEMENT)) {
                             processPreference(elements[j]);
                         } else {
-                            Assertion.failed(Util.getString(PREFIX + "unknownConfigurationElement", elements[j].getName())); //$NON-NLS-1$
+                            CoreArgCheck.isTrue(false,
+                                                Util.getString(PREFIX + "unknownConfigurationElement", elements[j].getName())); //$NON-NLS-1$
                         }
                     }
                 }
@@ -471,7 +472,7 @@ public final class GeneralPreferencePage extends PreferencePage
             prefId = theExtension.getAttribute(GeneralPreferenceContributor.PREFERENCE_ID_ATTRIBUTE);
 
             // preference ID can't be null
-            if (StringUtil.isEmpty(prefId)) {
+            if (CoreStringUtil.isEmpty(prefId)) {
                 Util.log(IStatus.ERROR, Util.getString(PREFIX + "nullPreferenceId", //$NON-NLS-1$
                                                        theExtension.getDeclaringExtension().getExtensionPointUniqueIdentifier()));
                 result = false;
@@ -488,7 +489,7 @@ public final class GeneralPreferencePage extends PreferencePage
                 categoryId = theExtension.getAttribute(GeneralPreferenceContributor.PREFERENCE_CATEGORY_ID_ATTRIBUTE);
 
                 // if categoryId is null, set it to the catch all category
-                if (StringUtil.isEmpty(categoryId)) {
+                if (CoreStringUtil.isEmpty(categoryId)) {
                     categoryId = DEFAULT_CATEGORY_ID;
                 }
             }

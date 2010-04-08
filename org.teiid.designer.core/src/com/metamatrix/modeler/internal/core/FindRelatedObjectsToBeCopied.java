@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.MappingClassSet;
@@ -43,8 +43,8 @@ public class FindRelatedObjectsToBeCopied implements ModelVisitor {
 
     public void addModelContents( final ModelContents contents,
                                   final Resource emfResource ) {
-        ArgCheck.isNotNull(contents);
-        ArgCheck.isNotNull(emfResource);
+        CoreArgCheck.isNotNull(contents);
+        CoreArgCheck.isNotNull(emfResource);
         this.modelContentsByResource.put(emfResource, contents);
     }
 

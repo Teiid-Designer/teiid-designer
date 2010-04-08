@@ -11,7 +11,7 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.ForeignKey;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
@@ -32,7 +32,7 @@ public class ForeignKeyColumnsRule implements ObjectValidationRule {
      * @see com.metamatrix.modeler.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, com.metamatrix.modeler.core.validation.ValidationContext)
      */
     public void validate(EObject eObject, ValidationContext context) {
-        ArgCheck.isInstanceOf(ForeignKey.class, eObject);
+        CoreArgCheck.isInstanceOf(ForeignKey.class, eObject);
 
         ForeignKey foreignKey = (ForeignKey) eObject;
 

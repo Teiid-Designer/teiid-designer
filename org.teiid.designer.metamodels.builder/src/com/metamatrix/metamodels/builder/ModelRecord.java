@@ -7,7 +7,7 @@
  */
 package com.metamatrix.metamodels.builder;
 
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 
 /**
@@ -44,8 +44,8 @@ public class ModelRecord {
 	 */
 	public ModelRecord(String type, String subType, String name, String nameInSource, String description, String extPackage) {
 		super();
-        ArgCheck.isNotNull(type);
-        ArgCheck.isNotNull(name);
+        CoreArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(name);
 		this.modelType = type;
 		this.modelSubType = subType;
 		this.modelName = name;
@@ -87,7 +87,7 @@ public class ModelRecord {
      * @param modelName the model name
      */
     public void setModelName(String modelName) {
-        ArgCheck.isNotNull(modelName);
+        CoreArgCheck.isNotNull(modelName);
         this.modelName = modelName;
     }
 	
@@ -104,7 +104,7 @@ public class ModelRecord {
      * @param modelNameInSource the model name
      */
     public void setModelNameInSource(String modelNameInSource) {
-        ArgCheck.isNotNull(modelNameInSource);
+        CoreArgCheck.isNotNull(modelNameInSource);
         this.modelNameInSource = modelNameInSource;
     }
 
@@ -137,7 +137,7 @@ public class ModelRecord {
 	 * @param modelType the model type
 	 */
 	public void setModelType(String modelType) {
-        ArgCheck.isNotNull(modelType);
+        CoreArgCheck.isNotNull(modelType);
 		this.modelType = modelType;
 	}
 	

@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.common.vdb.SystemVdbUtility;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.InputSet;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.StagingTable;
@@ -75,7 +75,7 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#isSystem(org.eclipse.emf.ecore.EObject)
      */
     public boolean isSystem(EObject eObject) {
-        ArgCheck.isInstanceOf(InputSet.class, eObject);
+        CoreArgCheck.isInstanceOf(InputSet.class, eObject);
         String modelName = getModelName(eObject);
         if (modelName != null && SystemVdbUtility.isSystemModelWithSystemTableType(modelName)) {
             return true;
@@ -87,7 +87,7 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#getColumns(org.eclipse.emf.ecore.EObject)
      */
     public List getColumns(EObject eObject) {
-        ArgCheck.isInstanceOf(InputSet.class, eObject); 
+        CoreArgCheck.isInstanceOf(InputSet.class, eObject); 
         InputSet inputSet = (InputSet) eObject;       
         return inputSet.getInputParameters();
     }
@@ -138,7 +138,7 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#getTableType(org.eclipse.emf.ecore.EObject)
      */
     public int getTableType(EObject eObject) {
-        ArgCheck.isInstanceOf(InputSet.class, eObject); 
+        CoreArgCheck.isInstanceOf(InputSet.class, eObject); 
         return MetadataConstants.TABLE_TYPES.XML_MAPPING_CLASS_TYPE;
     }
 
@@ -161,8 +161,8 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
      * @since 4.3
      */
     public boolean canAcceptTransformationSource(EObject target, EObject source) {
-        ArgCheck.isInstanceOf(InputSet.class, target);
-        ArgCheck.isNotNull(source);
+        CoreArgCheck.isInstanceOf(InputSet.class, target);
+        CoreArgCheck.isNotNull(source);
         return false;
     }
 
@@ -171,8 +171,8 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
      * @since 4.3
      */
     public boolean canBeTransformationSource(EObject source, EObject target) {
-        ArgCheck.isInstanceOf(InputSet.class, source);
-        ArgCheck.isNotNull(target);
+        CoreArgCheck.isInstanceOf(InputSet.class, source);
+        CoreArgCheck.isNotNull(target);
         if(target instanceof MappingClass && !(target instanceof StagingTable)) {
             return true;
         }
@@ -197,7 +197,7 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect#getName(org.eclipse.emf.ecore.EObject)
      */
     public String getName(EObject eObject) {
-        ArgCheck.isInstanceOf(InputSet.class, eObject); 
+        CoreArgCheck.isInstanceOf(InputSet.class, eObject); 
         return INPUT_SET_FULL_NAME;
     }
 

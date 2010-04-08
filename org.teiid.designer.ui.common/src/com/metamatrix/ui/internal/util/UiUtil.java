@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -41,8 +42,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.eclipse.ui.views.navigator.ResourcePatternFilter;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.ui.UiConstants;
 import com.metamatrix.ui.UiPlugin;
@@ -82,9 +82,9 @@ public final class UiUtil implements UiConstants {
     public static Image createImage( final Image theSourceImage,
                                      final Color theOldColor,
                                      final Color theNewColor ) {
-        ArgCheck.isNotNull(theSourceImage);
-        ArgCheck.isNotNull(theOldColor);
-        ArgCheck.isNotNull(theNewColor);
+        CoreArgCheck.isNotNull(theSourceImage);
+        CoreArgCheck.isNotNull(theOldColor);
+        CoreArgCheck.isNotNull(theNewColor);
 
         ImageData imageData = (ImageData)theSourceImage.getImageData().clone();
         PaletteData palette = imageData.palette;
@@ -195,7 +195,7 @@ public final class UiUtil implements UiConstants {
      * @since 5.0.2
      */
     public static ViewerFilter getResourceFilter( String theResourceNavigatorViewId ) {
-        ArgCheck.isNotEmpty(theResourceNavigatorViewId);
+        CoreArgCheck.isNotEmpty(theResourceNavigatorViewId);
 
         ViewerFilter result = null;
         IViewPart view = UiUtil.getViewPart(theResourceNavigatorViewId);
@@ -289,7 +289,7 @@ public final class UiUtil implements UiConstants {
      * @since 4.2
      */
     public static IViewPart getViewPart( String theViewId ) {
-        Assertion.isNotNull(theViewId);
+        CoreArgCheck.isNotNull(theViewId);
 
         IViewPart result = null;
         IWorkbenchPage page = getWorkbenchPage();

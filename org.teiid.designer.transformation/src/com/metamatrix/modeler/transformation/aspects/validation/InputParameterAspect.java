@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.transformation.aspects.validation;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.InputParameter;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
@@ -49,7 +49,7 @@ public class InputParameterAspect extends TransformationAspect {
      */
     @Override
     public boolean shouldValidate(final EObject eObject, final ValidationContext context) {
-        ArgCheck.isInstanceOf(InputParameter.class, eObject);
+        CoreArgCheck.isInstanceOf(InputParameter.class, eObject);
         if(!context.shouldIgnore(eObject)) {
             InputParameter inputParameter = (InputParameter) eObject;
 	        EObject inputSet = inputParameter.getInputSet();

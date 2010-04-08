@@ -10,7 +10,7 @@ package com.metamatrix.modeler.compare.selector;
 import java.util.List;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
@@ -30,7 +30,7 @@ public class EmfResourceSelector extends AbstractModelSelector {
      */
     public EmfResourceSelector( final Resource resource ) {
         super();
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         this.resource = resource;
     }
 

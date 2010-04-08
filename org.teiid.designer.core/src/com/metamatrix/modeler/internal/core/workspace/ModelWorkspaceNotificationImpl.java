@@ -14,7 +14,7 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.NotificationImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceNotification;
 
 /**
@@ -38,7 +38,7 @@ public class ModelWorkspaceNotificationImpl extends NotificationImpl implements 
      */    
     public ModelWorkspaceNotificationImpl(final int eventType, final IResourceDelta delta, final IResourceChangeEvent event){
         super(eventType, null, delta);
-        ArgCheck.isNotNull(event);
+        CoreArgCheck.isNotNull(event);
         
         this.delta = delta;
         this.event= event;

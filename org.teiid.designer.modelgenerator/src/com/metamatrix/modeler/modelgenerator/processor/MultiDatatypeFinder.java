@@ -13,7 +13,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * MultiDatatypeFinder
@@ -28,8 +28,8 @@ public class MultiDatatypeFinder implements DatatypeFinder {
      */
     public MultiDatatypeFinder( final List datatypeFinders ) {
         super();
-        ArgCheck.isNotNull(datatypeFinders);
-        ArgCheck.isPositive(datatypeFinders.size());
+        CoreArgCheck.isNotNull(datatypeFinders);
+        CoreArgCheck.isPositive(datatypeFinders.size());
         this.datatypeFinders = datatypeFinders;
     }
 

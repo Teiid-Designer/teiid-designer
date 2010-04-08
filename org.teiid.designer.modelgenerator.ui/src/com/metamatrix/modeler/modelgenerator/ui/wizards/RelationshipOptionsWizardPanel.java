@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.jdom.JDOMException;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
@@ -51,7 +51,7 @@ import com.metamatrix.ui.internal.util.WidgetFactory;
 /**
  * RelationshipOptionsWizardPanel. This panel contains the relationship options.
  */
-public class RelationshipOptionsWizardPanel extends Composite implements ModelGeneratorUiConstants, StringUtil.Constants {
+public class RelationshipOptionsWizardPanel extends Composite implements ModelGeneratorUiConstants, CoreStringUtil.Constants {
 
     private final static String FILE_EXT = ".xmi"; //$NON-NLS-1$
 

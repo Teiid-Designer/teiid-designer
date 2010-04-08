@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relationship.RelationshipMetamodelPlugin;
 import com.metamatrix.metamodels.relationship.RelationshipPackage;
 import com.metamatrix.metamodels.relationship.RelationshipRole;
@@ -534,7 +534,7 @@ public class RelationshipRoleImpl extends RelationshipEntityImpl implements Rela
      * @generated NOT
      */
     public IStatus isValidParticipant( final EObject participant ) {
-        ArgCheck.isNotNull(participant);
+        CoreArgCheck.isNotNull(participant);
         if (participant.eIsProxy()) {
             EcoreUtil.resolve(participant, participant);
         }
@@ -558,7 +558,7 @@ public class RelationshipRoleImpl extends RelationshipEntityImpl implements Rela
      * @generated NOT
      */
     public IStatus isValidParticipant( final EClassifier participantType ) {
-        ArgCheck.isNotNull(participantType);
+        CoreArgCheck.isNotNull(participantType);
         if (participantType instanceof EClass) {
             String invalidReason = null;
 

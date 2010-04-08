@@ -8,7 +8,7 @@
 package com.metamatrix.metamodels.relationship.aspects.relationship;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relationship.RelationshipEntity;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 
@@ -25,7 +25,7 @@ public abstract class RelationshipEntityAspect extends AbstractRelationshipMetam
      * @see com.metamatrix.modeler.core.relationship.metamodel.aspect.relationship.RelationshipMetamodelAspect#getName(org.eclipse.emf.ecore.EObject)
      */
     public String getName( EObject eObject ) { // NO_UCD
-        ArgCheck.isInstanceOf(RelationshipEntity.class, eObject);
+        CoreArgCheck.isInstanceOf(RelationshipEntity.class, eObject);
         RelationshipEntity relationshipEntity = (RelationshipEntity)eObject;
         return relationshipEntity.getName();
     }

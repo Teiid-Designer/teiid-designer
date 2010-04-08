@@ -16,7 +16,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EFactory;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.builder.ModelBuilder;
 import com.metamatrix.metamodels.builder.ModelRecord;
@@ -58,8 +58,8 @@ public class ModelBuilderImpl implements ModelBuilder, MetamodelBuilderConstants
      */
     public ModelBuilderImpl( final MultiStatus status,
                              final ResourceSet resourceSet ) {
-        ArgCheck.isNotNull(resourceSet);
-        ArgCheck.isNotNull(status);
+        CoreArgCheck.isNotNull(resourceSet);
+        CoreArgCheck.isNotNull(status);
         this.eResourceSet = resourceSet;
         this.status = status;
     }
@@ -72,7 +72,7 @@ public class ModelBuilderImpl implements ModelBuilder, MetamodelBuilderConstants
      * @since 4.3
      */
     public Resource create( ModelRecord record ) {
-        ArgCheck.isNotNull(record);
+        CoreArgCheck.isNotNull(record);
 
         // Construct absolute model path from record
         String absoluteModelPath = getModelAbsolutePath(record);
@@ -104,7 +104,7 @@ public class ModelBuilderImpl implements ModelBuilder, MetamodelBuilderConstants
      * @since 4.3
      */
     public List create( List records ) {
-        ArgCheck.isNotNull(records);
+        CoreArgCheck.isNotNull(records);
 
         List resources = new ArrayList(records.size());
         Iterator iter = records.iterator();

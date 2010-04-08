@@ -30,7 +30,7 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.builder.execution.MetamodelBuilderConstants;
 import com.metamatrix.metamodels.core.AnnotationContainer;
@@ -162,7 +162,7 @@ public class MetamodelBuilderUtil implements MetamodelBuilderConstants {
      */
     public static EObject getExtension( EObject eObject,
                                         final MultiStatus status ) throws ModelerCoreException {
-        ArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(eObject);
 
         final EClass eClass = eObject.eClass();
         final EPackage ePackage = eClass.getEPackage();

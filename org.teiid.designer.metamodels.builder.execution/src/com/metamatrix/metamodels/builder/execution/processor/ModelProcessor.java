@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.builder.ModelBuilder;
 import com.metamatrix.metamodels.builder.translator.RecordGenerator;
 import com.metamatrix.metamodels.builder.translator.ResultSetTranslator;
@@ -47,8 +47,8 @@ public class ModelProcessor extends AbstractProcessor {
                            String targetLocStr,
                            MultiStatus status ) {
         super(sqlConnection, modelAndSchemaName);
-        ArgCheck.isNotNull(resourceSet);
-        ArgCheck.isNotNull(status);
+        CoreArgCheck.isNotNull(resourceSet);
+        CoreArgCheck.isNotNull(status);
         this.status = status;
         this.targetLocationStr = targetLocStr;
         this.modelBuilder = modelBuilder;

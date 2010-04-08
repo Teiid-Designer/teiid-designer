@@ -11,14 +11,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.modelgenerator.ui.ModelGeneratorUiConstants;
 
 /**
  * DatatypeOptionsWizardPanel.  This panel contains the datatype options.
  */
 public class DatatypeOptionsWizardPanel extends Composite 
-        implements ModelGeneratorUiConstants, StringUtil.Constants {
+        implements ModelGeneratorUiConstants, CoreStringUtil.Constants {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTANTS

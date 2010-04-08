@@ -9,7 +9,7 @@ package com.metamatrix.modeler.internal.core.workspace;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
 import com.metamatrix.modeler.internal.core.util.OverflowingLRUCache;
 
@@ -61,7 +61,7 @@ public class ModelWorkspaceCache {
      *  Returns the info for the element.
      */
     public Object getInfo(ModelWorkspaceItem item) {
-        ArgCheck.isNotNull(item);
+        CoreArgCheck.isNotNull(item);
         switch (item.getItemType()) {
             case ModelWorkspaceItem.MODEL_WORKSPACE:
                 return this.workspaceInfo;
@@ -82,7 +82,7 @@ public class ModelWorkspaceCache {
      *  disturbing the cache ordering.
      */
     protected Object peekAtInfo(ModelWorkspaceItem item) {
-        ArgCheck.isNotNull(item);
+        CoreArgCheck.isNotNull(item);
         switch (item.getItemType()) {
             case ModelWorkspaceItem.MODEL_WORKSPACE:
                 return this.workspaceInfo;
@@ -102,8 +102,8 @@ public class ModelWorkspaceCache {
      * Remember the info for the element.
      */
     protected void putInfo(ModelWorkspaceItem item, Object info) {
-        ArgCheck.isNotNull(item);
-        ArgCheck.isNotNull(info);
+        CoreArgCheck.isNotNull(item);
+        CoreArgCheck.isNotNull(info);
         switch (item.getItemType()) {
             case ModelWorkspaceItem.MODEL_WORKSPACE:
                 this.workspaceInfo = (ModelWorkspaceInfo) info;
@@ -126,7 +126,7 @@ public class ModelWorkspaceCache {
      * Removes the info of the element from the cache.
      */
     protected void removeInfo(ModelWorkspaceItem item) {
-        ArgCheck.isNotNull(item);
+        CoreArgCheck.isNotNull(item);
         switch (item.getItemType()) {
             case ModelWorkspaceItem.MODEL_WORKSPACE:
                 this.workspaceInfo = null;

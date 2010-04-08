@@ -25,7 +25,7 @@ package com.metamatrix.core.io;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * This class allows for the original URL of a URL object that was used to create a File object to be saved. The File object is
@@ -54,7 +54,7 @@ public class FileUrl extends File {
      * This is the original URL of the InputStream that was
      * used to create this File object. 
      */
-    private String originalUrlString = StringUtil.Constants.EMPTY_STRING;
+    private String originalUrlString = CoreStringUtil.Constants.EMPTY_STRING;
 
     public FileUrl( final String pathname ) {
         super(pathname);

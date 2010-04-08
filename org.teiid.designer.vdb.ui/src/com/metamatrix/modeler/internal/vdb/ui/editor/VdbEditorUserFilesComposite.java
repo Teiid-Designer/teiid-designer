@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.teiid.designer.vdb.VdbEntry;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.ui.internal.InternalUiConstants.Widgets;
 import com.metamatrix.ui.internal.widget.ListPanel;
@@ -41,7 +41,7 @@ import com.metamatrix.ui.internal.widget.TablePanel;
  * @since 5.3.3
  */
 public final class VdbEditorUserFilesComposite
-    implements ListPanel.Constants, StringUtil.Constants, VdbUiConstants, VdbEditor.Constants, Widgets {
+    implements ListPanel.Constants, CoreStringUtil.Constants, VdbUiConstants, VdbEditor.Constants, Widgets {
 
     private static final String I18N_PREFIX = "VdbEditorUserFilesPage."; //$NON-NLS-1$
     private static final String FILE_SELECTION_DIALOG_TITLE = getString("fileSelectionDialogTitle"); //$NON-NLS-1$

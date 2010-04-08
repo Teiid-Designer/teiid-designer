@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.workspace.ModelProject;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.modelgenerator.ui.ModelGeneratorUiConstants;
@@ -31,7 +31,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
  * @since 4.0
  */
 public final class PasteSpecialUmlToRelationalWizard extends AbstractWizard
-    implements INewWizard, InternalUiConstants.Widgets, StringUtil.Constants, ModelGeneratorUiConstants {
+    implements INewWizard, InternalUiConstants.Widgets, CoreStringUtil.Constants, ModelGeneratorUiConstants {
 
     private static final String TITLE = Util.getString("PasteSpecialUmlToRelationalWizard.title"); //$NON-NLS-1$
 

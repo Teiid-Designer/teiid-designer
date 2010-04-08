@@ -9,7 +9,7 @@ package com.metamatrix.modeler.internal.ddl;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceSelections;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
@@ -36,7 +36,7 @@ public class ModelWrapper {
     public ModelWrapper( final Resource emfResource, final ModelContents contents,
                          final ModelWorkspaceSelections selections,
                          final String modelName, final String modelFilename ) {
-        ArgCheck.isNotNull(emfResource);
+        CoreArgCheck.isNotNull(emfResource);
         this.emfResource = emfResource;
         this.selections = selections;
         this.contents = contents != null ? contents : 

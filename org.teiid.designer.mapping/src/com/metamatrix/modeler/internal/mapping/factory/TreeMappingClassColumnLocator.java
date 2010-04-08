@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingRoot;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.MappingClassColumn;
@@ -85,8 +85,8 @@ public class TreeMappingClassColumnLocator implements PluginConstants  {
      */
     public void addMappingClassColumnLocation(MappingClassColumn theMappingColumn, EObject theTreeNode) {
         //startTracking("addMappingClassColumnLocation()"); //$NON-NLS-1$
-        ArgCheck.isNotNull(theMappingColumn);
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theMappingColumn);
+        CoreArgCheck.isNotNull(theTreeNode);
 
         MappingList theColumnMappingList = getMappingClassColumnMappingList(theMappingColumn);
         
@@ -133,8 +133,8 @@ public class TreeMappingClassColumnLocator implements PluginConstants  {
     public void removeMappingClassColumnLocation(MappingClassColumn theMappingColumn,
                                                  EObject theTreeNode) {
         //startTracking("removeMappingClassColumnLocation()"); //$NON-NLS-1$
-        ArgCheck.isNotNull(theMappingColumn);
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theMappingColumn);
+        CoreArgCheck.isNotNull(theTreeNode);
 
         MappingList theColumnMappingList = getMappingClassColumnMappingList(theMappingColumn);
         if (theColumnMappingList != null) {
@@ -231,7 +231,7 @@ public class TreeMappingClassColumnLocator implements PluginConstants  {
      */
     public MappingList getMappingClassColumnMappingList(MappingClassColumn theMappingColumn) {
         //startTracking("getMappingClassColumnMappingList()"); //$NON-NLS-1$
-        ArgCheck.isNotNull(theMappingColumn);
+        CoreArgCheck.isNotNull(theMappingColumn);
 
         MappingList result = null;
         MappingClass mappingClass = theMappingColumn.getMappingClass();
@@ -286,7 +286,7 @@ public class TreeMappingClassColumnLocator implements PluginConstants  {
      */
     public MappingClassColumn getMappingClassColumn(EObject theTreeNode, MappingClass theMappingClass) {
         //startTracking("getMappingClassColumn()"); //$NON-NLS-1$
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theTreeNode);
         
         MappingClassColumn result = null;
 
@@ -317,7 +317,7 @@ public class TreeMappingClassColumnLocator implements PluginConstants  {
     
     public MappingClassColumn getMappingClassColumn(EObject theTreeNode) {
         //startTracking("getMappingClassColumn(TREE NODE)"); //$NON-NLS-1$
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theTreeNode);
         
         MappingClassColumn result = (MappingClassColumn)treeNodesToMappingClassColumnsMap.get( theTreeNode );
         
@@ -357,8 +357,8 @@ public class TreeMappingClassColumnLocator implements PluginConstants  {
      */
     private Mapping createColumnMapping(MappingRoot theMappingRoot, MappingClassColumn theMappingColumn) {
         //startTracking("createColumnMapping()"); //$NON-NLS-1$
-        ArgCheck.isNotNull(theMappingRoot);
-        ArgCheck.isNotNull(theMappingColumn);
+        CoreArgCheck.isNotNull(theMappingRoot);
+        CoreArgCheck.isNotNull(theMappingColumn);
 
         Mapping mapping = theMappingRoot.createMapping(Collections.singletonList(theMappingColumn), Collections.EMPTY_LIST);
         theMappingRoot.getNested().add(mapping);

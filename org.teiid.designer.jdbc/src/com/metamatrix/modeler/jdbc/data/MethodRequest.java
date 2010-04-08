@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.ReflectionHelper;
 import com.metamatrix.modeler.internal.jdbc.JdbcUtil;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
@@ -33,12 +33,12 @@ public class MethodRequest extends Request {
      */
     public MethodRequest( final String name, final Object target, final String methodName, final Object[] params ) {
         super(name,target);
-        ArgCheck.isNotNull(name);
-        ArgCheck.isNotZeroLength(name);
-        ArgCheck.isNotNull(target);
-        ArgCheck.isNotNull(methodName);
-        ArgCheck.isNotZeroLength(methodName);
-        ArgCheck.isNotNull(params);
+        CoreArgCheck.isNotNull(name);
+        CoreArgCheck.isNotZeroLength(name);
+        CoreArgCheck.isNotNull(target);
+        CoreArgCheck.isNotNull(methodName);
+        CoreArgCheck.isNotZeroLength(methodName);
+        CoreArgCheck.isNotNull(params);
         this.methodName = methodName;
         this.params = params;
     }

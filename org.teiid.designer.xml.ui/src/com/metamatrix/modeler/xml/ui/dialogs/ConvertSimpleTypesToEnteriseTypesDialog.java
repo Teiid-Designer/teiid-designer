@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.xml.ui.ModelerXmlUiConstants;
@@ -64,7 +64,7 @@ public class ConvertSimpleTypesToEnteriseTypesDialog extends Dialog implements M
             if (modelRsrc != null) {
                 resourcePath = modelRsrc.getPath();
             }
-            String fileName = StringUtil.Constants.EMPTY_STRING;
+            String fileName = CoreStringUtil.Constants.EMPTY_STRING;
             if (resourcePath != null) {
                 fileName = resourcePath.makeRelative().toOSString();
             } else {

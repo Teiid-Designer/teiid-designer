@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.resource.EObjectCache;
 
@@ -64,7 +64,7 @@ public class EObjectCacheImpl implements EObjectCache {
      */
     public void add(final EObject value,
                     final boolean recurse) {
-        ArgCheck.isNotNull(value);
+        CoreArgCheck.isNotNull(value);
 
         final Object key = getCacheKey(value);
 
@@ -191,7 +191,7 @@ public class EObjectCacheImpl implements EObjectCache {
      */
     public void remove(final EObject value,
                        final boolean recurse) {
-        ArgCheck.isNotNull(value);
+        CoreArgCheck.isNotNull(value);
 
         final Object key = getCacheKey(value);
 
@@ -233,7 +233,7 @@ public class EObjectCacheImpl implements EObjectCache {
      */
     public void remove(final ObjectID key,
                        final boolean recurse) {
-        ArgCheck.isNotNull(key);
+        CoreArgCheck.isNotNull(key);
 
         EObject value = null;
 
@@ -300,7 +300,7 @@ public class EObjectCacheImpl implements EObjectCache {
     // ==================================================================================
 
     protected Object getCacheKey(final EObject value) {
-        ArgCheck.isNotNull(value);
+        CoreArgCheck.isNotNull(value);
         return ModelerCore.getObjectId(value);
     }
 

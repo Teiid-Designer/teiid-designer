@@ -26,7 +26,7 @@ import org.eclipse.uml2.uml.LiteralUnlimitedNatural;
 import org.eclipse.uml2.uml.PrimitiveType;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.uml2.uml.ValueSpecification;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.modeler.core.ExternalResourceDescriptor;
@@ -128,7 +128,7 @@ public class PrimitiveTypeManager {
      */
     public ValueSpecification createValueSpecification( final PrimitiveType type,
                                                         final String value ) {
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         // If the value is "null" assume it is meant to represent null, i.e., the absence of a value.
         if (value == null || value.length() == 0 || value.equalsIgnoreCase("null")) { //$NON-NLS-1$
             LiteralNull valueSpec = UMLFactory.eINSTANCE.createLiteralNull();
@@ -193,7 +193,7 @@ public class PrimitiveTypeManager {
      * @return
      */
     public boolean hasPrimitiveType( final String name ) {
-        ArgCheck.isNotZeroLength(name);
+        CoreArgCheck.isNotZeroLength(name);
         return nameToType.get(name.toLowerCase()) != null;
     }
 
@@ -204,7 +204,7 @@ public class PrimitiveTypeManager {
      * @return
      */
     public EObject getBuiltInTypeForPrimitiveType( final PrimitiveType type ) { // NO_UCD
-        ArgCheck.isNotNull(type);
+        CoreArgCheck.isNotNull(type);
         final String typeName = type.getName();
         if (this.hasPrimitiveType(typeName)) {
             try {

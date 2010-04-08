@@ -17,7 +17,7 @@ import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.ValueSpecification;
 import org.eclipse.uml2.uml.VisibilityKind;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlProperty;
@@ -210,19 +210,19 @@ public class Uml2PropertyUmlAspect extends AbstractUml2NamedElementUmlAspect imp
     }
 
     protected Property assertProperty( Object eObject ) {
-        ArgCheck.isInstanceOf(Property.class, eObject);
+        CoreArgCheck.isInstanceOf(Property.class, eObject);
         return (Property)eObject;
     }
 
     protected void appendName( final Property p,
                                final StringBuffer sb ) {
-        ArgCheck.isNotNull(p);
+        CoreArgCheck.isNotNull(p);
         sb.append(p.getName());
     }
 
     protected void appendMultiplicity( final Property p,
                                        final StringBuffer result ) {
-        ArgCheck.isNotNull(p);
+        CoreArgCheck.isNotNull(p);
         final int lower = p.getLower();
         final int upper = p.getUpper();
         result.append('[');
@@ -248,7 +248,7 @@ public class Uml2PropertyUmlAspect extends AbstractUml2NamedElementUmlAspect imp
      */
     protected void appendDerived( final Property p,
                                   final StringBuffer result ) {
-        ArgCheck.isNotNull(p);
+        CoreArgCheck.isNotNull(p);
         if (p.isDerived()) {
             result.append('/');
         }
@@ -274,7 +274,7 @@ public class Uml2PropertyUmlAspect extends AbstractUml2NamedElementUmlAspect imp
      */
     protected void appendProperties( final Property p,
                                      final StringBuffer result ) {
-        ArgCheck.isNotNull(p);
+        CoreArgCheck.isNotNull(p);
         if (p.isReadOnly()) {
             result.append("{readOnly}"); //$NON-NLS-1$
         }
@@ -311,7 +311,7 @@ public class Uml2PropertyUmlAspect extends AbstractUml2NamedElementUmlAspect imp
     protected void appendType( final Property p,
                                final StringBuffer result,
                                final boolean includePrefix ) {
-        ArgCheck.isNotNull(p);
+        CoreArgCheck.isNotNull(p);
         final Type type = p.getType();
         if (type != null) {
             if (includePrefix) {
@@ -324,7 +324,7 @@ public class Uml2PropertyUmlAspect extends AbstractUml2NamedElementUmlAspect imp
     protected void appendInitialValue( final Property p,
                                        final StringBuffer result,
                                        final boolean includePrefix ) {
-        ArgCheck.isNotNull(p);
+        CoreArgCheck.isNotNull(p);
         final ValueSpecification defaultValue = p.getDefaultValue();
         if (defaultValue != null) {
             if (includePrefix) {
@@ -336,7 +336,7 @@ public class Uml2PropertyUmlAspect extends AbstractUml2NamedElementUmlAspect imp
 
     protected void appendVisibility( final Property p,
                                      final StringBuffer result ) {
-        ArgCheck.isNotNull(p);
+        CoreArgCheck.isNotNull(p);
         VisibilityKind vk = p.getVisibility();
         if (vk.getValue() == VisibilityKind.PUBLIC) {
             result.append('+');
@@ -350,7 +350,7 @@ public class Uml2PropertyUmlAspect extends AbstractUml2NamedElementUmlAspect imp
     }
 
     protected boolean isAssociationEnd( final Property p ) { // NO_UCD
-        ArgCheck.isNotNull(p);
+        CoreArgCheck.isNotNull(p);
         return p.getAssociation() != null;
     }
 

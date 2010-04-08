@@ -13,8 +13,7 @@ import java.text.StringCharacterIterator;
 import java.util.Comparator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.HashCodeUtil;
 import com.metamatrix.core.util.IPathComparator;
 import com.metamatrix.modeler.jdbc.JdbcException;
@@ -135,7 +134,7 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
      */
     public JdbcNode findChild( String name ) {
         final JdbcDatabase dbNode = getJdbcDatabase();
-        Assertion.isNotNull(dbNode);
+        CoreArgCheck.isNotNull(dbNode);
         return dbNode.findJdbcNode(this.getPath().append(name));
     }
 
@@ -333,7 +332,7 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
             return 1; // this is > null
         }
         final JdbcNodeImpl that = (JdbcNodeImpl)obj; // May throw ClassCastException
-        Assertion.isNotNull(obj);
+        CoreArgCheck.isNotNull(obj);
 
         // Check that the types are identical
         final int diffType = this.type - that.type;
@@ -351,9 +350,9 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
      */
     public void accept( final JdbcNodeVisitor visitor,
                         final int depth ) throws JdbcException {
-        ArgCheck.isNotNull(visitor);
-        ArgCheck.isTrue(depth == DEPTH_INFINITE || depth == DEPTH_ONE || depth == DEPTH_ZERO,
-                        JdbcPlugin.Util.getString("JdbcNodeImpl.InvalidDepthValue")); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(visitor);
+        CoreArgCheck.isTrue(depth == DEPTH_INFINITE || depth == DEPTH_ONE || depth == DEPTH_ZERO,
+                            JdbcPlugin.Util.getString("JdbcNodeImpl.InvalidDepthValue")); //$NON-NLS-1$
 
         // visit this resource
         if (!visitor.visit(this) || depth == DEPTH_ZERO) return;
@@ -745,7 +744,7 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
      * @return boolean true if name is valid, false othewise
      */
     public boolean isValidName( final String name ) {
-        ArgCheck.isNotNull(name);
+        CoreArgCheck.isNotNull(name);
         boolean isValid = false;
 
         // Go through the string and ensure that each character is valid ...

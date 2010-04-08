@@ -31,8 +31,8 @@ import org.jdom.input.DOMBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.w3c.dom.NodeList;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.internal.core.xml.JdomHelper;
 import com.metamatrix.metamodels.wsdl.Binding;
 import com.metamatrix.metamodels.wsdl.BindingFault;
@@ -115,8 +115,8 @@ public class WsdlWriter implements XMLSave, WsdlConstants {
     public void save( final XMLResource resource,
                       final OutputStream outputStream,
                       final Map options ) throws IOException {
-        ArgCheck.isNotNull(resource);
-        ArgCheck.isNotNull(outputStream);
+        CoreArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(outputStream);
         init(resource, options);
         // final Map options = loadOptions != null ? loadOptions : Collections.EMPTY_MAP;
 
@@ -162,8 +162,8 @@ public class WsdlWriter implements XMLSave, WsdlConstants {
     public void save( XMLResource resource,
                       Writer writer,
                       Map<?, ?> options ) throws IOException {
-        ArgCheck.isNotNull(resource);
-        ArgCheck.isNotNull(writer);
+        CoreArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(writer);
         init(resource, options);
         // final Map options = loadOptions != null ? loadOptions : Collections.EMPTY_MAP;
 
@@ -1406,7 +1406,7 @@ public class WsdlWriter implements XMLSave, WsdlConstants {
                                       final boolean forceIfNullOrZeroLength ) {
         final String newValue = (value != null && value.trim().length() != 0) ? value.trim() : null;
         if (forceIfNullOrZeroLength || newValue != null) {
-            final String v = newValue == null ? StringUtil.Constants.EMPTY_STRING : newValue;
+            final String v = newValue == null ? CoreStringUtil.Constants.EMPTY_STRING : newValue;
             Namespace theNamespace = Namespace.NO_NAMESPACE;
             if (namespace != null && namespace.getPrefix() != null && namespace.getPrefix().trim().length() != 0) {
                 theNamespace = namespace;

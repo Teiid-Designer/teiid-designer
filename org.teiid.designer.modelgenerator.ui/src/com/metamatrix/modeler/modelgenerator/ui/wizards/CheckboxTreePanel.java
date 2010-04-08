@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import com.metamatrix.core.event.EventObjectListener;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
@@ -45,7 +45,7 @@ import com.metamatrix.ui.internal.widget.DefaultTreeViewerController;
 /**
  * CheckboxTreePanel.
  */
-public class CheckboxTreePanel extends Composite implements ModelGeneratorUiConstants, StringUtil.Constants {
+public class CheckboxTreePanel extends Composite implements ModelGeneratorUiConstants, CoreStringUtil.Constants {
 
     private TreeViewer treeViewer;
     ModelWorkspaceSelections selections;

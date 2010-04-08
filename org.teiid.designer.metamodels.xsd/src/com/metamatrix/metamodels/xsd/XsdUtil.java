@@ -54,8 +54,8 @@ import org.eclipse.xsd.util.XSDResourceImpl;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.xsd.aspects.sql.XsdSimpleTypeDefinitionAspect;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -222,9 +222,9 @@ public class XsdUtil {
 
     public static void removeNamespaceRef( final XSDSchema schema,
                                            final String namespace ) {
-        ArgCheck.isNotNull(schema);
+        CoreArgCheck.isNotNull(schema);
         XsdUtil.argCheckIsResolved(schema);
-        ArgCheck.isNotNull(namespace);
+        CoreArgCheck.isNotNull(namespace);
 
         final Map map = schema.getQNamePrefixToNamespaceMap();
         final Set entrySet = map.entrySet();
@@ -243,9 +243,9 @@ public class XsdUtil {
 
     public static void removeImport( final XSDSchema schema,
                                      final String namespace ) {
-        ArgCheck.isNotNull(schema);
+        CoreArgCheck.isNotNull(schema);
         XsdUtil.argCheckIsResolved(schema);
-        ArgCheck.isNotNull(namespace);
+        CoreArgCheck.isNotNull(namespace);
 
         for (final Iterator it = new ArrayList(schema.getContents()).iterator(); it.hasNext();) {
             final Object content = it.next();
@@ -262,9 +262,9 @@ public class XsdUtil {
 
     public static void addImport( final XSDSimpleTypeDefinition simpleType,
                                   final XSDSimpleTypeDefinition baseType ) {
-        ArgCheck.isNotNull(simpleType);
+        CoreArgCheck.isNotNull(simpleType);
         XsdUtil.argCheckIsResolved(simpleType);
-        ArgCheck.isNotNull(baseType);
+        CoreArgCheck.isNotNull(baseType);
         XsdUtil.argCheckIsResolved(baseType);
 
         final XSDSchema schema = simpleType.getSchema();
@@ -292,9 +292,9 @@ public class XsdUtil {
 
     public static void addNamespaceRef( final XSDSchema schema,
                                         final String namespace ) {
-        ArgCheck.isNotNull(schema);
+        CoreArgCheck.isNotNull(schema);
         XsdUtil.argCheckIsResolved(schema);
-        ArgCheck.isNotNull(namespace);
+        CoreArgCheck.isNotNull(namespace);
 
         final String prefix = XsdUtil.getUniqueQNamePrefix(schema);
         XsdUtil.addNamespaceRef(schema, prefix, namespace);
@@ -303,9 +303,9 @@ public class XsdUtil {
     public static void addNamespaceRef( final XSDSchema schema,
                                         final String prefix,
                                         final String namespace ) {
-        ArgCheck.isNotNull(schema);
+        CoreArgCheck.isNotNull(schema);
         XsdUtil.argCheckIsResolved(schema);
-        ArgCheck.isNotNull(namespace);
+        CoreArgCheck.isNotNull(namespace);
 
         final Map map = schema.getQNamePrefixToNamespaceMap();
         try {
@@ -382,9 +382,9 @@ public class XsdUtil {
 
     public static void setTargetNamespace( final XSDSchema schema,
                                            String namespace ) {
-        ArgCheck.isNotNull(schema);
+        CoreArgCheck.isNotNull(schema);
         XsdUtil.argCheckIsResolved(schema);
-        ArgCheck.isNotNull(namespace);
+        CoreArgCheck.isNotNull(namespace);
 
         String defaultNamespaceReference = schema.getQNamePrefixToNamespaceMap().get(null);
         boolean assignDefaultReference = defaultNamespaceReference == null
@@ -398,7 +398,7 @@ public class XsdUtil {
     }
 
     public static void setAsEnterpriseSchema( final XSDSchema schema ) {
-        ArgCheck.isNotNull(schema);
+        CoreArgCheck.isNotNull(schema);
         XsdUtil.argCheckIsResolved(schema);
 
         addNamespaceRef(schema,
@@ -408,7 +408,7 @@ public class XsdUtil {
     }
 
     public static void unsetAsEnterpriseSchema( final XSDSchema schema ) {
-        ArgCheck.isNotNull(schema);
+        CoreArgCheck.isNotNull(schema);
         XsdUtil.argCheckIsResolved(schema);
 
         schema.getQNamePrefixToNamespaceMap().remove(XsdConstants.PREFIX_FOR_ENTERPRISE_DATATYPES_URI_2005);
@@ -448,7 +448,7 @@ public class XsdUtil {
      * false.
      */
     public static boolean canAnnotate( final XSDConcreteComponent comp ) {
-        ArgCheck.isNotNull(comp);
+        CoreArgCheck.isNotNull(comp);
 
         if (comp instanceof XSDSchema || comp instanceof XSDAnnotation || comp instanceof XSDAttributeDeclaration
             || comp instanceof XSDAttributeGroupDefinition || comp instanceof XSDElementDeclaration
@@ -522,7 +522,7 @@ public class XsdUtil {
      */
     public static XSDAnnotation getAnnotation( final XSDConcreteComponent comp,
                                                boolean createIfNull ) {
-        ArgCheck.isNotNull(comp);
+        CoreArgCheck.isNotNull(comp);
 
         if (!createIfNull) {
             return getAnnotation(comp);
@@ -625,7 +625,7 @@ public class XsdUtil {
      */
     public static void setAnnotation( final XSDConcreteComponent comp,
                                       final XSDAnnotation annotation ) {
-        ArgCheck.isNotNull(comp);
+        CoreArgCheck.isNotNull(comp);
         if (annotation == null) {
             return;
         }
@@ -674,8 +674,8 @@ public class XsdUtil {
      */
     public static void addUserInfoAttribute( final XSDConcreteComponent comp,
                                              final String text ) {
-        ArgCheck.isNotNull(comp);
-        ArgCheck.isNotZeroLength(text);
+        CoreArgCheck.isNotNull(comp);
+        CoreArgCheck.isNotZeroLength(text);
 
         // If the XSDConcreteComponent is not a type that can be annotated then return immediately
         if (!canAnnotate(comp)) {
@@ -701,8 +701,8 @@ public class XsdUtil {
      */
     public static void addUserInfoAttribute( final XSDAnnotation annotation,
                                              final String text ) {
-        ArgCheck.isNotNull(annotation);
-        ArgCheck.isNotZeroLength(text);
+        CoreArgCheck.isNotNull(annotation);
+        CoreArgCheck.isNotZeroLength(text);
 
         // if there are any documentation nodes already, remove them
         if (!annotation.getUserInformation().isEmpty()) {
@@ -1961,7 +1961,7 @@ public class XsdUtil {
                 }
             }
         }
-        return StringUtil.Constants.EMPTY_STRING;
+        return CoreStringUtil.Constants.EMPTY_STRING;
     }
 
     /**

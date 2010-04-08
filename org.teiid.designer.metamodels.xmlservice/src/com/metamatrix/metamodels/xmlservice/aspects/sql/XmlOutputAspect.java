@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xmlservice.XmlOutput;
 import com.metamatrix.metamodels.xmlservice.XmlResult;
 import com.metamatrix.modeler.core.index.IndexConstants;
@@ -42,7 +42,7 @@ public class XmlOutputAspect extends XmlServiceComponentAspect implements SqlRes
      * @since 4.2
      */
     public List getColumns(final EObject eObject) {
-        ArgCheck.isInstanceOf(XmlOutput.class, eObject);
+        CoreArgCheck.isInstanceOf(XmlOutput.class, eObject);
         final XmlOutput output = (XmlOutput)eObject;
         XmlResult result = output.getResult();
         if(result != null) {
@@ -74,7 +74,7 @@ public class XmlOutputAspect extends XmlServiceComponentAspect implements SqlRes
      * @since 4.3
      */
     public boolean isDatatypeFeature(EObject eObject, EStructuralFeature eFeature) {
-        ArgCheck.isInstanceOf(XmlOutput.class, eObject); 
+        CoreArgCheck.isInstanceOf(XmlOutput.class, eObject); 
         return false;
     }
     
@@ -84,7 +84,7 @@ public class XmlOutputAspect extends XmlServiceComponentAspect implements SqlRes
      * @since 5.0.2
      */
     public Object getProcedure(EObject eObject) {
-        ArgCheck.isInstanceOf(XmlOutput.class, eObject); 
+        CoreArgCheck.isInstanceOf(XmlOutput.class, eObject); 
         return ((XmlOutput)eObject).getOperation();
     }
 }

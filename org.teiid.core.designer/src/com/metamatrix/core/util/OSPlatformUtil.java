@@ -161,7 +161,7 @@ public class OSPlatformUtil {
     }
 
     static void printSystemProperties( PrintStream stream ) {
-        Assertion.isNotNull(stream, "The PrintStream reference may not be null"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(stream, "The PrintStream reference may not be null"); //$NON-NLS-1$
         Properties p = System.getProperties();
         p.list(stream);
     }

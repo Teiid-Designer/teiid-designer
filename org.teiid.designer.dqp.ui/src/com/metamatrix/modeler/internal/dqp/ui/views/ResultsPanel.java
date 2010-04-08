@@ -37,7 +37,7 @@ import org.teiid.client.plan.PlanNode;
 import org.teiid.client.plan.XMLOutputVisitor;
 import com.metamatrix.common.util.QueryPlanDisplayHelper;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.ui.internal.dialog.TextAreaDialog;
 import com.metamatrix.ui.internal.util.SystemClipboardUtilities;
@@ -555,8 +555,8 @@ public class ResultsPanel extends Composite implements DqpUiConstants {
                                                                                                                                            name.length())).toString().trim();
 
                     // remove special characters
-                    name = StringUtil.replaceAll(name, "\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
-                    name = StringUtil.replaceAll(name, "\t", ""); //$NON-NLS-1$ //$NON-NLS-2$
+                    name = CoreStringUtil.replaceAll(name, "\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
+                    name = CoreStringUtil.replaceAll(name, "\t", ""); //$NON-NLS-1$ //$NON-NLS-2$
                 }
 
                 return name;

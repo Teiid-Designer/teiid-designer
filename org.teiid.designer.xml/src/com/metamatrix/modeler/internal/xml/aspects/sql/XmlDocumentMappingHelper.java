@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDTypeDefinition;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.MappingClassColumn;
 import com.metamatrix.metamodels.transformation.StagingTable;
@@ -42,7 +42,7 @@ public class XmlDocumentMappingHelper {
      * @see #initialize()
      */
     public XmlDocumentMappingHelper( final List treeMappingRoots ) {
-        ArgCheck.isNotNull(treeMappingRoots);
+        CoreArgCheck.isNotNull(treeMappingRoots);
         this.treeMappingRoots = treeMappingRoots;
         this.xmlDocNodeToMappingClassColumn = new HashMap();
         this.xmlDocNodeToMappingClass = new HashMap();

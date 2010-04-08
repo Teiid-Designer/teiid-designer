@@ -20,7 +20,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.query.internal.ui.builder.model.CompositeLanguageObjectEditorModel;
 import com.metamatrix.query.internal.ui.builder.util.CompositeEditorMessagePanel;
 import com.metamatrix.query.sql.LanguageObject;
@@ -66,8 +66,7 @@ public abstract class AbstractCompositeExpressionEditor extends AbstractComposit
     // /////////////////////////////////////////////////////////////////////////////////////////////
 
     private void createEditorButtons( List theEditors ) {
-        Assertion.isNotNull(theEditors);
-        Assertion.isNotEmpty(theEditors);
+        CoreArgCheck.isNotEmpty(theEditors);
 
         int numEditors = theEditors.size();
         editorButtons = new ArrayList(numEditors);
@@ -150,7 +149,7 @@ public abstract class AbstractCompositeExpressionEditor extends AbstractComposit
 
         return editors;
     }
-    
+
     ILanguageObjectEditor getEditorForFocus() {
         return getCurrentEditor();
     }

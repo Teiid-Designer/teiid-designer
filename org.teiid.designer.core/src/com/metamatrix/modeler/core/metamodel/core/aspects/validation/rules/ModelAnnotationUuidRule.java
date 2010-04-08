@@ -9,7 +9,7 @@ package com.metamatrix.modeler.core.metamodel.core.aspects.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -32,8 +32,8 @@ public class ModelAnnotationUuidRule implements ObjectValidationRule {
      * @since 4.2
      */
     public void validate(final EObject eObject, final ValidationContext context) {
-        ArgCheck.isNotNull(context);
-        ArgCheck.isInstanceOf(ModelAnnotation.class, eObject);
+        CoreArgCheck.isNotNull(context);
+        CoreArgCheck.isInstanceOf(ModelAnnotation.class, eObject);
 
         final ModelEditor editor = ModelerCore.getModelEditor();
         String uuidString = ModelerCore.getObjectIdString(eObject);

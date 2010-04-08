@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.modeler.vdb.ui.VdbUiPlugin;
@@ -33,7 +33,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
  */
 
 public class ImportVdbWizard extends AbstractWizard
-    implements IImportWizard, PluginConstants.Images, StringUtil.Constants, VdbUiConstants {
+    implements IImportWizard, PluginConstants.Images, CoreStringUtil.Constants, VdbUiConstants {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ImportVdbWizard.class);
 

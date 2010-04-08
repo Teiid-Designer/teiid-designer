@@ -22,7 +22,7 @@ import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.metamodels.core.CorePackage;
@@ -317,14 +317,14 @@ public class MappingTreeContentProvider implements ITreeContentProvider {
                                 EMap tags = a.getTags();
 
                                 if (isAdd) {
-                                    if (!StringUtil.isEmpty(desc)) {
+                                    if (!CoreStringUtil.isEmpty(desc)) {
                                         createNewDescriptionPropertyDifference(a, true);
                                     }
                                     if (tags != null && !tags.isEmpty()) {
                                         createNewAnnotationTagPropertyDifference(a, true);
                                     }
                                 } else {
-                                    if (!StringUtil.isEmpty(desc)) {
+                                    if (!CoreStringUtil.isEmpty(desc)) {
                                         createNewDescriptionPropertyDifference(a, false);
                                     }
                                     if (tags != null && !tags.isEmpty()) {

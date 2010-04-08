@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.compare.DifferenceDescriptor;
 import com.metamatrix.modeler.compare.DifferenceReport;
 import com.metamatrix.modeler.compare.ui.UiConstants;
@@ -44,7 +44,7 @@ import com.metamatrix.ui.internal.widget.StatusLabel;
 /**
  * Panel to show the tree of changes, allowing for selection / deselection of parts of them.
  */
-public class DifferenceReportsPanel extends Composite implements StringUtil.Constants {
+public class DifferenceReportsPanel extends Composite implements CoreStringUtil.Constants {
 
     private static final String OLD_FILE_TEXT = UiConstants.Util.getString("DifferenceReportsPanel.oldFile.text"); //$NON-NLS-1$
     private static final String NEW_FILE_TEXT = UiConstants.Util.getString("DifferenceReportsPanel.newFile.text"); //$NON-NLS-1$

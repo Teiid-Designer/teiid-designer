@@ -17,7 +17,7 @@ import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Dependency;
 import org.eclipse.uml2.uml.Property;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.metamodels.uml2.util.Uml2Util;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
@@ -127,7 +127,7 @@ public class Uml2ClassUmlAspect extends AbstractUml2NamedElementUmlAspect implem
     }
 
     protected Class assertUmlClass(Object eObject) {
-        ArgCheck.isInstanceOf(Class.class, eObject);
+        CoreArgCheck.isInstanceOf(Class.class, eObject);
     
         return (Class)eObject;
     }

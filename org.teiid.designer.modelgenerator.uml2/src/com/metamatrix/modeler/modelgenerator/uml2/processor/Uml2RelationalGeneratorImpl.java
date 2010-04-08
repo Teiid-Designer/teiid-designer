@@ -28,7 +28,7 @@ import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.UMLPackage;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.RelationalPackage;
@@ -633,8 +633,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
      */
     protected DifferenceReport doPostProcessRelational( final DifferenceReport report, 
                                                         final RelationTracker relationTracker ) {
-        ArgCheck.isNotNull(report);
-        ArgCheck.isNotNull(relationTracker);
+        CoreArgCheck.isNotNull(report);
+        CoreArgCheck.isNotNull(relationTracker);
         CompareUtil.skipDeletesOfStandardContainers(report);
         final Mapping root = report.getMapping();
         doPostProcessRelational(root,relationTracker);
@@ -713,8 +713,8 @@ public class Uml2RelationalGeneratorImpl implements Uml2RelationalGenerator {
      */
     protected DifferenceReport doPostProcessRelationship( final DifferenceReport report, 
                                                           final RelationTracker relationTracker ) {
-        ArgCheck.isNotNull(report);
-        ArgCheck.isNotNull(relationTracker);
+        CoreArgCheck.isNotNull(report);
+        CoreArgCheck.isNotNull(relationTracker);
         CompareUtil.skipDeletesOfStandardContainers(report);
         final Mapping root = report.getMapping();
         doPostProcessRelationship(root,relationTracker);

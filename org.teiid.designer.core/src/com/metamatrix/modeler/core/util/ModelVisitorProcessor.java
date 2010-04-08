@@ -17,7 +17,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelFolder;
@@ -122,7 +122,7 @@ public class ModelVisitorProcessor {
      */
     public ModelVisitorProcessor( final ModelVisitor visitor, final int mode ) {
         super();
-        ArgCheck.isNotNull(visitor);
+        CoreArgCheck.isNotNull(visitor);
         assertValidMode(mode);
         this.visitor = visitor;
         switch(mode) {
@@ -179,7 +179,7 @@ public class ModelVisitorProcessor {
      * @throws ModelerCoreException if there is an exception walking the workspace
      */
     public void walk( final ModelWorkspace workspace, final int depth ) throws ModelerCoreException {
-        ArgCheck.isNotNull(workspace);
+        CoreArgCheck.isNotNull(workspace);
         assertValidDepth(depth);
         
         // visit this resource      
@@ -213,7 +213,7 @@ public class ModelVisitorProcessor {
      * @throws ModelerCoreException if there is an exception walking the project
      */
     public void walk( final ModelProject project, final int depth ) throws ModelerCoreException {
-        ArgCheck.isNotNull(project);
+        CoreArgCheck.isNotNull(project);
         assertValidDepth(depth);
         
         // visit this resource      
@@ -245,7 +245,7 @@ public class ModelVisitorProcessor {
      * @throws ModelerCoreException if there is an exception walking the folder
      */
     public void walk( final ModelFolder folder, final int depth ) throws ModelerCoreException {
-        ArgCheck.isNotNull(folder);
+        CoreArgCheck.isNotNull(folder);
         assertValidDepth(depth);
         
         // visit this resource      
@@ -277,7 +277,7 @@ public class ModelVisitorProcessor {
      * @throws ModelerCoreException if there is an exception walking the model
      */
     public void walk( final ModelResource startingResource, final int depth ) throws ModelerCoreException {
-        ArgCheck.isNotNull(startingResource);
+        CoreArgCheck.isNotNull(startingResource);
         assertValidDepth(depth);
         
         // visit this resource      
@@ -297,7 +297,7 @@ public class ModelVisitorProcessor {
      * @throws ModelerCoreException if there is an exception walking the resource
      */
     public void walk( final Resource startingResource, final int depth ) throws ModelerCoreException {
-        ArgCheck.isNotNull(startingResource);
+        CoreArgCheck.isNotNull(startingResource);
         assertValidDepth(depth);
         
         // visit this resource      
@@ -326,7 +326,7 @@ public class ModelVisitorProcessor {
      * @throws ModelerCoreException if there is an exception walking the model objects
      */
     public void walk( final EObject startingObject, final int depth ) throws ModelerCoreException {
-        ArgCheck.isNotNull(startingObject);
+        CoreArgCheck.isNotNull(startingObject);
         assertValidDepth(depth);
 
         // visit this resource      
@@ -388,7 +388,7 @@ public class ModelVisitorProcessor {
      */
     public void walk( final Collection startingObjects, final int depth, 
                       final boolean skipDuplicateBranches ) throws ModelerCoreException {
-        ArgCheck.isNotNull(startingObjects);
+        CoreArgCheck.isNotNull(startingObjects);
         assertValidDepth(depth);
         final Collection roots = skipDuplicateBranches ?
                            removeDuplicates(startingObjects) :

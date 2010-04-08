@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.relationship.NavigationContext;
 import com.metamatrix.modeler.relationship.NavigationContextInfo;
 import com.metamatrix.modeler.relationship.NavigationLink;
@@ -31,11 +31,11 @@ public class FakeNavigationContextImpl implements NavigationContext {
 
     /**
      * Construct an instance of NavigationContextImpl.
-     * 
      */
-    public FakeNavigationContextImpl( final NavigationNode focusNode, final NavigationContextInfo info  ) {
-        Assertion.isNotNull(focusNode);
-        Assertion.isNotNull(info);
+    public FakeNavigationContextImpl( final NavigationNode focusNode,
+                                      final NavigationContextInfo info ) {
+        CoreArgCheck.isNotNull(focusNode);
+        CoreArgCheck.isNotNull(info);
         this.info = info;
         this.focusNode = focusNode;
         this.nonFocusNodes = new LinkedList();
@@ -43,7 +43,7 @@ public class FakeNavigationContextImpl implements NavigationContext {
         this.links = new LinkedList();
         this.readOnlyLinks = Collections.unmodifiableList(this.links);
     }
-    
+
     public NavigationContextInfo getInfo() {
         return this.info;
     }
@@ -51,18 +51,17 @@ public class FakeNavigationContextImpl implements NavigationContext {
     /**
      * @see com.metamatrix.modeler.relationship.NavigationContext#getNodes(com.metamatrix.modeler.NavigationContext)
      */
-    public List getNodes(NavigationLink link) {
+    public List getNodes( NavigationLink link ) {
         return null;
     }
 
-
     /**
-    * @see com.metamatrix.modeler.relationship.NavigationContext#getNodes(com.metamatrix.modeler.NavigationContext)
-    */
+     * @see com.metamatrix.modeler.relationship.NavigationContext#getNodes(com.metamatrix.modeler.NavigationContext)
+     */
     public List getAllNodes() {
-       return null;
+        return null;
     }
-    
+
     /**
      * @see com.metamatrix.modeler.relationship.NavigationContext#getFocusNode()
      */
@@ -87,69 +86,75 @@ public class FakeNavigationContextImpl implements NavigationContext {
     /**
      * @see com.metamatrix.modeler.relationship.NavigationContext#getNavigationLink(org.eclipse.emf.ecore.EObject)
      */
-    public NavigationLink getNavigationLink(EObject nonFocusNode) {
+    public NavigationLink getNavigationLink( EObject nonFocusNode ) {
         return null;
     }
 
     /**
      * @see com.metamatrix.modeler.relationship.NavigationContext#getLabel(com.metamatrix.modeler.relationship.NavigationLink)
      */
-    public String getLabel(NavigationLink link) {
+    public String getLabel( NavigationLink link ) {
         return null;
     }
 
     /**
-     * @see com.metamatrix.modeler.relationship.NavigationContext#getLabelForEnd(com.metamatrix.modeler.relationship.NavigationLink, org.eclipse.emf.ecore.EObject)
+     * @see com.metamatrix.modeler.relationship.NavigationContext#getLabelForEnd(com.metamatrix.modeler.relationship.NavigationLink,
+     *      org.eclipse.emf.ecore.EObject)
      */
-    public String getLabelForEnd(NavigationLink link, EObject nodeForEnd) {
+    public String getLabelForEnd( NavigationLink link,
+                                  EObject nodeForEnd ) {
         return null;
     }
 
     /**
      * @see com.metamatrix.modeler.relationship.NavigationContext#getTooltip(com.metamatrix.modeler.relationship.NavigationLink)
      */
-    public String getTooltip(NavigationLink link) {
+    public String getTooltip( NavigationLink link ) {
         return null;
     }
 
     /**
      * @see com.metamatrix.modeler.relationship.NavigationContext#getTooltip(org.eclipse.emf.ecore.EObject)
      */
-    public String getTooltip(EObject node) {
+    public String getTooltip( EObject node ) {
         return null;
     }
 
     /**
-     * @see com.metamatrix.modeler.relationship.NavigationContext#addNodeAndLink(com.metamatrix.modeler.relationship.NavigationNode, com.metamatrix.modeler.relationship.NavigationLink)
+     * @see com.metamatrix.modeler.relationship.NavigationContext#addNodeAndLink(com.metamatrix.modeler.relationship.NavigationNode,
+     *      com.metamatrix.modeler.relationship.NavigationLink)
      */
-    public void addNodeAndLink(NavigationNode node, NavigationLink link) {
+    public void addNodeAndLink( NavigationNode node,
+                                NavigationLink link ) {
     }
 
     /**
      * @see com.metamatrix.modeler.relationship.NavigationContext#getNavigationLink(com.metamatrix.modeler.relationship.NavigationNode)
      */
-    public NavigationLink getNavigationLink(NavigationNode nonFocusNode) {
+    public NavigationLink getNavigationLink( NavigationNode nonFocusNode ) {
         return null;
     }
 
     /**
-     * @see com.metamatrix.modeler.relationship.NavigationContext#getLabelForEnd(com.metamatrix.modeler.relationship.NavigationLink, com.metamatrix.modeler.relationship.NavigationNode)
+     * @see com.metamatrix.modeler.relationship.NavigationContext#getLabelForEnd(com.metamatrix.modeler.relationship.NavigationLink,
+     *      com.metamatrix.modeler.relationship.NavigationNode)
      */
-    public String getLabelForEnd(NavigationLink link, NavigationNode nodeForEnd) {
+    public String getLabelForEnd( NavigationLink link,
+                                  NavigationNode nodeForEnd ) {
         return null;
     }
-
 
     /**
      * @see com.metamatrix.modeler.relationship.NavigationContext#getNonFocusNodeRole(com.metamatrix.modeler.relationship.NavigationLink)
      */
-    public String getNonFocusNodeRole(NavigationLink link) {
+    public String getNonFocusNodeRole( NavigationLink link ) {
         return null;
     }
+
     /**
      * @see com.metamatrix.modeler.relationship.NavigationContext#getTooltip(com.metamatrix.modeler.relationship.NavigationNode)
      */
-    public String getTooltip(NavigationNode node) {
+    public String getTooltip( NavigationNode node ) {
         return null;
     }
 

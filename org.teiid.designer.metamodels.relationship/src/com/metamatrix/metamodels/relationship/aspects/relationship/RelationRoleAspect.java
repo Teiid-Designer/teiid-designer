@@ -8,7 +8,7 @@
 package com.metamatrix.metamodels.relationship.aspects.relationship;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relationship.RelationshipRole;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
@@ -34,7 +34,7 @@ public class RelationRoleAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipRoleAspect#getStereoType(org.eclipse.emf.ecore.EObject)
 	 */
 	public String getStereoType(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipRole.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipRole.class, eObject);
 		RelationshipRole relationshipRole = (RelationshipRole) eObject;
 		return relationshipRole.getStereotype();
 	}
@@ -43,7 +43,7 @@ public class RelationRoleAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipRoleAspect#isOrdered(org.eclipse.emf.ecore.EObject)
 	 */
 	public boolean isOrdered(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipRole.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipRole.class, eObject);
 		RelationshipRole relationshipRole = (RelationshipRole) eObject;
 		return relationshipRole.isOrdered();
 	}
@@ -52,7 +52,7 @@ public class RelationRoleAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipRoleAspect#isUnique(org.eclipse.emf.ecore.EObject)
 	 */
 	public boolean isUnique(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipRole.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipRole.class, eObject);
 		RelationshipRole relationshipRole = (RelationshipRole) eObject;
 		return relationshipRole.isUnique();
 	}
@@ -61,7 +61,7 @@ public class RelationRoleAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipRoleAspect#isNavigable(org.eclipse.emf.ecore.EObject)
 	 */
 	public boolean isNavigable(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipRole.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipRole.class, eObject);
 		RelationshipRole relationshipRole = (RelationshipRole) eObject;
 		return relationshipRole.isNavigable();
 	}
@@ -70,7 +70,7 @@ public class RelationRoleAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipRoleAspect#getLowerBound(org.eclipse.emf.ecore.EObject)
 	 */
 	public int getLowerBound(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipRole.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipRole.class, eObject);
 		RelationshipRole relationshipRole = (RelationshipRole) eObject;
 		return relationshipRole.getLowerBound();
 	}
@@ -79,7 +79,7 @@ public class RelationRoleAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipRoleAspect#getUpperBound(org.eclipse.emf.ecore.EObject)
 	 */
 	public int getUpperBound(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipRole.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipRole.class, eObject);
 		RelationshipRole relationshipRole = (RelationshipRole) eObject;
 		return relationshipRole.getUpperBound();
 	}
@@ -88,7 +88,7 @@ public class RelationRoleAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipRoleAspect#isSourceRole(org.eclipse.emf.ecore.EObject)
 	 */
 	public boolean isSourceRole(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipRole.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipRole.class, eObject);
 		RelationshipRole relationshipRole = (RelationshipRole) eObject;
 		return relationshipRole.isSourceRole();
 	}
@@ -97,7 +97,7 @@ public class RelationRoleAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipRoleAspect#isTargetRole(org.eclipse.emf.ecore.EObject)
 	 */
 	public boolean isTargetRole(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipRole.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipRole.class, eObject);
 		RelationshipRole relationshipRole = (RelationshipRole) eObject;
 		return relationshipRole.isTargetRole();
 	}
@@ -106,7 +106,7 @@ public class RelationRoleAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipRoleAspect#getOppositeRole(org.eclipse.emf.ecore.EObject)
 	 */
 	public Object getOppositeRole(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipRole.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipRole.class, eObject);
 		RelationshipRole relationshipRole = (RelationshipRole) eObject;
 		return relationshipRole.getOppositeRole();
 	}
@@ -115,7 +115,7 @@ public class RelationRoleAspect extends RelationshipEntityAspect implements Rela
 	 * @see com.metamatrix.modeler.relationship.aspect.relationship.RelationshipRoleAspect#getOverriddenRole(org.eclipse.emf.ecore.EObject)
 	 */
 	public Object getOverriddenRole(EObject eObject) {
-		ArgCheck.isInstanceOf(RelationshipRole.class, eObject);
+		CoreArgCheck.isInstanceOf(RelationshipRole.class, eObject);
 		RelationshipRole relationshipRole = (RelationshipRole) eObject;
 		return relationshipRole.getOverriddenRole();
 	}

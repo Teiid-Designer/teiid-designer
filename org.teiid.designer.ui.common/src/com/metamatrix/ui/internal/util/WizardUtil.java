@@ -21,10 +21,10 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.ui.UiConstants;
 import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.wizard.IPersistentWizardPage;
@@ -34,7 +34,7 @@ import com.metamatrix.ui.internal.wizard.IPersistentWizardPage;
  * @since 4.0
  */
 public final class WizardUtil implements InternalUiConstants.Widgets,
-                                         StringUtil.Constants,
+                                         CoreStringUtil.Constants,
                                          UiConstants {
     //============================================================================================================================
     // Constants
@@ -120,7 +120,7 @@ public final class WizardUtil implements InternalUiConstants.Widgets,
                                        String message,
                                        final int status,
                                        final Control control) {
-        ArgCheck.isNotNull(page);
+        CoreArgCheck.isNotNull(page);
         // Set page complete/incomplete appropriately
         page.setPageComplete(status != IMessageProvider.ERROR);
         // Set page's message according to whether its complete and its position within the wizard
@@ -142,7 +142,7 @@ public final class WizardUtil implements InternalUiConstants.Widgets,
             }
             page.setMessage(message);
         } else {
-            ArgCheck.isNotNull(message);
+            CoreArgCheck.isNotNull(message);
             page.setMessage(message, status);
         }
         // Set focus on control if not null
@@ -185,12 +185,12 @@ public final class WizardUtil implements InternalUiConstants.Widgets,
                                                    final String fileExtension,
                                                    final int existsLevel,
                                                    final boolean forceFileExtension) throws CoreException {
-        ArgCheck.isNotNull(fileText);
-        ArgCheck.isNotNull(folderText);
-        ArgCheck.isNotNull(page);
-        ArgCheck.isNotNull(fileExtension);
+        CoreArgCheck.isNotNull(fileText);
+        CoreArgCheck.isNotNull(folderText);
+        CoreArgCheck.isNotNull(page);
+        CoreArgCheck.isNotNull(fileExtension);
         String fileName = fileText.getText();
-        if (StringUtil.isEmpty(fileName)) {
+        if (CoreStringUtil.isEmpty(fileName)) {
             setPageComplete(page, MISSING_FILE_MESSAGE, IMessageProvider.ERROR);
         } else {
             // Append passed-in file extension if file name doesn't already end with it.
@@ -207,7 +207,7 @@ public final class WizardUtil implements InternalUiConstants.Widgets,
                 setPageComplete(page, INVALID_FILE_MESSAGE, IMessageProvider.ERROR);
             } else {
                 final String folderName = folderText.getText();
-                if (StringUtil.isEmpty(folderName)) {
+                if (CoreStringUtil.isEmpty(folderName)) {
                     setPageComplete(page, MISSING_FOLDER_MESSAGE, IMessageProvider.ERROR);
                 } else {
                     final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);

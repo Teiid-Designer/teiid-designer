@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.compare.impl.ComparePackageImpl;
 import com.metamatrix.modeler.compare.processor.DifferenceProcessorImpl;
@@ -171,7 +171,7 @@ public class ModelerComparePlugin extends Plugin {
      */
     public static DifferenceProcessor createDifferenceProcessor( final ModelResource modelResource )
         throws ModelWorkspaceException {
-        ArgCheck.isNotNull(modelResource);
+        CoreArgCheck.isNotNull(modelResource);
         final ModelSelector currentSelector = new ModelResourceSelector(modelResource);
         currentSelector.setLabel(modelResource.getPath().toString());
         DifferenceProcessor processor = null;
@@ -207,8 +207,8 @@ public class ModelerComparePlugin extends Plugin {
      */
     public static DifferenceProcessor createDifferenceProcessor( final ModelResource startingResource,
                                                                  final ModelResource endingResource ) {
-        ArgCheck.isNotNull(startingResource);
-        ArgCheck.isNotNull(endingResource);
+        CoreArgCheck.isNotNull(startingResource);
+        CoreArgCheck.isNotNull(endingResource);
         final ModelSelector startingSelector = new ModelResourceSelector(startingResource);
         final ModelSelector endingSelector = new ModelResourceSelector(endingResource);
         endingSelector.setLabel(startingResource.getPath().toString());
@@ -238,9 +238,9 @@ public class ModelerComparePlugin extends Plugin {
                                                                  final ModelResource endingResource,
                                                                  final String startingResourceDesc )
         throws ModelWorkspaceException {
-        ArgCheck.isNotNull(startingResource);
-        ArgCheck.isNotNull(startingResourcePath);
-        ArgCheck.isNotNull(endingResource);
+        CoreArgCheck.isNotNull(startingResource);
+        CoreArgCheck.isNotNull(startingResourcePath);
+        CoreArgCheck.isNotNull(endingResource);
 
         // assume that the starting resource and ending resource are of same type
         IResource resource = endingResource.getCorrespondingResource();
@@ -281,8 +281,8 @@ public class ModelerComparePlugin extends Plugin {
      */
     public static DifferenceProcessor createDifferenceProcessor( final Resource startingResource,
                                                                  final Resource endingResource ) {
-        ArgCheck.isNotNull(startingResource);
-        ArgCheck.isNotNull(endingResource);
+        CoreArgCheck.isNotNull(startingResource);
+        CoreArgCheck.isNotNull(endingResource);
         final ModelSelector startingSelector = new EmfResourceSelector(startingResource);
         final ModelSelector endingSelector = new EmfResourceSelector(endingResource);
         startingSelector.setLabel(URI.decode(startingResource.getURI().toString()));
@@ -309,8 +309,8 @@ public class ModelerComparePlugin extends Plugin {
     public static DifferenceProcessor createDifferenceProcessor( final Resource startingResource,
                                                                  final Resource endingResource,
                                                                  final HashMap mappings ) {
-        ArgCheck.isNotNull(startingResource);
-        ArgCheck.isNotNull(endingResource);
+        CoreArgCheck.isNotNull(startingResource);
+        CoreArgCheck.isNotNull(endingResource);
         final ModelSelector startingSelector = new EmfResourceSelector(startingResource);
         final ModelSelector endingSelector = new EmfResourceSelector(endingResource);
         startingSelector.setLabel(URI.decode(startingResource.getURI().toString()));
@@ -329,7 +329,7 @@ public class ModelerComparePlugin extends Plugin {
      * @return the processor that can be used to execute the merge
      */
     public static MergeProcessor createMergeProcessor( final DifferenceProcessor difference ) {
-        ArgCheck.isInstanceOf(DifferenceProcessorImpl.class, difference);
+        CoreArgCheck.isInstanceOf(DifferenceProcessorImpl.class, difference);
         return new MergeProcessorImpl((DifferenceProcessorImpl)difference);
     }
 
@@ -344,7 +344,7 @@ public class ModelerComparePlugin extends Plugin {
      */
     public static MergeProcessor createMergeProcessor( final DifferenceProcessor difference,
                                                        final EObject[] externalReferences ) {
-        ArgCheck.isInstanceOf(DifferenceProcessorImpl.class, difference);
+        CoreArgCheck.isInstanceOf(DifferenceProcessorImpl.class, difference);
         return new MergeProcessorImpl((DifferenceProcessorImpl)difference, externalReferences);
     }
 
@@ -363,7 +363,7 @@ public class ModelerComparePlugin extends Plugin {
     public static MergeProcessor createMergeProcessor( final DifferenceProcessor difference,
                                                        final EObject[] externalReferences,
                                                        final boolean moveAddsRatherThanCopy ) {
-        ArgCheck.isInstanceOf(DifferenceProcessorImpl.class, difference);
+        CoreArgCheck.isInstanceOf(DifferenceProcessorImpl.class, difference);
         return new MergeProcessorImpl((DifferenceProcessorImpl)difference, externalReferences, moveAddsRatherThanCopy);
     }
 

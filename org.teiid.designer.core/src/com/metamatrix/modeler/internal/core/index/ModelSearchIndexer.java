@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.index.IDocument;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -70,7 +70,7 @@ public class ModelSearchIndexer extends ModelIndexer {
      */
     @Override
     protected void setIndexType( ModelResource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         if (resource.getIndexType() == ModelResource.NOT_INDEXED) {
             resource.setIndexType(ModelResource.SEARCH_INDEXED);
         } else if (resource.getIndexType() == ModelResource.METADATA_INDEXED) {
@@ -88,8 +88,8 @@ public class ModelSearchIndexer extends ModelIndexer {
     protected void addIndexWord( final EObject eObject,
                                  final String modelPath,
                                  final List wordEntries ) {
-        ArgCheck.isNotNull(eObject);
-        ArgCheck.isNotNull(wordEntries);
+        CoreArgCheck.isNotNull(eObject);
+        CoreArgCheck.isNotNull(wordEntries);
 
         // add all search words for the EObject
         SearchRuntimeAdapter.addObjectSearchWords(eObject, modelPath, wordEntries);

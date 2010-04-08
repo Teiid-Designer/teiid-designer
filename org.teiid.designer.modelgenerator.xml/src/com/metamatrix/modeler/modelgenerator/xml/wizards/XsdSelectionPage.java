@@ -53,8 +53,7 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.xsd.XSDSchema;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.modelgenerator.xml.IUiConstants;
 import com.metamatrix.modeler.modelgenerator.xml.Util;
@@ -226,7 +225,7 @@ public abstract class XsdSelectionPage extends AbstractWizardPage {
                             path = ((File)xsd).getAbsolutePath();
                         } else {
                             // unexpected
-                            Assertion.failed("Unexpected XSD object type of " + xsd.getClass()); //$NON-NLS-1$
+                            CoreArgCheck.isTrue(false, "Unexpected XSD object type of " + xsd.getClass()); //$NON-NLS-1$
                         }
 
                         // don't add if it has already been added
@@ -756,7 +755,7 @@ public abstract class XsdSelectionPage extends AbstractWizardPage {
     }
 
     void addResource( IFile theFile ) {
-        ArgCheck.isNotNull(theFile);
+        CoreArgCheck.isNotNull(theFile);
 
         // Check whether the file exists ...
         if (!theFile.exists()) {
@@ -770,7 +769,7 @@ public abstract class XsdSelectionPage extends AbstractWizardPage {
     }
 
     void addResource( File theFile ) {
-        ArgCheck.isNotNull(theFile);
+        CoreArgCheck.isNotNull(theFile);
 
         // Check whether the file exists ...
         if (!theFile.exists()) {
@@ -799,12 +798,12 @@ public abstract class XsdSelectionPage extends AbstractWizardPage {
     }
 
     private boolean removeResource( File theFile ) {
-        ArgCheck.isNotNull(theFile);
+        CoreArgCheck.isNotNull(theFile);
         return removeResourceURI(theFile);
     }
 
     private boolean removeResource( IFile theFile ) {
-        ArgCheck.isNotNull(theFile);
+        CoreArgCheck.isNotNull(theFile);
         return removeResourceURI(theFile);
     }
 

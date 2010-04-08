@@ -14,7 +14,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import com.metamatrix.core.UserCancelledException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.compare.ModelGenerator;
 
 /**
@@ -31,7 +31,7 @@ public class CompositeModelGenerator extends AbstractModelGenerator {
      */
     public CompositeModelGenerator( final List modelGenerators ) {
         super(null);
-        ArgCheck.isNotNull(modelGenerators);
+        CoreArgCheck.isNotNull(modelGenerators);
         this.modelGenerators = modelGenerators != null ? modelGenerators : new ArrayList();
     }
     

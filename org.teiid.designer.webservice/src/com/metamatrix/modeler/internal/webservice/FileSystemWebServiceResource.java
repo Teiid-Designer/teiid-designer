@@ -10,7 +10,7 @@ package com.metamatrix.modeler.internal.webservice;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 
 /** 
@@ -26,7 +26,7 @@ public class FileSystemWebServiceResource extends AbstractWebServiceResource {
      */
     public FileSystemWebServiceResource( final String namespace, final File file ) {
         super(namespace,file == null ? null : file.getAbsolutePath() );
-        ArgCheck.isNotNull(file);
+        CoreArgCheck.isNotNull(file);
         this.file = file;
     }
 

@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.util.ModelVisitor;
 
 /**
@@ -39,7 +39,7 @@ public class ClearEObjectReferences implements ModelVisitor {
      * Construct an instance of ClearEObjectReferences.
      */
     public ClearEObjectReferences( final EObject refdObject ) {
-        ArgCheck.isNotNull(refdObject);
+        CoreArgCheck.isNotNull(refdObject);
         this.refdObject = refdObject;
         this.affectedObjects = new HashSet();
     }

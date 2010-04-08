@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.ui.UiConstants;
 
 public class StructuredViewerTextFilterer extends StructuredViewerFilterer implements IFilter {
@@ -177,7 +177,7 @@ public class StructuredViewerTextFilterer extends StructuredViewerFilterer imple
             String filterText = text.getText();
             synchronized (StructuredViewerTextFilterer.this) {
                 if (filterText.length() > 0) {
-                    filter = StringUtil.createPattern(filterText + "*", false); //$NON-NLS-1$;
+                    filter = CoreStringUtil.createPattern(filterText + "*", false); //$NON-NLS-1$;
                 } else {
                     filter = null; // no filter
                 } // endif

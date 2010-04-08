@@ -16,8 +16,8 @@ import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.core.id.UUID;
 import com.metamatrix.core.index.IEntryResult;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.index.IndexSelector;
@@ -63,11 +63,11 @@ public class VdbMetadata extends ModelerMetadata {
         Collection eObjects = new LinkedList();
 
         String uuid = null;
-        if (StringUtil.startsWithIgnoreCase(entityName, UUID.PROTOCOL)) {
+        if (CoreStringUtil.startsWithIgnoreCase(entityName, UUID.PROTOCOL)) {
             uuid = entityName.toLowerCase();
         } else {
             String shortName = super.getShortElementName(entityName);
-            if (StringUtil.startsWithIgnoreCase(shortName, UUID.PROTOCOL)) {
+            if (CoreStringUtil.startsWithIgnoreCase(shortName, UUID.PROTOCOL)) {
                 uuid = shortName.toLowerCase();
             }
         }
@@ -102,7 +102,7 @@ public class VdbMetadata extends ModelerMetadata {
             IEntryResult[] results = queryIndex(recordType, entityName, isPartialName);
             Collection records = findMetadataRecords(results);
 
-            if (StringUtil.startsWithIgnoreCase(entityName, UUID.PROTOCOL)) {
+            if (CoreStringUtil.startsWithIgnoreCase(entityName, UUID.PROTOCOL)) {
                 // Filter out ColumnRecord instances that do not match the specified uuid.
                 // Due to the pattern matching used to query index files if an index record
                 // matched the specified uuid string anywhere in that record it would be returned
@@ -134,7 +134,7 @@ public class VdbMetadata extends ModelerMetadata {
      */
     @Override
     protected EObject lookupEObject( final String uuid ) {
-        ArgCheck.isNotEmpty(uuid);
+        CoreArgCheck.isNotEmpty(uuid);
         // Go to the Container ...
         return (EObject)this.getContainer().getEObjectFinder().find(uuid);
     }

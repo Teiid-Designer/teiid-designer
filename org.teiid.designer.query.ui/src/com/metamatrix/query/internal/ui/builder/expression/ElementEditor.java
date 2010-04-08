@@ -18,7 +18,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.AbstractLanguageObjectEditor;
 import com.metamatrix.query.internal.ui.builder.model.ElementEditorModel;
@@ -104,7 +104,7 @@ public class ElementEditor extends AbstractLanguageObjectEditor {
      * Displays the appropriate UI for the current model state.
      */
     void displayElementSymbol() {
-        Assertion.isNotNull(viewer);
+        CoreArgCheck.isNotNull(viewer);
 
         StructuredSelection selection = StructuredSelection.EMPTY;
 
@@ -182,9 +182,9 @@ public class ElementEditor extends AbstractLanguageObjectEditor {
             clear();
         } else {
             if (!(theLanguageObject instanceof ElementSymbol)) {
-                Assertion.assertTrue((theLanguageObject instanceof ElementSymbol),
-                                     Util.getString(PREFIX + "invalidLanguageObject", //$NON-NLS-1$
-                                                    new Object[] {theLanguageObject.getClass().getName()}));
+                CoreArgCheck.isTrue((theLanguageObject instanceof ElementSymbol),
+                                    Util.getString(PREFIX + "invalidLanguageObject", //$NON-NLS-1$
+                                                   new Object[] {theLanguageObject.getClass().getName()}));
             }
 
             model.setLanguageObject(theLanguageObject);

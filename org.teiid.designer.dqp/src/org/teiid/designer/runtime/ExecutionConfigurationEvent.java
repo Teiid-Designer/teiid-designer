@@ -8,7 +8,7 @@
 package org.teiid.designer.runtime;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
 
 /**
@@ -90,7 +90,7 @@ public final class ExecutionConfigurationEvent {
                                          TargetType targetType,
                                          Object target ) {
         this(eventType, targetType, target, null);
-        ArgCheck.isNotNull(target, "target"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(target, "target"); //$NON-NLS-1$
     }
 
     private ExecutionConfigurationEvent( EventType eventType,

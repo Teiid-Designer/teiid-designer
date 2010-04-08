@@ -15,7 +15,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.extension.XAttribute;
 import com.metamatrix.metamodels.core.extension.XClass;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -37,7 +37,7 @@ public class XAttributeUniqueNameInXClassRule implements ObjectValidationRule {
      * @since 4.2
      */
     public void validate(EObject eObject, ValidationContext context) {
-        ArgCheck.isInstanceOf(XClass.class, eObject);
+        CoreArgCheck.isInstanceOf(XClass.class, eObject);
 
         final XClass xclass = (XClass) eObject;
         

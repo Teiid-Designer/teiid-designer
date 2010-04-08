@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.metamodels.relational.DirectionKind;
@@ -847,7 +847,7 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
         IResource result = null;
         String containerName = getContainerName();
 
-        if (!StringUtil.isEmpty(containerName)) {
+        if (!CoreStringUtil.isEmpty(containerName)) {
             IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
             IResource resource = root.findMember(new Path(containerName));
 

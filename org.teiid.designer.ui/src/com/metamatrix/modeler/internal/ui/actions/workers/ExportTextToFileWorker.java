@@ -17,7 +17,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 
@@ -51,7 +51,7 @@ public class ExportTextToFileWorker {
     private String text;
     private String header;
     private String fileName;
-    private String folder = StringUtil.Constants.EMPTY_STRING;
+    private String folder = CoreStringUtil.Constants.EMPTY_STRING;
 
     /**
      *
@@ -84,7 +84,7 @@ public class ExportTextToFileWorker {
      * @return <code>true</code> if export was canceled
      */
      public boolean export() {
-         this.folder = StringUtil.Constants.EMPTY_STRING;
+         this.folder = CoreStringUtil.Constants.EMPTY_STRING;
          this.fileName = null;
 
          boolean cancelled = false;
@@ -148,7 +148,7 @@ public class ExportTextToFileWorker {
          int headerLength = (this.header == null) ? 0 : this.header.length();
          StringBuffer sb = new StringBuffer(text.length() + headerLength + 10);
          if( headerLength > 0 ) {
-             sb.append(header).append(StringUtil.Constants.NEW_LINE_CHAR);
+             sb.append(header).append(CoreStringUtil.Constants.NEW_LINE_CHAR);
          }
          sb.append(text);
 

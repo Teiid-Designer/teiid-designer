@@ -42,7 +42,7 @@ import org.eclipse.wst.wsdl.validation.internal.IValidationMessage;
 import org.eclipse.wst.wsdl.validation.internal.IValidationReport;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
 import com.metamatrix.modeler.webservice.IWebServiceModelBuilder;
 import com.metamatrix.modeler.webservice.ui.util.WebServiceUiUtil;
@@ -238,21 +238,21 @@ public class ImportWsdlValidationPage extends AbstractWizardPage
                 switch (column) {
                     case MESSAGE_COLUMN: {
                         final String messageString = message.getMessage();
-                        return messageString == null ? StringUtil.Constants.EMPTY_STRING : messageString;
+                        return messageString == null ? CoreStringUtil.Constants.EMPTY_STRING : messageString;
                     }
                     case OBJECT_COLUMN: {
                         // Get the file name from the URI. This is the key to the url map if this wsdl was loaded via url.
                         String target = (String)builder.getUrlMap().get(message.getURI().substring(message.getURI().lastIndexOf('/') + 1));
                         // If the target is null, this wsdl was file based so we get the uri off the message
                         if (target == null) target = message.getURI();
-                        return target == null ? StringUtil.Constants.EMPTY_STRING : target;
+                        return target == null ? CoreStringUtil.Constants.EMPTY_STRING : target;
                     }
                     case LINE_NUMBER_COLUMN: {
                         final String lineNumber = String.valueOf(message.getLine());
-                        return lineNumber == null ? StringUtil.Constants.EMPTY_STRING : lineNumber;
+                        return lineNumber == null ? CoreStringUtil.Constants.EMPTY_STRING : lineNumber;
                     }
                 }
-                return StringUtil.Constants.EMPTY_STRING;
+                return CoreStringUtil.Constants.EMPTY_STRING;
             }
         });
         this.viewer.addDoubleClickListener(new IDoubleClickListener() {

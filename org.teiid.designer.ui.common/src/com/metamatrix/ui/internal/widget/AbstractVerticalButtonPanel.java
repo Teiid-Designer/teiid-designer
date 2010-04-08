@@ -16,7 +16,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
 /**
@@ -104,7 +104,7 @@ public abstract class AbstractVerticalButtonPanel extends Composite {
                                                 final int style,
                                                 final int gridStyle,
                                                 final int span) {
-        ArgCheck.isNotEmpty(name);
+        CoreArgCheck.isNotEmpty(name);
         // Set layout data
         final GridData gridData = new GridData(gridStyle);
         gridData.horizontalSpan = span;

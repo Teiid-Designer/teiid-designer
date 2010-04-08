@@ -25,7 +25,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.ui.UiConstants;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -60,7 +60,7 @@ final class WizardSelectionPage extends WizardPage implements UiConstants {
     public WizardSelectionPage( final IConfigurationElement[] elements,
                                 final ViewerSorter sorter ) {
         super(WizardSelectionPage.class.getSimpleName(), TITLE, null);
-        ArgCheck.isNotNull(elements);
+        CoreArgCheck.isNotNull(elements);
         this.elems = elements;
         this.sorter = sorter;
         setMessage(INITIAL_MESSAGE);

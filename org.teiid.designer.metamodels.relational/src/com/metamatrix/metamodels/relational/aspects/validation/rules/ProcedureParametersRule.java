@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.relational.aspects.validation.rules;
 import java.util.Iterator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.DirectionKind;
 import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.relational.ProcedureParameter;
@@ -31,7 +31,7 @@ public class ProcedureParametersRule implements ObjectValidationRule {
      * @see com.metamatrix.modeler.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, com.metamatrix.modeler.core.validation.ValidationContext)
      */
     public void validate(EObject eObject, ValidationContext context) {
-        ArgCheck.isInstanceOf(Procedure.class, eObject);
+        CoreArgCheck.isInstanceOf(Procedure.class, eObject);
 
         Procedure procedure = (Procedure) eObject;
 

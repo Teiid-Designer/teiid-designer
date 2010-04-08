@@ -15,7 +15,7 @@ import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.InvalidIDException;
 import com.metamatrix.core.id.ObjectID;
 import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreRuntimeException;
 import com.metamatrix.modeler.core.container.Container;
@@ -61,7 +61,7 @@ public class DefaultEObjectFinder extends AbstractFinder {
         } else if (key instanceof String) {
             String id = (String)key;
 
-            if (StringUtil.startsWithIgnoreCase(id, UUID.PROTOCOL)) {
+            if (CoreStringUtil.startsWithIgnoreCase(id, UUID.PROTOCOL)) {
                 try {
                     return findByObjectID(IDGenerator.getInstance().stringToObject(id.toLowerCase()), true);
                 } catch (InvalidIDException e) {

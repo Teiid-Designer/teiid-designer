@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -113,8 +113,8 @@ public class ModelMapperFactory implements PluginConstants, PluginConstants.Exte
      * @throws IllegalArgumentException if the metamodel URI is <code>null</code> or empty
      */
     public static ITreeToRelationalMapper createModelMapper( String theMetamodelUri ) {
-        ArgCheck.isNotNull(theMetamodelUri);
-        ArgCheck.isNotEmpty(theMetamodelUri);
+        CoreArgCheck.isNotNull(theMetamodelUri);
+        CoreArgCheck.isNotEmpty(theMetamodelUri);
 
         ITreeToRelationalMapper result = null;
 
@@ -140,7 +140,7 @@ public class ModelMapperFactory implements PluginConstants, PluginConstants.Exte
      * @throws IllegalArgumentException if the tree node is <code>null</code>
      */
     public static ITreeToRelationalMapper createModelMapper( EObject theTreeNode ) {
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theTreeNode);
 
         ITreeToRelationalMapper result = null;
         String uri = getMetamodelUri(theTreeNode);
@@ -163,7 +163,7 @@ public class ModelMapperFactory implements PluginConstants, PluginConstants.Exte
      * @throws IllegalArgumentException if the tree node is <code>null</code>
      */
     private static String getMetamodelUri( EObject theTreeNode ) {
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theTreeNode);
 
         // Get the container to use when resolving the EObject if it is a proxy ...
         Container container = ModelerCore.getContainer(theTreeNode);
@@ -194,7 +194,7 @@ public class ModelMapperFactory implements PluginConstants, PluginConstants.Exte
      * @throws IllegalArgumentException if the tree node is <code>null</code>
      */
     public static boolean isTreeRoot( EObject theTreeNode ) {
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theTreeNode);
 
         boolean result = false;
         String uri = getMetamodelUri(theTreeNode);
@@ -222,7 +222,7 @@ public class ModelMapperFactory implements PluginConstants, PluginConstants.Exte
      * @throws IllegalArgumentException if the tree node is <code>null</code>
      */
     public static boolean isXmlTreeNode( EObject theTreeNode ) {
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theTreeNode);
 
         boolean result = false;
 
@@ -275,7 +275,7 @@ public class ModelMapperFactory implements PluginConstants, PluginConstants.Exte
      * @throws IllegalArgumentException if the tree node is <code>null</code>
      */
     public static EObject getXsdComponent( EObject theTreeNode ) {
-        ArgCheck.isNotNull(theTreeNode);
+        CoreArgCheck.isNotNull(theTreeNode);
 
         EObject result = null;
 

@@ -41,8 +41,7 @@ import org.xml.sax.Attributes;
 import com.metamatrix.core.id.IDGenerator;
 import com.metamatrix.core.id.InvalidIDException;
 import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.DateUtil;
 import com.metamatrix.core.util.ReflectionHelper;
 import com.metamatrix.metamodels.core.CorePackage;
@@ -82,8 +81,8 @@ public class EResourceXmiHandler extends SAXXMIHandler {
                                 final Map options ) {
         super(xmiResource, helper, options);
 
-        ArgCheck.isNotNull(xmiResource);
-        ArgCheck.isInstanceOf(EResourceImpl.class, xmiResource);
+        CoreArgCheck.isNotNull(xmiResource);
+        CoreArgCheck.isInstanceOf(EResourceImpl.class, xmiResource);
 
         this.eResource = (EResourceImpl)xmiResource;
         this.idGenerator = IDGenerator.getInstance();
@@ -142,7 +141,7 @@ public class EResourceXmiHandler extends SAXXMIHandler {
                     // If the xmi:uuid attribute is encountered ...
                 } else if (qName.equals(UUID_ATTRIB)) {
                     ObjectID uuid = getObjectIDFromString(attribs.getValue(i));
-                    Assertion.isNotNull(uuid);
+                    CoreArgCheck.isNotNull(uuid);
 
                     // Apply patch for defect 14449
                     uuid = patch_defect14449(obj, uuid, i);
@@ -300,7 +299,7 @@ public class EResourceXmiHandler extends SAXXMIHandler {
             // If the xmi:uuid attribute is encountered ...
             if (qName.equals(UUID_ATTRIB)) {
                 ObjectID uuid = getObjectIDFromString(attribs.getValue(i));
-                Assertion.isNotNull(uuid);
+                CoreArgCheck.isNotNull(uuid);
 
                 EObject eProxy = this.eResource.findInEProxyCache(uuid);
 
@@ -370,8 +369,10 @@ public class EResourceXmiHandler extends SAXXMIHandler {
     protected ObjectID patch_defect14449( final EObject obj,
                                           final ObjectID objUuid,
                                           final int attribsIndex ) {
-        Assertion.assertTrue(attribsIndex >= 0 && attribsIndex < attribs.getLength());
-        Assertion.assertTrue(attribs.getQName(attribsIndex).equals(UUID_ATTRIB));
+        CoreArgCheck.isTrue(attribsIndex >= 0 && attribsIndex < attribs.getLength(),
+                            "Attributes Index " + attribsIndex + " out of range"); //$NON-NLS-1$ //$NON-NLS-2$
+        CoreArgCheck.isTrue(attribs.getQName(attribsIndex).equals(UUID_ATTRIB),
+                            "QName " + attribs.getQName(attribsIndex) + " does not match " + UUID_ATTRIB); //$NON-NLS-1$ //$NON-NLS-2$
 
         if (obj instanceof ModelImport) {
             final ModelImport modelImport = (ModelImport)obj;

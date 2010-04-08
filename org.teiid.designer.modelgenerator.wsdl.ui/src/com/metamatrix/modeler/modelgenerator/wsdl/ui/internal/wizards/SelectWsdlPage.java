@@ -53,10 +53,10 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -1023,11 +1023,11 @@ public class SelectWsdlPage extends WizardPage
     private IContainer validateFileAndFolder( final Text fileText,
                                               final Text folderText,
                                               final String fileExtension ) throws CoreException {
-        ArgCheck.isNotNull(fileText);
-        ArgCheck.isNotNull(folderText);
-        ArgCheck.isNotNull(fileExtension);
+        CoreArgCheck.isNotNull(fileText);
+        CoreArgCheck.isNotNull(folderText);
+        CoreArgCheck.isNotNull(fileExtension);
         String fileName = fileText.getText();
-        if (StringUtil.isEmpty(fileName)) {
+        if (CoreStringUtil.isEmpty(fileName)) {
             WizardUtil.setPageComplete(this, getString("missingFileMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
         } else {
             String problem = ModelUtilities.validateModelName(fileName, ModelerCore.MODEL_FILE_EXTENSION);
@@ -1037,7 +1037,7 @@ public class SelectWsdlPage extends WizardPage
                 targetModelLocation = null;
             } else {
                 final String folderName = folderText.getText();
-                if (StringUtil.isEmpty(folderName)) {
+                if (CoreStringUtil.isEmpty(folderName)) {
                     WizardUtil.setPageComplete(this, getString("missingFolderMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
                 } else {
                     final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);

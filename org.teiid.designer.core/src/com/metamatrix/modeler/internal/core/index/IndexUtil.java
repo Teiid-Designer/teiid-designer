@@ -17,13 +17,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
+import com.metamatrix.api.exception.query.QueryMetadataException;
 import com.metamatrix.core.MetaMatrixCoreException;
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.index.IIndex;
 import com.metamatrix.core.index.IIndexer;
 import com.metamatrix.core.index.SimpleIndexUtil;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -109,7 +109,7 @@ public class IndexUtil {
                                         final String indexDirectoryPath,
                                         final String indexFileName ) throws ModelerCoreException {
         if (resource == null) {
-            Assertion.isNotNull(resource, ModelerCore.Util.getString("IndexUtil.The_Resource_reference_may_not_be_null_1")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(resource, ModelerCore.Util.getString("IndexUtil.The_Resource_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
 
         try {
@@ -183,9 +183,8 @@ public class IndexUtil {
                                       boolean reuseExistingFile,
                                       boolean addResource ) throws ModelerCoreException {
 
-        if (mResource == null) {
-            Assertion.isNotNull(mResource, ModelerCore.Util.getString("IndexUtil.The_Resource_reference_may_not_be_null_1")); //$NON-NLS-1$
-        }
+        CoreArgCheck.isNotNull(mResource, ModelerCore.Util.getString("IndexUtil.The_Resource_reference_may_not_be_null_1")); //$NON-NLS-1$
+
         try {
             String resourceFileName = mResource.getEmfResource().getURI().lastSegment();
             // runtime index
@@ -333,53 +332,53 @@ public class IndexUtil {
     }
 
     public static String getRuntimeIndexFileName( final ModelResource model ) {
-        ArgCheck.isNotNull(model);
+        CoreArgCheck.isNotNull(model);
         return getRuntimeIndexFileName(model.getResource());
     }
 
     public static String getRuntimeIndexFileName( final Resource model ) {
-        ArgCheck.isNotNull(model);
+        CoreArgCheck.isNotNull(model);
         ModelResource mResource = ModelWorkspaceManager.getModelWorkspaceManager().findModelResource(model);
         return getRuntimeIndexFileName(mResource);
     }
 
     public static String getRuntimeIndexFileName( final IResource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         final String resourcePath = resource.getFullPath().toString();
         return getRuntimeIndexFileName(resourcePath);
     }
 
     public static String getRuntimeIndexFileName( final String fullPath ) {
-        ArgCheck.isNotNull(fullPath);
+        CoreArgCheck.isNotNull(fullPath);
         return getIndexFileName(fullPath, IndexConstants.INDEX_EXT);
     }
 
     public static String getSearchIndexFileName( final ModelResource model ) {
-        ArgCheck.isNotNull(model);
+        CoreArgCheck.isNotNull(model);
         return getSearchIndexFileName(model.getResource());
     }
 
     public static String getSearchIndexFileName( final Resource model ) {
-        ArgCheck.isNotNull(model);
+        CoreArgCheck.isNotNull(model);
         ModelResource mResource = ModelWorkspaceManager.getModelWorkspaceManager().findModelResource(model);
         return getSearchIndexFileName(mResource);
     }
 
     public static String getSearchIndexFileName( final IResource resource ) {
-        ArgCheck.isNotNull(resource);
+        CoreArgCheck.isNotNull(resource);
         final String resourcePath = resource.getFullPath().toString();
         return getSearchIndexFileName(resourcePath);
     }
 
     public static String getSearchIndexFileName( final String fullPath ) {
-        ArgCheck.isNotNull(fullPath);
+        CoreArgCheck.isNotNull(fullPath);
         return getIndexFileName(fullPath, IndexConstants.SEARCH_INDEX_EXT);
     }
 
     public static String getIndexFileName( final String fullPath,
                                            final String extension ) {
-        ArgCheck.isNotNull(fullPath);
-        ArgCheck.isNotNull(extension);
+        CoreArgCheck.isNotNull(fullPath);
+        CoreArgCheck.isNotNull(extension);
         String pathForName = fullPath;
         // If the index file names should be case insensitive ...
         if (!CASE_SENSITIVE_INDEX_FILE_NAMES) {

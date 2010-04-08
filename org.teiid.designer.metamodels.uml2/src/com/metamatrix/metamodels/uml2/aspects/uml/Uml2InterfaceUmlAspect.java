@@ -15,7 +15,7 @@ import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Interface;
 import org.eclipse.uml2.uml.Property;
 import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlClassifier;
@@ -100,7 +100,7 @@ public class Uml2InterfaceUmlAspect
 	}
 	
 	protected Interface assertUmlInterface(Object eObject) {
-		ArgCheck.isInstanceOf(Interface.class, eObject);
+		CoreArgCheck.isInstanceOf(Interface.class, eObject);
     
 		return (Interface)eObject;
 	}

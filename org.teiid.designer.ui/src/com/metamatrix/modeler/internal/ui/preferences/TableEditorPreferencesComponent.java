@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.table.EObjectPropertiesOrderPreferences;
 import com.metamatrix.modeler.internal.ui.table.PropertyOrder;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -329,7 +329,7 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
         }
 
         public String getText( Object element ) {
-            return StringUtil.computePluralForm(StringUtil.computeDisplayableForm(element.toString()));
+            return CoreStringUtil.computePluralForm(CoreStringUtil.computeDisplayableForm(element.toString()));
         }
 
         public void addListener( ILabelProviderListener listener ) {

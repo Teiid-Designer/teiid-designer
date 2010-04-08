@@ -49,7 +49,7 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.modelgenerator.salesforce.SalesforceImportWizardManager;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.DataModel;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.SalesforceField;
@@ -61,7 +61,7 @@ import com.metamatrix.ui.internal.util.WizardUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 
 public class SelectSalesforceObjectsPage extends AbstractWizardPage
-    implements Listener, FileUtils.Constants, StringUtil.Constants, ModelGeneratorSalesforceUiConstants,
+    implements Listener, FileUtils.Constants, CoreStringUtil.Constants, ModelGeneratorSalesforceUiConstants,
     ModelGeneratorSalesforceUiConstants.Images, ModelGeneratorSalesforceUiConstants.HelpContexts, ISelectionChangedListener,
     ICheckStateListener {
 

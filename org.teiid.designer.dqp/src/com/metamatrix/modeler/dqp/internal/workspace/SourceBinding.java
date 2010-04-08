@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ExecutionAdmin;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * The binding between a model and one or more connectors.
@@ -33,7 +33,7 @@ public class SourceBinding {
                           String path,
                           Connector connector ) {
         this(name, path, Collections.singleton(connector));
-        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
     }
 
     /**
@@ -45,9 +45,9 @@ public class SourceBinding {
     public SourceBinding( String name,
                           String path,
                           Set<Connector> connectors ) {
-        ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
-        ArgCheck.isNotEmpty(path, "path"); //$NON-NLS-1$
-        ArgCheck.isNotEmpty(connectors, "connectors"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(path, "path"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(connectors, "connectors"); //$NON-NLS-1$
 
         this.name = name;
         this.path = path;
@@ -75,7 +75,7 @@ public class SourceBinding {
      * @throws IllegalArgumentException if connector being added is from a different server
      */
     public boolean addConnector( Connector connector ) {
-        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
 
         // make sure server is the same
         if (this.connectors.iterator().next().getType().getAdmin() != connector.getType().getAdmin()) {
@@ -115,7 +115,7 @@ public class SourceBinding {
      *         that is not part of this model binding
      */
     public void removeConnector( Connector connector ) {
-        ArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
 
         // don't allow last connector to be removed
         if ((this.connectors.size() == 1) && this.connectors.contains(connector)) {

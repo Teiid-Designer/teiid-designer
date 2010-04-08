@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.core.validation.ResourceValidationRule;
@@ -35,8 +35,8 @@ public class EmfResourceValidationRule implements ResourceValidationRule {
      * @since 4.2
      */
     public void validate(final Resource resource, final ValidationContext context) {
-	    ArgCheck.isNotNull(resource);
-	    ArgCheck.isNotNull(context);
+	    CoreArgCheck.isNotNull(resource);
+	    CoreArgCheck.isNotNull(context);
 	    // xsd validator generateds markers for XSDDiagnostics
 	    if(resource instanceof XSDResourceImpl) {
 	        return;

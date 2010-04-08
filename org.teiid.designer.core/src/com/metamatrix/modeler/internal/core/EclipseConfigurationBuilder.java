@@ -21,13 +21,15 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
-import com.metamatrix.core.modeler.util.ArgCheck;
 import com.metamatrix.core.plugin.PluginUtilities;
-import com.metamatrix.core.util.Assertion;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ExtensionDescriptor;
 import com.metamatrix.modeler.core.ExternalResourceDescriptor;
 import com.metamatrix.modeler.core.MappingAdapterDescriptor;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.ValidationDescriptor;
+import com.metamatrix.modeler.core.association.AssociationDescriptor;
+import com.metamatrix.modeler.core.container.ResourceDescriptor;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.internal.core.container.ResourceDescriptorImpl;
 import com.metamatrix.modeler.internal.core.metamodel.MetamodelDescriptorImpl;
@@ -241,9 +243,9 @@ public class EclipseConfigurationBuilder {
                                                                                                            ModelerCore.EXTENSION_POINT.RESOURCE_FACTORY.ID);
         if (resourceFactoryExtension == null) {
             final String extensionPointID = ModelerCore.EXTENSION_POINT.RESOURCE_FACTORY.UNIQUE_ID;
-            Assertion.isNotNull(resourceFactoryExtension,
-                                ModelerCore.Util.getString("EclipseConfigurationBuilder.Extension_point_not_defined", //$NON-NLS-1$
-                                                           extensionPointID));
+            CoreArgCheck.isNotNull(resourceFactoryExtension,
+                                   ModelerCore.Util.getString("EclipseConfigurationBuilder.Extension_point_not_defined", //$NON-NLS-1$
+                                                              extensionPointID));
         }
 
         // Go through all the extensions and build descriptors ...
@@ -345,15 +347,15 @@ public class EclipseConfigurationBuilder {
      */
     public static ExtensionDescriptor createAssociationProviderDescriptor( final IExtension extension ) {
         if (extension == null) {
-            ArgCheck.isNotNull(extension,
-                               ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(extension,
+                                   ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
         final String uniqueId = extension.getExtensionPointUniqueIdentifier();
         if (!ModelerCore.EXTENSION_POINT.ASSOCIATION_PROVIDER.UNIQUE_ID.equals(uniqueId)) {
-            ArgCheck.isTrue(ModelerCore.EXTENSION_POINT.ASSOCIATION_PROVIDER.UNIQUE_ID.equals(uniqueId),
-                            ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
-                                                       ModelerCore.EXTENSION_POINT.ASSOCIATION_PROVIDER.UNIQUE_ID,
-                                                       uniqueId));
+            CoreArgCheck.isTrue(ModelerCore.EXTENSION_POINT.ASSOCIATION_PROVIDER.UNIQUE_ID.equals(uniqueId),
+                                ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
+                                                           ModelerCore.EXTENSION_POINT.ASSOCIATION_PROVIDER.UNIQUE_ID,
+                                                           uniqueId));
         }
 
         final Bundle bundle = Platform.getBundle(extension.getNamespaceIdentifier());
@@ -390,15 +392,15 @@ public class EclipseConfigurationBuilder {
      */
     public static MappingAdapterDescriptor createModelObjectResolverDescriptor( final IExtension extension ) {
         if (extension == null) {
-            ArgCheck.isNotNull(extension,
-                               ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(extension,
+                                   ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
         final String uniqueId = extension.getExtensionPointUniqueIdentifier();
         if (!ModelerCore.EXTENSION_POINT.EOBJECT_MATCHER_FACTORY.UNIQUE_ID.equals(uniqueId)) {
-            ArgCheck.isTrue(ModelerCore.EXTENSION_POINT.EOBJECT_MATCHER_FACTORY.UNIQUE_ID.equals(uniqueId),
-                            ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
-                                                       ModelerCore.EXTENSION_POINT.EOBJECT_MATCHER_FACTORY.UNIQUE_ID,
-                                                       uniqueId));
+            CoreArgCheck.isTrue(ModelerCore.EXTENSION_POINT.EOBJECT_MATCHER_FACTORY.UNIQUE_ID.equals(uniqueId),
+                                ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
+                                                           ModelerCore.EXTENSION_POINT.EOBJECT_MATCHER_FACTORY.UNIQUE_ID,
+                                                           uniqueId));
         }
 
         final Bundle bundle = Platform.getBundle(extension.getNamespaceIdentifier());
@@ -436,15 +438,15 @@ public class EclipseConfigurationBuilder {
      */
     public static ExtensionDescriptor createDatatypeManagerDescriptor( final IExtension extension ) {
         if (extension == null) {
-            ArgCheck.isNotNull(extension,
-                               ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(extension,
+                                   ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
         final String uniqueId = extension.getExtensionPointUniqueIdentifier();
         if (!ModelerCore.EXTENSION_POINT.DATATYPE_MANAGER.UNIQUE_ID.equals(uniqueId)) {
-            ArgCheck.isTrue(ModelerCore.EXTENSION_POINT.DATATYPE_MANAGER.UNIQUE_ID.equals(uniqueId),
-                            ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
-                                                       ModelerCore.EXTENSION_POINT.DATATYPE_MANAGER.UNIQUE_ID,
-                                                       uniqueId));
+            CoreArgCheck.isTrue(ModelerCore.EXTENSION_POINT.DATATYPE_MANAGER.UNIQUE_ID.equals(uniqueId),
+                                ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
+                                                           ModelerCore.EXTENSION_POINT.DATATYPE_MANAGER.UNIQUE_ID,
+                                                           uniqueId));
         }
 
         final Bundle bundle = Platform.getBundle(extension.getNamespaceIdentifier());
@@ -482,15 +484,15 @@ public class EclipseConfigurationBuilder {
      */
     public static ExtensionDescriptor createInvocationFactoryHelperDescriptor( final IExtension extension ) {
         if (extension == null) {
-            ArgCheck.isNotNull(extension,
-                               ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(extension,
+                                   ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
         final String uniqueId = extension.getExtensionPointUniqueIdentifier();
         if (!ModelerCore.EXTENSION_POINT.INVOCATION_FACTORY_HELPER.UNIQUE_ID.equals(uniqueId)) {
-            ArgCheck.isTrue(ModelerCore.EXTENSION_POINT.INVOCATION_FACTORY_HELPER.UNIQUE_ID.equals(uniqueId),
-                            ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
-                                                       ModelerCore.EXTENSION_POINT.INVOCATION_FACTORY_HELPER.UNIQUE_ID,
-                                                       uniqueId));
+            CoreArgCheck.isTrue(ModelerCore.EXTENSION_POINT.INVOCATION_FACTORY_HELPER.UNIQUE_ID.equals(uniqueId),
+                                ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
+                                                           ModelerCore.EXTENSION_POINT.INVOCATION_FACTORY_HELPER.UNIQUE_ID,
+                                                           uniqueId));
         }
 
         final Bundle bundle = Platform.getBundle(extension.getNamespaceIdentifier());
@@ -528,15 +530,15 @@ public class EclipseConfigurationBuilder {
      */
     public static ExtensionDescriptor createResourceLoadOptionDescriptor( final IExtension extension ) {
         if (extension == null) {
-            ArgCheck.isNotNull(extension,
-                               ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(extension,
+                                   ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
         final String uniqueId = extension.getExtensionPointUniqueIdentifier();
         if (!ModelerCore.EXTENSION_POINT.RESOURCE_LOAD_OPTIONS.UNIQUE_ID.equals(uniqueId)) {
-            ArgCheck.isTrue(ModelerCore.EXTENSION_POINT.RESOURCE_LOAD_OPTIONS.UNIQUE_ID.equals(uniqueId),
-                            ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
-                                                       ModelerCore.EXTENSION_POINT.RESOURCE_LOAD_OPTIONS.UNIQUE_ID,
-                                                       uniqueId));
+            CoreArgCheck.isTrue(ModelerCore.EXTENSION_POINT.RESOURCE_LOAD_OPTIONS.UNIQUE_ID.equals(uniqueId),
+                                ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
+                                                           ModelerCore.EXTENSION_POINT.RESOURCE_LOAD_OPTIONS.UNIQUE_ID,
+                                                           uniqueId));
         }
 
         final Bundle bundle = Platform.getBundle(extension.getNamespaceIdentifier());
@@ -574,15 +576,15 @@ public class EclipseConfigurationBuilder {
      */
     public static ExtensionDescriptor createExternalResourceSetDescriptor( final IExtension extension ) {
         if (extension == null) {
-            ArgCheck.isNotNull(extension,
-                               ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(extension,
+                                   ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
         final String uniqueId = extension.getExtensionPointUniqueIdentifier();
         if (!ModelerCore.EXTENSION_POINT.EXTERNAL_RESOURCE_SET.UNIQUE_ID.equals(uniqueId)) {
-            ArgCheck.isTrue(ModelerCore.EXTENSION_POINT.EXTERNAL_RESOURCE_SET.UNIQUE_ID.equals(uniqueId),
-                            ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
-                                                       ModelerCore.EXTENSION_POINT.EXTERNAL_RESOURCE_SET.UNIQUE_ID,
-                                                       uniqueId));
+            CoreArgCheck.isTrue(ModelerCore.EXTENSION_POINT.EXTERNAL_RESOURCE_SET.UNIQUE_ID.equals(uniqueId),
+                                ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
+                                                           ModelerCore.EXTENSION_POINT.EXTERNAL_RESOURCE_SET.UNIQUE_ID,
+                                                           uniqueId));
         }
 
         final Bundle bundle = Platform.getBundle(extension.getNamespaceIdentifier());
@@ -631,15 +633,15 @@ public class EclipseConfigurationBuilder {
      */
     public static ExternalResourceDescriptor createExternalResourceDescriptor( final IExtension extension ) {
         if (extension == null) {
-            ArgCheck.isNotNull(extension,
-                               ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(extension,
+                                   ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
         final String uniqueId = extension.getExtensionPointUniqueIdentifier();
         if (!ModelerCore.EXTENSION_POINT.EXTERNAL_RESOURCE.UNIQUE_ID.equals(uniqueId)) {
-            ArgCheck.isTrue(ModelerCore.EXTENSION_POINT.EXTERNAL_RESOURCE.UNIQUE_ID.equals(uniqueId),
-                            ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
-                                                       ModelerCore.EXTENSION_POINT.EXTERNAL_RESOURCE.UNIQUE_ID,
-                                                       uniqueId));
+            CoreArgCheck.isTrue(ModelerCore.EXTENSION_POINT.EXTERNAL_RESOURCE.UNIQUE_ID.equals(uniqueId),
+                                ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
+                                                           ModelerCore.EXTENSION_POINT.EXTERNAL_RESOURCE.UNIQUE_ID,
+                                                           uniqueId));
         }
 
         // Create the ExternalResourceDescriptor instance
@@ -780,15 +782,15 @@ public class EclipseConfigurationBuilder {
      */
     public static List createValidationDescriptor( final IExtension extension ) {
         if (extension == null) {
-            ArgCheck.isNotNull(extension,
-                               ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(extension,
+                                   ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
         final String uniqueId = extension.getExtensionPointUniqueIdentifier();
         if (!ModelerCore.EXTENSION_POINT.VALIDATION.UNIQUE_ID.equals(uniqueId)) {
-            ArgCheck.isTrue(ModelerCore.EXTENSION_POINT.VALIDATION.UNIQUE_ID.equals(uniqueId),
-                            ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
-                                                       ModelerCore.EXTENSION_POINT.VALIDATION.UNIQUE_ID,
-                                                       uniqueId));
+            CoreArgCheck.isTrue(ModelerCore.EXTENSION_POINT.VALIDATION.UNIQUE_ID.equals(uniqueId),
+                                ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
+                                                           ModelerCore.EXTENSION_POINT.VALIDATION.UNIQUE_ID,
+                                                           uniqueId));
         }
 
         if (ModelerCore.DEBUG_VALIDATION) {
@@ -863,15 +865,15 @@ public class EclipseConfigurationBuilder {
      */
     public static MetamodelDescriptor createMetamodelDescriptor( final IExtension extension ) {
         if (extension == null) {
-            ArgCheck.isNotNull(extension,
-                               ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
+            CoreArgCheck.isNotNull(extension,
+                                   ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
         final String uniqueId = extension.getExtensionPointUniqueIdentifier();
         if (!ModelerCore.EXTENSION_POINT.METAMODEL.UNIQUE_ID.equals(uniqueId)) {
-            ArgCheck.isTrue(ModelerCore.EXTENSION_POINT.METAMODEL.UNIQUE_ID.equals(uniqueId),
-                            ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
-                                                       ModelerCore.EXTENSION_POINT.METAMODEL.UNIQUE_ID,
-                                                       uniqueId));
+            CoreArgCheck.isTrue(ModelerCore.EXTENSION_POINT.METAMODEL.UNIQUE_ID.equals(uniqueId),
+                                ModelerCore.Util.getString("EclipseConfigurationBuilder.The_IExtension_must_be_an_extension_for_the_point", //$NON-NLS-1$
+                                                           ModelerCore.EXTENSION_POINT.METAMODEL.UNIQUE_ID,
+                                                           uniqueId));
         }
 
         final Bundle bundle = Platform.getBundle(extension.getNamespaceIdentifier());

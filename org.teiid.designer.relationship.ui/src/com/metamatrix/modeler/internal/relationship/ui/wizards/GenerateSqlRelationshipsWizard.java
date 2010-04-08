@@ -15,14 +15,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.relationship.ui.PluginConstants;
 import com.metamatrix.modeler.relationship.ui.UiConstants;
 import com.metamatrix.modeler.relationship.ui.UiPlugin;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
 
 public class GenerateSqlRelationshipsWizard extends AbstractWizard implements
-		PluginConstants.Images, IImportWizard, StringUtil.Constants,
+		PluginConstants.Images, IImportWizard, CoreStringUtil.Constants,
 		UiConstants {
 
 	// ============================================================================================================================

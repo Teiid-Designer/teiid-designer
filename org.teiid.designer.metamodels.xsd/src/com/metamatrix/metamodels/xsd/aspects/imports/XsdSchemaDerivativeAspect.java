@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.xsd.XsdPlugin;
@@ -50,7 +50,7 @@ public class XsdSchemaDerivativeAspect extends AbstractMetamodelAspect implement
      * @since 4.3
      */
     public String getModelLocation(EObject eObject) {
-        ArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
         XSDSchemaDirective xsdDerivative = (XSDSchemaDirective) eObject;
         return xsdDerivative.getSchemaLocation();
     }
@@ -61,7 +61,7 @@ public class XsdSchemaDerivativeAspect extends AbstractMetamodelAspect implement
      */
     public IPath getModelPath(EObject eObject) {
         
-        ArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
         XSDSchemaDirective xsdDerivative = (XSDSchemaDirective) eObject;
         XSDSchema schema = xsdDerivative.getResolvedSchema();
         
@@ -157,7 +157,7 @@ public class XsdSchemaDerivativeAspect extends AbstractMetamodelAspect implement
      * @see com.metamatrix.modeler.core.metamodel.aspect.ImportsAspect#getModelUuid(org.eclipse.emf.ecore.EObject)
      */
     public String getModelUuid(EObject eObject) {
-        ArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
+        CoreArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
         XSDSchemaDirective xsdDerivative = (XSDSchemaDirective) eObject;
         XSDSchema schema = xsdDerivative.getResolvedSchema();
         if(schema != null) {
@@ -224,8 +224,8 @@ public class XsdSchemaDerivativeAspect extends AbstractMetamodelAspect implement
      * @since 4.3
      */
     public void setModelLocation(EObject eObject, URI uri) {
-        ArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
-        ArgCheck.isNotNull(uri);
+        CoreArgCheck.isInstanceOf(XSDSchemaDirective.class, eObject);
+        CoreArgCheck.isNotNull(uri);
 
         final XSDSchemaDirective derivative = (XSDSchemaDirective)eObject;
         Resource eResource = derivative.eResource();

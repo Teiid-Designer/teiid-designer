@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.Base64;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
@@ -130,7 +130,7 @@ public final class ServerManager implements EventManager {
      */
     @Override
     public boolean addListener( IExecutionConfigurationListener listener ) {
-        ArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
         return this.listeners.addIfAbsent(listener);
     }
 
@@ -141,7 +141,7 @@ public final class ServerManager implements EventManager {
      * @return a status indicating if the server was added to the registry
      */
     public IStatus addServer( Server server ) {
-        ArgCheck.isNotNull(server, "server"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(server, "server"); //$NON-NLS-1$
         return internalAddServer(server, true);
     }
 
@@ -152,7 +152,7 @@ public final class ServerManager implements EventManager {
      * @return the connectors (never <code>null</code> but can be empty)
      */
     public Collection<Connector> getConnectorsForModel( String modelName ) {
-        ArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
         Collection<Connector> connectors = new ArrayList<Connector>();
 
         for (Server server : getServers()) {
@@ -181,7 +181,7 @@ public final class ServerManager implements EventManager {
      * @return the requested server or <code>null</code> if not found in the registry
      */
     public Server getServer( String url ) {
-        ArgCheck.isNotNull(url, "url"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(url, "url"); //$NON-NLS-1$
 
         for (Server server : getServers()) {
             if (url.equals(server.getUrl())) {
@@ -211,7 +211,7 @@ public final class ServerManager implements EventManager {
      * @return the source bindings (never <code>null</code> but can be empty)
      */
     public Collection<SourceBinding> getSourceBindingsForModel( String modelName ) {
-        ArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(modelName, "modelName"); //$NON-NLS-1$
         Collection<SourceBinding> bindings = new ArrayList<SourceBinding>();
 
         for (Server server : getServers()) {
@@ -323,7 +323,7 @@ public final class ServerManager implements EventManager {
     }
 
     public boolean isDefaultServer( Server server ) {
-        ArgCheck.isNotNull(server, "server"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(server, "server"); //$NON-NLS-1$
         if (this.defaultServer == null) {
             return false;
         }
@@ -335,7 +335,7 @@ public final class ServerManager implements EventManager {
      * @return <code>true</code> if the server has been registered
      */
     public boolean isRegistered( Server server ) {
-        ArgCheck.isNotNull(server, "server"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(server, "server"); //$NON-NLS-1$
 
         try {
             this.serverLock.readLock().lock();
@@ -386,7 +386,7 @@ public final class ServerManager implements EventManager {
      */
     @Override
     public boolean removeListener( IExecutionConfigurationListener listener ) {
-        ArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(listener, "listener"); //$NON-NLS-1$
         return this.listeners.remove(listener);
     }
 
@@ -395,7 +395,7 @@ public final class ServerManager implements EventManager {
      * @return a status indicating if the specified server was removed from the registry (never <code>null</code>)
      */
     public IStatus removeServer( Server server ) {
-        ArgCheck.isNotNull(server, "server"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(server, "server"); //$NON-NLS-1$
         return internalRemoveServer(server, true);
     }
 
@@ -522,8 +522,8 @@ public final class ServerManager implements EventManager {
      */
     public IStatus updateServer( Server replacedServer,
                                  Server updatedServer ) {
-        ArgCheck.isNotNull(replacedServer, "previousServerVersion"); //$NON-NLS-1$
-        ArgCheck.isNotNull(updatedServer, "newServerVersion"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(replacedServer, "previousServerVersion"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(updatedServer, "newServerVersion"); //$NON-NLS-1$
 
         IStatus status = null;
 

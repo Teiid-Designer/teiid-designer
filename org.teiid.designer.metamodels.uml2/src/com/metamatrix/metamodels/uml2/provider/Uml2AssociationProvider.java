@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.uml2.uml.AggregationKind;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Property;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.modeler.core.association.AssociationDescriptor;
 import com.metamatrix.modeler.core.association.AssociationProvider;
@@ -255,7 +255,7 @@ public class Uml2AssociationProvider implements AssociationProvider {
      * @return
      */
     public static List getClassifiers( final List eObjects ) {
-        ArgCheck.isNotNull(eObjects);
+        CoreArgCheck.isNotNull(eObjects);
         final List result = new ArrayList(eObjects.size());
         for (Iterator iter = eObjects.iterator(); iter.hasNext();) {
             final Object obj = iter.next();
@@ -281,8 +281,8 @@ public class Uml2AssociationProvider implements AssociationProvider {
      */
     public static boolean containsValidObjects( final List eObjects,
                                                 final Class[] validClasses ) {
-        ArgCheck.isNotNull(eObjects);
-        ArgCheck.isNotNull(validClasses);
+        CoreArgCheck.isNotNull(eObjects);
+        CoreArgCheck.isNotNull(validClasses);
         for (Iterator iter = eObjects.iterator(); iter.hasNext();) {
             final Object obj = iter.next();
             // Return false if the object is null

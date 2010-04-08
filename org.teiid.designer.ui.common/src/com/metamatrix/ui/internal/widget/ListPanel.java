@@ -29,8 +29,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.ui.internal.InternalUiConstants.Widgets;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -40,7 +40,7 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
  * 
  * @since 4.0
  */
-public class ListPanel extends AbstractVerticalButtonPanel implements StringUtil.Constants, Widgets {
+public class ListPanel extends AbstractVerticalButtonPanel implements CoreStringUtil.Constants, Widgets {
 
     public static interface Constants {
         int NONE = 0;
@@ -144,7 +144,7 @@ public class ListPanel extends AbstractVerticalButtonPanel implements StringUtil
                                            final int itemStyle,
                                            final int gridStyle,
                                            final java.util.List items ) {
-        ArgCheck.isNotNull(controller);
+        CoreArgCheck.isNotNull(controller);
         this.ctrlr = controller;
         final TableViewer viewer = getTableViewer();
 
@@ -367,7 +367,7 @@ public class ListPanel extends AbstractVerticalButtonPanel implements StringUtil
      * @since 4.0
      */
     public boolean contains( final Object element ) {
-        ArgCheck.isNotNull(element);
+        CoreArgCheck.isNotNull(element);
         final TableItem[] items = getTableViewer().getTable().getItems();
         for (int ndx = items.length; --ndx >= 0;) {
             if (element.equals(items[ndx].getData())) {

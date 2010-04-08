@@ -7,7 +7,7 @@
  */
 package com.metamatrix.modeler.jdbc.metadata.impl;
 
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.jdbc.JdbcImportSettings;
 import com.metamatrix.modeler.jdbc.metadata.JdbcCatalog;
 import com.metamatrix.modeler.jdbc.metadata.JdbcDatabase;
@@ -41,7 +41,7 @@ public class ImportSettingsSelectionVisitor implements JdbcNodeVisitor {
      */
     public ImportSettingsSelectionVisitor( final JdbcImportSettings settings ) {
         super();
-        ArgCheck.isNotNull(settings);
+        CoreArgCheck.isNotNull(settings);
         this.settings = settings;
     }
 

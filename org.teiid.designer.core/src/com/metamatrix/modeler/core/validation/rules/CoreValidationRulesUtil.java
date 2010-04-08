@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.ValidationContext;
 import com.metamatrix.modeler.core.validation.ValidationProblem;
@@ -37,8 +37,8 @@ public class CoreValidationRulesUtil {
      * @param ValidationResult to add problems for
      */
     public static void validateStringLength(final ValidationResult result, final int maxLength, final String stringToValidate) {
-        ArgCheck.isNotNull(stringToValidate);
-        ArgCheck.isNotNull(result);
+        CoreArgCheck.isNotNull(stringToValidate);
+        CoreArgCheck.isNotNull(result);
         
         final StringNameValidator validator = new StringNameValidator(maxLength);
         final String reasonInvalid = validator.checkNameLength(stringToValidate);
@@ -56,8 +56,8 @@ public class CoreValidationRulesUtil {
      * @param ValidationResult to add problems for
      */
     public static void validateStringLength(final ValidationResult result, final String stringToValidate) {
-        ArgCheck.isNotNull(stringToValidate);
-        ArgCheck.isNotNull(result);
+        CoreArgCheck.isNotNull(stringToValidate);
+        CoreArgCheck.isNotNull(result);
         
         final StringNameValidator validator = new StringNameValidator();
         final String reasonInvalid = validator.checkNameLength(stringToValidate);
@@ -77,8 +77,8 @@ public class CoreValidationRulesUtil {
      * one of the {@link IStatus} severity codes.
      */
     public static void validateStringNameChars(final ValidationResult result, final String stringToValidate, final char[] invalidChars, final int invalidCharacterSeverity) {
-        ArgCheck.isNotNull(stringToValidate);                
-        ArgCheck.isNotNull(result);
+        CoreArgCheck.isNotNull(stringToValidate);                
+        CoreArgCheck.isNotNull(result);
         final StringNameValidator validator = new StringNameValidator(invalidChars);
         final String reasonInvalid = validator.checkNameCharacters(stringToValidate);
         if ( reasonInvalid != null ) {
@@ -109,8 +109,8 @@ public class CoreValidationRulesUtil {
 	 * @param ValidationResult to add problems for
 	 */
 	public static void validateStringName(final ValidationResult result, final int maxLength, final String stringToValidate, final char[] invalidChars) {
-		ArgCheck.isNotNull(stringToValidate);                
-		ArgCheck.isNotNull(result);
+		CoreArgCheck.isNotNull(stringToValidate);                
+		CoreArgCheck.isNotNull(result);
 		final StringNameValidator validator = new StringNameValidator(maxLength, invalidChars);
 		final String reasonInvalid = validator.checkValidName(stringToValidate);
 		if ( reasonInvalid != null ) {

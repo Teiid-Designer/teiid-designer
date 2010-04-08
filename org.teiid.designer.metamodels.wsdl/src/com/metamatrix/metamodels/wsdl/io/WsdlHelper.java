@@ -22,7 +22,7 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import com.metamatrix.common.protocol.URLHelper;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.internal.core.xml.SAXBuilderHelper;
 import com.metamatrix.metamodels.wsdl.io.WsdlConstants.Xsd;
 
@@ -77,7 +77,7 @@ public class WsdlHelper extends XMLHelperImpl implements WsdlConstants, Xsd {
             // If the imported wsdl's path is already absolute, the imported wsdl's absolute path
             // will be used.
             final URI resolvedUri = absoluteUri.resolve(uri);
-            final File file = URLHelper.createFileFromUrl(resolvedUri.toURL(), StringUtil.createFileName(uri.getPath()), ".wsdl"); //$NON-NLS-1$ 
+            final File file = URLHelper.createFileFromUrl(resolvedUri.toURL(), CoreStringUtil.createFileName(uri.getPath()), ".wsdl"); //$NON-NLS-1$ 
             final String path = "file:/" + file.getAbsolutePath(); //$NON-NLS-1$
             importElement.setAttribute(IMPORT_LOCATION, path);
             urlMap.put(file.getAbsolutePath(), resolvedUri.toString());

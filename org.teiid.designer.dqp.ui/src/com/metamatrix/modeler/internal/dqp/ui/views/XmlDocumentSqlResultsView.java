@@ -27,9 +27,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.dqp.ui.actions.CopyXmlResultsToClipboardAction;
 import com.metamatrix.modeler.internal.dqp.ui.actions.SaveXmlResultsToFileAction;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.IResults;
@@ -83,7 +83,7 @@ public final class XmlDocumentSqlResultsView extends AbstractResultsView impleme
     @Override
     protected Control createResultsControl(Composite theParent,
                                            IResults theResults) {
-        ArgCheck.isInstanceOf(XmlDocumentResultsModel.class, theResults);
+        CoreArgCheck.isInstanceOf(XmlDocumentResultsModel.class, theResults);
         
         XmlDocumentResultsModel resultsModel = (XmlDocumentResultsModel)theResults;
         
@@ -107,7 +107,7 @@ public final class XmlDocumentSqlResultsView extends AbstractResultsView impleme
 
                     // this.success gets set by the property listener method
                     if (this.success) {
-                        text = getI18nString("tooLargeDocumentSaved") + StringUtil.Constants.DBL_SPACE + this.saveToFileAction.getFileName(); //$NON-NLS-1$
+                        text = getI18nString("tooLargeDocumentSaved") + CoreStringUtil.Constants.DBL_SPACE + this.saveToFileAction.getFileName(); //$NON-NLS-1$
                     } else {
                         text = getI18nString("tooLargeDocumentSaveCancelled"); //$NON-NLS-1$
                     }

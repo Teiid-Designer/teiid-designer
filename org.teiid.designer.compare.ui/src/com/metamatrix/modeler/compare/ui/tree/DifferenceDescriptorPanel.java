@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.compare.DifferenceDescriptor;
 import com.metamatrix.modeler.compare.PropertyDifference;
 import com.metamatrix.modeler.compare.ui.UiConstants;
@@ -43,15 +43,15 @@ import com.metamatrix.ui.internal.util.WidgetFactory;
 /**
  * DifferenceDescriptorPanel.
  */
-public class DifferenceDescriptorPanel extends Composite implements UiConstants, StringUtil.Constants {
+public class DifferenceDescriptorPanel extends Composite implements UiConstants, CoreStringUtil.Constants {
 
     private static final String PREFIX = "DifferenceDescriptorPanel."; //$NON-NLS-1$
-    private static final String[] TBL_HDRS_OLDNEW = new String[] {StringUtil.Constants.EMPTY_STRING,
+    private static final String[] TBL_HDRS_OLDNEW = new String[] {CoreStringUtil.Constants.EMPTY_STRING,
         Util.getString(PREFIX + "nameHdr"), //$NON-NLS-1$
         Util.getString(PREFIX + "oldValueHdr"), //$NON-NLS-1$
         Util.getString(PREFIX + "newValueHdr")}; //$NON-NLS-1$
 
-    private static final String[] TBL_HDRS_FIRSTSECOND = new String[] {StringUtil.Constants.EMPTY_STRING,
+    private static final String[] TBL_HDRS_FIRSTSECOND = new String[] {CoreStringUtil.Constants.EMPTY_STRING,
         Util.getString(PREFIX + "nameHdr"), //$NON-NLS-1$
         Util.getString(PREFIX + "firstValueHdr"), //$NON-NLS-1$
         Util.getString(PREFIX + "secondValueHdr")}; //$NON-NLS-1$

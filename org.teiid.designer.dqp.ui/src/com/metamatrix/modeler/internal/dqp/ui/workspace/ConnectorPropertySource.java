@@ -21,8 +21,8 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
-import com.metamatrix.core.modeler.util.ArgCheck;
-import com.metamatrix.core.util.StringUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
 
 /**
@@ -44,8 +44,8 @@ public class ConnectorPropertySource implements IPropertySource {
      */
     public ConnectorPropertySource( ConnectorType type,
                                     Properties properties ) {
-        ArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
-        ArgCheck.isNotNull(properties, "properties"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(properties, "properties"); //$NON-NLS-1$
 
         this.type = type;
         this.properties = properties;
@@ -126,7 +126,7 @@ public class ConnectorPropertySource implements IPropertySource {
         String result = this.properties.getProperty(propDefn.getName());
 
         if (result == null) {
-            result = StringUtil.Constants.EMPTY_STRING;
+            result = CoreStringUtil.Constants.EMPTY_STRING;
         }
 
         return result;

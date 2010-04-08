@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
 import com.metamatrix.modeler.jdbc.metadata.Capabilities;
@@ -62,7 +62,7 @@ public class JdbcDatabaseImpl extends JdbcNodeImpl implements JdbcDatabase, Inte
                              final String name,
                              final JdbcNodeSelections selections ) {
         super(DATABASE, name, null);
-        ArgCheck.isNotNull(connection);
+        CoreArgCheck.isNotNull(connection);
         this.connection = connection;
         this.includes = new IncludesImpl(this);
         this.cache = new JdbcNodeCache();
@@ -385,7 +385,7 @@ public class JdbcDatabaseImpl extends JdbcNodeImpl implements JdbcDatabase, Inte
      * @return
      */
     public DatabaseInfo loadDatabaseInfo( final DatabaseMetaData metadata ) throws JdbcException {
-        ArgCheck.isNotNull(metadata);
+        CoreArgCheck.isNotNull(metadata);
         final DatabaseInfoImpl obj = new DatabaseInfoImpl();
         final List statuses = new ArrayList();
 
@@ -607,7 +607,7 @@ public class JdbcDatabaseImpl extends JdbcNodeImpl implements JdbcDatabase, Inte
         public SelectSchemasAndCatalogs( final String matchName,
                                          final boolean ignoreCase,
                                          final boolean isExcelOrAccess ) {
-            ArgCheck.isNotNull(matchName);
+            CoreArgCheck.isNotNull(matchName);
             this.matchName = matchName;
             this.ignoreCase = ignoreCase;
             this.isExcelOrAccess = isExcelOrAccess;

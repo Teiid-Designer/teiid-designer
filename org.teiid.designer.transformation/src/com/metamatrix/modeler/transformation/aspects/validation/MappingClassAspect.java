@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.modeler.util.ArgCheck;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
@@ -68,7 +68,7 @@ public class MappingClassAspect extends TransformationAspect {
      */
     @Override
     public boolean shouldValidate(EObject eObject, final ValidationContext context) {
-        ArgCheck.isInstanceOf(MappingClass.class, eObject);
+        CoreArgCheck.isInstanceOf(MappingClass.class, eObject);
         if(!context.shouldIgnore(eObject)) {
 	        MappingClass mappingClass = (MappingClass) eObject;
 	        Resource resource = mappingClass.eResource();
