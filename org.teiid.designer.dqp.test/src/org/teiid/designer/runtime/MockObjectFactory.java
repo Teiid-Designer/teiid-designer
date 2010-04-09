@@ -8,16 +8,21 @@
 
 package org.teiid.designer.runtime;
 
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.ConnectionFactory;
 import org.teiid.adminapi.PropertyDefinition;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 
 /**
  *
@@ -118,6 +123,29 @@ public class MockObjectFactory {
         return modelResource;
     }
 
+    /**
+     * Mocks static Eclipse classes used when running Eclipse. Needs to be called from the @Before method of the test class.
+     */
+    public static void initializeStaticWorkspaceClasses() {
+        // ResourcesPlugin
+        mockStatic(ResourcesPlugin.class);
+        IWorkspace workspace = mock(IWorkspace.class);
+        when(ResourcesPlugin.getWorkspace()).thenReturn(workspace);
+
+        // ModelWorkspaceManager
+        mockStatic(ModelWorkspaceManager.class);
+        ModelWorkspaceManager modelWorkspaceMgr = mock(ModelWorkspaceManager.class);
+        when(ModelWorkspaceManager.getModelWorkspaceManager()).thenReturn(modelWorkspaceMgr);
+
+        // ModelerCore
+        mockStatic(ModelerCore.class);
+        ModelerCore modelerCore = mock(ModelerCore.class);
+        when(ModelerCore.getPlugin()).thenReturn(modelerCore);
+    }
+
+    /**
+     * Prevent construction.
+     */
     private MockObjectFactory() {
         // nothing to do
     }

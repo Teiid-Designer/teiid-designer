@@ -58,7 +58,7 @@ public class ServerManagerTest {
     @Before
     public void beforeEach() throws Exception {
         MockitoAnnotations.initMocks(this);
-        TestUtils.initializeStaticWorkspaceClasses();
+        MockObjectFactory.initializeStaticWorkspaceClasses();
         this.mgr = new ServerManager(null);
     }
 

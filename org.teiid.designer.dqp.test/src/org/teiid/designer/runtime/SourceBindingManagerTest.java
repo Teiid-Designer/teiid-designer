@@ -45,7 +45,7 @@ public class SourceBindingManagerTest {
 
     @Before
     public void beforeEach() {
-        TestUtils.initializeStaticWorkspaceClasses();
+        MockObjectFactory.initializeStaticWorkspaceClasses();
 
         this.commonExecutionAdmin = MockObjectFactory.createExecutionAdmin();
         this.commonConnector = MockObjectFactory.createConnector("connectorName", "connectorTypeName");

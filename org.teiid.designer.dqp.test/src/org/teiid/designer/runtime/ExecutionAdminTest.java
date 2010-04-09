@@ -36,7 +36,7 @@ public class ExecutionAdminTest {
 
     @Before
     public void beforeEach() {
-        TestUtils.initializeStaticWorkspaceClasses();
+        MockObjectFactory.initializeStaticWorkspaceClasses();
     }
 
     private ExecutionAdmin getNewAdmin() throws Exception {
