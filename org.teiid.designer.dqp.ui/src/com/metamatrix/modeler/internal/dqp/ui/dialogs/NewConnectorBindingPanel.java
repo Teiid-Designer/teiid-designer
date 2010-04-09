@@ -39,10 +39,11 @@ import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.common.namedobject.BaseID;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
+import com.metamatrix.modeler.internal.dqp.ui.workspace.RuntimePropertySourceProvider;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
@@ -70,7 +71,7 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
 
     private Button btnShowExpertProps;
 
-    private ConnectorBindingsPropertySourceProvider sourceProvider;
+    private RuntimePropertySourceProvider sourceProvider;
 
     /**
      * @param parent
@@ -158,7 +159,7 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
         });
 
         this.propertyPage = new PropertySheetPage();
-        this.sourceProvider = getConnectorBindingsPropertySourceProvider();
+        this.sourceProvider = new RuntimePropertySourceProvider();
         this.sourceProvider.setEditable(true);
         this.propertyPage.setPropertySourceProvider(sourceProvider);
         this.propertyPage.createControl(c);
@@ -249,10 +250,6 @@ public class NewConnectorBindingPanel extends BaseNewConnectorBindingPanel {
         }
 
         return result;
-    }
-
-    private ConnectorBindingsPropertySourceProvider getConnectorBindingsPropertySourceProvider() {
-        return new ConnectorBindingsPropertySourceProvider(this.vdb);
     }
 
     /**

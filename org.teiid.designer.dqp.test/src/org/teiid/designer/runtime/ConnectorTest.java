@@ -18,14 +18,19 @@ import java.util.Properties;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.adminapi.ConnectionFactory;
 import org.teiid.adminapi.PropertyDefinition;
 
 /**
  * 
  */
+@RunWith( PowerMockRunner.class )
+@PrepareForTest( ConnectorType.class )
 public class ConnectorTest {
 
     private static final String CONNECTOR_NAME = "connectorName";

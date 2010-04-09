@@ -82,7 +82,7 @@ public class ParameterInfo implements Externalizable {
         out.writeInt(numColumns);
     }
 
-    public void readExternal( ObjectInput in ) throws IOException, ClassNotFoundException {
+    public void readExternal( ObjectInput in ) throws IOException {
         type = in.readInt();
         numColumns = in.readInt();
     }

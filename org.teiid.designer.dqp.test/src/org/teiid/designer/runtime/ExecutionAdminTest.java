@@ -31,7 +31,7 @@ import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
  * 
  */
 @RunWith( PowerMockRunner.class )
-@PrepareForTest( {ModelerCore.class, ModelWorkspaceManager.class, ResourcesPlugin.class} )
+@PrepareForTest( {ConnectorType.class, ModelerCore.class, ModelWorkspaceManager.class, ResourcesPlugin.class} )
 public class ExecutionAdminTest {
 
     @Before

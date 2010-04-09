@@ -137,10 +137,10 @@ public class SQLStates {
         return null;
     }
     
-    public static final class SQLStateClass {
-        private String codeBeginsWith;
-        private Set stateCodes = new HashSet();
-        private SQLStateClass(String beginsWith) {
+    static final class SQLStateClass {
+        String codeBeginsWith;
+        Set stateCodes = new HashSet();
+        SQLStateClass(String beginsWith) {
             this.codeBeginsWith = beginsWith;
         }
         

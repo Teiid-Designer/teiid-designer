@@ -7,19 +7,25 @@
  */
 package org.teiid.designer.runtime;
 
-import static org.mockito.Mockito.mock;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.adminapi.PropertyDefinition;
 
 /**
  * 
  */
+@RunWith( PowerMockRunner.class )
+@PrepareForTest( ConnectorType.class )
 public class ConnectorTypeTest {
 
     @Mock
@@ -54,13 +60,6 @@ public class ConnectorTypeTest {
     }
 
     @Test
-    public void shouldAllowCompareTo() {
-        ConnectorType type = mock(ConnectorType.class);
-        when(type.getName()).thenReturn("name_2");
-        new ConnectorType("name", propDefs, admin).compareTo(type);
-    }
-
-    @Test
     public void shouldAllowGetAdmin() {
         new ConnectorType("name", propDefs, admin).getAdmin();
     }
@@ -79,4 +78,36 @@ public class ConnectorTypeTest {
     public void shouldAllowGetPropertyDefinition() {
         new ConnectorType("name", propDefs, admin).getPropertyDefinition("propName");
     }
+
+    @Test
+    public void shouldCompareNameWhenSameServer() {
+        // setup
+        String serverUrl = "http://localhost:8080";
+        ConnectorType connectorTypeA = MockObjectFactory.createConnectorType("A");
+        when(connectorTypeA.getAdmin().getServer().getUrl()).thenReturn(serverUrl);
+        ConnectorType connectorTypeB = MockObjectFactory.createConnectorType("B");
+        when(connectorTypeB.getAdmin().getServer().getUrl()).thenReturn(serverUrl);
+
+        // tests
+        assertThat(connectorTypeA.compareTo(connectorTypeB) < 0, is(true));
+        assertThat(connectorTypeB.compareTo(connectorTypeA) > 0, is(true));
+        assertThat(connectorTypeA.compareTo(connectorTypeA), is(0));
+    }
+
+    @Test
+    public void shouldCompareServerUrlWhenDifferentServers() {
+        // setup
+        String serverUrlA = "http://localhost:8080";
+        String serverUrlB = "file:/users/sledge/text.txt";
+        ConnectorType connectorTypeA = MockObjectFactory.createConnectorType("A");
+        when(connectorTypeA.getAdmin().getServer().getUrl()).thenReturn(serverUrlA);
+        ConnectorType connectorTypeB = MockObjectFactory.createConnectorType("B");
+        when(connectorTypeB.getAdmin().getServer().getUrl()).thenReturn(serverUrlB);
+
+        // tests
+        assertThat(connectorTypeB.compareTo(connectorTypeA) < 0, is(true));
+        assertThat(connectorTypeA.compareTo(connectorTypeB) > 0, is(true));
+        assertThat(connectorTypeA.compareTo(connectorTypeA), is(0));
+    }
+
 }

@@ -76,7 +76,7 @@ public class TestUml2Compatibility extends TestCase {
                 names.add(name);
             }
             in.close();
-            return (String[])names.toArray(new String[names.size()]);
+            return names.toArray(new String[names.size()]);
         }
         return CoreStringUtil.Constants.EMPTY_STRING_ARRAY;
     }
@@ -84,7 +84,7 @@ public class TestUml2Compatibility extends TestCase {
     private static void sortAndOutputStrings( final List<String> strings ) {
         Collections.sort(strings, String.CASE_INSENSITIVE_ORDER);
         for (final Iterator<String> iter = strings.iterator(); iter.hasNext();) {
-            final String str = (String)iter.next();
+            final String str = iter.next();
             System.out.println("    " + str); //$NON-NLS-1$
         }
     }

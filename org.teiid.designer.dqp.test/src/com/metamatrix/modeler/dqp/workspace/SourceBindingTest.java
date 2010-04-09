@@ -15,8 +15,11 @@ import java.util.HashSet;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
@@ -25,6 +28,8 @@ import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
 /**
  * 
  */
+@RunWith( PowerMockRunner.class )
+@PrepareForTest( ConnectorType.class )
 public class SourceBindingTest {
 
     private static final Set<Connector> NULL_CONNECTORS = null;
