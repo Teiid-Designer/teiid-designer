@@ -18,22 +18,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.util.Collection;
 import java.util.Collections;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 
 /**
  * 
  */
-@RunWith( PowerMockRunner.class )
-@PrepareForTest( {ModelerCore.class, ModelWorkspaceManager.class, ResourcesPlugin.class} )
 public class ServerManagerTest {
     private static final String MODEL1 = "Model1";
 
@@ -58,7 +50,6 @@ public class ServerManagerTest {
     @Before
     public void beforeEach() throws Exception {
         MockitoAnnotations.initMocks(this);
-        MockObjectFactory.initializeStaticWorkspaceClasses();
         this.mgr = new ServerManager(null);
     }
 

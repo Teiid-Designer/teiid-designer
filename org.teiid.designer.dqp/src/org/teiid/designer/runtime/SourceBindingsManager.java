@@ -257,7 +257,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
             if (binding.getConnectors().contains(connector)) result.add(binding);
         }
 
-        return Collections.EMPTY_LIST;
+        return result;
     }
 
     /**
