@@ -8,7 +8,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
 Require-Bundle: org.teiid.designer.core,
  org.teiid.designer.metamodels.core,
- teiid_embedded_query,
  org.eclipse.xsd,
  org.eclipse.emf.mapping,
  org.eclipse.emf.ecore.xmi,
@@ -17,7 +16,9 @@ Require-Bundle: org.teiid.designer.core,
  org.junit4,
  org.jdom,
  org.teiid.core.designer,
- org.teiid.core.designer.test
+ org.teiid.core.designer.test,
+ org.teiid.designer.legacy,
+ teiid_embedded_query
 Export-Package: com.metamatrix.modeler.core,
  com.metamatrix.modeler.core.compare,
  com.metamatrix.modeler.core.metamodel,

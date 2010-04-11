@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xsd,
  org.teiid.designer.core,
  org.teiid.core.designer,
- teiid_embedded_query,
- org.teiid.designer.metamodels.core
+ org.teiid.designer.metamodels.core,
+ org.teiid.designer.legacy
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

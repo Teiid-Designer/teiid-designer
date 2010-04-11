@@ -24,13 +24,14 @@ Require-Bundle: org.teiid.designer.core,
  org.teiid.designer.metamodels.webservice,
  org.teiid.core.designer,
  org.teiid.designer.mapping,
- teiid_embedded_query,
  org.eclipse.emf.mapping,
  org.teiid.designer.metamodels.xsd,
  org.eclipse.xsd.edit,
  org.teiid.designer.metamodels.transformation,
  org.teiid.designer.metamodels.core,
  org.eclipse.core.resources,
- org.teiid.designer.udf
+ org.teiid.designer.udf,
+ org.teiid.designer.legacy,
+ teiid_embedded_query
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

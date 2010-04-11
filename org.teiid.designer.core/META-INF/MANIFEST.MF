@@ -80,7 +80,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xsd,
  org.eclipse.emf.mapping,
  org.teiid.core.designer,
- teiid_embedded_query,
- org.jdom
+ org.jdom,
+ org.teiid.designer.legacy,
+ teiid_embedded_query
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

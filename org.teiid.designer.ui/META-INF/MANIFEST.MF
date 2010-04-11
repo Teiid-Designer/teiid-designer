@@ -70,7 +70,6 @@ Require-Bundle: org.eclipse.ui.cheatsheets,
  org.apache.ant,
  org.teiid.core.designer,
  org.teiid.designer.metamodels.function,
- teiid_embedded_query,
  org.eclipse.emf.mapping,
  org.eclipse.xsd,
  org.eclipse.emf.ecore.edit,
@@ -79,6 +78,7 @@ Require-Bundle: org.eclipse.ui.cheatsheets,
  org.teiid.designer.metamodels.diagram,
  org.teiid.designer.metamodels.transformation,
  org.teiid.designer.metamodels.core,
- org.jdom
+ org.jdom,
+ org.teiid.designer.legacy
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

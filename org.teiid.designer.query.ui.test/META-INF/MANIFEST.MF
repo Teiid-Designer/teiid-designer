@@ -9,4 +9,5 @@ Export-Package: com.metamatrix.query.internal.ui.sqleditor.component
 Bundle-Localization: plugin
 Require-Bundle: org.teiid.designer.query.ui,
  org.junit4,
- teiid_embedded_query
+ teiid_embedded_query,
+ org.teiid.designer.legacy

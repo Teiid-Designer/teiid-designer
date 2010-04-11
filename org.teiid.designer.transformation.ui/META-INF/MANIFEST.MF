@@ -45,10 +45,11 @@ Require-Bundle: org.eclipse.ui.ide,
  org.teiid.designer.tools.textimport.ui,
  org.teiid.designer.relational.ui,
  org.teiid.core.designer,
- teiid_embedded_query,
  org.teiid.designer.metamodels.core,
  org.eclipse.emf.mapping,
  org.teiid.designer.metamodels.transformation,
- org.teiid.designer.metamodels.function
+ org.teiid.designer.metamodels.function,
+ org.teiid.designer.legacy,
+ teiid_embedded_query
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

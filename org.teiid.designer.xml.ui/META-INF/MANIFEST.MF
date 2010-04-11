@@ -31,11 +31,11 @@ Require-Bundle: org.eclipse.ui.ide,
  org.teiid.designer.xml,
  org.eclipse.gef,
  org.teiid.core.designer,
- teiid_embedded_query,
  org.eclipse.core.runtime,
  org.eclipse.xsd,
  org.eclipse.emf.ecore.xmi,
  org.teiid.designer.metamodels.core,
- org.eclipse.emf.edit
+ org.eclipse.emf.edit,
+ org.teiid.designer.legacy
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

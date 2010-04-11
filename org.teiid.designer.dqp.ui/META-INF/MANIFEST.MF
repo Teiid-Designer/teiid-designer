@@ -50,6 +50,7 @@ Require-Bundle: org.eclipse.ui.views,
  org.jdom,
  org.apache.log4j,
  org.junit4,
- org.teiid.designer.vdb
+ org.teiid.designer.vdb,
+ org.teiid.designer.legacy
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

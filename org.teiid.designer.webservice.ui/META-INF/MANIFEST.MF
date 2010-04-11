@@ -31,7 +31,6 @@ Require-Bundle: org.eclipse.ui.cheatsheets,
  org.teiid.designer.core,
  org.teiid.core.designer,
  org.eclipse.ui.workbench.texteditor,
- teiid_embedded_query,
  org.teiid.designer.metamodels.webservice,
  org.eclipse.core.runtime,
  org.eclipse.emf.mapping,
@@ -46,6 +45,8 @@ Require-Bundle: org.eclipse.ui.cheatsheets,
  org.teiid.designer.metamodels.transformation,
  org.teiid.designer.metamodels.core,
  org.eclipse.core.resources,
- org.jdom
+ org.jdom,
+ org.teiid.designer.legacy,
+ teiid_embedded_query
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

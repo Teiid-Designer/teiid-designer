@@ -18,4 +18,5 @@ Require-Bundle: org.teiid.designer.transformation,
  org.eclipse.core.runtime,
  org.eclipse.emf.ecore,
  org.teiid.designer.metamodels.transformation,
- org.eclipse.emf.mapping
+ org.eclipse.emf.mapping,
+ org.teiid.designer.legacy

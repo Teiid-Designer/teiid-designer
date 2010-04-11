@@ -24,6 +24,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.teiid.designer.metamodels.core,
  org.eclipse.emf.edit,
  org.teiid.designer.transformation,
+ org.teiid.designer.legacy,
  org.teiid.designer.vdb,
  net.jcip.annotations;resolution:=optional
 Bundle-ActivationPolicy: lazy
