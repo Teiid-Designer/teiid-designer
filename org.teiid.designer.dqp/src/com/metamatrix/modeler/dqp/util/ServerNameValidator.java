@@ -64,7 +64,7 @@ public class ServerNameValidator extends StringNameValidator {
 
         // The remaining characters must be either alphabetic, digit or underscore character ...
         while (c != CharacterIterator.DONE) {
-            if (c != '.') {
+            if (c != '.' && c != '-') {
                 if (!(Character.isUnicodeIdentifierPart(c) || Character.isLetterOrDigit(c) || c == UNDERSCORE_CHARACTER)) {
                     final Object[] params = new Object[] {new Character(c), new Integer(index)};
                     final String msg = ModelerCore.Util.getString("StringNameValidator.The_character___{0}___(at_position_{1})_is_not_allowed;_only_alphabetic,_digit_or_underscore", params); //$NON-NLS-1$

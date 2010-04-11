@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -63,6 +62,11 @@ public class NewConnectorPanel extends Composite implements IChangeNotifier, IPr
 
     private static String getString( String theKey ) {
         return DqpUiConstants.UTIL.getStringOrKey(PREFIX + theKey);
+    }
+
+    private static String getString( String theKey,
+                                     Object obj ) {
+        return DqpUiConstants.UTIL.getString(PREFIX + theKey, obj);
     }
 
     private ListenerList changeListeners;
@@ -132,9 +136,9 @@ public class NewConnectorPanel extends Composite implements IChangeNotifier, IPr
     private void createNameAndTypeGroup( Composite theParent ) {
         Composite nameGroup = WidgetFactory.createGroup(theParent, getString("bindingName"), SWT.FILL, 1, 3); //$NON-NLS-1$
 
-        Label schemaNameLabel = new Label(nameGroup, SWT.NONE);
-        schemaNameLabel.setText(getString("name")); //$NON-NLS-1$
-        setGridData(schemaNameLabel, GridData.BEGINNING, false, GridData.CENTER, false);
+        // Label schemaNameLabel = new Label(nameGroup, SWT.NONE);
+        //schemaNameLabel.setText(getString("name")); //$NON-NLS-1$
+        // setGridData(schemaNameLabel, GridData.BEGINNING, false, GridData.CENTER, false);
 
         this.bindingNameText = WidgetFactory.createTextField(nameGroup, GridData.HORIZONTAL_ALIGN_FILL);
         this.bindingNameText.setEditable(true);
@@ -173,6 +177,20 @@ public class NewConnectorPanel extends Composite implements IChangeNotifier, IPr
         Collections.sort(typeNames);
         WidgetUtil.setComboItems(this.typeCombo, typeNames, null, false, this.currentType.getName());
         this.typeCombo.setVisibleItemCount(Math.min(10, this.connectorTypes.size()));
+        // Now we need to re-set the connectorTypes array to be compatible with combo box?
+
+        List<ConnectorType> sortedTypes = new ArrayList<ConnectorType>();
+        for (String name : typeNames) {
+            for (ConnectorType type : this.connectorTypes) {
+                if (type.getName().equals(name)) {
+                    sortedTypes.add(type);
+                    break;
+                }
+            }
+        }
+
+        this.connectorTypes.clear();
+        this.connectorTypes.addAll(sortedTypes);
     }
 
     private void createProperties( Composite theParent ) {
@@ -267,10 +285,10 @@ public class NewConnectorPanel extends Composite implements IChangeNotifier, IPr
             if (this.admin.getConnector(getConnectorName()) != null) {
                 // binding with that name already exists //MyCode : need check in the future
                 severity = IStatus.ERROR;
-                msg = DqpUiConstants.UTIL.getString("duplicateNameMsg", getConnectorName()); //$NON-NLS-1$
+                msg = getString("duplicateNameMsg", getConnectorName()); //$NON-NLS-1$
             } else {
                 severity = IStatus.OK;
-                msg = DqpUiConstants.UTIL.getString("nameIsValidMsg"); //$NON-NLS-1$
+                msg = getString("nameIsValidMsg"); //$NON-NLS-1$
             }
 
             result = new Status(severity, DqpUiConstants.PLUGIN_ID, IStatus.OK, msg, null);

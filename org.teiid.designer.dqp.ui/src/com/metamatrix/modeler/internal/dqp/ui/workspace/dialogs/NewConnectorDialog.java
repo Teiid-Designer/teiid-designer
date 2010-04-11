@@ -47,8 +47,8 @@ public class NewConnectorDialog extends ExtendedTitleAreaDialog implements IChan
      * @param type the initial type selected by the user (can be <code>null</code>)
      */
     public NewConnectorDialog( Shell parentShell,
-                                      ExecutionAdmin admin,
-                                      ConnectorType type) {
+                               ExecutionAdmin admin,
+                               ConnectorType type ) {
         super(parentShell, DqpUiPlugin.getDefault());
         CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
         this.admin = admin;
@@ -57,7 +57,7 @@ public class NewConnectorDialog extends ExtendedTitleAreaDialog implements IChan
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -75,6 +75,7 @@ public class NewConnectorDialog extends ExtendedTitleAreaDialog implements IChan
         this.pnlBindings = new NewConnectorPanel(mainComposite, this.admin, this.type);
         this.pnlBindings.addChangeListener(this);
         this.pnlBindings.setFocus();
+        this.pnlBindings.setReadonly(false);
 
         getShell().setText(DqpUiConstants.UTIL.getString(I18N_PREFIX + "name")); //$NON-NLS-1$
         setTitle(DqpUiConstants.UTIL.getString(I18N_PREFIX + "title")); //$NON-NLS-1$
