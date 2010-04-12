@@ -1,3 +1,4 @@
 Barry LaFond (blafond@redhat.com) - Project Lead
 John Verhaeg (jverhaeg@redhat.com)
 Dan Florian (dflorian@redhat.com)
+John Doyle (jdoyle@redhat.com)
