@@ -37,7 +37,7 @@
 	</condition>
 	<target name="local" unless="isInHudson">
 		<property name="WORKINGDIR" value="${basedir}/.." />
-		<property name="COMMON_TOOLS" value="${java.io.tmpdir}/downloads" />
+		<property name="COMMON_TOOLS" value="${java.io.tmpdir}/build/downloads" />
 	</target>
 
 	<!-- FIXME if required: use a newer version -->
@@ -113,16 +113,16 @@
 				<!-- fetch projects using psf file; create it if needed -->
 				<if>
 					<not>
-						<available file="psfs/athena.psf" type="file" />
+						<available file="${basedir}/psfs/athena.psf" type="file" />
 					</not>
 					<then>
 						<!-- FIXME if required: change these tag/branches -->
 						<property name="basebuilderTag" value="r35x_v20090811" />
 						<property name="commonrelengTag" value="HEAD" />
 
-						<debug>Create athena.psf file</debug>
+						<echo>Create ${basedir}/psfs/athena.psf file</echo>
 						<mkdir dir="psfs" />
-						<echo file="psfs/athena.psf">&lt;?xml version="1.0" encoding="UTF-8"?>
+						<echo file="${basedir}/psfs/athena.psf">&lt;?xml version="1.0" encoding="UTF-8"?>
 &lt;psf version="2.0">
 &lt;provider id="org.eclipse.team.cvs.core.cvsnature">
 &lt;project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/technology,org.eclipse.dash/athena/org.eclipse.dash.commonbuilder/org.eclipse.dash.commonbuilder.releng,org.eclipse.dash.common.releng,${commonrelengTag}"/>
@@ -131,7 +131,7 @@
 &lt;/psf></echo>
 					</then>
 				</if>
-				<debug>Fetch projects from psfs/athena.psf into ${COMMON_TOOLS}</debug>
+				<echo>Fetch projects from athena.psf into ${COMMON_TOOLS}</echo>
 				<cvsGetProjectSet cvsreallyquiet="true"
 				                  cvsUser="anonymous"
 				                  cvsPwd=""
