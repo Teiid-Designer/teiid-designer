@@ -18,19 +18,11 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.CoreConstants.Debug;
@@ -195,50 +187,50 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
         // Initialize logging/i18n utility
         ((PluginUtilImpl)Util).initializePlatformLogger(this);
 
-        // Test widget listener
-        getWorkbench().addWindowListener(new IWindowListener() {
-
-            @Override
-            public void windowActivated( final IWorkbenchWindow window ) {
-                Display.getCurrent().addFilter(SWT.MouseDown, new Listener() {
-
-                    @Override
-                    public void handleEvent( final Event event ) {
-                        final StringBuilder builder = new StringBuilder();
-                        if (event.widget instanceof Control) {
-                            Control control = (Control)event.widget;
-                            for (Composite parent = control.getParent(); parent != null; parent = control.getParent()) {
-                                final Control[] children = parent.getChildren();
-                                for (int ndx = 0, len = children.length; ndx < len; ++ndx)
-                                    if (children[ndx] == control) {
-                                        if (builder.length() > 0) builder.insert(0, '.');
-                                        builder.insert(0, ']');
-                                        builder.insert(0, ndx);
-                                        builder.insert(0, '[');
-                                        builder.insert(0, control.getClass().getSimpleName());
-                                    }
-                                control = parent;
-                            }
-                            builder.insert(0, "."); //$NON-NLS-1$
-                            builder.insert(0, control.getClass().getSimpleName());
-                        }
-                        System.out.println(builder);
-                    }
-                });
-            }
-
-            @Override
-            public void windowClosed( final IWorkbenchWindow window ) {
-            }
-
-            @Override
-            public void windowDeactivated( final IWorkbenchWindow window ) {
-            }
-
-            @Override
-            public void windowOpened( final IWorkbenchWindow window ) {
-            }
-        });
+        // // Test widget listener
+        // getWorkbench().addWindowListener(new IWindowListener() {
+        //
+        // @Override
+        // public void windowActivated( final IWorkbenchWindow window ) {
+        // Display.getCurrent().addFilter(SWT.MouseDown, new Listener() {
+        //
+        // @Override
+        // public void handleEvent( final Event event ) {
+        // final StringBuilder builder = new StringBuilder();
+        // if (event.widget instanceof Control) {
+        // Control control = (Control)event.widget;
+        // for (Composite parent = control.getParent(); parent != null; parent = control.getParent()) {
+        // final Control[] children = parent.getChildren();
+        // for (int ndx = 0, len = children.length; ndx < len; ++ndx)
+        // if (children[ndx] == control) {
+        // if (builder.length() > 0) builder.insert(0, '.');
+        // builder.insert(0, ']');
+        // builder.insert(0, ndx);
+        // builder.insert(0, '[');
+        // builder.insert(0, control.getClass().getSimpleName());
+        // }
+        // control = parent;
+        // }
+        //                            builder.insert(0, "."); //$NON-NLS-1$
+        // builder.insert(0, control.getClass().getSimpleName());
+        // }
+        // System.out.println(builder);
+        // }
+        // });
+        // }
+        //
+        // @Override
+        // public void windowClosed( final IWorkbenchWindow window ) {
+        // }
+        //
+        // @Override
+        // public void windowDeactivated( final IWorkbenchWindow window ) {
+        // }
+        //
+        // @Override
+        // public void windowOpened( final IWorkbenchWindow window ) {
+        // }
+        // });
 
         try {
             UiUtil.runInSwtThread(new Runnable() {
