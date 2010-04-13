@@ -44,38 +44,12 @@ public class ModelSearchIndexer extends ModelIndexer {
     // O V E R R I D D E N M E T H O D S
     // ==================================================================================
 
-    /* (non-Javadoc)
-     * @see com.metamatrix.internal.core.index.IIndexer#shouldIndex(com.metamatrix.internal.core.index.IDocument)
-     */
     @Override
-    public boolean shouldIndex( final IDocument document ) {
-        if (document instanceof ResourceDocument) {
-            return true;
-        }
-        return false;
-    }
-
-    /* (non-Javadoc)
-     * @see com.metamatrix.modeler.core.index.ResourceIndexer#getIndexType()
-     */
-    @Override
-    public String getIndexType() {
-        return INDEX_TYPES;
-    }
-
-    /**
-     * Set the indexType on the modelResource, each indexer is responsible for setting the appropriate Type.
-     * 
-     * @param resource The modelResource whose index type is set
-     */
-    @Override
-    protected void setIndexType( ModelResource resource ) {
-        CoreArgCheck.isNotNull(resource);
-        if (resource.getIndexType() == ModelResource.NOT_INDEXED) {
-            resource.setIndexType(ModelResource.SEARCH_INDEXED);
-        } else if (resource.getIndexType() == ModelResource.METADATA_INDEXED) {
-            resource.setIndexType(ModelResource.INDEXED);
-        }
+    protected void addIndexWord( final EObject eObject,
+                                 IndexingContext context,
+                                 final String modelPath,
+                                 final List wordEntries ) {
+        addIndexWord(eObject, modelPath, wordEntries);
     }
 
     /**
@@ -93,14 +67,6 @@ public class ModelSearchIndexer extends ModelIndexer {
 
         // add all search words for the EObject
         SearchRuntimeAdapter.addObjectSearchWords(eObject, modelPath, wordEntries);
-    }
-
-    @Override
-    protected void addIndexWord( final EObject eObject,
-                                 IndexingContext context,
-                                 final String modelPath,
-                                 final List wordEntries ) {
-        addIndexWord(eObject, modelPath, wordEntries);
     }
 
     /**
@@ -163,6 +129,40 @@ public class ModelSearchIndexer extends ModelIndexer {
     @Override
     protected String getIndexFileName( IPath path ) {
         return IndexUtil.getIndexFileName(path.toString(), IndexConstants.SEARCH_INDEX_EXT);
+    }
+
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.core.index.ResourceIndexer#getIndexType()
+     */
+    @Override
+    public String getIndexType() {
+        return INDEX_TYPES;
+    }
+
+    /**
+     * Set the indexType on the modelResource, each indexer is responsible for setting the appropriate Type.
+     * 
+     * @param resource The modelResource whose index type is set
+     */
+    @Override
+    protected void setIndexType( ModelResource resource ) {
+        CoreArgCheck.isNotNull(resource);
+        if (resource.getIndexType() == ModelResource.NOT_INDEXED) {
+            resource.setIndexType(ModelResource.SEARCH_INDEXED);
+        } else if (resource.getIndexType() == ModelResource.METADATA_INDEXED) {
+            resource.setIndexType(ModelResource.INDEXED);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see com.metamatrix.internal.core.index.IIndexer#shouldIndex(com.metamatrix.internal.core.index.IDocument)
+     */
+    @Override
+    public boolean shouldIndex( final IDocument document ) {
+        if (document instanceof ResourceDocument) {
+            return true;
+        }
+        return false;
     }
 
     // ==================================================================================

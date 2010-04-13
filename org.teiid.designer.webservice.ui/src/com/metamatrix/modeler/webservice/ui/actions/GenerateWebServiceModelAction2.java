@@ -56,6 +56,47 @@ public class GenerateWebServiceModelAction2 extends SortableSelectionAction impl
     }
 
     /**
+     * 
+     */
+    @Override
+    public boolean isApplicable( ISelection selection ) {
+        return isValidSelection(selection);
+    }
+
+    private boolean isDocumentOrRootSelected( ISelection selection ) {
+        if (!SelectionUtilities.isSingleSelection(selection)) {
+            return false;
+        }
+
+        Object selectedObject = SelectionUtilities.getSelectedObject(selection);
+
+        if (selectedObject != null && (selectedObject instanceof XmlDocument || selectedObject instanceof XmlRoot)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isSingleXmlDocumentModelSelected( ISelection selection ) {
+        if (!SelectionUtilities.isSingleSelection(selection)) {
+            return false;
+        }
+        Object selectedObject = SelectionUtilities.getSelectedObject(selection);
+
+        if (selectedObject instanceof IResource && ModelUtilities.isModelFile((IResource)selectedObject)) {
+            IResource iResource = (IResource)selectedObject;
+            XMIHeader header = ModelUtil.getXmiHeader(iResource);
+            if (header != null) {
+                String mmURI = header.getPrimaryMetamodelURI();
+                if (mmURI != null && mmURI.equals(XmlDocumentPackage.eNS_URI)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Valid selections include Relational Tables, Procedures or Relational Models. The roots instance variable will populated
      * with all Tables and Procedures contained within the current selection.
      * 
@@ -216,47 +257,6 @@ public class GenerateWebServiceModelAction2 extends SortableSelectionAction impl
         }
 
         notifyResult(severity < IStatus.ERROR && rc != Window.CANCEL);
-    }
-
-    /**
-     * 
-     */
-    @Override
-    public boolean isApplicable( ISelection selection ) {
-        return isValidSelection(selection);
-    }
-
-    private boolean isDocumentOrRootSelected( ISelection selection ) {
-        if (!SelectionUtilities.isSingleSelection(selection)) {
-            return false;
-        }
-
-        Object selectedObject = SelectionUtilities.getSelectedObject(selection);
-
-        if (selectedObject != null && (selectedObject instanceof XmlDocument || selectedObject instanceof XmlRoot)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean isSingleXmlDocumentModelSelected( ISelection selection ) {
-        if (!SelectionUtilities.isSingleSelection(selection)) {
-            return false;
-        }
-        Object selectedObject = SelectionUtilities.getSelectedObject(selection);
-
-        if (selectedObject instanceof IResource && ModelUtilities.isModelFile((IResource)selectedObject)) {
-            IResource iResource = (IResource)selectedObject;
-            XMIHeader header = ModelUtil.getXmiHeader(iResource);
-            if (header != null) {
-                String mmURI = header.getPrimaryMetamodelURI();
-                if (mmURI != null && mmURI.equals(XmlDocumentPackage.eNS_URI)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**
