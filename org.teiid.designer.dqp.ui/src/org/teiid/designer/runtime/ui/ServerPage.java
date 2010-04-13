@@ -377,9 +377,7 @@ public final class ServerPage extends WizardPage {
              */
             @Override
             public void run() {
-                // TODO Actually ping the server
-                success[0] = true;
-                getServerManager().ping(server).isOK();
+                success[0] = getServerManager().ping(server).isOK();
             }
         });
 
@@ -431,15 +429,6 @@ public final class ServerPage extends WizardPage {
     }
 
     /**
-     * If the initial message is being displayed do a validation.
-     */
-    void updateInitialMessage() {
-        if (UTIL.getString("serverPageOkStatusMsg").equals(getMessage())) { //$NON-NLS-1$
-            updateState();
-        }
-    }
-
-    /**
      * {@inheritDoc}
      * 
      * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
@@ -454,6 +443,15 @@ public final class ServerPage extends WizardPage {
 
             // set initial message
             setMessage(UTIL.getString("serverPageOkStatusMsg")); //$NON-NLS-1$
+        }
+    }
+
+    /**
+     * If the initial message is being displayed do a validation.
+     */
+    void updateInitialMessage() {
+        if (UTIL.getString("serverPageOkStatusMsg").equals(getMessage())) { //$NON-NLS-1$
+            updateState();
         }
     }
 
