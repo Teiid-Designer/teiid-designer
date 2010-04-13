@@ -1,0 +1,206 @@
+<!-- 
+	This script is completely boilerplate, and is used to bootstrap before building.
+	
+	To use it, call it like this from within your build.xml's run target:
+	
+<project default="run">
+	<target name="run">
+		<ant antfile="bootstrap.xml" target="init">
+			<property name="basebuilderTag" value="r35x_v20090811" />
+			<property name="commonrelengTag" value="HEAD" />
+			<property name="ANTCONTRIB_VERSION" value="1.0b2" />
+			<property name="ANT4ECLIPSE_VERSION" value="1.0.0.M3" />
+			<property name="build.properties" value="build.properties" />
+		</ant>
+		...
+		<condition property="JAVA_HOME" value="${java.home}" else="${java.home}/..">
+			<available file="${java.home}/bin/javac" type="file" />
+		</condition>
+		...
+		<property name="build.properties" value="build.properties" />
+		<property file="${build.properties}" />
+		<ant antfile="${relengCommonBuilderDir}/build.xml" />
+	</target>
+</project>
+-->
+
+<project default="init">
+	<condition property="isInHudson" value="true">
+		<or>
+			<contains string="${user.dir}" substring="hudson" />
+			<contains string="${user.name}" substring="hudson" />
+			<contains string="${user.home}" substring="hudson" />
+		</or>
+	</condition>
+	<target name="local" unless="isInHudson">
+		<property name="WORKINGDIR" value="${basedir}/.." />
+		<property name="COMMON_TOOLS" value="${java.io.tmpdir}/build/downloads" />
+	</target>
+
+	<!-- if required: use a newer version -->
+	<target name="get.ant-contrib" unless="ant-contrib.jar.exists">
+		<property name="ANTCONTRIB_VERSION" value="1.0b2" />
+		<property name="ANTCONTRIB_MIRROR" value="http://downloads.sourceforge.net/ant-contrib/" />
+		<get usetimestamp="true"
+		     dest="${COMMON_TOOLS}/ant-contrib-${ANTCONTRIB_VERSION}-bin.zip"
+		     src="${ANTCONTRIB_MIRROR}/ant-contrib-${ANTCONTRIB_VERSION}-bin.zip"
+		/>
+		<touch file="${COMMON_TOOLS}/ant-contrib-${ANTCONTRIB_VERSION}-bin.zip" />
+		<mkdir dir="${java.io.tmpdir}/ant-contrib-${ANTCONTRIB_VERSION}-bin.zip_" />
+		<unzip src="${COMMON_TOOLS}/ant-contrib-${ANTCONTRIB_VERSION}-bin.zip"
+		       dest="${java.io.tmpdir}/ant-contrib-${ANTCONTRIB_VERSION}-bin.zip_"
+		       overwrite="true"
+		/>
+		<copy file="${java.io.tmpdir}/ant-contrib-${ANTCONTRIB_VERSION}-bin.zip_/ant-contrib/lib/ant-contrib.jar"
+		      tofile="${COMMON_TOOLS}/ant-contrib.jar"
+		      failonerror="true"
+		/>
+		<delete dir="${java.io.tmpdir}/ant-contrib-${ANTCONTRIB_VERSION}-bin.zip_"
+		        includeemptydirs="true"
+		        quiet="true"
+		/>
+	</target>
+
+	<!-- if required: use a newer version -->
+	<target name="get.ant4eclipse" unless="ant4eclipse.jar.exists">
+		<property name="ANT4ECLIPSE_VERSION" value="1.0.0.M3" />
+		<property name="ANT4ECLIPSE_MIRROR" value="http://downloads.sourceforge.net/ant4eclipse/" />
+		<get usetimestamp="true"
+		     dest="${COMMON_TOOLS}/org.ant4eclipse_${ANT4ECLIPSE_VERSION}.zip"
+		     src="${ANT4ECLIPSE_MIRROR}/org.ant4eclipse_${ANT4ECLIPSE_VERSION}.zip"
+		/>
+		<touch file="${COMMON_TOOLS}/org.ant4eclipse_${ANT4ECLIPSE_VERSION}.zip" />
+		<mkdir dir="${java.io.tmpdir}/org.ant4eclipse_${ANT4ECLIPSE_VERSION}.zip_" />
+		<unzip src="${COMMON_TOOLS}/org.ant4eclipse_${ANT4ECLIPSE_VERSION}.zip"
+		       dest="${java.io.tmpdir}/org.ant4eclipse_${ANT4ECLIPSE_VERSION}.zip_"
+		       overwrite="true"
+		/>
+		<copy file="${java.io.tmpdir}/org.ant4eclipse_${ANT4ECLIPSE_VERSION}.zip_/org.ant4eclipse_${ANT4ECLIPSE_VERSION}.jar"
+		      tofile="${COMMON_TOOLS}/ant4eclipse.jar"
+		      failonerror="true"
+		/>
+		<delete dir="${java.io.tmpdir}/org.ant4eclipse_${ANT4ECLIPSE_VERSION}.zip_"
+		        includeemptydirs="true"
+		        quiet="true"
+		/>
+	</target>
+
+	<target name="get.athena.common.releng.and.releng.basebuilder">
+		<!-- find relengCommonBuilderDir and relengBaseBuilderDir -->
+		<for param="dir" list="${COMMON_TOOLS}, ${basedir}/../.., ${basedir}/.." delimiter=", ">
+			<sequential>
+				<if>
+					<available file="@{dir}/org.eclipse.dash.common.releng" type="dir" />
+					<then>
+						<property name="relengCommonBuilderDir" value="@{dir}/org.eclipse.dash.common.releng" />
+					</then>
+				</if>
+				<if>
+					<available file="@{dir}/org.eclipse.releng.basebuilder" type="dir" />
+					<then>
+						<property name="relengBaseBuilderDir" value="@{dir}/org.eclipse.releng.basebuilder" />
+					</then>
+				</if>
+
+			</sequential>
+		</for>
+
+		<if>
+			<or>
+				<not>
+					<isset property="relengCommonBuilderDir" />
+				</not>
+				<not>
+					<isset property="relengBaseBuilderDir" />
+				</not>
+			</or>
+			<then>
+				<!-- fetch projects using psf file; create it if needed -->
+				<if>
+					<not>
+						<available file="${basedir}/psfs/athena.psf" type="file" />
+					</not>
+					<then>
+						<!-- if required: use a different tag/branch -->
+						<property name="basebuilderTag" value="r35x_v20090811" />
+						<property name="commonrelengTag" value="HEAD" />
+
+						<echo>Create ${basedir}/psfs/athena.psf file</echo>
+						<mkdir dir="psfs" />
+						<echo file="${basedir}/psfs/athena.psf">&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;psf version="2.0">
+&lt;provider id="org.eclipse.team.cvs.core.cvsnature">
+&lt;project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/technology,org.eclipse.dash/athena/org.eclipse.dash.commonbuilder/org.eclipse.dash.commonbuilder.releng,org.eclipse.dash.common.releng,${commonrelengTag}"/>
+&lt;project reference="1.0,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,org.eclipse.releng.basebuilder,org.eclipse.releng.basebuilder,${basebuilderTag}"/>
+&lt;/provider>
+&lt;/psf></echo>
+					</then>
+				</if>
+				<echo>Fetch projects from athena.psf into ${COMMON_TOOLS}</echo>
+				<cvsGetProjectSet cvsreallyquiet="true"
+				                  cvsUser="anonymous"
+				                  cvsPwd=""
+				                  command="checkout"
+				                  projectSet="psfs/athena.psf"
+				                  destination="${COMMON_TOOLS}"
+				/>
+				<property name="relengCommonBuilderDir" value="${COMMON_TOOLS}/org.eclipse.dash.common.releng" />
+				<property name="relengBaseBuilderDir" value="${COMMON_TOOLS}/org.eclipse.releng.basebuilder" />
+			</then>
+		</if>
+	</target>
+
+	<target name="init" depends="local">
+		<property name="WORKINGDIR" value="${basedir}/.." />
+		<property name="COMMON_TOOLS" value="${basedir}/../tools" />
+		<mkdir dir="${COMMON_TOOLS}" />
+
+		<available file="${COMMON_TOOLS}/ant-contrib.jar" type="file" property="ant-contrib.jar.exists" />
+		<antcall target="get.ant-contrib" />
+		<taskdef resource="net/sf/antcontrib/antlib.xml">
+			<classpath>
+				<pathelement location="${COMMON_TOOLS}/ant-contrib.jar" />
+			</classpath>
+		</taskdef>
+
+		<available file="${COMMON_TOOLS}/ant4eclipse.jar" type="file" property="ant4eclipse.jar.exists" />
+		<antcall target="get.ant4eclipse" />
+		<taskdef resource="org/ant4eclipse/antlib.xml">
+			<classpath>
+				<pathelement location="${COMMON_TOOLS}/ant4eclipse.jar" />
+			</classpath>
+		</taskdef>
+
+		<antcallback target="get.athena.common.releng.and.releng.basebuilder"
+		             return="relengCommonBuilderDir, relengBaseBuilderDir"
+		/>
+
+		<if>
+			<or>
+				<not>
+					<isset property="relengCommonBuilderDir" />
+				</not>
+				<not>
+					<isset property="relengBaseBuilderDir" />
+				</not>
+			</or>
+			<then>
+				<fail>Error!
+	$${relengBaseBuilderDir} or $${relengCommonBuilderDir} could not be found!
+
+	Try checking out manually using psfs/athena.psf
+</fail>
+			</then>
+		</if>
+		<property name="build.properties" value="build.properties" />
+		<echo file="${build.properties}" append="true">
+
+#bootstrap.xml properties
+WORKINGDIR=${WORKINGDIR}
+COMMON_TOOLS=${COMMON_TOOLS}
+relengCommonBuilderDir=${relengCommonBuilderDir}
+relengBaseBuilderDir=${relengBaseBuilderDir}
+</echo>
+	</target>
+
+</project>
