@@ -7,720 +7,515 @@
  */
 package com.metamatrix.modeler.internal.vdb.ui.editor;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Iterator;
+import static org.teiid.designer.core.util.StringConstants.EMPTY_STRING;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Set;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.IFindReplaceTarget;
+import org.eclipse.jface.text.DocumentEvent;
+import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IActionBars;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.ide.IGotoMarker;
-import org.eclipse.ui.part.MultiPageEditorPart;
-import org.eclipse.ui.texteditor.ITextEditorExtension2;
-import org.eclipse.ui.views.properties.IPropertySheetPage;
+import org.eclipse.ui.dialogs.ISelectionStatusValidator;
+import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.eclipse.ui.part.EditorPart;
 import org.teiid.designer.vdb.Vdb;
-import com.metamatrix.core.event.IChangeListener;
-import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.validation.Severity;
+import org.teiid.designer.vdb.VdbEntry;
+import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.ui.PluginConstants;
-import com.metamatrix.modeler.internal.ui.actions.RedoAction;
-import com.metamatrix.modeler.internal.ui.actions.UndoAction;
-import com.metamatrix.modeler.internal.vdb.ui.properties.ModelEntryPropertySourceProvider;
-import com.metamatrix.modeler.ui.UiConstants;
-import com.metamatrix.modeler.ui.actions.ModelerActionBarIdManager;
-import com.metamatrix.modeler.ui.editors.IRevertable;
-import com.metamatrix.modeler.ui.undo.IUndoManager;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelLabelProvider;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.internal.vdb.ui.editor.TableAndButtonsGroup.RemoveButtonProvider;
+import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
-import com.metamatrix.ui.internal.eventsupport.SelectionProvider;
 import com.metamatrix.ui.internal.util.UiUtil;
+import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
+import com.metamatrix.ui.text.StyledTextEditor;
 
 /**
  * @since 4.0
  */
-public final class VdbEditor extends MultiPageEditorPart
-    implements IResourceChangeListener, VdbUiConstants, VdbUiConstants.ExtensionPoints, IRevertable, IGotoMarker,
-    ITextEditorExtension2 {
+// TODO: Deal with problems, read-only, revert, undo/redo, model dependencies, save, open existing
+public final class VdbEditor extends EditorPart {
 
-    static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(VdbEditor.class);
+    private static final String DESCRIPTION_GROUP = i18n("descriptionGroup"); //$NON-NLS-1$
+    private static final String MODELS_GROUP = i18n("modelsGroup"); //$NON-NLS-1$
+    private static final String OTHER_FILES_GROUP = i18n("otherFilesGroup"); //$NON-NLS-1$
 
-    /**
-     * @since 4.0
-     */
-    static Image getStatusImage( final Severity severity ) {
+    static final String MODEL_COLUMN_NAME = i18n("modelColumnName"); //$NON-NLS-1$
+    static final String FILE_COLUMN_NAME = i18n("fileColumnName"); //$NON-NLS-1$
+    static final String PATH_COLUMN_NAME = i18n("pathColumnName"); //$NON-NLS-1$
+    static final String SYNCHRONIZED_COLUMN_NAME = i18n("synchronizedColumnName"); //$NON-NLS-1$
+    static final String VISIBLE_COLUMN_NAME = i18n("visibleColumnName"); //$NON-NLS-1$;
+    static final String DATA_SOURCE_COLUMN_NAME = i18n("dataSourceColumnName"); //$NON-NLS-1$;
 
-        switch (severity.getValue()) {
-            case Severity.ERROR: {
-                return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
-            }
-            case Severity.WARNING: {
-                return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
-            }
-            case Severity.INFO: {
-                return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO);
-            }
-            default: {
-                return null;
-            }
-        }
-    }
+    static final String SYNCHRONIZED_TOOLTIP = i18n("synchronizedTooltip"); //$NON-NLS-1$
+    static final String UNSYNCHRONIZED_TOOLTIP = i18n("unsynchronizedTooltip"); //$NON-NLS-1$
+    static final String SYNCHRONIZATION_NOT_APPLICABLE_TOOLTIP = i18n("synchronizationNotApplicableTooltip"); //$NON-NLS-1$
 
-    /**
-     * @since 4.0
-     */
-    static String getString( final String id ) {
-        return Util.getString(I18N_PREFIX + id);
+    static final String VISIBLE_TOOLTIP = i18n("visibleTooltip"); //$NON-NLS-1$
+    static final String NOT_VISIBLE_TOOLTIP = i18n("notVisibleTooltip"); //$NON-NLS-1$
+
+    static final String ADD_FILE_DIALOG_TITLE = i18n("addFileDialogTitle"); //$NON-NLS-1$
+    static final String ADD_FILE_DIALOG_MESSAGE = i18n("addFileDialogMessage"); //$NON-NLS-1$
+    static final String ADD_FILE_DIALOG_INVALID_SELECTION_MESSAGE = i18n("addFileDialogInvalidSelectionMessage"); //$NON-NLS-1$
+
+    static final String CONFIRM_DIALOG_TITLE = i18n("confirmDialogTitle"); //$NON-NLS-1$
+    static final String CONFIRM_SYNCHRONIZE_MESSAGE = i18n("confirmSynchronizeMessage"); //$NON-NLS-1$
+    static final String CONFIRM_SYNCHRONIZE_ALL_MESSAGE = i18n("confirmSynchronizeAllMessage"); //$NON-NLS-1$
+    static final String CONFIRM_REMOVE_MESSAGE = i18n("confirmRemoveMessage"); //$NON-NLS-1$
+
+    private static final String SYNCHRONIZE_ALL_BUTTON = i18n("synchronizeAllButton"); //$NON-NLS-1$
+
+    private static String i18n( final String id ) {
+        return VdbUiConstants.Util.getString(id);
     }
 
     Vdb vdb;
-
-    private IResource modelProject;
-    ArrayList editors;
-    private ModelEntryPropertySourceProvider propertySourceProvider;
-    boolean saveCanceled = false;
-    VdbEditorOverviewPage overviewPage;
-    VdbEditorProblemPage problemPage;
-    private VdbEditorUserFilesPage userFilesPage;
-    private VdbEditorWsdlPage wsdlPage;
-    boolean vdbWasJustSaved = false;
-
-    private long currentTimeStamp = 0;
-    private UndoAction undoAction;
-
-    private RedoAction redoAction;
+    StyledTextEditor textEditor;
 
     /**
-     * @see org.eclipse.ui.part.MultiPageEditorPart#addPage(org.eclipse.ui.IEditorPart, org.eclipse.ui.IEditorInput)
-     * @since 4.0
-     */
-    @Override
-    public int addPage( final IEditorPart editor,
-                        final IEditorInput input ) throws PartInitException {
-        final int ndx = super.addPage(editor, input);
-        setPageText(ndx, editor.getTitle());
-        this.editors.add(editor);
-        return ndx;
-    }
-
-    /**
-     * Add any editor pages contributed by extensions.
+     * {@inheritDoc}
      * 
-     * @since 4.3
+     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      */
-    protected void createAdditionalPages( final int theStartingIndex,
-                                          final IEditorInput theInput ) {
-        // get the VDB Editor Page extension point from the plugin class
-        final IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(PLUGIN_ID, VdbEditorPage.ID);
-
-        // get the all extensions to this extension point
-        final IExtension[] extensions = extensionPoint.getExtensions();
-
-        // if no extensions no work to do
-        if (extensions.length == 0) return;
-
-        // make executable extensions for every CLASS_NAME
-        for (int i = 0; i < extensions.length; ++i) {
-            final IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-
-            for (int j = 0; j < elements.length; ++j)
-                try {
-                    final Object extension = elements[j].createExecutableExtension(VdbEditorPage.CLASS_NAME);
-
-                    if (extension instanceof IVdbEditorPage) {
-                        final IVdbEditorPage page = (IVdbEditorPage)extension;
-                        page.setVdb(this.vdb);
-
-                        // add the page
-                        final int pageNum = addPage(page, theInput);
-
-                        // get additional extension info
-                        final String displayName = elements[j].getAttribute(VdbEditorPage.DISPLAY_NAME);
-                        // String order = elements[j].getAttribute(VdbEditorPage.ORDER);
-
-                        // call interface methods
-                        page.setDisplayName(displayName);
-                        setPageText(pageNum, displayName);
-                        page.updateReadOnlyState(getReadonlyState());
-
-                        final ISelectionListener handler = page.getSelectionListener();
-
-                        if (handler != null) getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(handler);
-                    } else Util.log(IStatus.ERROR, Util.getString(I18N_PREFIX + "pageExtensionIncorrectClass", //$NON-NLS-1$
-                                                                  extension.getClass().getName()));
-                } catch (final Exception theException) {
-                    // problem initializing the VDB Editor Page
-                    final String msg = Util.getString(I18N_PREFIX + "editorPageInitializationError", //$NON-NLS-1$
-                                                      elements[j].getAttribute(VdbEditorPage.CLASS_NAME));
-                    Util.log(IStatus.ERROR, theException, msg);
-                }
-        }
-    }
-
-    /**
-     * @see org.eclipse.ui.part.MultiPageEditorPart#createPages()
-     * @since 4.0
-     */
+    @SuppressWarnings( "unchecked" )
     @Override
-    protected void createPages() {
-        createPagesInTransaction();
-    }
+    public void createPartControl( final Composite parent ) {
+        // Compute height of description text area
+        // For some reason, this can't be less than 4, or the vertical scrollbar widgets never appear (at least on a OSX)
+        final GC gc = new GC(parent);
+        gc.setFont(parent.getFont());
+        final int height = Dialog.convertHeightInCharsToPixels(gc.getFontMetrics(), 4);
+        gc.dispose();
 
-    private void createPagesInTransaction() {
-        final boolean started = ModelerCore.startTxn(false, false, "Open VDB Editor", this); //$NON-NLS-1$
-        boolean succeeded = false;
+        // Insert a ScrolledComposite so controls don't disappear if the panel shrinks
+        final ScrolledComposite scroller = new ScrolledComposite(parent, SWT.V_SCROLL | SWT.H_SCROLL);
+        scroller.setLayout(new GridLayout());
+        scroller.setExpandHorizontal(true);
+        scroller.setExpandVertical(true);
+        // Tweak the scroll bars to give better scrolling behavior:
+        ScrollBar bar = scroller.getHorizontalBar();
+        if (bar != null) bar.setIncrement(height / 4);
+        bar = scroller.getVerticalBar();
+        if (bar != null) bar.setIncrement(height / 4);
+
+        final Composite pg = WidgetFactory.createPanel(scroller, SWT.NONE, GridData.FILL_BOTH, 1, 1);
+        scroller.setContent(pg);
+
+        final Group group = WidgetFactory.createGroup(pg, DESCRIPTION_GROUP, GridData.FILL_HORIZONTAL);
+        this.textEditor = new StyledTextEditor(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
+        final GridData gridData = new GridData(GridData.FILL_BOTH);
+        gridData.horizontalSpan = 1;
+        gridData.heightHint = height;
+        gridData.minimumHeight = height;
+        this.textEditor.setLayoutData(gridData);
+        this.textEditor.setText(vdb.getDescription());
+        this.textEditor.getDocument().addDocumentListener(new IDocumentListener() {
+
+            public void documentAboutToBeChanged( final DocumentEvent event ) {
+            }
+
+            public void documentChanged( final DocumentEvent event ) {
+                vdb.setDescription(textEditor.getText());
+            }
+
+        });
 
         try {
-            final IEditorInput input = getEditorInput();
-            overviewPage = new VdbEditorOverviewPage(this);
-            addPage(overviewPage, input);
-            problemPage = new VdbEditorProblemPage(this);
-            addPage(problemPage, input);
-            userFilesPage = new VdbEditorUserFilesPage(this);
-            addPage(userFilesPage, input);
-            wsdlPage = new VdbEditorWsdlPage(this);
-            final int index = addPage(wsdlPage, input);
-
-            // add additional pages contributed by extensions
-            createAdditionalPages(index + 1, input);
-
-            this.modelProject = ((IFileEditorInput)input).getFile().getProject();
-            ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
-            succeeded = true;
-        } catch (final PartInitException err) {
-            WidgetUtil.showError(err.getMessage());
-            Util.log(err);
-        } catch (final Exception e) {
-            UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
-        } finally {
-            if (started) if (succeeded) ModelerCore.commitTxn();
-            else {
-                // We don't want to roll this back. Not really changing anything in any model
-                // ModelerCore.rollbackTxn();
-            }
+            vdb.addModelEntry(new Path("/test/pr.xmi"), new NullProgressMonitor()); //$NON-NLS-1$
+        } catch (final RuntimeException error) {
+            VdbUiConstants.Util.log(error);
+            WidgetUtil.showError(error);
         }
+
+        final TextColumnProvider pathColumnProvider = new TextColumnProvider<VdbEntry>() {
+
+            @Override
+            public String getName() {
+                return PATH_COLUMN_NAME;
+            }
+
+            @Override
+            public String getValue( final VdbEntry element ) {
+                return element.getName().removeLastSegments(1).toString();
+            }
+        };
+        final CheckBoxColumnProvider syncColumnProvider = new CheckBoxColumnProvider<VdbEntry>() {
+
+            @Override
+            public String getName() {
+                return SYNCHRONIZED_COLUMN_NAME;
+            }
+
+            @Override
+            public String getToolTip( final VdbEntry element ) {
+                if (element.getSynchronization() == Synchronization.Synchronized) return SYNCHRONIZED_TOOLTIP;
+                if (element.getSynchronization() == Synchronization.NotSynchronized) return UNSYNCHRONIZED_TOOLTIP;
+                return SYNCHRONIZATION_NOT_APPLICABLE_TOOLTIP;
+            }
+
+            @Override
+            public Boolean getValue( final VdbEntry element ) {
+                return element.getSynchronization() == Synchronization.Synchronized;
+            }
+
+            @Override
+            public boolean isCellEditable( final VdbEntry element ) {
+                return element.getSynchronization() == Synchronization.NotSynchronized;
+            }
+
+            @Override
+            public void setCellValue( final VdbEntry element,
+                                      final Boolean value ) {
+                if (MessageDialog.openConfirm(pg.getShell(), CONFIRM_DIALOG_TITLE, CONFIRM_SYNCHRONIZE_MESSAGE)) element.synchronize(new NullProgressMonitor());
+            }
+        };
+        final TableAndButtonsGroup modelsGroup = new TableAndButtonsGroup(
+                                                                          pg,
+                                                                          MODELS_GROUP,
+                                                                          new DefaultTableProvider<VdbModelEntry>() {
+
+                                                                              @Override
+                                                                              public void doubleClicked( final VdbModelEntry element ) {
+                                                                                  openEditor(element);
+                                                                              }
+
+                                                                              @Override
+                                                                              public VdbModelEntry[] getElements() {
+                                                                                  final Set<VdbModelEntry> modelEntries = vdb.getModelEntries();
+                                                                                  return modelEntries.toArray(new VdbModelEntry[modelEntries.size()]);
+                                                                              }
+
+                                                                              @Override
+                                                                              public boolean isDoubleClickSupported() {
+                                                                                  return true;
+                                                                              }
+                                                                          },
+                                                                          new TextColumnProvider<VdbModelEntry>() {
+
+                                                                              @Override
+                                                                              public Image getImage( final VdbModelEntry element ) {
+                                                                                  return ModelIdentifier.getModelImage(element.findFile());
+                                                                              }
+
+                                                                              @Override
+                                                                              public String getName() {
+                                                                                  return MODEL_COLUMN_NAME;
+                                                                              }
+
+                                                                              @Override
+                                                                              public String getValue( final VdbModelEntry element ) {
+                                                                                  return element.getName().lastSegment();
+                                                                              }
+                                                                          }, pathColumnProvider, syncColumnProvider,
+                                                                          new CheckBoxColumnProvider<VdbModelEntry>() {
+
+                                                                              @Override
+                                                                              public String getName() {
+                                                                                  return VISIBLE_COLUMN_NAME;
+                                                                              }
+
+                                                                              @Override
+                                                                              public String getToolTip( final VdbModelEntry element ) {
+                                                                                  return element.isVisible() ? VISIBLE_TOOLTIP : NOT_VISIBLE_TOOLTIP;
+                                                                              }
+
+                                                                              @Override
+                                                                              public Boolean getValue( final VdbModelEntry element ) {
+                                                                                  return element.isVisible();
+                                                                              }
+
+                                                                              @Override
+                                                                              public boolean isCellEditable( final VdbModelEntry element ) {
+                                                                                  return true;
+                                                                              }
+
+                                                                              @Override
+                                                                              public void setCellValue( final VdbModelEntry element,
+                                                                                                        final Boolean value ) {
+                                                                                  element.setVisible(value);
+                                                                              }
+                                                                          }, new TextColumnProvider<VdbModelEntry>() {
+
+                                                                              @Override
+                                                                              public String getName() {
+                                                                                  return DATA_SOURCE_COLUMN_NAME;
+                                                                              }
+
+                                                                              @Override
+                                                                              public String getValue( final VdbModelEntry element ) {
+                                                                                  final String value = element.getDataSource();
+                                                                                  return value == null ? EMPTY_STRING : value;
+                                                                              }
+
+                                                                              @Override
+                                                                              public boolean isCellEditable( final VdbModelEntry element ) {
+                                                                                  return true;
+                                                                              }
+
+                                                                              @Override
+                                                                              public void setCellValue( final VdbModelEntry element,
+                                                                                                        final String value ) {
+                                                                                  element.setDataSource(value);
+                                                                              }
+                                                                          });
+        final ModelLabelProvider modelLabelProvider = new ModelLabelProvider();
+        final ISelectionStatusValidator validator = new ISelectionStatusValidator() {
+
+            public IStatus validate( final Object[] selection ) {
+                for (int ndx = selection.length; --ndx >= 0;)
+                    if (selection[ndx] instanceof IContainer) return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0,
+                                                                                ADD_FILE_DIALOG_INVALID_SELECTION_MESSAGE, null);
+                return new Status(IStatus.OK, VdbUiConstants.PLUGIN_ID, 0, EMPTY_STRING, null);
+            }
+        };
+        modelsGroup.add(modelsGroup.new AddButtonProvider() {
+
+            @Override
+            protected void add() {
+                final ViewerFilter filter = new ViewerFilter() {
+
+                    @Override
+                    public boolean select( final Viewer viewer,
+                                           final Object parent,
+                                           final Object element ) {
+                        if (element instanceof IContainer) return true;
+                        final IFile file = (IFile)element;
+                        if (!ModelUtilities.isModelFile(file) && !ModelUtil.isXsdFile(file)) return false;
+                        for (final VdbModelEntry modelEntry : vdb.getModelEntries())
+                            if (file.equals(modelEntry.findFile())) return false;
+                        return true;
+                    }
+                };
+                final Object[] models = WidgetUtil.showWorkspaceObjectSelectionDialog(ADD_FILE_DIALOG_TITLE,
+                                                                                      ADD_FILE_DIALOG_MESSAGE,
+                                                                                      true,
+                                                                                      null,
+                                                                                      new ModelingResourceFilter(filter),
+                                                                                      validator,
+                                                                                      modelLabelProvider);
+                for (final Object model : models)
+                    vdb.addModelEntry(((IFile)model).getFullPath(), new NullProgressMonitor());
+            }
+        });
+        final RemoveButtonProvider removeButtonProvider = modelsGroup.new RemoveButtonProvider() {
+
+            @Override
+            public void selected( final IStructuredSelection selection ) {
+                if (!MessageDialog.openConfirm(pg.getShell(), CONFIRM_DIALOG_TITLE, CONFIRM_REMOVE_MESSAGE)) return;
+                for (final Object element : selection.toList())
+                    vdb.removeEntry((VdbEntry)element);
+            }
+        };
+        modelsGroup.add(removeButtonProvider);
+        modelsGroup.setInput(vdb);
+
+        final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
+        final TableAndButtonsGroup otherFilesGroup = new TableAndButtonsGroup(pg, OTHER_FILES_GROUP,
+                                                                              new DefaultTableProvider<VdbEntry>() {
+
+                                                                                  @Override
+                                                                                  public VdbEntry[] getElements() {
+                                                                                      final Set<VdbEntry> entries = vdb.getEntries();
+                                                                                      return entries.toArray(new VdbModelEntry[entries.size()]);
+                                                                                  }
+                                                                              }, new TextColumnProvider<VdbEntry>() {
+
+                                                                                  @Override
+                                                                                  public Image getImage( final VdbEntry element ) {
+                                                                                      return workbenchLabelProvider.getImage(element.findFile());
+                                                                                  }
+
+                                                                                  @Override
+                                                                                  public String getName() {
+                                                                                      return FILE_COLUMN_NAME;
+                                                                                  }
+
+                                                                                  @Override
+                                                                                  public String getValue( final VdbEntry element ) {
+                                                                                      return element.getName().lastSegment();
+                                                                                  }
+                                                                              }, pathColumnProvider, syncColumnProvider);
+        otherFilesGroup.add(otherFilesGroup.new AddButtonProvider() {
+
+            @Override
+            protected void add() {
+                final ViewerFilter filter = new ViewerFilter() {
+
+                    @Override
+                    public boolean select( final Viewer viewer,
+                                           final Object parent,
+                                           final Object element ) {
+                        if (element instanceof IContainer) return true;
+                        final IFile file = (IFile)element;
+                        if (ModelUtilities.isModelFile(file) || ModelUtil.isXsdFile(file) || ModelUtil.isVdbArchiveFile(file)) return false;
+                        for (final VdbEntry entry : vdb.getEntries())
+                            if (file.equals(entry.findFile())) return false;
+                        return true;
+                    }
+                };
+                final Object[] files = WidgetUtil.showWorkspaceObjectSelectionDialog(ADD_FILE_DIALOG_TITLE,
+                                                                                     ADD_FILE_DIALOG_MESSAGE,
+                                                                                     true,
+                                                                                     null,
+                                                                                     new ModelingResourceFilter(filter),
+                                                                                     validator,
+                                                                                     modelLabelProvider);
+                for (final Object file : files)
+                    vdb.addEntry(((IFile)file).getFullPath(), new NullProgressMonitor());
+            }
+        });
+        otherFilesGroup.add(removeButtonProvider);
+        otherFilesGroup.setInput(vdb);
+        final Button synchronizeAllButton = WidgetFactory.createButton(pg, SYNCHRONIZE_ALL_BUTTON, GridData.HORIZONTAL_ALIGN_CENTER);
+        synchronizeAllButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                if (!MessageDialog.openConfirm(pg.getShell(), CONFIRM_DIALOG_TITLE, CONFIRM_SYNCHRONIZE_ALL_MESSAGE)) return;
+                vdb.synchronize(new NullProgressMonitor());
+                modelsGroup.getTable().getViewer().refresh();
+                otherFilesGroup.getTable().getViewer().refresh();
+            }
+        });
+        synchronizeAllButton.setEnabled(!vdb.isSynchronized());
+        // TODO: wire to VDB sync
+
+        group.setFont(modelsGroup.getGroup().getFont());
+
+        // pack and resize:
+        pg.pack(true);
     }
 
     /**
-     * @see org.eclipse.ui.part.MultiPageEditorPart#dispose()
-     * @since 4.0
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.ui.part.WorkbenchPart#dispose()
      */
     @Override
     public void dispose() {
-        // loop through pages and check for IVdbEditorPage
-        for (int size = this.editors.size(), i = 0; i < size; ++i)
-            if (this.editors.get(i) instanceof IVdbEditorPage) {
-                final IVdbEditorPage page = (IVdbEditorPage)this.editors.get(i);
-
-                // unregister selection listener
-                final ISelectionListener handler = page.getSelectionListener();
-
-                if (handler != null) getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(handler);
-
-                // alert page of dispose
-                page.preDispose();
-            }
-
         try {
-            this.vdb.close();
+            vdb.close();
+            if (textEditor != null) textEditor.dispose();
         } catch (final Exception err) {
-            Util.log(err);
-            WidgetUtil.showError(err.getLocalizedMessage());
+            VdbUiConstants.Util.log(err);
+            WidgetUtil.showError(err);
         }
-
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
-
-        // unregister undo/redo actions
-        final IActionBars bars = getEditorSite().getActionBars();
-        final IMenuManager editMenu = bars.getMenuManager().findMenuUsingPath(ModelerActionBarIdManager.getEditMenuId());
-        editMenu.removeMenuListener(undoAction);
-        editMenu.removeMenuListener(redoAction);
-
         super.dispose();
     }
 
     /**
-     * Re-read file from disk
-     */
-    // TODO: No undo/redo capability
-    public void doRevertToSaved() {
-        if (!vdbTimeStampDifferent()) return;
-
-        // try to refresh contents:
-        try {
-            vdb.close();
-        } catch (final Exception error) {
-            Util.log(error);
-            WidgetUtil.showError(error.getLocalizedMessage());
-        }
-
-        for (final Iterator iter = this.editors.iterator(); iter.hasNext();) {
-            final Object element = iter.next(); // these are all actually IEditorParts, too
-            if (element instanceof IRevertable) {
-                final IRevertable r = (IRevertable)element;
-                r.doRevertToSaved();
-            } // endif -- instance
-        } // endfor
-
-        overviewPage.update();
-
-        update(); // make sure the editor is marked not dirty.
-    }
-
-    /**
-     * @see org.eclipse.ui.ISaveablePart#doSave(org.eclipse.core.runtime.IProgressMonitor)
-     * @since 4.0
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     public void doSave( final IProgressMonitor monitor ) {
-        final boolean started = ModelerCore.startTxn(false, false, "Save VDB Context", this); //$NON-NLS-1$
-        boolean succeeded = false;
-        try {
-            saveAll(monitor);
-            succeeded = true;
-        } catch (final Exception ex) {
-            VdbUiConstants.Util.log(IStatus.ERROR, ex, ex.getMessage());
-        } finally {
-            if (started) if (succeeded) ModelerCore.commitTxn();
-            else {
-                // We don't want to roll this back. Not really changing anything in any model
-                // ModelerCore.rollbackTxn();
-            }
-        }
+        vdb.save(monitor);
     }
 
     /**
-     * Does nothing.
+     * {@inheritDoc}
      * 
-     * @see org.eclipse.ui.ISaveablePart#doSaveAs()
-     * @since 4.0
+     * @see org.eclipse.ui.part.EditorPart#doSaveAs()
      */
     @Override
     public void doSaveAs() {
     }
 
     /**
-     * @since 4.0
-     */
-    private boolean fileChanged( final IFile file,
-                                 final IResourceDelta delta ) {
-        // related to defect 17599 - we weren't using the IResourceDelta correctly
-        final IResourceDelta rscDelta = delta.findMember(file.getFullPath());
-        return rscDelta != null && rscDelta.getKind() == IResourceDelta.CHANGED;
-    }
-
-    boolean fileIsVdb( final IFile file ) {
-        final IFile vdbFile = ((IFileEditorInput)getEditorInput()).getFile();
-        if (vdbFile.equals(file)) return true;
-
-        return false;
-    }
-
-    /**
-     * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-     * @since 4.2
-     */
-    @Override
-    public Object getAdapter( final Class adapter ) {
-        if (adapter.equals(IFindReplaceTarget.class)) return getActiveEditor().getAdapter(adapter);
-
-        if (adapter.equals(IPropertySheetPage.class)) {
-            if (propertySourceProvider == null) propertySourceProvider = new ModelEntryPropertySourceProvider();
-            return propertySourceProvider.getPropertySheetPage();
-        }
-
-        if (adapter.equals(IUndoManager.class)) return getActiveEditor().getAdapter(adapter);
-
-        return super.getAdapter(adapter);
-    }
-
-    /**
-     * @return Returns the currentTimeStamp.
-     * @since 4.3
-     */
-    public long getCurrentTimeStamp() {
-        return this.currentTimeStamp;
-    }
-
-    /**
-     * Obtains the read-only state of the VDB editor.
-     * 
-     * @return <code>true</code> if read-only; <code>false</code> otherwise.
-     * @since 4.3
-     */
-    private boolean getReadonlyState() {
-        boolean result = true;
-
-        final IEditorInput input = getEditorInput();
-
-        if ((input != null) && (input instanceof IFileEditorInput)) result = ((IFileEditorInput)input).getFile().isReadOnly();
-
-        return result;
-    }
-
-    /**
-     * @since 4.0
+     * @return the VDB being edited
      */
     public Vdb getVdb() {
-        return this.vdb;
+        return vdb;
     }
 
     /**
-     * Does nothing.
+     * {@inheritDoc}
      * 
-     * @see org.eclipse.ui.IEditorPart#gotoMarker(org.eclipse.core.resources.IMarker)
-     * @since 4.0
-     */
-    public void gotoMarker( final IMarker marker ) {
-    }
-
-    void handleContextChanged() {
-        if (this.vdb.isModified()) update();
-    }
-
-    private void handleSaveException( final Throwable e,
-                                      final IProgressMonitor monitor ) {
-        final String message = Util.getString("VdbEditor.saveError", getEditorInput().getName()); //$NON-NLS-1$
-        Util.log(IStatus.ERROR, e, message);
-
-        final String title = getString("saveErrorTitle"); //$NON-NLS-1$
-        MessageDialog.openError(getSite().getShell(), title, message);
-
-        if (monitor != null) monitor.setCanceled(true);
-
-    }
-
-    /**
-     * @see org.eclipse.ui.part.MultiPageEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
-     * @since 4.0
+     * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
      */
     @Override
     public void init( final IEditorSite site,
-                      final IEditorInput input ) throws PartInitException {
-        // Let's make sure the vdb's project is a model project
-
-        // get the ModelResource.
-        final IProject project = ((IFileEditorInput)input).getFile().getProject();
-
-        try {
-            if (project != null && project.getNature(PluginConstants.MODEL_PROJECT_NATURE_ID) == null) {
-                final String message = Util.getString("VdbEditor.modelProjectError", input.getName()); //$NON-NLS-1$
-                throw new PartInitException(message);
-            }
-        } catch (final CoreException ex) {
-            // Util.log(ex);
-            if (ex instanceof PartInitException) throw (PartInitException)ex;
-
-            throw new PartInitException(ex.getLocalizedMessage(), ex);
-        }
-
-        super.init(site, input);
-        this.editors = new ArrayList();
+                      final IEditorInput input ) {
         final IFile file = ((IFileEditorInput)input).getFile();
+        vdb = new Vdb(file, new NullProgressMonitor());
+        vdb.addChangeListener(new PropertyChangeListener() {
 
-        setCurrentTimeStamp(file.getModificationStamp());
-
-        // If the resource has a VDB file extension but with the wrong case then throw exception (defect 17709)
-        final String fileExtension = file.getFileExtension();
-        if (!fileExtension.equals(ModelUtil.EXTENSION_VDB) && fileExtension.equalsIgnoreCase(ModelUtil.EXTENSION_VDB)) {
-            final String fileName = file.getName();
-            final int endIndex = fileName.length() - fileExtension.length();
-            final String expectedFileName = fileName.substring(0, endIndex) + fileExtension.toLowerCase();
-
-            final Object[] params = new Object[] {fileName, expectedFileName};
-            final String msg = VdbUiConstants.Util.getString("VdbEditor.file_extension_not_correct_case_please_rename_file", params); //$NON-NLS-1$
-            throw new PartInitException(msg);
-        }
-
-        setPartName(file.getName());
-        try {
-            vdb = new Vdb(file.getFullPath());
-        } catch (final Exception err) {
-            Util.log(err);
-            throw new PartInitException(err.getLocalizedMessage(), err);
-        }
-
-        site.setSelectionProvider(new SelectionProvider());
-
-        this.vdb.addChangeListener(new IChangeListener() {
-            public void stateChanged( final IChangeNotifier theSource ) {
-                handleContextChanged();
+            @Override
+            public void propertyChange( final PropertyChangeEvent event ) {
+                final String prop = event.getPropertyName();
+                if (Vdb.SAVED.equals(prop) || Vdb.CLOSED.equals(prop)) return;
             }
         });
-
-        // wire up undo/redo actions using the global Model Editor actions
-        this.undoAction = new UndoAction();
-        this.redoAction = new RedoAction();
-
-        final IActionBars bars = site.getActionBars();
-        bars.setGlobalActionHandler(ActionFactory.UNDO.getId(), this.undoAction);
-        bars.setGlobalActionHandler(ActionFactory.REDO.getId(), this.redoAction);
-
-        final IMenuManager editMenu = bars.getMenuManager().findMenuUsingPath(ModelerActionBarIdManager.getEditMenuId());
-        editMenu.addMenuListener(undoAction);
-        editMenu.addMenuListener(redoAction);
+        setSite(site);
+        setInput(input);
+        setPartName(file.getName());
     }
 
     /**
-     * @see org.eclipse.ui.part.MultiPageEditorPart#isDirty()
-     * @since 4.2
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.ui.part.EditorPart#isDirty()
      */
     @Override
     public boolean isDirty() {
-        return this.saveCanceled || super.isDirty();
+        return false;
     }
 
     /**
-     * @see org.eclipse.ui.texteditor.ITextEditorExtension2#isEditorInputModifiable()
-     * @since 5.5.3
-     */
-    public boolean isEditorInputModifiable() {
-        return !getReadonlyState();
-    }
-
-    /**
-     * @see org.eclipse.ui.ISaveablePart#isSaveAsAllowed()
-     * @since 4.0
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
      */
     @Override
     public boolean isSaveAsAllowed() {
-        return false;
+        return true;
     }
 
-    void postChange( final IFile file ) {
-
-        if (!file.isAccessible()) UiUtil.getWorkbenchPage().closeEditor(VdbEditor.this, false);
-        else {
-            // set focus back on the active editor to give it an opportunity to refresh state
-            final IEditorPart part = getActiveEditor();
-
-            if (part != null) part.setFocus();
-        }
-
-        // fix for Defect 17061
-        if (fileIsVdb(file)) {
-            doRevertToSaved();
-            problemPage.refreshViewer();
-            overviewPage.update();
-        }
-    }
-
-    /**
-     * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
-     * @since 4.0
-     */
-    public void resourceChanged( final IResourceChangeEvent event ) {
-        switch (event.getType()) {
-            // Close editor if project closed
-            case IResourceChangeEvent.PRE_CLOSE: {
-                final IResource project = event.getResource();
-                if (project != null && project.equals(this.modelProject)) Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
-                        UiUtil.getWorkbenchPage().closeEditor(VdbEditor.this, true);
-                    }
-                });
-                break;
-            }
-            case IResourceChangeEvent.POST_CHANGE: {
-                final IResourceDelta delta = event.getDelta();
-                final IFile file = ((IFileEditorInput)getEditorInput()).getFile();
-                if (!vdbWasJustSaved) {
-                    if (fileChanged(file, delta)) Display.getDefault().syncExec(new Runnable() {
-                        public void run() {
-                            postChange(file);
-                        }
-                    });
-                } else {
-                    setCurrentTimeStamp(((IFileEditorInput)getEditorInput()).getFile().getModificationStamp());
-                    problemPage.refreshViewer();
-                    // Fixes Thread access error
-                    Display.getDefault().asyncExec(new Runnable() {
-                        public void run() {
-                            overviewPage.update();
-                        }
-                    });
-
-                }
-
-                break;
-            }
-        }
-        vdbWasJustSaved = false;
-    }
-
-    private void saveAll( final IProgressMonitor monitor ) {
-
-        final WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
-            @Override
-            public void execute( final IProgressMonitor monitor ) {
-                // Update each of the editor pages
-                for (final Iterator iter = editors.iterator(); iter.hasNext();)
-                    ((IEditorPart)iter.next()).doSave(monitor);
-
-                // Save the VDB archive file. if the monitor was canceled during the context save operation the
-                // actual file was still saved but indexing and validation may not have occurred.
-                // handle monitor canceled at the end of this method.
-                final IStatus status = vdb.save(monitor);
-
-                // Show errors if necessary
-                if (!status.isOK()) {
-                    WidgetUtil.show(status);
-                    Util.log(status);
-                }
-
-                // Refresh the file since it was modified by the context
-                try {
-                    final IFileEditorInput input = (IFileEditorInput)getEditorInput();
-                    final IFile file = input.getFile();
-
-                    // pass in null for monitor because we don't want an InterruptedException thrown
-                    // if the monitor has been cancelled. we still want to refresh since the file has changed.
-                    file.refreshLocal(IResource.DEPTH_ZERO, null);
-                } catch (final CoreException err) {
-                    WidgetUtil.showError(err.getMessage());
-                    Util.log(err);
-                }
-
-                // Notify framework that save successful. this will update the editor tab to show it is no longer dirty.
-                if (!monitor.isCanceled()) {
-                    saveCanceled = false;
-                    update();
-                    vdbWasJustSaved = true;
-                } else {
-                    // metadata VDB context currently does not handle if the monitor is canceled.
-                    // so until this gets fixed it has been completely saved. add an update to indicate the VDB was successfully
-                    // saved.
-                    // see defect 14549
-                    update();
-
-                    // canceled. throw this to let downstream operations (like auto-build) know that
-                    // the monitor has been canceled.
-                    saveCanceled = true;
-                    // temporary code until metadata VDB context handles the monitor being canceled. this will let the isDirty()
-                    // method work correctly.
-                    // see defect 14549
-                    saveCanceled = false;
-                    // this exception actually manifests itself as an InterruptedException and is caught
-                    // in the catch block of the operation.run(monitor) below.
-                    throw new OperationCanceledException(Util.getString(I18N_PREFIX + "saveCanceled", //$NON-NLS-1$
-                                                                        new Object[] {getEditorInput().getName()}));
-                }
-            }
-        };
-
+    void openEditor( final VdbEntry entry ) {
         try {
-            operation.run(monitor);
-        } catch (final Exception ex) {
-            if (ex instanceof InterruptedException) throw new OperationCanceledException(ex.getLocalizedMessage());
-            else if (ex instanceof InvocationTargetException) handleSaveException(((InvocationTargetException)ex).getTargetException(),
-                                                                                  monitor);
-            else handleSaveException(ex, monitor);
+            IDE.openEditor(UiUtil.getWorkbenchPage(), entry.findFile());
+        } catch (final Exception error) {
+            throw new RuntimeException(error);
         }
     }
 
     /**
-     * @param currentTimeStamp The currentTimeStamp to set.
-     * @since 4.3
-     */
-    public void setCurrentTimeStamp( final long currentTimeStamp ) {
-        this.currentTimeStamp = currentTimeStamp;
-    }
-
-    /**
-     * @see com.metamatrix.modeler.internal.ui.editors.MultiPageModelEditor#setFocus()
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
      */
     @Override
     public void setFocus() {
-        super.setFocus();
-
-        final IEditorPart page = getActiveEditor();
-
-        // inform IVdbEditorPages of readonly state
-        if (page instanceof IVdbEditorPage) ((IVdbEditorPage)page).updateReadOnlyState(getReadonlyState());
-    }
-
-    /**
-     * Sets the tab for this editor
-     * 
-     * @param tabId
-     * @since 5.0
-     */
-    public void setTab( final String tabId ) {
-        for (int i = 0; i < editors.size(); ++i)
-            if (((IEditorPart)editors.get(i)).getTitle().equals(tabId)) {
-                super.setActivePage(i);
-                return;
-            }
-    }
-
-    /**
-     * Public method used outside the VDB Editor (i.e. SynchronizeVdbAction). It insures that the context being used is the same one
-     * as the open editor and that the sync process is identical, including the save (Defect 22305)
-     * 
-     * @param autoSave
-     */
-    public void synchronizeVdb( final boolean autoSave ) {
-        if (overviewPage != null) overviewPage.synchronizeVdb(autoSave);
-    }
-
-    /**
-     * @since 4.0
-     */
-    void update() {
-        firePropertyChange(PROP_DIRTY);
-    }
-
-    /**
-     * @see org.eclipse.ui.texteditor.ITextEditorExtension2#validateEditorInputState()
-     * @since 5.5.3
-     */
-    public boolean validateEditorInputState() {
-        return false;
-    }
-
-    private boolean vdbTimeStampDifferent() {
-        final long newModStamp = ((IFileEditorInput)getEditorInput()).getFile().getModificationStamp();
-        final long currentTimeStamp = getCurrentTimeStamp();
-        final long diff = newModStamp - currentTimeStamp;
-        if (Math.abs(diff) > 0) {
-            setCurrentTimeStamp(newModStamp);
-            return true;
-        }
-
-        return false;
-    }
-
-    interface Constants {
-        String INVALID_INPUT_MESSAGE = getString("invalidInputMessage"); //$NON-NLS-1$
     }
 }

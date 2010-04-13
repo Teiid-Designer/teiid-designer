@@ -28,10 +28,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.teiid.designer.core.xmi.ModelImportInfo;
+import org.teiid.designer.core.xmi.XMIHeader;
+import org.teiid.designer.core.xmi.XMIHeaderReader;
 import com.metamatrix.common.vdb.VdbModelInfo;
-import com.metamatrix.common.xmi.ModelImportInfo;
-import com.metamatrix.common.xmi.XMIHeader;
-import com.metamatrix.common.xmi.XMIHeaderReader;
 import com.metamatrix.common.xsd.XsdHeader;
 import com.metamatrix.common.xsd.XsdHeaderReader;
 import com.metamatrix.core.MetaMatrixCoreException;
@@ -95,10 +95,8 @@ public class WorkspaceResourceFinderUtil {
     public static IResource findIResource( final Resource resource ) {
 
         try {
-            if (resource != null && resource.getURI() != null && getWorkspace() != null) {
-                return findIResource(resource.getURI());
-            }
-        } catch (IllegalStateException ise) {
+            if (resource != null && resource.getURI() != null && getWorkspace() != null) return findIResource(resource.getURI());
+        } catch (final IllegalStateException ise) {
             // do nothing
         }
 
@@ -120,9 +118,7 @@ public class WorkspaceResourceFinderUtil {
      */
     public static IResource findIResource( final String workspaceUri ) {
 
-        if (!isValidWorkspaceUri(workspaceUri)) {
-            return null;
-        }
+        if (!isValidWorkspaceUri(workspaceUri)) return null;
         final String normalizedUriString = normalizeUriString(workspaceUri);
 
         // MyDefect : 16368 Refactored methods.
@@ -168,10 +164,10 @@ public class WorkspaceResourceFinderUtil {
                 final String uriString = normalizeUriToString(resourceUri);
                 final IFile[] fileResources = getAllProjectsFileResources();
 
-                IFile fileResource = getResourceByLocation(fileResources, uriString);
+                final IFile fileResource = getResourceByLocation(fileResources, uriString);
                 if (fileResource != null) return fileResource;
             }
-        } catch (IllegalStateException ise) {
+        } catch (final IllegalStateException ise) {
             // do nothing
             // MyDefect : getWorkspace() now throws this IllegalStateException exception.
             ModelerCore.Util.log(ise);
@@ -182,58 +178,45 @@ public class WorkspaceResourceFinderUtil {
     }
 
     /**
-     * Return the array of IResource instances that match the specified name. The name must consist of only one path segment and
-     * may or may not have a file extension. If no IResource instances are found that match this name an empty array is returned.
+     * Return the array of IResource instances that match the specified name. The name must consist of only one path segment and may
+     * or may not have a file extension. If no IResource instances are found that match this name an empty array is returned.
      * 
      * @param name the name of the IResource
      * @return the IResource[]
      */
     public static IResource[] findIResourceByName( final String name ) {
-        if (name == null || name.length() == 0 || getWorkspace() == null) {
-            return EMPTY_IRESOURCE_ARRAY;
-        }
+        if (name == null || name.length() == 0 || getWorkspace() == null) return EMPTY_IRESOURCE_ARRAY;
 
         // Collect all IResources within all IProjects
-        FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
+        final FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
         if (getWorkspace() != null && getWorkspace().getRoot() != null) {
-            IProject[] projects = getWorkspace().getRoot().getProjects();
-            for (int i = 0; i < projects.length; i++) {
+            final IProject[] projects = getWorkspace().getRoot().getProjects();
+            for (final IProject project : projects)
                 try {
-                    projects[i].accept(visitor);
-                } catch (CoreException e) {
+                    project.accept(visitor);
+                } catch (final CoreException e) {
                     // do nothing
                 }
-            }
         }
 
         // Try to match the specified resource name with one of the IResource instances
-        boolean removeExtension = (name.indexOf('.') == -1);
-        IFile[] fileResources = visitor.getFileResources();
-        ArrayList tmp = new ArrayList();
-        for (int i = 0; i < fileResources.length; i++) {
-            IFile fileResource = fileResources[i];
+        final boolean removeExtension = (name.indexOf('.') == -1);
+        final IFile[] fileResources = visitor.getFileResources();
+        final ArrayList tmp = new ArrayList();
+        for (final IFile fileResource : fileResources)
             if (fileResource != null) {
                 IPath path = fileResource.getFullPath();
                 // Do not process file names staring with '.' since these
                 // are considered reserved for Eclipse specific files
-                if (path.lastSegment().charAt(0) == '.') {
-                    continue;
-                }
-                if (removeExtension) {
-                    path = path.removeFileExtension();
-                }
-                if (name.equalsIgnoreCase(path.lastSegment())) {
-                    tmp.add(fileResource);
-                }
+                if (path.lastSegment().charAt(0) == '.') continue;
+                if (removeExtension) path = path.removeFileExtension();
+                if (name.equalsIgnoreCase(path.lastSegment())) tmp.add(fileResource);
             }
-        }
 
         // If no matching resources are found return an empty array
-        if (tmp.size() == 0) {
-            return EMPTY_IRESOURCE_ARRAY;
-        }
+        if (tmp.size() == 0) return EMPTY_IRESOURCE_ARRAY;
 
-        IResource[] result = new IResource[tmp.size()];
+        final IResource[] result = new IResource[tmp.size()];
         tmp.toArray(result);
 
         return result;
@@ -247,38 +230,29 @@ public class WorkspaceResourceFinderUtil {
      * @return the IResource
      */
     public static IResource findIResourceByPath( final IPath workspacePath ) {
-        if (workspacePath == null || workspacePath.isEmpty() || getWorkspace() == null) {
-            return null;
-        }
+        if (workspacePath == null || workspacePath.isEmpty() || getWorkspace() == null) return null;
 
         // Collect all IResources within all IProjects
-        FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
+        final FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
         if (getWorkspace() != null && getWorkspace().getRoot() != null) {
-            IProject[] projects = getWorkspace().getRoot().getProjects();
-            for (int i = 0; i < projects.length; i++) {
+            final IProject[] projects = getWorkspace().getRoot().getProjects();
+            for (final IProject project : projects)
                 try {
-                    projects[i].accept(visitor);
-                } catch (CoreException e) {
+                    project.accept(visitor);
+                } catch (final CoreException e) {
                     // do nothing
                 }
-            }
         }
 
-        IFile[] fileResources = visitor.getFileResources();
-        for (int i = 0; i < fileResources.length; i++) {
-            IFile fileResource = fileResources[i];
+        final IFile[] fileResources = visitor.getFileResources();
+        for (final IFile fileResource : fileResources)
             if (fileResource != null) {
-                IPath path = fileResource.getFullPath();
+                final IPath path = fileResource.getFullPath();
                 // Do not process file names staring with '.' since these
                 // are considered reserved for Eclipse specific files
-                if (path.lastSegment().charAt(0) == '.') {
-                    continue;
-                }
-                if (path.equals(workspacePath)) {
-                    return fileResource;
-                }
+                if (path.lastSegment().charAt(0) == '.') continue;
+                if (path.equals(workspacePath)) return fileResource;
             }
-        }
 
         return null;
     }
@@ -291,31 +265,26 @@ public class WorkspaceResourceFinderUtil {
      * @return the IResource
      */
     public static IResource findIResourceByUUID( final String stringifiedUuid ) {
-        if (CoreStringUtil.isEmpty(stringifiedUuid) || !stringifiedUuid.startsWith(UUID.PROTOCOL) || getWorkspace() == null) {
-            return null;
-        }
+        if (CoreStringUtil.isEmpty(stringifiedUuid) || !stringifiedUuid.startsWith(UUID.PROTOCOL) || getWorkspace() == null) return null;
 
         // Collect all IResources within all IProjects
-        FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
+        final FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
         if (getWorkspace() != null && getWorkspace().getRoot() != null) {
-            IProject[] projects = getWorkspace().getRoot().getProjects();
-            for (int i = 0; i < projects.length; i++) {
+            final IProject[] projects = getWorkspace().getRoot().getProjects();
+            for (final IProject project : projects)
                 try {
-                    projects[i].accept(visitor);
-                } catch (CoreException e) {
+                    project.accept(visitor);
+                } catch (final CoreException e) {
                     // do nothing
                 }
-            }
         }
 
-        IFile[] fileResources = visitor.getFileResources();
-        for (int i = 0; i < fileResources.length; i++) {
-            IFile iResource = fileResources[i];
+        final IFile[] fileResources = visitor.getFileResources();
+        for (final IFile fileResource : fileResources) {
+            final IFile iResource = fileResource;
             if (iResource != null && !ModelUtil.isXsdFile(iResource)) {
-                XMIHeader header = ModelUtil.getXmiHeader(iResource);
-                if (header != null && stringifiedUuid.equals(header.getUUID())) {
-                    return iResource;
-                }
+                final XMIHeader header = ModelUtil.getXmiHeader(iResource);
+                if (header != null && stringifiedUuid.equals(header.getUUID())) return iResource;
             }
         }
 
@@ -324,32 +293,27 @@ public class WorkspaceResourceFinderUtil {
 
     private static String getAbsoluteLocation( final File base,
                                                final String relativePath ) {
-        URI baseLocation = URI.createFileURI(base.getAbsolutePath());
+        final URI baseLocation = URI.createFileURI(base.getAbsolutePath());
         URI relLocation = URI.createURI(relativePath, false);
-        if (baseLocation.isHierarchical() && !baseLocation.isRelative() && relLocation.isRelative()) {
-            relLocation = relLocation.resolve(baseLocation);
-        }
+        if (baseLocation.isHierarchical() && !baseLocation.isRelative() && relLocation.isRelative()) relLocation = relLocation.resolve(baseLocation);
         return URI.decode(relLocation.toString());
     }
 
     private static IFile[] getAllProjectsFileResources() {
         // Collect all IResources within all IProjects
 
-        FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
-        IWorkspace workSpace = getWorkspace();
+        final FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor();
+        final IWorkspace workSpace = getWorkspace();
         if (workSpace != null && workSpace.getRoot() != null) {
-            IWorkspaceRoot wsRoot = workSpace.getRoot();
-            IProject[] projects = wsRoot.getProjects();
-            for (int i = 0; i < projects.length; i++) {
-                if (projects[i].isOpen()) {
-                    try {
-                        projects[i].accept(visitor);
-                    } catch (CoreException e) {
-                        // do nothing
-                        ModelerCore.Util.log(e);
-                    }
+            final IWorkspaceRoot wsRoot = workSpace.getRoot();
+            final IProject[] projects = wsRoot.getProjects();
+            for (final IProject project : projects)
+                if (project.isOpen()) try {
+                    project.accept(visitor);
+                } catch (final CoreException e) {
+                    // do nothing
+                    ModelerCore.Util.log(e);
                 }
-            }
         }
 
         return visitor.getFileResources();
@@ -359,28 +323,25 @@ public class WorkspaceResourceFinderUtil {
         return getAllWorkspaceResources(null);
     }
 
-    public static Collection getAllWorkspaceResources( ResourceFilter filter ) {
+    public static Collection getAllWorkspaceResources( final ResourceFilter filter ) {
         // Collect all IResources within all IProjects
-        FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor(filter);
-        IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
-        for (int i = 0; i < projects.length; i++) {
+        final FileResourceCollectorVisitor visitor = new FileResourceCollectorVisitor(filter);
+        final IProject[] projects = ModelerCore.getWorkspace().getRoot().getProjects();
+        for (final IProject project : projects)
             try {
-                projects[i].accept(visitor);
-            } catch (CoreException e) {
+                project.accept(visitor);
+            } catch (final CoreException e) {
                 // do nothing
             }
-        }
 
-        Collection fileResources = visitor.getFileResourcesCollection();
-        Iterator itor = fileResources.iterator();
+        final Collection fileResources = visitor.getFileResourcesCollection();
+        final Iterator itor = fileResources.iterator();
         while (itor.hasNext()) {
-            IFile fileResource = (IFile)itor.next();
-            IPath path = fileResource.getFullPath();
+            final IFile fileResource = (IFile)itor.next();
+            final IPath path = fileResource.getFullPath();
             // Do not process file names starting with '.' since these
             // are considered reserved for Eclipse specific files
-            if (path.lastSegment().charAt(0) == '.') {
-                itor.remove();
-            } // endif -- .file
+            if (path.lastSegment().charAt(0) == '.') itor.remove();
         } // endwhile
 
         return fileResources;
@@ -388,8 +349,8 @@ public class WorkspaceResourceFinderUtil {
 
     /**
      * Return IPath[] array representing the workspace paths to dependent IResource instances. The dependent paths are found by
-     * reading the model imports declarations in the specified resource. Only paths to IResource instances will be returned
-     * whereas import declarations to one of the well-know Teiid Designer/EMF global resources such as
+     * reading the model imports declarations in the specified resource. Only paths to IResource instances will be returned whereas
+     * import declarations to one of the well-know Teiid Designer/EMF global resources such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
      * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
@@ -402,18 +363,14 @@ public class WorkspaceResourceFinderUtil {
      * @return the IPath[] for paths to the dependent IResource instances
      */
     public static IPath[] getDependentResourcePaths( final IResource iResource ) {
-        if (iResource == null || getWorkspace() == null) {
-            return EMPTY_IPATH_ARRAY;
-        }
+        if (iResource == null || getWorkspace() == null) return EMPTY_IPATH_ARRAY;
 
         final IResource[] dependentIResources = getDependentResources(iResource);
-        if (dependentIResources == null || dependentIResources.length == 0) {
-            return EMPTY_IPATH_ARRAY;
-        }
+        if (dependentIResources == null || dependentIResources.length == 0) return EMPTY_IPATH_ARRAY;
 
         final IPath[] result = new IPath[dependentIResources.length];
         for (int i = 0; i != dependentIResources.length; ++i) {
-            IResource dependentIResource = dependentIResources[i];
+            final IResource dependentIResource = dependentIResources[i];
             result[i] = dependentIResource.getFullPath();
         }
 
@@ -437,14 +394,10 @@ public class WorkspaceResourceFinderUtil {
      * @return the IResource[] references of dependent resources
      */
     public static IResource[] getDependentResources( final IResource iResource ) {
-        if (iResource == null || getWorkspace() == null) {
-            return EMPTY_IRESOURCE_ARRAY;
-        }
+        if (iResource == null || getWorkspace() == null) return EMPTY_IRESOURCE_ARRAY;
 
         final File iResourceFile = iResource.getRawLocation().toFile();
-        if (!iResourceFile.exists()) {
-            return EMPTY_IRESOURCE_ARRAY;
-        }
+        if (!iResourceFile.exists()) return EMPTY_IRESOURCE_ARRAY;
 
         final Collection result = new ArrayList();
         try {
@@ -461,12 +414,10 @@ public class WorkspaceResourceFinderUtil {
 
                         IResource dependentIResource = findIResource(location);
                         if (dependentIResource == null) {
-                            String absolutePath = getAbsoluteLocation(iResourceFile, location);
+                            final String absolutePath = getAbsoluteLocation(iResourceFile, location);
                             dependentIResource = findIResource(absolutePath);
                         }
-                        if (dependentIResource != null && !result.contains(dependentIResource)) {
-                            result.add(dependentIResource);
-                        }
+                        if (dependentIResource != null && !result.contains(dependentIResource)) result.add(dependentIResource);
                     }
 
                     // Add all the included schema locations
@@ -475,12 +426,10 @@ public class WorkspaceResourceFinderUtil {
                         final String location = locations[i];
                         IResource dependentIResource = findIResource(location);
                         if (dependentIResource == null) {
-                            String absolutePath = getAbsoluteLocation(iResourceFile, location);
+                            final String absolutePath = getAbsoluteLocation(iResourceFile, location);
                             dependentIResource = findIResource(absolutePath);
                         }
-                        if (dependentIResource != null && !result.contains(dependentIResource)) {
-                            result.add(dependentIResource);
-                        }
+                        if (dependentIResource != null && !result.contains(dependentIResource)) result.add(dependentIResource);
                     }
                 }
 
@@ -489,61 +438,53 @@ public class WorkspaceResourceFinderUtil {
                 final XMIHeader header = XMIHeaderReader.readHeader(iResourceFile);
                 if (header != null) {
 
-                    ModelImportInfo[] infos = header.getModelImportInfos();
-                    for (int i = 0; i < infos.length; i++) {
+                    final ModelImportInfo[] infos = header.getModelImportInfos();
+                    for (final ModelImportInfo info : infos) {
                         IResource dependentIResource = null;
 
-                        String location = infos[i].getLocation();
-                        String path = infos[i].getPath();
-                        if (!CoreStringUtil.isEmpty(path)) {
-                            dependentIResource = findIResource(path);
-                        } else if (!CoreStringUtil.isEmpty(location)) {
-                            String depPath = iResource.getFullPath().removeLastSegments(1).append(location).toString();
+                        final String location = info.getLocation();
+                        final String path = info.getPath();
+                        if (!CoreStringUtil.isEmpty(path)) dependentIResource = findIResource(path);
+                        else if (!CoreStringUtil.isEmpty(location)) {
+                            final String depPath = iResource.getFullPath().removeLastSegments(1).append(location).toString();
                             if (!isGlobalResource(depPath)) {
                                 dependentIResource = findIResource(depPath);
                                 if (dependentIResource == null) {
-                                    String absolutePath = getAbsoluteLocation(iResourceFile, location);
+                                    final String absolutePath = getAbsoluteLocation(iResourceFile, location);
                                     dependentIResource = findIResource(absolutePath);
                                 }
                             }
                         }
-                        if (dependentIResource != null && !result.contains(dependentIResource)) {
-                            result.add(dependentIResource);
-                        }
+                        if (dependentIResource != null && !result.contains(dependentIResource)) result.add(dependentIResource);
 
                     }
                 }
 
                 // Get the header information from the VDB archive file
             } else if (ModelUtil.isVdbArchiveFile(iResource)) {
-                final XMIHeader header = ModelFileUtil.getXmiHeader(iResourceFile);
+                final XMIHeader header = ModelUtil.getXmiHeader(iResourceFile);
                 if (header != null) {
 
-                    ModelImportInfo[] infos = header.getModelImportInfos();
-                    for (int i = 0; i < infos.length; i++) {
+                    final ModelImportInfo[] infos = header.getModelImportInfos();
+                    for (final ModelImportInfo info : infos) {
                         IResource dependentIResource = null;
 
-                        String location = infos[i].getLocation();
-                        String path = infos[i].getPath();
-                        if (!CoreStringUtil.isEmpty(path)) {
-                            dependentIResource = findIResource(path);
-                        } else if (!CoreStringUtil.isEmpty(location)) {
-                            if (!isGlobalResource(location)) {
-                                dependentIResource = findIResource(location);
-                                if (dependentIResource == null) {
-                                    String absolutePath = getAbsoluteLocation(iResourceFile, location);
-                                    dependentIResource = findIResource(absolutePath);
-                                }
+                        final String location = info.getLocation();
+                        final String path = info.getPath();
+                        if (!CoreStringUtil.isEmpty(path)) dependentIResource = findIResource(path);
+                        else if (!CoreStringUtil.isEmpty(location)) if (!isGlobalResource(location)) {
+                            dependentIResource = findIResource(location);
+                            if (dependentIResource == null) {
+                                final String absolutePath = getAbsoluteLocation(iResourceFile, location);
+                                dependentIResource = findIResource(absolutePath);
                             }
                         }
-                        if (dependentIResource != null && !result.contains(dependentIResource)) {
-                            result.add(dependentIResource);
-                        }
+                        if (dependentIResource != null && !result.contains(dependentIResource)) result.add(dependentIResource);
                     }
                 }
             }
 
-        } catch (Exception err) {
+        } catch (final Exception err) {
             final Object[] params = new Object[] {iResource.getFullPath()};
             final String msg = ModelerCore.Util.getString("WorkspaceResourceFinderUtil.Error_getting_model_imports_from_resource", params); //$NON-NLS-1$
             ModelerCore.Util.log(IStatus.ERROR, err, msg);
@@ -553,8 +494,7 @@ public class WorkspaceResourceFinderUtil {
     }
 
     /**
-     * Returns true if the specified URI string is one of the well-known Teiid Designer/EMF identifiers to a global resource such
-     * as
+     * Returns true if the specified URI string is one of the well-known Teiid Designer/EMF identifiers to a global resource such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"
      * "http://www.metamatrix.com/metamodels/UmlPrimitiveTypes-instance"
@@ -566,78 +506,42 @@ public class WorkspaceResourceFinderUtil {
      * @param uri the URI string
      */
     public static String getGlobalResourceUri( final String uri ) {
-        if (uri == null) {
-            return null;
-        }
+        if (uri == null) return null;
 
         // If the URI is to the Teiid Designer built-in datatypes model ...
-        if (uri.startsWith(DatatypeConstants.BUILTIN_DATATYPES_URI)) {
-            return DatatypeConstants.BUILTIN_DATATYPES_URI;
-        }
-        if (uri.endsWith(DatatypeConstants.DATATYPES_MODEL_FILE_NAME)) {
-            return DatatypeConstants.BUILTIN_DATATYPES_URI;
-        }
+        if (uri.startsWith(DatatypeConstants.BUILTIN_DATATYPES_URI)) return DatatypeConstants.BUILTIN_DATATYPES_URI;
+        if (uri.endsWith(DatatypeConstants.DATATYPES_MODEL_FILE_NAME)) return DatatypeConstants.BUILTIN_DATATYPES_URI;
 
         // If the URI is to the Teiid Designer built-in UML primitive types model ...
-        if (uri.startsWith(UML_PRIMITIVE_TYPES_INTERNAL_URI)) {
-            return UML_PRIMITIVE_TYPES_INTERNAL_URI;
-        }
-        if (uri.endsWith(UML_PRIMITIVE_TYPES_MODEL_FILE_NAME)) {
-            return UML_PRIMITIVE_TYPES_INTERNAL_URI;
-        }
-        if (uri.startsWith(UML_METAMODEL_URI)) {
-            return UML_METAMODEL_URI;
-        }
+        if (uri.startsWith(UML_PRIMITIVE_TYPES_INTERNAL_URI)) return UML_PRIMITIVE_TYPES_INTERNAL_URI;
+        if (uri.endsWith(UML_PRIMITIVE_TYPES_MODEL_FILE_NAME)) return UML_PRIMITIVE_TYPES_INTERNAL_URI;
+        if (uri.startsWith(UML_METAMODEL_URI)) return UML_METAMODEL_URI;
 
         // If the URI is to the Teiid Designer built-in relationship model ...
-        if (uri.endsWith(RELATIONSHIP_PRIMITIVE_TYPES_INTERNAL_URI)) {
-            return RELATIONSHIP_PRIMITIVE_TYPES_INTERNAL_URI;
-        }
-        if (uri.endsWith(RELATIONSHIP_PRIMITIVE_TYPES_MODEL_FILE_NAME)) {
-            return RELATIONSHIP_PRIMITIVE_TYPES_INTERNAL_URI;
-        }
+        if (uri.endsWith(RELATIONSHIP_PRIMITIVE_TYPES_INTERNAL_URI)) return RELATIONSHIP_PRIMITIVE_TYPES_INTERNAL_URI;
+        if (uri.endsWith(RELATIONSHIP_PRIMITIVE_TYPES_MODEL_FILE_NAME)) return RELATIONSHIP_PRIMITIVE_TYPES_INTERNAL_URI;
 
         // If the URI is to one of the Emf XMLSchema resources ...
-        if (uri.startsWith(ModelerCore.XML_SCHEMA_INSTANCE_GENERAL_URI)) {
-            return ModelerCore.XML_SCHEMA_INSTANCE_GENERAL_URI;
-        }
-        if (uri.startsWith(ModelerCore.XML_SCHEMA_GENERAL_URI)) {
-            return ModelerCore.XML_SCHEMA_GENERAL_URI;
-        }
-        if (uri.startsWith(ModelerCore.XML_MAGIC_SCHEMA_GENERAL_URI)) {
-            return ModelerCore.XML_MAGIC_SCHEMA_GENERAL_URI;
-        }
-        if (uri.equals(ModelerCore.XML_XSD_GENERAL_URI)) {
-            return ModelerCore.XML_XSD_GENERAL_URI;
-        }
+        if (uri.startsWith(ModelerCore.XML_SCHEMA_INSTANCE_GENERAL_URI)) return ModelerCore.XML_SCHEMA_INSTANCE_GENERAL_URI;
+        if (uri.startsWith(ModelerCore.XML_SCHEMA_GENERAL_URI)) return ModelerCore.XML_SCHEMA_GENERAL_URI;
+        if (uri.startsWith(ModelerCore.XML_MAGIC_SCHEMA_GENERAL_URI)) return ModelerCore.XML_MAGIC_SCHEMA_GENERAL_URI;
+        if (uri.equals(ModelerCore.XML_XSD_GENERAL_URI)) return ModelerCore.XML_XSD_GENERAL_URI;
 
         // If the URI is in the form of an Eclipse platform path to
         // one of the Emf XMLSchema resources ...
-        if (uri.startsWith(XML_SCHEMA_ECLIPSE_PLATFORM_URI_PREFIX)) {
-            // MagicXMLSchema.xsd suffix on the resource URI
-            if (uri.indexOf(XML_MAGIC_SCHEMA_ECLIPSE_PLATFORM_URI_SUFFIX) > 0) {
-                return ModelerCore.XML_MAGIC_SCHEMA_GENERAL_URI;
-            }
-            // XMLSchema.xsd suffix on the resource URI
-            else if (uri.indexOf(XML_SCHEMA_ECLIPSE_PLATFORM_URI_SUFFIX) > 0) {
-                return ModelerCore.XML_SCHEMA_GENERAL_URI;
-            }
-            // XMLSchema-instance.xsd suffix on the resource URI
-            else if (uri.indexOf(XML_SCHEMA_INSTANCE_ECLIPSE_PLATFORM_URI_SUFFIX) > 0) {
-                return ModelerCore.XML_SCHEMA_INSTANCE_GENERAL_URI;
-            }
-        }
+        if (uri.startsWith(XML_SCHEMA_ECLIPSE_PLATFORM_URI_PREFIX)) // MagicXMLSchema.xsd suffix on the resource URI
+        if (uri.indexOf(XML_MAGIC_SCHEMA_ECLIPSE_PLATFORM_URI_SUFFIX) > 0) return ModelerCore.XML_MAGIC_SCHEMA_GENERAL_URI;
+        else if (uri.indexOf(XML_SCHEMA_ECLIPSE_PLATFORM_URI_SUFFIX) > 0) return ModelerCore.XML_SCHEMA_GENERAL_URI;
+        else if (uri.indexOf(XML_SCHEMA_INSTANCE_ECLIPSE_PLATFORM_URI_SUFFIX) > 0) return ModelerCore.XML_SCHEMA_INSTANCE_GENERAL_URI;
 
         // Next check if the import reference is to one of our system models
         try {
             final Resource[] systemModels = ModelerCore.getSystemVdbResources();
             for (int i = 0; i != systemModels.length; ++i) {
                 final String systemModelUri = URI.decode(systemModels[i].getURI().toString());
-                if (uri.equalsIgnoreCase(systemModelUri)) {
-                    return systemModelUri;
-                }
+                if (uri.equalsIgnoreCase(systemModelUri)) return systemModelUri;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // do nothing
         }
 
@@ -647,143 +551,124 @@ public class WorkspaceResourceFinderUtil {
                 final URI metamodelUri = ModelerCore.getMetamodelRegistry().getURI(uri);
                 return ModelerCore.getMetamodelRegistry().getMetamodelDescriptor(metamodelUri).getNamespaceURI();
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // do nothing
         }
 
         return null;
     }
 
-    private static IFile getResourceByLocation( IFile[] fileResources,
-                                                String workspaceUri ) {
+    private static IFile getResourceByLocation( final IFile[] fileResources,
+                                                final String workspaceUri ) {
 
         IFile fileResource = null;
         String resourceLocation;
 
         // Try to match the workspace URI to a IResource location ...
-        for (int i = 0; i < fileResources.length; i++) {
-            fileResource = fileResources[i];
+        for (final IFile fileResource2 : fileResources) {
+            fileResource = fileResource2;
             resourceLocation = fileResource.getLocation().toOSString();
-            if (workspaceUri.endsWith(resourceLocation)) {
-                return fileResource;
-            }
+            if (workspaceUri.endsWith(resourceLocation)) return fileResource;
             resourceLocation = fileResource.getLocation().toString();
-            if (workspaceUri.endsWith(resourceLocation)) {
-                return fileResource;
-            }
+            if (workspaceUri.endsWith(resourceLocation)) return fileResource;
         }
 
         // Case 5683 - look for a match of the supplied workspaceUri (usually file.ext) to the
         // last segment of the fileResource path.
-        for (int i = 0; i < fileResources.length; i++) {
-            fileResource = fileResources[i];
-            String fileNameSegment = fileResource.getLocation().lastSegment();
-            if (fileNameSegment != null && fileNameSegment.equalsIgnoreCase(workspaceUri)) {
-                return fileResource;
-            }
+        for (final IFile fileResource2 : fileResources) {
+            fileResource = fileResource2;
+            final String fileNameSegment = fileResource.getLocation().lastSegment();
+            if (fileNameSegment != null && fileNameSegment.equalsIgnoreCase(workspaceUri)) return fileResource;
         }
 
         // MyDefect : 16368 Added to fix the defect
-        for (int i = 0; i < fileResources.length; i++) {
-            fileResource = fileResources[i];
-            IPath resrcLocation = fileResource.getLocation();
+        for (final IFile fileResource2 : fileResources) {
+            fileResource = fileResource2;
+            final IPath resrcLocation = fileResource.getLocation();
             resourceLocation = resrcLocation.toOSString();
-            if (resourceLocation.endsWith(workspaceUri)) {
-                return fileResource;
-            }
+            if (resourceLocation.endsWith(workspaceUri)) return fileResource;
             resourceLocation = resrcLocation.toString();
-            if (resourceLocation.endsWith(workspaceUri)) {
-                return fileResource;
-            }
+            if (resourceLocation.endsWith(workspaceUri)) return fileResource;
         }
 
         return null;
     }
 
-    private static IFile getResourceStartsWithHttp( IFile[] fileResources,
-                                                    String workspaceUri ) {
+    private static IFile getResourceStartsWithHttp( final IFile[] fileResources,
+                                                    final String workspaceUri ) {
 
         IFile fileResource = null;
         String targetNamespace;
 
-        if (workspaceUri.startsWith("http")) { //$NON-NLS-1$
-            for (int i = 0; i < fileResources.length; i++) {
-                fileResource = fileResources[i];
-                targetNamespace = getXsdTargetNamespace(fileResource);
-                if (workspaceUri.equals(targetNamespace)) {
-                    return fileResource;
-                }
-            }
+        if (workspaceUri.startsWith("http")) for (final IFile fileResource2 : fileResources) { //$NON-NLS-1$
+            fileResource = fileResource2;
+            targetNamespace = getXsdTargetNamespace(fileResource);
+            if (workspaceUri.equals(targetNamespace)) return fileResource;
         }
 
         return null;
     }
 
-    private static IFile getResourceStartsWithPathSeparator( IFile[] fileResources,
-                                                             String workspaceUri ) {
+    private static IFile getResourceStartsWithPathSeparator( final IFile[] fileResources,
+                                                             final String workspaceUri ) {
 
         IFile fileResource = null;
         IPath pathInWorkspace;
 
         if (workspaceUri.charAt(0) == IPath.SEPARATOR) {
             pathInWorkspace = new Path(workspaceUri);
-            for (int i = 0; i < fileResources.length; i++) {
-                fileResource = fileResources[i];
-                if (fileResource != null && fileResource.getFullPath().equals(pathInWorkspace)) {
-                    return fileResource;
-                }
+            for (final IFile fileResource2 : fileResources) {
+                fileResource = fileResource2;
+                if (fileResource != null && fileResource.getFullPath().equals(pathInWorkspace)) return fileResource;
             }
         }
 
         return null;
     }
 
-    public static Collection getResourcesThatUse( IResource resource ) {
+    public static Collection getResourcesThatUse( final IResource resource ) {
         return getResourcesThatUse(resource, null);
     }
 
-    public static Collection getResourcesThatUse( IResource resource,
-                                                  ResourceFilter filter ) {
+    public static Collection getResourcesThatUse( final IResource resource,
+                                                  final ResourceFilter filter ) {
         // search the workspace for any models that import anything beneath the path that is moving
-        Collection allResources = getAllWorkspaceResources(filter);
-        Collection colDependentResources = new ArrayList();
+        final Collection allResources = getAllWorkspaceResources(filter);
+        final Collection colDependentResources = new ArrayList();
 
         // check to see if any of the resources found depend upon the specified resource:
-        IPath targetPath = resource.getFullPath();
-        for (Iterator iter = allResources.iterator(); iter.hasNext();) {
-            IResource nextResource = (IResource)iter.next();
-            IPath[] paths = getDependentResourcePaths(nextResource);
-            for (int i = 0; i < paths.length; i++) {
-                if (paths[i].equals(targetPath)) {
-                    String modelPath = nextResource.getFullPath().toString();
+        final IPath targetPath = resource.getFullPath();
+        for (final Iterator iter = allResources.iterator(); iter.hasNext();) {
+            final IResource nextResource = (IResource)iter.next();
+            final IPath[] paths = getDependentResourcePaths(nextResource);
+            for (final IPath path : paths)
+                if (path.equals(targetPath)) {
+                    final String modelPath = nextResource.getFullPath().toString();
                     // If the URI is to the Teiid Designer built-in datatypes resource or to one
                     // of the Emf XMLSchema resources then continue since there is no
                     // ModelReference to add.
-                    if (modelPath != null && !isGlobalResource(modelPath)) {
-                        colDependentResources.add(nextResource);
-                    }
+                    if (modelPath != null && !isGlobalResource(modelPath)) colDependentResources.add(nextResource);
                     break;
                 }
-            }
         }
 
         return colDependentResources;
     }
 
-    public static void getResourcesThatUseRecursive( IResource resource,
-                                                     ResourceFilter filter,
-                                                     Collection dependentResources ) {
+    public static void getResourcesThatUseRecursive( final IResource resource,
+                                                     final ResourceFilter filter,
+                                                     final Collection dependentResources ) {
         // search the workspace for any models that import anything beneath the path that is moving
-        Collection allResources = getAllWorkspaceResources(filter);
+        final Collection allResources = getAllWorkspaceResources(filter);
 
         // check to see if any of the resources found depend upon the specified resource:
-        IPath targetPath = resource.getFullPath();
-        for (Iterator iter = allResources.iterator(); iter.hasNext();) {
-            IResource nextResource = (IResource)iter.next();
-            IPath[] paths = getDependentResourcePaths(nextResource);
-            for (int i = 0; i < paths.length; i++) {
-                if (paths[i].equals(targetPath)) {
-                    String modelPath = nextResource.getFullPath().toString();
+        final IPath targetPath = resource.getFullPath();
+        for (final Iterator iter = allResources.iterator(); iter.hasNext();) {
+            final IResource nextResource = (IResource)iter.next();
+            final IPath[] paths = getDependentResourcePaths(nextResource);
+            for (final IPath path : paths)
+                if (path.equals(targetPath)) {
+                    final String modelPath = nextResource.getFullPath().toString();
                     // If the URI is to the Teiid Designer built-in datatypes resource or to one
                     // of the Emf XMLSchema resources then continue since there is no
                     // ModelReference to add.
@@ -793,7 +678,6 @@ public class WorkspaceResourceFinderUtil {
                     }
                     break;
                 }
-            }
         }
     }
 
@@ -810,18 +694,16 @@ public class WorkspaceResourceFinderUtil {
      * @return
      * @since 4.3
      */
-    public static IResource[] getVdbResourcesThatContain( Collection resources ) {
-        if (resources == null || resources.isEmpty() || getWorkspace() == null) {
-            return EMPTY_IRESOURCE_ARRAY;
-        }
+    public static IResource[] getVdbResourcesThatContain( final Collection resources ) {
+        if (resources == null || resources.isEmpty() || getWorkspace() == null) return EMPTY_IRESOURCE_ARRAY;
 
         // Collect only vdb archive resources from the workspace
-        Collection vdbResources = getAllWorkspaceResources(VDB_RESOURCE_FILTER);
+        final Collection vdbResources = getAllWorkspaceResources(VDB_RESOURCE_FILTER);
 
         // Retrieve any vdb archive resources that reference the specified IResource
-        Collection result = new HashSet();
-        for (Iterator iter = resources.iterator(); iter.hasNext();) {
-            IResource resource = (IResource)iter.next();
+        final Collection result = new HashSet();
+        for (final Iterator iter = resources.iterator(); iter.hasNext();) {
+            final IResource resource = (IResource)iter.next();
             result.addAll(getVdbResourcesThatContain(resource, vdbResources));
         }
         return (IResource[])result.toArray(new IResource[result.size()]);
@@ -839,16 +721,14 @@ public class WorkspaceResourceFinderUtil {
      * @return
      * @since 4.3
      */
-    public static IResource[] getVdbResourcesThatContain( IResource resource ) {
-        if (resource == null || !resource.exists() || getWorkspace() == null) {
-            return EMPTY_IRESOURCE_ARRAY;
-        }
+    public static IResource[] getVdbResourcesThatContain( final IResource resource ) {
+        if (resource == null || !resource.exists() || getWorkspace() == null) return EMPTY_IRESOURCE_ARRAY;
 
         // Collect only vdb archive resources from the workspace
-        Collection vdbResources = getAllWorkspaceResources(VDB_RESOURCE_FILTER);
+        final Collection vdbResources = getAllWorkspaceResources(VDB_RESOURCE_FILTER);
 
         // Retrieve any vdb archive resources that reference the specified IResource
-        Collection result = getVdbResourcesThatContain(resource, vdbResources);
+        final Collection result = getVdbResourcesThatContain(resource, vdbResources);
         return (IResource[])result.toArray(new IResource[result.size()]);
     }
 
@@ -860,36 +740,28 @@ public class WorkspaceResourceFinderUtil {
      * @return
      * @since 4.3
      */
-    private static Collection getVdbResourcesThatContain( IResource resource,
-                                                          Collection workspaceResources ) {
+    private static Collection getVdbResourcesThatContain( final IResource resource,
+                                                          final Collection workspaceResources ) {
         Collection result = Collections.EMPTY_LIST;
-        if (resource == null || !resource.exists() || ModelUtil.isVdbArchiveFile(resource)) {
-            return result;
-        }
-        if (workspaceResources == null || workspaceResources.isEmpty()) {
-            return result;
-        }
+        if (resource == null || !resource.exists() || ModelUtil.isVdbArchiveFile(resource)) return result;
+        if (workspaceResources == null || workspaceResources.isEmpty()) return result;
 
         // Check if any vdb archive resources in the workspace reference this resource ...
         String targetUuid = null;
-        XMIHeader xmiHeader = ModelUtil.getXmiHeader(resource);
-        if (xmiHeader != null) {
-            targetUuid = xmiHeader.getUUID();
-        }
+        final XMIHeader xmiHeader = ModelUtil.getXmiHeader(resource);
+        if (xmiHeader != null) targetUuid = xmiHeader.getUUID();
         final String targetPath = resource.getFullPath().makeAbsolute().toString();
         result = new ArrayList();
 
         // Match the UUID or full path of the specified resource to those referenced in the vdb manifest
-        for (Iterator iter = workspaceResources.iterator(); iter.hasNext();) {
-            IResource nextResource = (IResource)iter.next();
-            if (!ModelUtil.isVdbArchiveFile(nextResource)) {
-                continue;
-            }
-            File vdbFile = nextResource.getRawLocation().toFile();
+        for (final Iterator iter = workspaceResources.iterator(); iter.hasNext();) {
+            final IResource nextResource = (IResource)iter.next();
+            if (!ModelUtil.isVdbArchiveFile(nextResource)) continue;
+            final File vdbFile = nextResource.getRawLocation().toFile();
             if (vdbFile.exists()) {
-                com.metamatrix.common.vdb.VdbHeader vdbHeader = ModelUtil.getVdbHeader(vdbFile);
+                final com.metamatrix.common.vdb.VdbHeader vdbHeader = ModelUtil.getVdbHeader(vdbFile);
                 if (vdbHeader != null) {
-                    VdbModelInfo[] infos = vdbHeader.getModelInfos();
+                    final VdbModelInfo[] infos = vdbHeader.getModelInfos();
                     for (int i = 0; i != infos.length; ++i) {
                         if (targetUuid != null && targetUuid.equals(infos[i].getUUID())) {
                             result.add(nextResource);
@@ -925,15 +797,13 @@ public class WorkspaceResourceFinderUtil {
      * @return
      */
     public static String getWorkspaceUri( final IResource resource ) {
-        if (resource != null) {
-            return resource.getFullPath().toString();
-        }
+        if (resource != null) return resource.getFullPath().toString();
         return null;
     }
 
     /**
-     * Return the URI string defining the relative path within the workspace for the specified EMF resource. If the resource is
-     * one of the well-known Teiid Designer/EMF global resources such as
+     * Return the URI string defining the relative path within the workspace for the specified EMF resource. If the resource is one
+     * of the well-known Teiid Designer/EMF global resources such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" "http://www.w3.org/2001/XMLSchema"
      * "http://www.w3.org/2001/MagicXMLSchema" "http://www.w3.org/2001/XMLSchema-instance"
@@ -952,20 +822,14 @@ public class WorkspaceResourceFinderUtil {
 
             // if it is a global resource just return the uri
             String resourceUriString = resourceUri.toString();
-            if (isGlobalResource(resourceUriString)) {
-                return getGlobalResourceUri(resourceUriString);
-            }
+            if (isGlobalResource(resourceUriString)) return getGlobalResourceUri(resourceUriString);
             resourceUriString = normalizeUriToString(resourceUri);
-            if (isGlobalResource(resourceUriString)) {
-                return getGlobalResourceUri(resourceUriString);
-            }
+            if (isGlobalResource(resourceUriString)) return getGlobalResourceUri(resourceUriString);
 
             // If the corresponding IResource can be found then
             // return the relative path within the workspace
-            IResource iResource = findIResource(resource);
-            if (iResource != null) {
-                return iResource.getFullPath().toString();
-            }
+            final IResource iResource = findIResource(resource);
+            if (iResource != null) return iResource.getFullPath().toString();
 
             // Try and compute the relative path for the Emf resource
             // by checking its path against those of all known workspace
@@ -974,18 +838,17 @@ public class WorkspaceResourceFinderUtil {
             // URI in order to create a relative path.
             String path = resourceUriString;
             try {
-                IProject[] projects = getWorkspace().getRoot().getProjects();
-                for (int i = 0; i < projects.length; i++) {
-                    IProject project = projects[i];
+                final IProject[] projects = getWorkspace().getRoot().getProjects();
+                for (final IProject project : projects) {
                     final IPath iPath = project.getLocation().removeLastSegments(1);
-                    String projectLocation = iPath.toString();
+                    final String projectLocation = iPath.toString();
                     int beginIndex = path.indexOf(projectLocation);
                     if (beginIndex >= 0) {
                         beginIndex = beginIndex + projectLocation.length();
                         return path.substring(beginIndex);
                     }
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 path = resourceUriString;
             }
 
@@ -993,16 +856,12 @@ public class WorkspaceResourceFinderUtil {
             // URI and the Platform installation location
             path = resourceUriString;
             final String osPath = resourceUri.toFileString();
-            if (osPath == null) {
-                return null;
-            }
+            if (osPath == null) return null;
 
             // Remove the path to the workspace from the resource path ...
             final IPath wsPath = Platform.getLocation();
             final String wsPathStr = wsPath.toOSString();
-            if (osPath.startsWith(wsPathStr)) {
-                path = osPath.substring(wsPathStr.length());
-            }
+            if (osPath.startsWith(wsPathStr)) path = osPath.substring(wsPathStr.length());
             return path;
 
         }
@@ -1013,23 +872,18 @@ public class WorkspaceResourceFinderUtil {
         if (ModelUtil.isXsdFile(iResource)) {
             final String location = iResource.getLocation().toOSString();
             final File resourceFile = new File(location);
-            if (resourceFile.exists()) {
-                try {
-                    final XsdHeader header = XsdHeaderReader.readHeader(resourceFile);
-                    if (header != null) {
-                        return header.getTargetNamespaceURI();
-                    }
-                } catch (MetaMatrixCoreException e) {
-                    ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
-                }
+            if (resourceFile.exists()) try {
+                final XsdHeader header = XsdHeaderReader.readHeader(resourceFile);
+                if (header != null) return header.getTargetNamespaceURI();
+            } catch (final MetaMatrixCoreException e) {
+                ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
             }
         }
         return null;
     }
 
     /**
-     * Returns true if the specified URI string is one of the well-known Teiid Designer/EMF identifiers to a global resource such
-     * as
+     * Returns true if the specified URI string is one of the well-known Teiid Designer/EMF identifiers to a global resource such as
      * <p>
      * "http://www.metamatrix.com/metamodels/SimpleDatatypes-instance"
      * "http://www.metamatrix.com/metamodels/UmlPrimitiveTypes-instance"
@@ -1041,9 +895,7 @@ public class WorkspaceResourceFinderUtil {
      * @param uri the URI string
      */
     public static boolean isGlobalResource( final String uri ) {
-        if (uri == null) {
-            return false;
-        }
+        if (uri == null) return false;
 
         // http://www.w3.org/2001/xml.xsd
         //       "http://www.w3.org/2001/XMLSchema"; //$NON-NLS-1$
@@ -1051,82 +903,49 @@ public class WorkspaceResourceFinderUtil {
         //       "http://www.w3.org/2001/XMLSchema-instance"; //$NON-NLS-1$
 
         // If the URI is to the Teiid Designer built-in datatypes model ...
-        if (uri.startsWith(DatatypeConstants.BUILTIN_DATATYPES_URI)) {
-            return true;
-        }
-        if (uri.endsWith(DatatypeConstants.DATATYPES_MODEL_FILE_NAME)) {
-            return true;
-        }
+        if (uri.startsWith(DatatypeConstants.BUILTIN_DATATYPES_URI)) return true;
+        if (uri.endsWith(DatatypeConstants.DATATYPES_MODEL_FILE_NAME)) return true;
 
         // If the URI is to the Teiid Designer built-in UML primitive types model ...
-        if (uri.startsWith(UML_PRIMITIVE_TYPES_INTERNAL_URI)) {
-            return true;
-        }
-        if (uri.endsWith(UML_PRIMITIVE_TYPES_MODEL_FILE_NAME)) {
-            return true;
-        }
-        if (uri.startsWith(UML_METAMODEL_URI)) {
-            return true;
-        }
+        if (uri.startsWith(UML_PRIMITIVE_TYPES_INTERNAL_URI)) return true;
+        if (uri.endsWith(UML_PRIMITIVE_TYPES_MODEL_FILE_NAME)) return true;
+        if (uri.startsWith(UML_METAMODEL_URI)) return true;
 
         // If the URI is to the Teiid Designer built-in relationship model ...
-        if (uri.endsWith(RELATIONSHIP_PRIMITIVE_TYPES_INTERNAL_URI)) {
-            return true;
-        }
-        if (uri.endsWith(RELATIONSHIP_PRIMITIVE_TYPES_MODEL_FILE_NAME)) {
-            return true;
-        }
+        if (uri.endsWith(RELATIONSHIP_PRIMITIVE_TYPES_INTERNAL_URI)) return true;
+        if (uri.endsWith(RELATIONSHIP_PRIMITIVE_TYPES_MODEL_FILE_NAME)) return true;
 
         // If the URI is to one of the Emf XMLSchema resources ...
-        if (uri.startsWith(ModelerCore.XML_SCHEMA_INSTANCE_GENERAL_URI)
-            || uri.startsWith(ModelerCore.XML_MAGIC_SCHEMA_GENERAL_URI) || uri.startsWith(ModelerCore.XML_SCHEMA_GENERAL_URI)
-            || uri.startsWith(ModelerCore.XML_XSD_GENERAL_URI)) {
-            return true;
-        }
+        if (uri.startsWith(ModelerCore.XML_SCHEMA_INSTANCE_GENERAL_URI) || uri.startsWith(ModelerCore.XML_MAGIC_SCHEMA_GENERAL_URI)
+            || uri.startsWith(ModelerCore.XML_SCHEMA_GENERAL_URI) || uri.startsWith(ModelerCore.XML_XSD_GENERAL_URI)) return true;
 
         // If the URI is in the form of an Eclipse platform path to
         // one of the Emf XMLSchema resources ...
-        if (uri.startsWith(XML_SCHEMA_ECLIPSE_PLATFORM_URI_PREFIX)) {
-            // MagicXMLSchema.xsd suffix on the resource URI
-            if (uri.indexOf(XML_MAGIC_SCHEMA_ECLIPSE_PLATFORM_URI_SUFFIX) > 0) {
-                return true;
-            }
-            // XMLSchema.xsd suffix on the resource URI
-            else if (uri.indexOf(XML_SCHEMA_ECLIPSE_PLATFORM_URI_SUFFIX) > 0) {
-                return true;
-            }
-            // XMLSchema-instance.xsd suffix on the resource URI
-            else if (uri.indexOf(XML_SCHEMA_INSTANCE_ECLIPSE_PLATFORM_URI_SUFFIX) > 0) {
-                return true;
-            }
-        }
+        if (uri.startsWith(XML_SCHEMA_ECLIPSE_PLATFORM_URI_PREFIX)) // MagicXMLSchema.xsd suffix on the resource URI
+        if (uri.indexOf(XML_MAGIC_SCHEMA_ECLIPSE_PLATFORM_URI_SUFFIX) > 0) return true;
+        else if (uri.indexOf(XML_SCHEMA_ECLIPSE_PLATFORM_URI_SUFFIX) > 0) return true;
+        else if (uri.indexOf(XML_SCHEMA_INSTANCE_ECLIPSE_PLATFORM_URI_SUFFIX) > 0) return true;
 
         // Next check if the import reference is to one of our system models
         try {
             final Resource[] systemModels = ModelerCore.getSystemVdbResources();
             for (int i = 0; i != systemModels.length; ++i) {
                 final String systemModelUri = URI.decode(systemModels[i].getURI().toString());
-                if (uri.equalsIgnoreCase(systemModelUri)) {
-                    return true;
-                }
+                if (uri.equalsIgnoreCase(systemModelUri)) return true;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // do nothing
         }
 
         // Next check if the import reference is to one of our metamodels
         try {
-            if (ModelerCore.getMetamodelRegistry().containsURI(uri)) {
-                return true;
-            }
-        } catch (Exception e) {
+            if (ModelerCore.getMetamodelRegistry().containsURI(uri)) return true;
+        } catch (final Exception e) {
             // do nothing
         }
 
         // MyCode : 18565
-        if (isLocalResource(uri)) {
-            return false;
-        }
+        if (isLocalResource(uri)) return false;
 
         return false;
     }
@@ -1135,46 +954,40 @@ public class WorkspaceResourceFinderUtil {
 
         boolean found = false;
         try {
-            String uriName = URI.createURI(uri).lastSegment();
+            final String uriName = URI.createURI(uri).lastSegment();
             final Resource[] systemModels = ModelerCore.getModelContainer().getResourceFinder().findByName(uriName, false, false);
 
             for (int i = 0; i != systemModels.length; ++i) {
-                URI resUri = systemModels[i].getURI();
-                if (resUri.lastSegment().equalsIgnoreCase(uriName)) {
-                    found = true;
-                }
+                final URI resUri = systemModels[i].getURI();
+                if (resUri.lastSegment().equalsIgnoreCase(uriName)) found = true;
             }
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             ModelerCore.Util.log(e);
         }
 
         return found;
     }
 
-    private static boolean isValidWorkspaceUri( String workspaceUri ) {
+    private static boolean isValidWorkspaceUri( final String workspaceUri ) {
 
-        if (workspaceUri == null || workspaceUri.length() == 0 || getWorkspace() == null) {
-            return false;
-        }
+        if (workspaceUri == null || workspaceUri.length() == 0 || getWorkspace() == null) return false;
 
         // If the URI is to the Teiid Designer built-in datatypes resource or to one
         // of the Emf XMLSchema resources then return null since there is no
         // IResource in the workspace for any of these models
-        if (isGlobalResource(workspaceUri)) {
-            return false;
-        }
+        if (isGlobalResource(workspaceUri)) return false;
 
         return true;
     }
 
     private static String normalizeUriString( final String uriString ) {
-        String normalizedUriString = removeSchemeAndAuthority(uriString);
+        final String normalizedUriString = removeSchemeAndAuthority(uriString);
         return normalizedUriString;
     }
 
     private static String normalizeUriToString( final URI uri ) {
-        String uriString = new Path(URI.decode(uri.toString())).toString();
+        final String uriString = new Path(URI.decode(uri.toString())).toString();
         return normalizeUriString(uriString);
     }
 
@@ -1186,47 +999,37 @@ public class WorkspaceResourceFinderUtil {
         // in which the scheme and/or authority may or may not exist
         if (normalizedUri != null) {
             // remove scheme from the URI string
-            if (normalizedUri.startsWith(SCHEME_FILE)) {
-                normalizedUri = normalizedUri.substring(SCHEME_FILE.length());
-            } else if (normalizedUri.startsWith(SCHEME_PLATFORM)) {
+            if (normalizedUri.startsWith(SCHEME_FILE)) normalizedUri = normalizedUri.substring(SCHEME_FILE.length());
+            else if (normalizedUri.startsWith(SCHEME_PLATFORM)) {
                 normalizedUri = normalizedUri.substring(SCHEME_PLATFORM.length());
-                if (normalizedUri.startsWith(PLATFORM_RESOURCE_SEGMENT)) {
-                    normalizedUri = normalizedUri.substring(PLATFORM_RESOURCE_SEGMENT.length());
-                }
+                if (normalizedUri.startsWith(PLATFORM_RESOURCE_SEGMENT)) normalizedUri = normalizedUri.substring(PLATFORM_RESOURCE_SEGMENT.length());
             }
 
             // remove the authority
             if (normalizedUri.startsWith(AUTHORITY_SEPARATOR)) {
                 normalizedUri = normalizedUri.substring(AUTHORITY_SEPARATOR.length());
-                int beginIndex = normalizedUri.indexOf(SEGMENT_SEPARATOR);
-                if (beginIndex > -1) {
-                    normalizedUri = normalizedUri.substring(beginIndex);
-                }
+                final int beginIndex = normalizedUri.indexOf(SEGMENT_SEPARATOR);
+                if (beginIndex > -1) normalizedUri = normalizedUri.substring(beginIndex);
             }
 
             // remove the leading separator if it preceeds a device
-            if (normalizedUri.indexOf(DEVICE_IDENTIFIER) > 0 && normalizedUri.charAt(0) == SEGMENT_SEPARATOR) {
-                normalizedUri = normalizedUri.substring(1);
-            }
+            if (normalizedUri.indexOf(DEVICE_IDENTIFIER) > 0 && normalizedUri.charAt(0) == SEGMENT_SEPARATOR) normalizedUri = normalizedUri.substring(1);
         }
         return normalizedUri;
     }
 
     public static class FileResourceCollectorVisitor implements IResourceVisitor {
-        private List resources;
+        private final List resources;
         private ResourceFilter resFilt;
 
         public FileResourceCollectorVisitor() {
             this(ResourceFilter.ACCEPT_ALL);
         }
 
-        public FileResourceCollectorVisitor( ResourceFilter rf ) {
+        public FileResourceCollectorVisitor( final ResourceFilter rf ) {
             this.resources = new ArrayList();
-            if (rf != null) {
-                resFilt = rf;
-            } else {
-                resFilt = ResourceFilter.ACCEPT_ALL;
-            } // endif
+            if (rf != null) resFilt = rf;
+            else resFilt = ResourceFilter.ACCEPT_ALL;
         }
 
         public IFile[] getFileResources() {
@@ -1237,16 +1040,14 @@ public class WorkspaceResourceFinderUtil {
             return resources;
         }
 
-        public boolean visit( IResource resource ) {
-            if (resource.exists() && resource.getType() == IResource.FILE && resFilt.accept(resource)) {
-                resources.add(resource);
-            }
+        public boolean visit( final IResource resource ) {
+            if (resource.exists() && resource.getType() == IResource.FILE && resFilt.accept(resource)) resources.add(resource);
             return true;
         }
     }
 
     static class VdbResourceFilter implements ResourceFilter {
-        public boolean accept( IResource res ) {
+        public boolean accept( final IResource res ) {
             return ModelUtil.isVdbArchiveFile(res);
         }
 

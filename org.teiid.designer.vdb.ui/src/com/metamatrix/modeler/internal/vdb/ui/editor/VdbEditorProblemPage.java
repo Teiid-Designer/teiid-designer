@@ -22,17 +22,16 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.EditorPart;
-import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbModelEntry;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.validation.ProblemMarker;
 import com.metamatrix.modeler.ui.editors.IRevertable;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
+import com.metamatrix.modeler.vdb.ui.VdbUiPlugin;
 import com.metamatrix.ui.UiConstants.Images;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -43,7 +42,7 @@ import com.metamatrix.ui.table.TableViewerSorter;
  * @since 4.0
  */
 public class VdbEditorProblemPage extends EditorPart
-    implements Images, VdbUiConstants, CoreStringUtil.Constants, VdbEditor.Constants, IRevertable, IGotoMarker {
+    implements Images, VdbUiConstants, CoreStringUtil.Constants, IRevertable, IGotoMarker {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(VdbEditorProblemPage.class);
 
@@ -93,10 +92,8 @@ public class VdbEditorProblemPage extends EditorPart
             public Object[] getElements( final Object inputElement ) {
                 final Vdb vdb = VdbEditorProblemPage.this.editor.getVdb();
                 final ArrayList problems = new ArrayList();
-                for (VdbModelEntry entry : vdb.getModelEntries()) {
-                    problems.addAll(entry.getErrors());
-                    problems.addAll(entry.getWarnings());
-                }
+                for (final VdbModelEntry entry : vdb.getModelEntries())
+                    problems.addAll(entry.getProblems());
                 return problems.toArray();
             }
 
@@ -109,9 +106,7 @@ public class VdbEditorProblemPage extends EditorPart
             @Override
             public Image getColumnImage( final Object element,
                                          final int column ) {
-                if (column == SEVERITY_COLUMN) {
-                    return VdbEditor.getStatusImage(((ProblemMarker)element).getSeverity());
-                }
+                if (column == SEVERITY_COLUMN) return VdbUiPlugin.getImage(((ProblemMarker)element).getSeverity().getValue());
                 return null;
             }
 
@@ -142,9 +137,7 @@ public class VdbEditorProblemPage extends EditorPart
                                          final Object object1,
                                          final Object object2,
                                          final int column ) {
-                if (column == SEVERITY_COLUMN) {
-                    return (((ProblemMarker)object2).getSeverity().getValue() - ((ProblemMarker)object1).getSeverity().getValue());
-                }
+                if (column == SEVERITY_COLUMN) return (((ProblemMarker)object2).getSeverity().getValue() - ((ProblemMarker)object1).getSeverity().getValue());
                 return super.compareColumn(viewer, object1, object2, column);
             }
         });
@@ -176,10 +169,9 @@ public class VdbEditorProblemPage extends EditorPart
     }
 
     /**
-     * Does nothing.
+     * {@inheritDoc}
      * 
-     * @see org.eclipse.ui.IEditorPart#gotoMarker(org.eclipse.core.resources.IMarker)
-     * @since 4.0
+     * @see org.eclipse.ui.ide.IGotoMarker#gotoMarker(org.eclipse.core.resources.IMarker)
      */
     public void gotoMarker( final IMarker marker ) {
     }
@@ -190,10 +182,7 @@ public class VdbEditorProblemPage extends EditorPart
      */
     @Override
     public void init( final IEditorSite site,
-                      final IEditorInput input ) throws PartInitException {
-        if (input != null && !(input instanceof IFileEditorInput)) {
-            throw new PartInitException(INVALID_INPUT_MESSAGE);
-        }
+                      final IEditorInput input ) {
         setSite(site);
         setInput(input);
         setPartName(TITLE);

@@ -29,9 +29,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.util.XSDResourceImpl;
+import org.teiid.designer.core.xmi.XMIHeader;
+import org.teiid.designer.core.xmi.XMIHeaderReader;
+import com.metamatrix.common.log.LogManager;
 import com.metamatrix.common.vdb.VdbHeader;
 import com.metamatrix.common.vdb.VdbHeaderReader;
-import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.common.xsd.XsdHeader;
 import com.metamatrix.common.xsd.XsdHeaderReader;
 import com.metamatrix.core.MetaMatrixCoreException;
@@ -41,6 +43,7 @@ import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.FileSeparatorUtil;
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.ResourceFinder;
@@ -76,6 +79,8 @@ public class ModelUtil {
     public static final String DOT_EXTENSION_WSDL = ".wsdl"; //$NON-NLS-1$
     private static final String[] EXTENSIONS = new String[] {EXTENSION_XML, EXTENSION_XMI};
 
+    private static XmiHeaderCache cache;
+
     /**
      * Returns the lowest-level workspace container in the specified object's hierarchy, which may be the object itself. The
      * container can only be determined if the specified object is an {@link EObject} or {@link IResource}.
@@ -89,14 +94,10 @@ public class ModelUtil {
         CoreArgCheck.isNotNull(object);
         Object obj = object;
         if (obj instanceof EObject) {
-            ModelResource resource = ModelerCore.getModelEditor().findModelResource((EObject)obj);
-            if (resource != null) {
-                obj = resource.getResource();
-            }
+            final ModelResource resource = ModelerCore.getModelEditor().findModelResource((EObject)obj);
+            if (resource != null) obj = resource.getResource();
         }
-        if (obj instanceof IResource && !(obj instanceof IContainer)) {
-            obj = ((IResource)obj).getParent();
-        }
+        if (obj instanceof IResource && !(obj instanceof IContainer)) obj = ((IResource)obj).getParent();
         if (obj instanceof IContainer) {
             final IContainer ctnr = (IContainer)obj;
             return (ctnr.isAccessible() ? ctnr : null);
@@ -108,8 +109,8 @@ public class ModelUtil {
      * Returns the file extension portion of this file, or an empty string if there is none.
      * <p>
      * The file extension portion is defined as the string following the last period (".") character in the file name. If there is
-     * no period in the file name, the file has no file extension portion. If the name ends in a period, the file extension
-     * portion is the empty string.
+     * no period in the file name, the file has no file extension portion. If the name ends in a period, the file extension portion
+     * is the empty string.
      * </p>
      * 
      * @param resource
@@ -121,8 +122,8 @@ public class ModelUtil {
     }
 
     /**
-     * Returns the model for the specified object, which may be the object itself. The model can only be determined if the
-     * specified object is a {@link ModelResource}, {@link EObject}, {@link IFile} or {@link Resource}.
+     * Returns the model for the specified object, which may be the object itself. The model can only be determined if the specified
+     * object is a {@link ModelResource}, {@link EObject}, {@link IFile} or {@link Resource}.
      * 
      * @param object The object whose hierarchy is to be searched for a model; may not be null.
      * @return The model for the specified object, or null if the model cannot be determined.
@@ -130,19 +131,11 @@ public class ModelUtil {
      */
     public static ModelResource getModel( final Object object ) throws ModelWorkspaceException {
         CoreArgCheck.isNotNull(object);
-        if (object instanceof ModelResource) {
-            return (ModelResource)object;
-        }
-        if (object instanceof EObject) {
-            return ModelerCore.getModelEditor().findModelResource((EObject)object);
-        }
-        if (object instanceof IFile) {
-            return ModelerCore.getModelEditor().findModelResource((IFile)object);
-        }
+        if (object instanceof ModelResource) return (ModelResource)object;
+        if (object instanceof EObject) return ModelerCore.getModelEditor().findModelResource((EObject)object);
+        if (object instanceof IFile) return ModelerCore.getModelEditor().findModelResource((IFile)object);
 
-        if (object instanceof Resource) {
-            return ModelerCore.getModelEditor().findModelResource((Resource)object);
-        }
+        if (object instanceof Resource) return ModelerCore.getModelEditor().findModelResource((Resource)object);
         return null;
     }
 
@@ -155,11 +148,9 @@ public class ModelUtil {
      * @return
      * @throws CoreException
      */
-    public static ModelResource getModelResource( IFile modelFile,
-                                                  boolean forceOpen ) throws ModelWorkspaceException {
-        if (modelFile == null) {
-            return null;
-        }
+    public static ModelResource getModelResource( final IFile modelFile,
+                                                  final boolean forceOpen ) throws ModelWorkspaceException {
+        if (modelFile == null) return null;
         return ModelerCore.getModelEditor().findModelResource(modelFile);
     }
 
@@ -173,29 +164,21 @@ public class ModelUtil {
      */
     public static Collection getModels( final List objects ) throws ModelWorkspaceException {
         CoreArgCheck.isNotNull(objects);
-        Collection<Object> modelResourceSet = new HashSet<Object>();
-        for (Iterator i = objects.iterator(); i.hasNext();) {
-            Object nextObj = i.next();
-            if (nextObj instanceof ModelResource) {
-                modelResourceSet.add(nextObj);
-            }
+        final Collection<Object> modelResourceSet = new HashSet<Object>();
+        for (final Iterator i = objects.iterator(); i.hasNext();) {
+            final Object nextObj = i.next();
+            if (nextObj instanceof ModelResource) modelResourceSet.add(nextObj);
             if (nextObj instanceof EObject) {
-                Object mr = ModelerCore.getModelEditor().findModelResource((EObject)nextObj);
-                if (mr != null) {
-                    modelResourceSet.add(mr);
-                }
+                final Object mr = ModelerCore.getModelEditor().findModelResource((EObject)nextObj);
+                if (mr != null) modelResourceSet.add(mr);
             }
             if (nextObj instanceof IFile) {
-                Object mr = ModelerCore.getModelEditor().findModelResource((IFile)nextObj);
-                if (mr != null) {
-                    modelResourceSet.add(mr);
-                }
+                final Object mr = ModelerCore.getModelEditor().findModelResource((IFile)nextObj);
+                if (mr != null) modelResourceSet.add(mr);
             }
             if (nextObj instanceof Resource) {
-                Object mr = ModelerCore.getModelEditor().findModelResource((Resource)nextObj);
-                if (mr != null) {
-                    modelResourceSet.add(mr);
-                }
+                final Object mr = ModelerCore.getModelEditor().findModelResource((Resource)nextObj);
+                if (mr != null) modelResourceSet.add(mr);
             }
         }
 
@@ -212,9 +195,7 @@ public class ModelUtil {
      */
     public static ModelResource getModifiableModel( final Object object ) throws ModelWorkspaceException {
         final ModelResource model = getModel(object);
-        if (model != null && !model.isReadOnly()) {
-            return model;
-        }
+        if (model != null && !model.isReadOnly()) return model;
         return null;
     }
 
@@ -230,33 +211,26 @@ public class ModelUtil {
                                            final URI importedResourceURI ) {
         URI uri = importedResourceURI;
         if (importedResourceURI.isFile()) {
-            boolean deresolve = (baseResourceURI != null && !baseResourceURI.isRelative() && baseResourceURI.isHierarchical());
+            final boolean deresolve = (baseResourceURI != null && !baseResourceURI.isRelative() && baseResourceURI.isHierarchical());
             if (deresolve && !importedResourceURI.isRelative()) {
-                URI deresolvedURI = importedResourceURI.deresolve(baseResourceURI, true, true, false);
-                if (deresolvedURI.hasRelativePath()) {
-                    uri = deresolvedURI;
-                }
+                final URI deresolvedURI = importedResourceURI.deresolve(baseResourceURI, true, true, false);
+                if (deresolvedURI.hasRelativePath()) uri = deresolvedURI;
             }
         }
         return uri;
     }
 
-    public static String getRelativePath( IPath source,
-                                          IPath base ) {
-        StringBuffer upPath = new StringBuffer();
-        int baseSegments = base.segmentCount();
-        int matchingSegments = source.matchingFirstSegments(base);
+    public static String getRelativePath( final IPath source,
+                                          final IPath base ) {
+        final StringBuffer upPath = new StringBuffer();
+        final int baseSegments = base.segmentCount();
+        final int matchingSegments = source.matchingFirstSegments(base);
         int upSegments = baseSegments - matchingSegments;
-        String fileSep = FileSeparatorUtil.getFileSeparator(source.toString());
-        if (base.getFileExtension() != null) {
-            upSegments--;
-        }
-        if (upSegments > 0) {
-            for (int i = 0; i < upSegments; i++) {
-                upPath.append(".." + fileSep);//$NON-NLS-1$
-            }
-        }
-        IPath sourceRelativePath = source.removeFirstSegments(matchingSegments).makeRelative();
+        final String fileSep = FileSeparatorUtil.getFileSeparator(source.toString());
+        if (base.getFileExtension() != null) upSegments--;
+        if (upSegments > 0) for (int i = 0; i < upSegments; i++)
+            upPath.append(".." + fileSep);//$NON-NLS-1$
+        final IPath sourceRelativePath = source.removeFirstSegments(matchingSegments).makeRelative();
         return upPath + sourceRelativePath.toString();
     }
 
@@ -271,7 +245,7 @@ public class ModelUtil {
      * @since 5.0
      */
     private static String getString( final String id,
-                                     String arg ) {
+                                     final String arg ) {
         return ModelerCore.Util.getString(I18N_PREFIX + id, arg);
     }
 
@@ -282,14 +256,10 @@ public class ModelUtil {
      * @return The VdbHeader for the model file
      */
     public static VdbHeader getVdbHeader( final File resource ) {
-        if (resource != null && resource.isFile() && resource.exists()) {
-            if (ModelFileUtil.isVdbArchiveFile(resource)) {
-                try {
-                    return VdbHeaderReader.readHeader(resource);
-                } catch (MetaMatrixCoreException e) {
-                    ModelerCore.Util.log(e);
-                }
-            }
+        if (resource != null && resource.isFile() && resource.exists()) if (ModelFileUtil.isVdbArchiveFile(resource)) try {
+            return VdbHeaderReader.readHeader(resource);
+        } catch (final MetaMatrixCoreException e) {
+            ModelerCore.Util.log(e);
         }
         return null;
     }
@@ -305,9 +275,9 @@ public class ModelUtil {
      */
     public static IPath getVdbProjectPathURI( final MMXmiResource baseResource ) {
         if (baseResource.getURI().isFile() && baseResource.getURI().hasAbsolutePath()) {
-            String[] pathSegments = baseResource.getURI().segments();
-            String baseURI = baseResource.getURI().toString();
-            String fileSep = FileSeparatorUtil.getFileSeparator(baseURI);
+            final String[] pathSegments = baseResource.getURI().segments();
+            final String baseURI = baseResource.getURI().toString();
+            final String fileSep = FileSeparatorUtil.getFileSeparator(baseURI);
             String deviceLocation = CoreStringUtil.Constants.EMPTY_STRING;
             // find vdbWorkingFolder index
             int vdbFolderIndex = -1;
@@ -315,31 +285,57 @@ public class ModelUtil {
             for (int i = 0; i < pathSegments.length; i++) {
                 if (projectPath == null) {
                     projectPath = new Path(pathSegments[i]);
-                    int index = baseURI.indexOf(pathSegments[i]);
+                    final int index = baseURI.indexOf(pathSegments[i]);
                     // Defect 24918 - Platform may be LINUX/UNIX so the device location may NOT always be available.
                     // So, we do a quick check, and if NOT WINDOWS, just set the default "root" to '/'
                     if (Platform.getOS().equals(Platform.OS_WIN32)) {
                         deviceLocation = baseURI.substring(0, index - 1);
-                        if (deviceLocation.startsWith(ModelFileUtil.FILE_COLON)) {
-                            deviceLocation = deviceLocation.substring(6) + fileSep;
-                        }
+                        if (deviceLocation.startsWith(ModelFileUtil.FILE_COLON)) deviceLocation = deviceLocation.substring(6)
+                                                                                                  + fileSep;
                     } else deviceLocation = File.separator;
-                } else {
-                    projectPath = projectPath.append(FileUtils.normalizeFileName(pathSegments[i]));
-                }
+                } else projectPath = projectPath.append(FileUtils.normalizeFileName(pathSegments[i]));
                 if (pathSegments[i].equalsIgnoreCase(ResourceFinder.VDB_WORKING_FOLDER)) {
                     vdbFolderIndex = i;
                     break;
                 }
             }
-            if (vdbFolderIndex > -1) {
-                // increment the index to get to the temp-directory
-                projectPath = projectPath.append(pathSegments[vdbFolderIndex + 1]);
-                // Now
-            }
-            IPath finalPath = new Path(deviceLocation).append(projectPath);
+            if (vdbFolderIndex > -1) // increment the index to get to the temp-directory
+            projectPath = projectPath.append(pathSegments[vdbFolderIndex + 1]);
+            // Now
+            final IPath finalPath = new Path(deviceLocation).append(projectPath);
             return finalPath;
         }
+        return null;
+    }
+
+    /**
+     * Return the XMIHeader for the specified File or null if the file does not represent a MetaMatrix model file.
+     * 
+     * @param resource The file of a metamatrix model file.
+     * @return The XMIHeader for the model file
+     */
+    public static XMIHeader getXmiHeader( final File resource ) {
+        if (resource != null && resource.isFile() && resource.exists() && resource.canRead()) {
+            // check cache
+            if (cache != null) {
+                final XMIHeader header = cache.getCachedXmiHeader(resource);
+                if (header != null) return header;
+            }
+            try {
+                final XMIHeader header = XMIHeaderReader.readHeader(resource);
+                // add to cache
+                if (cache != null) cache.setXmiHeaderToCache(resource, header);
+                return header;
+            } catch (final MetaMatrixCoreException e) {
+                LogManager.logWarning(RuntimeMetadataPlugin.PLUGIN_ID, e, e.getMessage());
+            } catch (final IllegalArgumentException iae) {
+                // Swallowing this exception because we're doing all three checks that would produce it.
+                // If this exception is caught, it's because the files really were closed/deleted in another thread and this
+                // thread didn't know about it.
+                // Fixes Defect 22117
+            }
+        }
+
         return null;
     }
 
@@ -352,9 +348,7 @@ public class ModelUtil {
     public static XMIHeader getXmiHeader( final IResource resource ) {
         if (resource != null && resource.getType() == IResource.FILE) {
             final IPath path = ((IFile)resource).getLocation();
-            if (path != null) {
-                return ModelFileUtil.getXmiHeader(path.toFile());
-            }
+            if (path != null) return getXmiHeader(path.toFile());
         }
         return null;
     }
@@ -366,14 +360,10 @@ public class ModelUtil {
      * @return The XsdHeader for the model file
      */
     public static XsdHeader getXsdHeader( final File resource ) {
-        if (resource != null && resource.isFile() && resource.exists()) {
-            if (ModelFileUtil.isXsdFile(resource)) {
-                try {
-                    return XsdHeaderReader.readHeader(resource);
-                } catch (MetaMatrixCoreException e) {
-                    ModelerCore.Util.log(e);
-                }
-            }
+        if (resource != null && resource.isFile() && resource.exists()) if (ModelFileUtil.isXsdFile(resource)) try {
+            return XsdHeaderReader.readHeader(resource);
+        } catch (final MetaMatrixCoreException e) {
+            ModelerCore.Util.log(e);
         }
         return null;
     }
@@ -387,29 +377,25 @@ public class ModelUtil {
     public static XsdHeader getXsdHeader( final IResource resource ) {
         if (resource != null && resource.getType() == IResource.FILE) {
             final IPath path = ((IFile)resource).getLocation();
-            if (path != null) {
-                return getXsdHeader(path.toFile());
-            }
+            if (path != null) return getXsdHeader(path.toFile());
         }
         return null;
     }
 
-    private static boolean isIndexFileLastModifiedAfterResourceFile( ModelResource targetModelResource ) {
+    private static boolean isIndexFileLastModifiedAfterResourceFile( final ModelResource targetModelResource ) {
 
-        File rsrcIndexFile = new File(IndexUtil.INDEX_PATH, IndexUtil.getRuntimeIndexFileName(targetModelResource));
-        if (!rsrcIndexFile.exists()) {
-            return false;
-        }
+        final File rsrcIndexFile = new File(IndexUtil.INDEX_PATH, IndexUtil.getRuntimeIndexFileName(targetModelResource));
+        if (!rsrcIndexFile.exists()) return false;
 
         final IPath path = ((IFile)targetModelResource.getResource()).getLocation();
-        long resourceLastModified = path.toFile().lastModified();
-        long indexLastModified = rsrcIndexFile.lastModified();
+        final long resourceLastModified = path.toFile().lastModified();
+        final long indexLastModified = rsrcIndexFile.lastModified();
 
         return (indexLastModified < resourceLastModified);
     }
 
-    public static boolean isIResourceReadOnly( IResource iResource ) {
-        ResourceAttributes attributes = iResource.getResourceAttributes();
+    public static boolean isIResourceReadOnly( final IResource iResource ) {
+        final ResourceAttributes attributes = iResource.getResourceAttributes();
         return attributes == null ? false : attributes.isReadOnly();
     }
 
@@ -445,16 +431,10 @@ public class ModelUtil {
      */
     public static boolean isModelFile( final IResource resource,
                                        final boolean projectCheck ) {
-        if (projectCheck) {
-            if (!isModelProjectResource(resource)) {
-                return false;
-            }
-        }
+        if (projectCheck) if (!isModelProjectResource(resource)) return false;
         if (resource.getType() == IResource.FILE) {
             final IPath path = ((IFile)resource).getLocation();
-            if (path != null) {
-                return ModelFileUtil.isModelFile(path.toFile());
-            }
+            if (path != null) return ModelFileUtil.isModelFile(path.toFile());
         }
         return false;
     }
@@ -467,9 +447,7 @@ public class ModelUtil {
      * @return true if it is a ModelFile.
      */
     public static boolean isModelFile( final Resource resource ) {
-        if (resource == null) {
-            return false;
-        }
+        if (resource == null) return false;
 
         final String extension = resource.getURI().fileExtension();
         return ModelFileUtil.isModelFileExtension(extension, true);
@@ -480,10 +458,8 @@ public class ModelUtil {
      */
     private static boolean isModelProjectResource( final IResource resource ) {
         if (resource != null) {
-            IProject proj = resource.getProject();
-            if (proj != null && ModelerCore.hasModelNature(proj)) {
-                return true;
-            }
+            final IProject proj = resource.getProject();
+            if (proj != null && ModelerCore.hasModelNature(proj)) return true;
         }
         return false;
     }
@@ -494,17 +470,16 @@ public class ModelUtil {
      * @param eObject
      * @return true if model object is in virtual model.
      */
-    public static boolean isPhysical( Object obj ) {
+    public static boolean isPhysical( final Object obj ) {
         if (obj != null && obj instanceof EObject) {
-            EObject eObject = (EObject)obj;
+            final EObject eObject = (EObject)obj;
             final Resource resource = eObject.eResource();
-            if (resource instanceof EmfResource) {
-                return ModelType.PHYSICAL_LITERAL.equals(((EmfResource)resource).getModelAnnotation().getModelType());
-            } else if (resource == null && eObject.eIsProxy()) {
-                URI theUri = ((InternalEObject)eObject).eProxyURI().trimFragment();
+            if (resource instanceof EmfResource) return ModelType.PHYSICAL_LITERAL.equals(((EmfResource)resource).getModelAnnotation().getModelType());
+            else if (resource == null && eObject.eIsProxy()) {
+                final URI theUri = ((InternalEObject)eObject).eProxyURI().trimFragment();
                 if (theUri.isFile()) {
-                    File newFile = new File(theUri.toFileString());
-                    XMIHeader header = ModelFileUtil.getXmiHeader(newFile);
+                    final File newFile = new File(theUri.toFileString());
+                    final XMIHeader header = getXmiHeader(newFile);
                     if (header != null && ModelType.PHYSICAL_LITERAL.equals(ModelType.get(header.getModelType()))) return true;
                 }
             }
@@ -531,11 +506,7 @@ public class ModelUtil {
      */
     public static boolean isVdbArchiveFile( final IPath path ) {
         // Check that the resource has the correct lower-case extension
-        if (path != null && path.getFileExtension() != null) {
-            if (ModelFileUtil.EXTENSION_VDB.equals(path.getFileExtension())) {
-                return true;
-            }
-        }
+        if (path != null && path.getFileExtension() != null) if (ModelFileUtil.EXTENSION_VDB.equals(path.getFileExtension())) return true;
         return false;
     }
 
@@ -547,9 +518,7 @@ public class ModelUtil {
      */
     public static boolean isVdbArchiveFile( final IResource resource ) {
         // Check that the resource has the correct lower-case extension
-        if (ModelFileUtil.EXTENSION_VDB.equals(resource.getFileExtension())) {
-            return true;
-        }
+        if (ModelFileUtil.EXTENSION_VDB.equals(resource.getFileExtension())) return true;
         return false;
     }
 
@@ -565,9 +534,7 @@ public class ModelUtil {
             final URI uri = resource.getURI();
             if (uri != null) {
                 final String fileName = uri.lastSegment();
-                if (fileName.endsWith(ModelFileUtil.EXTENSION_VDB)) {
-                    return true;
-                }
+                if (fileName.endsWith(ModelFileUtil.EXTENSION_VDB)) return true;
             }
         }
         return false;
@@ -579,17 +546,16 @@ public class ModelUtil {
      * @param eObject
      * @return true if model object is in virtual model.
      */
-    public static boolean isVirtual( Object obj ) {
+    public static boolean isVirtual( final Object obj ) {
         if (obj != null && obj instanceof EObject) {
-            EObject eObject = (EObject)obj;
+            final EObject eObject = (EObject)obj;
             final Resource resource = eObject.eResource();
-            if (resource instanceof EmfResource) {
-                return ModelType.VIRTUAL_LITERAL.equals(((EmfResource)resource).getModelAnnotation().getModelType());
-            } else if (resource == null && eObject.eIsProxy()) {
-                URI theUri = ((InternalEObject)eObject).eProxyURI().trimFragment();
+            if (resource instanceof EmfResource) return ModelType.VIRTUAL_LITERAL.equals(((EmfResource)resource).getModelAnnotation().getModelType());
+            else if (resource == null && eObject.eIsProxy()) {
+                final URI theUri = ((InternalEObject)eObject).eProxyURI().trimFragment();
                 if (theUri.isFile()) {
-                    File newFile = new File(theUri.toFileString());
-                    XMIHeader header = ModelFileUtil.getXmiHeader(newFile);
+                    final File newFile = new File(theUri.toFileString());
+                    final XMIHeader header = getXmiHeader(newFile);
                     if (header != null && ModelType.VIRTUAL_LITERAL.equals(ModelType.get(header.getModelType()))) return true;
                 }
             }
@@ -609,24 +575,18 @@ public class ModelUtil {
 
             // If the file does not yet exist then the only thing
             // we can do is to check the name and extension.
-            if (resource != null && !resource.exists()) {
-                return true;
-            }
+            if (resource != null && !resource.exists()) return true;
 
-            XMIHeader header = ModelFileUtil.getXmiHeader(resource);
+            final XMIHeader header = getXmiHeader(resource);
             // If the header is not null then we know the file is, at least,
             // a well formed xml document.
             if (header != null) {
                 // If the XMI version for the header is not null, then return
                 // false if the file represents an older 1.X model file
-                if (header.getXmiVersion() != null && header.getXmiVersion().startsWith("1.")) { //$NON-NLS-1$
-                    return false;
-                }
+                if (header.getXmiVersion() != null && header.getXmiVersion().startsWith("1.")) return false; //$NON-NLS-1$
                 // If the UUID for the header is not null, then the file is a
                 // Teiid Designer model file containing a ModelAnnotation element.
-                if (header.getUUID() != null) {
-                    return true;
-                }
+                if (header.getUUID() != null) return true;
             }
         }
         return false;
@@ -641,20 +601,16 @@ public class ModelUtil {
     public static boolean isXmiFile( final IResource resource ) {
         // Check that the resource has the correct lower-case extension
         if (ModelFileUtil.EXTENSION_XMI.equals(resource.getFileExtension())) {
-            XMIHeader header = getXmiHeader(resource);
+            final XMIHeader header = getXmiHeader(resource);
             // If the header is not null then we know the file is, at least,
             // a well formed xml document.
             if (header != null) {
                 // If the XMI version for the header is not null, then return
                 // false if the file represents an older 1.X model file
-                if (header.getXmiVersion() != null && header.getXmiVersion().startsWith("1.")) { //$NON-NLS-1$
-                    return false;
-                }
+                if (header.getXmiVersion() != null && header.getXmiVersion().startsWith("1.")) return false; //$NON-NLS-1$
                 // If the UUID for the header is not null, then the file is a
                 // Teiid Designer model file containing a ModelAnnotation element.
-                if (header.getUUID() != null) {
-                    return true;
-                }
+                if (header.getUUID() != null) return true;
             }
         }
         return false;
@@ -667,11 +623,7 @@ public class ModelUtil {
      * @return true if it is a Teiid Designer xmi model
      */
     public static boolean isXmiFile( final Resource resource ) {
-        if (resource != null) {
-            if (resource instanceof EmfResource) {
-                return true;
-            }
-        }
+        if (resource != null) if (resource instanceof EmfResource) return true;
         return false;
     }
 
@@ -685,9 +637,7 @@ public class ModelUtil {
      */
     public static boolean isXsdFile( final IPath path ) {
         // Check that the resource has the correct lower-case extension
-        if (ModelFileUtil.EXTENSION_XSD.equals(path.getFileExtension())) {
-            return true;
-        }
+        if (ModelFileUtil.EXTENSION_XSD.equals(path.getFileExtension())) return true;
         return false;
     }
 
@@ -699,9 +649,7 @@ public class ModelUtil {
      */
     public static boolean isXsdFile( final IResource resource ) {
         // Check that the resource has the correct lower-case extension
-        if (ModelFileUtil.EXTENSION_XSD.equals(resource.getFileExtension())) {
-            return true;
-        }
+        if (ModelFileUtil.EXTENSION_XSD.equals(resource.getFileExtension())) return true;
         return false;
     }
 
@@ -713,16 +661,12 @@ public class ModelUtil {
      */
     public static boolean isXsdFile( final Resource resource ) {
         if (resource != null) {
-            if (resource instanceof XSDResourceImpl) {
-                return true;
-            }
+            if (resource instanceof XSDResourceImpl) return true;
             // Check that the resource has the correct lower-case extension
             final URI uri = resource.getURI();
             if (uri != null) {
                 final String fileName = uri.lastSegment();
-                if (fileName.endsWith(ModelFileUtil.EXTENSION_XSD)) {
-                    return true;
-                }
+                if (fileName.endsWith(ModelFileUtil.EXTENSION_XSD)) return true;
             }
         }
         return false;
@@ -743,34 +687,32 @@ public class ModelUtil {
      * @return true if requires validation, false if not.
      * @since 4.2
      */
-    public static boolean requiresValidation( IFile file ) {
+    public static boolean requiresValidation( final IFile file ) {
         ModelResource mr = null;
 
         // Find Model Resource
         try {
             mr = getModelResource(file, false);
-        } catch (ModelWorkspaceException err) {
-            String message = getString(Constants.MODEL_RESOURCE_NOT_FOUND_MSG_KEY, file.toString());
+        } catch (final ModelWorkspaceException err) {
+            final String message = getString(Constants.MODEL_RESOURCE_NOT_FOUND_MSG_KEY, file.toString());
             ModelerCore.Util.log(IStatus.ERROR, err, message);
         }
 
-        if (mr != null) {
-            return requiresValidation(mr);
-        }
+        if (mr != null) return requiresValidation(mr);
 
         // If we ever get here it's an error, so let's
         return false;
     }
 
     /**
-     * Method returns a boolean value (true or false) for whether or not a model resource requires validation. The model may be
-     * have been saved with auto-build off.
+     * Method returns a boolean value (true or false) for whether or not a model resource requires validation. The model may be have
+     * been saved with auto-build off.
      * 
      * @param targetModelResource
      * @return true if requires validation, false if not.
      * @since 4.2
      */
-    public static boolean requiresValidation( ModelResource targetModelResource ) {
+    public static boolean requiresValidation( final ModelResource targetModelResource ) {
         if (targetModelResource == null) return false;
 
         // TODO: (BML 12/14/04) This check is currently required because XSD files are always tagged with a NOT_INDEXED during
@@ -779,38 +721,30 @@ public class ModelUtil {
         if (ModelUtil.isXsdFile(targetModelResource.getResource())) return false;
 
         // sz - added the code to fix defect 15948.
-        boolean isIndexModified = isIndexFileLastModifiedAfterResourceFile(targetModelResource);
-        if ((targetModelResource.getIndexType() == ModelResource.NOT_INDEXED) || isIndexModified) {
-            return true;
-        }
+        final boolean isIndexModified = isIndexFileLastModifiedAfterResourceFile(targetModelResource);
+        if ((targetModelResource.getIndexType() == ModelResource.NOT_INDEXED) || isIndexModified) return true;
 
         return false;
     }
 
-    public static boolean setIResourceReadOnly( IResource iResource,
-                                                boolean isReadOnly ) {
-        ResourceAttributes attributes = iResource.getResourceAttributes();
-        if (attributes == null) {
-            return false;
-        }
+    public static boolean setIResourceReadOnly( final IResource iResource,
+                                                final boolean isReadOnly ) {
+        final ResourceAttributes attributes = iResource.getResourceAttributes();
+        if (attributes == null) return false;
         attributes.setReadOnly(isReadOnly);
         return true;
     }
 
     public static void setModelWorkspaceManagerInitialized() {
-        ModelFileUtil.setCache(ModelWorkspaceManager.getModelWorkspaceManager());
+        cache = ModelWorkspaceManager.getModelWorkspaceManager();
     }
 
     /**
      * @since 4.0
      */
     public static IStatus validateFolderName( final String name ) {
-        if (name == null) {
-            return newErrorStatus(ModelerCore.Util.getString("ModelUtil.folder_must_have_a_non-null_name")); //$NON-NLS-1$
-        }
-        if (name.trim().length() == 0) {
-            return newErrorStatus(ModelerCore.Util.getString("ModelUtil.folder_must_have_a_non-empty_name")); //$NON-NLS-1$
-        }
+        if (name == null) return newErrorStatus(ModelerCore.Util.getString("ModelUtil.folder_must_have_a_non-null_name")); //$NON-NLS-1$
+        if (name.trim().length() == 0) return newErrorStatus(ModelerCore.Util.getString("ModelUtil.folder_must_have_a_non-empty_name")); //$NON-NLS-1$
 
         // Ensure the file name is a valid file name
         return validateName(name, IResource.FOLDER);
@@ -820,24 +754,17 @@ public class ModelUtil {
      * @since 4.0
      */
     public static IStatus validateModelFileName( final String name ) {
-        if (name == null) {
-            return newErrorStatus(ModelerCore.Util.getString("ModelUtil.model_file_name_may_not_be_null")); //$NON-NLS-1$
-        }
-        if (name.trim().length() == 0) {
-            return newErrorStatus(ModelerCore.Util.getString("ModelUtil.model_file_name_may_not_be_zero_length")); //$NON-NLS-1$
-        }
+        if (name == null) return newErrorStatus(ModelerCore.Util.getString("ModelUtil.model_file_name_may_not_be_null")); //$NON-NLS-1$
+        if (name.trim().length() == 0) return newErrorStatus(ModelerCore.Util.getString("ModelUtil.model_file_name_may_not_be_zero_length")); //$NON-NLS-1$
         boolean validExtension = false;
         // Try exact match (likely)
-        for (int i = 0; i < EXTENSIONS.length; i++) {
-            if (name.endsWith(EXTENSIONS[i])) {
+        for (final String element : EXTENSIONS)
+            if (name.endsWith(element)) {
                 validExtension = true;
                 break;
             }
-        }
 
-        if (!validExtension) {
-            return newErrorStatus(ModelerCore.Util.getString("ModelUtil.model_file_name_does_not_have_a_valid_extension")); //$NON-NLS-1$
-        }
+        if (!validExtension) return newErrorStatus(ModelerCore.Util.getString("ModelUtil.model_file_name_does_not_have_a_valid_extension")); //$NON-NLS-1$
 
         // Ensure the file name is a valid file name
         return validateName(name, IResource.FILE);
@@ -850,7 +777,7 @@ public class ModelUtil {
      * @since 4.0
      */
     private static IStatus validateName( final String segment,
-                                         int type ) {
+                                         final int type ) {
 
         /* segment must not begin or end with a whitespace */
         if (Character.isWhitespace(segment.charAt(0)) || Character.isWhitespace(segment.charAt(segment.length() - 1))) {
@@ -877,5 +804,12 @@ public class ModelUtil {
     public static interface Constants {
         String MODEL_NOT_PHYSICAL_MESSAGE = getString("modelNotPhysicalMessage"); //$NON-NLS-1$
         String MODEL_RESOURCE_NOT_FOUND_MSG_KEY = "modelResourceNotFoundMessageKey"; //$NON-NLS-1$
+    }
+
+    public interface XmiHeaderCache {
+        XMIHeader getCachedXmiHeader( File resource );
+
+        void setXmiHeaderToCache( File resource,
+                                  XMIHeader header );
     }
 }

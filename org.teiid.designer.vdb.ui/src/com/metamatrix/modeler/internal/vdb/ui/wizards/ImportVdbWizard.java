@@ -26,8 +26,8 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
 
 /**
  * Wizard which allows importing existing VDB files into the user's workspace. The resulting workspace items will replicate the
- * project/folder/model structure defined within the VDB. All other VDB artifacts, including manifest files and index files will
- * not be extracted into the workspace.
+ * project/folder/model structure defined within the VDB. All other VDB artifacts, including manifest files and index files will not
+ * be extracted into the workspace.
  * 
  * @author BLaFond
  */
@@ -39,13 +39,15 @@ public class ImportVdbWizard extends AbstractWizard
 
     private static final String TITLE = getString("title"); //$NON-NLS-1$
 
-    private static final ImageDescriptor IMAGE = VdbUiPlugin.getDefault().getImageDescriptor(Images.IMPORT_VDB_ICON);
+    private static final ImageDescriptor IMAGE = null; // VdbUiPlugin.getDefault().getImageDescriptor(Images.IMPORT_VDB_ICON);
 
     private static final String NOT_LICENSED_MSG = getString("notLicensedMessage"); //$NON-NLS-1$
 
     private static boolean importLicensed = true;
 
     /**
+     * @param id
+     * @return ?
      * @since 4.0
      */
     private static String getString( final String id ) {
@@ -58,7 +60,7 @@ public class ImportVdbWizard extends AbstractWizard
      * @since 4.0
      */
     public ImportVdbWizard() {
-        super(VdbUiPlugin.getDefault(), TITLE, IMAGE);
+        super(VdbUiPlugin.singleton, TITLE, IMAGE);
     }
 
     Composite createEmptyPageControl( final Composite parent ) {
@@ -66,13 +68,19 @@ public class ImportVdbWizard extends AbstractWizard
     }
 
     /**
+     * @param selection
+     * @return ?
+     */
+    protected ImportVdbMainPage createMainPage( final IStructuredSelection selection ) {
+        return new ImportVdbMainPage();
+    }
+
+    /**
      * @see org.eclipse.jface.wizard.IWizard#createPageControls(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public void createPageControls( Composite pageContainer ) {
-        if (importLicensed) {
-            super.createPageControls(pageContainer);
-        }
+    public void createPageControls( final Composite pageContainer ) {
+        if (importLicensed) super.createPageControls(pageContainer);
     }
 
     /**
@@ -81,11 +89,15 @@ public class ImportVdbWizard extends AbstractWizard
      */
     @Override
     public boolean finish() {
-        boolean result = true;
+        final boolean result = true;
 
         zipPage.finish();
 
         return result;
+    }
+
+    IPath getFolder() {
+        return ResourcesPlugin.getWorkspace().getRoot().getRawLocation();
     }
 
     /**
@@ -99,7 +111,7 @@ public class ImportVdbWizard extends AbstractWizard
             addPage(zipPage);
         } else {
             // Create empty page
-            WizardPage page = new WizardPage(ImportVdbWizard.class.getSimpleName(), TITLE, null) {
+            final WizardPage page = new WizardPage(ImportVdbWizard.class.getSimpleName(), TITLE, null) {
                 public void createControl( final Composite parent ) {
                     setControl(createEmptyPageControl(parent));
                 }
@@ -108,34 +120,5 @@ public class ImportVdbWizard extends AbstractWizard
             page.setPageComplete(false);
             addPage(page);
         }
-    }
-
-    protected ImportVdbMainPage createMainPage( final IStructuredSelection selection ) {
-        return new ImportVdbMainPage();
-    }
-
-    /**
-     * @see org.eclipse.jface.wizard.IWizard#canFinish()
-     * @since 4.0
-     */
-    @Override
-    public boolean canFinish() {
-        return super.canFinish();
-    }
-
-    /**
-     * @see org.eclipse.jface.wizard.IWizard#dispose()
-     * @since 4.0
-     */
-    @Override
-    public void dispose() {
-        super.dispose();
-    }
-
-    /**
-     * @since 4.0
-     */
-    IPath getFolder() {
-        return ResourcesPlugin.getWorkspace().getRoot().getRawLocation();
     }
 }

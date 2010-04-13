@@ -25,7 +25,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchWindow;
-import com.metamatrix.common.xmi.XMIHeader;
+import org.teiid.designer.core.xmi.XMIHeader;
 import com.metamatrix.metamodels.xml.XmlDocument;
 import com.metamatrix.metamodels.xml.XmlDocumentPackage;
 import com.metamatrix.metamodels.xml.XmlRoot;
@@ -59,83 +59,66 @@ public class GenerateWebServiceModelAction2 extends SortableSelectionAction impl
      * 
      */
     @Override
-    public boolean isApplicable( ISelection selection ) {
+    public boolean isApplicable( final ISelection selection ) {
         return isValidSelection(selection);
     }
 
-    private boolean isDocumentOrRootSelected( ISelection selection ) {
-        if (!SelectionUtilities.isSingleSelection(selection)) {
-            return false;
-        }
+    private boolean isDocumentOrRootSelected( final ISelection selection ) {
+        if (!SelectionUtilities.isSingleSelection(selection)) return false;
 
-        Object selectedObject = SelectionUtilities.getSelectedObject(selection);
+        final Object selectedObject = SelectionUtilities.getSelectedObject(selection);
 
-        if (selectedObject != null && (selectedObject instanceof XmlDocument || selectedObject instanceof XmlRoot)) {
-            return true;
-        }
+        if (selectedObject != null && (selectedObject instanceof XmlDocument || selectedObject instanceof XmlRoot)) return true;
 
         return false;
     }
 
-    private boolean isSingleXmlDocumentModelSelected( ISelection selection ) {
-        if (!SelectionUtilities.isSingleSelection(selection)) {
-            return false;
-        }
-        Object selectedObject = SelectionUtilities.getSelectedObject(selection);
+    private boolean isSingleXmlDocumentModelSelected( final ISelection selection ) {
+        if (!SelectionUtilities.isSingleSelection(selection)) return false;
+        final Object selectedObject = SelectionUtilities.getSelectedObject(selection);
 
         if (selectedObject instanceof IResource && ModelUtilities.isModelFile((IResource)selectedObject)) {
-            IResource iResource = (IResource)selectedObject;
-            XMIHeader header = ModelUtil.getXmiHeader(iResource);
+            final IResource iResource = (IResource)selectedObject;
+            final XMIHeader header = ModelUtil.getXmiHeader(iResource);
             if (header != null) {
-                String mmURI = header.getPrimaryMetamodelURI();
-                if (mmURI != null && mmURI.equals(XmlDocumentPackage.eNS_URI)) {
-                    return true;
-                }
+                final String mmURI = header.getPrimaryMetamodelURI();
+                if (mmURI != null && mmURI.equals(XmlDocumentPackage.eNS_URI)) return true;
             }
         }
         return false;
     }
 
     /**
-     * Valid selections include Relational Tables, Procedures or Relational Models. The roots instance variable will populated
-     * with all Tables and Procedures contained within the current selection.
+     * Valid selections include Relational Tables, Procedures or Relational Models. The roots instance variable will populated with
+     * all Tables and Procedures contained within the current selection.
      * 
      * @return
      * @since 4.1
      */
     @Override
-    protected boolean isValidSelection( ISelection selection ) {
+    protected boolean isValidSelection( final ISelection selection ) {
         boolean isValid = true;
-        if (SelectionUtilities.isEmptySelection(selection)) {
-            isValid = false;
-        }
+        if (SelectionUtilities.isEmptySelection(selection)) isValid = false;
 
         if (isValid && SelectionUtilities.isSingleSelection(selection)) {
             final Collection objs = SelectionUtilities.getSelectedObjects(selection);
             final Iterator selections = objs.iterator();
             while (selections.hasNext() && isValid) {
                 final Object next = selections.next();
-                if (next instanceof XmlDocument || next instanceof XmlRoot) {
-                    isValid = true;
-                } else {
-                    isValid = false;
-                }
+                if (next instanceof XmlDocument || next instanceof XmlRoot) isValid = true;
+                else isValid = false;
 
                 // stop processing if no longer valid:
-                if (!isValid) {
-                    break;
-                } // endif -- valid
+                if (!isValid) break;
             } // endwhile -- all selected
-        } else {
-            isValid = false;
-        }
+        } else isValid = false;
 
         return isValid;
     }
 
     @Override
     public void run() {
-        IWorkbenchWindow iww = WebServiceUiPlugin.getDefault().getCurrentWorkbenchWindow();
+        final IWorkbenchWindow iww = WebServiceUiPlugin.getDefault().getCurrentWorkbenchWindow();
 
         // ----------------------------------------------------
         // Defect 22355: added preProcess() check to see if VDB is dirty or any Models are Dirty.
@@ -147,7 +130,7 @@ public class GenerateWebServiceModelAction2 extends SortableSelectionAction impl
         }
         // ----------------------------------------------------
 
-        ISelection selection = getSelection();
+        final ISelection selection = getSelection();
 
         // We can handle single selection, multiple selection AND NO selection.
         // 1) If a document or document root is NOT selected we
@@ -157,66 +140,58 @@ public class GenerateWebServiceModelAction2 extends SortableSelectionAction impl
         // from the whole workspace/VDB
 
         IStructuredSelection thisSelection = null;
-        if (selection != null && !selection.isEmpty() && isDocumentOrRootSelected(selection)) {
-            thisSelection = (IStructuredSelection)selection;
-        } else if (canIgnoreSelection) {
+        if (selection != null && !selection.isEmpty() && isDocumentOrRootSelected(selection)) thisSelection = (IStructuredSelection)selection;
+        else if (canIgnoreSelection) {
             // Set to false in case there's an exception and it doesn't get set back.
             canIgnoreSelection = false;
             // Present user a selection dialog for THIS XML DOCUMENT MODEL ONLY
 
-            ILabelProvider labelProvider = new ModelExplorerLabelProvider();
-            ITreeContentProvider contentProvider = new XmlDocumentContentProvider();
+            final ILabelProvider labelProvider = new ModelExplorerLabelProvider();
+            final ITreeContentProvider contentProvider = new XmlDocumentContentProvider();
 
-            XmlDocumentSelectorDialog xmlDialog = new XmlDocumentSelectorDialog(
-                                                                                WebServiceUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
-                                                                                labelProvider, contentProvider);
+            final XmlDocumentSelectorDialog xmlDialog = new XmlDocumentSelectorDialog(
+                                                                                      WebServiceUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
+                                                                                      labelProvider, contentProvider);
             xmlDialog.setAllowMultiple(false);
 
-            if (selection != null && !selection.isEmpty() && isSingleXmlDocumentModelSelected(selection)) {
-                xmlDialog.setInput(SelectionUtilities.getSelectedObject(selection));
-            }
+            if (selection != null && !selection.isEmpty() && isSingleXmlDocumentModelSelected(selection)) xmlDialog.setInput(SelectionUtilities.getSelectedObject(selection));
             xmlDialog.open();
 
             if (xmlDialog.getReturnCode() == Window.OK) {
-                Object[] oSelectedObjects = xmlDialog.getResult();
+                final Object[] oSelectedObjects = xmlDialog.getResult();
 
                 // add the selected location to this Relationship
                 if (oSelectedObjects.length == 1) {
-                    if (oSelectedObjects[0] instanceof XmlDocument || oSelectedObjects[0] instanceof XmlRoot) {
-                        thisSelection = new StructuredSelection(oSelectedObjects[0]);
-                    } else {
+                    if (oSelectedObjects[0] instanceof XmlDocument || oSelectedObjects[0] instanceof XmlRoot) thisSelection = new StructuredSelection(
+                                                                                                                                                      oSelectedObjects[0]);
+                    else {
                         // ERROR !!!!!
-                        String title = IInternalUiConstants.UTIL.getString("GenerateWebServiceModelAction.selectionError.title"); //$NON-NLS-1$
-                        String dlgMsg = IInternalUiConstants.UTIL.getString("GenerateWebServiceModelAction.selectionError.wrongType"); //$NON-NLS-1$
+                        final String title = IInternalUiConstants.UTIL.getString("GenerateWebServiceModelAction.selectionError.title"); //$NON-NLS-1$
+                        final String dlgMsg = IInternalUiConstants.UTIL.getString("GenerateWebServiceModelAction.selectionError.wrongType"); //$NON-NLS-1$
                         MessageDialog.openError(iww.getShell(), title, dlgMsg);
                         notifyResult(false);
                         return;
                     }
                 } else {
                     // ERROR !!!!!
-                    String title = IInternalUiConstants.UTIL.getString("GenerateWebServiceModelAction.selectionError.title"); //$NON-NLS-1$
-                    String dlgMsg = IInternalUiConstants.UTIL.getString("GenerateWebServiceModelAction.selectionError.emptySelection"); //$NON-NLS-1$
+                    final String title = IInternalUiConstants.UTIL.getString("GenerateWebServiceModelAction.selectionError.title"); //$NON-NLS-1$
+                    final String dlgMsg = IInternalUiConstants.UTIL.getString("GenerateWebServiceModelAction.selectionError.emptySelection"); //$NON-NLS-1$
                     MessageDialog.openError(iww.getShell(), title, dlgMsg);
                     notifyResult(false);
                     return;
                 }
-            } else {
-                return;
-            }
+            } else return;
 
         } else {
             // selection empty, tell user to select something:
-            IViewReference ivr = iww.getActivePage().findViewReference(ProductCustomizerMgr.getInstance().getProductCharacteristics().getPrimaryNavigationViewId());
+            final IViewReference ivr = iww.getActivePage().findViewReference(ProductCustomizerMgr.getInstance().getProductCharacteristics().getPrimaryNavigationViewId());
             String viewTitle;
-            if (ivr != null) {
-                viewTitle = ivr.getTitle();
-            } else {
-                // don't have a view ref, use a default name:
-                viewTitle = DEFAULT_EXPLORER_TITLE;
-            } // endif
+            if (ivr != null) viewTitle = ivr.getTitle();
+            else // don't have a view ref, use a default name:
+            viewTitle = DEFAULT_EXPLORER_TITLE;
 
             // show the dialog:
-            String dlgMsg = IInternalUiConstants.UTIL.getString(KEY_NO_SEL_DLG_MSG, viewTitle);
+            final String dlgMsg = IInternalUiConstants.UTIL.getString(KEY_NO_SEL_DLG_MSG, viewTitle);
             MessageDialog.openError(iww.getShell(), NO_SEL_DLG_TITLE, dlgMsg);
             return;
         }
@@ -224,7 +199,7 @@ public class GenerateWebServiceModelAction2 extends SortableSelectionAction impl
         final GenerateWebServiceModelWizard wizard = new GenerateWebServiceModelWizard();
         wizard.init(iww.getWorkbench(), thisSelection);
         final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
-        int rc = dialog.open();
+        final int rc = dialog.open();
 
         if (rc == Window.CANCEL) {
             notifyResult(false);
@@ -245,15 +220,11 @@ public class GenerateWebServiceModelAction2 extends SortableSelectionAction impl
             final String okTitle = IInternalUiConstants.UTIL.getString("GenerateWebServiceModelAction.successTitle"); //$NON-NLS-1$
             final String ok = IInternalUiConstants.UTIL.getString("GenerateWebServiceModelAction.successFinish"); //$NON-NLS-1$
 
-            List msgs = new ArrayList(result.getChildren().length);
-            for (int i = 0; i < result.getChildren().length; i++) {
+            final List msgs = new ArrayList(result.getChildren().length);
+            for (int i = 0; i < result.getChildren().length; i++)
                 msgs.add(result.getChildren()[i].getMessage());
-            }
-            if (msgs.size() > 0) {
-                ListMessageDialog.openInformation(wizard.getShell(), okTitle, null, ok, msgs, null);
-            } else {
-                MessageDialog.openInformation(wizard.getShell(), okTitle, ok);
-            }
+            if (msgs.size() > 0) ListMessageDialog.openInformation(wizard.getShell(), okTitle, null, ok, msgs, null);
+            else MessageDialog.openInformation(wizard.getShell(), okTitle, ok);
         }
 
         notifyResult(severity < IStatus.ERROR && rc != Window.CANCEL);
@@ -263,7 +234,7 @@ public class GenerateWebServiceModelAction2 extends SortableSelectionAction impl
      * @param theCanIgnoreSelection The canIgnoreSelection to set.
      * @since 5.0
      */
-    public void setCanIgnoreSelection( boolean theCanIgnoreSelection ) {
+    public void setCanIgnoreSelection( final boolean theCanIgnoreSelection ) {
         this.canIgnoreSelection = theCanIgnoreSelection;
     }
 }

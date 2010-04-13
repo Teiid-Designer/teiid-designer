@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.EditorPart;
 import com.metamatrix.core.util.I18nUtil;
@@ -43,7 +42,7 @@ import com.metamatrix.ui.internal.util.WidgetFactory;
  * @since 5.3.3
  */
 public final class VdbEditorUserFilesPage extends EditorPart
-    implements CoreStringUtil.Constants, VdbUiConstants, VdbEditor.Constants, IRevertable, IGotoMarker {
+    implements CoreStringUtil.Constants, VdbUiConstants, IRevertable, IGotoMarker {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(VdbEditorUserFilesPage.class);
 
@@ -182,10 +181,9 @@ public final class VdbEditorUserFilesPage extends EditorPart
     }
 
     /**
-     * Does nothing.
+     * {@inheritDoc}
      * 
-     * @see org.eclipse.ui.IEditorPart#gotoMarker(org.eclipse.core.resources.IMarker)
-     * @since 4.0
+     * @see org.eclipse.ui.ide.IGotoMarker#gotoMarker(org.eclipse.core.resources.IMarker)
      */
     public void gotoMarker( final IMarker marker ) {
     }
@@ -196,8 +194,7 @@ public final class VdbEditorUserFilesPage extends EditorPart
      */
     @Override
     public void init( final IEditorSite site,
-                      final IEditorInput input ) throws PartInitException {
-        if (input != null && !(input instanceof IFileEditorInput)) throw new PartInitException(INVALID_INPUT_MESSAGE);
+                      final IEditorInput input ) {
         setSite(site);
         setInput(input);
         setPartName(TITLE);

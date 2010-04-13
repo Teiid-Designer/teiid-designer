@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -40,8 +41,7 @@ import com.metamatrix.ui.internal.widget.TablePanel;
  * 
  * @since 5.3.3
  */
-public final class VdbEditorUserFilesComposite
-    implements ListPanel.Constants, CoreStringUtil.Constants, VdbUiConstants, VdbEditor.Constants, Widgets {
+public final class VdbEditorUserFilesComposite implements ListPanel.Constants, CoreStringUtil.Constants, VdbUiConstants, Widgets {
 
     private static final String I18N_PREFIX = "VdbEditorUserFilesPage."; //$NON-NLS-1$
     private static final String FILE_SELECTION_DIALOG_TITLE = getString("fileSelectionDialogTitle"); //$NON-NLS-1$
@@ -79,10 +79,9 @@ public final class VdbEditorUserFilesComposite
         final List addedFiles = new ArrayList();
 
         if (paths != null) for (final String path : paths) {
-            final VdbEntry addedFile = this.editor.getVdb().addEntry(Path.fromPortableString(path));
+            final VdbEntry addedFile = this.editor.getVdb().addEntry(Path.fromPortableString(path), new NullProgressMonitor());
             if (addedFile != null) addedFiles.add(addedFile.getName());
         }
-        if (!addedFiles.isEmpty()) this.editor.update();
         return addedFiles.toArray();
     }
 
@@ -207,10 +206,7 @@ public final class VdbEditorUserFilesComposite
             removedFiles.add(entry);
         }
 
-        if (!removedFiles.isEmpty()) {
-            this.editor.update();
-            refresh();
-        }
+        if (!removedFiles.isEmpty()) refresh();
         return removedFiles.toArray();
     }
 

@@ -9,8 +9,6 @@
 -->
 <plugin>
 
-     <extension-point id="vdbEditorPage" name="%vdbEditorPage" schema="schema/vdbEditorPage.exsd"/>
-
 <!-- Model Editors -->
    <extension
          point="org.eclipse.ui.editors">
@@ -44,9 +42,9 @@
          </description>
       </wizard>
    </extension> 
+<!-- Modeler VDB Import wizard 
    <extension
          point="org.eclipse.ui.importWizards">
-<!-- Modeler VDB Import wizard 
       <wizard
             name="%importVdbWizard.name"
             icon="icons/full/ctool16/importvdb.gif"
@@ -56,75 +54,7 @@
             %importVdbWizard.description
          </description>
       </wizard>
+   </extension> 
 -->
-   </extension>
-      <extension
-		id="SynchronizeVdbAction"
-		name="%synchronizeVdbAction.name"
-        point="org.teiid.designer.ui.modelResourceAction">
-      <resourceAction
-         name="com.metamatrix.modeler.internal.vdb.ui.actions.SynchronizeVdbAction"
-         label="%synchronizeVdbAction.label">
-      </resourceAction>
-   </extension>
-<!--
-	Add the Navigation Action Set to the Modeler Perspective MetaData menu. In order to do
-	this we must make sure the MetaData Action Set has also been activated. Also add the search action set.
--->
-   <extension
-         point="org.eclipse.ui.perspectiveExtensions">
-      <perspectiveExtension
-         targetID="modelerPerspective">
-         <actionSet
-               id="vdbMetadataActionSet">
-         </actionSet>
-      </perspectiveExtension>
-   </extension>
 
-
-   <extension
-		id="RebuildVdbAction"
-		name="%rebuildVdbAction.name"
-        point="org.teiid.designer.ui.modelResourceAction">
-      <resourceAction
-         name="com.metamatrix.modeler.internal.vdb.ui.actions.RebuildVdbAction"
-         label="%rebuildVdbAction.label">
-      </resourceAction>
-   </extension>
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="%vdbActionSet.name"
-            visible="true"
-            id="vdbMetadataActionSet">
-         <menu
-               label="%metadata.menu"
-               path="additions"
-               id="metadataMenu">
-            <separator
-                  name="slot1">
-            </separator>
-            <separator
-                  name="slot2">
-            </separator>
-            <separator
-                  name="slot3">
-            </separator>
-            <separator
-                  name="slot4">
-            </separator>
-            <groupMarker
-                  name="com.metamatrix.modeler.ui.groupMarker1">
-            </groupMarker>
-         </menu>            
-         <action
-               label="%rebuildVdbAction.text"
-               tooltip="%rebuildVdbAction.tip"
-               icon="icons/full/ctool16/rebuild_vdb.gif"
-               class="com.metamatrix.modeler.internal.vdb.ui.actions.RebuildVdbMetadataAction"
-               menubarPath="metadataMenu/slot4"
-               id="rebuildVdbMetadataAction">
-         </action>              
-      </actionSet>
-   </extension>  
 </plugin>

@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.common.xmi.XMIHeader;
+import org.teiid.designer.core.xmi.XMIHeader;
 import com.metamatrix.core.index.IDocument;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
@@ -46,7 +46,7 @@ public class ModelSearchIndexer extends ModelIndexer {
 
     @Override
     protected void addIndexWord( final EObject eObject,
-                                 IndexingContext context,
+                                 final IndexingContext context,
                                  final String modelPath,
                                  final List wordEntries ) {
         addIndexWord(eObject, modelPath, wordEntries);
@@ -80,18 +80,16 @@ public class ModelSearchIndexer extends ModelIndexer {
         if (document instanceof ModelDocument) {
             final ModelDocument modelDocument = (ModelDocument)document;
             // get the emfResource
-            Resource resource = modelDocument.getResource();
+            final Resource resource = modelDocument.getResource();
             try {
                 // find the model resource
-                ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(resource);
+                final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(resource);
 
                 // find the primary meta model URI for the resource
                 String primaryMetamodelURI = null;
                 if (modelResource != null) {
-                    MetamodelDescriptor descriptor = modelResource.getPrimaryMetamodelDescriptor();
-                    if (descriptor != null) {
-                        primaryMetamodelURI = descriptor.getNamespaceURI();
-                    }
+                    final MetamodelDescriptor descriptor = modelResource.getPrimaryMetamodelDescriptor();
+                    if (descriptor != null) primaryMetamodelURI = descriptor.getNamespaceURI();
                 }
                 // add search word for the resource
                 SearchRuntimeAdapter.addResourceSearchWords(modelResource.getUuid(),
@@ -100,23 +98,21 @@ public class ModelSearchIndexer extends ModelIndexer {
                                                             primaryMetamodelURI,
                                                             modelResource.getModelType().getName(),
                                                             wordEntries);
-            } catch (ModelerCoreException e) {
+            } catch (final ModelerCoreException e) {
                 ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
                 return;
             }
         } else if (document instanceof ResourceDocument) {
             final ResourceDocument resourceDocument = (ResourceDocument)document;
-            IResource resourceFile = resourceDocument.getIResource();
-            XMIHeader header = ModelUtil.getXmiHeader(resourceFile);
-            if (header != null) {
-                // add search word for the resource
-                SearchRuntimeAdapter.addResourceSearchWords(header.getUUID(),
-                                                            resourceDocument.getIResource().getFullPath(),
-                                                            URI.createFileURI(resourceFile.getLocation().toString()),
-                                                            header.getPrimaryMetamodelURI(),
-                                                            ModelType.VDB_ARCHIVE_LITERAL.getName(),
-                                                            wordEntries);
-            }
+            final IResource resourceFile = resourceDocument.getIResource();
+            final XMIHeader header = ModelUtil.getXmiHeader(resourceFile);
+            if (header != null) // add search word for the resource
+            SearchRuntimeAdapter.addResourceSearchWords(header.getUUID(),
+                                                        resourceDocument.getIResource().getFullPath(),
+                                                        URI.createFileURI(resourceFile.getLocation().toString()),
+                                                        header.getPrimaryMetamodelURI(),
+                                                        ModelType.VDB_ARCHIVE_LITERAL.getName(),
+                                                        wordEntries);
         }
     }
 
@@ -127,7 +123,7 @@ public class ModelSearchIndexer extends ModelIndexer {
      * @return The index file names for this resource
      */
     @Override
-    protected String getIndexFileName( IPath path ) {
+    protected String getIndexFileName( final IPath path ) {
         return IndexUtil.getIndexFileName(path.toString(), IndexConstants.SEARCH_INDEX_EXT);
     }
 
@@ -145,13 +141,10 @@ public class ModelSearchIndexer extends ModelIndexer {
      * @param resource The modelResource whose index type is set
      */
     @Override
-    protected void setIndexType( ModelResource resource ) {
+    protected void setIndexType( final ModelResource resource ) {
         CoreArgCheck.isNotNull(resource);
-        if (resource.getIndexType() == ModelResource.NOT_INDEXED) {
-            resource.setIndexType(ModelResource.SEARCH_INDEXED);
-        } else if (resource.getIndexType() == ModelResource.METADATA_INDEXED) {
-            resource.setIndexType(ModelResource.INDEXED);
-        }
+        if (resource.getIndexType() == ModelResource.NOT_INDEXED) resource.setIndexType(ModelResource.SEARCH_INDEXED);
+        else if (resource.getIndexType() == ModelResource.METADATA_INDEXED) resource.setIndexType(ModelResource.INDEXED);
     }
 
     /* (non-Javadoc)
@@ -159,9 +152,7 @@ public class ModelSearchIndexer extends ModelIndexer {
      */
     @Override
     public boolean shouldIndex( final IDocument document ) {
-        if (document instanceof ResourceDocument) {
-            return true;
-        }
+        if (document instanceof ResourceDocument) return true;
         return false;
     }
 

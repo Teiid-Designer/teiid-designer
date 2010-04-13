@@ -34,7 +34,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.EditorPart;
@@ -59,7 +58,7 @@ import com.metamatrix.ui.text.StyledTextEditor;
  * @since 4.2
  */
 public class VdbEditorWsdlPage extends EditorPart
-    implements Images, VdbUiConstants, CoreStringUtil.Constants, VdbEditor.Constants, IRevertable, IGotoMarker, IUndoManager {
+    implements Images, VdbUiConstants, CoreStringUtil.Constants, IRevertable, IGotoMarker, IUndoManager {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(VdbEditorWsdlPage.class);
 
@@ -154,7 +153,6 @@ public class VdbEditorWsdlPage extends EditorPart
         // } catch (final IllegalArgumentException e) {
         // // the uri is invalid. Already set the error status.
         // }
-        editor.update();
         updateDefaultNamespaceLabel();
     }
 
@@ -328,10 +326,9 @@ public class VdbEditorWsdlPage extends EditorPart
     }
 
     /**
-     * Does nothing.
+     * {@inheritDoc}
      * 
-     * @see org.eclipse.ui.IEditorPart#gotoMarker(org.eclipse.core.resources.IMarker)
-     * @since 4.2
+     * @see org.eclipse.ui.ide.IGotoMarker#gotoMarker(org.eclipse.core.resources.IMarker)
      */
     public void gotoMarker( final IMarker marker ) {
     }
@@ -342,8 +339,7 @@ public class VdbEditorWsdlPage extends EditorPart
      */
     @Override
     public void init( final IEditorSite site,
-                      final IEditorInput input ) throws PartInitException {
-        if (input != null && !(input instanceof IFileEditorInput)) throw new PartInitException(INVALID_INPUT_MESSAGE);
+                      final IEditorInput input ) {
         setSite(site);
         setInput(input);
         setPartName(TITLE);

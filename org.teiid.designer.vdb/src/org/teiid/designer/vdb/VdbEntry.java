@@ -10,11 +10,16 @@ package org.teiid.designer.vdb;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 import net.jcip.annotations.ThreadSafe;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import com.metamatrix.core.util.ChecksumUtil;
 
@@ -25,21 +30,35 @@ import com.metamatrix.core.util.ChecksumUtil;
 public class VdbEntry {
 
     private final IPath name;
+    private final Vdb vdb;
+    private final AtomicReference<Synchronization> synchronization = new AtomicReference<Synchronization>(
+                                                                                                          Synchronization.NotSynchronized);
     private final AtomicLong checksum = new AtomicLong();
+    private final IResourceChangeListener fileListener;
 
-    VdbEntry( final IPath name ) {
+    VdbEntry( final IPath name,
+              final Vdb vdb,
+              final IProgressMonitor monitor ) {
         this.name = name;
-        synchronizeEntry();
+        this.vdb = vdb;
+        synchronizeEntry(monitor);
+        fileListener = new IResourceChangeListener() {
+            public void resourceChanged( final IResourceChangeEvent event ) {
+                final IResourceDelta delta = event.getDelta().findMember(name);
+                if (delta == null) return;
+                fileChanged(delta);
+            }
+        };
+        ResourcesPlugin.getWorkspace().addResourceChangeListener(fileListener);
     }
 
     VdbEntry( final String name,
-              final String path ) {
-        this.name = Path.fromPortableString(path).append(name);
+              final Vdb vdb,
+              final IProgressMonitor monitor ) {
+        this(Path.fromPortableString(name), vdb, monitor);
     }
 
-    private long computeChecksum() {
-        final IFile file = findFile();
-        if (file == null) return 0L;
+    private long computeChecksum( final IFile file ) {
         RuntimeException runtimeError = null;
         InputStream stream = null;
         try {
@@ -47,6 +66,7 @@ public class VdbEntry {
             return ChecksumUtil.computeChecksum(stream).getValue();
         } catch (final Exception error) {
             runtimeError = new RuntimeException(error);
+            setSynchronization(Synchronization.NotSynchronized);
             throw runtimeError;
         } finally {
             if (stream != null) try {
@@ -58,6 +78,18 @@ public class VdbEntry {
     }
 
     void dispose() {
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(fileListener);
+    }
+
+    void fileChanged( final IResourceDelta delta ) {
+        if ((delta.getFlags() & (IResourceDelta.REPLACED | IResourceDelta.MOVED_FROM | IResourceDelta.MOVED_TO)) > 0) throw new UnsupportedOperationException(
+                                                                                                                                                              toString(delta));
+        final int kind = delta.getKind();
+        if (kind == IResourceDelta.REMOVED) setSynchronization(Synchronization.NotApplicable);
+        else if (kind == IResourceDelta.ADDED || kind == IResourceDelta.CHANGED) {
+            if (checksum.get() != computeChecksum((IFile)delta.getResource())) setSynchronization(Synchronization.NotSynchronized);
+            else setSynchronization(Synchronization.Synchronized);
+        } else throw new UnsupportedOperationException(toString(delta));
     }
 
     /**
@@ -72,7 +104,11 @@ public class VdbEntry {
      */
     public final IFile findFile() {
         final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(name);
-        return (resource instanceof IFile ? (IFile)resource : null);
+        if (!(resource instanceof IFile)) {
+            setSynchronization(Synchronization.NotApplicable);
+            return null;
+        }
+        return (IFile)resource;
     }
 
     /**
@@ -87,50 +123,74 @@ public class VdbEntry {
      *         i.e., the entry information matches the file information.
      * @throws RuntimeException
      */
-    public final SyncState getSyncState() {
-        try {
-            return (computeChecksum() == this.checksum.get() ? SyncState.InSync : SyncState.OutOfSync);
-        } catch (final RuntimeException error) {
-            return SyncState.NoFile;
-        }
+    public final Synchronization getSynchronization() {
+        return synchronization.get();
     }
 
     /**
-     * @return <code>true</code> if synchronization was successful
+     * @return the VDB containing this entry
      */
-    public boolean synchronize() {
-        return synchronizeEntry();
+    Vdb getVdb() {
+        return vdb;
+    }
+
+    private void setSynchronization( final Synchronization synchronization ) {
+        final Synchronization oldSynchronization = getSynchronization();
+        if (oldSynchronization == synchronization) return;
+        this.synchronization.set(synchronization);
+        vdb.notifyChangeListeners(this, Vdb.SYNCHRONIZATION, oldSynchronization, synchronization);
+    }
+
+    /**
+     * @param monitor
+     */
+    public void synchronize( final IProgressMonitor monitor ) {
+        if (synchronization.get() != Synchronization.NotSynchronized) return;
+        setSynchronization(synchronizeEntry(monitor));
     }
 
     /*
      * Private since called by constructor and don't want subclasses overriding
      */
-    private boolean synchronizeEntry() {
-        // Return if resource to synchronize on doesn't exist
-        if (!fileExists()) return false;
-        // Synchronize file checksum
-        checksum.set(computeChecksum());
-        return true;
+    private Synchronization synchronizeEntry( final IProgressMonitor monitor ) {
+        final IFile file = findFile();
+        if (file == null) return Synchronization.NotApplicable;
+        checksum.set(computeChecksum(file));
+        return Synchronization.Synchronized;
+    }
+
+    String toString( final IResourceDelta delta ) {
+        final StringBuilder builder = new StringBuilder("file="); //$NON-NLS-1$
+        builder.append(delta.getFullPath().toString());
+        builder.append(", kind="); //$NON-NLS-1$
+        builder.append(delta.getKind());
+        builder.append(", flags="); //$NON-NLS-1$
+        builder.append(delta.getFlags());
+        builder.append(", from="); //$NON-NLS-1$
+        builder.append(delta.getMovedFromPath());
+        builder.append(", to="); //$NON-NLS-1$
+        builder.append(delta.getMovedToPath());
+        return builder.toString();
     }
 
     /**
      * 
      */
-    public enum SyncState {
+    public enum Synchronization {
 
         /**
-         * The associated file for this entry does not exist
+         * This entry is synchronized with its corresponding workspace file
          */
-        NoFile,
+        Synchronized,
 
         /**
-         * This entry is in-sync with its associated file
+         * This entry is out-of-sync with its corresponding workspace file
          */
-        InSync,
+        NotSynchronized,
 
         /**
-         * This entry is out-of-sync with its associated file
+         * Synchronization is not applicable to this entry, generally because the corresponding workspace file does not exist
          */
-        OutOfSync;
+        NotApplicable;
     }
 }

@@ -7,108 +7,107 @@
  */
 package com.metamatrix.modeler.vdb.ui;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
-import com.metamatrix.ui.AbstractUiPlugin;
-import com.metamatrix.ui.actions.AbstractActionService;
-import com.metamatrix.ui.actions.ActionService;
 
-
-/** 
+/**
  * @since 4.2
  */
-public class VdbUiPlugin extends AbstractUiPlugin implements VdbUiConstants {
-    //============================================================================================================================
-    // Static Variables
+public class VdbUiPlugin extends AbstractUIPlugin implements VdbUiConstants {
 
     /**
-     * The shared instance of this class.
-     * 
-     * @since 4.2
+     * The ID within the {@link JFaceResources#getImageRegistry() JFace image registry} of the checked check box image
      */
-    private static VdbUiPlugin plugin;
-
-    //============================================================================================================================
-    // Static Methods
+    public static final String CHECKED_BOX = "checkedBox"; //$NON-NLS-1$
 
     /**
-     * Returns the shared instance of this class.
-     * 
-     * @return
-     * @since 4.2
+     * The ID within the {@link JFaceResources#getImageRegistry() JFace image registry} of the unchecked check box image
      */
-    public static VdbUiPlugin getDefault() {
-        return VdbUiPlugin.plugin;
+    public static final String UNCHECKED_BOX = "uncheckedBox"; //$NON-NLS-1$
+
+    /**
+     * The singleton instance of this plug-in
+     */
+    public static VdbUiPlugin singleton;
+
+    private static final Image createCheckBoxImage( final boolean checked ) {
+        Display display = Display.getCurrent();
+        if (display == null) display = Display.getDefault();
+        final Shell shell = new Shell(display, SWT.NO_TRIM);
+        final Button checkBox = new Button(shell, SWT.CHECK);
+        checkBox.setSelection(checked);
+        checkBox.pack();
+        final Point size = checkBox.getSize();
+        shell.setSize(size);
+        final Color greenScreen = new Color(display, 255, 255, 254);
+        checkBox.setBackground(greenScreen);
+        shell.setBackground(greenScreen);
+        shell.open();
+        final GC gc = new GC(checkBox);
+        final Image image = new Image(display, size.x, size.y);
+        gc.copyArea(image, 0, 0);
+        gc.dispose();
+        shell.close();
+        final ImageData imageData = image.getImageData();
+        imageData.transparentPixel = imageData.palette.getPixel(greenScreen.getRGB());
+        return new Image(display, imageData);
     }
 
     /**
-     * Has the benign side-effect of adding a section for the specified object to the dialog settings if that section does not
-     * already exist.
-     * 
-     * @param object
-     * @return The dialog settings for the specified object.
-     * @since 4.2
+     * @param severity
+     * @return The image associated with the supplied severity
      */
-    public static IDialogSettings getDialogSettings(final Object object) {
-        // Get dialog settings, creating section if necessary
-        final IDialogSettings settings = getDefault().getDialogSettings();
-        final String name = object.getClass().getName();
-        IDialogSettings section = settings.getSection(name);
-        if (section == null) {
-            section = settings.addNewSection(name);
+    public static Image getImage( final int severity ) {
+        switch (severity) {
+            case IStatus.ERROR: {
+                return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
+            }
+            case IStatus.WARNING: {
+                return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
+            }
+            case IStatus.INFO: {
+                return JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_INFO);
+            }
         }
-        return section;
+        return null;
     }
-
-    //============================================================================================================================
-    // Constructors
 
     /**
-     * @since 4.2
-     */
-    public VdbUiPlugin() {
-        // Save this instance to be shared via the getDefault() method.
-        VdbUiPlugin.plugin = this;
-    }
-
-    //============================================================================================================================
-    // Overridden Methods
-
-    /** 
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
      * @since 4.3.2
      */
     @Override
-    public void start(final BundleContext context) throws Exception {
+    public void start( final BundleContext context ) throws Exception {
         super.start(context);
+        singleton = this;
         // Initialize logging/i18n/debugging utility
         ((PluginUtilImpl)Util).initializePlatformLogger(this);
+        // Register commonly-used images
+        JFaceResources.getImageRegistry().put(UNCHECKED_BOX, createCheckBoxImage(false));
+        JFaceResources.getImageRegistry().put(CHECKED_BOX, createCheckBoxImage(true));
     }
 
-    //============================================================================================================================
-    // Utility Methods
-
     /**
-     * @see com.metamatrix.ui.AbstractUiPlugin#getPluginUtil()
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
      */
     @Override
-    public PluginUtil getPluginUtil() {
-        return Util;
-    }
-    
-    /**
-     * @see com.metamatrix.ui.AbstractUiPlugin#createActionService(org.eclipse.ui.IWorkbenchPage)
-     */
-    @Override
-    protected ActionService createActionService(IWorkbenchPage page) {
-        return new AbstractActionService(this, page) {
-            public IAction getDefaultAction(String theActionId) {
-                return null;
-            }
-        };
+    public void stop( final BundleContext context ) throws Exception {
+        super.stop(context);
+        singleton = null;
     }
 }

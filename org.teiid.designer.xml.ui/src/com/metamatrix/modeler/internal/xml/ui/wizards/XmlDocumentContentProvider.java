@@ -10,7 +10,7 @@ package com.metamatrix.modeler.internal.xml.ui.wizards;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.resources.IResource;
-import com.metamatrix.common.xmi.XMIHeader;
+import org.teiid.designer.core.xmi.XMIHeader;
 import com.metamatrix.metamodels.xml.XmlDocument;
 import com.metamatrix.metamodels.xml.XmlDocumentPackage;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
@@ -28,7 +28,7 @@ public class XmlDocumentContentProvider extends ModelExplorerContentProvider {
         super.setShowModelContent(true);
     }
 
-    public XmlDocumentContentProvider( Object rootNode ) {
+    public XmlDocumentContentProvider( final Object rootNode ) {
         this.root = rootNode;
         super.setShowModelContent(true);
     }
@@ -37,20 +37,15 @@ public class XmlDocumentContentProvider extends ModelExplorerContentProvider {
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      */
     @Override
-    public Object[] getChildren( Object parentElement ) {
+    public Object[] getChildren( final Object parentElement ) {
         if (isXmlDocumentModel(parentElement)) {
-            Object[] allChildren = super.getChildren(parentElement);
+            final Object[] allChildren = super.getChildren(parentElement);
             // Now only return XmlDocuments
-            List xmlDocNodes = new ArrayList();
-            for (int i = 0; i < allChildren.length; i++) {
-                if (allChildren[i] instanceof XmlDocument) {
-                    xmlDocNodes.add(allChildren[i]);
-                }
-            }
+            final List xmlDocNodes = new ArrayList();
+            for (final Object element : allChildren)
+                if (element instanceof XmlDocument) xmlDocNodes.add(element);
 
-            if (xmlDocNodes.isEmpty()) {
-                return new Object[0];
-            }
+            if (xmlDocNodes.isEmpty()) return new Object[0];
 
             return xmlDocNodes.toArray();
         }
@@ -62,10 +57,8 @@ public class XmlDocumentContentProvider extends ModelExplorerContentProvider {
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
     @Override
-    public Object getParent( Object element ) {
-        if (element instanceof IResource) {
-            return root;
-        }
+    public Object getParent( final Object element ) {
+        if (element instanceof IResource) return root;
         return super.getParent(element);
     }
 
@@ -77,15 +70,13 @@ public class XmlDocumentContentProvider extends ModelExplorerContentProvider {
     // this.root = theRoot;
     // }
 
-    private boolean isXmlDocumentModel( Object object ) {
+    private boolean isXmlDocumentModel( final Object object ) {
         if (object instanceof IResource && ModelUtilities.isModelFile((IResource)object)) {
-            IResource iResource = (IResource)object;
-            XMIHeader header = ModelUtil.getXmiHeader(iResource);
+            final IResource iResource = (IResource)object;
+            final XMIHeader header = ModelUtil.getXmiHeader(iResource);
             if (header != null) {
-                String mmURI = header.getPrimaryMetamodelURI();
-                if (mmURI != null && mmURI.equals(XmlDocumentPackage.eNS_URI)) {
-                    return true;
-                }
+                final String mmURI = header.getPrimaryMetamodelURI();
+                if (mmURI != null && mmURI.equals(XmlDocumentPackage.eNS_URI)) return true;
             }
         }
 

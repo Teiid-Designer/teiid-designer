@@ -35,7 +35,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
-import com.metamatrix.common.xmi.XMIHeader;
+import org.teiid.designer.core.xmi.XMIHeader;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.IOperation;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -55,7 +55,7 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceNotificationListener;
 import com.metamatrix.modeler.core.workspace.Openable;
 import com.metamatrix.modeler.internal.core.index.IndexUtil;
 import com.metamatrix.modeler.internal.core.search.ModelWorkspaceSearch;
-import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil.XmiHeaderCache;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil.XmiHeaderCache;
 
 /**
  * ModelWorkspaceManager
@@ -72,8 +72,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     private static ModelWorkspaceManager manager;
 
     /**
-     * Returns the {@link ModelWorkspaceItem} corresponding to the given file, or <code>null</code> if unable to associate the
-     * given file with a {@link ModelWorkspaceItem}.
+     * Returns the {@link ModelWorkspaceItem} corresponding to the given file, or <code>null</code> if unable to associate the given
+     * file with a {@link ModelWorkspaceItem}.
      * <p>
      * The file must be one of:
      * <ul>
@@ -85,26 +85,18 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * yet open.
      * <p>
      */
-    public static ModelResource create( IFile file,
+    public static ModelResource create( final IFile file,
                                         ModelProject project ) {
-        if (file == null || !ModelerCore.hasModelNature(file.getProject())) {
+        if (file == null || !ModelerCore.hasModelNature(file.getProject())) return null;
+        if (project == null) project = manager.getModelWorkspace().getModelProject(file);
+        if (file.getFileExtension() != null && ModelUtil.isModelFile(file)) try {
+            ModelResource resource = (ModelResource)project.findModelWorkspaceItem(file);
+            if (resource != null) return resource;
+            // Else it was not found, so it must be created ...
+            resource = (ModelResource)ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(file, true);
+            return resource;
+        } catch (final ModelWorkspaceException e) {
             return null;
-        }
-        if (project == null) {
-            project = manager.getModelWorkspace().getModelProject(file);
-        }
-        if (file.getFileExtension() != null && ModelUtil.isModelFile(file)) {
-            try {
-                ModelResource resource = (ModelResource)project.findModelWorkspaceItem(file);
-                if (resource != null) {
-                    return resource;
-                }
-                // Else it was not found, so it must be created ...
-                resource = (ModelResource)ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(file, true);
-                return resource;
-            } catch (ModelWorkspaceException e) {
-                return null;
-            }
         }
         return null;
     }
@@ -115,20 +107,16 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * opening all of the item's parents if they are not yet open.
      * <p>
      */
-    public static ModelWorkspaceItem create( IFolder folder,
+    public static ModelWorkspaceItem create( final IFolder folder,
                                              ModelProject project ) {
-        if (project == null) {
-            project = manager.getModelWorkspace().getModelProject(folder);
-        }
+        if (project == null) project = manager.getModelWorkspace().getModelProject(folder);
         try {
             ModelWorkspaceItem folderItem = project.findModelWorkspaceItem(folder);
-            if (folderItem != null) {
-                return folderItem;
-            }
+            if (folderItem != null) return folderItem;
             // Else it was not found, so it must be created ...
             folderItem = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(folder, true);
             return folderItem;
-        } catch (ModelWorkspaceException e) {
+        } catch (final ModelWorkspaceException e) {
             return null;
         }
     }
@@ -155,10 +143,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      */
     public static ModelWorkspaceItem create( final IResource resource,
                                              final ModelProject project ) {
-        if (resource == null || (resource.getProject() != null && !ModelerCore.hasModelNature(resource.getProject()))) {
-            return null;
-        }
-        int type = resource.getType();
+        if (resource == null || (resource.getProject() != null && !ModelerCore.hasModelNature(resource.getProject()))) return null;
+        final int type = resource.getType();
         switch (type) {
             case IResource.PROJECT:
                 return ModelerCore.create((IProject)resource);
@@ -191,7 +177,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                                                                                  | IResourceChangeEvent.PRE_CLOSE);
 
                 manager.initModelWorkspace(workspace);
-            } catch (Throwable t) {
+            } catch (final Throwable t) {
                 if (!ModelerCore.HEADLESS) {
                     t.printStackTrace();
                     ModelerCore.Util.log(IStatus.ERROR,
@@ -203,27 +189,25 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     }
 
     public final static void shutdown() throws CoreException {
-        if (manager != null) {
-            try {
-                // Remove the delta processor as a listener of resource change events
-                final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-                workspace.removeResourceChangeListener(manager.getDeltaProcessor());
+        if (manager != null) try {
+            // Remove the delta processor as a listener of resource change events
+            final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+            workspace.removeResourceChangeListener(manager.getDeltaProcessor());
 
-                // Shutdown the manager
-                manager.shutdownManager();
-                manager.getIndexManager().disposeAll();
-            } catch (CoreException e) {
-                throw e;
-            } catch (Throwable t) {
-                throw new CoreException(
-                                        new Status(
-                                                   IStatus.ERROR,
-                                                   ModelerCore.PLUGIN_ID,
-                                                   1,
-                                                   ModelerCore.Util.getString("ModelWorkspaceManager.Error_encountered_shutting_down_ModelWorkspaceManager_2"), t)); //$NON-NLS-1$
-            } finally {
-                manager = null;
-            }
+            // Shutdown the manager
+            manager.shutdownManager();
+            manager.getIndexManager().disposeAll();
+        } catch (final CoreException e) {
+            throw e;
+        } catch (final Throwable t) {
+            throw new CoreException(
+                                    new Status(
+                                               IStatus.ERROR,
+                                               ModelerCore.PLUGIN_ID,
+                                               1,
+                                               ModelerCore.Util.getString("ModelWorkspaceManager.Error_encountered_shutting_down_ModelWorkspaceManager_2"), t)); //$NON-NLS-1$
+        } finally {
+            manager = null;
         }
     }
 
@@ -232,7 +216,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     /**
      * Unique handle to the model workspace.
      */
-    private ModelWorkspaceImpl modelWorkspace = new ModelWorkspaceImpl();
+    private final ModelWorkspaceImpl modelWorkspace = new ModelWorkspaceImpl();
 
     /**
      * Used to convert <code>IResourceDelta</code>s into <code>ModelWorkspaceDelta</code>s.
@@ -252,8 +236,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     private final Collection workspaceListeners = new ArrayList();
 
     /**
-     * Collection of veto listeners for resource change events; each listener may veto the unloading and reloading of the
-     * in-memory model.
+     * Collection of veto listeners for resource change events; each listener may veto the unloading and reloading of the in-memory
+     * model.
      */
     private final Collection resourceReloadVetoListeners = new ArrayList();
 
@@ -269,16 +253,16 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     private int indexType = ModelResource.NOT_INDEXED;
 
     /**
-     * Used to keep a cache of IMarker-EObject maps to eliminate repetitive UUID/EObject resolving. Part of Defect 22362 to
-     * improve XML Document editing performance. Improves time to decoration tree & table view items.
+     * Used to keep a cache of IMarker-EObject maps to eliminate repetitive UUID/EObject resolving. Part of Defect 22362 to improve
+     * XML Document editing performance. Improves time to decoration tree & table view items.
      */
-    private ModelMarkerManager markerManager = new ModelMarkerManager();
+    private final ModelMarkerManager markerManager = new ModelMarkerManager();
 
-    private Map FileToxmlHeaderMap = Collections.synchronizedMap(new HashMap());
+    private final Map FileToxmlHeaderMap = Collections.synchronizedMap(new HashMap());
 
-    private ModelWorkspaceSearch modelWorkspaceSearch = new ModelWorkspaceSearch();
+    private final ModelWorkspaceSearch modelWorkspaceSearch = new ModelWorkspaceSearch();
 
-    private ModelWorkspaceIndexManager indexManager = new ModelWorkspaceIndexManager();
+    private final ModelWorkspaceIndexManager indexManager = new ModelWorkspaceIndexManager();
 
     /**
      * Construct an instance of ModelWorkspaceManager.
@@ -294,7 +278,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
         // and mark the associated ModelResource as requiring indexing.
         try {
             addChangeNotifier(ModelerCore.getModelContainer());
-        } catch (CoreException e) {
+        } catch (final CoreException e) {
             ModelerCore.Util.log(IStatus.ERROR,
                                  e,
                                  ModelerCore.Util.getString("ModelWorkspaceManager.Error_adding_ChangeNotifier_to_the_model_container_{0}_1", e.getMessage())); //$NON-NLS-1$
@@ -310,10 +294,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                       ModelProjectImpl project ) {
         // there should be no existing item for the resource being added
         final ModelWorkspaceItem resourceItem = this.modelWorkspace.getWorkspaceItem(resource.getFullPath(), resource.getType());
-        if (resourceItem != null) {
-            // if there is return, no need to add
-            return;
-        }
+        if (resourceItem != null) // if there is return, no need to add
+        return;
 
         // create new ModelWorkspaceItem for resource
         ModelWorkspaceItem newResource = null;
@@ -343,20 +325,16 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                     final String debugMsg = ModelerCore.Util.getString("ModelWorkspaceManager.DEBUG.Creating_ModelResource_instance_for_0_2", params); //$NON-NLS-1$
                     ModelerCore.Util.log(IStatus.INFO, debugMsg);
                 }
-                if (resource.getType() == IResource.FILE) {
-                    newResource = project.createModelResource((IFile)resource);
-                } else if (resource.getType() == IResource.FOLDER) {
-                    newResource = project.createModelFolder((IFolder)resource);
-                }
+                if (resource.getType() == IResource.FILE) newResource = project.createModelResource((IFile)resource);
+                else if (resource.getType() == IResource.FOLDER) newResource = project.createModelFolder((IFolder)resource);
                 parentItem = this.modelWorkspace.getParent(resource);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 ModelerCore.Util.log(IStatus.ERROR,
                                      e,
                                      ModelerCore.Util.getString("ModelWorkspaceManager.Error_creating_new_model_workspace_item___{0}_1", e.getMessage())); //$NON-NLS-1$
             }
-        } else if (resource instanceof IProject && project != null) {
-            parentItem = this.modelWorkspace;
-        } else {
+        } else if (resource instanceof IProject && project != null) parentItem = this.modelWorkspace;
+        else {
             ModelerCore.Util.log(IStatus.ERROR,
                                  ModelerCore.Util.getString("ModelWorkspaceManager.Unable_to_create_workspace_item_for_{0}_2", resource.getFullPath())); //$NON-NLS-1$
             return;
@@ -369,39 +347,31 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
             return;
         }
         final ModelWorkspaceItemInfo parentInfo = (ModelWorkspaceItemInfo)getInfo(parentItem);
-        if (parentInfo != null) {
-            parentInfo.addChild(newResource);
-        }
+        if (parentInfo != null) parentInfo.addChild(newResource);
     }
 
     private void addChangeNotifier( final Container container ) {
         if (container != null) {
-            ChangeNotifier notifier = container.getChangeNotifier();
-            if (notifier != null) {
-                notifier.addListener(new NotificationProcessor());
-            }
+            final ChangeNotifier notifier = container.getChangeNotifier();
+            if (notifier != null) notifier.addListener(new NotificationProcessor());
         }
     }
 
     /**
      * Add a listener that would listen to and possibly veto the reloading of a ModelResource from the underlying file.
      */
-    public void addModelResourceReloadVetoListener( ModelResourceReloadVetoListener listener ) {
+    public void addModelResourceReloadVetoListener( final ModelResourceReloadVetoListener listener ) {
         CoreArgCheck.isNotNull(listener);
-        if (this.resourceReloadVetoListeners.contains(listener)) {
-            return;
-        }
+        if (this.resourceReloadVetoListeners.contains(listener)) return;
         this.resourceReloadVetoListeners.add(listener);
     }
 
     /**
      * Add a listener that would listen to the workspace change events.
      */
-    public void addNotificationListener( ModelWorkspaceNotificationListener listener ) {
+    public void addNotificationListener( final ModelWorkspaceNotificationListener listener ) {
         CoreArgCheck.isNotNull(listener);
-        if (this.workspaceListeners.contains(listener)) {
-            return;
-        }
+        if (this.workspaceListeners.contains(listener)) return;
         this.workspaceListeners.add(listener);
     }
 
@@ -413,9 +383,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
             while (iter.hasNext()) {
                 final ModelResourceReloadVetoListener listener = (ModelResourceReloadVetoListener)iter.next();
                 final boolean canReload = listener.canReload(modelResource);
-                if (!canReload) {
-                    return false;
-                }
+                if (!canReload) return false;
             }
         }
         return true;
@@ -427,36 +395,28 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * @param notification Notification for adding and removing items to workspace
      * @throws CoreException
      */
-    private boolean changeWorkspace( ModelWorkspaceNotification notification ) throws CoreException {
+    private boolean changeWorkspace( final ModelWorkspaceNotification notification ) throws CoreException {
 
         // get the added/removed/moved/renamed resource
         final IResource resource = (IResource)notification.getNotifier();
 
         // do nothing for non-model projects and resources in them
-        IProject iProject = resource.getProject();
-        if (iProject.exists()) {
-            // Projects don't have model natures when closed ...
-            if (iProject.isOpen() && !ModelerCore.hasModelNature(iProject)) {
-                return false;
-            }
-        }
+        final IProject iProject = resource.getProject();
+        if (iProject.exists()) // Projects don't have model natures when closed ...
+        if (iProject.isOpen() && !ModelerCore.hasModelNature(iProject)) return false;
 
         // do nothing for non-model
         if (resource.getType() == IResource.FILE) {
-            if (!ModelUtil.isModelFile(resource, false) && !ModelUtil.isVdbArchiveFile(resource)) {
-                return false;
-            }
+            if (!ModelUtil.isModelFile(resource, false) && !ModelUtil.isVdbArchiveFile(resource)) return false;
             // set the workspace as not indexed for any model file change
             this.setIndexType(ModelResource.NOT_INDEXED);
             // non-project, non-folder resources
-        } else if (resource.getType() != IResource.PROJECT && resource.getType() != IResource.FOLDER) {
-            return false;
-        }
+        } else if (resource.getType() != IResource.PROJECT && resource.getType() != IResource.FOLDER) return false;
 
         // get the existing resource item for this
         ModelProjectImpl project = (ModelProjectImpl)this.modelWorkspace.findModelProject(resource);
 
-        int eventType = ((ModelWorkspaceNotificationImpl)notification).getEventType();
+        final int eventType = ((ModelWorkspaceNotificationImpl)notification).getEventType();
         switch (eventType) {
             case Notification.ADD:
                 add(resource, project);
@@ -469,9 +429,9 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                             remove(resource);
                         }
                     }, this);
-                } catch (CoreException err) {
+                } catch (final CoreException err) {
                     throw err;
-                } catch (Exception err) {
+                } catch (final Exception err) {
                     ModelerCore.Util.log(err);
                 }
                 break;
@@ -504,9 +464,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                     if (project == null) {
                         project = new ModelProjectImpl((IProject)resource, this.modelWorkspace);
                         final ModelWorkspaceItemInfo parentInfo = (ModelWorkspaceItemInfo)getInfo(this.modelWorkspace);
-                        if (parentInfo != null) {
-                            parentInfo.addChild(project);
-                        }
+                        if (parentInfo != null) parentInfo.addChild(project);
                     }
                     project.open(null);
                 }
@@ -530,7 +488,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * @throws CoreException if a problem occurs
      * @since 5.0.1
      */
-    public boolean deleteIndexes( IResource theResource ) throws CoreException {
+    public boolean deleteIndexes( final IResource theResource ) throws CoreException {
         // delete search indexes for closing project
         return deleteIndexes(theResource, new SearchIndexResourceVisitor());
     }
@@ -544,10 +502,10 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * @throws CoreException if a problem occurs
      * @since 5.0.1
      */
-    public boolean deleteIndexes( IResource theResource,
-                                  SearchIndexResourceVisitor theVisitor ) throws CoreException {
+    public boolean deleteIndexes( final IResource theResource,
+                                  final SearchIndexResourceVisitor theVisitor ) throws CoreException {
         theResource.accept(theVisitor);
-        File[] indexFiles = theVisitor.getIndexFiles();
+        final File[] indexFiles = theVisitor.getIndexFiles();
         return IndexUtil.deleteIndexFiles(indexFiles, true);
     }
 
@@ -570,7 +528,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * @return the ModelResource; null only if the resource is not known to the {@link ModelWorkspace}.
      */
     public ModelWorkspaceItem findModelWorkspaceItem( final IPath resourcePath,
-                                                      int resourceType ) {
+                                                      final int resourceType ) {
         CoreArgCheck.isNotNull(resourcePath);
         return modelWorkspace.getWorkspaceItem(resourcePath, resourceType);
     }
@@ -600,9 +558,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
         final IProject proj = resource.getProject();
 
         // check if this is a model project
-        if (!ModelerCore.hasModelNature(proj)) {
-            return null;
-        }
+        if (!ModelerCore.hasModelNature(proj)) return null;
 
         final IPath pathInProject = resource.getProjectRelativePath();
 
@@ -614,9 +570,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
         int numFolders = pathInProject.segmentCount(); // should be at least 1
         if (resource instanceof IFile) {
             // See if the file is a model ...
-            if (!ModelUtil.isModelFile(resource)) {
-                return null; // it's a non-model resource
-            }
+            if (!ModelUtil.isModelFile(resource)) return null; // it's a non-model resource
             --numFolders;
         }
         for (int i = 0; i < numFolders; ++i) {
@@ -639,9 +593,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                     ((ModelProjectInfo)parentInfo).addChild(newFolder);
                     parent = newFolder;
                 }
-            } else {
-                parent = child;
-            }
+            } else parent = child;
         }
 
         if (resource instanceof IFile) {
@@ -660,37 +612,30 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     /**
      * Fire ModelWorkspaceNotification, iteratively make all registered listeners aware of this notification.
      */
-    public void fire( ModelWorkspaceNotification notification ) throws CoreException {
+    public void fire( final ModelWorkspaceNotification notification ) throws CoreException {
 
         // System.out.println("\n[ModelWorkspaceManager.fire] TOP, notification is: " +
         // ((ModelWorkspaceNotificationImpl)notification).getNotificationTypePhrase() );
 
         CoreArgCheck.isNotNull(notification);
-        IResourceDelta delta = notification.getDelta();
-        int eventType = notification.getEventType();
+        final IResourceDelta delta = notification.getDelta();
+        final int eventType = notification.getEventType();
         // The delta is null upon project close events
         boolean reloadedResource = false;
         // change the workspace to add or remove items if needed
-        if (delta != null && notification.isPostChange()) {
-            reloadedResource = changeWorkspace(notification);
-        }
+        if (delta != null && notification.isPostChange()) reloadedResource = changeWorkspace(notification);
         // process predelete notifications to cleanup indexes and resources
-        if (notification.isPreDelete()) {
-            reloadedResource = changeWorkspace(notification);
-        }
+        if (notification.isPreDelete()) reloadedResource = changeWorkspace(notification);
 
-        if (eventType == ModelWorkspaceNotification.CLOSING) {
-            // notifier should be a project but check to be sure
-            if (notification.isProject() && (notification.getNotifier() instanceof IProject)) {
-                // delete search indexes for closing project
-                deleteIndexes((IProject)notification.getNotifier());
-            }
-        }
+        if (eventType == ModelWorkspaceNotification.CLOSING) // notifier should be a project but check to be sure
+        if (notification.isProject() && (notification.getNotifier() instanceof IProject)) // delete search indexes for closing
+        // project
+        deleteIndexes((IProject)notification.getNotifier());
 
         // notify all listners about the notification
-        Iterator listenIter = getNotificationListeners().iterator();
+        final Iterator listenIter = getNotificationListeners().iterator();
         while (listenIter.hasNext()) {
-            ModelWorkspaceNotificationListener listener = (ModelWorkspaceNotificationListener)listenIter.next();
+            final ModelWorkspaceNotificationListener listener = (ModelWorkspaceNotificationListener)listenIter.next();
             switch (eventType) {
                 case Notification.ADD: {
                     listener.notifyAdd(notification);
@@ -736,11 +681,9 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     }
 
     public XMIHeader getCachedXmiHeader( final File resource ) {
-        XMIHeaderCachedObject headerCachedObject = (XMIHeaderCachedObject)FileToxmlHeaderMap.get(resource.getAbsolutePath());
+        final XMIHeaderCachedObject headerCachedObject = (XMIHeaderCachedObject)FileToxmlHeaderMap.get(resource.getAbsolutePath());
         if (headerCachedObject != null) {
-            if (!headerCachedObject.isModified(resource)) {
-                return headerCachedObject.getXMIHeader();
-            }
+            if (!headerCachedObject.isModified(resource)) return headerCachedObject.getXMIHeader();
             FileToxmlHeaderMap.remove(resource.getAbsolutePath());
         }
 
@@ -760,13 +703,9 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * Returns the {@link ModelWorkspaceItem} represented by the <code>String</code> memento.
      */
     public ModelWorkspaceItem getHandleFromMemento( final String memento ) {
-        if (memento == null) {
-            return null;
-        }
-        ModelWorkspace modelWorkspace = getModelWorkspace();
-        if (memento.equals("")) { // workspace memento //$NON-NLS-1$
-            return modelWorkspace;
-        }
+        if (memento == null) return null;
+        final ModelWorkspace modelWorkspace = getModelWorkspace();
+        if (memento.equals("")) return modelWorkspace; //$NON-NLS-1$
         return null;
     }
 
@@ -777,7 +716,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     /**
      * Returns the info for the element.
      */
-    public Object getInfo( ModelWorkspaceItem item ) {
+    public Object getInfo( final ModelWorkspaceItem item ) {
         return this.cache.getInfo(item);
     }
 
@@ -795,9 +734,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * @return
      */
     public Container getModelContainer() throws CoreException {
-        if (container == null) {
-            container = ModelerCore.getModelContainer();
-        }
+        if (container == null) container = ModelerCore.getModelContainer();
         return container;
     }
 
@@ -820,8 +757,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     }
 
     /**
-     * Find all {@link org.eclipse.core.resources.IResource}s whose {@linkcom.metamatrix.modeler.core.workspace.ModelResource}s
-     * are not indexed to the given index type.
+     * Find all {@link org.eclipse.core.resources.IResource}s whose {@linkcom.metamatrix.modeler.core.workspace.ModelResource}s are
+     * not indexed to the given index type.
      * 
      * @param indexType The indexType of the ModelResource.
      * @return The collection of IResource objects
@@ -835,27 +772,21 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                 return resources;
             }
 
-            public boolean visit( IResource resource ) throws CoreException {
+            public boolean visit( final IResource resource ) throws CoreException {
                 if (resource != null && resource.getType() == IResource.FILE) {
-                    ModelWorkspaceItem modelWorkspaceItem = findModelWorkspaceItem(resource);
+                    final ModelWorkspaceItem modelWorkspaceItem = findModelWorkspaceItem(resource);
                     if (modelWorkspaceItem != null && modelWorkspaceItem instanceof ModelResource) {
-                        ModelResource mResource = (ModelResource)modelWorkspaceItem;
-                        int modelIndexType = mResource.getIndexType();
+                        final ModelResource mResource = (ModelResource)modelWorkspaceItem;
+                        final int modelIndexType = mResource.getIndexType();
                         switch (indexType) {
                             case ModelResource.INDEXED:
-                                if (modelIndexType != ModelResource.INDEXED) {
-                                    resources.add(mResource.getResource());
-                                }
+                                if (modelIndexType != ModelResource.INDEXED) resources.add(mResource.getResource());
                                 break;
                             case ModelResource.METADATA_INDEXED:
-                                if (modelIndexType != ModelResource.INDEXED && modelIndexType != ModelResource.METADATA_INDEXED) {
-                                    resources.add(mResource.getResource());
-                                }
+                                if (modelIndexType != ModelResource.INDEXED && modelIndexType != ModelResource.METADATA_INDEXED) resources.add(mResource.getResource());
                                 break;
                             case ModelResource.SEARCH_INDEXED:
-                                if (modelIndexType != ModelResource.INDEXED && modelIndexType != ModelResource.SEARCH_INDEXED) {
-                                    resources.add(mResource.getResource());
-                                }
+                                if (modelIndexType != ModelResource.INDEXED && modelIndexType != ModelResource.SEARCH_INDEXED) resources.add(mResource.getResource());
                                 break;
                             default:
                                 break;
@@ -867,21 +798,15 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
         }
 
         // If there are no resources that require indexing then return immediately
-        if (this.indexType == ModelResource.INDEXED || this.indexType == indexType) {
-            return Collections.EMPTY_LIST;
-        }
+        if (this.indexType == ModelResource.INDEXED || this.indexType == indexType) return Collections.EMPTY_LIST;
         // assuming when some one gets non-indexed resources they would build them
         setIndexType(indexType);
 
-        ResourceVisitor visitor = new ResourceVisitor();
+        final ResourceVisitor visitor = new ResourceVisitor();
         // collect all IResources for model files
-        ModelProject[] projects = ModelerCore.getModelWorkspace().getModelProjects();
-        for (int i = 0; i < projects.length; i++) {
-            ModelProject mProject = projects[i];
-            if (mProject != null && mProject.isOpen()) {
-                mProject.getProject().accept(visitor);
-            }
-        }
+        final ModelProject[] projects = ModelerCore.getModelWorkspace().getModelProjects();
+        for (final ModelProject mProject : projects)
+            if (mProject != null && mProject.isOpen()) mProject.getProject().accept(visitor);
 
         return visitor.getResources();
     }
@@ -897,24 +822,20 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
         CoreArgCheck.isNotNull(workspace);
 
         // collect all resources in open projects
-        ModelIResourceCollectorVisitor resourceVisitor = new ModelIResourceCollectorVisitor();
+        final ModelIResourceCollectorVisitor resourceVisitor = new ModelIResourceCollectorVisitor();
         workspace.getRoot().accept(resourceVisitor);
 
         // sort the resources, in order (IRoot, IPRoject, IFolder and IFile)
-        List resources = resourceVisitor.getResources();
-        IResourceComparator comparator = new IResourceComparator();
+        final List resources = resourceVisitor.getResources();
+        final IResourceComparator comparator = new IResourceComparator();
         Collections.sort(resources, comparator);
 
         // create model workspaceitems for each of these resources
-        Iterator resourceIter = resources.iterator();
+        final Iterator resourceIter = resources.iterator();
         while (resourceIter.hasNext()) {
-            IResource resource = (IResource)resourceIter.next();
-            ModelWorkspaceItem workspaceItem = create(resource, null);
-            if (resource.getType() == IResource.PROJECT || resource.getType() == IResource.ROOT) {
-                if (workspaceItem instanceof Openable) {
-                    ((Openable)workspaceItem).open(null);
-                }
-            }
+            final IResource resource = (IResource)resourceIter.next();
+            final ModelWorkspaceItem workspaceItem = create(resource, null);
+            if (resource.getType() == IResource.PROJECT || resource.getType() == IResource.ROOT) if (workspaceItem instanceof Openable) ((Openable)workspaceItem).open(null);
         }
         ModelUtil.setModelWorkspaceManagerInitialized();
     }
@@ -931,15 +852,11 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
         CoreArgCheck.isNotNull(theResource);
         boolean result = false;
 
-        if (ModelUtil.isModelFile(theResource, true)) {
-            try {
-                ModelWorkspaceItem item = findModelWorkspaceItem(theResource, false);
+        if (ModelUtil.isModelFile(theResource, true)) try {
+            final ModelWorkspaceItem item = findModelWorkspaceItem(theResource, false);
 
-                if (item != null) {
-                    result = (getInfo(item) != null);
-                }
-            } catch (ModelWorkspaceException theException) {
-            }
+            if (item != null) result = (getInfo(item) != null);
+        } catch (final ModelWorkspaceException theException) {
         }
 
         return result;
@@ -950,11 +867,11 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * 
      * @param project the project on which the clean has been initiated.
      */
-    public void notifyClean( IProject project ) {
-        Collection listeners = getNotificationListeners();
-        Iterator iter = listeners.iterator();
+    public void notifyClean( final IProject project ) {
+        final Collection listeners = getNotificationListeners();
+        final Iterator iter = listeners.iterator();
         while (iter.hasNext()) {
-            ModelWorkspaceNotificationListener listener = (ModelWorkspaceNotificationListener)iter.next();
+            final ModelWorkspaceNotificationListener listener = (ModelWorkspaceNotificationListener)iter.next();
             listener.notifyClean(project);
         }
     }
@@ -965,7 +882,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     // TODO: should be synchronized, could answer uninitialized info or if cache is in middle of rehash, could even answer
     // distinct
     // element info
-    protected Object peekAtInfo( ModelWorkspaceItem item ) {
+    protected Object peekAtInfo( final ModelWorkspaceItem item ) {
         return this.cache.peekAtInfo(item);
     }
 
@@ -973,8 +890,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * @param key
      * @param value
      */
-    public void putInfo( ModelWorkspaceItem item,
-                         Object info ) {
+    public void putInfo( final ModelWorkspaceItem item,
+                         final Object info ) {
         this.cache.putInfo(item, info);
     }
 
@@ -988,16 +905,12 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
         final ModelWorkspaceItem resourceItem = this.modelWorkspace.getWorkspaceItem(resource.getFullPath(), resource.getType());
         // clean up indexes and resources for all model children
         removeResourcesRecursively(resource);
-        if (resourceItem instanceof Openable) {
-            ((Openable)resourceItem).close();
-        }
+        if (resourceItem instanceof Openable) ((Openable)resourceItem).close();
         final ModelWorkspaceItem parentItem = this.modelWorkspace.getParent(resource);
         if (parentItem != null) {
             final ModelWorkspaceItemInfo parentInfo = (ModelWorkspaceItemInfo)getInfo(parentItem);
             // Info will be null if the parentItem is not open... so just return
-            if (parentInfo != null) {
-                parentInfo.removeChild(resourceItem);
-            }
+            if (parentInfo != null) parentInfo.removeChild(resourceItem);
         }
         // parentItem will be null if the remove event for the parent is processed first
     }
@@ -1019,14 +932,14 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     /**
      * @param item
      */
-    public void removeInfo( ModelWorkspaceItem item ) {
+    public void removeInfo( final ModelWorkspaceItem item ) {
         this.cache.removeInfo(item);
     }
 
     /**
      * Remove a listener that would listen to and possibly veto the reloading of a ModelResource from the underlying file.
      */
-    public void removeModelResourceReloadVetoListener( ModelResourceReloadVetoListener listener ) {
+    public void removeModelResourceReloadVetoListener( final ModelResourceReloadVetoListener listener ) {
         CoreArgCheck.isNotNull(listener);
         this.resourceReloadVetoListeners.remove(listener);
     }
@@ -1034,7 +947,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     /**
      * Remove a listener that would listen to the workspace change events.
      */
-    public void removeNotificationListener( ModelWorkspaceNotificationListener listener ) {
+    public void removeNotificationListener( final ModelWorkspaceNotificationListener listener ) {
         this.workspaceListeners.remove(listener);
     }
 
@@ -1049,29 +962,23 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
         CoreArgCheck.isNotNull(resource);
 
         // type of resource
-        int resourceType = resource.getType();
+        final int resourceType = resource.getType();
 
         // Per defect 10957, resourceItem may be null, so can't use it to clean up index files
         if (resource.getLocation() != null && resourceType == IResource.FILE) {
             // Remove the runtime index file associated with the resource being removed
-            String runtimeIndexFileName = IndexUtil.getRuntimeIndexFileName(resource);
-            File runtimeIndexFile = new File(IndexUtil.INDEX_PATH, runtimeIndexFileName);
-            if (runtimeIndexFile.exists()) {
-                getIndexManager().disposeIndex(runtimeIndexFileName);
-            }
+            final String runtimeIndexFileName = IndexUtil.getRuntimeIndexFileName(resource);
+            final File runtimeIndexFile = new File(IndexUtil.INDEX_PATH, runtimeIndexFileName);
+            if (runtimeIndexFile.exists()) getIndexManager().disposeIndex(runtimeIndexFileName);
 
             // Remove the search index file associated with the resource being removed
-            String searchIndexFileName = IndexUtil.getSearchIndexFileName(resource);
-            File searchIndexFile = new File(IndexUtil.INDEX_PATH, searchIndexFileName);
-            if (searchIndexFile.exists()) {
-                getIndexManager().disposeIndex(searchIndexFileName);
-            }
+            final String searchIndexFileName = IndexUtil.getSearchIndexFileName(resource);
+            final File searchIndexFile = new File(IndexUtil.INDEX_PATH, searchIndexFileName);
+            if (searchIndexFile.exists()) getIndexManager().disposeIndex(searchIndexFileName);
 
             // Remove the underlying Emf resource
             final ModelWorkspaceItem resourceItem = this.modelWorkspace.getWorkspaceItem(resource.getFullPath(), IResource.FILE);
-            if (resourceItem != null && resourceItem instanceof ModelResourceImpl) {
-                ((ModelResourceImpl)resourceItem).removeEmfResource();
-            }
+            if (resourceItem != null && resourceItem instanceof ModelResourceImpl) ((ModelResourceImpl)resourceItem).removeEmfResource();
 
             // remove XMIHeader from cache
             this.FileToxmlHeaderMap.remove(resource.getRawLocation().toOSString());
@@ -1086,19 +993,13 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                 }
 
                 private boolean isIncludedResource( final IResource resource ) {
-                    if (resource == null || !resource.exists()) {
-                        return false;
-                    }
-                    if (ModelUtil.isModelFile(resource) || ModelUtil.isXsdFile(resource) || ModelUtil.isVdbArchiveFile(resource)) {
-                        return true;
-                    }
+                    if (resource == null || !resource.exists()) return false;
+                    if (ModelUtil.isModelFile(resource) || ModelUtil.isXsdFile(resource) || ModelUtil.isVdbArchiveFile(resource)) return true;
                     return false;
                 }
 
                 public boolean visit( final IResource resource ) {
-                    if (isIncludedResource(resource)) {
-                        resources.add(resource);
-                    }
+                    if (isIncludedResource(resource)) resources.add(resource);
                     return true;
                 }
             }
@@ -1108,9 +1009,9 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
             resource.accept(visitor);
 
             // for each model clean up index files and emf resoures
-            Collection childResources = visitor.getFileResources();
+            final Collection childResources = visitor.getFileResources();
             for (final Iterator rscIter = childResources.iterator(); rscIter.hasNext();) {
-                IResource child = (IResource)rscIter.next();
+                final IResource child = (IResource)rscIter.next();
                 removeResourcesRecursively(child);
             }
         }
@@ -1119,13 +1020,13 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     /**
      * Set the type indicating one or more ModelResources in the workspace have been indexed to the given type.
      */
-    void setIndexType( int type ) {
+    void setIndexType( final int type ) {
         this.indexType = type;
     }
 
     public void setXmiHeaderToCache( final File resource,
-                                     XMIHeader header ) {
-        XMIHeaderCachedObject headerCachedObject = new XMIHeaderCachedObject(header, resource.lastModified());
+                                     final XMIHeader header ) {
+        final XMIHeaderCachedObject headerCachedObject = new XMIHeaderCachedObject(header, resource.lastModified());
         FileToxmlHeaderMap.put(resource.getAbsolutePath(), headerCachedObject);
     }
 
@@ -1136,38 +1037,28 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * @throws CoreException
      */
     private void shutdownManager() throws CoreException {
-        if (container != null) {
-            try {
-                if (ModelerCore.DEBUG_MODEL_WORKSPACE) {
-                    ModelerCore.Util.log(IStatus.INFO,
-                                         ModelerCore.Util.getString("ModelWorkspaceManager.DEBUG.Shutting_down_model_container")); //$NON-NLS-1$
-                }
-                container.shutdown();
-                if (ModelerCore.DEBUG_MODEL_WORKSPACE) {
-                    ModelerCore.Util.log(IStatus.INFO,
-                                         ModelerCore.Util.getString("ModelWorkspaceManager.DEBUG.Completed_shuting_down_model_container")); //$NON-NLS-1$
-                }
-            } catch (ModelerCoreException e) {
-                throw new CoreException(
-                                        new Status(
-                                                   IStatus.ERROR,
-                                                   ModelerCore.PLUGIN_ID,
-                                                   1,
-                                                   ModelerCore.Util.getString("ModelWorkspaceManager.Error_shutting_down_the_model_container_2"), e)); //$NON-NLS-1$
-            } finally {
-                container = null;
-            }
+        if (container != null) try {
+            if (ModelerCore.DEBUG_MODEL_WORKSPACE) ModelerCore.Util.log(IStatus.INFO,
+                                                                        ModelerCore.Util.getString("ModelWorkspaceManager.DEBUG.Shutting_down_model_container")); //$NON-NLS-1$
+            container.shutdown();
+            if (ModelerCore.DEBUG_MODEL_WORKSPACE) ModelerCore.Util.log(IStatus.INFO,
+                                                                        ModelerCore.Util.getString("ModelWorkspaceManager.DEBUG.Completed_shuting_down_model_container")); //$NON-NLS-1$
+        } catch (final ModelerCoreException e) {
+            throw new CoreException(
+                                    new Status(
+                                               IStatus.ERROR,
+                                               ModelerCore.PLUGIN_ID,
+                                               1,
+                                               ModelerCore.Util.getString("ModelWorkspaceManager.Error_shutting_down_the_model_container_2"), e)); //$NON-NLS-1$
+        } finally {
+            container = null;
         }
 
-        if (workspaceListeners != null) {
-            workspaceListeners.clear();
-        }
+        if (workspaceListeners != null) workspaceListeners.clear();
         /*
          * Need to tell the markerManager to dispose so it's cache of eObject/Marker maps can be cleand up.
          */
-        if (markerManager != null) {
-            markerManager.dispose();
-        }
+        if (markerManager != null) markerManager.dispose();
     }
 
     /**
@@ -1179,28 +1070,22 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
             super();
         }
 
-        public int compare( Object rsc1,
-                            Object rsc2 ) {
+        public int compare( final Object rsc1,
+                            final Object rsc2 ) {
             CoreArgCheck.isInstanceOf(IResource.class, rsc1);
             CoreArgCheck.isInstanceOf(IResource.class, rsc2);
 
-            IResource resource1 = (IResource)rsc1;
-            IResource resource2 = (IResource)rsc2;
+            final IResource resource1 = (IResource)rsc1;
+            final IResource resource2 = (IResource)rsc2;
 
             return resource2.getType() - resource1.getType();
         }
 
         @Override
-        public boolean equals( Object anObject ) {
-            if (this == anObject) {
-                return true;
-            }
-            if (anObject == this) {
-                return true;
-            }
-            if (anObject == null || anObject.getClass() != this.getClass()) {
-                return false;
-            }
+        public boolean equals( final Object anObject ) {
+            if (this == anObject) return true;
+            if (anObject == this) return true;
+            if (anObject == null || anObject.getClass() != this.getClass()) return false;
             return true;
         }
     }
@@ -1217,15 +1102,10 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
         }
 
         private boolean isIncludedResource( final IResource resource ) {
-            if (resource == null || !resource.exists()) {
-                return false;
-            }
-            if (resource.getType() == IResource.PROJECT) {
-                return ModelerCore.hasModelNature((IProject)resource);
-            } else if ((resource.getType() == IResource.FILE)) {
-                if (ModelUtil.isModelFile(resource) || ModelUtil.isXsdFile(resource) || ModelUtil.isVdbArchiveFile(resource)) {
-                    return true;
-                }
+            if (resource == null || !resource.exists()) return false;
+            if (resource.getType() == IResource.PROJECT) return ModelerCore.hasModelNature((IProject)resource);
+            else if ((resource.getType() == IResource.FILE)) {
+                if (ModelUtil.isModelFile(resource) || ModelUtil.isXsdFile(resource) || ModelUtil.isVdbArchiveFile(resource)) return true;
                 return false;
             }
             return true;
@@ -1234,9 +1114,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
         public boolean visit( final IResource resource ) {
             if (isIncludedResource(resource)) {
                 resources.add(resource);
-                if (resource.getType() != IResource.FILE) {
-                    return true;
-                }
+                if (resource.getType() != IResource.FILE) return true;
             }
             return false;
         }
@@ -1246,9 +1124,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
 
         private void checkResourceForIndexing( final Notification notification ) {
             final Object target = notification.getNotifier();
-            if (notification.isTouch()) {
-                return;
-            }
+            if (notification.isTouch()) return;
             switch (notification.getEventType()) {
                 case Notification.ADD:
                 case Notification.ADD_MANY:
@@ -1264,43 +1140,33 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
             }
         }
 
-        public void notifyChanged( Notification notification ) {
+        public void notifyChanged( final Notification notification ) {
             // If the notification is just a touch, don't do anything.
-            if (notification.isTouch()) {
-                return;
-            }
+            if (notification.isTouch()) return;
             if (notification instanceof SourcedNotification) {
                 final Collection chain = ((SourcedNotification)notification).getNotifications();
-                for (Iterator iter = chain.iterator(); iter.hasNext();) {
-                    Notification n = (Notification)iter.next();
+                for (final Iterator iter = chain.iterator(); iter.hasNext();) {
+                    final Notification n = (Notification)iter.next();
                     checkResourceForIndexing(n);
                 }
-            } else {
-                checkResourceForIndexing(notification);
-            }
+            } else checkResourceForIndexing(notification);
         }
 
         private void refreshResourceIndexType( final Object obj ) {
-            if (obj == null) {
-                return;
-            }
+            if (obj == null) return;
             if (obj instanceof Resource && ((Resource)obj).isModified()) {
-                ModelResource mResource = ModelWorkspaceManager.this.findModelResource((Resource)obj);
+                final ModelResource mResource = ModelWorkspaceManager.this.findModelResource((Resource)obj);
                 if (mResource != null) {
-                    if (mResource.getIndexType() == ModelResource.NOT_INDEXED) {
-                        return;
-                    }
+                    if (mResource.getIndexType() == ModelResource.NOT_INDEXED) return;
                     mResource.refreshIndexType();
                     ModelWorkspaceManager.this.setIndexType(ModelResource.NOT_INDEXED);
                 }
             } else if (obj instanceof EObject && ((EObject)obj).eResource() != null) {
-                Resource eResource = ((EObject)obj).eResource();
+                final Resource eResource = ((EObject)obj).eResource();
                 if (eResource.isModified()) {
-                    ModelResource mResource = ModelWorkspaceManager.this.findModelResource(eResource);
+                    final ModelResource mResource = ModelWorkspaceManager.this.findModelResource(eResource);
                     if (mResource != null) {
-                        if (mResource.getIndexType() == ModelResource.NOT_INDEXED) {
-                            return;
-                        }
+                        if (mResource.getIndexType() == ModelResource.NOT_INDEXED) return;
                         mResource.setIndexType(ModelResource.NOT_INDEXED);
                         ModelWorkspaceManager.this.setIndexType(ModelResource.NOT_INDEXED);
                     }
@@ -1310,21 +1176,21 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     }
 
     private class XMIHeaderCachedObject {
-        private XMIHeader header;
-        private long lastModified;
+        private final XMIHeader header;
+        private final long lastModified;
 
-        XMIHeaderCachedObject( XMIHeader header,
-                               long lastModified ) {
-            XMIHeaderCachedObject.this.header = header;
-            XMIHeaderCachedObject.this.lastModified = lastModified;
+        XMIHeaderCachedObject( final XMIHeader header,
+                               final long lastModified ) {
+            this.header = header;
+            this.lastModified = lastModified;
         }
 
         XMIHeader getXMIHeader() {
             return header;
         }
 
-        boolean isModified( File file ) {
-            return file.lastModified() != XMIHeaderCachedObject.this.lastModified;
+        boolean isModified( final File file ) {
+            return file.lastModified() != this.lastModified;
         }
     }
 }
