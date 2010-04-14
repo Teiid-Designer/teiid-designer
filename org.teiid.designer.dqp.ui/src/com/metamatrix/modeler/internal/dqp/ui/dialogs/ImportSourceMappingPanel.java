@@ -45,8 +45,6 @@ import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
 import com.metamatrix.modeler.dqp.internal.config.ModelConnectorBindingMapperImpl;
 import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 import com.metamatrix.modeler.internal.dqp.ui.views.ConnectorBindingsTreeProvider;
@@ -69,7 +67,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
 
     private List connectorTypePanelControls;
 
-    private final ModelSource importSource;
+    // private final ModelSource importSource;
 
     private ModelConnectorBindingMapperImpl mapper;
 
@@ -112,18 +110,15 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
      */
     public ImportSourceMappingPanel( final Composite theParent,
                                      final Vdb vdb,
-                                     final ModelInfo theModelInfo,
-                                     final ModelSource theImportSource ) {
+                                     final ModelInfo theModelInfo ) {
         super(theParent);
 
         CoreArgCheck.isNotNull(theParent);
         CoreArgCheck.isNotNull(vdb);
         CoreArgCheck.isNotNull(theModelInfo);
-        CoreArgCheck.isNotNull(theImportSource);
 
         this.vdb = vdb;
         this.modelInfo = theModelInfo;
-        this.importSource = theImportSource;
 
         setLayout(new GridLayout(1, false));
         setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -131,7 +126,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         createContents();
 
         // register to receive notice of configuration changes
-        DqpPlugin.getInstance().getAdmin().addChangeListener(this);
+        // DqpPlugin.getInstance().getAdmin().addChangeListener(this);
     }
 
     private void createContents() {
@@ -146,16 +141,16 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         Object user = ""; //$NON-NLS-1$
         Object driverType = ""; //$NON-NLS-1$
 
-        final List props = this.importSource.getProperties();
-        ModelSourceProperty prop = null;
-
-        for (int numProps = props.size(), j = 0; j < numProps; ++j) {
-            prop = (ModelSourceProperty)props.get(j);
-
-            if (prop.getName().equals(JDBCConnectionPropertyNames.JDBC_IMPORT_URL)) url = prop.getValue();
-            else if (prop.getName().equals(JDBCConnectionPropertyNames.JDBC_IMPORT_USERNAME)) user = prop.getValue();
-            else if (prop.getName().equals(JDBCConnectionPropertyNames.JDBC_IMPORT_DRIVER_CLASS)) driverType = prop.getValue();
-        }
+        // final List props = this.importSource.getProperties();
+        // ModelSourceProperty prop = null;
+        //
+        // for (int numProps = props.size(), j = 0; j < numProps; ++j) {
+        // prop = (ModelSourceProperty)props.get(j);
+        //
+        // if (prop.getName().equals(JDBCConnectionPropertyNames.JDBC_IMPORT_URL)) url = prop.getValue();
+        // else if (prop.getName().equals(JDBCConnectionPropertyNames.JDBC_IMPORT_USERNAME)) user = prop.getValue();
+        // else if (prop.getName().equals(JDBCConnectionPropertyNames.JDBC_IMPORT_DRIVER_CLASS)) driverType = prop.getValue();
+        // }
 
         //
         // create panel description label
@@ -426,7 +421,9 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
                    && !this.matchingConnectorTypes.isEmpty()) {
             final IStructuredSelection selection = (IStructuredSelection)this.connectorTypesViewer.getSelection();
             final VdbModelEntry modelEntry = getModelEntry();
-            result = this.mapper.createConnectorBinding(modelEntry, (ConnectorType)selection.getFirstElement(), getNewBindingName());
+            result = this.mapper.createConnectorBinding(modelEntry,
+                                                        (ConnectorType)selection.getFirstElement(),
+                                                        getNewBindingName());
         }
 
         return result;
@@ -453,7 +450,12 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
     }
 
     private VdbModelEntry getModelEntry() {
-        return VdbDefnHelper.findModelReference(this.vdb, this.modelInfo);
+        for (VdbModelEntry entry : this.vdb.getModelEntries()) {
+            if (entry.getName().toString().equals(this.modelInfo.getPath())) {
+                return entry;
+            }
+        }
+        return null;
     }
 
     private String getNewBindingName() {
@@ -484,38 +486,31 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
         int severity = IStatus.ERROR;
         String msg = "Message has not been set"; //$NON-NLS-1$
 
-        if (this.btnExistingBinding.getSelection() && !this.bindingsViewer.getSelection().isEmpty()) {
-            // valid
-            severity = IStatus.OK;
-            msg = UTIL.getString(PREFIX + "okMsg.binding", //$NON-NLS-1$
-                                 ((IStructuredSelection)this.bindingsViewer.getSelection()).getFirstElement());
-        } else if (this.btnCreateFromType.getSelection() && !this.connectorTypesViewer.getSelection().isEmpty()) {
-            // validate name first
-            final IStatus result = ModelerDqpUtils.isValidBindingName(getNewBindingName());
-
-            if (result.getSeverity() != IStatus.ERROR) {
-                final VdbDefnHelper helper = getVdbDefnHelper();
-
-                if (ModelerDqpUtils.isUniqueBindingName(getNewBindingName(), helper.getVdbDefn())) {
-                    severity = IStatus.OK;
-                    msg = UTIL.getString(PREFIX + "okMsg.connectorType", //$NON-NLS-1$
-                                         new Object[] {getNewBindingName(),
-                                             ((IStructuredSelection)this.connectorTypesViewer.getSelection()).getFirstElement()});
-                } else // binding with that name already exists
-                msg = UTIL.getString(PREFIX + "bindingNameExists", getNewBindingName()); //$NON-NLS-1$
-            } else msg = result.getMessage();
-        } else // invalid
-        msg = getString("errorMsg"); //$NON-NLS-1$
+        // TODO: Generate Status
+        // if (this.btnExistingBinding.getSelection() && !this.bindingsViewer.getSelection().isEmpty()) {
+        // // valid
+        // severity = IStatus.OK;
+        //            msg = UTIL.getString(PREFIX + "okMsg.binding", //$NON-NLS-1$
+        // ((IStructuredSelection)this.bindingsViewer.getSelection()).getFirstElement());
+        // } else if (this.btnCreateFromType.getSelection() && !this.connectorTypesViewer.getSelection().isEmpty()) {
+        // // validate name first
+        // final IStatus result = ModelerDqpUtils.isValidBindingName(getNewBindingName());
+        //
+        // if (result.getSeverity() != IStatus.ERROR) {
+        // final VdbDefnHelper helper = getVdbDefnHelper();
+        //
+        // if (ModelerDqpUtils.isUniqueBindingName(getNewBindingName(), helper.getVdbDefn())) {
+        // severity = IStatus.OK;
+        //                    msg = UTIL.getString(PREFIX + "okMsg.connectorType", //$NON-NLS-1$
+        // new Object[] {getNewBindingName(),
+        // ((IStructuredSelection)this.connectorTypesViewer.getSelection()).getFirstElement()});
+        // } else // binding with that name already exists
+        //                msg = UTIL.getString(PREFIX + "bindingNameExists", getNewBindingName()); //$NON-NLS-1$
+        // } else msg = result.getMessage();
+        // } else // invalid
+        //        msg = getString("errorMsg"); //$NON-NLS-1$
 
         return BaseNewConnectorBindingPanel.createStatus(severity, msg);
-    }
-
-    /**
-     * @return
-     * @since 5.0
-     */
-    private VdbDefnHelper getVdbDefnHelper() {
-        return DqpPlugin.getInstance().getVdbDefnHelper(this.vdb);
     }
 
     void handleBindingNameChanged() {
@@ -577,7 +572,7 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
      * @since 5.0
      */
     void handleDispose() {
-        DqpPlugin.getInstance().getAdmin().removeChangeListener(this);
+        // DqpPlugin.getInstance().getAdmin().removeChangeListener(this);
     }
 
     void handlePasswordChanged() {
@@ -692,8 +687,8 @@ public final class ImportSourceMappingPanel extends BaseNewConnectorBindingPanel
     }
 
     /**
-     * Indicates if the panel is in a state that a new binding will/has been created. The password should only be used when in a new
-     * binding state.
+     * Indicates if the panel is in a state that a new binding will/has been created. The password should only be used when in a
+     * new binding state.
      * 
      * @return <code>true</code> if new binding state; <code>false</code> if an existing binding state.
      * @since 4.3

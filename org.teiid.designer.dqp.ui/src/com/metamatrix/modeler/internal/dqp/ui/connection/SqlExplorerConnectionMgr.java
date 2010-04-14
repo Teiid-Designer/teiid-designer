@@ -15,8 +15,8 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.sessiontree.model.RootSessionTreeNode;
 import net.sourceforge.sqlexplorer.sessiontree.model.SessionTreeNode;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.teiid.designer.udf.UdfManager;
 import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
@@ -148,7 +148,7 @@ public final class SqlExplorerConnectionMgr implements DqpUiConstants, IVdbConne
     public Vdb getVdb( final Object connection ) {
         CoreArgCheck.isInstanceOf(SessionTreeNode.class, connection, connection.getClass().getName());
         // find the associated VDB context for the connection
-        return new Vdb(new Path(getConnectionName(connection)), new NullProgressMonitor());
+        return new Vdb(new Path(getConnectionName(connection)));
     }
 
     /**

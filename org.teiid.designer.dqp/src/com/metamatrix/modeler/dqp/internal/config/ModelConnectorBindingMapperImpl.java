@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import org.teiid.adminapi.PropertyDefinition;
@@ -21,7 +20,6 @@ import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
-import com.metamatrix.common.vdb.ModelInfo;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
@@ -42,7 +40,8 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
     private Map modelConnectorTypeMatches;
     // model entry -> ConnectorBinding
     private Map modelConnectorBindings;
-    private ExecutionAdmin manager;
+
+    private ExecutionAdmin executionAdmin;
 
     // Used to enable Unit Testing.
     public static boolean HEADLESS = false;
@@ -84,7 +83,11 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
     public Collection findConnectorTypeMatches( final VdbModelEntry modelEntry ) {
         if (modelEntry.getType() != ModelType.PHYSICAL_LITERAL) return Collections.EMPTY_LIST;
         // update matches
-        updateConnectorTypeMatches();
+        try {
+            updateConnectorTypeMatches();
+        } catch (Exception e) {
+            DqpPlugin.Util.log(e);
+        }
         final Collection matches = (Collection)this.modelConnectorTypeMatches.get(modelEntry);
         if (matches != null) return matches;
         return Collections.EMPTY_LIST;
@@ -98,26 +101,26 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
      * @since 4.3
      */
     private Collection findMatchingConnectorBindings( final VdbModelEntry modelEntry ) {
-        if (modelEntry.getType() != ModelType.PHYSICAL_LITERAL) return Collections.EMPTY_LIST;
-        final Map jdbcProperties = ModelerDqpUtils.getModelJdbcProperties(modelEntry);
-        if (!jdbcProperties.isEmpty()) {
-
-            // First check bindings in the VDB
-            final VdbDefnHelper vdbDefnHelper = getVdbDefnHelper();
-            Collection contextBindings = Collections.EMPTY_LIST;
-            if (vdbDefnHelper != null) contextBindings = vdbDefnHelper.getVdbDefn().getConnectorBindings().values();
-            Collection bindingMatches = getMatchingBindings(jdbcProperties, contextBindings);
-
-            if (bindingMatches.isEmpty()) {
-                // get all the available connector bindings from configuration manager
-                final Collection configBindings = getConfigurationManager().getConnectorBindings();
-
-                // matching bindings
-                bindingMatches = getMatchingBindings(jdbcProperties, configBindings);
-            }
-
-            return bindingMatches;
-        }
+        // if (modelEntry.getType() != ModelType.PHYSICAL_LITERAL) return Collections.EMPTY_LIST;
+        // final Map jdbcProperties = ModelerDqpUtils.getModelJdbcProperties(modelEntry);
+        // if (!jdbcProperties.isEmpty()) {
+        //
+        // // First check bindings in the VDB
+        // final VdbDefnHelper vdbDefnHelper = getVdbDefnHelper();
+        // Collection contextBindings = Collections.EMPTY_LIST;
+        // if (vdbDefnHelper != null) contextBindings = vdbDefnHelper.getVdbDefn().getConnectorBindings().values();
+        // Collection bindingMatches = getMatchingBindings(jdbcProperties, contextBindings);
+        //
+        // if (bindingMatches.isEmpty()) {
+        // // get all the available connector bindings from configuration manager
+        // final Collection configBindings = getConfigurationManager().getConnectorBindings();
+        //
+        // // matching bindings
+        // bindingMatches = getMatchingBindings(jdbcProperties, configBindings);
+        // }
+        //
+        // return bindingMatches;
+        // }
         return Collections.EMPTY_LIST;
     }
 
@@ -126,15 +129,16 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
      * 
      * @param modelEntry The model reference
      * @return Matching connector types
+     * @throws Exception
      * @since 4.3
      */
-    private Collection findMatchingConnectorType( final VdbModelEntry modelEntry ) {
+    private Collection findMatchingConnectorType( final VdbModelEntry modelEntry ) throws Exception {
         if (modelEntry.getType() != ModelType.PHYSICAL_LITERAL) return Collections.EMPTY_LIST;
         final Map jdbcProperties = ModelerDqpUtils.getModelJdbcProperties(modelEntry);
         final Collection connTypes = new ArrayList();
         if (!jdbcProperties.isEmpty()) {
             // get all the available connector bindings
-            final Collection types = getConfigurationManager().getConnectorTypes();
+            final Collection types = getExecutionAdmin().getConnectorTypes();
             // for each binding get properties
             for (final Iterator iter1 = types.iterator(); iter1.hasNext();) {
                 final ConnectorType connectorType = (ConnectorType)iter1.next();
@@ -155,22 +159,7 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
      */
     public Map getAllConnectorBindings() {
         if (this.modelConnectorBindings == null) {
-            final VdbDefnHelper helper = getVdbDefnHelper();
-            Map modelPathBindingMap = Collections.EMPTY_MAP;
-            if (helper != null) modelPathBindingMap = helper.getVdbDefn().getModelToBindingMappings();
-
-            for (final Iterator iter = modelPathBindingMap.keySet().iterator(); iter.hasNext();) {
-                final String modelPath = (String)iter.next();
-                final VdbModelEntry modelEntry = getModelEntry(modelPath);
-                final ModelInfo m = helper.getVdbDefn().getModel(modelEntry.getName());
-                final List bindingNames = m.getConnectorBindingNames();
-                if (bindingNames != null && bindingNames.size() > 0) {
-                    final String bindingName = (String)bindingNames.iterator().next();
-                    final Connector connector = helper.getVdbDefn().getConnectorBindingByName(bindingName);
-                    if (connector != null) this.modelConnectorBindings.put(modelEntry, connector);
-
-                }
-            }
+            // TODO: Load all ConnectionFactory's bound to source models??
         }
         return this.modelConnectorBindings;
     }
@@ -179,10 +168,11 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
      * Get the configuration manager stored on the mapper or lookup the default manager from the plug-in.
      * 
      * @return The configuration manager
+     * @throws Exception
      * @since 4.3
      */
-    private ConfigurationManager getConfigurationManager() {
-        return (this.manager != null) ? this.manager : DqpPlugin.getInstance().getAdmin();
+    private ExecutionAdmin getExecutionAdmin() throws Exception {
+        return (this.executionAdmin != null) ? this.executionAdmin : DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
     }
 
     /**
@@ -210,7 +200,7 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
         for (final Iterator iter1 = bindings.iterator(); iter1.hasNext();) {
             final Connector connector = (Connector)iter1.next();
 
-            final ConnectorType type = DqpPlugin.getInstance().getAdmin().getConnectorType(connector);
+            final ConnectorType type = connector.getType();
 
             String driverClassName = connector.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
 
@@ -267,23 +257,12 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
     }
 
     private VdbModelEntry getModelEntry( final String modelPath ) {
-        return this.vdb.getModelEntry(modelPath);
-    }
-
-    private VdbDefnHelper getVdbDefnHelper() {
-        VdbDefnHelper helper = null;
-        if (!HEADLESS) helper = DqpPlugin.getInstance().getVdbDefnHelper(this.vdb);
-        return helper;
-    }
-
-    /**
-     * Set the configuration manager used by the mapper to find connector bindings.
-     * 
-     * @param manager The manager to set.
-     * @since 4.3
-     */
-    public void setManager( final ConfigurationManager manager ) {
-        this.manager = manager;
+        for (VdbModelEntry entry : this.vdb.getModelEntries()) {
+            if (entry.getName().toString().equals(modelPath)) {
+                return entry;
+            }
+        }
+        return null;
     }
 
     /**
@@ -303,14 +282,41 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
     /**
      * Populate the the map of model entries to the connector types that have matching connection properties.
      * 
+     * @throws Exception
      * @since 4.3
      */
-    private void updateConnectorTypeMatches() {
+    private void updateConnectorTypeMatches() throws Exception {
         if (this.modelConnectorTypeMatches == null) this.modelConnectorTypeMatches = new HashMap();
         for (final Iterator iter = getModelEntries().iterator(); iter.hasNext();) {
             final VdbModelEntry modelEntry = (VdbModelEntry)iter.next();
             final Collection types = findMatchingConnectorType(modelEntry);
             if (types != null && !types.isEmpty()) this.modelConnectorTypeMatches.put(modelEntry, types);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.modeler.dqp.config.ModelConnectorBindingMapper#createConnectorBinding(org.teiid.designer.vdb.VdbModelEntry,
+     *      org.teiid.designer.runtime.ConnectorType, java.lang.String)
+     */
+    @Override
+    public Connector createConnectorBinding( VdbModelEntry modelEntry,
+                                             ConnectorType ConnectorType,
+                                             String theName ) throws Exception {
+        // TODO: Implement!!!!!!!!!!!
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.modeler.dqp.config.ModelConnectorBindingMapper#setConnector(org.teiid.designer.vdb.VdbModelEntry,
+     *      org.teiid.designer.runtime.Connector)
+     */
+    @Override
+    public void setConnector( VdbModelEntry modelEntry,
+                              Connector connector ) {
+        // TODO: Implement!!!!!!!!!!!v
     }
 }

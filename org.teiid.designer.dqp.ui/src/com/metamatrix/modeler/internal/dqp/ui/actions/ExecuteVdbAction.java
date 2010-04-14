@@ -13,13 +13,11 @@ import java.sql.Connection;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
@@ -40,7 +38,6 @@ import com.metamatrix.modeler.dqp.execution.VdbExecutionValidator;
 import com.metamatrix.modeler.dqp.internal.execution.VdbExecutionValidatorImpl;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.dqp.ui.dialogs.ConnectorBindingsDialog;
 import com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditor;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -64,7 +61,7 @@ public class ExecuteVdbAction extends ActionDelegate
 
     private IFile selectedVDB;
 
-    ConnectorBindingsDialog dialog;
+    // ConnectorBindingsDialog dialog;
 
     private IStatus canExecute;
 
@@ -261,28 +258,29 @@ public class ExecuteVdbAction extends ActionDelegate
             UiBusyIndicator.showWhile(null, new Runnable() {
                 public void run() {
                     final Shell shell = DqpUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
-                    dialog = new ConnectorBindingsDialog(shell, getSelectedVdbFile(), vdb, getVdbExecutionValidator());
+                    // TODO: Launch some "Select or Create Connection Factory Dialog"
+                    // dialog = new ConnectorBindingsDialog(shell, getSelectedVdbFile(), vdb, getVdbExecutionValidator());
                 }
             });
 
-            dialog.open();
-
-            if (dialog.getReturnCode() == Window.OK) {
-                // save VDB if necessary
-                if (vdb.isModified()) vdb.save(new NullProgressMonitor());
-
-                // recheck the execution status. should be OK if the dialog OK button was clicked. but just make sure.
-                try {
-                    new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, operation);
-                } catch (final InterruptedException e) {
-                } catch (final InvocationTargetException e) {
-                    UTIL.log(e.getTargetException());
-                    MessageDialog.openError(getShell(), getString("executorErrorDialog.title"), //$NON-NLS-1$
-                                            getString("executorErrorDialog.msg") //$NON-NLS-1$
-                    );
-                    return;
-                }
-            }
+            // dialog.open();
+            //
+            // if (dialog.getReturnCode() == Window.OK) {
+            // // save VDB if necessary
+            // if (vdb.isModified()) vdb.save(new NullProgressMonitor());
+            //
+            // // recheck the execution status. should be OK if the dialog OK button was clicked. but just make sure.
+            // try {
+            // new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, operation);
+            // } catch (final InterruptedException e) {
+            // } catch (final InvocationTargetException e) {
+            // UTIL.log(e.getTargetException());
+            //                    MessageDialog.openError(getShell(), getString("executorErrorDialog.title"), //$NON-NLS-1$
+            //                                            getString("executorErrorDialog.msg") //$NON-NLS-1$
+            // );
+            // return;
+            // }
+            // }
         }
     }
 

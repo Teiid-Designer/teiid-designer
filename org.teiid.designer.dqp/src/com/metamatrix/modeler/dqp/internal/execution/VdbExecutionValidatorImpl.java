@@ -12,9 +12,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.adminapi.PropertyDefinition;
-import org.teiid.designer.runtime.Connector;
-import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
 import com.metamatrix.core.modeler.util.FileUtils;
@@ -22,7 +19,6 @@ import com.metamatrix.core.util.AutoMultiStatus;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.execution.VdbExecutionValidator;
 
@@ -165,32 +161,34 @@ public class VdbExecutionValidatorImpl implements VdbExecutionValidator {
             while (modelItr.hasNext()) {
                 VdbModelEntry modelEntry = (VdbModelEntry)modelItr.next();
 
-                if (modelEntry.requiresConnector()) {
-                    // TODO: We don't have a Server defined here yet? How about the concept
-                    // of a Preview/Execution Server??
-                    Connector connector = DqpPlugin.getInstance().getServerManager().getFirstConnector(model, vdbDefn);
-                    // can't assume we get a binding because we no longer stop on the first error:
-                    if (connector != null) {
-                        ConnectorType type = connector.getType();
-                        if (type != null) {
-                            for (PropertyDefinition typeDefn : type.getPropertyDefinitions()) {
-
-                                if (typeDefn.isRequired()) {
-                                    String id = typeDefn.getName();
-                                    String value = connector.getPropertyValue(id);
-
-                                    // look at type for default values as connectors inherit default values
-                                    if ((value == null || CoreStringUtil.isEmpty(value)) && typeDefn.getDefaultValue() == null) {
-                                        vdbStatus.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, BINDING_PROPERTY_ERROR_CODE,
-                                                                 getString("bindingPropertyError", //$NON-NLS-1$
-                                                                           new Object[] {id, connector.getName()}), null));
-                                    }
-                                }
-
-                            }
-                        }
-                    } // endif -- binding not null
-                }
+                // TODO: Check whether or not a ModelEntry is a source model that requires a ConnectionFactory
+                // IF NOT, then add a new status
+                // if (modelEntry.requiresConnector()) {
+                // // TODO: We don't have a Server defined here yet? How about the concept
+                // // of a Preview/Execution Server??
+                // Connector connector = DqpPlugin.getInstance().getServerManager().getFirstConnector(model, vdbDefn);
+                // // can't assume we get a binding because we no longer stop on the first error:
+                // if (connector != null) {
+                // ConnectorType type = connector.getType();
+                // if (type != null) {
+                // for (PropertyDefinition typeDefn : type.getPropertyDefinitions()) {
+                //
+                // if (typeDefn.isRequired()) {
+                // String id = typeDefn.getName();
+                // String value = connector.getPropertyValue(id);
+                //
+                // // look at type for default values as connectors inherit default values
+                // if ((value == null || CoreStringUtil.isEmpty(value)) && typeDefn.getDefaultValue() == null) {
+                // vdbStatus.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, BINDING_PROPERTY_ERROR_CODE,
+                //                                                                 getString("bindingPropertyError", //$NON-NLS-1$
+                // new Object[] {id, connector.getName()}), null));
+                // }
+                // }
+                //
+                // }
+                // }
+                // } // endif -- binding not null
+                // }
             }
         }
 
@@ -223,9 +221,12 @@ public class VdbExecutionValidatorImpl implements VdbExecutionValidator {
 
     protected IStatus checkForValidationErrors( final Vdb vdb ) {
         // if the vdb has validation errors....exit with an error...cannot execute such a vdb
-        if (vdb.getSeverity().getValue() == Severity.ERROR) {
-            return STATUS_VDB_VALIDATION_ERRORS;
-        }
+
+        // TODO: Somehow DO this?????
+
+        // if (vdb.getSeverity().getValue() == Severity.ERROR) {
+        // return STATUS_VDB_VALIDATION_ERRORS;
+        // }
         return OK_STATUS;
     }
 

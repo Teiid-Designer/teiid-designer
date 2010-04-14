@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.dqp.ui.actions;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.Properties;
 import net.sourceforge.sqlexplorer.AliasModel;
 import net.sourceforge.sqlexplorer.DriverModel;
 import net.sourceforge.sqlexplorer.IConstants;
@@ -33,9 +32,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.execution.VdbExecutionValidator;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -105,8 +102,8 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
      * @return The status for executing a VDB.
      * @since 4.3
      */
-    public IStatus checkVdbModelState( final VDBDefn defn ) {
-        return validator.validateVdbModels(this.vdb, defn);
+    public IStatus checkVdbModelState() {
+        return validator.validateVdbModels(this.vdb);
     }
 
     public void closeAllConnections() {
@@ -114,12 +111,12 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
     }
 
     private boolean deployVDB( final String vdbName,
-                               final File vdbFile ) {
+                               final File vdbFile ) throws SQLException {
 
         // Admin admin = getAdminConnection().getAdminAPI();
         //
         // // remove the old one if there is one.
-        // try {
+        // try { final VdbDefnHelper helper = DqpPlugin.getInstance().getVdbDefnHelper(this.vdb);
         // Collection<VDB> vdbs = admin.getVDBs(vdbName + AdminObject.WILDCARD);
         // for (VDB vdb : vdbs) {
         // admin.changeVDBStatus(vdb.getName(), vdb.getVDBVersion(), VDB.DELETED);
@@ -154,17 +151,14 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
         IStatus result = SUCCESS;
 
         final SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
-        final VdbDefnHelper helper = DqpPlugin.getInstance().getVdbDefnHelper(this.vdb);
-        final VDBDefn defn = helper.getVdbDefn();
-        final String vdbName = defn.getName();
-        String vdbVersion = defn.getVersion();
+        final String vdbName = this.vdb.getName().toString();
 
-        if (CoreStringUtil.isEmpty(vdbVersion)) vdbVersion = "1"; //$NON-NLS-1$
+        String vdbVersion = "1"; //$NON-NLS-1$
 
         final File vdbFile = getVdbFile();
 
         final File executionDir = DqpPath.getRuntimePath().toFile();
-        final String url = buildConnectionURL(executionDir.getAbsolutePath(), vdbName, vdbVersion, getExecutionProperties());
+        final String url = buildConnectionURL(executionDir.getAbsolutePath(), vdbName, vdbVersion, null);
         ISQLDriver driver = null;
 
         // ensure that the JDBC Driver for the DQP has been loaded
@@ -348,10 +342,6 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
         return driver;
     }
 
-    private Properties getExecutionProperties() {
-        return vdb.getExecutionProperties();
-    }
-
     private ISQLAlias getSqlAlias( final String theName ) {
         // lookup the VDB name in the AliasModel and see if one has been created
         final SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
@@ -377,7 +367,6 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
 
     private void init() {
         try {
-            this.vdb.setLoadModelsOnOpen(false);
 
             this.timestamp = getVdbFile().lastModified();
         } catch (final Exception e) {
