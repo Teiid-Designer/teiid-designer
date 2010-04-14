@@ -43,7 +43,6 @@ public class DefaultVdbEditorUtil implements IVdbEditorUtil {
                         if (editor != null) {
 
                             page.activate(editor);
-                            editor.setTab(tabId);
 
                         } else {
 
@@ -53,7 +52,6 @@ public class DefaultVdbEditorUtil implements IVdbEditorUtil {
                                 editor = (VdbEditor)page.openEditor(new FileEditorInput(vdbFile),
                                                                     VdbUiConstants.Extensions.VDB_EDITOR_ID);
                                 page.activate(editor);
-                                editor.setTab(tabId);
                             } catch (final Exception e) {
                                 DqpUiConstants.UTIL.log(e);
                             }
@@ -92,16 +90,6 @@ public class DefaultVdbEditorUtil implements IVdbEditorUtil {
         }
 
         return null;
-    }
-
-    /**
-     * @see com.metamatrix.modeler.dqp.ui.IVdbEditorUtil#openConnectorBindingsEditor(com.metamatrix.vdb.edit.VdbEditingContext)
-     * @since 4.3
-     */
-    public void openConnectorBindingsEditor( final Vdb vdb ) {
-
-        activateEditor(vdb, DqpUiConstants.VDB_EDITOR_CONNECTOR_BINDINGS_ID);
-
     }
 
     /**

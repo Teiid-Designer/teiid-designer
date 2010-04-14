@@ -62,8 +62,8 @@ import org.teiid.designer.runtime.ui.EditServerAction;
 import org.teiid.designer.runtime.ui.NewServerAction;
 import org.teiid.designer.runtime.ui.ReconnectToServerAction;
 import org.teiid.designer.runtime.ui.SetDefaultServerAction;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -458,6 +458,8 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                     manager.add(this.setDefaultServerAction);
                 }
                 manager.add(this.reconnectAction);
+                manager.add(new Separator());
+                manager.add(this.newConnectorBindingAction);
                 manager.add(new Separator());
                 manager.add(this.newServerAction);
             } else if (selection instanceof Connector) {

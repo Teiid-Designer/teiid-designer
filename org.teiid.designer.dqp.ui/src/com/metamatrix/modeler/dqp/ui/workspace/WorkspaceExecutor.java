@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.dqp.ui.workspace;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -16,7 +17,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import com.metamatrix.common.types.DataTypeManager;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.jdbc.api.Connection;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.IResults;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.SqlResultsModel;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.XmlDocumentResultsModel;

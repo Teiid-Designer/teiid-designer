@@ -39,6 +39,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.teiid.jdbc.TeiidStatement;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
@@ -153,9 +154,9 @@ public abstract class AbstractResultsView extends ViewPart implements DqpUiConst
                     // set the query plan if one exists
                     Statement statement = theResults.getStatement();
 
-                    if ((statement != null) && (statement instanceof com.metamatrix.jdbc.api.Statement)) {
-                        pnl.setQueryPlan(((com.metamatrix.jdbc.api.Statement)statement).getPlanDescription());
-                        pnl.setDebugLog(((com.metamatrix.jdbc.api.Statement)statement).getDebugLog());
+                    if (statement instanceof TeiidStatement) {
+                        pnl.setQueryPlan(((TeiidStatement)statement).getPlanDescription());
+                        pnl.setDebugLog(((TeiidStatement)statement).getDebugLog());
                         action.run();
                     }
 

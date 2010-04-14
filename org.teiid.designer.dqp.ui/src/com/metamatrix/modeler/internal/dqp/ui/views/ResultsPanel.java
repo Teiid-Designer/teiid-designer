@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.internal.dqp.ui.views;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import javax.xml.bind.JAXBException;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -32,12 +30,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.part.ViewPart;
-import org.teiid.client.plan.DisplayHelper;
 import org.teiid.client.plan.PlanNode;
-import org.teiid.client.plan.XMLOutputVisitor;
-import com.metamatrix.common.util.QueryPlanDisplayHelper;
+import org.teiid.client.plan.PlanNode.Property;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.ui.internal.dialog.TextAreaDialog;
 import com.metamatrix.ui.internal.util.SystemClipboardUtilities;
@@ -357,10 +352,11 @@ public class ResultsPanel extends Composite implements DqpUiConstants {
                 this.txtQueryPlan.setLayoutData(new GridData(GridData.FILL_BOTH));
             }
 
-            DisplayHelper helper = new QueryPlanDisplayHelper();
-            XMLOutputVisitor v = new XMLOutputVisitor(helper);
-            v.visit(theQueryPlan);
-            this.txtQueryPlan.setText(v.getText());
+            try {
+                this.txtQueryPlan.setText(this.queryPlan.toXml());
+            } catch (JAXBException e) {
+                DqpUiConstants.UTIL.log(e);
+            }
 
             // tree version of query plan
             this.treeViewer.setInput(theQueryPlan);
@@ -431,26 +427,11 @@ public class ResultsPanel extends Composite implements DqpUiConstants {
         }
     }
 
-    private static final class NodeProperty {
-        String name;
-        Object value;
-
-        NodeProperty( String name,
-                      Object value ) {
-            this.name = name;
-            this.value = value;
-        }
-    }
-
     private class QueryPlanProvider extends LabelProvider implements ITreeContentProvider {
-
-        private QueryPlanDisplayHelper helper;
 
         private boolean showOnlyProps;
 
         public QueryPlanProvider( boolean theShowPropsFlag ) {
-
-            this.helper = new QueryPlanDisplayHelper();
             this.showOnlyProps = theShowPropsFlag;
         }
 
@@ -477,32 +458,27 @@ public class ResultsPanel extends Composite implements DqpUiConstants {
         public Object[] getElements( Object theInputElement ) {
             Object[] result = NO_KIDS;
 
-            if (theInputElement != null) {
+            if (theInputElement instanceof Property) {
+                Property theProperty = (Property)theInputElement;
                 List kids = new ArrayList();
 
-                if (theInputElement instanceof PlanNode) {
+                if (theProperty.getPlanNode() != null) {
                     PlanNode node = (PlanNode)theInputElement;
 
-                    if (this.showOnlyProps) {
-                        // Get the list of exposed property names
-                        List orderedPropertyNames = helper.getOrderedProperties(node);
-                        Map props = node.getProperties();
-
-                        if (orderedPropertyNames != null && !orderedPropertyNames.isEmpty() && props != null && !props.isEmpty()) {
-                            for (Iterator itr = orderedPropertyNames.iterator(); itr.hasNext();) {
-                                String propName = (String)itr.next();
-                                kids.add(new NodeProperty(propName, props.get(propName)));
-                            }
+                    // Get the list of exposed property names
+                    List<Property> props = node.getProperties();
+                    for (Property prop : props) {
+                        if (this.showOnlyProps && prop.getPlanNode() == null) {
+                            // Grab property
+                            kids.add(prop);
+                        } else if (!this.showOnlyProps && prop.getPlanNode() != null) {
+                            kids.add(prop);
                         }
-                    } else {
-                        kids = node.getChildren();
                     }
-                } else if (theInputElement instanceof NodeProperty) {
-                    Object val = ((NodeProperty)theInputElement).value;
-                    if (val instanceof List) {
-                        kids = (List)val;
-                    } else {
-                        kids = Arrays.asList(new Object[] {val});
+
+                } else {
+                    if (theProperty.getValues() != null) {
+                        kids = theProperty.getValues();
                     }
                 }
 
@@ -526,48 +502,13 @@ public class ResultsPanel extends Composite implements DqpUiConstants {
          */
         @Override
         public String getText( Object theElement ) {
-            if ((theElement != null) && (theElement instanceof PlanNode)) {
-                PlanNode node = (PlanNode)theElement;
-                String name = helper.getName(node);
-                String varProp = ""; //$NON-NLS-1$
-                Object propObject = null;
-                StringBuffer propValue = new StringBuffer();
+            if (theElement instanceof Property) {
+                Property prop = (Property)theElement;
 
-                while (name.indexOf("${") > -1) { //$NON-NLS-1$
-                    varProp = name.substring(name.indexOf(BEGIN_DELIM) + 2, name.indexOf(END_DELIM));
-                    propObject = node.getProperties().get(varProp);
-
-                    if (propObject instanceof ArrayList) {
-                        ArrayList list = (ArrayList)propObject;
-
-                        for (int size = list.size(), i = 0; i < size; ++i) {
-                            if (i > 0) {
-                                propValue.append(" ,"); //$NON-NLS-1$   
-                            }
-
-                            propValue.append(list.get(i));
-                        }
-                    } else {
-                        propValue.append(propObject);
-                    }
-
-                    name = new StringBuffer().append(name.substring(0, name.indexOf(BEGIN_DELIM))).append(propValue).append(name.substring(name.indexOf(END_DELIM) + 1,
-                                                                                                                                           name.length())).toString().trim();
-
-                    // remove special characters
-                    name = CoreStringUtil.replaceAll(name, "\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
-                    name = CoreStringUtil.replaceAll(name, "\t", ""); //$NON-NLS-1$ //$NON-NLS-2$
+                if (prop.getPlanNode() != null) {
+                    return prop.getName().concat(" ").concat(prop.getPlanNode().getName()); //$NON-NLS-1$
                 }
-
-                return name;
-            } else if (theElement instanceof NodeProperty) {
-                String propertyName = ((NodeProperty)theElement).name;
-                // Try to get the mapped name for the property
-                String mappedName = helper.getPropertyName(propertyName);
-                if (mappedName == null) {
-                    return propertyName;
-                }
-                return mappedName;
+                return prop.getName();
             }
 
             return super.getText(theElement);

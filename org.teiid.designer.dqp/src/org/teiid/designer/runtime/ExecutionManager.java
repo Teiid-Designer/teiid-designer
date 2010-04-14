@@ -8,11 +8,11 @@
 package org.teiid.designer.runtime;
 
 import java.io.File;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.jdbc.api.Connection;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 

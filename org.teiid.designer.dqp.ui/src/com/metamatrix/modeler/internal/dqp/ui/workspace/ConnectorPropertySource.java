@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace;
 
+import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -49,7 +50,8 @@ public class ConnectorPropertySource implements IPropertySource {
 
         this.type = type;
         this.properties = properties;
-        this.initialValues = new Properties(properties);
+
+        this.initialValues = new Properties(this.properties);
     }
 
     /**
@@ -58,6 +60,7 @@ public class ConnectorPropertySource implements IPropertySource {
     public ConnectorPropertySource( Connector connector ) {
         this(connector.getType(), connector.getProperties());
         this.connector = connector;
+        this.properties.setProperty("rarName", connector.getType().getName());
     }
 
     /**
@@ -122,8 +125,7 @@ public class ConnectorPropertySource implements IPropertySource {
      * @since 4.2
      */
     public Object getPropertyValue( Object id ) {
-        PropertyDefinition propDefn = ((PropertyDefinition)id);
-        String result = this.properties.getProperty(propDefn.getName());
+        String result = this.properties.getProperty((String)id);
 
         if (result == null) {
             result = CoreStringUtil.Constants.EMPTY_STRING;
@@ -169,10 +171,14 @@ public class ConnectorPropertySource implements IPropertySource {
     public void setPropertyValue( Object id,
                                   Object value ) {
         PropertyDefinition propDefn = ((PropertyDefinition)id);
-        this.properties.setProperty(propDefn.getName(), (String)value);
+        try {
+            this.connector.setPropertyValue(propDefn.getName(), value.toString());
 
-        if (this.connector != null) {
-            this.provider.propertyChanged(this.connector);
+            if (this.connector != null) {
+                this.provider.propertyChanged(this.connector);
+            }
+        } catch (Exception e) {
+            UTIL.log(e);
         }
     }
 

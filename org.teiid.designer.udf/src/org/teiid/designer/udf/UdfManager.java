@@ -38,7 +38,7 @@ import org.eclipse.emf.common.util.URI;
 import org.teiid.designer.udf.UdfModelEvent.Type;
 import com.metamatrix.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.vdb.ModelType;
+import com.metamatrix.core.util.ModelType;
 import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.ValidationContext;

@@ -8,11 +8,11 @@
 package com.metamatrix.modeler.dqp.ui.workspace;
 
 import java.io.File;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.jdbc.api.Connection;
 import com.metamatrix.ui.internal.util.UiUtil;
 
 /**

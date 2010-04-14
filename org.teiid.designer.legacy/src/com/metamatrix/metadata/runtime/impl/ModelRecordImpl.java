@@ -22,7 +22,7 @@
 
 package com.metamatrix.metadata.runtime.impl;
 
-import com.metamatrix.core.vdb.ModelType;
+import com.metamatrix.core.util.ModelType;
 import com.metamatrix.modeler.core.metadata.runtime.ModelRecord;
 
 /**
@@ -44,16 +44,16 @@ public class ModelRecordImpl extends AbstractMetadataRecord implements ModelReco
     private String primaryMetamodelUri;
 
     public ModelRecordImpl() {
-    	this(new MetadataRecordDelegate());
-    }
-    
-    protected ModelRecordImpl(MetadataRecordDelegate delegate) {
-    	this.delegate = delegate;
+        this(new MetadataRecordDelegate());
     }
 
-    //==================================================================================
-    //                     I N T E R F A C E   M E T H O D S
-    //==================================================================================
+    protected ModelRecordImpl( MetadataRecordDelegate delegate ) {
+        this.delegate = delegate;
+    }
+
+    // ==================================================================================
+    // I N T E R F A C E M E T H O D S
+    // ==================================================================================
 
     /**
      * @see com.metamatrix.modeler.core.metadata.runtime.ModelRecord#getPrimaryMetamodelUri()
@@ -129,69 +129,69 @@ public class ModelRecordImpl extends AbstractMetadataRecord implements ModelReco
     }
 
     // ==================================================================================
-    //                      P U B L I C   M E T H O D S
+    // P U B L I C M E T H O D S
     // ==================================================================================
 
     /**
      * @param string
      */
-    public void setPrimaryMetamodelUri(String string) {
+    public void setPrimaryMetamodelUri( String string ) {
         primaryMetamodelUri = string;
     }
 
     /**
      * @param b
      */
-    public void setVisible(boolean b) {
+    public void setVisible( boolean b ) {
         isVisible = b;
     }
 
     /**
      * @param i
      */
-    public void setMaxSetSize(int i) {
+    public void setMaxSetSize( int i ) {
         maxSetSize = i;
     }
 
     /**
      * @param b
      */
-    public void setSupportsDistinct(boolean b) {
+    public void setSupportsDistinct( boolean b ) {
         supportsDistinct = b;
     }
 
     /**
      * @param b
      */
-    public void setSupportsJoin(boolean b) {
+    public void setSupportsJoin( boolean b ) {
         supportsJoin = b;
     }
 
     /**
      * @param b
      */
-    public void setSupportsOrderBy(boolean b) {
+    public void setSupportsOrderBy( boolean b ) {
         supportsOrderBy = b;
     }
 
     /**
      * @param b
      */
-    public void setSupportsOuterJoin(boolean b) {
+    public void setSupportsOuterJoin( boolean b ) {
         supportsOuterJoin = b;
     }
 
     /**
      * @param b
      */
-    public void setSupportsWhereAll(boolean b) {
+    public void setSupportsWhereAll( boolean b ) {
         supportsWhereAll = b;
     }
 
     /**
      * @param i
      */
-    public void setModelType(int i) {
+    public void setModelType( int i ) {
         modelType = i;
     }
 

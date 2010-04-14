@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Set;
 import com.metamatrix.common.vdb.ModelInfo;
 import com.metamatrix.common.vdb.runtime.URIResource;
-import com.metamatrix.core.vdb.ModelType;
+import com.metamatrix.core.util.ModelType;
 import com.metamatrix.metadata.runtime.api.Model;
 import com.metamatrix.metadata.runtime.api.ModelID;
 

@@ -59,9 +59,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ViewPart;
+import org.teiid.jdbc.TeiidStatement;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.HashCodeUtil;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.dqp.ui.actions.CopySqlResultsToClipboardAction;
 import com.metamatrix.modeler.internal.dqp.ui.actions.CopyXmlResultsToClipboardAction;
@@ -160,9 +161,9 @@ public class PreviewDataView extends AbstractPreviewDataView implements IResults
                     // set the query plan if one exists
                     Statement statement = results.getStatement();
 
-                    if ((statement != null) && (statement instanceof com.metamatrix.jdbc.api.Statement)) {
-                        pnl.setQueryPlan(((com.metamatrix.jdbc.api.Statement)statement).getPlanDescription());
-                        pnl.setDebugLog(((com.metamatrix.jdbc.api.Statement)statement).getDebugLog());
+                    if ((statement != null) && (statement instanceof TeiidStatement)) {
+                        pnl.setQueryPlan(((TeiidStatement)statement).getPlanDescription());
+                        pnl.setDebugLog(((TeiidStatement)statement).getDebugLog());
                         handleShowResults();
                     }
 

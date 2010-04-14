@@ -19,27 +19,29 @@ import com.metamatrix.query.sql.lang.Option;
  */
 public class OptionDisplayNode extends DisplayNode {
 
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
 
     /**
-     *   OptionDisplayNode constructor
-     *  @param parentNode the parent DisplayNode of this.
-     *  @param option the query language object used to construct this display node.
+     * OptionDisplayNode constructor
+     * 
+     * @param parentNode the parent DisplayNode of this.
+     * @param option the query language object used to construct this display node.
      */
-    public OptionDisplayNode(DisplayNode parentNode, Option option) {
+    public OptionDisplayNode( DisplayNode parentNode,
+                              Option option ) {
         this.parentNode = parentNode;
         this.languageObject = option;
         createChildNodes();
     }
 
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
     // METHODS
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
 
     /**
-     *   Create the child nodes for this type of DisplayNode.
+     * Create the child nodes for this type of DisplayNode.
      */
     private void createChildNodes() {
         // Build the Display Node List
@@ -47,92 +49,79 @@ public class OptionDisplayNode extends DisplayNode {
     }
 
     /**
-     *   Create the DisplayNode list for this type of DisplayNode.  This is a list of
-     *  all the lowest level nodes for this DisplayNode.
+     * Create the DisplayNode list for this type of DisplayNode. This is a list of all the lowest level nodes for this
+     * DisplayNode.
      */
     private void createDisplayNodeList() {
-        //if(childNodeList.size()==0) return;
+        // if(childNodeList.size()==0) return;
 
         displayNodeList = new ArrayList();
-//        int indent = this.getIndentLevel();
+        // int indent = this.getIndentLevel();
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.OPTION));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-//        if(isClauseIndentOn() && !DisplayNodeUtils.isWithinNoClauseIndentNode(this)) {
-//        	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));
-//        	indent++;
-//        }
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.OPTION));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
+        // if(isClauseIndentOn() && !DisplayNodeUtils.isWithinNoClauseIndentNode(this)) {
+        // displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));
+        // indent++;
+        // }
 
         Option option = (Option)(this.getLanguageObject());
-        if(option.getShowPlan()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.SHOWPLAN));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        }
-        if(option.getPlanOnly()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.PLANONLY));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        }
-        if(option.getDebug()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.DEBUG));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        }        
-        
+
         List makeDepGroups = option.getDependentGroups();
-        if(makeDepGroups != null && makeDepGroups.size() > 0) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.MAKEDEP));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-            
+        if (makeDepGroups != null && makeDepGroups.size() > 0) {
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.MAKEDEP));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
+
             Iterator iter = makeDepGroups.iterator();
-            String group = (String) iter.next();
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,group));
-            while(iter.hasNext()) {
-                group = (String) iter.next();   
-                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,COMMA+SPACE));
-                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,group));                
-            }    
+            String group = (String)iter.next();
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, group));
+            while (iter.hasNext()) {
+                group = (String)iter.next();
+                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, COMMA + SPACE));
+                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, group));
+            }
         }
 
         List makeNotDepGroups = option.getNotDependentGroups();
-        if(makeNotDepGroups != null && makeNotDepGroups.size() > 0) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.MAKENOTDEP));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-            
+        if (makeNotDepGroups != null && makeNotDepGroups.size() > 0) {
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.MAKENOTDEP));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
+
             Iterator iter = makeNotDepGroups.iterator();
-            String group = (String) iter.next();
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,group));
-            while(iter.hasNext()) {
-                group = (String) iter.next();   
-                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,COMMA+SPACE));
-                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,group));                
-            }    
+            String group = (String)iter.next();
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, group));
+            while (iter.hasNext()) {
+                group = (String)iter.next();
+                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, COMMA + SPACE));
+                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, group));
+            }
         }
 
         Collection noCacheGroups = option.getNoCacheGroups();
-        if(noCacheGroups != null && noCacheGroups.size() > 0) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.NOCACHE));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
+        if (noCacheGroups != null && noCacheGroups.size() > 0) {
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.NOCACHE));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
 
             Iterator gIter = noCacheGroups.iterator();
-            String group = (String) gIter.next();
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,group));
-            while(gIter.hasNext()) {
-                group = (String) gIter.next();   
-                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,COMMA+SPACE));
-                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,group));                
-            }    
-        }else if(option.isNoCache()){
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.NOCACHE));
-        }
-        
-        // No options were set, omit option
-        if(displayNodeList.size()==2) {
-        	displayNodeList.clear();
+            String group = (String)gIter.next();
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, group));
+            while (gIter.hasNext()) {
+                group = (String)gIter.next();
+                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, COMMA + SPACE));
+                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, group));
+            }
+        } else if (option.isNoCache()) {
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.NOCACHE));
         }
 
-//        if(isClauseCROn() && !DisplayNodeUtils.isWithinNoClauseIndentNode(this)) {
-//        	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));
-//        }
-	}
+        // No options were set, omit option
+        if (displayNodeList.size() == 2) {
+            displayNodeList.clear();
+        }
+
+        // if(isClauseCROn() && !DisplayNodeUtils.isWithinNoClauseIndentNode(this)) {
+        // displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));
+        // }
+    }
 
 }
-

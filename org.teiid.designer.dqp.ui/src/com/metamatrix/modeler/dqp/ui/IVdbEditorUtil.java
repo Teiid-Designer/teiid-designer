@@ -16,15 +16,6 @@ import org.teiid.designer.vdb.Vdb;
 public interface IVdbEditorUtil {
 
     /**
-     * Open the Connector Bindings editor for the specified <code>VdbEditingContext</code>
-     * 
-     * @param context
-     * @throws PartInitException
-     * @since 4.3
-     */
-    public void openConnectorBindingsEditor( Vdb vdb ) throws PartInitException;
-
-    /**
      * Display the Problems associated with the specified <code>VdbEditingContext</code>
      * 
      * @param context

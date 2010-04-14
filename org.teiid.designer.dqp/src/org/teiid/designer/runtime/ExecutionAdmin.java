@@ -180,8 +180,13 @@ public class ExecutionAdmin {
      * @throws Exception
      */
     public ConnectorType getConnectorType( String name ) {
-        CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
-        return this.connectorTypeByNameMap.get(name);
+        //        CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
+        // return this.connectorTypeByNameMap.get(name);
+        String fixedRarName = name;
+        if (fixedRarName.endsWith(".rar")) {
+            fixedRarName = fixedRarName.substring(0, fixedRarName.length() - 4);
+        }
+        return this.connectorTypeByNameMap.get(fixedRarName);
     }
 
     public Collection<ConnectorType> getConnectorTypes() {
@@ -255,9 +260,18 @@ public class ExecutionAdmin {
 
     protected void refreshConnectorTypes( Set<String> connectorTypeNames ) throws Exception {
         for (String connectorTypeName : connectorTypeNames) {
-            Collection<PropertyDefinition> propDefs = this.admin.getConnectorPropertyDefinitions(connectorTypeName);
-            ConnectorType connectorType = new ConnectorType(connectorTypeName, propDefs, this);
-            this.connectorTypeByNameMap.put(connectorTypeName, connectorType);
+            String fixedRarName = connectorTypeName;
+            if (fixedRarName.endsWith(".rar")) {
+                fixedRarName = fixedRarName.substring(0, fixedRarName.length() - 4);
+            }
+            Collection<PropertyDefinition> propDefs = this.admin.getConnectorPropertyDefinitions(fixedRarName);
+            ConnectorType connectorType = new ConnectorType(fixedRarName, propDefs, this);
+            this.connectorTypeByNameMap.put(fixedRarName, connectorType);
+            //
+            // Collection<PropertyDefinition> propDefs = this.admin.getConnectorPropertyDefinitions(connectorTypeName);
+            // System.out.println("ExecutionAdmin.refreshConnectorTypes() Adding typeName = " + connectorTypeName);
+            // ConnectorType connectorType = new ConnectorType(connectorTypeName, propDefs, this);
+            // this.connectorTypeByNameMap.put(connectorTypeName, connectorType);
         }
     }
 

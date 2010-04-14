@@ -37,7 +37,7 @@ import java.util.Properties;
 import java.util.Set;
 import com.metamatrix.common.util.ByteArrayHelper;
 import com.metamatrix.common.vdb.ModelInfo;
-import com.metamatrix.core.vdb.ModelType;
+import com.metamatrix.core.util.ModelType;
 
 /**
  */
