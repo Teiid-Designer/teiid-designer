@@ -35,6 +35,7 @@
 	<target name="local" unless="isInHudson">
 		<property name="WORKINGDIR" value="${basedir}/.." />
 		<property name="COMMON_TOOLS" value="${java.io.tmpdir}/build/downloads" />
+		<property name="writableBuildRoot" value="${WORKSPACE}/build" />
 	</target>
 
 	<!-- if required: use a newer version -->
@@ -201,6 +202,13 @@ COMMON_TOOLS=${COMMON_TOOLS}
 relengCommonBuilderDir=${relengCommonBuilderDir}
 relengBaseBuilderDir=${relengBaseBuilderDir}
 </echo>
+		<if>
+			<isset property="writableBuildRoot" />
+			<then>
+				<echo file="${build.properties}" append="true">writableBuildRoot=${writableBuildRoot}
+</echo>
+			</then>
+		</if>
 	</target>
 
 </project>
