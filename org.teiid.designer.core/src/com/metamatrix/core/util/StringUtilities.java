@@ -37,6 +37,12 @@ import com.metamatrix.core.MetaMatrixRuntimeException;
  * @author <a href="mailto:jverhaeg@metamatrix.com">John P. A. Verhaeg</a>
  */
 public class StringUtilities {
+    
+    /**
+     * An empty string.
+     */
+    public static String EMPTY_STRING = ""; //$NON-NLS-1$
+    
     /**
      * The String "\n"
      */
@@ -56,10 +62,6 @@ public class StringUtilities {
     // ############################################################################################################################
     // # Static Methods #
     // ############################################################################################################################
-
-    public static String getLineSeparator() {
-        return LINE_SEPARATOR;
-    }
 
     /**
      * Returns the path representing the concatenation of the specified path prefix and suffix. The resulting path is guaranteed
@@ -85,37 +87,50 @@ public class StringUtilities {
     }
 
     /**
-     * Returns a new string that lowercases the first character in the passed in value String
-     * 
-     * @param value
-     * @return String
+     * @param originalString
+     * @param maxLength
+     * @param endLength
+     * @param middleString
+     * @return
+     * @since 5.0
      */
-    public static String lowerCaseFirstChar( final String value ) {
-        if (value == null) {
-            return null;
+    public static String condenseToLength( String originalString,
+                                           int maxLength,
+                                           int endLength,
+                                           String middleString ) {
+        if (originalString.length() <= maxLength) {
+            return originalString;
         }
+        int originalLength = originalString.length();
+        StringBuffer sb = new StringBuffer(maxLength);
+        sb.append(originalString.substring(0, maxLength - endLength - middleString.length()));
+        sb.append(middleString);
+        sb.append(originalString.substring(originalLength - endLength, originalLength));
 
-        // Lower case the first char and try to look-up the SF
-        String firstChar = new Character(value.charAt(0)).toString();
-        firstChar = firstChar.toLowerCase();
-        return (firstChar + value.substring(1));
+        return sb.toString();
     }
 
     /**
-     * Returns a new string that uppercases the first character in the passed in value String
+     * Returns a new string that represents the last fragment of the original string that begins with an uppercase char. Ex:
+     * "getSuperTypes" would return "Types".
      * 
      * @param value
      * @return String
      */
-    public static String upperCaseFirstChar( final String value ) {
+    public static String getLastUpperCharToken( final String value ) {
         if (value == null) {
             return null;
         }
 
-        // Lower case the first char and try to look-up the SF
-        String firstChar = new Character(value.charAt(0)).toString();
-        firstChar = firstChar.toUpperCase();
-        return (firstChar + value.substring(1));
+        StringBuffer result = new StringBuffer();
+        for (int i = value.length() - 1; i >= 0; i--) {
+            result.insert(0, value.charAt(i));
+            if (Character.isUpperCase(value.charAt(i))) {
+                return result.toString();
+            }
+        }
+
+        return result.toString();
     }
 
     /**
@@ -149,29 +164,6 @@ public class StringUtilities {
         return result.toString() + lastToken;
     }
 
-    /**
-     * Returns a new string that represents the last fragment of the original string that begins with an uppercase char. Ex:
-     * "getSuperTypes" would return "Types".
-     * 
-     * @param value
-     * @return String
-     */
-    public static String getLastUpperCharToken( final String value ) {
-        if (value == null) {
-            return null;
-        }
-
-        StringBuffer result = new StringBuffer();
-        for (int i = value.length() - 1; i >= 0; i--) {
-            result.insert(0, value.charAt(i));
-            if (Character.isUpperCase(value.charAt(i))) {
-                return result.toString();
-            }
-        }
-
-        return result.toString();
-    }
-
     public static String[] getLines( final String value ) {
         StringReader stringReader = new StringReader(value);
         BufferedReader reader = new BufferedReader(stringReader);
@@ -186,6 +178,37 @@ public class StringUtilities {
             throw new MetaMatrixRuntimeException(e);
         }
         return (String[])result.toArray(new String[result.size()]);
+    }
+
+    public static String getLineSeparator() {
+        return LINE_SEPARATOR;
+    }
+
+    /**
+     * Indicates if the specified text is either empty or <code>null</code>.
+     * 
+     * @param text the text being checked (may be <code>null</code>)
+     * @return <code>true</code> if the specified text is either empty or <code>null</code>
+     */
+    public static boolean isEmpty( String text ) {
+        return ((text == null) || (text.length() == 0));
+    }
+
+    /**
+     * Returns a new string that lowercases the first character in the passed in value String
+     * 
+     * @param value
+     * @return String
+     */
+    public static String lowerCaseFirstChar( final String value ) {
+        if (value == null) {
+            return null;
+        }
+
+        // Lower case the first char and try to look-up the SF
+        String firstChar = new Character(value.charAt(0)).toString();
+        firstChar = firstChar.toLowerCase();
+        return (firstChar + value.substring(1));
     }
 
     public static String removeChars( final String value,
@@ -203,6 +226,17 @@ public class StringUtilities {
             result.append(value);
         }
         return result.toString();
+    }
+
+    /**
+     * Replaces multiple sequential "whitespace" characters from the specified string with a single space character, where
+     * whitespace includes \r\t\n and other characters
+     * 
+     * @param value the string to work with
+     * @see java.util.regex.Pattern
+     */
+    public static String removeExtraWhitespace( String value ) {
+        return value.replaceAll("\\s\\s+", " "); //$NON-NLS-1$//$NON-NLS-2$
     }
 
     /**
@@ -240,37 +274,19 @@ public class StringUtilities {
     }
 
     /**
-     * Replaces multiple sequential "whitespace" characters from the specified string with a single space character, where
-     * whitespace includes \r\t\n and other characters
+     * Returns a new string that uppercases the first character in the passed in value String
      * 
-     * @param value the string to work with
-     * @see java.util.regex.Pattern
+     * @param value
+     * @return String
      */
-    public static String removeExtraWhitespace( String value ) {
-        return value.replaceAll("\\s\\s+", " "); //$NON-NLS-1$//$NON-NLS-2$
-    }
-
-    /**
-     * @param originalString
-     * @param maxLength
-     * @param endLength
-     * @param middleString
-     * @return
-     * @since 5.0
-     */
-    public static String condenseToLength( String originalString,
-                                           int maxLength,
-                                           int endLength,
-                                           String middleString ) {
-        if (originalString.length() <= maxLength) {
-            return originalString;
+    public static String upperCaseFirstChar( final String value ) {
+        if (value == null) {
+            return null;
         }
-        int originalLength = originalString.length();
-        StringBuffer sb = new StringBuffer(maxLength);
-        sb.append(originalString.substring(0, maxLength - endLength - middleString.length()));
-        sb.append(middleString);
-        sb.append(originalString.substring(originalLength - endLength, originalLength));
 
-        return sb.toString();
+        // Lower case the first char and try to look-up the SF
+        String firstChar = new Character(value.charAt(0)).toString();
+        firstChar = firstChar.toUpperCase();
+        return (firstChar + value.substring(1));
     }
 }
