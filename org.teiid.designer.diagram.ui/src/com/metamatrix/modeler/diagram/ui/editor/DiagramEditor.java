@@ -173,7 +173,7 @@ public class DiagramEditor extends GraphicalEditor
     private Collection completionListeners;
 
     // cache adapters so that they can be reused
-    private Map adapterMap = new HashMap();
+    private final Map adapterMap = new HashMap();
 
     public DiagramEditor() {
         DiagramUiUtilities.setLoggingLevel(DiagramUiUtilities.LOG_NONE);
@@ -185,135 +185,36 @@ public class DiagramEditor extends GraphicalEditor
     }
 
     /**
-     * @see org.eclipse.ui.IEditorPart#init(IEditorSite, IEditorInput)
+     * @see com.metamatrix.modeler.ui.editors.IInitializationCompleteNotifier#addListener(com.metamatrix.modeler.ui.editors.IInitializationCompleteListener)
+     * @since 4.3
      */
-    @Override
-    public void init( IEditorSite iSite,
-                      IEditorInput iInput ) {
-        setSite(iSite);
-        setInput(iInput);
+    public void addListener( final IInitializationCompleteListener theListener ) {
+        if (completionListeners == null) completionListeners = new ArrayList();
 
-        markerListener = new IResourceChangeListener() {
-            public void resourceChanged( IResourceChangeEvent event ) {
-
-                if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
-                    // Let's see if all dependencies are open in workspace.
-                    if (getDiagram() != null && getDiagram().getTarget() != null
-                        && !ModelObjectUtilities.isStale(getDiagram().getTarget())) {
-                        ModelResource currentMR = ModelUtilities.getModelResourceForModelObject(getDiagram());
-                        boolean allDepExist = ModelUtilities.allDependenciesOpenInWorkspace(currentMR);
-                        if (allDepExist) {
-                            final IMarkerDelta[] deltas = event.findMarkerDeltas(null, true);
-
-                            if (deltas != null && deltas.length > 0) {
-
-                                List visitedResources = new ArrayList();
-                                // boolean which will break this method out of it's loop
-                                // We only need to refresh the diagram once here
-
-                                boolean foundRefreshableResource = false;
-
-                                for (int i = 0; i < deltas.length; i++) {
-                                    IResource eventResource = deltas[i].getResource();
-                                    // Need to only look at a delta's resource if we haven't looked at it before.
-                                    if (!visitedResources.contains(eventResource)) {
-                                        if (ModelUtilities.isModelFile(eventResource)) {
-                                            ModelResource mr = null;
-                                            try {
-                                                mr = ModelUtilities.getModelResource((IFile)eventResource, false);
-                                            } catch (ModelWorkspaceException e) {
-                                                DiagramUiConstants.Util.log(e);
-                                                WidgetUtil.showError(e);
-                                            }
-                                            if (mr != null && getDiagram() != null) {
-                                                if (currentMR != null && mr.equals(currentMR)) {
-                                                    boolean refreshDiagram = getDecoratorHandler().handleResouceChanged();
-                                                    if (refreshDiagram) {
-                                                        foundRefreshableResource = true;
-                                                        refreshDiagramSafe();
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        if (!foundRefreshableResource) visitedResources.add(eventResource);
-                                    }
-                                    if (foundRefreshableResource) break;
-                                }
-                                updateReadOnlyState();
-                            }
-                        } else {
-                            // We know that something happened that removed a dependent model
-                            Display.getDefault().syncExec(new Runnable() {
-                                public void run() {
-                                    openContext(getDiagram());
-                                    updateReadOnlyState();
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-        };
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(markerListener);
-        ((AbstractActionService)DiagramUiPlugin.getDefault().getActionService(iSite.getPage())).addPartListener(this);
-
+        completionListeners.add(theListener);
     }
 
     /**
-     * @see org.eclipse.gef.ui.parts.GraphicalEditor#initializeGraphicalViewer()
-     **/
-    @Override
-    protected void initializeGraphicalViewer() {
-        initializeDiagram();
+     * @see com.metamatrix.modeler.diagram.ui.actions.AutoLayout#autoLayout()
+     */
+    public void autoLayout() {
+        if (getCurrentModel() != null && getGraphicalViewer().getContents() instanceof DiagramEditPart) {
+            final DiagramEditPart diagram = (DiagramEditPart)getGraphicalViewer().getContents();
+
+            /* componentLayout() is called to give the components that have "children" a chance to layout
+             * those children. Classifiers, for instance have model children which result in Attribute
+             * Edit parts being created.  The Classifier has already been constructed but still needs to
+             * layout the attributes.
+             */
+            diagram.setUnderConstruction(true);
+            diagram.layout();
+            diagram.constructionCompleted(true);
+            if (getDiagramController() != null) getDiagramController().updateForAutoLayout();
+        }
     }
 
-    protected void initializeDiagram() {
-        // Here's where we go ahead and if the input is an IFile and we can find the model resource
-        // If we can find a model resource, we can open it's package diagram
-        if (getEditorInput() instanceof IFileEditorInput) {
-            Display.getCurrent().asyncExec(new Runnable() {
-                public void run() {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e1) {
-                        String message = this.getClass().getName() + ":  initializeDiagram() error sleeping on Thread"; //$NON-NLS-1$
-                        DiagramUiConstants.Util.log(IStatus.ERROR, e1, message);
-                    }
-
-                    if (initializeModelPackage) {
-                        IFileEditorInput ifei = (IFileEditorInput)getEditorInput();
-                        IFile modelFile = ifei.getFile();
-
-                        ModelResource mr = null;
-                        try {
-                            mr = ModelUtilities.getModelResource(modelFile, true);
-                        } catch (ModelWorkspaceException e) {
-                            String message = this.getClass().getName()
-                                             + ":  initializeDiagram() error finding model resource for file = " + modelFile; //$NON-NLS-1$
-                            DiagramUiConstants.Util.log(IStatus.ERROR, e, message);
-                            WidgetUtil.showError(e);
-                        }
-
-                        if (mr != null) {
-                            bOkToCreateMarkers = false;
-
-                            openContext(mr);
-
-                            bOkToCreateMarkers = true;
-
-                        }
-                    }
-                }
-            });
-
-        } else {
-            setCurrentModel(new DummyDiagramNode());
-            getGraphicalViewer().setContents(getCurrentModel());
-        }
-
-        // capture it here so we are assured of having at least the resource
-        // oLatestInput = getEditorInput();
-
+    private void autoSelect() {
+        if (meParentEditor != null) ModelEditorManager.autoSelectEditor(meParentEditor, this);
     }
 
     // jhTODO: for rename/delete keybindings
@@ -322,236 +223,80 @@ public class DiagramEditor extends GraphicalEditor
     // //// }
     // ////
 
-    public DiagramModelNode getCurrentModel() {
-        return currentModel;
-    }
-
-    protected void setCurrentModel( DiagramModelNode newDiagramModelNode ) {
-        this.currentModel = newDiagramModelNode;
-    }
-
-    public Diagram getDiagram() {
-        if (diagramInput != null) {
-            return diagramInput.getDiagram();
-        }
-
-        return null;
-    }
-
-    public HashMap getTreeStatesMap() {
-        /*
-         * key: document eobject
-         * val: Object[]    // tree expanded state
-         */
-        if (hmapModelTreeStates == null) {
-            hmapModelTreeStates = new HashMap();
-        }
-
-        return hmapModelTreeStates;
-    }
-
     /**
-     * @see org.eclipse.ui.IEditorPart#isSaveAsAllowed()
-     **/
-    @Override
-    public boolean isSaveAsAllowed() {
-        return false;
-    }
-
-    /**
-     * @see org.eclipse.ui.IEditorPart#doSave(IProgressMonitor)
-     **/
-    @Override
-    public void doSave( IProgressMonitor iMonitor ) {
-    }
-
-    /**
-     * @see org.eclipse.ui.IEditorPart#doSaveAs()
-     **/
-    @Override
-    public void doSaveAs() {
-    }
-
-    /**
-     * <p>
-     * </p>
-     * 
-     * @see org.eclipse.ui.INavigationLocationProvider#createEmptyNavigationLocation()
-     * @since 4.0
+     * @see com.metamatrix.modeler.diagram.ui.actions.AutoLayout#canAutoLayout()
      */
-    public INavigationLocation createEmptyNavigationLocation() {
-        //        System.out.println("[DiagramEditor.createEmptyNavigationLocation] TOP"); //$NON-NLS-1$
-        return null;
-        // return neNavigableEditor.createEmptyNavigationLocation();
+    public boolean canAutoLayout() {
+        return true;
     }
 
     /**
-     * <p>
-     * </p>
-     * 
-     * @see org.eclipse.ui.INavigationLocationProvider#createNavigationLocation()
-     * @since 4.0
+     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#canDisplay(org.eclipse.ui.IEditorInput)
      */
-    public INavigationLocation createNavigationLocation() {
-        //        System.out.println("[DiagramEditor.createNavigationLocation] TOP"); //$NON-NLS-1$
-        INavigationLocation newLocation = null;
+    public boolean canDisplay( final IEditorInput input ) {
+        boolean result = false;
+        ModelResource mr = null;
 
-        // newLocation = neNavigableEditor.createNavigationLocation();
-        // if( newLocation instanceof DefaultModelEditorNavigationLocation && getDiagram() != null ) {
-        // EObject target = getDiagram().getTarget();
-        // if( target != null && !(target instanceof ModelAnnotation) ) {
-        // String pathFromModelToTarget = ModelerCore.getModelEditor().getModelRelativePathIncludingModel(target).toString();
-        // if( pathFromModelToTarget != null ) {
-        // ((DefaultModelEditorNavigationLocation)newLocation).setText(pathFromModelToTarget);
-        // }
-        // }
-        // }
-        return newLocation;
-    }
+        if (input instanceof EObject) mr = ModelUtilities.getModelResourceForModelObject((EObject)input);
+        else if (input instanceof ModelResource) mr = (ModelResource)input;
+        else if (input instanceof IFileEditorInput) {
+            final IFileEditorInput ifei = (IFileEditorInput)input;
+            final IFile modelFile = ifei.getFile();
 
-    /**
-     * @see com.metamatrix.modeler.ui.editors.INavigationSupported
-     **/
-    public IMarker createMarker() {
-
-        NavigationMarker nmMarker = new NavigationMarker();
-        nmMarker.setAttribute(Navigation.MARKER_TYPE, Navigation.NAVIGATION);
-        nmMarker.setAttribute(Navigation.CURRENT_INPUT, getDiagram());
-
-        // if (UiConstants.Util.isDebugEnabled(DebugConstants.NAVIGATION) ) {
-        //                UiConstants.Util.print(DebugConstants.NAVIGATION, THIS_CLASS + ".createMarker();  curr diagram saved: " + getDiagram() ); //$NON-NLS-1$
-        //                UiConstants.Util.print(DebugConstants.NAVIGATION, THIS_CLASS + ".createMarker();  Nav History Count: " + neNavigableEditor.getNavHistoryCount() ); //$NON-NLS-1$
-        // }
-
-        // also save Selections
-        updateSelectionsInMarker(nmMarker);
-        mMostRecentlyCreatedMarker = nmMarker;
-        return nmMarker;
-    }
-
-    private void updateSelectionsInMarker( IMarker mMostRecentlyCreatedMarker ) {
-
-        if (mMostRecentlyCreatedMarker != null) {
-
-            try {
-
-                // update Selection
-                if (getSelectionHandler() != null) {
-
-                    List lstEObjects = getSelectionHandler().getSelectedEObjects();
-                    mMostRecentlyCreatedMarker.setAttribute(Navigation.CURRENT_SELECTION, lstEObjects);
-                }
-
-            } catch (CoreException ce) {
-                String message = this.getClass().getName() + ":  updateSelectionsInMarker() error  "; //$NON-NLS-1$
-                DiagramUiConstants.Util.log(IStatus.ERROR, ce, message);
-            }
-        }
-
-    }
-
-    /**
-     * @see org.eclipse.ui.IEditorPart#gotoMarker(IMarker)
-     **/
-    public void gotoMarker( IMarker iMarker ) {
-        /*
-         *
-         * 1.  the marker should also have SELECTED_OBJECT
-         *   retrieve it and then:
-         *          getSelectionHandler().select( oSelectedObject );
-         */
-        String sMarkerType = iMarker.getAttribute(Navigation.MARKER_TYPE, Navigation.UNKNOWN);
-
-        if (sMarkerType.equals(Navigation.NAVIGATION)) {
-
-            // close the createMarker feature during this operation:
-            bOkToCreateMarkers = false;
-
-            Object oInput = MarkerUtilities.getMarkerAttribute(iMarker, Navigation.CURRENT_INPUT); // iMarker.getAttribute(
-            if (oInput != null) {
-                if (canOpenContext(oInput)) {
-                    openContext(oInput);
-
-                    // reset selection
-                    List lstSelection = (List)MarkerUtilities.getMarkerAttribute(iMarker, Navigation.CURRENT_SELECTION); // iMarker.getAttribute(
-                    // Navigation.CURRENT_SELECTION
-                    // );
-
-                    if (lstSelection != null) {
-
-                        Iterator it = lstSelection.iterator();
-
-                        while (it.hasNext()) {
-                            EObject eoTemp = (EObject)it.next();
-                            getSelectionHandler().select(eoTemp);
-                        }
-                    }
-
-                    // force the parent container to display us
-                    getParent().displayModelEditorPage(this);
-                }
-            }
-        }
-        // open up createMarker again:
-        bOkToCreateMarkers = true;
-
-        // quit now (skip the remainder of this method)
-        if (sMarkerType.equals(Navigation.NAVIGATION)) {
-            return;
-        }
-
-        // if NOT a navigation marker, handle this way:
-        EObject targetEObject = ModelObjectUtilities.getMarkedEObject(iMarker);
-
-        if (targetEObject != null) {
-            // Here's where we should open up the package diagram for the object so it can be viewed for
-            // edit and selected so it's properties are in the pop.
-            // PackageDiagramProvider pdp = new PackageDiagramProvider();
-            // Diagram packageDiagram = pdp.getPackageDiagram(targetEObject);
-
-            Diagram someDiagram = DiagramUiPlugin.getDiagramTypeManager().getDiagramForGoToMarkerEObject(targetEObject, true);
-
-            if (someDiagram != null) {
-                if (getDiagram() == null || !someDiagram.equals(getDiagram())) {
-                    if (canOpenContext(someDiagram)) {
-                        openContext(someDiagram);
-                        // defect 18922 - notify diagram ctrlr if changing selection:
-                        if (getDiagramController() != null) {
-                            getDiagramController().selectionChanged(getParent(), new StructuredSelection(targetEObject));
-                        } else if (getSelectionHandler() != null) {
-                            getSelectionHandler().select(targetEObject);
-                        } // endif
-                    }
-                } else if (getDiagram() != null && someDiagram.equals(getDiagram())) {
-                    // defect 18922 - notify diagram ctrlr if changing selection:
-                    if (getDiagramController() != null) {
-                        getDiagramController().selectionChanged(getParent(), new StructuredSelection(targetEObject));
-                    } else if (getSelectionHandler() != null) {
-                        getSelectionHandler().select(targetEObject);
-                    } // endif
-
-                }
+            if (ModelUtil.isXsdFile(modelFile)) result = false;
+            else try {
+                mr = ModelUtilities.getModelResource(modelFile, true);
+            } catch (final ModelWorkspaceException e) {
+                final String message = this.getClass().getName()
+                                       + ":  canDisplay() error finding model resource for file = " + modelFile; //$NON-NLS-1$
+                DiagramUiConstants.Util.log(IStatus.ERROR, e, message);
             }
 
         }
+        if (mr != null) result = ModelUtilities.supportsDiagrams(mr);
+
+        return result;
     }
 
     /**
-     * @see org.eclipse.ui.IEditorPart#isDirty()
-     **/
-    @Override
-    public boolean isDirty() {
+     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#canOpenContext(java.lang.Object)
+     */
+    public boolean canOpenContext( final Object input ) {
+        return DiagramUiPlugin.getDiagramTypeManager().canOpenContext(input);
+    }
+
+    public boolean checkValidity( final String callPrefix ) {
+        // Check if diagram == null, diagram resource == null
+        if (getDiagram() == null) // String message = callPrefix + ":  checkValidity() ERROR - Diagram == NULL";
+        // DiagramUiPlugin.Util.log(IStatus.ERROR, message);
         return false;
+
+        final ModelResource mr = ModelUtilities.getModelResourceForModelObject(getDiagram());
+        if (mr == null) // String message = callPrefix + ":  checkValidity() ERROR - Model Resource == NULL for current diagram.";
+        // DiagramUiPlugin.Util.log(IStatus.ERROR, message);
+        return false;
+
+        if (DiagramUiUtilities.isValidDiagram(getDiagram())) return false;
+
+        return true;
     }
 
-    protected void setInitialPartFactory() {
-        viewer.setEditPartFactory(new DummyDiagramPartFactory());
+    private void clearCurrentDiagram() {
+        // Cleanup work??
+        // Start with clearing all associations.
+        if (getCurrentModel() != null) {
+            setCurrentModel(null);
+            diagramInput = null;
+        }
+        if (!getDiagramViewer().getSelectedEditParts().isEmpty()) getDiagramViewer().deselectAll();
+        resetRootEditPart();
     }
 
-    public DiagramDecoratorHandler getDecoratorHandler() {
-        if (decoratorHandler == null) decoratorHandler = new DiagramDecoratorHandler(this);
+    private void clearDiagramToolbar() {
+        getToolBarManager().removeAll();
+        getToolBarManager().update(true);
+        diagramViewForm.redraw();
 
-        return decoratorHandler;
     }
 
     /**
@@ -579,114 +324,30 @@ public class DiagramEditor extends GraphicalEditor
         this.getControl().addMouseTrackListener(new MouseTrackAdapter() {
 
             @Override
-            public void mouseExit( MouseEvent e ) {
+            public void mouseExit( final MouseEvent e ) {
                 if (e.x < 0 && getSelectionHandler() != null) getSelectionHandler().fireMouseExit();
             }
         });
     }
 
-    protected ScaledFont getFontManager() {
-        if (scaledFontManager == null) scaledFontManager = new DiagramFontManager(viewer);
-
-        return scaledFontManager;
-    }
-
-    @Override
-    public Object getAdapter( Class type ) {
-
-        if (type == ZoomManager.class && getDiagramViewer().isValidViewer() && getDiagramViewer().getRootEditPart() != null) {
-            ZoomManager zm = ((ScalableFreeformRootEditPart)getGraphicalViewer().getRootEditPart()).getZoomManager();
-            zm.setZoomLevels(DiagramUiConstants.Zoom.zoomValues);
-            zm.setZoom(zoomFactor);
-            return zm;
-        }
-
-        if (type == ScaledFont.class) {
-            return getFontManager();
-        }
-
-        if (type == AutoLayout.class) {
-            return this;
-        }
-
-        if (type == IDiagramActionAdapter.class) {
-            if (getDiagramActionAdapter() != null) {
-                return getDiagramActionAdapter();
-            }
-        }
-
-        if (type == IPrintable.class) {
-            if (this.getGraphicalViewer() != null) {
-                return new Printable(getGraphicalViewer());
-            }
-        }
-
-        return super.getAdapter(type);
-    }
-
-    private void saveZoom() {
-        ZoomManager zm = ((ScalableFreeformRootEditPart)getGraphicalViewer().getRootEditPart()).getZoomManager();
-        zoomFactor = zm.getZoom();
-    }
-
-    public void resetZoom() {
-        ZoomManager zm = ((ScalableFreeformRootEditPart)getGraphicalViewer().getRootEditPart()).getZoomManager();
-        zm.setZoom(zoomFactor);
-    }
-
-    public IDiagramActionAdapter getDiagramActionAdapter() {
-        return currentActionAdapter;
-    }
-
-    private void setDiagramActionAdapter( Diagram newDiagram ) {
-        if (newDiagram != null) {
-            if (currentActionAdapter == null || isNewDiagram(newDiagram)) {
-                // deactivate current adapter
-                if (this.currentActionAdapter != null) {
-                    this.currentActionAdapter.pageDeactivated();
-                }
-
-                // if an adapter for this type has already been used, use it.
-                // otherwise construct a new one
-                String type = newDiagram.getType();
-                IDiagramActionAdapter newAdapter = (IDiagramActionAdapter)adapterMap.get(type);
-
-                if (newAdapter == null) {
-                    newAdapter = DiagramUiPlugin.getDiagramTypeManager().getDiagram(type).getActionAdapter(this);
-
-                    if (newAdapter != null) {
-                        adapterMap.put(type, newAdapter);
-                    }
-                }
-
-                if (newAdapter != null) {
-                    newAdapter.setDiagramEditor(this);
-                }
-
-                this.currentActionAdapter = newAdapter;
-            }
-        }
-        // jhTODO: for rename/delete keybindings
-
-        //////        System.out.println("[DiagramEditor.setDiagramActionAdapter] About to call initializeKeyBindings();"); //$NON-NLS-1$
-        // //// initializeKeyBindings();
-
-    }
-
-    // This private method will only work when called before the setDiagram() is called in openContext();
-    private boolean isNewDiagram( Diagram newDiagram ) {
-        if (newDiagram == null && getDiagram() == null) return false;
-
-        if (getDiagram() != null && newDiagram != null && newDiagram.getType().equals(getDiagram().getType())) return false;
-
-        return true;
+    /**
+     * <p>
+     * </p>
+     * 
+     * @see org.eclipse.ui.INavigationLocationProvider#createEmptyNavigationLocation()
+     * @since 4.0
+     */
+    public INavigationLocation createEmptyNavigationLocation() {
+        //        System.out.println("[DiagramEditor.createEmptyNavigationLocation] TOP"); //$NON-NLS-1$
+        return null;
+        // return neNavigableEditor.createEmptyNavigationLocation();
     }
 
     /**
      * Creates the GraphicalViewer on the specified <code>Composite</code>.
      */
     @Override
-    protected void createGraphicalViewer( Composite parent ) {
+    protected void createGraphicalViewer( final Composite parent ) {
         // System.out.println("  -->>  DE.createGraphicalViewer(START) calling viewer.createControl() DVF.isDisposed() = " +
         // diagramViewForm.isDisposed());
         viewer.createControl((Composite)diagramViewForm.getSashForm());
@@ -704,8 +365,186 @@ public class DiagramEditor extends GraphicalEditor
     }
 
     /**
-     * Returns the KeyHandler with common bindings for both the Outline and Graphical Views. For example, delete is a common
-     * action.
+     * @see com.metamatrix.modeler.ui.editors.INavigationSupported
+     **/
+    public IMarker createMarker() {
+
+        final NavigationMarker nmMarker = new NavigationMarker();
+        nmMarker.setAttribute(Navigation.MARKER_TYPE, Navigation.NAVIGATION);
+        nmMarker.setAttribute(Navigation.CURRENT_INPUT, getDiagram());
+
+        // if (UiConstants.Util.isDebugEnabled(DebugConstants.NAVIGATION) ) {
+        //                UiConstants.Util.print(DebugConstants.NAVIGATION, THIS_CLASS + ".createMarker();  curr diagram saved: " + getDiagram() ); //$NON-NLS-1$
+        //                UiConstants.Util.print(DebugConstants.NAVIGATION, THIS_CLASS + ".createMarker();  Nav History Count: " + neNavigableEditor.getNavHistoryCount() ); //$NON-NLS-1$
+        // }
+
+        // also save Selections
+        updateSelectionsInMarker(nmMarker);
+        mMostRecentlyCreatedMarker = nmMarker;
+        return nmMarker;
+    }
+
+    protected void createModel( final Diagram diagram,
+                                final IProgressMonitor monitor ) {
+        if (getModelFactory() != null) {
+
+            diagramInput = new DiagramEditorInput(diagram);
+
+            setCurrentModel(getModelFactory().createModel(diagram, getNotationId(), monitor));
+
+            final DiagramEditPartFactory newEditPartFactory = DiagramUiPlugin.getDiagramTypeManager().getDiagram(diagram.getType()).getEditPartFactory();
+            newEditPartFactory.setNotationId(getNotationId());
+            createSelectionHandler(diagram, viewer);
+            newEditPartFactory.setSelectionHandler(getSelectionHandler());
+            viewer.setEditPartFactory(newEditPartFactory);
+        }
+    }
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @see org.eclipse.ui.INavigationLocationProvider#createNavigationLocation()
+     * @since 4.0
+     */
+    public INavigationLocation createNavigationLocation() {
+        //        System.out.println("[DiagramEditor.createNavigationLocation] TOP"); //$NON-NLS-1$
+        final INavigationLocation newLocation = null;
+
+        // newLocation = neNavigableEditor.createNavigationLocation();
+        // if( newLocation instanceof DefaultModelEditorNavigationLocation && getDiagram() != null ) {
+        // EObject target = getDiagram().getTarget();
+        // if( target != null && !(target instanceof ModelAnnotation) ) {
+        // String pathFromModelToTarget = ModelerCore.getModelEditor().getModelRelativePathIncludingModel(target).toString();
+        // if( pathFromModelToTarget != null ) {
+        // ((DefaultModelEditorNavigationLocation)newLocation).setText(pathFromModelToTarget);
+        // }
+        // }
+        // }
+        return newLocation;
+    }
+
+    /**
+     * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public void createPartControl( final Composite parent ) {
+        // System.out.println("  -->>  DE.createPartControl() Creating ViewForm and ToolBar() ");
+        diagramViewForm = new DiagramViewForm(parent, SWT.BORDER);
+        toolBar = new ToolBar(diagramViewForm, SWT.FLAT | SWT.WRAP | SWT.VERTICAL);
+        // toolBar.setLayout(new GridLayout());
+        // GridData data = new GridData(GridData.HORIZONTAL_ALIGN_END, SWT.FILL, false, true); //GridData.HORIZONTAL_ALIGN_END |
+        // GridData.VERTICAL_ALIGN_END);
+        // toolBar.setLayoutData(data);SWT.VERTICAL
+
+        diagramViewForm.setToolBar(toolBar);
+
+        toolBarManager = new DiagramToolBarManager(toolBar);
+
+        super.createPartControl(diagramViewForm);
+
+        toolBarManager.update(true);
+        parent.addDisposeListener(new DisposeListener() {
+            public void widgetDisposed( final DisposeEvent e ) {
+                final DiagramController dController = getDiagramController();
+                if (dController != null) dController.dispose();
+            }
+        });
+        // System.out.println("  -->>  DE.createPartControl() ViewForm.isDisposed() = " + diagramViewForm.isDisposed());
+    }
+
+    protected void createSelectionHandler( final Diagram diagram,
+                                           final DiagramViewer theViewer ) {
+        selectionHandler = DiagramUiPlugin.getDiagramTypeManager().getDiagram(diagram.getType()).getSelectionHandler(theViewer);
+    }
+
+    /**
+     * @see org.eclipse.ui.IWorkbenchPart#dispose()
+     * @since 5.0
+     */
+    @Override
+    public void dispose() {
+        // dispose the action adapters
+        if (!this.adapterMap.isEmpty()) {
+            final Iterator itr = this.adapterMap.values().iterator();
+
+            while (itr.hasNext())
+                ((IDiagramActionAdapter)itr.next()).disposeOfActions();
+        }
+
+        DiagramUiPlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator().removeListener(this);
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(markerListener);
+        ((AbstractActionService)DiagramUiPlugin.getDefault().getActionService(getEditorSite().getPage())).removePartListener(this);
+        if (toolBarManager != null) {
+            // System.out.println("  -->>  DE.dispose() calling toolBarManager.dispose() TBM = NULL");
+            toolBarManager.dispose();
+            toolBarManager = null;
+        }
+
+        if (dacDiagramActionContributor != null) {
+            dacDiagramActionContributor.dispose();
+            dacDiagramActionContributor = null;
+        }
+
+        if (currentActionAdapter != null) currentActionAdapter = null;
+    }
+
+    /**
+     * @see com.metamatrix.modeler.diagram.ui.actions.AutoLayout#canAutoLayout()
+     */
+    public void doRefreshDiagram() {
+        refreshDiagramSafe();
+        autoLayout();
+    }
+
+    /**
+     * @see org.eclipse.ui.IEditorPart#doSave(IProgressMonitor)
+     **/
+    @Override
+    public void doSave( final IProgressMonitor iMonitor ) {
+    }
+
+    /**
+     * @see org.eclipse.ui.IEditorPart#doSaveAs()
+     **/
+    @Override
+    public void doSaveAs() {
+    }
+
+    /**
+     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#getEditorActionBarContributor()
+     */
+    public AbstractModelEditorPageActionBarContributor getActionBarContributor() {
+        // jh experiment: commenting out the 'if null' logic.
+        // this way, we'll always provide a new one, but that one will persist
+        // until a new one is required...Whoa..that led to an NPE???
+        if (dacDiagramActionContributor == null) dacDiagramActionContributor = new DiagramActionContributor(this);
+        return dacDiagramActionContributor;
+    }
+
+    @Override
+    public Object getAdapter( final Class type ) {
+
+        if (type == ZoomManager.class && getDiagramViewer().isValidViewer() && getDiagramViewer().getRootEditPart() != null) {
+            final ZoomManager zm = ((ScalableFreeformRootEditPart)getGraphicalViewer().getRootEditPart()).getZoomManager();
+            zm.setZoomLevels(DiagramUiConstants.Zoom.zoomValues);
+            zm.setZoom(zoomFactor);
+            return zm;
+        }
+
+        if (type == ScaledFont.class) return getFontManager();
+
+        if (type == AutoLayout.class) return this;
+
+        if (type == IDiagramActionAdapter.class) if (getDiagramActionAdapter() != null) return getDiagramActionAdapter();
+
+        if (type == IPrintable.class) if (this.getGraphicalViewer() != null) return new Printable(getGraphicalViewer());
+
+        return super.getAdapter(type);
+    }
+
+    /**
+     * Returns the KeyHandler with common bindings for both the Outline and Graphical Views. For example, delete is a common action.
      */
     protected KeyHandler getCommonKeyHandler() {
         //////        System.out.println("[DiagramEditor.getCommonKeyHandler] TOP"); //$NON-NLS-1$
@@ -723,205 +562,577 @@ public class DiagramEditor extends GraphicalEditor
         return sharedKeyHandler;
     }
 
-    protected void createSelectionHandler( Diagram diagram,
-                                           DiagramViewer theViewer ) {
-        selectionHandler = DiagramUiPlugin.getDiagramTypeManager().getDiagram(diagram.getType()).getSelectionHandler(theViewer);
+    /**
+     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#getControl()
+     */
+    public Control getControl() {
+        return viewer.getControl();
     }
 
-    protected IDiagramSelectionHandler getSelectionHandler() {
-        return selectionHandler;
+    public DiagramModelNode getCurrentModel() {
+        return currentModel;
     }
 
-    private void resetRootEditPart() {
-        RootEditPart root = viewer.getRootEditPart();
-        if (root != null && dacDiagramActionContributor != null) dacDiagramActionContributor.tellZoomWrappersToClose();
-        if (root != null) {
-            if (!(root instanceof ScalableFreeformRootEditPart)) {
-                // ORIG root = new ScalableFreeformRootEditPart();
-                root = new CustomScalableFreeformRootEditPart();
-                viewer.setRootEditPart(root);
-            } else {
-                root.setContents(null);
-            }
-            // defect 16983 - remove any extra connections that are left over:
-            ConnectionLayer cLayer = (ConnectionLayer)((ScalableFreeformRootEditPart)root).getLayer(LayerConstants.CONNECTION_LAYER);
-            if (!cLayer.getChildren().isEmpty()) {
-                cLayer.removeAll();
-            } // endif
-            // } else {
-            // root.setContents(null);
-        }
-    }
-
-    private void clearCurrentDiagram() {
-        // Cleanup work??
-        // Start with clearing all associations.
-        if (getCurrentModel() != null) {
-            setCurrentModel(null);
-            diagramInput = null;
-        }
-        if (!getDiagramViewer().getSelectedEditParts().isEmpty()) getDiagramViewer().deselectAll();
-        resetRootEditPart();
-    }
-
-    protected void createModel( Diagram diagram,
-                                IProgressMonitor monitor ) {
-        if (getModelFactory() != null) {
-
-            diagramInput = new DiagramEditorInput(diagram);
-
-            setCurrentModel(getModelFactory().createModel(diagram, getNotationId(), monitor));
-
-            DiagramEditPartFactory newEditPartFactory = DiagramUiPlugin.getDiagramTypeManager().getDiagram(diagram.getType()).getEditPartFactory();
-            newEditPartFactory.setNotationId(getNotationId());
-            createSelectionHandler(diagram, viewer);
-            newEditPartFactory.setSelectionHandler(getSelectionHandler());
-            viewer.setEditPartFactory(newEditPartFactory);
-        }
+    public ModelResource getCurrentModelResource() {
+        return this.currentModelResource;
     }
 
     /**
-     * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
+     * @return Returns the zoomFactor.
+     * @since 4.2
      */
-    protected void setDiagram( Diagram diagram,
-                               IProgressMonitor monitor ) {
-        boolean requiredStart = false;
-        boolean succeeded = false;
-        try {
-            // Let's wrap this in a transaction!!! that way all constructed objects and layout properties
-            // will result in only one transaction?
-
-            requiredStart = ModelerCore.startTxn(false, false, "Display Diagram", this); //$NON-NLS-1$
-
-            saveZoom();
-
-            clearCurrentDiagram();
-
-            if (diagram != null) {
-                // New: 5/6/04 to cache diagram entities.
-                DiagramEntityManager.addDiagram(diagram);
-
-                currentModelResource = ModelUtilities.getModelResourceForModelObject(diagram.getTarget());
-                currentModelPath = ((IFileEditorInput)getEditorInput()).getFile().getFullPath();
-
-                setNotationId(DiagramUiUtilities.getDiagramNotation(diagram));
-
-                DiagramModelFactory modelFactory = DiagramUiPlugin.getDiagramTypeManager().getDiagram(diagram.getType()).getModelFactory();
-
-                setModelFactory(modelFactory);
-
-                createModel(diagram, monitor);
-
-                if (getCurrentModel() != null) {
-                    if (monitor != null) {
-                        monitor.subTask("Setting Viewer Contents"); //$NON-NLS-1$
-                        monitor.worked(20);
-                    }
-                    getGraphicalViewer().setContents(getCurrentModel());
-
-                    if (monitor != null) {
-                        monitor.subTask("Performing Layout"); //$NON-NLS-1$
-                        monitor.worked(10);
-                    }
-                    if (getGraphicalViewer().getContents() instanceof DiagramEditPart) {
-                        DiagramEditPart diagramEP = (DiagramEditPart)getGraphicalViewer().getContents();
-
-                        /* componentLayout() is called to give the components that have "children" a chance to layout
-                         * those children. Classifiers, for instance have model children which result in Attribute
-                         * Edit parts being created.  The Classifier has already been constructed but still needs to
-                         * layout the attributes.
-                         */
-                        diagramEP.layout(DiagramEditPart.LAYOUT_CHILDREN);
-                        resetZoom();
-                        diagramEP.constructionCompleted(true);
-                    }
-                    if (monitor != null) monitor.worked(10);
-                }
-            } else {
-                if ((currentModelResource != null) && currentModelResource.exists() && currentModelResource.isOpen()) {
-                    openContext(currentModelResource);
-                } else {
-                    setModelFactory(null);
-                    selectionHandler = null;
-                    diagramInput = null;
-                    if (currentActionAdapter != null) currentActionAdapter.disposeOfActions();
-                    currentActionAdapter = null;
-
-                    removeDiagramController();
-                    clearDiagramToolbar();
-                    setInitialPartFactory();
-                    setCurrentModel(new DummyDiagramNode());
-                    getGraphicalViewer().setContents(getCurrentModel());
-                }
-            }
-            succeeded = true;
-        } catch (Exception ex) {
-            DiagramUiConstants.Util.log(IStatus.ERROR, ex, ex.getClass().getName() + ":" + THIS_CLASS + ".setDiagram()"); //$NON-NLS-1$ //$NON-NLS-2$
-        } finally {
-            if (requiredStart) {
-                if (succeeded) {
-                    ModelerCore.commitTxn();
-                } else {
-                    ModelerCore.rollbackTxn();
-                }
-                if (overview != null) overview.resetContents();
-            }
-        }
-
+    public double getCurrentZoomFactor() {
+        return this.zoomFactor;
     }
 
-    private void clearDiagramToolbar() {
-        getToolBarManager().removeAll();
-        getToolBarManager().update(true);
-        diagramViewForm.redraw();
+    public DiagramDecoratorHandler getDecoratorHandler() {
+        if (decoratorHandler == null) decoratorHandler = new DiagramDecoratorHandler(this);
 
+        return decoratorHandler;
+    }
+
+    public Diagram getDiagram() {
+        if (diagramInput != null) return diagramInput.getDiagram();
+
+        return null;
+    }
+
+    public IDiagramActionAdapter getDiagramActionAdapter() {
+        return currentActionAdapter;
+    }
+
+    /**
+     * @return
+     */
+    public DiagramController getDiagramController() {
+        return diagramController;
+    }
+
+    /*
+     * Private utility method to get the DiagramController for a given diagram.
+     * This method checks for NPE reported in Defect 13860.
+     */
+    private DiagramController getDiagramController( final Diagram diagram ) {
+        if (diagram != null && diagram.getType() != null) {
+            final IDiagramType dt = DiagramUiPlugin.getDiagramTypeManager().getDiagram(diagram.getType());
+            if (dt != null) return dt.getDiagramController(this);
+        }
+        return null;
+    }
+
+    /**
+     * @see com.metamatrix.modeler.diagram.ui.editor.ZoomableEditor#getDiagramEditor()
+     */
+    public DiagramEditor getDiagramEditor() {
+        return this;
+    }
+
+    public DiagramViewer getDiagramViewer() {
+        return viewer;
     }
 
     public DiagramViewForm getDiagramViewForm() {
         return diagramViewForm;
     }
 
-    private void setDiagramToolBar() {
-        if (toolBarManager != null && toolBar != null) {
-            if (getDiagramActionAdapter() != null) {
-                getDiagramActionAdapter().contributeToDiagramToolBar();
-                getDiagramActionAdapter().enableDiagramToolbarActions();
-            }
-            getToolBarManager().update(true);
-        } else {
-            // System.out.println("  -->>  DE.setDiagramToolBar() TBM or ToolBar == NULL!!! ");
-        }
-        // System.out.println("  -->>  DE.setDiagramToolBar() ViewForm.isDisposed == " + diagramViewForm.isDisposed());
-        if (!diagramViewForm.isDisposed() && diagramViewForm.isVisible()) diagramViewForm.redraw();
+    protected ScaledFont getFontManager() {
+        if (scaledFontManager == null) scaledFontManager = new DiagramFontManager(viewer);
+
+        return scaledFontManager;
     }
 
     /**
-     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#canOpenContext(java.lang.Object)
+     * @see com.metamatrix.modeler.ui.editors.IInlineRenameable#canRenameInline(org.eclipse.emf.ecore.EObject)
+     * @since 5.0
      */
-    public boolean canOpenContext( Object input ) {
-        return DiagramUiPlugin.getDiagramTypeManager().canOpenContext(input);
+    public IInlineRenameable getInlineRenameable( final EObject theObj ) {
+        return this;
+    }
+
+    public ILabelProvider getLabelProvider() {
+        return DiagramUiPlugin.getDiagramNotationManager().getLabelProvider();
+    }
+
+    /**
+     * @return
+     */
+    public DiagramModelFactory getModelFactory() {
+        return diagramModelFactory;
+    }
+
+    /**
+     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#getModelObjectSelectionChangedListener(java.lang.Object)
+     */
+    public ISelectionChangedListener getModelObjectSelectionChangedListener() {
+        return this;
+    }
+
+    /**
+     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#getModelObjectSelectionProvider()
+     */
+    public ISelectionProvider getModelObjectSelectionProvider() {
+        return selectionProvider;
+    }
+
+    public MenuManager getNotationActionGroup() {
+        if (mmNotationActionGroup == null) mmNotationActionGroup = DiagramUiPlugin.getDiagramNotationManager().getNotationActionGroup(this,
+                                                                                                                                      getNotationId());
+        else ((NotationChoiceRadioActionGroup)mmNotationActionGroup).updateNotationActions(getNotationId());
+        return mmNotationActionGroup;
+    }
+
+    public String getNotationId() {
+        return this.sNotationId;
+    }
+
+    /**
+     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#getNotifyChangedListener()
+     */
+    public INotifyChangedListener getNotifyChangedListener() {
+        return this;
+    }
+
+    /**
+     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#getOutlineContribution()
+     */
+    public ModelEditorPageOutline getOutlineContribution() {
+        if (overview == null) overview = new DiagramOverview(getGraphicalViewer(), getSelectionSynchronizer(), getCurrentModel());
+        return overview;
+    }
+
+    /*
+     */
+    public ModelEditor getParent() {
+        return meParentEditor;
+    }
+
+    /**
+     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#getControl()
+     */
+    public DiagramViewForm getPrimaryControl() {
+        return diagramViewForm;
+    }
+
+    protected IDiagramSelectionHandler getSelectionHandler() {
+        return selectionHandler;
+    }
+
+    /**
+     * @see org.eclipse.ui.IWorkbenchPart#getTitle()
+     */
+    @Override
+    public String getTitle() {
+        if (title == null) return super.getTitle();
+        return title;
+    }
+
+    /**
+     * @see org.eclipse.ui.IWorkbenchPart#getTitleImage()
+     */
+    @Override
+    public Image getTitleImage() {
+        return titleImage;
+    }
+
+    /**
+     * @see org.eclipse.ui.IWorkbenchPart#getTitleToolTip()
+     */
+    @Override
+    public String getTitleToolTip() {
+        if (tooltip == null) return super.getTitleToolTip();
+        return tooltip;
+    }
+
+    public ToolBarManager getToolBarManager() {
+        return toolBarManager;
+    }
+
+    public HashMap getTreeStatesMap() {
+        /*
+         * key: document eobject
+         * val: Object[]    // tree expanded state
+         */
+        if (hmapModelTreeStates == null) hmapModelTreeStates = new HashMap();
+
+        return hmapModelTreeStates;
+    }
+
+    /**
+     * @see org.eclipse.ui.IEditorPart#gotoMarker(IMarker)
+     **/
+    public void gotoMarker( final IMarker iMarker ) {
+        /*
+         *
+         * 1.  the marker should also have SELECTED_OBJECT
+         *   retrieve it and then:
+         *          getSelectionHandler().select( oSelectedObject );
+         */
+        final String sMarkerType = iMarker.getAttribute(Navigation.MARKER_TYPE, Navigation.UNKNOWN);
+
+        if (sMarkerType.equals(Navigation.NAVIGATION)) {
+
+            // close the createMarker feature during this operation:
+            bOkToCreateMarkers = false;
+
+            final Object oInput = MarkerUtilities.getMarkerAttribute(iMarker, Navigation.CURRENT_INPUT); // iMarker.getAttribute(
+            if (oInput != null) if (canOpenContext(oInput)) {
+                openContext(oInput);
+
+                // reset selection
+                final List lstSelection = (List)MarkerUtilities.getMarkerAttribute(iMarker, Navigation.CURRENT_SELECTION); // iMarker.getAttribute(
+                // Navigation.CURRENT_SELECTION
+                // );
+
+                if (lstSelection != null) {
+
+                    final Iterator it = lstSelection.iterator();
+
+                    while (it.hasNext()) {
+                        final EObject eoTemp = (EObject)it.next();
+                        getSelectionHandler().select(eoTemp);
+                    }
+                }
+
+                // force the parent container to display us
+                getParent().displayModelEditorPage(this);
+            }
+        }
+        // open up createMarker again:
+        bOkToCreateMarkers = true;
+
+        // quit now (skip the remainder of this method)
+        if (sMarkerType.equals(Navigation.NAVIGATION)) return;
+
+        // if NOT a navigation marker, handle this way:
+        final EObject targetEObject = ModelObjectUtilities.getMarkedEObject(iMarker);
+
+        if (targetEObject != null) {
+            // Here's where we should open up the package diagram for the object so it can be viewed for
+            // edit and selected so it's properties are in the pop.
+            // PackageDiagramProvider pdp = new PackageDiagramProvider();
+            // Diagram packageDiagram = pdp.getPackageDiagram(targetEObject);
+
+            final Diagram someDiagram = DiagramUiPlugin.getDiagramTypeManager().getDiagramForGoToMarkerEObject(targetEObject, true);
+
+            if (someDiagram != null) if (getDiagram() == null || !someDiagram.equals(getDiagram())) {
+                if (canOpenContext(someDiagram)) {
+                    openContext(someDiagram);
+                    // defect 18922 - notify diagram ctrlr if changing selection:
+                    if (getDiagramController() != null) getDiagramController().selectionChanged(getParent(),
+                                                                                                new StructuredSelection(
+                                                                                                                        targetEObject));
+                    else if (getSelectionHandler() != null) getSelectionHandler().select(targetEObject);
+                }
+            } else if (getDiagram() != null && someDiagram.equals(getDiagram())) // defect 18922 - notify diagram ctrlr if changing
+            // selection:
+            if (getDiagramController() != null) getDiagramController().selectionChanged(getParent(),
+                                                                                        new StructuredSelection(targetEObject));
+            else if (getSelectionHandler() != null) getSelectionHandler().select(targetEObject);
+
+        }
+    }
+
+    public void handleZoomChanged() {
+        saveZoom();
+        // Let's get the primary Edit part, get it's figure and update it's BKGD color
+        if (getDiagramViewer().getContents() != null && getDiagramViewer().getContents() instanceof DiagramEditPart) {
+            final DiagramEditPart rootEditPart = (DiagramEditPart)getDiagramViewer().getContents();
+            if (rootEditPart != null) rootEditPart.handleZoomChanged();
+
+            if (diagramController != null) diagramController.handleZoomChanged();
+
+            // update the print grid if zoom has changed diagram size
+            getDiagramViewer().updateForPrintPreferences();
+        }
+    }
+
+    /**
+     * @see org.eclipse.ui.IEditorPart#init(IEditorSite, IEditorInput)
+     */
+    @Override
+    public void init( final IEditorSite iSite,
+                      final IEditorInput iInput ) {
+        setSite(iSite);
+        setInput(iInput);
+
+        markerListener = new IResourceChangeListener() {
+            public void resourceChanged( final IResourceChangeEvent event ) {
+
+                if (event.getType() == IResourceChangeEvent.POST_CHANGE) // Let's see if all dependencies are open in workspace.
+                if (getDiagram() != null && getDiagram().getTarget() != null
+                    && !ModelObjectUtilities.isStale(getDiagram().getTarget())) {
+                    final ModelResource currentMR = ModelUtilities.getModelResourceForModelObject(getDiagram());
+                    final boolean allDepExist = ModelUtilities.allDependenciesOpenInWorkspace(currentMR);
+                    if (allDepExist) {
+                        final IMarkerDelta[] deltas = event.findMarkerDeltas(null, true);
+
+                        if (deltas != null && deltas.length > 0) {
+
+                            final List visitedResources = new ArrayList();
+                            // boolean which will break this method out of it's loop
+                            // We only need to refresh the diagram once here
+
+                            boolean foundRefreshableResource = false;
+
+                            for (final IMarkerDelta delta : deltas) {
+                                final IResource eventResource = delta.getResource();
+                                // Need to only look at a delta's resource if we haven't looked at it before.
+                                if (!visitedResources.contains(eventResource)) {
+                                    if (ModelUtilities.isModelFile(eventResource)) {
+                                        ModelResource mr = null;
+                                        try {
+                                            mr = ModelUtilities.getModelResource((IFile)eventResource, false);
+                                        } catch (final ModelWorkspaceException e) {
+                                            DiagramUiConstants.Util.log(e);
+                                            WidgetUtil.showError(e);
+                                        }
+                                        if (mr != null && getDiagram() != null) if (currentMR != null && mr.equals(currentMR)) {
+                                            final boolean refreshDiagram = getDecoratorHandler().handleResouceChanged();
+                                            if (refreshDiagram) {
+                                                foundRefreshableResource = true;
+                                                refreshDiagramSafe();
+                                            }
+                                        }
+                                    }
+                                    if (!foundRefreshableResource) visitedResources.add(eventResource);
+                                }
+                                if (foundRefreshableResource) break;
+                            }
+                            updateReadOnlyState();
+                        }
+                    } else // We know that something happened that removed a dependent model
+                    Display.getDefault().syncExec(new Runnable() {
+                        public void run() {
+                            openContext(getDiagram());
+                            updateReadOnlyState();
+                        }
+                    });
+                }
+            }
+        };
+        ResourcesPlugin.getWorkspace().addResourceChangeListener(markerListener);
+        ((AbstractActionService)DiagramUiPlugin.getDefault().getActionService(iSite.getPage())).addPartListener(this);
+
+    }
+
+    protected void initializeDiagram() {
+        // Here's where we go ahead and if the input is an IFile and we can find the model resource
+        // If we can find a model resource, we can open it's package diagram
+        if (getEditorInput() instanceof IFileEditorInput) Display.getCurrent().asyncExec(new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(100);
+                } catch (final InterruptedException e1) {
+                    final String message = this.getClass().getName() + ":  initializeDiagram() error sleeping on Thread"; //$NON-NLS-1$
+                    DiagramUiConstants.Util.log(IStatus.ERROR, e1, message);
+                }
+
+                if (initializeModelPackage) {
+                    final IFileEditorInput ifei = (IFileEditorInput)getEditorInput();
+                    final IFile modelFile = ifei.getFile();
+
+                    ModelResource mr = null;
+                    try {
+                        mr = ModelUtilities.getModelResource(modelFile, true);
+                    } catch (final ModelWorkspaceException e) {
+                        final String message = this.getClass().getName()
+                                               + ":  initializeDiagram() error finding model resource for file = " + modelFile; //$NON-NLS-1$
+                        DiagramUiConstants.Util.log(IStatus.ERROR, e, message);
+                        WidgetUtil.showError(e);
+                    }
+
+                    if (mr != null) {
+                        bOkToCreateMarkers = false;
+
+                        openContext(mr);
+
+                        bOkToCreateMarkers = true;
+
+                    }
+                }
+            }
+        });
+        else {
+            setCurrentModel(new DummyDiagramNode());
+            getGraphicalViewer().setContents(getCurrentModel());
+        }
+
+        // capture it here so we are assured of having at least the resource
+        // oLatestInput = getEditorInput();
+
     }
 
     public void initializeEditorPage() {
+    }
+
+    /**
+     * @see org.eclipse.gef.ui.parts.GraphicalEditor#initializeGraphicalViewer()
+     **/
+    @Override
+    protected void initializeGraphicalViewer() {
+        initializeDiagram();
+    }
+
+    private boolean isCurrentResource( final ModelResource modelResource ) {
+        CoreArgCheck.isNotNull(modelResource, DiagramUiConstants.Util.getString("DiagramEditor.isCurrentResourceNullCheck")); //$NON-NLS-1$
+
+        // Check cached model resource
+        if (currentModelResource != null && modelResource == currentModelResource) return true;
+
+        // get resource from diagram.
+        final ModelResource editorMR = ModelUtilities.getModelResourceForModelObject(getDiagram());
+        if (editorMR != null) {
+            if (modelResource == editorMR) return true;
+        } else // Get file for resource
+        if (currentModelPath != null) {
+            // get file path for resource
+            final IPath newPath = modelResource.getPath();
+            if (currentModelPath.equals(newPath)) return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @see org.eclipse.ui.IEditorPart#isDirty()
+     **/
+    @Override
+    public boolean isDirty() {
+        return false;
+    }
+
+    // This private method will only work when called before the setDiagram() is called in openContext();
+    private boolean isNewDiagram( final Diagram newDiagram ) {
+        if (newDiagram == null && getDiagram() == null) return false;
+
+        if (getDiagram() != null && newDiagram != null && newDiagram.getType().equals(getDiagram().getType())) return false;
+
+        return true;
+    }
+
+    /**
+     * @see org.eclipse.ui.IEditorPart#isSaveAsAllowed()
+     **/
+    @Override
+    public boolean isSaveAsAllowed() {
+        return false;
+    }
+
+    /**
+     * @return False.
+     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#isSelectedFirst(org.eclipse.ui.IEditorInput)
+     * @since 5.0.1
+     */
+    public boolean isSelectedFirst( final IEditorInput input ) {
+        return false;
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.ILabelProviderListener#labelProviderChanged(org.eclipse.jface.viewers.LabelProviderChangedEvent)
+     */
+    public void labelProviderChanged( final LabelProviderChangedEvent event ) {
+
+        boolean modelChanged = false;
+        final Object[] elements = event.getElements();
+
+        if (elements != null && elements.length > 1) for (final Object nextElement : elements) {
+            if (nextElement instanceof EObject) {
+                if (ModelUtilities.areModelResourcesSame((EObject)nextElement, getDiagram())) modelChanged = true;
+            } else if (nextElement instanceof IResource) if (ModelUtilities.isModelFile((IResource)nextElement)) {
+                ModelResource modelResource = null;
+                try {
+                    modelResource = ModelUtilities.getModelResource((IFile)nextElement, false);
+                } catch (final ModelWorkspaceException e) {
+                    DiagramUiConstants.Util.log(IStatus.ERROR,
+                                                e,
+                                                "DiagramEditor.labelProviderChanged()  ERROR finding ModelResource"); //$NON-NLS-1$
+                }
+                if (modelResource != null && modelResource.equals(modelResource)) modelChanged = true;
+            }
+            if (modelChanged) break;
+        }
+
+        if (getModelFactory() != null && getCurrentModel() != null && modelChanged) getDecoratorHandler().handleLabelProviderChanged();
+
+    }
+
+    /**
+     * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
+     */
+    public void notifyChanged( final Notification notification ) {
+        boolean diagramStillValid = true;
+        // DiagramModelFactory inherently wraps
+        if (getModelFactory() != null && getCurrentModel() != null) diagramStillValid = getModelFactory().notifyModel(notification,
+                                                                                                                      getCurrentModel(),
+                                                                                                                      diagramInput.getDiagram().getType());
+
+        if (diagramStillValid) {
+            try {
+                if (getDiagramActionAdapter() != null) getDiagramActionAdapter().handleNotification(notification);
+                if (diagramController != null) diagramController.handleNotification(notification);
+            } catch (final Exception ex) {
+                DiagramUiConstants.Util.log(IStatus.ERROR, ex, ex.getClass().getName());
+            }
+            if (getDiagram() != null) {
+                updateEditorTab(getDiagram());
+                // defect 16803 - be smarter about model changes
+                if (getModelFactory().shouldRefreshDiagram(notification, getCurrentModel(), diagramInput.getDiagram().getType())) // trigger
+                // the
+                // refresh:
+                refreshDiagramSafe();
+            }
+        } else if (meParentEditor != null && meParentEditor.getModelFile() != null && meParentEditor.getModelFile().exists()) // here's
+        // where
+        // we
+        // replace
+        // current
+        // diagram
+        // with
+        // bogus
+        // empty
+        // diagram
+        // by
+        // calling
+        // openContext(null)
+        openContext(null);
+    }
+
+    /**
+     * @see com.metamatrix.modeler.ui.editors.IInitializationCompleteNotifier#notifyInitializationComplete()
+     * @since 4.3
+     */
+    public void notifyInitializationComplete() {
+        if (completionListeners != null && !completionListeners.isEmpty()) for (final Iterator iter = completionListeners.iterator(); iter.hasNext();)
+            ((IInitializationCompleteListener)iter.next()).processInitializationComplete();
+    }
+
+    /**
+     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#openComplete()
+     * @since 4.2
+     */
+    public void openComplete() {
+        if (revealableEObject != null) {
+            final EObject revealedObject = revealableEObject;
+            getDiagramViewer().reveal(revealedObject);
+            revealableEObject = null;
+        }
     }
 
     /*
      * non-Javadoc)
      * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#openContext(java.lang.Object)
      */
-    public void openContext( Object input ) {
+    public void openContext( final Object input ) {
         openContext(input, false);
     }
 
-    public void openContext( Object input,
-                             boolean forceRefresh ) {
+    public void openContext( final Object input,
+                             final boolean forceRefresh ) {
         // System.out.println("  -->>  DE.openContext() already openin/gContext = " + openingContext + " NOpens = " + nOpens +
         // " Input = " + input);
-        Diagram previousDiagram = getDiagram();
+        final Diagram previousDiagram = getDiagram();
         //System.out.println("DiagramEditor.openContext(" + input + ")"); //$NON-NLS-1$ //$NON-NLS-2$
-        if (input instanceof Diagram) {
-            autoSelect();
-        }
+        if (input instanceof Diagram) autoSelect();
 
         initializeModelPackage = false;
 
@@ -949,8 +1160,7 @@ public class DiagramEditor extends GraphicalEditor
 
                 // [fix for defect 16563]:
                 // if new diagram and old diagram are the same, take no further action
-                if (this.meParentEditor != null && !forceRefresh && previousDiagram != null
-                    && inputDiagram.equals(previousDiagram)) {
+                if (this.meParentEditor != null && !forceRefresh && previousDiagram != null && inputDiagram.equals(previousDiagram)) {
                     // ----------------------------
                     // Defect 22844 - setting ignoreInternalFocus
                     // This cleans up simple selection causing focus to OperationEditorPage way too often
@@ -964,15 +1174,12 @@ public class DiagramEditor extends GraphicalEditor
                 boolean requiresProgress = false;
                 requiresProgress = DiagramUiPlugin.getDiagramTypeManager().getDiagram(newDiagram.getType()).isDiagramLarge(newDiagram);
 
-                if (requiresProgress) {
-                    setDiagramWithProgress(newDiagram);
-                } else {
-                    UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-                        public void run() {
-                            setDiagram(newDiagram, null);
-                        }
-                    });
-                }
+                if (requiresProgress) setDiagramWithProgress(newDiagram);
+                else UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+                    public void run() {
+                        setDiagram(newDiagram, null);
+                    }
+                });
 
                 updateDiagramController();
 
@@ -995,19 +1202,14 @@ public class DiagramEditor extends GraphicalEditor
                 updateEditorTab(newDiagram);
 
                 // Lastly, we give the diagram type the chance to fire an initial selection
-                EObject initialSelection = DiagramUiPlugin.getDiagramTypeManager().getDiagram(newDiagram.getType()).getInitialSelection(input);
+                final EObject initialSelection = DiagramUiPlugin.getDiagramTypeManager().getDiagram(newDiagram.getType()).getInitialSelection(input);
                 if (initialSelection != null) getDiagramViewer().getSelectionHandler().select(initialSelection);
-                else {
-                    if (!contextIsDiagram && input instanceof EObject) {
-                        getDiagramViewer().getSelectionHandler().select((EObject)input);
-                    }
-                }
+                else if (!contextIsDiagram && input instanceof EObject) getDiagramViewer().getSelectionHandler().select((EObject)input);
                 revealableEObject = DiagramUiPlugin.getDiagramTypeManager().getDiagram(newDiagram.getType()).getRevealedEObject(newDiagram,
                                                                                                                                 input);
-                if (bOkToCreateMarkers) {
-                    //                  System.out.println("\n[DiagramEditor.openContext] About to markLocation( this ) (DiagramEditor) " ); //$NON-NLS-1$
-                    UiUtil.getWorkbenchPage().getNavigationHistory().markLocation(this);
-                }
+                if (bOkToCreateMarkers) // System.out.println("\n[DiagramEditor.openContext] About to markLocation( this ) (DiagramEditor) "
+                                        // );
+                UiUtil.getWorkbenchPage().getNavigationHistory().markLocation(this);
 
             }
             getDecoratorHandler().reset();
@@ -1019,126 +1221,133 @@ public class DiagramEditor extends GraphicalEditor
     }
 
     /**
-     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#openComplete()
-     * @since 4.2
+     * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
      */
-    public void openComplete() {
-        if (revealableEObject != null) {
-            final EObject revealedObject = revealableEObject;
-            getDiagramViewer().reveal(revealedObject);
-            revealableEObject = null;
-        }
+    public void partActivated( final IWorkbenchPart part ) {
+        // No action
     }
 
     /**
-     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#setTitleText(java.lang.String)
+     * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
+     */
+    public void partBroughtToTop( final IWorkbenchPart part ) {
+        // No action
+    }
+
+    /**
+     * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
+     */
+    public void partClosed( final IWorkbenchPart part ) {
+        // No action
+    }
+
+    /**
+     * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
+     */
+    public void partDeactivated( final IWorkbenchPart part ) {
+        refreshFont();
+    }
+
+    /**
+     * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
+     */
+    public void partOpened( final IWorkbenchPart part ) {
+        // No action
+    }
+
+    /**
+     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#preDispose()
      * @since 4.2
      */
-    public void setTitleText( String newTitle ) {
-        this.title = newTitle;
+    public void preDispose() {
+        // Default Implementation
     }
 
-    private boolean setDiagramWithProgress( Diagram newDiagram ) {
-        boolean success = false;
-        final Diagram theDiagram = newDiagram;
-        final IRunnableWithProgress op = new IRunnableWithProgress() {
-            public void run( final IProgressMonitor monitor ) {
-                monitor.beginTask("Constructing Diagram", 100); //$NON-NLS-1$
-                setDiagram(theDiagram, monitor);
-            }
-        };
-
-        try {
-            final ProgressMonitorDialog dlg = new ProgressMonitorDialog(getControl().getShell());
-            dlg.run(false, true, op);
-            if (dlg.getProgressMonitor().isCanceled()) {
-                return true;
-            }
-
-            success = true;
-        } catch (final InterruptedException ignored) {
-            success = true;
-        } catch (final Exception err) {
-            success = false;
-        }
-
-        return success;
-    }
-
-    private void updateDiagramController() {
-
-        boolean useExistingController = false;
-
-        // get the new diagram's controller class (if exists)
-        Class controllerClass = DiagramUiPlugin.getDiagramTypeManager().getDiagram((getDiagram()).getType()).getDiagramControllerClass();
-
-        // Clean up and remove current controller if exists.
-        // Check for non-null controller and if non-null, then is it the same class as the new diagram type.
-        if (diagramController != null) {
-
-            // If new diagram's controller is the same type, ask the
-            // controller if it want's to maintain control
-            if (controllerClass != null) {
-                if (diagramController.getClass().equals(controllerClass)) {
-                    useExistingController = diagramController.maintainControl(getDiagram());
-                }
-            }
-
-            // We need to throw away the old controller here.
-            if (!useExistingController) {
-                // Remove the control listener that was added at end of this method
-                if (diagramController instanceof ControlListener) {
-                    getControl().removeControlListener((ControlListener)diagramController);
-                }
-
-                diagramController.deactivate();
-
-                selectionProvider.removeDiagramController(diagramController);
-
-                Control diagramControl = diagramViewForm.getControllerControl();
-                if (diagramControl != null) {
-                    diagramControl.dispose();
-                }
-                // Finish cleaning up the diagram controller
-                diagramController.dispose();
-                diagramController = null;
-
-                // resize the diagram view form
-                diagramViewForm.getSashForm().update();
-                diagramViewForm.getSashForm().pack(true);
-                diagramViewForm.update();
-                diagramViewForm.layout(false);
-            }
-
-        }
-
-        if (useExistingController) {
-            diagramController.rewireDiagram(getDiagram());
-        } else if (controllerClass != null) {
-            DiagramController newDiagramController = getDiagramController(getDiagram());
-
-            // If new controller, wire it up.
-            if (newDiagramController != null) {
-                diagramController = newDiagramController;
-                diagramController.wireDiagram(getDiagram());
-                selectionProvider.setDiagramController(diagramController);
-                if (diagramController instanceof ControlListener) {
-                    getControl().addControlListener((ControlListener)diagramController);
-                }
-            }
-        }
-    }
-
-    /*
-     * Private utility method to get the DiagramController for a given diagram.
-     * This method checks for NPE reported in Defect 13860.
+    /**
+     * @see com.metamatrix.core.event.EventObjectListener#processEvent(java.util.EventObject)
+     * @since 4.2
      */
-    private DiagramController getDiagramController( Diagram diagram ) {
-        if (diagram != null && diagram.getType() != null) {
-            IDiagramType dt = DiagramUiPlugin.getDiagramTypeManager().getDiagram(diagram.getType());
-            if (dt != null) return dt.getDiagramController(this);
+    public void processEvent( final EventObject obj ) {
+
+        final ModelResourceEvent event = (ModelResourceEvent)obj;
+
+        // Return if event concerns closed resource, otherwise subsequent call to checkValidity will cause resource to be
+        // re-opened
+        final int eventType = event.getType();
+        if (eventType == ModelResourceEvent.CLOSING || eventType == ModelResourceEvent.CLOSED) return;
+
+        final boolean stillValid = checkValidity(this.getClass().getName() + ".processEvent()"); //$NON-NLS-1$
+        final Diagram currentDiagram = getDiagram();
+
+        if (eventType == ModelResourceEvent.RELOADED) {
+            final ModelResource evResource = event.getModelResource();
+            final boolean isSameResource = isCurrentResource(evResource);
+            final IResource res = event.getResource();
+            if (isSameResource) // we are the editor for the reloaded file:
+            Display.getDefault().asyncExec(new Runnable() {
+                public void run() {
+                    final EObject realDiagram = ModelObjectUtilities.getRealEObject(currentDiagram);
+                    ModelEditorManager.open(realDiagram, true);
+                    if (res instanceof IFile) {
+                        final IFile file = (IFile)res;
+                        ModelEditorManager.activate(file, true);
+                    } // endif
+                }
+            });
+            else // defect 16805 - ask the IDiagramType for whether we depend on
+            // the event resource.
+            if (currentDiagram != null) {
+                final IDiagramType idt = DiagramUiPlugin.getDiagramTypeManager().getDiagram(currentDiagram.getType());
+
+                if (idt.dependsOnResource(currentModel, evResource.getResource())) // redisplay contents:
+                refreshDiagramSafe();
+            } // endif -- diagram not null
+        } else if (stillValid && eventType == ModelResourceEvent.CHANGED) // Check Readonly status
+        updateReadOnlyState();
+        else if (stillValid && eventType == ModelResourceEvent.ADDED) {
+            // file should not be represented in the diagram, since it is new.
+            // how do we find if we need to refresh?
+        } else if (stillValid && (eventType == ModelResourceEvent.REMOVED || eventType == ModelResourceEvent.MOVED)) // if moved or
+        // removed:
+        if (currentDiagram != null) {
+            final IDiagramType idt = DiagramUiPlugin.getDiagramTypeManager().getDiagram(currentDiagram.getType());
+            if (idt.dependsOnResource(currentModel, event.getResource())) // redisplay contents:
+            refreshDiagramSafe();
+        } // endif -- diagram not null
+    }
+
+    /**
+     * Safely rebuilds the diagram in the display thread, without adjusting the scrolling viewport.
+     */
+    void refreshDiagramSafe() {
+        // redisplay contents:
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                // refresh the diagram:
+                // Since this is in an async, we need to really check if the model/workspace isn't closing???
+                if (!DiagramUiPlugin.getDefault().getWorkbench().isClosing() && getDiagramViewer().isValidViewer())
+                // -----------------------------
+                // Defect 23360
+                // NPE resulting from deleting a resource and NOT checking for stale diagrams.
+                if (getCurrentModel() != null && getCurrentModel().getModelObject() != null
+                    && DiagramUiUtilities.isValidDiagram(getDiagram())) openContext(getCurrentModel().getModelObject(), true);
+            }
+        });
+    }
+
+    /* This call is required because we are managing fonts globally. So if an editor isn't displayed, but has
+     * diagram figures containing "disposed" fonts, they need to be updated to the new font, so the GC methods
+     * don't barf.... BML 5/18/04
+     * On close all, each tab/editor is deactivated and somehow told to "refresh" display before going away...
+     */
+    private void refreshFont() {
+        final EditPart editPart = getDiagramViewer().getContents();
+
+        if ((editPart != null) && (editPart instanceof DiagramEditPart)) {
+            final DiagramEditPart diagramEP = (DiagramEditPart)editPart;
+
+            if ((diagramEP.getCurrentDiagramFont() != null) && diagramEP.getCurrentDiagramFont().isDisposed()) diagramEP.refreshFont(true);
         }
-        return null;
     }
 
     private void removeDiagramController() {
@@ -1151,10 +1360,8 @@ public class DiagramEditor extends GraphicalEditor
             diagramController.deactivate();
             selectionProvider.removeDiagramController(diagramController);
 
-            Control diagramControl = diagramViewForm.getControllerControl();
-            if (diagramControl != null) {
-                diagramControl.dispose();
-            }
+            final Control diagramControl = diagramViewForm.getControllerControl();
+            if (diagramControl != null) diagramControl.dispose();
             diagramViewForm.getSashForm().update();
             diagramViewForm.getSashForm().pack(true);
             diagramViewForm.update();
@@ -1164,72 +1371,273 @@ public class DiagramEditor extends GraphicalEditor
     }
 
     /**
-     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#getModelObjectSelectionProvider()
+     * @see com.metamatrix.modeler.ui.editors.IInitializationCompleteNotifier#removeListener(com.metamatrix.modeler.ui.editors.IInitializationCompleteListener)
+     * @since 4.3
      */
-    public ISelectionProvider getModelObjectSelectionProvider() {
-        return selectionProvider;
+    public void removeListener( final IInitializationCompleteListener theListener ) {
+        if (completionListeners != null && !completionListeners.isEmpty()) completionListeners.remove(theListener);
     }
 
     /**
-     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#getModelObjectSelectionChangedListener(java.lang.Object)
+     * @see com.metamatrix.modeler.ui.editors.IInlineRenameable#renameInline(org.eclipse.emf.ecore.EObject)
+     * @since 5.0
      */
-    public ISelectionChangedListener getModelObjectSelectionChangedListener() {
-        return this;
+    public void renameInline( final EObject theObj,
+                              final IInlineRenameable renameable ) {
+        if (renameable == this) // Set Selection
+        // Let's asynch this off
+        Display.getCurrent().asyncExec(new Runnable() {
+            public void run() {
+                // Defect 19537 - replaced call to handleDoubleClick() to use a new renameInline() method
+                // since this is what we really want to do!!!!!
+                getSelectionHandler().renameInline(theObj);
+            }
+        });
+    }
+
+    private void resetRootEditPart() {
+        RootEditPart root = viewer.getRootEditPart();
+        if (root != null && dacDiagramActionContributor != null) dacDiagramActionContributor.tellZoomWrappersToClose();
+        if (root != null) {
+            if (!(root instanceof ScalableFreeformRootEditPart)) {
+                // ORIG root = new ScalableFreeformRootEditPart();
+                root = new CustomScalableFreeformRootEditPart();
+                viewer.setRootEditPart(root);
+            } else root.setContents(null);
+            // defect 16983 - remove any extra connections that are left over:
+            final ConnectionLayer cLayer = (ConnectionLayer)((ScalableFreeformRootEditPart)root).getLayer(LayerConstants.CONNECTION_LAYER);
+            if (!cLayer.getChildren().isEmpty()) cLayer.removeAll();
+        }
+    }
+
+    public void resetZoom() {
+        final ZoomManager zm = ((ScalableFreeformRootEditPart)getGraphicalViewer().getRootEditPart()).getZoomManager();
+        zm.setZoom(zoomFactor);
+    }
+
+    private void saveZoom() {
+        final ZoomManager zm = ((ScalableFreeformRootEditPart)getGraphicalViewer().getRootEditPart()).getZoomManager();
+        zoomFactor = zm.getZoom();
     }
 
     /**
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
-     *      org.eclipse.jface.viewers.ISelection)
+     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged( SelectionChangedEvent sce ) {
-        ISelection selection = sce.getSelection();
+    public void selectionChanged( final SelectionChangedEvent sce ) {
+        final ISelection selection = sce.getSelection();
         if (selection instanceof IStructuredSelection) {
 
             if (SelectionUtilities.isSingleSelection(selection)) {
-                Object obj = ((IStructuredSelection)selection).getFirstElement();
+                final Object obj = ((IStructuredSelection)selection).getFirstElement();
                 if (obj instanceof EObject) {
-                    if (getSelectionHandler() != null) {
-                        getSelectionHandler().select((EObject)obj);
-                    }
+                    if (getSelectionHandler() != null) getSelectionHandler().select((EObject)obj);
 
                     if (getDiagramController() != null) getDiagramController().selectionChanged(getParent(), selection);
 
-                    if (meParentEditor != null && obj instanceof Diagram && meParentEditor.getActiveEditor() == this) {
-                        // ----------------------------
-                        // Defect 22844 - setting ignoreInternalFocus
-                        // This cleans up simple selection causing focus to OperationEditorPage way too often
-                        // ----------------------------
-                        meParentEditor.setIgnoreInternalFocus(true);
-                    }
+                    if (meParentEditor != null && obj instanceof Diagram && meParentEditor.getActiveEditor() == this) // ----------------------------
+                    // Defect 22844 - setting ignoreInternalFocus
+                    // This cleans up simple selection causing focus to OperationEditorPage way too often
+                    // ----------------------------
+                    meParentEditor.setIgnoreInternalFocus(true);
                 }
-            } else {
-                if (getSelectionHandler() != null) {
-                    getSelectionHandler().select(selection);
-                }
-            }
+            } else if (getSelectionHandler() != null) getSelectionHandler().select(selection);
 
             // update the selections in the most recent marker
             updateSelectionsInMarker(mMostRecentlyCreatedMarker);
         }
     }
 
+    protected void setCurrentModel( final DiagramModelNode newDiagramModelNode ) {
+        this.currentModel = newDiagramModelNode;
+    }
+
     /**
-     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#getEditorActionBarContributor()
+     * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
      */
-    public AbstractModelEditorPageActionBarContributor getActionBarContributor() {
-        // jh experiment: commenting out the 'if null' logic.
-        // this way, we'll always provide a new one, but that one will persist
-        // until a new one is required...Whoa..that led to an NPE???
-        if (dacDiagramActionContributor == null) {
-            dacDiagramActionContributor = new DiagramActionContributor(this);
+    protected void setDiagram( final Diagram diagram,
+                               final IProgressMonitor monitor ) {
+        boolean requiredStart = false;
+        boolean succeeded = false;
+        try {
+            // Let's wrap this in a transaction!!! that way all constructed objects and layout properties
+            // will result in only one transaction?
+
+            requiredStart = ModelerCore.startTxn(false, false, "Display Diagram", this); //$NON-NLS-1$
+
+            saveZoom();
+
+            clearCurrentDiagram();
+
+            if (diagram != null) {
+                // New: 5/6/04 to cache diagram entities.
+                DiagramEntityManager.addDiagram(diagram);
+
+                currentModelResource = ModelUtilities.getModelResourceForModelObject(diagram.getTarget());
+                currentModelPath = ((IFileEditorInput)getEditorInput()).getFile().getFullPath();
+
+                setNotationId(DiagramUiUtilities.getDiagramNotation(diagram));
+
+                final DiagramModelFactory modelFactory = DiagramUiPlugin.getDiagramTypeManager().getDiagram(diagram.getType()).getModelFactory();
+
+                setModelFactory(modelFactory);
+
+                createModel(diagram, monitor);
+
+                if (getCurrentModel() != null) {
+                    if (monitor != null) {
+                        monitor.subTask("Setting Viewer Contents"); //$NON-NLS-1$
+                        monitor.worked(20);
+                    }
+                    getGraphicalViewer().setContents(getCurrentModel());
+
+                    if (monitor != null) {
+                        monitor.subTask("Performing Layout"); //$NON-NLS-1$
+                        monitor.worked(10);
+                    }
+                    if (getGraphicalViewer().getContents() instanceof DiagramEditPart) {
+                        final DiagramEditPart diagramEP = (DiagramEditPart)getGraphicalViewer().getContents();
+
+                        /* componentLayout() is called to give the components that have "children" a chance to layout
+                         * those children. Classifiers, for instance have model children which result in Attribute
+                         * Edit parts being created.  The Classifier has already been constructed but still needs to
+                         * layout the attributes.
+                         */
+                        diagramEP.layout(DiagramEditPart.LAYOUT_CHILDREN);
+                        resetZoom();
+                        diagramEP.constructionCompleted(true);
+                    }
+                    if (monitor != null) monitor.worked(10);
+                }
+            } else if ((currentModelResource != null) && currentModelResource.exists() && currentModelResource.isOpen()) openContext(currentModelResource);
+            else {
+                setModelFactory(null);
+                selectionHandler = null;
+                diagramInput = null;
+                if (currentActionAdapter != null) currentActionAdapter.disposeOfActions();
+                currentActionAdapter = null;
+
+                removeDiagramController();
+                clearDiagramToolbar();
+                setInitialPartFactory();
+                setCurrentModel(new DummyDiagramNode());
+                getGraphicalViewer().setContents(getCurrentModel());
+            }
+            succeeded = true;
+        } catch (final Exception ex) {
+            DiagramUiConstants.Util.log(IStatus.ERROR, ex, ex.getClass().getName() + ":" + THIS_CLASS + ".setDiagram()"); //$NON-NLS-1$ //$NON-NLS-2$
+        } finally {
+            if (requiredStart) {
+                if (succeeded) ModelerCore.commitTxn();
+                else ModelerCore.rollbackTxn();
+                if (overview != null) overview.resetContents();
+            }
         }
-        return dacDiagramActionContributor;
+
+    }
+
+    private void setDiagramActionAdapter( final Diagram newDiagram ) {
+        if (newDiagram != null) if (currentActionAdapter == null || isNewDiagram(newDiagram)) {
+            // deactivate current adapter
+            if (this.currentActionAdapter != null) this.currentActionAdapter.pageDeactivated();
+
+            // if an adapter for this type has already been used, use it.
+            // otherwise construct a new one
+            final String type = newDiagram.getType();
+            IDiagramActionAdapter newAdapter = (IDiagramActionAdapter)adapterMap.get(type);
+
+            if (newAdapter == null) {
+                newAdapter = DiagramUiPlugin.getDiagramTypeManager().getDiagram(type).getActionAdapter(this);
+
+                if (newAdapter != null) adapterMap.put(type, newAdapter);
+            }
+
+            if (newAdapter != null) newAdapter.setDiagramEditor(this);
+
+            this.currentActionAdapter = newAdapter;
+        }
+
+        //////        System.out.println("[DiagramEditor.setDiagramActionAdapter] About to call initializeKeyBindings();"); //$NON-NLS-1$
+        // //// initializeKeyBindings();
+
+    }
+
+    private void setDiagramToolBar() {
+        if (toolBarManager != null && toolBar != null) {
+            if (getDiagramActionAdapter() != null) {
+                getDiagramActionAdapter().contributeToDiagramToolBar();
+                getDiagramActionAdapter().enableDiagramToolbarActions();
+            }
+            getToolBarManager().update(true);
+        } else {
+            // System.out.println("  -->>  DE.setDiagramToolBar() TBM or ToolBar == NULL!!! ");
+        }
+        // System.out.println("  -->>  DE.setDiagramToolBar() ViewForm.isDisposed == " + diagramViewForm.isDisposed());
+        if (!diagramViewForm.isDisposed() && diagramViewForm.isVisible()) diagramViewForm.redraw();
+    }
+
+    private boolean setDiagramWithProgress( final Diagram newDiagram ) {
+        boolean success = false;
+        final Diagram theDiagram = newDiagram;
+        final IRunnableWithProgress op = new IRunnableWithProgress() {
+            public void run( final IProgressMonitor monitor ) {
+                monitor.beginTask("Constructing Diagram", 100); //$NON-NLS-1$
+                setDiagram(theDiagram, monitor);
+            }
+        };
+
+        try {
+            final ProgressMonitorDialog dlg = new ProgressMonitorDialog(getControl().getShell());
+            dlg.run(false, true, op);
+            if (dlg.getProgressMonitor().isCanceled()) return true;
+
+            success = true;
+        } catch (final InterruptedException ignored) {
+            success = true;
+        } catch (final Exception err) {
+            success = false;
+        }
+
+        return success;
+    }
+
+    /**
+     * @see org.eclipse.ui.IWorkbenchPart#setFocus()
+     */
+    @Override
+    public void setFocus() {
+        refreshFont();
+        super.setFocus();
+        // ----------------------------
+        // Defect 22844 - setting ignoreInternalFocus
+        // This cleans up simple selection causing focus to OperationEditorPage way too often
+        // ----------------------------
+        if (meParentEditor != null) meParentEditor.setIgnoreInternalFocus(true);
+    }
+
+    protected void setInitialPartFactory() {
+        viewer.setEditPartFactory(new DummyDiagramPartFactory());
+    }
+
+    /**
+     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#setLabelProvider(org.eclipse.jface.viewers.ILabelProvider)
+     */
+    public void setLabelProvider( final ILabelProvider provider ) {
+        DiagramUiPlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator().addListener(this);
+        // provider.addListener(this);
+        DiagramUiPlugin.getDiagramNotationManager().setLabelProvider(provider);
+    }
+
+    /**
+     * @param factory
+     */
+    public void setModelFactory( final DiagramModelFactory factory ) {
+        diagramModelFactory = factory;
     }
 
     /**
      * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#getEditorActionBarContributor()
      */
-    public void setNotationId( String sNotationId ) {
+    public void setNotationId( final String sNotationId ) {
         //        Util.log( IStatus.INFO, "[DiagramEditor.setNotationId] TOP "  ); //$NON-NLS-1$
         if (!this.sNotationId.equals(sNotationId)) {
             this.sNotationId = sNotationId;
@@ -1247,332 +1655,72 @@ public class DiagramEditor extends GraphicalEditor
         }
     }
 
-    public String getNotationId() {
-        return this.sNotationId;
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#setLabelProvider(org.eclipse.jface.viewers.ILabelProvider)
-     */
-    public void setLabelProvider( ILabelProvider provider ) {
-        DiagramUiPlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator().addListener(this);
-        // provider.addListener(this);
-        DiagramUiPlugin.getDiagramNotationManager().setLabelProvider(provider);
-    }
-
-    public ILabelProvider getLabelProvider() {
-        return DiagramUiPlugin.getDiagramNotationManager().getLabelProvider();
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#getNotifyChangedListener()
-     */
-    public INotifyChangedListener getNotifyChangedListener() {
-        return this;
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#getControl()
-     */
-    public Control getControl() {
-        return viewer.getControl();
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#getControl()
-     */
-    public DiagramViewForm getPrimaryControl() {
-        return diagramViewForm;
-    }
-
-    /**
-     * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
-     */
-    public void notifyChanged( Notification notification ) {
-        boolean diagramStillValid = true;
-        // DiagramModelFactory inherently wraps
-        if (getModelFactory() != null && getCurrentModel() != null) {
-            diagramStillValid = getModelFactory().notifyModel(notification,
-                                                              getCurrentModel(),
-                                                              diagramInput.getDiagram().getType());
-        }
-
-        if (diagramStillValid) {
-            try {
-                if (getDiagramActionAdapter() != null) getDiagramActionAdapter().handleNotification(notification);
-                if (diagramController != null) diagramController.handleNotification(notification);
-            } catch (Exception ex) {
-                DiagramUiConstants.Util.log(IStatus.ERROR, ex, ex.getClass().getName());
-            }
-            if (getDiagram() != null) {
-                updateEditorTab(getDiagram());
-                // defect 16803 - be smarter about model changes
-                if (getModelFactory().shouldRefreshDiagram(notification, getCurrentModel(), diagramInput.getDiagram().getType())) {
-                    // trigger the refresh:
-                    refreshDiagramSafe();
-                } // endif
-            }
-        } else {
-            if (meParentEditor != null && meParentEditor.getModelFile() != null && meParentEditor.getModelFile().exists()) {
-                // here's where we replace current diagram with bogus empty diagram by calling openContext(null)
-                openContext(null);
-            }
-        }
-    }
-
-    private void updateEditorTab( Diagram someDiagram ) {
-        ILabelProvider labelProvider = DiagramUiPlugin.getDiagramNotationManager().getLabelProvider();
-        if (labelProvider != null) {
-            titleImage = labelProvider.getImage(someDiagram);
-            setTitleText(labelProvider.getText(someDiagram));
-            tooltip = labelProvider.getText(someDiagram);
-        }
-        if (this.meParentEditor != null) {
-            this.meParentEditor.refreshEditorTabs();
-        }
-    }
-
-    public MenuManager getNotationActionGroup() {
-        if (mmNotationActionGroup == null) {
-            mmNotationActionGroup = DiagramUiPlugin.getDiagramNotationManager().getNotationActionGroup(this, getNotationId());
-        } else {
-            ((NotationChoiceRadioActionGroup)mmNotationActionGroup).updateNotationActions(getNotationId());
-        }
-        return mmNotationActionGroup;
-    }
-
-    /**
-     * @see org.eclipse.ui.IWorkbenchPart#getTitle()
-     */
-    @Override
-    public String getTitle() {
-        if (title == null) {
-            return super.getTitle();
-        }
-        return title;
-    }
-
-    /**
-     * @see org.eclipse.ui.IWorkbenchPart#getTitleImage()
-     */
-    @Override
-    public Image getTitleImage() {
-        return titleImage;
-    }
-
-    /**
-     * @see org.eclipse.ui.IWorkbenchPart#getTitleToolTip()
-     */
-    @Override
-    public String getTitleToolTip() {
-        if (tooltip == null) {
-            return super.getTitleToolTip();
-        }
-        return tooltip;
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#getOutlineContribution()
-     */
-    public ModelEditorPageOutline getOutlineContribution() {
-        if (overview == null) overview = new DiagramOverview(getGraphicalViewer(), getSelectionSynchronizer(), getCurrentModel());
-        return overview;
-    }
-
     /**
      * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#setParent()
      */
-    public void setParent( ModelEditor meParentEditor ) {
+    public void setParent( final ModelEditor meParentEditor ) {
         this.meParentEditor = meParentEditor;
     }
 
-    /*
-     */
-    public ModelEditor getParent() {
-        return meParentEditor;
-    }
-
     /**
-     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#canDisplay(org.eclipse.ui.IEditorInput)
-     */
-    public boolean canDisplay( IEditorInput input ) {
-        boolean result = false;
-        ModelResource mr = null;
-
-        if (input instanceof EObject) {
-            mr = ModelUtilities.getModelResourceForModelObject((EObject)input);
-        } else if (input instanceof ModelResource) {
-            mr = (ModelResource)input;
-        } else if (input instanceof IFileEditorInput) {
-            IFileEditorInput ifei = (IFileEditorInput)input;
-            IFile modelFile = ifei.getFile();
-
-            if (ModelUtil.isXsdFile(modelFile)) {
-                result = false;
-            } else {
-                try {
-                    mr = ModelUtilities.getModelResource(modelFile, true);
-                } catch (ModelWorkspaceException e) {
-                    String message = this.getClass().getName()
-                                     + ":  canDisplay() error finding model resource for file = " + modelFile; //$NON-NLS-1$
-                    DiagramUiConstants.Util.log(IStatus.ERROR, e, message);
-                }
-            }
-
-        }
-        if (mr != null) {
-            result = ModelUtilities.supportsDiagrams(mr);
-        }
-
-        return result;
-    }
-
-    /**
-     * @see com.metamatrix.modeler.diagram.ui.actions.AutoLayout#autoLayout()
-     */
-    public void autoLayout() {
-        if (getCurrentModel() != null && getGraphicalViewer().getContents() instanceof DiagramEditPart) {
-            DiagramEditPart diagram = (DiagramEditPart)getGraphicalViewer().getContents();
-
-            /* componentLayout() is called to give the components that have "children" a chance to layout
-             * those children. Classifiers, for instance have model children which result in Attribute
-             * Edit parts being created.  The Classifier has already been constructed but still needs to
-             * layout the attributes.
-             */
-            diagram.setUnderConstruction(true);
-            diagram.layout();
-            diagram.constructionCompleted(true);
-            if (getDiagramController() != null) {
-                getDiagramController().updateForAutoLayout();
-            }
-        }
-    }
-
-    /**
-     * @see com.metamatrix.modeler.diagram.ui.actions.AutoLayout#canAutoLayout()
-     */
-    public boolean canAutoLayout() {
-        return true;
-    }
-
-    /**
-     * @see com.metamatrix.modeler.diagram.ui.actions.AutoLayout#canAutoLayout()
-     */
-    public void doRefreshDiagram() {
-        refreshDiagramSafe();
-        autoLayout();
-    }
-
-    /**
-     * @see com.metamatrix.modeler.diagram.ui.editor.ZoomableEditor#getDiagramEditor()
-     */
-    public DiagramEditor getDiagramEditor() {
-        return this;
-    }
-
-    public DiagramViewer getDiagramViewer() {
-        return viewer;
-    }
-
-    /**
-     * @return
-     */
-    public DiagramController getDiagramController() {
-        return diagramController;
-    }
-
-    /**
-     * @return
-     */
-    public DiagramModelFactory getModelFactory() {
-        return diagramModelFactory;
-    }
-
-    /**
-     * @param factory
-     */
-    public void setModelFactory( DiagramModelFactory factory ) {
-        diagramModelFactory = factory;
-    }
-
-    /**
-     * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-     */
-    @Override
-    public void createPartControl( Composite parent ) {
-        // System.out.println("  -->>  DE.createPartControl() Creating ViewForm and ToolBar() ");
-        diagramViewForm = new DiagramViewForm(parent, SWT.BORDER);
-        toolBar = new ToolBar(diagramViewForm, SWT.FLAT | SWT.WRAP | SWT.VERTICAL);
-        // toolBar.setLayout(new GridLayout());
-        // GridData data = new GridData(GridData.HORIZONTAL_ALIGN_END, SWT.FILL, false, true); //GridData.HORIZONTAL_ALIGN_END |
-        // GridData.VERTICAL_ALIGN_END);
-        // toolBar.setLayoutData(data);SWT.VERTICAL
-
-        diagramViewForm.setToolBar(toolBar);
-
-        toolBarManager = new DiagramToolBarManager(toolBar);
-
-        super.createPartControl(diagramViewForm);
-
-        toolBarManager.update(true);
-        parent.addDisposeListener(new DisposeListener() {
-            public void widgetDisposed( DisposeEvent e ) {
-                DiagramController dController = getDiagramController();
-                if (dController != null) {
-                    dController.dispose();
-                }
-            }
-        });
-        // System.out.println("  -->>  DE.createPartControl() ViewForm.isDisposed() = " + diagramViewForm.isDisposed());
-    }
-
-    public ToolBarManager getToolBarManager() {
-        return toolBarManager;
-    }
-
-    /**
-     * @see org.eclipse.ui.IWorkbenchPart#dispose()
-     * @since 5.0
-     */
-    @Override
-    public void dispose() {
-        // dispose the action adapters
-        if (!this.adapterMap.isEmpty()) {
-            Iterator itr = this.adapterMap.values().iterator();
-
-            while (itr.hasNext()) {
-                ((IDiagramActionAdapter)itr.next()).disposeOfActions();
-            }
-        }
-
-        DiagramUiPlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator().removeListener(this);
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(markerListener);
-        ((AbstractActionService)DiagramUiPlugin.getDefault().getActionService(getEditorSite().getPage())).removePartListener(this);
-        if (toolBarManager != null) {
-            // System.out.println("  -->>  DE.dispose() calling toolBarManager.dispose() TBM = NULL");
-            toolBarManager.dispose();
-            toolBarManager = null;
-        }
-
-        if (dacDiagramActionContributor != null) {
-            dacDiagramActionContributor.dispose();
-            dacDiagramActionContributor = null;
-        }
-
-        if (currentActionAdapter != null) {
-            currentActionAdapter = null;
-        }
-
-        // jh TODO Defect 18038
-        // serialize and save the mapTreeStatesMap
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#preDispose()
+     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#setTitleText(java.lang.String)
      * @since 4.2
      */
-    public void preDispose() {
-        // Default Implementation
+    public void setTitleText( final String newTitle ) {
+        this.title = newTitle;
+    }
+
+    private void updateDiagramController() {
+
+        boolean useExistingController = false;
+
+        // get the new diagram's controller class (if exists)
+        final Class controllerClass = DiagramUiPlugin.getDiagramTypeManager().getDiagram((getDiagram()).getType()).getDiagramControllerClass();
+
+        // Clean up and remove current controller if exists.
+        // Check for non-null controller and if non-null, then is it the same class as the new diagram type.
+        if (diagramController != null) {
+
+            // If new diagram's controller is the same type, ask the
+            // controller if it want's to maintain control
+            if (controllerClass != null) if (diagramController.getClass().equals(controllerClass)) useExistingController = diagramController.maintainControl(getDiagram());
+
+            // We need to throw away the old controller here.
+            if (!useExistingController) {
+                // Remove the control listener that was added at end of this method
+                if (diagramController instanceof ControlListener) getControl().removeControlListener((ControlListener)diagramController);
+
+                diagramController.deactivate();
+
+                selectionProvider.removeDiagramController(diagramController);
+
+                final Control diagramControl = diagramViewForm.getControllerControl();
+                if (diagramControl != null) diagramControl.dispose();
+                // Finish cleaning up the diagram controller
+                diagramController.dispose();
+                diagramController = null;
+
+                // resize the diagram view form
+                diagramViewForm.getSashForm().update();
+                diagramViewForm.getSashForm().pack(true);
+                diagramViewForm.update();
+                diagramViewForm.layout(false);
+            }
+
+        }
+
+        if (useExistingController) diagramController.rewireDiagram(getDiagram());
+        else if (controllerClass != null) {
+            final DiagramController newDiagramController = getDiagramController(getDiagram());
+
+            // If new controller, wire it up.
+            if (newDiagramController != null) {
+                diagramController = newDiagramController;
+                diagramController.wireDiagram(getDiagram());
+                selectionProvider.setDiagramController(diagramController);
+                if (diagramController instanceof ControlListener) getControl().addControlListener((ControlListener)diagramController);
+            }
+        }
     }
 
     public void updateDiagramPreferences() {
@@ -1581,7 +1729,7 @@ public class DiagramEditor extends GraphicalEditor
 
         // Let's get the primary Edit part, get it's figure and update it's BKGD color
         if (getDiagramViewer().getContents() != null && getDiagramViewer().getContents() instanceof DiagramEditPart) {
-            DiagramEditPart rootEditPart = (DiagramEditPart)getDiagramViewer().getContents();
+            final DiagramEditPart rootEditPart = (DiagramEditPart)getDiagramViewer().getContents();
             if (rootEditPart != null) rootEditPart.updateForPreferences();
         }
 
@@ -1590,369 +1738,54 @@ public class DiagramEditor extends GraphicalEditor
 
     }
 
-    /**
-     * @see org.eclipse.jface.viewers.ILabelProviderListener#labelProviderChanged(org.eclipse.jface.viewers.LabelProviderChangedEvent)
-     */
-    public void labelProviderChanged( LabelProviderChangedEvent event ) {
-
-        boolean modelChanged = false;
-        Object[] elements = event.getElements();
-
-        if (elements != null && elements.length > 1) {
-            for (int i = 0; i < elements.length; i++) {
-                Object nextElement = elements[i];
-                if (nextElement instanceof EObject) {
-                    if (ModelUtilities.areModelResourcesSame((EObject)nextElement, getDiagram())) modelChanged = true;
-                } else if (nextElement instanceof IResource) {
-                    if (ModelUtilities.isModelFile((IResource)nextElement)) {
-                        ModelResource modelResource = null;
-                        try {
-                            modelResource = ModelUtilities.getModelResource((IFile)nextElement, false);
-                        } catch (ModelWorkspaceException e) {
-                            DiagramUiConstants.Util.log(IStatus.ERROR,
-                                                        e,
-                                                        "DiagramEditor.labelProviderChanged()  ERROR finding ModelResource"); //$NON-NLS-1$
-                        }
-                        if (modelResource != null && modelResource.equals(modelResource)) {
-                            modelChanged = true;
-                        }
-                    }
-                }
-                if (modelChanged) break;
-            }
+    private void updateEditorTab( final Diagram someDiagram ) {
+        final ILabelProvider labelProvider = DiagramUiPlugin.getDiagramNotationManager().getLabelProvider();
+        if (labelProvider != null) {
+            titleImage = labelProvider.getImage(someDiagram);
+            setTitleText(labelProvider.getText(someDiagram));
+            tooltip = labelProvider.getText(someDiagram);
         }
-
-        if (getModelFactory() != null && getCurrentModel() != null && modelChanged) {
-            getDecoratorHandler().handleLabelProviderChanged();
-        }
-
-    }
-
-    /**
-     * @see org.eclipse.ui.IWorkbenchPart#setFocus()
-     */
-    @Override
-    public void setFocus() {
-        refreshFont();
-        super.setFocus();
-        // ----------------------------
-        // Defect 22844 - setting ignoreInternalFocus
-        // This cleans up simple selection causing focus to OperationEditorPage way too often
-        // ----------------------------
-        if (meParentEditor != null) meParentEditor.setIgnoreInternalFocus(true);
-    }
-
-    /**
-     * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
-     */
-    public void partActivated( IWorkbenchPart part ) {
-        // No action
-    }
-
-    /**
-     * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
-     */
-    public void partBroughtToTop( IWorkbenchPart part ) {
-        // No action
-    }
-
-    /**
-     * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
-     */
-    public void partClosed( IWorkbenchPart part ) {
-        // No action
-    }
-
-    /* This call is required because we are managing fonts globally. So if an editor isn't displayed, but has
-     * diagram figures containing "disposed" fonts, they need to be updated to the new font, so the GC methods
-     * don't barf.... BML 5/18/04
-     * On close all, each tab/editor is deactivated and somehow told to "refresh" display before going away...
-     */
-    private void refreshFont() {
-        EditPart editPart = getDiagramViewer().getContents();
-
-        if ((editPart != null) && (editPart instanceof DiagramEditPart)) {
-            DiagramEditPart diagramEP = (DiagramEditPart)editPart;
-
-            if ((diagramEP.getCurrentDiagramFont() != null) && diagramEP.getCurrentDiagramFont().isDisposed()) {
-                diagramEP.refreshFont(true);
-            }
-        }
-    }
-
-    /**
-     * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
-     */
-    public void partDeactivated( IWorkbenchPart part ) {
-        refreshFont();
-    }
-
-    /**
-     * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
-     */
-    public void partOpened( IWorkbenchPart part ) {
-        // No action
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#updateReadOnlyState(boolean)
-     */
-    public void updateReadOnlyState( boolean isReadOnly ) {
-        if (getCurrentModel() != null && getCurrentModel().isReadOnly() != isReadOnly) {
-            getCurrentModel().setReadOnly(isReadOnly);
-            Iterator iter = getCurrentModel().getChildren().iterator();
-            Object nextObj = null;
-            while (iter.hasNext()) {
-                nextObj = iter.next();
-                if (nextObj instanceof DiagramModelNode) {
-                    ((DiagramModelNode)nextObj).setReadOnly(isReadOnly);
-                }
-            }
-        }
+        if (this.meParentEditor != null) this.meParentEditor.refreshEditorTabs();
     }
 
     void updateReadOnlyState() {
         // Check Readonly status
         if (getEditorInput() instanceof IFileEditorInput) {
-            boolean readOnly = ((IFileEditorInput)getEditorInput()).getFile().isReadOnly();
+            final boolean readOnly = ((IFileEditorInput)getEditorInput()).getFile().isReadOnly();
             updateReadOnlyState(readOnly);
         }
     }
 
     /**
-     * @return Returns the zoomFactor.
-     * @since 4.2
+     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#updateReadOnlyState(boolean)
      */
-    public double getCurrentZoomFactor() {
-        return this.zoomFactor;
-    }
-
-    public void handleZoomChanged() {
-        saveZoom();
-        // Let's get the primary Edit part, get it's figure and update it's BKGD color
-        if (getDiagramViewer().getContents() != null && getDiagramViewer().getContents() instanceof DiagramEditPart) {
-            DiagramEditPart rootEditPart = (DiagramEditPart)getDiagramViewer().getContents();
-            if (rootEditPart != null) rootEditPart.handleZoomChanged();
-
-            if (diagramController != null) {
-                diagramController.handleZoomChanged();
-            }
-
-            // update the print grid if zoom has changed diagram size
-            getDiagramViewer().updateForPrintPreferences();
-        }
-    }
-
-    /**
-     * @see com.metamatrix.core.event.EventObjectListener#processEvent(java.util.EventObject)
-     * @since 4.2
-     */
-    public void processEvent( EventObject obj ) {
-
-        ModelResourceEvent event = (ModelResourceEvent)obj;
-
-        // Return if event concerns closed resource, otherwise subsequent call to checkValidity will cause resource to be
-        // re-opened
-        final int eventType = event.getType();
-        if (eventType == ModelResourceEvent.CLOSING || eventType == ModelResourceEvent.CLOSED) {
-            return;
-        }
-
-        boolean stillValid = checkValidity(this.getClass().getName() + ".processEvent()"); //$NON-NLS-1$
-        final Diagram currentDiagram = getDiagram();
-
-        if (eventType == ModelResourceEvent.RELOADED) {
-            final ModelResource evResource = event.getModelResource();
-            boolean isSameResource = isCurrentResource(evResource);
-            final IResource res = event.getResource();
-            if (isSameResource) {
-                // we are the editor for the reloaded file:
-                Display.getDefault().asyncExec(new Runnable() {
-                    public void run() {
-                        EObject realDiagram = ModelObjectUtilities.getRealEObject(currentDiagram);
-                        ModelEditorManager.open(realDiagram, true);
-                        if (res instanceof IFile) {
-                            IFile file = (IFile)res;
-                            ModelEditorManager.activate(file, true);
-                        } // endif
-                    }
-                });
-            } else {
-                // We also need to check if the current diagram's resource, though different may "import"
-                // the event resource, in this case we call open also.
-
-                // defect 16805 - ask the IDiagramType for whether we depend on
-                // the event resource.
-                if (currentDiagram != null) {
-                    IDiagramType idt = DiagramUiPlugin.getDiagramTypeManager().getDiagram(currentDiagram.getType());
-
-                    if (idt.dependsOnResource(currentModel, evResource.getResource())) {
-                        // redisplay contents:
-                        refreshDiagramSafe();
-                    } // endif -- depends
-                } // endif -- diagram not null
-            }
-        } else if (stillValid && eventType == ModelResourceEvent.CHANGED) {
-            // Check Readonly status
-            updateReadOnlyState();
-        } else if (stillValid && eventType == ModelResourceEvent.ADDED) {
-            // file should not be represented in the diagram, since it is new.
-            // TODO: how do we find if we need to refresh?
-        } else if (stillValid && (eventType == ModelResourceEvent.REMOVED || eventType == ModelResourceEvent.MOVED)) {
-            // if moved or removed:
-            if (currentDiagram != null) {
-                IDiagramType idt = DiagramUiPlugin.getDiagramTypeManager().getDiagram(currentDiagram.getType());
-                if (idt.dependsOnResource(currentModel, event.getResource())) {
-                    // redisplay contents:
-                    refreshDiagramSafe();
-                } // endif -- depends
-            } // endif -- diagram not null
-        }
-    }
-
-    /**
-     * Safely rebuilds the diagram in the display thread, without adjusting the scrolling viewport.
-     */
-    void refreshDiagramSafe() {
-        // redisplay contents:
-        Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
-                // refresh the diagram:
-                // Since this is in an async, we need to really check if the model/workspace isn't closing???
-                if (!DiagramUiPlugin.getDefault().getWorkbench().isClosing() && getDiagramViewer().isValidViewer())
-                // -----------------------------
-                // Defect 23360
-                // NPE resulting from deleting a resource and NOT checking for stale diagrams.
-                if (getCurrentModel() != null && getCurrentModel().getModelObject() != null
-                    && DiagramUiUtilities.isValidDiagram(getDiagram())) {
-                    openContext(getCurrentModel().getModelObject(), true);
-                }
-            }
-        });
-    }
-
-    public boolean checkValidity( String callPrefix ) {
-        // Check if diagram == null, diagram resource == null
-        if (getDiagram() == null) {
-            //            String message = callPrefix + ":  checkValidity() ERROR - Diagram == NULL"; //$NON-NLS-1$
-            // DiagramUiPlugin.Util.log(IStatus.ERROR, message);
-            return false;
-        }
-
-        ModelResource mr = ModelUtilities.getModelResourceForModelObject(getDiagram());
-        if (mr == null) {
-            //            String message = callPrefix + ":  checkValidity() ERROR - Model Resource == NULL for current diagram."; //$NON-NLS-1$
-            // DiagramUiPlugin.Util.log(IStatus.ERROR, message);
-            return false;
-        }
-
-        if (DiagramUiUtilities.isValidDiagram(getDiagram())) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean isCurrentResource( ModelResource modelResource ) {
-        CoreArgCheck.isNotNull(modelResource, DiagramUiConstants.Util.getString("DiagramEditor.isCurrentResourceNullCheck")); //$NON-NLS-1$
-
-        // Check cached model resource
-        if (currentModelResource != null && modelResource == currentModelResource) {
-            return true;
-        }
-
-        // get resource from diagram.
-        ModelResource editorMR = ModelUtilities.getModelResourceForModelObject(getDiagram());
-        if (editorMR != null) {
-            if (modelResource == editorMR) return true;
-        } else {
-            // Get file for resource
-            if (currentModelPath != null) {
-                // get file path for resource
-                IPath newPath = modelResource.getPath();
-                if (currentModelPath.equals(newPath)) return true;
-            }
-        }
-
-        return false;
-    }
-
-    public ModelResource getCurrentModelResource() {
-        return this.currentModelResource;
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.editors.IInitializationCompleteNotifier#addListener(com.metamatrix.modeler.ui.editors.IInitializationCompleteListener)
-     * @since 4.3
-     */
-    public void addListener( IInitializationCompleteListener theListener ) {
-        if (completionListeners == null) {
-            completionListeners = new ArrayList();
-        }
-
-        completionListeners.add(theListener);
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.editors.IInitializationCompleteNotifier#notifyInitializationComplete()
-     * @since 4.3
-     */
-    public void notifyInitializationComplete() {
-        if (completionListeners != null && !completionListeners.isEmpty()) {
-            for (Iterator iter = completionListeners.iterator(); iter.hasNext();) {
-                ((IInitializationCompleteListener)iter.next()).processInitializationComplete();
+    public void updateReadOnlyState( final boolean isReadOnly ) {
+        if (getCurrentModel() != null && getCurrentModel().isReadOnly() != isReadOnly) {
+            getCurrentModel().setReadOnly(isReadOnly);
+            final Iterator iter = getCurrentModel().getChildren().iterator();
+            Object nextObj = null;
+            while (iter.hasNext()) {
+                nextObj = iter.next();
+                if (nextObj instanceof DiagramModelNode) ((DiagramModelNode)nextObj).setReadOnly(isReadOnly);
             }
         }
     }
 
-    /**
-     * @see com.metamatrix.modeler.ui.editors.IInitializationCompleteNotifier#removeListener(com.metamatrix.modeler.ui.editors.IInitializationCompleteListener)
-     * @since 4.3
-     */
-    public void removeListener( IInitializationCompleteListener theListener ) {
-        if (completionListeners != null && !completionListeners.isEmpty()) {
-            completionListeners.remove(theListener);
+    private void updateSelectionsInMarker( final IMarker mMostRecentlyCreatedMarker ) {
+
+        if (mMostRecentlyCreatedMarker != null) try {
+
+            // update Selection
+            if (getSelectionHandler() != null) {
+
+                final List lstEObjects = getSelectionHandler().getSelectedEObjects();
+                mMostRecentlyCreatedMarker.setAttribute(Navigation.CURRENT_SELECTION, lstEObjects);
+            }
+
+        } catch (final CoreException ce) {
+            final String message = this.getClass().getName() + ":  updateSelectionsInMarker() error  "; //$NON-NLS-1$
+            DiagramUiConstants.Util.log(IStatus.ERROR, ce, message);
         }
-    }
 
-    /**
-     * @see com.metamatrix.modeler.ui.editors.IInlineRenameable#canRenameInline(org.eclipse.emf.ecore.EObject)
-     * @since 5.0
-     */
-    public IInlineRenameable getInlineRenameable( EObject theObj ) {
-        return this;
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.editors.IInlineRenameable#renameInline(org.eclipse.emf.ecore.EObject)
-     * @since 5.0
-     */
-    public void renameInline( final EObject theObj,
-                              IInlineRenameable renameable ) {
-        if (renameable == this) {
-            // Set Selection
-            // Let's asynch this off
-            Display.getCurrent().asyncExec(new Runnable() {
-                public void run() {
-                    // Defect 19537 - replaced call to handleDoubleClick() to use a new renameInline() method
-                    // since this is what we really want to do!!!!!
-                    getSelectionHandler().renameInline(theObj);
-                }
-            });
-
-        }
-    }
-
-    /**
-     * @return False.
-     * @see com.metamatrix.modeler.ui.editors.ModelEditorPage#isSelectedFirst(org.eclipse.ui.IEditorInput)
-     * @since 5.0.1
-     */
-    public boolean isSelectedFirst( IEditorInput input ) {
-        return false;
-    }
-
-    private void autoSelect() {
-        if (meParentEditor != null) ModelEditorManager.autoSelectEditor(meParentEditor, this);
     }
 }
