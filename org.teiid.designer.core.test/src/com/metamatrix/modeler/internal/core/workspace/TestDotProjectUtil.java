@@ -16,10 +16,22 @@ import org.jdom.JDOMException;
 import com.metamatrix.core.util.SmartTestSuite;
 
 /**
- * @author SDelap TODO To change the template for this generated type comment go to Window - Preferences - Java - Code Style -
- *         Code Templates
  */
 public class TestDotProjectUtil extends TestCase {
+
+    private IResource buildMockResourceFromTestData( final File file ) {
+        if (file.isDirectory()) {
+            final MockContainer container = new MockContainer();
+            final File[] files = file.listFiles();
+            if (files != null && files.length > 0) for (final File file2 : files) {
+                final IResource resource = buildMockResourceFromTestData(file2);
+                container.addResource(resource);
+            }
+            return container;
+        }
+        final MockFileResource resource = new MockFileResource(file);
+        return resource;
+    }
 
     public void testGetDotProjectCountFromFiles() throws IOException, JDOMException {
         assertEquals("The wrong .project count was found.", 0, DotProjectUtils.getDotProjectCount(SmartTestSuite.getTestDataFile("/dotProjectFiles/nodotproject"), true, false)); //$NON-NLS-1$ //$NON-NLS-2$
@@ -95,7 +107,7 @@ public class TestDotProjectUtil extends TestCase {
         assertEquals("The wrong .project count was found.", 0, DotProjectUtils.getDotProjectCount(buildMockResourceFromTestData(SmartTestSuite.getTestDataFile("/dotProjectFiles/modelerdotproject/Books.xsd")), true, true)); //$NON-NLS-1$ //$NON-NLS-2$
 
         // Test Nature
-        MockFileResource fileResource = (MockFileResource)buildMockResourceFromTestData(SmartTestSuite.getTestDataFile("/dotProjectFiles/modelerdotproject/.project")); //$NON-NLS-1$
+        final MockFileResource fileResource = (MockFileResource)buildMockResourceFromTestData(SmartTestSuite.getTestDataFile("/dotProjectFiles/modelerdotproject/.project")); //$NON-NLS-1$
         fileResource.setAccessible(true);
         fileResource.setModelNature(false);
         assertEquals("The wrong .project count was found.", 1, DotProjectUtils.getDotProjectCount(fileResource, false, false)); //$NON-NLS-1$ 
@@ -103,22 +115,6 @@ public class TestDotProjectUtil extends TestCase {
         fileResource.setModelNature(true);
         assertEquals("The wrong .project count was found.", 1, DotProjectUtils.getDotProjectCount(fileResource, false, false)); //$NON-NLS-1$ 
 
-    }
-
-    private IResource buildMockResourceFromTestData( File file ) {
-        if (file.isDirectory()) {
-            MockContainer container = new MockContainer();
-            File[] files = file.listFiles();
-            if (files != null && files.length > 0) {
-                for (int i = 0; i < files.length; i++) {
-                    IResource resource = buildMockResourceFromTestData(files[i]);
-                    container.addResource(resource);
-                }
-            }
-            return container;
-        }
-        MockFileResource resource = new MockFileResource(file);
-        return resource;
     }
 
 }
