@@ -32,33 +32,24 @@ public class SqlTableModel {
     static final int limitRows = 100;
     boolean bFinished = false;
     boolean allRetrieved = false;
-    private int count;
-    private int maxRows;
-    private HashMap columnMap = new HashMap();
+    private final int count;
+    private final int maxRows;
+    private final HashMap columnMap = new HashMap();
     ResultSetMetaData metaData;
     String[] columnNames;
     SQLConnection conn;
     private String sql;
 
-    public int getColumnIndex( String property ) {
-        Integer ind = (Integer)columnMap.get(property);
-        int i = -1;
-        if (ind != null) {
-            i = ind.intValue();
-        }
-
-        return i;
-    }
-
     public String ss[];
+
     public SQLTableSorter sorter;
 
-    public SqlTableModel( ResultSetReader rs,
-                          ResultSetMetaData metaData,
-                          int maxRows,
-                          SQLConnection conn,
-                          String[] ss,
-                          SQLTableSorter sorter ) throws java.lang.Exception {
+    public SqlTableModel( final ResultSetReader rs,
+                          final ResultSetMetaData metaData,
+                          final int maxRows,
+                          final SQLConnection conn,
+                          final String[] ss,
+                          final SQLTableSorter sorter ) throws java.lang.Exception {
         this.sorter = sorter;
         this.ss = ss;
         this.conn = conn;
@@ -86,15 +77,56 @@ public class SqlTableModel {
 
     }
 
-    public SqlTableModel( ResultSetReader theResultSetReader,
-                          ResultSetMetaData theMetaData,
-                          int theMaxRows,
-                          SQLConnection theConnection,
-                          String[] theColumnNames,
-                          SQLTableSorter theSorter,
-                          String theSql ) throws java.lang.Exception {
+    public SqlTableModel( final ResultSetReader theResultSetReader,
+                          final ResultSetMetaData theMetaData,
+                          final int theMaxRows,
+                          final SQLConnection theConnection,
+                          final String[] theColumnNames,
+                          final SQLTableSorter theSorter,
+                          final String theSql ) throws java.lang.Exception {
         this(theResultSetReader, theMetaData, theMaxRows, theConnection, theColumnNames, theSorter);
         this.sql = theSql;
+    }
+
+    public void closeResultSet() {
+
+        if (!bFinished) {
+        }
+
+    }
+
+    public int getColumnIndex( final String property ) {
+        final Integer ind = (Integer)columnMap.get(property);
+        int i = -1;
+        if (ind != null) i = ind.intValue();
+
+        return i;
+    }
+
+    public String[] getColumns() {
+        return columnNames;
+
+    }
+
+    public Object[] getElements() {
+        return list.toArray();
+    }
+
+    public String getPartial() {
+        if (!allRetrieved) return new String("" + list.size() + "\\?"); //$NON-NLS-1$ //$NON-NLS-2$
+        return new String("" + list.size() + "\\" + list.size()); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    public int getSize() {
+        return list.size();
+    }
+
+    public String getSql() {
+        return this.sql;
+    }
+
+    public boolean isFinished() {
+        return bFinished;
     }
 
     public void moreRows() throws java.lang.Exception {// Retrieves "limitRows" lines each time
@@ -127,7 +159,7 @@ public class SqlTableModel {
         Object[] obj = null;
         while ((obj = rs.readRow()) != null) {
             jj++;
-            SqlRowElement el = new SqlRowElement(obj, count, this);
+            final SqlRowElement el = new SqlRowElement(obj, count, this);
             list.add(el);
             if (list.size() >= maxRows) {
                 bFinished = true;// We can't retrieve more than maxRows rows
@@ -142,40 +174,6 @@ public class SqlTableModel {
         allRetrieved = true;
         return true;
 
-    }
-
-    public Object[] getElements() {
-        return list.toArray();
-    }
-
-    // TODO remove this
-    public void closeResultSet() {
-
-        if (!bFinished) {
-        }
-
-    }
-
-    public int getSize() {
-        return list.size();
-    }
-
-    public String getPartial() {
-        if (!allRetrieved) return new String("" + list.size() + "\\?"); //$NON-NLS-1$ //$NON-NLS-2$
-        return new String("" + list.size() + "\\" + list.size()); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    public boolean isFinished() {
-        return bFinished;
-    }
-
-    public String[] getColumns() {
-        return columnNames;
-
-    }
-
-    public String getSql() {
-        return this.sql;
     }
 
 }

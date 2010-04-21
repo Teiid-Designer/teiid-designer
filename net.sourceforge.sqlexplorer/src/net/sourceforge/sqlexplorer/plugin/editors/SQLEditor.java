@@ -105,48 +105,10 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
 public class SQLEditor extends TextEditor implements IResourceChangeListener {
-    private MouseClickListener mcl = new MouseClickListener();
-
-    @Override
-    protected void editorContextMenuAboutToShow( IMenuManager menu ) {
-        super.editorContextMenuAboutToShow(menu);
-
-        IContributionItem[] iContributionItems = SQLExplorerPlugin.getDefault().pluginManager.getEditorContextMenuActions(this);
-        if (iContributionItems != null && iContributionItems.length > 0) {
-            menu.add(new Separator());
-
-            for (int i = 0; i < iContributionItems.length; i++) {
-                menu.add(iContributionItems[i]);
-            }
-        }
-
-        // DEFECT 21637 - the preference action wasn't initializeing the Preference page properly. Let's just remove it.
-        // DEFECT 21636 - the Shift Left and Shift Right actions don't work either.
-
-        IContributionItem[] allItems = menu.getItems();
-        IContributionItem[] itemsToRemove = new IContributionItem[3];
-
-        for (int i = 0; i < allItems.length; i++) {
-            if (allItems[i] instanceof ActionContributionItem) {
-                IAction theAction = ((ActionContributionItem)allItems[i]).getAction();
-                if (theAction.getText().indexOf("Preference") > -1) {
-                    itemsToRemove[0] = allItems[i];
-                } else if (ITextEditorActionDefinitionIds.SHIFT_LEFT.equals(theAction.getActionDefinitionId())) {
-                    itemsToRemove[1] = allItems[i];
-                } else if (ITextEditorActionDefinitionIds.SHIFT_RIGHT.equals(theAction.getActionDefinitionId())) {
-                    itemsToRemove[2] = allItems[i];
-                }
-            }
-        }
-
-        for (int i = 0; i < itemsToRemove.length; ++i) {
-            if (itemsToRemove[i] != null) {
-                menu.remove(itemsToRemove[i]);
-            }
-        }
-    }
+    private final MouseClickListener mcl = new MouseClickListener();
 
     private IPartListener partListener;
+
     IPreferenceStore store;
     public SQLTextViewer sqlTextViewer;
     ExecSQLAction execSQLAction;
@@ -154,10 +116,10 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
     SQLEditorSessionListener listener;
     private OpenFileAction openFileAction;
     private ClearTextAction clearTextAction;
-
     String closedConnectionName;
 
     SessionTreeNode sessionTreeNode;
+
     Combo catalogCombo;
     SessionTreeModel stm = SQLExplorerPlugin.getDefault().stm;
 
@@ -167,24 +129,50 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
         setPreferenceStore(store);
     }
 
-    ISourceViewer getViewer() {
-        return getSourceViewer();
+    /**
+	 * 
+	 */
+    public void clearText() {
+        sqlTextViewer.clearText();
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.texteditor.AbstractTextEditor#createActions()
+     */
+    @Override
+    protected void createActions() {
+
+        super.createActions();
+        final Action action = new Action("Auto-Completion") {
+            @Override
+            public void run() {
+                sqlTextViewer.showAssistance();
+            }
+        };
+
+        // This action definition is associated with the accelerator Ctrl+Space
+        action.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
+        setAction("ContentAssistProposal", action); //$NON-NLS-1$
+        execSQLAction.setActionDefinitionId("net.sourceforge.sqlexplorer.sqlrun");
+        setAction("SQL Run", execSQLAction);
+
     }
 
     @Override
-    protected ISourceViewer createSourceViewer( Composite parent,
-                                                IVerticalRuler ruler,
+    protected ISourceViewer createSourceViewer( final Composite parent,
+                                                final IVerticalRuler ruler,
                                                 int style ) {
         style |= SWT.WRAP;
         parent.setLayout(new FillLayout());
-        Composite myParent = new Composite(parent, SWT.NONE);
+        final Composite myParent = new Composite(parent, SWT.NONE);
 
-        GridLayout layout = new GridLayout();
+        final GridLayout layout = new GridLayout();
         layout.marginHeight = layout.marginWidth = layout.horizontalSpacing = layout.verticalSpacing = 0;
         myParent.setLayout(layout);
 
-        ToolBarManager toolBarMgr = new ToolBarManager(SWT.FLAT);
-        ToolBar toolBar = toolBarMgr.createControl(myParent);
+        final ToolBarManager toolBarMgr = new ToolBarManager(SWT.FLAT);
+        final ToolBar toolBar = toolBarMgr.createControl(myParent);
 
         GridData gid = new GridData();
         gid.horizontalAlignment = GridData.FILL;
@@ -200,14 +188,12 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
         // toolBarMgr.add(saveFileAction);
         toolBarMgr.add(openFileAction);
         toolBarMgr.add(clearTextAction);
-        IAction[] toolActions = SQLExplorerPlugin.getDefault().pluginManager.getEditorToolbarActions(this);
-        if (toolActions != null) {
-            for (int i = 0; i < toolActions.length; i++)
-                toolBarMgr.add(toolActions[i]);
-        }
+        final IAction[] toolActions = SQLExplorerPlugin.getDefault().pluginManager.getEditorToolbarActions(this);
+        if (toolActions != null) for (final IAction toolAction : toolActions)
+            toolBarMgr.add(toolAction);
         toolBarMgr.update(true);
         // ToolItem sep1 = new ToolItem (toolBar, SWT.SEPARATOR);
-        ToolItem sep2 = new ToolItem(toolBar, SWT.SEPARATOR);
+        final ToolItem sep2 = new ToolItem(toolBar, SWT.SEPARATOR);
         catalogCombo = new Combo(toolBar, SWT.READ_ONLY);
         listener = new SQLEditorSessionListener(this);
         stm.addListener(listener);
@@ -216,19 +202,17 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
         catalogCombo.setSize(200, catalogCombo.getSize().y);
         catalogCombo.addSelectionListener(new SelectionListener() {
 
-            public void widgetSelected( SelectionEvent arg0 ) {
-                int selIndex = catalogCombo.getSelectionIndex();
-                String newCat = catalogCombo.getItem(selIndex);
-                if (sessionTreeNode != null) {
-                    try {
-                        sessionTreeNode.setCatalog(newCat);
-                    } catch (Exception e1) {
-                        SQLExplorerPlugin.error("Error changing catalog", e1);
-                    }
-                }
+            public void widgetDefaultSelected( final SelectionEvent arg0 ) {
             }
 
-            public void widgetDefaultSelected( SelectionEvent arg0 ) {
+            public void widgetSelected( final SelectionEvent arg0 ) {
+                final int selIndex = catalogCombo.getSelectionIndex();
+                final String newCat = catalogCombo.getItem(selIndex);
+                if (sessionTreeNode != null) try {
+                    sessionTreeNode.setCatalog(newCat);
+                } catch (final Exception e1) {
+                    SQLExplorerPlugin.error("Error changing catalog", e1);
+                }
             }
         });
         sep2.setWidth(catalogCombo.getSize().x);
@@ -245,7 +229,7 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
         sqlTextViewer = new SQLTextViewer(myParent, style, store, null, ruler);
         sqlTextViewer.getControl().setLayoutData(gid);
         sqlTextViewer.getTextWidget().addVerifyKeyListener(new VerifyKeyListener() {
-            public void verifyKey( VerifyEvent event ) {
+            public void verifyKey( final VerifyEvent event ) {
                 if (event.stateMask == SWT.CTRL && event.keyCode == 13) {
                     event.doit = false;
                     execSQLAction.run();
@@ -262,229 +246,38 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
         // sourceViewer.getControl().setLayoutData(gid);
         // new VerticalRuler(0)
         myParent.layout();
-        IDocument dc = new Document();
+        final IDocument dc = new Document();
         sqlTextViewer.setDocument(dc);
         if (sessionTreeNode != null) setNewDictionary(sessionTreeNode.getDictionary());
         partListener = new IPartListener() {
-            public void partActivated( IWorkbenchPart part ) {
-                if (part == SQLEditor.this) {
-                    if (sessionTreeNode != null) {
-                        if (sessionTreeNode.supportsCatalogs()) {
-                            String catalog = sessionTreeNode.getCatalog();
-                            String catalogs[] = catalogCombo.getItems();
-                            for (int i = 0; i < catalogs.length; i++) {
-                                if (catalog.equals(catalogs[i])) {
-                                    catalogCombo.select(i);
-                                    break;
-                                }
-                            }
+            public void partActivated( final IWorkbenchPart part ) {
+                if (part == SQLEditor.this) if (sessionTreeNode != null) if (sessionTreeNode.supportsCatalogs()) {
+                    final String catalog = sessionTreeNode.getCatalog();
+                    final String catalogs[] = catalogCombo.getItems();
+                    for (int i = 0; i < catalogs.length; i++)
+                        if (catalog.equals(catalogs[i])) {
+                            catalogCombo.select(i);
+                            break;
                         }
-                    }
                 }
             }
 
-            public void partBroughtToTop( IWorkbenchPart part ) {
+            public void partBroughtToTop( final IWorkbenchPart part ) {
             }
 
-            public void partClosed( IWorkbenchPart part ) {
+            public void partClosed( final IWorkbenchPart part ) {
             }
 
-            public void partDeactivated( IWorkbenchPart part ) {
+            public void partDeactivated( final IWorkbenchPart part ) {
             }
 
-            public void partOpened( IWorkbenchPart part ) {
+            public void partOpened( final IWorkbenchPart part ) {
             }
         };
         getEditorSite().getPage().addPartListener(partListener);
         mcl.install(sqlTextViewer);
 
         return sqlTextViewer;
-
-    }
-
-    public void setNewDictionary( Dictionary dictionary ) {
-        if (sqlTextViewer != null) {
-            sqlTextViewer.setNewDictionary(dictionary);
-            sqlTextViewer.refresh();
-        }
-        // setSourceViewerConfiguration(new SQLSourceViewerConfiguration(new SQLTextTools(store,dictionary)));
-        // sourceViewer.refresh();
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
-     */
-    @Override
-    public void init( IEditorSite site,
-                      IEditorInput input ) throws PartInitException {
-        super.init(site, input);
-        if (input instanceof SQLEditorInput) {
-            SQLEditorInput sqlInput = (SQLEditorInput)input;
-            sessionTreeNode = sqlInput.getSessionNode();
-            if (sessionTreeNode != null) {
-                setNewDictionary(sessionTreeNode.getDictionary());
-                updateSessionStatus(stm);
-            }
-            
-            ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
-        }
-    }
-
-    public String getSQLToBeExecuted() {
-        String sql = sqlTextViewer.getTextWidget().getSelectionText();
-        if (sql == null || sql.trim().length() == 0) {
-            sql = sqlTextViewer.getTextWidget().getText();
-            /*String sep = System.getProperty("line.separator"); //$NON-NLS-1$
-            int iStartIndex = 0;
-            int iEndIndex = sql.length();
-
-            int iCaretPos = sqlTextViewer.getTextWidget().getCaretOffset();
-
-            int iIndex = sql.lastIndexOf(sep+sep,iCaretPos);
-            if(iIndex >0) 
-            	iStartIndex = iIndex;
-            iIndex = sql.indexOf(sep+sep,iCaretPos);
-            if(iIndex >0) 
-            	iEndIndex = iIndex;
-
-            sql = sql.substring(iStartIndex, iEndIndex).trim();*/
-        }
-        System.out.println("Exec " + sql);
-        return sql != null ? sql : ""; //$NON-NLS-1$
-    }
-
-    /**
-     * @return
-     */
-    public SessionTreeNode getSessionTreeNode() {
-        return sessionTreeNode;
-    }
-
-    public void updateSessionStatus( final SessionTreeModel stm ) {
-        // Defect 21949 requires null checks and isDiposed() checks to prevent errors during exit/shutdown
-        if (catalogCombo != null && catalogCombo.isDisposed()) {
-            return;
-        }
-        this.getSite().getShell().getDisplay().asyncExec(new Runnable() {
-            public void run() {
-                SessionTreeNode[] sessionNodes = stm.getRoot().getSessionTreeNodes();
-                boolean found = false;
-
-                for (int i = 0; i < sessionNodes.length; i++) {
-                    if (sessionTreeNode == sessionNodes[i]) {
-                        // found exact session
-                        found = true;
-                    } else if (sessionTreeNode != null) {
-                        // another session with same alias
-                        if (sessionTreeNode.getAlias().getName().equals(sessionNodes[i].getAlias().getName())) {
-                            sessionTreeNode = sessionNodes[i];
-                            found = true;
-                        }
-                    } else if (closedConnectionName != null) {
-                        // closed session name matches a new session name
-                        if (closedConnectionName.equals(sessionNodes[i].getAlias().getName())) {
-                            sessionTreeNode = sessionNodes[i];
-                            found = true;
-                        }
-                    }
-
-                    if (found) {
-                        closedConnectionName = null;
-                        break;
-                    }
-
-                }
-                if (!catalogCombo.isDisposed()) {
-                    if (found) {
-                        if (sessionTreeNode.supportsCatalogs()) {
-                            catalogCombo.setVisible(true);
-                            String catalogs[] = sessionTreeNode.getCatalogs();
-                            String currentCatalog = sessionTreeNode.getCatalog();
-
-                            for (int i = 0; i < catalogs.length; i++) {
-                                catalogCombo.add(catalogs[i]);
-
-                                if (currentCatalog.equals(catalogs[i])) {
-                                    catalogCombo.select(catalogCombo.getItemCount() - 1);
-                                }
-                            }
-                        } else {
-                            catalogCombo.setVisible(false);
-                        }
-                    } else {
-                        // save old session/connection name in case a new one is opened
-                        if (sessionTreeNode != null) {
-                            closedConnectionName = sessionTreeNode.getAlias().getName();
-                        }
-
-                        sessionTreeNode = null;
-                        setNewDictionary(null);
-                        catalogCombo.setVisible(false);
-                    }
-
-                    execSQLAction.setEnabled(found);
-                }
-            }
-        });
-    }
-
-    /**
-     * @param txt
-     */
-    public void setText( String txt ) {
-        // reuse existing document so that undo/redo stack is not lost
-        IDocument doc = sqlTextViewer.getDocument();
-
-        if (doc == null) {
-            doc = new Document();
-            sqlTextViewer.setDocument(doc);
-        }
-
-        doc.set(txt);
-
-        if (sessionTreeNode != null) setNewDictionary(sessionTreeNode.getDictionary());
-
-    }
-
-    /**
-     * @param str
-     */
-    public void loadFile( String file ) {
-        FileReader fr = null;
-        BufferedReader in = null;
-        try {
-            fr = new FileReader(file);
-            in = new BufferedReader(fr);
-            String str;
-            StringBuffer all = new StringBuffer();
-            String delimiter = sqlTextViewer.getTextWidget().getLineDelimiter();
-            while ((str = in.readLine()) != null) {
-                all.append(str);
-                all.append(delimiter);
-            }
-            sqlTextViewer.setDocument(new Document(all.toString()));
-
-        } catch (Throwable e) {
-            SQLExplorerPlugin.error("Error loading document", e); //$NON-NLS-1$
-        } finally {
-            try {
-                fr.close();
-            } catch (java.io.IOException e) {
-            }
-            try {
-                in.close();
-            } catch (java.io.IOException e) {
-            }
-
-        }
-
-    }
-
-    /**
-	 * 
-	 */
-    public void clearText() {
-        sqlTextViewer.clearText();
 
     }
 
@@ -500,30 +293,85 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
         super.dispose();
     }
 
-    public void setMessage( String s ) {
-        statusMgr.setMessage(s);
+    @Override
+    protected void editorContextMenuAboutToShow( final IMenuManager menu ) {
+        super.editorContextMenuAboutToShow(menu);
+
+        final IContributionItem[] iContributionItems = SQLExplorerPlugin.getDefault().pluginManager.getEditorContextMenuActions(this);
+        if (iContributionItems != null && iContributionItems.length > 0) {
+            menu.add(new Separator());
+
+            for (final IContributionItem iContributionItem : iContributionItems)
+                menu.add(iContributionItem);
+        }
+
+        // DEFECT 21637 - the preference action wasn't initializeing the Preference page properly. Let's just remove it.
+        // DEFECT 21636 - the Shift Left and Shift Right actions don't work either.
+
+        final IContributionItem[] allItems = menu.getItems();
+        final IContributionItem[] itemsToRemove = new IContributionItem[3];
+
+        for (final IContributionItem allItem : allItems)
+            if (allItem instanceof ActionContributionItem) {
+                final IAction theAction = ((ActionContributionItem)allItem).getAction();
+                if (theAction.getText().indexOf("Preference") > -1) itemsToRemove[0] = allItem;
+                else if (ITextEditorActionDefinitionIds.SHIFT_LEFT.equals(theAction.getActionDefinitionId())) itemsToRemove[1] = allItem;
+                else if (ITextEditorActionDefinitionIds.SHIFT_RIGHT.equals(theAction.getActionDefinitionId())) itemsToRemove[2] = allItem;
+            }
+
+        for (int i = 0; i < itemsToRemove.length; ++i)
+            if (itemsToRemove[i] != null) menu.remove(itemsToRemove[i]);
+    }
+
+    /**
+     * @return
+     */
+    public SessionTreeNode getSessionTreeNode() {
+        return sessionTreeNode;
+    }
+
+    public String getSQLToBeExecuted() {
+        String sql = sqlTextViewer.getTextWidget().getSelectionText();
+        if (sql == null || sql.trim().length() == 0) sql = sqlTextViewer.getTextWidget().getText();
+        /*String sep = System.getProperty("line.separator"); //$NON-NLS-1$
+        int iStartIndex = 0;
+        int iEndIndex = sql.length();
+
+        int iCaretPos = sqlTextViewer.getTextWidget().getCaretOffset();
+
+        int iIndex = sql.lastIndexOf(sep+sep,iCaretPos);
+        if(iIndex >0) 
+        	iStartIndex = iIndex;
+        iIndex = sql.indexOf(sep+sep,iCaretPos);
+        if(iIndex >0) 
+        	iEndIndex = iIndex;
+
+        sql = sql.substring(iStartIndex, iEndIndex).trim();*/
+        System.out.println("Exec " + sql);
+        return sql != null ? sql : ""; //$NON-NLS-1$
+    }
+
+    ISourceViewer getViewer() {
+        return getSourceViewer();
     }
 
     /* (non-Javadoc)
-     * @see org.eclipse.ui.texteditor.AbstractTextEditor#createActions()
+     * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
      */
     @Override
-    protected void createActions() {
-
-        super.createActions();
-        Action action = new Action("Auto-Completion") {
-            @Override
-            public void run() {
-                sqlTextViewer.showAssistance();
+    public void init( final IEditorSite site,
+                      final IEditorInput input ) throws PartInitException {
+        super.init(site, input);
+        if (input instanceof SQLEditorInput) {
+            final SQLEditorInput sqlInput = (SQLEditorInput)input;
+            sessionTreeNode = sqlInput.getSessionNode();
+            if (sessionTreeNode != null) {
+                setNewDictionary(sessionTreeNode.getDictionary());
+                updateSessionStatus(stm);
             }
-        };
 
-        // This action definition is associated with the accelerator Ctrl+Space
-        action.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
-        setAction("ContentAssistProposal", action); //$NON-NLS-1$
-        execSQLAction.setActionDefinitionId("net.sourceforge.sqlexplorer.sqlrun");
-        setAction("SQL Run", execSQLAction);
-
+            ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+        }
     }
 
     /**
@@ -534,13 +382,177 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
     public boolean isDirty() {
         // only dirty if file associated with editor
         boolean result = false;
-        IEditorInput input = getEditorInput();
+        final IEditorInput input = getEditorInput();
 
-        if ((!(input instanceof SQLEditorInput)) || (((SQLEditorInput)input).getFile() != null)) {
-            result = super.isDirty();
-        }
+        if ((!(input instanceof SQLEditorInput)) || (((SQLEditorInput)input).getFile() != null)) result = super.isDirty();
 
         return result;
+    }
+
+    /**
+     * @param str
+     */
+    public void loadFile( final String file ) {
+        FileReader fr = null;
+        BufferedReader in = null;
+        try {
+            fr = new FileReader(file);
+            in = new BufferedReader(fr);
+            String str;
+            final StringBuffer all = new StringBuffer();
+            final String delimiter = sqlTextViewer.getTextWidget().getLineDelimiter();
+            while ((str = in.readLine()) != null) {
+                all.append(str);
+                all.append(delimiter);
+            }
+            sqlTextViewer.setDocument(new Document(all.toString()));
+
+        } catch (final Throwable e) {
+            SQLExplorerPlugin.error("Error loading document", e); //$NON-NLS-1$
+        } finally {
+            try {
+                fr.close();
+            } catch (final java.io.IOException e) {
+            }
+            try {
+                in.close();
+            } catch (final java.io.IOException e) {
+            }
+
+        }
+
+    }
+
+    @Override
+    public void resourceChanged( final IResourceChangeEvent event ) {
+        if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
+            if (getSite().getShell().isDisposed()) return;
+
+            final Display display = getSite().getShell().getDisplay();
+            final IResourceDelta delta = event.getDelta();
+
+            if (delta != null) try {
+                delta.accept(new IResourceDeltaVisitor() {
+
+                    @Override
+                    public boolean visit( final IResourceDelta delta ) {
+                        String name = null;
+
+                        if (closedConnectionName != null) name = new File(closedConnectionName).getName();
+                        else return false;
+
+                        if (name.equals(delta.getResource().getName()) && (getSessionTreeNode() == null)
+                            && (delta.getKind() & IResourceDelta.REMOVED) != 0) {
+
+                            // close the editor
+                            display.asyncExec(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    if (display.isDisposed()) return;
+
+                                    getEditorSite().getWorkbenchWindow().getActivePage().closeEditor(SQLEditor.this, false);
+                                }
+                            });
+
+                            return false;
+                        }
+
+                        return true;
+                    }
+                });
+            } catch (final CoreException e) {
+                SQLExplorerPlugin.error("Error processing ResourceChangeEvent", e);
+            }
+        }
+    }
+
+    public void setMessage( final String s ) {
+        statusMgr.setMessage(s);
+    }
+
+    public void setNewDictionary( final Dictionary dictionary ) {
+        if (sqlTextViewer != null) {
+            sqlTextViewer.setNewDictionary(dictionary);
+            sqlTextViewer.refresh();
+        }
+        // setSourceViewerConfiguration(new SQLSourceViewerConfiguration(new SQLTextTools(store,dictionary)));
+        // sourceViewer.refresh();
+    }
+
+    /**
+     * @param txt
+     */
+    public void setText( final String txt ) {
+        // reuse existing document so that undo/redo stack is not lost
+        IDocument doc = sqlTextViewer.getDocument();
+
+        if (doc == null) {
+            doc = new Document();
+            sqlTextViewer.setDocument(doc);
+        }
+
+        doc.set(txt);
+
+        if (sessionTreeNode != null) setNewDictionary(sessionTreeNode.getDictionary());
+
+    }
+
+    public void updateSessionStatus( final SessionTreeModel stm ) {
+        // Defect 21949 requires null checks and isDiposed() checks to prevent errors during exit/shutdown
+        if (catalogCombo != null && catalogCombo.isDisposed()) return;
+        this.getSite().getShell().getDisplay().asyncExec(new Runnable() {
+            public void run() {
+                final SessionTreeNode[] sessionNodes = stm.getRoot().getSessionTreeNodes();
+                boolean found = false;
+
+                for (final SessionTreeNode sessionNode : sessionNodes) {
+                    if (sessionTreeNode == sessionNode) // found exact session
+                    found = true;
+                    else if (sessionTreeNode != null) {
+                        // another session with same alias
+                        if (sessionTreeNode.getAlias().getName().equals(sessionNode.getAlias().getName())) {
+                            sessionTreeNode = sessionNode;
+                            found = true;
+                        }
+                    } else if (closedConnectionName != null) // closed session name matches a new session name
+                    if (closedConnectionName.equals(sessionNode.getAlias().getName())) {
+                        sessionTreeNode = sessionNode;
+                        found = true;
+                    }
+
+                    if (found) {
+                        closedConnectionName = null;
+                        break;
+                    }
+
+                }
+                if (!catalogCombo.isDisposed()) {
+                    if (found) {
+                        if (sessionTreeNode.supportsCatalogs()) {
+                            catalogCombo.setVisible(true);
+                            final String catalogs[] = sessionTreeNode.getCatalogs();
+                            final String currentCatalog = sessionTreeNode.getCatalog();
+
+                            for (final String catalog : catalogs) {
+                                catalogCombo.add(catalog);
+
+                                if (currentCatalog.equals(catalog)) catalogCombo.select(catalogCombo.getItemCount() - 1);
+                            }
+                        } else catalogCombo.setVisible(false);
+                    } else {
+                        // save old session/connection name in case a new one is opened
+                        if (sessionTreeNode != null) closedConnectionName = sessionTreeNode.getAlias().getName();
+
+                        sessionTreeNode = null;
+                        setNewDictionary(null);
+                        catalogCombo.setVisible(false);
+                    }
+
+                    execSQLAction.setEnabled(found);
+                }
+            }
+        });
     }
 
     class MouseClickListener
@@ -559,12 +571,259 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
         /** The link color. */
         private Color fColor;
         /** The key modifier mask. */
-        private int fKeyModifierMask = SWT.CTRL;
+        private final int fKeyModifierMask = SWT.CTRL;
+
+        private void activateCursor( final ISourceViewer viewer ) {
+            final StyledText text = viewer.getTextWidget();
+            if (text == null || text.isDisposed()) return;
+            final Display display = text.getDisplay();
+            if (fCursor == null) fCursor = new Cursor(display, SWT.CURSOR_HAND);
+            text.setCursor(fCursor);
+        }
+
+        public void deactivate() {
+            deactivate(false);
+        }
+
+        public void deactivate( final boolean redrawAll ) {
+            if (!fActive) return;
+
+            repairRepresentation(redrawAll);
+            fActive = false;
+        }
+
+        /* (non-Javadoc)
+         * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+         */
+        public void documentAboutToBeChanged( final DocumentEvent event ) {
+            if (fActive && fActiveRegion != null) {
+                fRememberedPosition = new Position(fActiveRegion.getOffset(), fActiveRegion.getLength());
+                try {
+                    event.getDocument().addPosition(fRememberedPosition);
+                } catch (final BadLocationException x) {
+                    fRememberedPosition = null;
+                }
+            }
+        }
+
+        /* (non-Javadoc)
+         * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
+         */
+        public void documentChanged( final DocumentEvent event ) {
+            if (fRememberedPosition != null && !fRememberedPosition.isDeleted()) {
+                event.getDocument().removePosition(fRememberedPosition);
+                fActiveRegion = new Region(fRememberedPosition.getOffset(), fRememberedPosition.getLength());
+            }
+            fRememberedPosition = null;
+
+            if (sourceViewer != null) {
+                final StyledText widget = sourceViewer.getTextWidget();
+                if (widget != null && !widget.isDisposed()) widget.getDisplay().asyncExec(new Runnable() {
+                    public void run() {
+                        deactivate();
+                    }
+                });
+            }
+
+        }
+
+        /* (non-Javadoc)
+         * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
+         */
+        public void focusGained( final FocusEvent e ) {
+        }
+
+        /* (non-Javadoc)
+         * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
+         */
+        public void focusLost( final FocusEvent e ) {
+            deactivate();
+
+        }
+
+        private int getCurrentTextOffset( final ISourceViewer viewer ) {
+
+            try {
+                final StyledText text = viewer.getTextWidget();
+                if (text == null || text.isDisposed()) return -1;
+
+                final Display display = text.getDisplay();
+                final Point absolutePosition = display.getCursorLocation();
+                final Point relativePosition = text.toControl(absolutePosition);
+
+                final int widgetOffset = text.getOffsetAtLocation(relativePosition);
+                if (viewer instanceof ITextViewerExtension5) {
+                    final ITextViewerExtension5 extension = (ITextViewerExtension5)viewer;
+                    return extension.widgetOffset2ModelOffset(widgetOffset);
+                }
+                return widgetOffset + viewer.getVisibleRegion().getOffset();
+
+            } catch (final IllegalArgumentException e) {
+                return -1;
+            }
+        }
+
+        private IRegion getCurrentTextRegion( final ISourceViewer viewer ) {
+            if (viewer == null) return null;
+            final Dictionary dictionary = ((SQLTextViewer)viewer).dictionary;
+            if (dictionary == null) return null;
+            final int offset = getCurrentTextOffset(viewer);
+            if (offset == -1) return null;
+            // IJavaElement input= SelectionConverter.getInput(JavaEditor.this);
+            // if (input == null)
+            // return null;
+
+            try {
+
+                // IJavaElement[] elements= null;
+                // synchronized (input) {
+                // elements= ((ICodeAssist) input).codeSelect(offset, 0);
+                // }
+
+                // if (elements == null || elements.length == 0)
+                // return null;
+
+                final IRegion reg = selectWord(viewer.getDocument(), offset);
+                if (reg == null) return null;
+                final String selection = viewer.getDocument().get(reg.getOffset(), reg.getLength());
+                if (selection == null) return null;
+                final Object obj = dictionary.getByTableName(selection.toLowerCase());
+
+                if (obj == null) return null;
+                if (!(obj instanceof ArrayList)) return null;
+                final ArrayList ls = (ArrayList)obj;
+                if (ls.isEmpty()) return null;
+                final Object node = ((ArrayList)obj).get(0);
+                if (node instanceof TableNode) activeTableNode = (TableNode)node;
+                else return null;
+                return reg;
+
+            } catch (final Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        private Point getMaximumLocation( final StyledText text,
+                                          final int offset,
+                                          final int length ) {
+            final Point maxLocation = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
+
+            for (int i = 0; i <= length; i++) {
+                final Point location = text.getLocationAtOffset(offset + i);
+
+                if (location.x > maxLocation.x) maxLocation.x = location.x;
+                if (location.y > maxLocation.y) maxLocation.y = location.y;
+            }
+
+            return maxLocation;
+        }
+
+        private Point getMinimumLocation( final StyledText text,
+                                          final int offset,
+                                          final int length ) {
+            final Point minLocation = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
+
+            for (int i = 0; i <= length; i++) {
+                final Point location = text.getLocationAtOffset(offset + i);
+
+                if (location.x < minLocation.x) minLocation.x = location.x;
+                if (location.y < minLocation.y) minLocation.y = location.y;
+            }
+
+            return minLocation;
+        }
+
+        private void highlightRegion( final ISourceViewer viewer,
+                                      final IRegion region ) {
+
+            if (region.equals(fActiveRegion)) return;
+
+            repairRepresentation();
+
+            final StyledText text = viewer.getTextWidget();
+            if (text == null || text.isDisposed()) return;
+
+            // highlight region
+            int offset = 0;
+            int length = 0;
+
+            if (viewer instanceof ITextViewerExtension5) {
+                final ITextViewerExtension5 extension = (ITextViewerExtension5)viewer;
+                final IRegion widgetRange = extension.modelRange2WidgetRange(region);
+                if (widgetRange == null) return;
+
+                offset = widgetRange.getOffset();
+                length = widgetRange.getLength();
+
+            } else {
+                offset = region.getOffset() - viewer.getVisibleRegion().getOffset();
+                length = region.getLength();
+            }
+
+            final StyleRange oldStyleRange = text.getStyleRangeAtOffset(offset);
+            final Color foregroundColor = fColor;
+            final Color backgroundColor = oldStyleRange == null ? text.getBackground() : oldStyleRange.background;
+            final StyleRange styleRange = new StyleRange(offset, length, foregroundColor, backgroundColor);
+            text.setStyleRange(styleRange);
+
+            // underline
+            text.redrawRange(offset, length, true);
+
+            fActiveRegion = region;
+        }
+
+        private boolean includes( final IRegion region,
+                                  final IRegion position ) {
+            return position.getOffset() >= region.getOffset()
+                   && position.getOffset() + position.getLength() <= region.getOffset() + region.getLength();
+        }
+
+        /* (non-Javadoc)
+         * @see org.eclipse.jface.text.ITextInputListener#inputDocumentAboutToBeChanged(org.eclipse.jface.text.IDocument, org.eclipse.jface.text.IDocument)
+         */
+        public void inputDocumentAboutToBeChanged( final IDocument oldInput,
+                                                   final IDocument newInput ) {
+            if (oldInput == null) return;
+            deactivate();
+            oldInput.removeDocumentListener(this);
+        }
+
+        /* (non-Javadoc)
+         * @see org.eclipse.jface.text.ITextInputListener#inputDocumentChanged(org.eclipse.jface.text.IDocument, org.eclipse.jface.text.IDocument)
+         */
+        public void inputDocumentChanged( final IDocument oldInput,
+                                          final IDocument newInput ) {
+            if (newInput == null) return;
+            newInput.addDocumentListener(this);
+        }
+
+        public void install( final ISourceViewer sourceViewer ) {
+
+            this.sourceViewer = sourceViewer;
+            if (sourceViewer == null) return;
+
+            final StyledText text = sourceViewer.getTextWidget();
+            if (text == null || text.isDisposed()) return;
+
+            updateColor(sourceViewer);
+
+            sourceViewer.addTextInputListener(this);
+
+            final IDocument document = sourceViewer.getDocument();
+            if (document != null) document.addDocumentListener(this);
+
+            text.addKeyListener(this);
+            text.addMouseListener(this);
+            text.addMouseMoveListener(this);
+            text.addFocusListener(this);
+            text.addPaintListener(this);
+        }
 
         /* (non-Javadoc)
          * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
          */
-        public void keyPressed( KeyEvent event ) {
+        public void keyPressed( final KeyEvent event ) {
             if (fActive) {
                 deactivate();
                 return;
@@ -579,66 +838,10 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
 
         }
 
-        public void deactivate() {
-            deactivate(false);
-        }
-
-        public void deactivate( boolean redrawAll ) {
-            if (!fActive) return;
-
-            repairRepresentation(redrawAll);
-            fActive = false;
-        }
-
-        private void repairRepresentation( boolean redrawAll ) {
-
-            if (fActiveRegion == null) return;
-
-            if (sourceViewer != null) {
-                resetCursor(sourceViewer);
-
-                int offset = fActiveRegion.getOffset();
-                int length = fActiveRegion.getLength();
-
-                // remove style
-                if (!redrawAll && sourceViewer instanceof ITextViewerExtension2) ((ITextViewerExtension2)sourceViewer).invalidateTextPresentation(offset,
-                                                                                                                                                  length);
-                else sourceViewer.invalidateTextPresentation();
-
-                // remove underline
-                if (sourceViewer instanceof ITextViewerExtension5) {
-                    ITextViewerExtension5 extension = (ITextViewerExtension5)sourceViewer;
-                    offset = extension.modelOffset2WidgetOffset(offset);
-                } else {
-                    offset -= sourceViewer.getVisibleRegion().getOffset();
-                }
-
-                StyledText text = sourceViewer.getTextWidget();
-                try {
-                    text.redrawRange(offset, length, true);
-                } catch (IllegalArgumentException x) {
-                    x.printStackTrace();
-                    // JavaPlugin.log(x);
-                }
-            }
-
-            fActiveRegion = null;
-        }
-
-        private void resetCursor( ISourceViewer viewer ) {
-            StyledText text = viewer.getTextWidget();
-            if (text != null && !text.isDisposed()) text.setCursor(null);
-
-            if (fCursor != null) {
-                fCursor.dispose();
-                fCursor = null;
-            }
-        }
-
         /* (non-Javadoc)
          * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
          */
-        public void keyReleased( KeyEvent e ) {
+        public void keyReleased( final KeyEvent e ) {
             if (!fActive) return;
 
             deactivate();
@@ -648,13 +851,13 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
         /* (non-Javadoc)
          * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
          */
-        public void mouseDoubleClick( MouseEvent e ) {
+        public void mouseDoubleClick( final MouseEvent e ) {
         }
 
         /* (non-Javadoc)
          * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
          */
-        public void mouseDown( MouseEvent event ) {
+        public void mouseDown( final MouseEvent event ) {
             if (!fActive) return;
 
             if (event.stateMask != fKeyModifierMask) {
@@ -669,49 +872,9 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
         }
 
         /* (non-Javadoc)
-         * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
-         */
-        public void mouseUp( MouseEvent e ) {
-            if (!fActive) return;
-
-            if (e.button != 1) {
-                deactivate();
-                return;
-            }
-
-            boolean wasActive = fCursor != null;
-
-            deactivate();
-
-            if (wasActive) {
-                // activeTableNode.get
-                //IAction action= getAction("OpenEditor");  //$NON-NLS-1$
-                // if (action != null)
-                // action.run();
-                BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-                    public void run() {
-                        try {
-                            DBView dbView = (DBView)SQLEditor.this.getEditorSite().getWorkbenchWindow().getActivePage().findView("net.sourceforge.sqlexplorer.plugin.views.DBView");
-                            if (dbView != null) {
-                                SQLEditor.this.getEditorSite().getWorkbenchWindow().getActivePage().bringToTop(dbView);
-                                dbView.setInput(sessionTreeNode);
-                                dbView.tryToSelect(sessionTreeNode, activeTableNode);
-                            }
-
-                        } catch (Exception e1) {
-                            SQLExplorerPlugin.error("Error selecting table", e1);
-                        }
-                    }
-                });
-
-            }
-
-        }
-
-        /* (non-Javadoc)
          * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
          */
-        public void mouseMove( MouseEvent event ) {
+        public void mouseMove( final MouseEvent event ) {
             if (event.widget instanceof Control && !((Control)event.widget).isFocusControl()) {
                 deactivate();
                 return;
@@ -728,7 +891,7 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
                 return;
             }
 
-            StyledText text = sourceViewer.getTextWidget();
+            final StyledText text = sourceViewer.getTextWidget();
             if (text == null || text.isDisposed()) {
                 deactivate();
                 return;
@@ -739,7 +902,7 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
                 return;
             }
 
-            IRegion region = getCurrentTextRegion(sourceViewer);
+            final IRegion region = getCurrentTextRegion(sourceViewer);
             if (region == null || region.getLength() == 0) {
                 repairRepresentation();
                 return;
@@ -749,20 +912,144 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
             activateCursor(sourceViewer);
         }
 
-        private void activateCursor( ISourceViewer viewer ) {
-            StyledText text = viewer.getTextWidget();
+        /* (non-Javadoc)
+         * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
+         */
+        public void mouseUp( final MouseEvent e ) {
+            if (!fActive) return;
+
+            if (e.button != 1) {
+                deactivate();
+                return;
+            }
+
+            final boolean wasActive = fCursor != null;
+
+            deactivate();
+
+            if (wasActive) // activeTableNode.get
+            //IAction action= getAction("OpenEditor");  //$NON-NLS-1$
+            // if (action != null)
+            // action.run();
+            BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+                public void run() {
+                    try {
+                        final DBView dbView = (DBView)SQLEditor.this.getEditorSite().getWorkbenchWindow().getActivePage().findView("net.sourceforge.sqlexplorer.plugin.views.DBView");
+                        if (dbView != null) {
+                            SQLEditor.this.getEditorSite().getWorkbenchWindow().getActivePage().bringToTop(dbView);
+                            dbView.setInput(sessionTreeNode);
+                            dbView.tryToSelect(sessionTreeNode, activeTableNode);
+                        }
+
+                    } catch (final Exception e1) {
+                        SQLExplorerPlugin.error("Error selecting table", e1);
+                    }
+                }
+            });
+
+        }
+
+        /* (non-Javadoc)
+         * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
+         */
+        public void paintControl( final PaintEvent event ) {
+            if (fActiveRegion == null) return;
+
+            if (sourceViewer == null) return;
+
+            final StyledText text = sourceViewer.getTextWidget();
             if (text == null || text.isDisposed()) return;
-            Display display = text.getDisplay();
-            if (fCursor == null) fCursor = new Cursor(display, SWT.CURSOR_HAND);
-            text.setCursor(fCursor);
+
+            int offset = 0;
+            int length = 0;
+
+            if (sourceViewer instanceof ITextViewerExtension5) {
+
+                final ITextViewerExtension5 extension = (ITextViewerExtension5)sourceViewer;
+                final IRegion widgetRange = extension.modelRange2WidgetRange(new Region(offset, length));
+                if (widgetRange == null) return;
+
+                offset = widgetRange.getOffset();
+                length = widgetRange.getLength();
+
+            } else {
+
+                final IRegion region = sourceViewer.getVisibleRegion();
+                if (!includes(region, fActiveRegion)) return;
+
+                offset = fActiveRegion.getOffset() - region.getOffset();
+                length = fActiveRegion.getLength();
+            }
+
+            // support for bidi
+            final Point minLocation = getMinimumLocation(text, offset, length);
+            final Point maxLocation = getMaximumLocation(text, offset, length);
+
+            final int x1 = minLocation.x;
+            final int x2 = minLocation.x + maxLocation.x - minLocation.x - 1;
+            final int y = minLocation.y + text.getLineHeight() - 1;
+
+            final GC gc = event.gc;
+            if (fColor != null && !fColor.isDisposed()) gc.setForeground(fColor);
+            gc.drawLine(x1, y, x2, y);
+
+        }
+
+        /* (non-Javadoc)
+         * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+         */
+        public void propertyChange( final PropertyChangeEvent event ) {
         }
 
         private void repairRepresentation() {
             repairRepresentation(false);
         }
 
-        private IRegion selectWord( IDocument document,
-                                    int anchor ) {
+        private void repairRepresentation( final boolean redrawAll ) {
+
+            if (fActiveRegion == null) return;
+
+            if (sourceViewer != null) {
+                resetCursor(sourceViewer);
+
+                int offset = fActiveRegion.getOffset();
+                final int length = fActiveRegion.getLength();
+
+                // remove style
+                if (!redrawAll && sourceViewer instanceof ITextViewerExtension2) ((ITextViewerExtension2)sourceViewer).invalidateTextPresentation(offset,
+                                                                                                                                                  length);
+                else sourceViewer.invalidateTextPresentation();
+
+                // remove underline
+                if (sourceViewer instanceof ITextViewerExtension5) {
+                    final ITextViewerExtension5 extension = (ITextViewerExtension5)sourceViewer;
+                    offset = extension.modelOffset2WidgetOffset(offset);
+                } else offset -= sourceViewer.getVisibleRegion().getOffset();
+
+                final StyledText text = sourceViewer.getTextWidget();
+                try {
+                    text.redrawRange(offset, length, true);
+                } catch (final IllegalArgumentException x) {
+                    x.printStackTrace();
+                    // JavaPlugin.log(x);
+                }
+            }
+
+            fActiveRegion = null;
+        }
+
+        private void resetCursor( final ISourceViewer viewer ) {
+            final StyledText text = viewer.getTextWidget();
+            if (text != null && !text.isDisposed()) text.setCursor(null);
+
+            if (fCursor != null) {
+                fCursor.dispose();
+                fCursor = null;
+            }
+        }
+
+        private IRegion selectWord( final IDocument document,
+                                    final int anchor ) {
 
             try {
                 int offset = anchor;
@@ -774,10 +1061,10 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
                     --offset;
                 }
 
-                int start = offset;
+                final int start = offset;
 
                 offset = anchor;
-                int length = document.getLength();
+                final int length = document.getLength();
 
                 while (offset < length) {
                     c = document.getChar(offset);
@@ -785,298 +1072,14 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
                     ++offset;
                 }
 
-                int end = offset;
+                final int end = offset;
 
                 if (start == end) return new Region(start, 0);
                 return new Region(start + 1, end - start - 1);
 
-            } catch (BadLocationException x) {
+            } catch (final BadLocationException x) {
                 return null;
             }
-        }
-
-        private IRegion getCurrentTextRegion( ISourceViewer viewer ) {
-            if (viewer == null) return null;
-            Dictionary dictionary = ((SQLTextViewer)viewer).dictionary;
-            if (dictionary == null) return null;
-            int offset = getCurrentTextOffset(viewer);
-            if (offset == -1) return null;
-            // IJavaElement input= SelectionConverter.getInput(JavaEditor.this);
-            // if (input == null)
-            // return null;
-
-            try {
-
-                // IJavaElement[] elements= null;
-                // synchronized (input) {
-                // elements= ((ICodeAssist) input).codeSelect(offset, 0);
-                // }
-
-                // if (elements == null || elements.length == 0)
-                // return null;
-
-                IRegion reg = selectWord(viewer.getDocument(), offset);
-                if (reg == null) return null;
-                String selection = viewer.getDocument().get(reg.getOffset(), reg.getLength());
-                if (selection == null) return null;
-                Object obj = dictionary.getByTableName(selection.toLowerCase());
-
-                if (obj == null) return null;
-                if (!(obj instanceof ArrayList)) return null;
-                ArrayList ls = (ArrayList)obj;
-                if (ls.isEmpty()) return null;
-                Object node = ((ArrayList)obj).get(0);
-                if (node instanceof TableNode) activeTableNode = (TableNode)node;
-                else return null;
-                return reg;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        private int getCurrentTextOffset( ISourceViewer viewer ) {
-
-            try {
-                StyledText text = viewer.getTextWidget();
-                if (text == null || text.isDisposed()) return -1;
-
-                Display display = text.getDisplay();
-                Point absolutePosition = display.getCursorLocation();
-                Point relativePosition = text.toControl(absolutePosition);
-
-                int widgetOffset = text.getOffsetAtLocation(relativePosition);
-                if (viewer instanceof ITextViewerExtension5) {
-                    ITextViewerExtension5 extension = (ITextViewerExtension5)viewer;
-                    return extension.widgetOffset2ModelOffset(widgetOffset);
-                }
-                return widgetOffset + viewer.getVisibleRegion().getOffset();
-
-            } catch (IllegalArgumentException e) {
-                return -1;
-            }
-        }
-
-        private void highlightRegion( ISourceViewer viewer,
-                                      IRegion region ) {
-
-            if (region.equals(fActiveRegion)) return;
-
-            repairRepresentation();
-
-            StyledText text = viewer.getTextWidget();
-            if (text == null || text.isDisposed()) return;
-
-            // highlight region
-            int offset = 0;
-            int length = 0;
-
-            if (viewer instanceof ITextViewerExtension5) {
-                ITextViewerExtension5 extension = (ITextViewerExtension5)viewer;
-                IRegion widgetRange = extension.modelRange2WidgetRange(region);
-                if (widgetRange == null) return;
-
-                offset = widgetRange.getOffset();
-                length = widgetRange.getLength();
-
-            } else {
-                offset = region.getOffset() - viewer.getVisibleRegion().getOffset();
-                length = region.getLength();
-            }
-
-            StyleRange oldStyleRange = text.getStyleRangeAtOffset(offset);
-            Color foregroundColor = fColor;
-            Color backgroundColor = oldStyleRange == null ? text.getBackground() : oldStyleRange.background;
-            StyleRange styleRange = new StyleRange(offset, length, foregroundColor, backgroundColor);
-            text.setStyleRange(styleRange);
-
-            // underline
-            text.redrawRange(offset, length, true);
-
-            fActiveRegion = region;
-        }
-
-        /* (non-Javadoc)
-         * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
-         */
-        public void focusGained( FocusEvent e ) {
-        }
-
-        /* (non-Javadoc)
-         * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
-         */
-        public void focusLost( FocusEvent e ) {
-            deactivate();
-
-        }
-
-        /* (non-Javadoc)
-         * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
-         */
-        public void paintControl( PaintEvent event ) {
-            if (fActiveRegion == null) return;
-
-            if (sourceViewer == null) return;
-
-            StyledText text = sourceViewer.getTextWidget();
-            if (text == null || text.isDisposed()) return;
-
-            int offset = 0;
-            int length = 0;
-
-            if (sourceViewer instanceof ITextViewerExtension5) {
-
-                ITextViewerExtension5 extension = (ITextViewerExtension5)sourceViewer;
-                IRegion widgetRange = extension.modelRange2WidgetRange(new Region(offset, length));
-                if (widgetRange == null) return;
-
-                offset = widgetRange.getOffset();
-                length = widgetRange.getLength();
-
-            } else {
-
-                IRegion region = sourceViewer.getVisibleRegion();
-                if (!includes(region, fActiveRegion)) return;
-
-                offset = fActiveRegion.getOffset() - region.getOffset();
-                length = fActiveRegion.getLength();
-            }
-
-            // support for bidi
-            Point minLocation = getMinimumLocation(text, offset, length);
-            Point maxLocation = getMaximumLocation(text, offset, length);
-
-            int x1 = minLocation.x;
-            int x2 = minLocation.x + maxLocation.x - minLocation.x - 1;
-            int y = minLocation.y + text.getLineHeight() - 1;
-
-            GC gc = event.gc;
-            if (fColor != null && !fColor.isDisposed()) gc.setForeground(fColor);
-            gc.drawLine(x1, y, x2, y);
-
-        }
-
-        private boolean includes( IRegion region,
-                                  IRegion position ) {
-            return position.getOffset() >= region.getOffset()
-                   && position.getOffset() + position.getLength() <= region.getOffset() + region.getLength();
-        }
-
-        private Point getMinimumLocation( StyledText text,
-                                          int offset,
-                                          int length ) {
-            Point minLocation = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
-
-            for (int i = 0; i <= length; i++) {
-                Point location = text.getLocationAtOffset(offset + i);
-
-                if (location.x < minLocation.x) minLocation.x = location.x;
-                if (location.y < minLocation.y) minLocation.y = location.y;
-            }
-
-            return minLocation;
-        }
-
-        private Point getMaximumLocation( StyledText text,
-                                          int offset,
-                                          int length ) {
-            Point maxLocation = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
-
-            for (int i = 0; i <= length; i++) {
-                Point location = text.getLocationAtOffset(offset + i);
-
-                if (location.x > maxLocation.x) maxLocation.x = location.x;
-                if (location.y > maxLocation.y) maxLocation.y = location.y;
-            }
-
-            return maxLocation;
-        }
-
-        /* (non-Javadoc)
-         * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
-         */
-        public void propertyChange( PropertyChangeEvent event ) {
-            // TODO Auto-generated method stub
-
-        }
-
-        /* (non-Javadoc)
-         * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
-         */
-        public void documentAboutToBeChanged( DocumentEvent event ) {
-            if (fActive && fActiveRegion != null) {
-                fRememberedPosition = new Position(fActiveRegion.getOffset(), fActiveRegion.getLength());
-                try {
-                    event.getDocument().addPosition(fRememberedPosition);
-                } catch (BadLocationException x) {
-                    fRememberedPosition = null;
-                }
-            }
-        }
-
-        /* (non-Javadoc)
-         * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
-         */
-        public void documentChanged( DocumentEvent event ) {
-            if (fRememberedPosition != null && !fRememberedPosition.isDeleted()) {
-                event.getDocument().removePosition(fRememberedPosition);
-                fActiveRegion = new Region(fRememberedPosition.getOffset(), fRememberedPosition.getLength());
-            }
-            fRememberedPosition = null;
-
-            if (sourceViewer != null) {
-                StyledText widget = sourceViewer.getTextWidget();
-                if (widget != null && !widget.isDisposed()) {
-                    widget.getDisplay().asyncExec(new Runnable() {
-                        public void run() {
-                            deactivate();
-                        }
-                    });
-                }
-            }
-
-        }
-
-        /* (non-Javadoc)
-         * @see org.eclipse.jface.text.ITextInputListener#inputDocumentAboutToBeChanged(org.eclipse.jface.text.IDocument, org.eclipse.jface.text.IDocument)
-         */
-        public void inputDocumentAboutToBeChanged( IDocument oldInput,
-                                                   IDocument newInput ) {
-            if (oldInput == null) return;
-            deactivate();
-            oldInput.removeDocumentListener(this);
-        }
-
-        /* (non-Javadoc)
-         * @see org.eclipse.jface.text.ITextInputListener#inputDocumentChanged(org.eclipse.jface.text.IDocument, org.eclipse.jface.text.IDocument)
-         */
-        public void inputDocumentChanged( IDocument oldInput,
-                                          IDocument newInput ) {
-            if (newInput == null) return;
-            newInput.addDocumentListener(this);
-        }
-
-        public void install( ISourceViewer sourceViewer ) {
-
-            this.sourceViewer = sourceViewer;
-            if (sourceViewer == null) return;
-
-            StyledText text = sourceViewer.getTextWidget();
-            if (text == null || text.isDisposed()) return;
-
-            updateColor(sourceViewer);
-
-            sourceViewer.addTextInputListener(this);
-
-            IDocument document = sourceViewer.getDocument();
-            if (document != null) document.addDocumentListener(this);
-
-            text.addKeyListener(this);
-            text.addMouseListener(this);
-            text.addMouseMoveListener(this);
-            text.addFocusListener(this);
-            text.addPaintListener(this);
         }
 
         public void uninstall() {
@@ -1095,10 +1098,10 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
 
             sourceViewer.removeTextInputListener(this);
 
-            IDocument document = sourceViewer.getDocument();
+            final IDocument document = sourceViewer.getDocument();
             if (document != null) document.removeDocumentListener(this);
 
-            StyledText text = sourceViewer.getTextWidget();
+            final StyledText text = sourceViewer.getTextWidget();
             if (text == null || text.isDisposed()) return;
 
             text.removeKeyListener(this);
@@ -1108,69 +1111,16 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
             text.removePaintListener(this);
         }
 
-        private void updateColor( ISourceViewer viewer ) {
+        private void updateColor( final ISourceViewer viewer ) {
             if (fColor != null) fColor.dispose();
 
-            StyledText text = viewer.getTextWidget();
+            final StyledText text = viewer.getTextWidget();
             if (text == null || text.isDisposed()) return;
 
-            Display display = text.getDisplay();
+            final Display display = text.getDisplay();
             fColor = new Color(display, new RGB(0, 0, 255));
         }
 
-    }
-
-    @Override
-    public void resourceChanged( IResourceChangeEvent event ) {
-        if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
-            if (getSite().getShell().isDisposed()) {
-                return;
-            }
-
-            final Display display = getSite().getShell().getDisplay();
-            IResourceDelta delta = event.getDelta();
-
-            if (delta != null) {
-                try {
-                    delta.accept(new IResourceDeltaVisitor() {
-
-                        @Override
-                        public boolean visit( IResourceDelta delta ) {
-                            String name = null;
-                            
-                            if (closedConnectionName != null) {
-                                name = new File(closedConnectionName).getName();
-                            } else {
-                                return false;
-                            }
-                            
-                            if (name.equals(delta.getResource().getName()) && (getSessionTreeNode() == null)
-                                && (delta.getKind() & IResourceDelta.REMOVED) != 0) {
-                                
-                                // close the editor
-                                display.asyncExec(new Runnable() {
-
-                                    @Override
-                                    public void run() {
-                                        if (display.isDisposed()) {
-                                            return;
-                                        }
-
-                                        getEditorSite().getWorkbenchWindow().getActivePage().closeEditor(SQLEditor.this, false);
-                                    }
-                                });
-
-                                return false;
-                            }
-
-                            return true;
-                        }
-                    });
-                } catch (CoreException e) {
-                    SQLExplorerPlugin.error("Error processing ResourceChangeEvent", e);
-                }
-            }
-        }
     }
 
 }
@@ -1178,14 +1128,14 @@ public class SQLEditor extends TextEditor implements IResourceChangeListener {
 class SQLEditorSessionListener implements SessionTreeModelChangedListener {
     SQLEditor editor;
 
-    public SQLEditorSessionListener( SQLEditor editor ) {
+    public SQLEditorSessionListener( final SQLEditor editor ) {
         this.editor = editor;
     }
 
     /* (non-Javadoc)
      * @see net.sourceforge.sqlexplorer.sessiontree.model.SessionTreeModelChangedListener#modelChanged()
      */
-    public void modelChanged( SessionTreeNode nd ) {
+    public void modelChanged( final SessionTreeNode nd ) {
         editor.updateSessionStatus(SQLExplorerPlugin.getDefault().stm);
 
     }

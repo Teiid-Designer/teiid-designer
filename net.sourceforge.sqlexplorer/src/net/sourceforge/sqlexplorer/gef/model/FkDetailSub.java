@@ -18,18 +18,20 @@
  */
 package net.sourceforge.sqlexplorer.gef.model;
 
-
 public class FkDetailSub {
-	static final long serialVersionUID = 1;
-	/**
-	 * @param previousRow
-	 * @param fkColumnName
-	 * @param order
-	 * @param pkColumnName
-	 */
-	public FkDetailSub(Fk previousRow, String fkColumnName, short order, String pkColumnName) {
-		
-		// TODO Auto-generated constructor stub
-	}
+    static final long serialVersionUID = 1;
+
+    /**
+     * @param previousRow
+     * @param fkColumnName
+     * @param order
+     * @param pkColumnName
+     */
+    public FkDetailSub( final Fk previousRow,
+                        final String fkColumnName,
+                        final short order,
+                        final String pkColumnName ) {
+
+    }
 
 }

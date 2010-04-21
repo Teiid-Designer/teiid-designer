@@ -18,24 +18,22 @@
  */
 package net.sourceforge.sqlexplorer.gef.model;
 
-
 /**
- * @author MAZZOLINI
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @author MAZZOLINI To change the template for this generated type comment go to Window&gt;Preferences&gt;Java&gt;Code
+ *         Generation&gt;Code and Comments
  */
 public class IndexDetailSub {
 
-	/**
-	 * @param previousRow
-	 * @param name
-	 * @param asc_or_des
-	 * @param order
-	 */
-	public IndexDetailSub(Index previousRow, String name, String asc_or_des, short order) {
-		
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param previousRow
+     * @param name
+     * @param asc_or_des
+     * @param order
+     */
+    public IndexDetailSub( final Index previousRow,
+                           final String name,
+                           final String asc_or_des,
+                           final short order ) {
+    }
 
 }

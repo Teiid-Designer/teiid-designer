@@ -110,82 +110,116 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 public class SchemaEditor extends GraphicalEditor {
 
-    class ResourceTracker implements IResourceChangeListener, IResourceDeltaVisitor {
-        public void resourceChanged( IResourceChangeEvent event ) {
-            IResourceDelta delta = event.getDelta();
-            try {
-                if (delta != null) delta.accept(this);
-            } catch (CoreException exception) {
-                // What should be done here?
+    Schema schema;
+
+    private final ResourceTracker resourceListener = new ResourceTracker();
+
+    private IPartListener partListener = new IPartListener() {
+        // If an open, unsaved file was deleted, query the user to either do a "Save As"
+        // or close the editor.
+        public void partActivated( final IWorkbenchPart part ) {
+            if (part != SchemaEditor.this) return;
+            if (!((FileEditorInput)getEditorInput()).getFile().exists()) {
+                final Shell shell = getSite().getShell();
+                final String title = "Deleted";//$NON-NLS-1$
+                final String message = "File Deleted without Saving";//$NON-NLS-1$
+                final String[] buttons = {"Save", //$NON-NLS-1$
+                    "Close"};//$NON-NLS-1$
+                final MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.QUESTION, buttons, 0);
+                if (dialog.open() == 0) {
+                    if (!performSaveAs()) partActivated(part);
+                } else closeEditor(false);
             }
         }
 
-        public boolean visit( IResourceDelta delta ) {
-            if (delta == null || !delta.getResource().equals(((FileEditorInput)getEditorInput()).getFile())) return true;
-
-            if (delta.getKind() == IResourceDelta.REMOVED) {
-                if ((IResourceDelta.MOVED_TO & delta.getFlags()) == 0) { // if the file was deleted
-                    // NOTE: The case where an open, unsaved file is deleted is being handled by the
-                    // PartListener added to the Workbench in the initialize() method.
-                    if (!isDirty()) closeEditor(false);
-                } else { // else if it was moved or renamed
-                    final IFile newFile = ResourcesPlugin.getWorkspace().getRoot().getFile(delta.getMovedToPath());
-                    Display display = getSite().getShell().getDisplay();
-                    display.asyncExec(new Runnable() {
-                        public void run() {
-                            superSetInput(new FileEditorInput(newFile));
-                        }
-                    });
-                }
-            }
-            return false;
+        public void partBroughtToTop( final IWorkbenchPart part ) {
         }
+
+        public void partClosed( final IWorkbenchPart part ) {
+        }
+
+        public void partDeactivated( final IWorkbenchPart part ) {
+        }
+
+        public void partOpened( final IWorkbenchPart part ) {
+        }
+    };
+
+    private boolean savePreviouslyNeeded = false;
+
+    public static final String ID = "net.sf.gef.editors.SchemaEditor";//$NON-NLS-1$
+
+    static ActionRegistry getActionRegistry( final SchemaEditor schemaEditor ) {
+        return schemaEditor.getActionRegistry();
     }
 
-    Schema schema;
+    static DefaultEditDomain getEditDomain( final SchemaEditor schemaEditor ) {
+        return schemaEditor.getEditDomain();
+    }
+
+    private KeyHandler keyHandler;
 
     public SchemaEditor() {
         this.setEditDomain(new DefaultEditDomain(this));
     }
 
+    protected void closeEditor( final boolean flag ) {
+        getSite().getPage().closeEditor(SchemaEditor.this, flag);
+    }
+
+    @Override
+    public void commandStackChanged( final EventObject eventobject ) {
+        if (isDirty()) {
+            if (!savePreviouslyNeeded()) {
+                setSavePreviouslyNeeded(true);
+                firePropertyChange(IEditorPart.PROP_DIRTY);
+            }
+        } else {
+            setSavePreviouslyNeeded(false);
+            firePropertyChange(IEditorPart.PROP_DIRTY);
+        }
+
+        super.commandStackChanged(eventobject);
+
+    }
+
     @Override
     protected void configureGraphicalViewer() {
         super.configureGraphicalViewer();
-        ScrollingGraphicalViewer scrollinggraphicalviewer = (ScrollingGraphicalViewer)getGraphicalViewer();
-        ScalableFreeformRootEditPart scalablefreeformrooteditpart = new ScalableFreeformRootEditPart();
-        ZoomInAction zoominaction = new ZoomInAction(scalablefreeformrooteditpart.getZoomManager());
-        ZoomOutAction zoomoutaction = new ZoomOutAction(scalablefreeformrooteditpart.getZoomManager());
+        final ScrollingGraphicalViewer scrollinggraphicalviewer = (ScrollingGraphicalViewer)getGraphicalViewer();
+        final ScalableFreeformRootEditPart scalablefreeformrooteditpart = new ScalableFreeformRootEditPart();
+        final ZoomInAction zoominaction = new ZoomInAction(scalablefreeformrooteditpart.getZoomManager());
+        final ZoomOutAction zoomoutaction = new ZoomOutAction(scalablefreeformrooteditpart.getZoomManager());
         getActionRegistry().registerAction(zoominaction);
         getActionRegistry().registerAction(zoomoutaction);
-        /**
-         * TODO id doesn't work with eclipse 3.0m6 and gef 3
-         */
 
         try {
-            IEditorPart pt = this;
-            Action act = new PrintAction(pt) {
+            final IEditorPart pt = this;
+            final Action act = new PrintAction(pt) {
                 @Override
                 public String getText() {
                     return Messages.getString("SchemaEditor.Print..._1"); //$NON-NLS-1$
                 }
             };
             getActionRegistry().registerAction(act);
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
         }
-        IHandlerService svc = (IHandlerService)getSite().getService(IHandlerService.class);
+        final IHandlerService svc = (IHandlerService)getSite().getService(IHandlerService.class);
         svc.activateHandler(zoominaction.getActionDefinitionId(), new ActionHandler(zoominaction));
         svc.activateHandler(zoomoutaction.getActionDefinitionId(), new ActionHandler(zoomoutaction));
         scrollinggraphicalviewer.setRootEditPart(scalablefreeformrooteditpart);
         scrollinggraphicalviewer.setEditPartFactory(new SchemaPartFactory());
-        SchemaEditorContextMenuProvider schemaContextMenuProvider = new SchemaEditorContextMenuProvider(scrollinggraphicalviewer,
-                                                                                                        getActionRegistry(), this);
+        final SchemaEditorContextMenuProvider schemaContextMenuProvider = new SchemaEditorContextMenuProvider(
+                                                                                                              scrollinggraphicalviewer,
+                                                                                                              getActionRegistry(),
+                                                                                                              this);
 
         scrollinggraphicalviewer.setContextMenu(schemaContextMenuProvider);
         getSite().registerContextMenu(schemaContextMenuProvider, scrollinggraphicalviewer);
         scrollinggraphicalviewer.setKeyHandler((new GraphicalViewerKeyHandler(scrollinggraphicalviewer)).setParent(getCommonKeyHandler()));
         // Font font = JFaceResources.getDefaultFont();
 
-        Font font1 = JFaceResources.getDefaultFont();
+        final Font font1 = JFaceResources.getDefaultFont();
         scrollinggraphicalviewer.getControl().setFont(font1);
         getGraphicalViewer().addDropTargetListener(new AbstractTransferDropTargetListener(getGraphicalViewer(),
                                                                                           TableNodeTransfer.getInstance()) {
@@ -194,16 +228,20 @@ public class SchemaEditor extends GraphicalEditor {
             @Override
             protected Request createTargetRequest() {
                 // System.out.println("createTargetRequest " +(TableNode) TableNodeTransfer.getInstance().getSelection());
-                CreateRequest request = new CreateRequest();
+                final CreateRequest request = new CreateRequest();
                 request.setFactory(factory);
                 factory.setTableNode((TableNode)TableNodeTransfer.getInstance().getSelection());
                 return request;
             }
 
             @Override
-            protected void updateTargetRequest() {
-                // System.out.println("updateTargetRequest");
-                ((CreateRequest)getTargetRequest()).setLocation(getDropLocation());
+            protected void handleDragOver() {
+                final DropTargetEvent ev = getCurrentEvent();
+                ev.detail = DND.DROP_COPY;
+                // System.out.println("handleDragOver " +ev.currentDataType+ " "+ev.data+" "+ev.dataTypes);
+                ev.data = TableNodeTransfer.getInstance().getSelection();
+                super.handleDragOver();
+
             }
 
             @Override
@@ -213,55 +251,26 @@ public class SchemaEditor extends GraphicalEditor {
             }
 
             @Override
-            protected void handleDragOver() {
-                DropTargetEvent ev = getCurrentEvent();
-                ev.detail = DND.DROP_COPY;
-                // System.out.println("handleDragOver " +ev.currentDataType+ " "+ev.data+" "+ev.dataTypes);
-                ev.data = TableNodeTransfer.getInstance().getSelection();
-                super.handleDragOver();
-
+            public boolean isEnabled( final DropTargetEvent dte ) {
+                if (TableNodeTransfer.getInstance().getSelection() != null) return true;
+                return super.isEnabled(dte);
             }
 
             @Override
-            public boolean isEnabled( DropTargetEvent dte ) {
-                if (TableNodeTransfer.getInstance().getSelection() != null) return true;
-                return super.isEnabled(dte);
+            protected void updateTargetRequest() {
+                // System.out.println("updateTargetRequest");
+                ((CreateRequest)getTargetRequest()).setLocation(getDropLocation());
             }
 
         });
 
     }
 
-    protected KeyHandler getCommonKeyHandler() {
-        if (keyHandler == null) {
-            keyHandler = new KeyHandler();
-            keyHandler.put(KeyStroke.getPressed('\177', 127, 0), getActionRegistry().getAction(ActionFactory.DELETE.getId()));
-            keyHandler.put(KeyStroke.getPressed('c', SWT.CTRL), getActionRegistry().getAction(ActionFactory.COPY.getId()));
-            keyHandler.put(KeyStroke.getPressed('v', SWT.CTRL), getActionRegistry().getAction(ActionFactory.PASTE.getId()));
-            keyHandler.put(KeyStroke.getPressed('C', SWT.CTRL), getActionRegistry().getAction(ActionFactory.COPY.getId()));
-            keyHandler.put(KeyStroke.getPressed('V', SWT.CTRL), getActionRegistry().getAction(ActionFactory.PASTE.getId()));
-        }
-        return keyHandler;
-    }
-
-    @Override
-    protected void initializeGraphicalViewer() {
-        getGraphicalViewer().setContents(getSchema());
-    }
-
-    /**
-     * @return
-     */
-    Schema getSchema() {
-        if (schema == null) schema = new Schema();
-        return schema;
-    }
-
     @Override
     protected void createActions() {
         super.createActions();
-        ActionRegistry actionregistry = getActionRegistry();
-        IAction iaction = actionregistry.getAction("print");//$NON-NLS-1$
+        final ActionRegistry actionregistry = getActionRegistry();
+        final IAction iaction = actionregistry.getAction("print");//$NON-NLS-1$
         if (iaction != null) actionregistry.removeAction(iaction);
         Object obj = null;
         obj = new AlignmentAction((IWorkbenchPart)this, 1);
@@ -284,64 +293,33 @@ public class SchemaEditor extends GraphicalEditor {
         getSelectionActions().add(((IAction)(obj)).getId());
     }
 
-    @Override
-    protected GraphicalViewer getGraphicalViewer() {
-        return super.getGraphicalViewer();
+    protected void createOutputStream( final OutputStream os ) throws IOException {
+        final ObjectOutputStream out = new ObjectOutputStream(os);
+        out.writeObject(this.getSchema());
+        out.close();
     }
 
     @Override
-    public void setInput( IEditorInput input ) {
-        superSetInput(input);
+    public void dispose() {
 
-        IFile file = ((IFileEditorInput)input).getFile();
-        try {
-            InputStream is = file.getContents(false);
-            ObjectInputStream ois = new ObjectInputStream(is);
-            setSchema((Schema)ois.readObject());
-            ois.close();
-        } catch (Exception e) {
-            // e.printStackTrace();
-        }
-    }
-
-    public void setSchema( Schema schema ) {
-        this.schema = schema;
-    }
-
-    private ResourceTracker resourceListener = new ResourceTracker();
-
-    protected void superSetInput( IEditorInput input ) {
-        if (getEditorInput() != null) {
-            IFile file = ((FileEditorInput)getEditorInput()).getFile();
-            file.getWorkspace().removeResourceChangeListener(resourceListener);
-        }
-
-        super.setInput(input);
-
-        if (getEditorInput() != null) {
-            IFile file = ((FileEditorInput)getEditorInput()).getFile();
-            file.getWorkspace().addResourceChangeListener(resourceListener);
-        } else setPartName(Messages.getString("SchemaEditor.Schema_Viewer__2")); //$NON-NLS-1$
+        getSite().getWorkbenchWindow().getPartService().removePartListener(partListener);
+        partListener = null;
+        ((FileEditorInput)getEditorInput()).getFile().getWorkspace().removeResourceChangeListener(resourceListener);
+        super.dispose();
     }
 
     @Override
-    protected void setSite( IWorkbenchPartSite iworkbenchpartsite ) {
-        super.setSite(iworkbenchpartsite);
-        getSite().getWorkbenchWindow().getPartService().addPartListener(partListener);
-    }
-
-    @Override
-    public void doSave( IProgressMonitor progressMonitor ) {
+    public void doSave( final IProgressMonitor progressMonitor ) {
         // IPath ipath = null;
         try {
-            IFile ifile = ((IFileEditorInput)getEditorInput()).getFile();
+            final IFile ifile = ((IFileEditorInput)getEditorInput()).getFile();
             // ipath = ifile.getLocation();
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            final ByteArrayOutputStream out = new ByteArrayOutputStream();
             createOutputStream(out);
             ifile.setContents(new ByteArrayInputStream(out.toByteArray()), true, false, progressMonitor);
             out.close();
             getCommandStack().markSaveLocation();
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             SQLExplorerPlugin.error("Error saving", e);//$NON-NLS-1$
         }
     }
@@ -349,6 +327,54 @@ public class SchemaEditor extends GraphicalEditor {
     @Override
     public void doSaveAs() {
         performSaveAs();
+    }
+
+    @Override
+    public Object getAdapter( final Class type ) {
+
+        if (type == IContentOutlinePage.class) return new OutlinePage(new TreeViewer());
+        if (type == ZoomManager.class) return ((ScalableFreeformRootEditPart)getGraphicalViewer().getRootEditPart()).getZoomManager();
+
+        return super.getAdapter(type);
+
+    }
+
+    protected KeyHandler getCommonKeyHandler() {
+        if (keyHandler == null) {
+            keyHandler = new KeyHandler();
+            keyHandler.put(KeyStroke.getPressed('\177', 127, 0), getActionRegistry().getAction(ActionFactory.DELETE.getId()));
+            keyHandler.put(KeyStroke.getPressed('c', SWT.CTRL), getActionRegistry().getAction(ActionFactory.COPY.getId()));
+            keyHandler.put(KeyStroke.getPressed('v', SWT.CTRL), getActionRegistry().getAction(ActionFactory.PASTE.getId()));
+            keyHandler.put(KeyStroke.getPressed('C', SWT.CTRL), getActionRegistry().getAction(ActionFactory.COPY.getId()));
+            keyHandler.put(KeyStroke.getPressed('V', SWT.CTRL), getActionRegistry().getAction(ActionFactory.PASTE.getId()));
+        }
+        return keyHandler;
+    }
+
+    @Override
+    protected GraphicalViewer getGraphicalViewer() {
+        return super.getGraphicalViewer();
+    }
+
+    /**
+     * @return
+     */
+    Schema getSchema() {
+        if (schema == null) schema = new Schema();
+        return schema;
+    }
+
+    SelectionSynchronizer getSynchronizer() {
+        return getSelectionSynchronizer();
+    }
+
+    public void gotoMarker( final IMarker imarker ) {
+
+    }
+
+    @Override
+    protected void initializeGraphicalViewer() {
+        getGraphicalViewer().setContents(getSchema());
     }
 
     @Override
@@ -367,25 +393,25 @@ public class SchemaEditor extends GraphicalEditor {
     }
 
     protected boolean performSaveAs() {
-        SaveAsDialog dialog = new SaveAsDialog(getSite().getWorkbenchWindow().getShell());
+        final SaveAsDialog dialog = new SaveAsDialog(getSite().getWorkbenchWindow().getShell());
         dialog.setOriginalFile(((IFileEditorInput)getEditorInput()).getFile());
         dialog.open();
-        IPath path = dialog.getResult();
+        final IPath path = dialog.getResult();
 
         if (path == null) return false;
 
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IFile file = workspace.getRoot().getFile(path);
 
-        WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+        final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
             @Override
             public void execute( final IProgressMonitor monitor ) {
                 try {
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    final ByteArrayOutputStream out = new ByteArrayOutputStream();
                     createOutputStream(out);
                     file.create(new ByteArrayInputStream(out.toByteArray()), true, monitor);
                     out.close();
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     SQLExplorerPlugin.error("Error performing save as", e);//$NON-NLS-1$
                 }
             }
@@ -395,138 +421,87 @@ public class SchemaEditor extends GraphicalEditor {
             new ProgressMonitorDialog(getSite().getWorkbenchWindow().getShell()).run(false, true, op);
             setInput(new FileEditorInput(file));
             getCommandStack().markSaveLocation();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             SQLExplorerPlugin.error("Error performing save as", e);//$NON-NLS-1$
         }
         return true;
-    }
-
-    private IPartListener partListener = new IPartListener() {
-        // If an open, unsaved file was deleted, query the user to either do a "Save As"
-        // or close the editor.
-        public void partActivated( IWorkbenchPart part ) {
-            if (part != SchemaEditor.this) return;
-            if (!((FileEditorInput)getEditorInput()).getFile().exists()) {
-                Shell shell = getSite().getShell();
-                String title = "Deleted";//$NON-NLS-1$
-                String message = "File Deleted without Saving";//$NON-NLS-1$
-                String[] buttons = {"Save", //$NON-NLS-1$
-                    "Close"};//$NON-NLS-1$
-                MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.QUESTION, buttons, 0);
-                if (dialog.open() == 0) {
-                    if (!performSaveAs()) partActivated(part);
-                } else {
-                    closeEditor(false);
-                }
-            }
-        }
-
-        public void partBroughtToTop( IWorkbenchPart part ) {
-        }
-
-        public void partClosed( IWorkbenchPart part ) {
-        }
-
-        public void partDeactivated( IWorkbenchPart part ) {
-        }
-
-        public void partOpened( IWorkbenchPart part ) {
-        }
-    };
-
-    protected void createOutputStream( OutputStream os ) throws IOException {
-        ObjectOutputStream out = new ObjectOutputStream(os);
-        out.writeObject(this.getSchema());
-        out.close();
-    }
-
-    public void gotoMarker( IMarker imarker ) {
-
-    }
-
-    protected void updateMarkers( IResource iresource,
-                                  IProgressMonitor iprogressmonitor ) {
-
     }
 
     private boolean savePreviouslyNeeded() {
         return savePreviouslyNeeded;
     }
 
-    private boolean savePreviouslyNeeded = false;
-
     @Override
-    public void commandStackChanged( EventObject eventobject ) {
-        if (isDirty()) {
-            if (!savePreviouslyNeeded()) {
-                setSavePreviouslyNeeded(true);
-                firePropertyChange(IEditorPart.PROP_DIRTY);
-            }
-        } else {
-            setSavePreviouslyNeeded(false);
-            firePropertyChange(IEditorPart.PROP_DIRTY);
+    public void setInput( final IEditorInput input ) {
+        superSetInput(input);
+
+        final IFile file = ((IFileEditorInput)input).getFile();
+        try {
+            final InputStream is = file.getContents(false);
+            final ObjectInputStream ois = new ObjectInputStream(is);
+            setSchema((Schema)ois.readObject());
+            ois.close();
+        } catch (final Exception e) {
+            // e.printStackTrace();
         }
-
-        super.commandStackChanged(eventobject);
-
     }
 
-    private void setSavePreviouslyNeeded( boolean value ) {
+    private void setSavePreviouslyNeeded( final boolean value ) {
         savePreviouslyNeeded = value;
     }
 
-    protected void closeEditor( boolean flag ) {
-        getSite().getPage().closeEditor(SchemaEditor.this, flag);
+    public void setSchema( final Schema schema ) {
+        this.schema = schema;
     }
 
     @Override
-    public void dispose() {
-
-        getSite().getWorkbenchWindow().getPartService().removePartListener(partListener);
-        partListener = null;
-        ((FileEditorInput)getEditorInput()).getFile().getWorkspace().removeResourceChangeListener(resourceListener);
-        super.dispose();
+    protected void setSite( final IWorkbenchPartSite iworkbenchpartsite ) {
+        super.setSite(iworkbenchpartsite);
+        getSite().getWorkbenchWindow().getPartService().addPartListener(partListener);
     }
 
-    public static final String ID = "net.sf.gef.editors.SchemaEditor";//$NON-NLS-1$
-    private KeyHandler keyHandler;
+    protected void superSetInput( final IEditorInput input ) {
+        if (getEditorInput() != null) {
+            final IFile file = ((FileEditorInput)getEditorInput()).getFile();
+            file.getWorkspace().removeResourceChangeListener(resourceListener);
+        }
 
-    static DefaultEditDomain getEditDomain( SchemaEditor schemaEditor ) {
-        return schemaEditor.getEditDomain();
+        super.setInput(input);
+
+        if (getEditorInput() != null) {
+            final IFile file = ((FileEditorInput)getEditorInput()).getFile();
+            file.getWorkspace().addResourceChangeListener(resourceListener);
+        } else setPartName(Messages.getString("SchemaEditor.Schema_Viewer__2")); //$NON-NLS-1$
     }
 
-    static ActionRegistry getActionRegistry( SchemaEditor schemaEditor ) {
-        return schemaEditor.getActionRegistry();
-    }
+    protected void updateMarkers( final IResource iresource,
+                                  final IProgressMonitor iprogressmonitor ) {
 
-    @Override
-    public Object getAdapter( Class type ) {
-
-        if (type == IContentOutlinePage.class) return new OutlinePage(new TreeViewer());
-        if (type == ZoomManager.class) return ((ScalableFreeformRootEditPart)getGraphicalViewer().getRootEditPart()).getZoomManager();
-
-        return super.getAdapter(type);
-
-    }
-
-    SelectionSynchronizer getSynchronizer() {
-        return getSelectionSynchronizer();
     }
 
     protected class OutlinePage extends ContentOutlinePage implements IAdaptable {
 
-        @Override
-        public void init( IPageSite ipagesite ) {
-            super.init(ipagesite);
-            ActionRegistry actionregistry = SchemaEditor.getActionRegistry(SchemaEditor.this);
-            IActionBars iactionbars = ipagesite.getActionBars();
-            String s = "undo"; //$NON-NLS-1$
-            iactionbars.setGlobalActionHandler(s, actionregistry.getAction(s));
-            s = "redo"; //$NON-NLS-1$
-            iactionbars.setGlobalActionHandler(s, actionregistry.getAction(s));
-            s = "delete"; //$NON-NLS-1$
-            iactionbars.setGlobalActionHandler(s, actionregistry.getAction(s));
-            iactionbars.updateActionBars();
+        private PageBook pageBook;
+
+        private Control outline;
+
+        private Canvas overview;
+
+        private IAction showOutlineAction, showOverviewAction;
+
+        static final int ID_OUTLINE = 0;
+
+        static final int ID_OVERVIEW = 1;
+
+        private boolean overviewInitialized;
+
+        private Thumbnail thumbnail;
+
+        private final SchemaTreePartFactory schemaTreePartFactory;
+
+        public OutlinePage( final EditPartViewer editpartviewer ) {
+            super(editpartviewer);
+            schemaTreePartFactory = new SchemaTreePartFactory();
         }
 
         protected void configureOutlineViewer() {
@@ -538,7 +513,7 @@ public class SchemaEditor extends GraphicalEditor {
             // getSite().registerContextMenu("net.sf.ProvaGef.edit.outline.contextmenu", schemaCMP,
             // getSite().getSelectionProvider());
             getViewer().setKeyHandler(getCommonKeyHandler());
-            IToolBarManager itoolbarmanager = getSite().getActionBars().getToolBarManager();
+            final IToolBarManager itoolbarmanager = getSite().getActionBars().getToolBarManager();
 
             showOutlineAction = new Action() {
                 @Override
@@ -560,7 +535,7 @@ public class SchemaEditor extends GraphicalEditor {
         }
 
         @Override
-        public void createControl( Composite composite ) {
+        public void createControl( final Composite composite ) {
             pageBook = new PageBook(composite, 0);
             outline = getViewer().createControl(pageBook);
             overview = new Canvas(pageBook, 0);
@@ -577,7 +552,7 @@ public class SchemaEditor extends GraphicalEditor {
             super.dispose();
         }
 
-        public Object getAdapter( Class key ) {
+        public Object getAdapter( final Class key ) {
             if (key == org.eclipse.gef.editparts.ZoomManager.class) return ((ScalableFreeformRootEditPart)getGraphicalViewer().getRootEditPart()).getZoomManager();
             return null;
         }
@@ -591,8 +566,18 @@ public class SchemaEditor extends GraphicalEditor {
             getSynchronizer().addViewer(getViewer());
         }
 
-        protected void unhookOutlineViewer() {
-            getSynchronizer().removeViewer(getViewer());
+        @Override
+        public void init( final IPageSite ipagesite ) {
+            super.init(ipagesite);
+            final ActionRegistry actionregistry = SchemaEditor.getActionRegistry(SchemaEditor.this);
+            final IActionBars iactionbars = ipagesite.getActionBars();
+            String s = "undo"; //$NON-NLS-1$
+            iactionbars.setGlobalActionHandler(s, actionregistry.getAction(s));
+            s = "redo"; //$NON-NLS-1$
+            iactionbars.setGlobalActionHandler(s, actionregistry.getAction(s));
+            s = "delete"; //$NON-NLS-1$
+            iactionbars.setGlobalActionHandler(s, actionregistry.getAction(s));
+            iactionbars.updateActionBars();
         }
 
         protected void initializeOutlineViewer() {
@@ -600,17 +585,17 @@ public class SchemaEditor extends GraphicalEditor {
         }
 
         protected void initializeOverview() {
-            LightweightSystem lws = new LightweightSystem(overview);
-            RootEditPart rep = getGraphicalViewer().getRootEditPart();
+            final LightweightSystem lws = new LightweightSystem(overview);
+            final RootEditPart rep = getGraphicalViewer().getRootEditPart();
             if (rep instanceof ScalableFreeformRootEditPart) {
-                ScalableFreeformRootEditPart root = (ScalableFreeformRootEditPart)rep;
+                final ScalableFreeformRootEditPart root = (ScalableFreeformRootEditPart)rep;
                 thumbnail = new ScrollableThumbnail((Viewport)root.getFigure());
                 thumbnail.setSource(root.getLayer(LayerConstants.PRINTABLE_LAYERS));
                 lws.setContents(thumbnail);
             }
         }
 
-        protected void showPage( int id ) {
+        protected void showPage( final int id ) {
             if (id == ID_OUTLINE) {
                 showOutlineAction.setChecked(true);
                 showOverviewAction.setChecked(false);
@@ -625,19 +610,39 @@ public class SchemaEditor extends GraphicalEditor {
             }
         }
 
-        private PageBook pageBook;
-        private Control outline;
-        private Canvas overview;
-        private IAction showOutlineAction, showOverviewAction;
-        static final int ID_OUTLINE = 0;
-        static final int ID_OVERVIEW = 1;
-        private boolean overviewInitialized;
-        private Thumbnail thumbnail;
-        private SchemaTreePartFactory schemaTreePartFactory;
+        protected void unhookOutlineViewer() {
+            getSynchronizer().removeViewer(getViewer());
+        }
+    }
 
-        public OutlinePage( EditPartViewer editpartviewer ) {
-            super(editpartviewer);
-            schemaTreePartFactory = new SchemaTreePartFactory();
+    class ResourceTracker implements IResourceChangeListener, IResourceDeltaVisitor {
+        public void resourceChanged( final IResourceChangeEvent event ) {
+            final IResourceDelta delta = event.getDelta();
+            try {
+                if (delta != null) delta.accept(this);
+            } catch (final CoreException exception) {
+                // What should be done here?
+            }
+        }
+
+        public boolean visit( final IResourceDelta delta ) {
+            if (delta == null || !delta.getResource().equals(((FileEditorInput)getEditorInput()).getFile())) return true;
+
+            if (delta.getKind() == IResourceDelta.REMOVED) if ((IResourceDelta.MOVED_TO & delta.getFlags()) == 0) { // if the file
+                                                                                                                    // was deleted
+                // NOTE: The case where an open, unsaved file is deleted is being handled by the
+                // PartListener added to the Workbench in the initialize() method.
+                if (!isDirty()) closeEditor(false);
+            } else { // else if it was moved or renamed
+                final IFile newFile = ResourcesPlugin.getWorkspace().getRoot().getFile(delta.getMovedToPath());
+                final Display display = getSite().getShell().getDisplay();
+                display.asyncExec(new Runnable() {
+                    public void run() {
+                        superSetInput(new FileEditorInput(newFile));
+                    }
+                });
+            }
+            return false;
         }
     }
 }
@@ -648,10 +653,10 @@ class TableFactory implements CreationFactory {
 
     public Object getNewObject() {
         try {
-            TableAdapter tad = new TableAdapter(tn);
-            Table tb = tad.adapt();
+            final TableAdapter tad = new TableAdapter(tn);
+            final Table tb = tad.adapt();
             return tb;
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
         }
         return null;
 
@@ -661,7 +666,7 @@ class TableFactory implements CreationFactory {
         return Table.class;
     }
 
-    public void setTableNode( TableNode tn ) {
+    public void setTableNode( final TableNode tn ) {
         this.tn = tn;
     }
 }

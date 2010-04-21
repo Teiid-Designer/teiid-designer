@@ -46,16 +46,102 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 public class SqlExecProgress implements IConstants, IRunnableWithProgress {
 
+    private static IResultSetProcessor[] getAdditionalResultSetProcessors() {
+        if (SqlExecProgress.resultSetProcessors == null) {
+            // get the ResultSet Processor extension point from the plugin class
+            final IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(SQLExplorerPlugin.PLUGIN_ID,
+                                                                                                     ExtensionPoints.ResultSetProcessor.ID);
+
+            // get the all extensions to this extension point
+            final IExtension[] extensions = extensionPoint.getExtensions();
+
+            // if no extensions no work to do
+            if (extensions.length == 0) SqlExecProgress.resultSetProcessors = new IResultSetProcessor[0];
+            else {
+                final List temp = new ArrayList(extensions.length);
+
+                // make executable extensions for every CLASS_NAME
+                for (int i = 0; i < extensions.length; ++i) {
+                    final IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+
+                    for (int j = 0; j < elements.length; ++j)
+                        try {
+                            final Object extension = elements[j].createExecutableExtension(ExtensionPoints.ResultSetProcessor.CLASS_NAME);
+
+                            if (extension instanceof IResultSetProcessor) temp.add(extension);
+                            else {
+                                // not an IResultSetProcessor. just log it and continue
+                                final String msg = MessageFormat.format(Messages.getString("SqlExecProgress.invalidResulSetProcessorClass"), //$NON-NLS-1$
+                                                                        new Object[] {extension.getClass().getName()});
+                                SQLExplorerPlugin.error(msg, null);
+                            }
+                        } catch (final Exception theException) {
+                            final String msg = MessageFormat.format(Messages.getString("SqlExecProgress.resultSetProcessInitializationProblem"), //$NON-NLS-1$
+                                                                    new Object[] {elements[j].getAttribute(ExtensionPoints.ResultSetProcessor.CLASS_NAME)});
+                            SQLExplorerPlugin.error(msg, theException);
+                        }
+                }
+
+                SqlExecProgress.resultSetProcessors = (IResultSetProcessor[])temp.toArray(new IResultSetProcessor[temp.size()]);
+            }
+        }
+
+        return SqlExecProgress.resultSetProcessors;
+    }
+
+    private static ISqlExecVetoListener[] getSqlExecVetoListeners() {
+        if (SqlExecProgress.sqlExecVetoListeners == null) {
+            // get the ResultSet Processor extension point from the plugin class
+            final IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(SQLExplorerPlugin.PLUGIN_ID,
+                                                                                                     ExtensionPoints.SqlExecVetoListener.ID);
+
+            // get the all extensions to this extension point
+            final IExtension[] extensions = extensionPoint.getExtensions();
+
+            // if no extensions no work to do
+            if (extensions.length == 0) SqlExecProgress.sqlExecVetoListeners = new ISqlExecVetoListener[0];
+            else {
+                final List temp = new ArrayList(extensions.length);
+
+                // make executable extensions for every CLASS_NAME
+                for (int i = 0; i < extensions.length; ++i) {
+                    final IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+
+                    for (int j = 0; j < elements.length; ++j)
+                        try {
+                            final Object extension = elements[j].createExecutableExtension(ExtensionPoints.SqlExecVetoListener.CLASS_NAME);
+
+                            if (extension instanceof ISqlExecVetoListener) temp.add(extension);
+                            else {
+                                // not an ISqlExecVetoListener. just log it and continue
+                                final String msg = MessageFormat.format(Messages.getString("SqlExecProgress.invalidSqlExecVetoListenerClass"), //$NON-NLS-1$
+                                                                        new Object[] {extension.getClass().getName()});
+                                SQLExplorerPlugin.error(msg, null);
+                            }
+                        } catch (final Exception theException) {
+                            final String msg = MessageFormat.format(Messages.getString("SqlExecProgress.sqlExecVetoListenerInitializationProblem"), //$NON-NLS-1$
+                                                                    new Object[] {elements[j].getAttribute(ExtensionPoints.ResultSetProcessor.CLASS_NAME)});
+                            SQLExplorerPlugin.error(msg, theException);
+                        }
+                }
+
+                SqlExecProgress.sqlExecVetoListeners = (ISqlExecVetoListener[])temp.toArray(new ISqlExecVetoListener[temp.size()]);
+            }
+        }
+
+        return SqlExecProgress.sqlExecVetoListeners;
+    }
+
     /**
      * @see org.eclipse.jface.operation.IRunnableWithProgress#run(IProgressMonitor)
      */
 
-    private String _sql;
-
+    private final String _sql;
     SQLEditor txtComp;
 
     int maxRows;
-    private SessionTreeNode sessionTreeNode;
+
+    private final SessionTreeNode sessionTreeNode;
 
     private static IResultSetProcessor[] resultSetProcessors;
 
@@ -63,10 +149,10 @@ public class SqlExecProgress implements IConstants, IRunnableWithProgress {
 
     Throwable exception;
 
-    public SqlExecProgress( String sqlString,
-                            SQLEditor txtComp,
-                            int maxRows,
-                            SessionTreeNode sessionTreeNode ) {
+    public SqlExecProgress( final String sqlString,
+                            final SQLEditor txtComp,
+                            final int maxRows,
+                            final SessionTreeNode sessionTreeNode ) {
         _sql = sqlString;
         this.txtComp = txtComp;
         this.maxRows = maxRows;
@@ -74,111 +160,14 @@ public class SqlExecProgress implements IConstants, IRunnableWithProgress {
 
     }
 
-    public void run( final IProgressMonitor monitor ) {
-
-        // ask the veto listeners if we should continue. if one listeners wishes to stop execution
-        // just return after logging
-        ISqlExecVetoListener[] vetoListeners = getSqlExecVetoListeners();
-
-        if (vetoListeners.length != 0) {
-            for (int i = 0; i < vetoListeners.length; ++i) {
-                IStatus status = vetoListeners[i].continueSqlExecution(this.sessionTreeNode);
-
-                if (status.getSeverity() == IStatus.ERROR) {
-                    // String msg = status.getMessage();
-                    //                    
-                    // if (StringUtilities.isEmpty(msg)) {
-                    //                        msg = MessageFormat.format(Messages.getString("SqlExecProgress.executionVetoedMsg"), //$NON-NLS-1$
-                    // new Object[] {vetoListeners[i].getClass().getName()});
-                    // }
-                    //                    
-                    // SQLExplorerPlugin.error(msg, null);
-                    return;
-                }
-            }
-        }
-
-        // TODO make ';' and Comment '#' configurable.
-        final long startTime = System.currentTimeMillis();
-        QueryTokenizer qt = new QueryTokenizer(_sql, ";", "#"); //$NON-NLS-1$
-        List queryStrings = new ArrayList();
-        while (qt.hasQuery()) {
-            final String querySql = qt.nextQuery();
-            // ignore commented lines.
-            if (!querySql.startsWith("--")) //$NON-NLS-1$
-            {
-                queryStrings.add(querySql);
-            }
-        }
-
-        final ArrayList rsLis = new ArrayList();
-        SqlTableModel sqlTbModel = null;
-        while (!queryStrings.isEmpty()) {
-
-            String querySql = (String)queryStrings.remove(0);
-            if (querySql != null) {
-                SQLExplorerPlugin.getDefault().addSQLtoHistory(querySql, this.sessionTreeNode);
-                sqlTbModel = processQuery(querySql, monitor);
-                if (sqlTbModel != null) {
-                    rsLis.add(sqlTbModel);
-                }
-            }
-        }
-
-        if (!rsLis.isEmpty()) {
-            txtComp.getSite().getShell().getDisplay().asyncExec(new Runnable() {
-                public void run() {
-                    try {
-                        SqlResultsView resultsView = (SqlResultsView)txtComp.getSite().getPage().showView("net.sourceforge.sqlexplorer.plugin.views.SqlResultsView");
-                        resultsView.setData(((SqlTableModel[])rsLis.toArray(new SqlTableModel[rsLis.size()])));// mo,new
-                        // SQLTableSorter(count,metaData));
-                        long endTime = System.currentTimeMillis();
-                        String message = Messages.getString("Time__1") + " " + (int)(endTime - startTime) + Messages.getString("_ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                        txtComp.setMessage(message);
-                    } catch (Throwable e) {
-                        SQLExplorerPlugin.error("Error displaying data", e);
-                        txtComp.setMessage(e.getMessage());
-                    }
-                }
-            });
-        }
+    /**
+     * @return
+     */
+    public Throwable getException() {
+        return exception;
     }
 
-    private class LocalThread extends Thread {
-
-        @Override
-        public void run() {
-            try {
-                while (true) {
-
-                    if (end) break;
-                    if (monitor.isCanceled()) {
-                        stmt.cancel();
-                        break;
-                    }
-                    Thread.sleep(100);
-                }
-            } catch (Throwable e) {
-            }
-
-        }
-
-        public LocalThread( final IProgressMonitor monitor,
-                            final Statement stmt ) {
-            this.monitor = monitor;
-            this.stmt = stmt;
-        }
-
-        IProgressMonitor monitor;
-        Statement stmt;
-        boolean end = false;
-
-        public void endMonitor() {
-            end = true;
-        }
-    }
-
-    private SqlTableModel processQuery( String sql,
+    private SqlTableModel processQuery( final String sql,
                                         final IProgressMonitor monitor ) {
         LocalThread lt = null;
         Statement stmt = null;
@@ -189,9 +178,9 @@ public class SqlExecProgress implements IConstants, IRunnableWithProgress {
             lt = new LocalThread(monitor, stmt);
             lt.start();
 
-            boolean b = stmt.execute(sql);
-            IResultSetProcessor[] processors = getAdditionalResultSetProcessors();
-            IWorkbenchPartSite site = this.txtComp.getSite();
+            final boolean b = stmt.execute(sql);
+            final IResultSetProcessor[] processors = getAdditionalResultSetProcessors();
+            final IWorkbenchPartSite site = this.txtComp.getSite();
 
             if (b) {
                 SqlTableModel md = null;
@@ -200,45 +189,35 @@ public class SqlExecProgress implements IConstants, IRunnableWithProgress {
                     // send results to the processors
                     boolean showDefaultView = true;
 
-                    if (processors.length != 0) {
-                        for (int i = 0; i < processors.length; ++i) {
-                            try {
-                                if (monitor.isCanceled()) {
-                                    break;
-                                }
+                    if (processors.length != 0) for (int i = 0; i < processors.length; ++i)
+                        try {
+                            if (monitor.isCanceled()) break;
 
-                                processors[i].setWorkbenchPartSite(site);
-                                IStatus status = processors[i].process(sql, rs, monitor);
+                            processors[i].setWorkbenchPartSite(site);
+                            final IStatus status = processors[i].process(sql, rs, monitor);
 
-                                // when one of the processors doesn't need the default view don't ask the others
-                                if (showDefaultView) {
-                                    showDefaultView = processors[i].isDefaultResultsViewNeeded();
-                                }
+                            // when one of the processors doesn't need the default view don't ask the others
+                            if (showDefaultView) showDefaultView = processors[i].isDefaultResultsViewNeeded();
 
-                                // reset the result set for the next processor
-                                if (!status.isOK()) {
-                                    break;
-                                }
-                                // get ready for the next processor
-                                rs.beforeFirst();
-                            } catch (Exception theException) {
-                                String msg = MessageFormat.format(Messages.getString("SqlExecProgress.resulSetProcessorProblem"), //$NON-NLS-1$
-                                                                  new Object[] {processors[i].getClass().getName()});
-                                SQLExplorerPlugin.error(msg, theException);
-                            }
+                            // reset the result set for the next processor
+                            if (!status.isOK()) break;
+                            // get ready for the next processor
+                            rs.beforeFirst();
+                        } catch (final Exception theException) {
+                            final String msg = MessageFormat.format(Messages.getString("SqlExecProgress.resulSetProcessorProblem"), //$NON-NLS-1$
+                                                                    new Object[] {processors[i].getClass().getName()});
+                            SQLExplorerPlugin.error(msg, theException);
                         }
-                    }
 
                     if (!monitor.isCanceled() && showDefaultView) {
                         final ResultSetMetaData metaData = rs.getMetaData();
                         final int count = metaData.getColumnCount();
 
                         final String[] ss = new String[count];
-                        for (int i = 0; i < count; i++) {
+                        for (int i = 0; i < count; i++)
                             ss[i] = metaData.getColumnName(i + 1);
-                        }
                         final SQLTableSorter sorter = new SQLTableSorter(count, metaData);
-                        ResultSetReader reader = new ResultSetReader(rs);
+                        final ResultSetReader reader = new ResultSetReader(rs);
                         md = new SqlTableModel(reader, metaData, maxRows, sessionTreeNode.getConnection(), ss, sorter, sql);
                     }
 
@@ -248,22 +227,17 @@ public class SqlExecProgress implements IConstants, IRunnableWithProgress {
                 lt.endMonitor();
 
                 // ResultSet is null so let processors process the Statement
-                if (processors.length != 0) {
-                    for (int i = 0; i < processors.length; ++i) {
-                        try {
-                            if (monitor.isCanceled()) {
-                                break;
-                            }
+                if (processors.length != 0) for (int i = 0; i < processors.length; ++i)
+                    try {
+                        if (monitor.isCanceled()) break;
 
-                            processors[i].setWorkbenchPartSite(site);
-                            processors[i].processNoResultSet(sql, stmt, monitor);
-                        } catch (Exception theException) {
-                            String msg = MessageFormat.format(Messages.getString("SqlExecProgress.resulSetProcessorProblem"), //$NON-NLS-1$
-                                                              new Object[] {processors[i].getClass().getName()});
-                            SQLExplorerPlugin.error(msg, theException);
-                        }
+                        processors[i].setWorkbenchPartSite(site);
+                        processors[i].processNoResultSet(sql, stmt, monitor);
+                    } catch (final Exception theException) {
+                        final String msg = MessageFormat.format(Messages.getString("SqlExecProgress.resulSetProcessorProblem"), //$NON-NLS-1$
+                                                                new Object[] {processors[i].getClass().getName()});
+                        SQLExplorerPlugin.error(msg, theException);
                     }
-                }
 
                 // commented out this code that displays the update row count since we now display it in our result views
                 // txtComp.getSite().getShell().getDisplay().asyncExec(new Runnable(){
@@ -290,13 +264,11 @@ public class SqlExecProgress implements IConstants, IRunnableWithProgress {
             return null;
         } finally {
             if (lt != null) lt.endMonitor();
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (Exception e) {
-                    String msg = Messages.getString("SqlExecProgress.errorClosingStatement"); //$NON-NLS-1$
-                    SQLExplorerPlugin.error(msg, e); 
-                }
+            if (stmt != null) try {
+                stmt.close();
+            } catch (final Exception e) {
+                final String msg = Messages.getString("SqlExecProgress.errorClosingStatement"); //$NON-NLS-1$
+                SQLExplorerPlugin.error(msg, e);
             }
             SQLExplorerPlugin.getDefault().performGc(1000);
         }
@@ -304,102 +276,97 @@ public class SqlExecProgress implements IConstants, IRunnableWithProgress {
 
     }
 
-    /**
-     * @return
-     */
-    public Throwable getException() {
-        return exception;
-    }
+    public void run( final IProgressMonitor monitor ) {
 
-    private static IResultSetProcessor[] getAdditionalResultSetProcessors() {
-        if (SqlExecProgress.resultSetProcessors == null) {
-            // get the ResultSet Processor extension point from the plugin class
-            IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(SQLExplorerPlugin.PLUGIN_ID,
-                                                                                               ExtensionPoints.ResultSetProcessor.ID);
+        // ask the veto listeners if we should continue. if one listeners wishes to stop execution
+        // just return after logging
+        final ISqlExecVetoListener[] vetoListeners = getSqlExecVetoListeners();
 
-            // get the all extensions to this extension point
-            IExtension[] extensions = extensionPoint.getExtensions();
+        if (vetoListeners.length != 0) for (int i = 0; i < vetoListeners.length; ++i) {
+            final IStatus status = vetoListeners[i].continueSqlExecution(this.sessionTreeNode);
 
-            // if no extensions no work to do
-            if (extensions.length == 0) {
-                SqlExecProgress.resultSetProcessors = new IResultSetProcessor[0];
-            } else {
-                List temp = new ArrayList(extensions.length);
+            if (status.getSeverity() == IStatus.ERROR) // String msg = status.getMessage();
+            //                    
+            // if (StringUtilities.isEmpty(msg)) {
+            //                        msg = MessageFormat.format(Messages.getString("SqlExecProgress.executionVetoedMsg"), //$NON-NLS-1$
+            // new Object[] {vetoListeners[i].getClass().getName()});
+            // }
+            //                    
+            // SQLExplorerPlugin.error(msg, null);
+            return;
+        }
 
-                // make executable extensions for every CLASS_NAME
-                for (int i = 0; i < extensions.length; ++i) {
-                    IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+        final long startTime = System.currentTimeMillis();
+        final QueryTokenizer qt = new QueryTokenizer(_sql, ";", "#"); //$NON-NLS-1$
+        final List queryStrings = new ArrayList();
+        while (qt.hasQuery()) {
+            final String querySql = qt.nextQuery();
+            // ignore commented lines.
+            if (!querySql.startsWith("--")) queryStrings.add(querySql);
+        }
 
-                    for (int j = 0; j < elements.length; ++j) {
-                        try {
-                            Object extension = elements[j].createExecutableExtension(ExtensionPoints.ResultSetProcessor.CLASS_NAME);
+        final ArrayList rsLis = new ArrayList();
+        SqlTableModel sqlTbModel = null;
+        while (!queryStrings.isEmpty()) {
 
-                            if (extension instanceof IResultSetProcessor) {
-                                temp.add(extension);
-                            } else {
-                                // not an IResultSetProcessor. just log it and continue
-                                String msg = MessageFormat.format(Messages.getString("SqlExecProgress.invalidResulSetProcessorClass"), //$NON-NLS-1$
-                                                                  new Object[] {extension.getClass().getName()});
-                                SQLExplorerPlugin.error(msg, null);
-                            }
-                        } catch (Exception theException) {
-                            String msg = MessageFormat.format(Messages.getString("SqlExecProgress.resultSetProcessInitializationProblem"), //$NON-NLS-1$
-                                                              new Object[] {elements[j].getAttribute(ExtensionPoints.ResultSetProcessor.CLASS_NAME)});
-                            SQLExplorerPlugin.error(msg, theException); 
-                        }
-                    }
-                }
-
-                SqlExecProgress.resultSetProcessors = (IResultSetProcessor[])temp.toArray(new IResultSetProcessor[temp.size()]);
+            final String querySql = (String)queryStrings.remove(0);
+            if (querySql != null) {
+                SQLExplorerPlugin.getDefault().addSQLtoHistory(querySql, this.sessionTreeNode);
+                sqlTbModel = processQuery(querySql, monitor);
+                if (sqlTbModel != null) rsLis.add(sqlTbModel);
             }
         }
 
-        return SqlExecProgress.resultSetProcessors;
+        if (!rsLis.isEmpty()) txtComp.getSite().getShell().getDisplay().asyncExec(new Runnable() {
+            public void run() {
+                try {
+                    final SqlResultsView resultsView = (SqlResultsView)txtComp.getSite().getPage().showView("net.sourceforge.sqlexplorer.plugin.views.SqlResultsView");
+                    resultsView.setData(((SqlTableModel[])rsLis.toArray(new SqlTableModel[rsLis.size()])));// mo,new
+                    // SQLTableSorter(count,metaData));
+                    final long endTime = System.currentTimeMillis();
+                    final String message = Messages.getString("Time__1") + " " + (int)(endTime - startTime) + Messages.getString("_ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    txtComp.setMessage(message);
+                } catch (final Throwable e) {
+                    SQLExplorerPlugin.error("Error displaying data", e);
+                    txtComp.setMessage(e.getMessage());
+                }
+            }
+        });
     }
 
-    private static ISqlExecVetoListener[] getSqlExecVetoListeners() {
-        if (SqlExecProgress.sqlExecVetoListeners == null) {
-            // get the ResultSet Processor extension point from the plugin class
-            IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(SQLExplorerPlugin.PLUGIN_ID,
-                                                                                               ExtensionPoints.SqlExecVetoListener.ID);
+    private class LocalThread extends Thread {
 
-            // get the all extensions to this extension point
-            IExtension[] extensions = extensionPoint.getExtensions();
+        IProgressMonitor monitor;
 
-            // if no extensions no work to do
-            if (extensions.length == 0) {
-                SqlExecProgress.sqlExecVetoListeners = new ISqlExecVetoListener[0];
-            } else {
-                List temp = new ArrayList(extensions.length);
+        Statement stmt;
 
-                // make executable extensions for every CLASS_NAME
-                for (int i = 0; i < extensions.length; ++i) {
-                    IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+        boolean end = false;
 
-                    for (int j = 0; j < elements.length; ++j) {
-                        try {
-                            Object extension = elements[j].createExecutableExtension(ExtensionPoints.SqlExecVetoListener.CLASS_NAME);
-
-                            if (extension instanceof ISqlExecVetoListener) {
-                                temp.add(extension);
-                            } else {
-                                // not an ISqlExecVetoListener. just log it and continue
-                                String msg = MessageFormat.format(Messages.getString("SqlExecProgress.invalidSqlExecVetoListenerClass"), //$NON-NLS-1$
-                                                                  new Object[] {extension.getClass().getName()});
-                                SQLExplorerPlugin.error(msg, null);
-                            }
-                        } catch (Exception theException) {
-                            String msg = MessageFormat.format(Messages.getString("SqlExecProgress.sqlExecVetoListenerInitializationProblem"), //$NON-NLS-1$
-                                                              new Object[] {elements[j].getAttribute(ExtensionPoints.ResultSetProcessor.CLASS_NAME)});
-                            SQLExplorerPlugin.error(msg, theException); 
-                        }
-                    }
-                }
-
-                SqlExecProgress.sqlExecVetoListeners = (ISqlExecVetoListener[])temp.toArray(new ISqlExecVetoListener[temp.size()]);
-            }
+        public LocalThread( final IProgressMonitor monitor,
+                            final Statement stmt ) {
+            this.monitor = monitor;
+            this.stmt = stmt;
         }
 
-        return SqlExecProgress.sqlExecVetoListeners;
+        public void endMonitor() {
+            end = true;
+        }
+
+        @Override
+        public void run() {
+            try {
+                while (true) {
+
+                    if (end) break;
+                    if (monitor.isCanceled()) {
+                        stmt.cancel();
+                        break;
+                    }
+                    Thread.sleep(100);
+                }
+            } catch (final Throwable e) {
+            }
+
+        }
     }
 }
