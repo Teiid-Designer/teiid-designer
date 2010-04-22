@@ -33,24 +33,22 @@ import com.metamatrix.core.MetaMatrixRuntimeException;
  * This class contains static utilities that return strings that are the result of manipulating other strings or objects.
  * 
  * @since 3.1
- * @version 3.1
- * @author <a href="mailto:jverhaeg@metamatrix.com">John P. A. Verhaeg</a>
  */
 public class StringUtilities {
-    
+
     /**
      * An empty string.
      */
     public static String EMPTY_STRING = ""; //$NON-NLS-1$
-    
+
     /**
      * The String "\n"
      */
     public static final String NEW_LINE = "\n"; //$NON-NLS-1$
 
     /**
-     * The name of the System property that specifies the string that should be used to separate lines. This property is a
-     * standard environment property that is usually set automatically.
+     * The name of the System property that specifies the string that should be used to separate lines. This property is a standard
+     * environment property that is usually set automatically.
      */
     public static final String LINE_SEPARATOR_PROPERTY_NAME = "line.separator"; //$NON-NLS-1$
 
@@ -59,13 +57,9 @@ public class StringUtilities {
      */
     public static final String LINE_SEPARATOR = System.getProperty(LINE_SEPARATOR_PROPERTY_NAME, NEW_LINE);
 
-    // ############################################################################################################################
-    // # Static Methods #
-    // ############################################################################################################################
-
     /**
-     * Returns the path representing the concatenation of the specified path prefix and suffix. The resulting path is guaranteed
-     * to have exactly one file separator between the prefix and suffix.
+     * Returns the path representing the concatenation of the specified path prefix and suffix. The resulting path is guaranteed to
+     * have exactly one file separator between the prefix and suffix.
      * 
      * @param prefix The path prefix
      * @param suffix The path suffix
@@ -75,14 +69,9 @@ public class StringUtilities {
     public static String buildPath( final String prefix,
                                     final String suffix ) {
         final StringBuffer path = new StringBuffer(prefix);
-        if (!prefix.endsWith(File.separator)) {
-            path.append(File.separator);
-        }
-        if (suffix.startsWith(File.separator)) {
-            path.append(suffix.substring(File.separator.length()));
-        } else {
-            path.append(suffix);
-        }
+        if (!prefix.endsWith(File.separator)) path.append(File.separator);
+        if (suffix.startsWith(File.separator)) path.append(suffix.substring(File.separator.length()));
+        else path.append(suffix);
         return path.toString();
     }
 
@@ -94,15 +83,13 @@ public class StringUtilities {
      * @return
      * @since 5.0
      */
-    public static String condenseToLength( String originalString,
-                                           int maxLength,
-                                           int endLength,
-                                           String middleString ) {
-        if (originalString.length() <= maxLength) {
-            return originalString;
-        }
-        int originalLength = originalString.length();
-        StringBuffer sb = new StringBuffer(maxLength);
+    public static String condenseToLength( final String originalString,
+                                           final int maxLength,
+                                           final int endLength,
+                                           final String middleString ) {
+        if (originalString.length() <= maxLength) return originalString;
+        final int originalLength = originalString.length();
+        final StringBuffer sb = new StringBuffer(maxLength);
         sb.append(originalString.substring(0, maxLength - endLength - middleString.length()));
         sb.append(middleString);
         sb.append(originalString.substring(originalLength - endLength, originalLength));
@@ -118,16 +105,12 @@ public class StringUtilities {
      * @return String
      */
     public static String getLastUpperCharToken( final String value ) {
-        if (value == null) {
-            return null;
-        }
+        if (value == null) return null;
 
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
         for (int i = value.length() - 1; i >= 0; i--) {
             result.insert(0, value.charAt(i));
-            if (Character.isUpperCase(value.charAt(i))) {
-                return result.toString();
-            }
+            if (Character.isUpperCase(value.charAt(i))) return result.toString();
         }
 
         return result.toString();
@@ -144,37 +127,31 @@ public class StringUtilities {
      */
     public static String getLastUpperCharToken( final String value,
                                                 final String lastToken ) {
-        if (value == null || lastToken == null) {
-            return value;
-        }
+        if (value == null || lastToken == null) return value;
 
-        int index = value.lastIndexOf(lastToken);
-        if (index == -1) {
-            return null;
-        }
+        final int index = value.lastIndexOf(lastToken);
+        if (index == -1) return null;
 
-        StringBuffer result = new StringBuffer();
+        final StringBuffer result = new StringBuffer();
         for (int i = index - 1; i >= 0; i--) {
             result.insert(0, value.charAt(i));
-            if (Character.isUpperCase(value.charAt(i))) {
-                return result.toString() + lastToken;
-            }
+            if (Character.isUpperCase(value.charAt(i))) return result.toString() + lastToken;
         }
 
         return result.toString() + lastToken;
     }
 
     public static String[] getLines( final String value ) {
-        StringReader stringReader = new StringReader(value);
-        BufferedReader reader = new BufferedReader(stringReader);
-        ArrayList result = new ArrayList();
+        final StringReader stringReader = new StringReader(value);
+        final BufferedReader reader = new BufferedReader(stringReader);
+        final ArrayList result = new ArrayList();
         try {
             String line = reader.readLine();
             while (line != null) {
                 result.add(line);
                 line = reader.readLine();
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new MetaMatrixRuntimeException(e);
         }
         return (String[])result.toArray(new String[result.size()]);
@@ -190,7 +167,7 @@ public class StringUtilities {
      * @param text the text being checked (may be <code>null</code>)
      * @return <code>true</code> if the specified text is either empty or <code>null</code>
      */
-    public static boolean isEmpty( String text ) {
+    public static boolean isEmpty( final String text ) {
         return ((text == null) || (text.length() == 0));
     }
 
@@ -201,9 +178,7 @@ public class StringUtilities {
      * @return String
      */
     public static String lowerCaseFirstChar( final String value ) {
-        if (value == null) {
-            return null;
-        }
+        if (value == null) return null;
 
         // Lower case the first char and try to look-up the SF
         String firstChar = new Character(value.charAt(0)).toString();
@@ -218,13 +193,9 @@ public class StringUtilities {
             final String removeChars = String.valueOf(chars);
             for (int i = 0; i < value.length(); i++) {
                 final String character = value.substring(i, i + 1);
-                if (removeChars.indexOf(character) == -1) {
-                    result.append(character);
-                }
+                if (removeChars.indexOf(character) == -1) result.append(character);
             }
-        } else {
-            result.append(value);
-        }
+        } else result.append(value);
         return result.toString();
     }
 
@@ -235,7 +206,7 @@ public class StringUtilities {
      * @param value the string to work with
      * @see java.util.regex.Pattern
      */
-    public static String removeExtraWhitespace( String value ) {
+    public static String removeExtraWhitespace( final String value ) {
         return value.replaceAll("\\s\\s+", " "); //$NON-NLS-1$//$NON-NLS-2$
     }
 
@@ -247,8 +218,8 @@ public class StringUtilities {
      * @param stripExtras if true, replace multiple whitespace characters with a single character.
      * @see java.util.regex.Pattern
      */
-    public static String replaceWhitespace( String value,
-                                            boolean stripExtras ) {
+    public static String replaceWhitespace( final String value,
+                                            final boolean stripExtras ) {
         return replaceWhitespace(value, " ", stripExtras); //$NON-NLS-1$
     }
 
@@ -261,14 +232,12 @@ public class StringUtilities {
      * @param stripExtras if true, replace multiple whitespace characters with a single character.
      * @see java.util.regex.Pattern
      */
-    public static String replaceWhitespace( String value,
-                                            String replaceWith,
-                                            boolean stripExtras ) {
+    public static String replaceWhitespace( final String value,
+                                            final String replaceWith,
+                                            final boolean stripExtras ) {
         String rv = value.replaceAll("\\s+", replaceWith); //$NON-NLS-1$
 
-        if (stripExtras) {
-            rv = removeExtraWhitespace(rv);
-        } // endif
+        if (stripExtras) rv = removeExtraWhitespace(rv);
 
         return rv;
     }
@@ -280,13 +249,14 @@ public class StringUtilities {
      * @return String
      */
     public static String upperCaseFirstChar( final String value ) {
-        if (value == null) {
-            return null;
-        }
+        if (value == null) return null;
 
         // Lower case the first char and try to look-up the SF
         String firstChar = new Character(value.charAt(0)).toString();
         firstChar = firstChar.toUpperCase();
         return (firstChar + value.substring(1));
+    }
+
+    private StringUtilities() {
     }
 }

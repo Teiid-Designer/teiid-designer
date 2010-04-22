@@ -13,6 +13,7 @@ import java.sql.Connection;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -47,8 +48,7 @@ import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
 /**
  * @since 4.2
  */
-public class ExecuteVdbAction extends ActionDelegate
-    implements DqpUiConstants, IWorkbenchWindowActionDelegate, IViewActionDelegate {
+public class ExecuteVdbAction extends ActionDelegate implements DqpUiConstants, IWorkbenchWindowActionDelegate, IViewActionDelegate {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ExecuteVdbAction.class);
 
@@ -122,7 +122,7 @@ public class ExecuteVdbAction extends ActionDelegate
         }
 
         if (result == null) try {
-            result = new Vdb(this.selectedVDB.getLocation());
+            result = new Vdb(this.selectedVDB, new NullProgressMonitor());
         } catch (final Exception err) {
             VdbUiConstants.Util.log(err);
             MessageDialog.openInformation(null, getString("editorContextError.title"), getString("editorContextError.message")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -183,8 +183,7 @@ public class ExecuteVdbAction extends ActionDelegate
     }
 
     /**
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-     *      org.eclipse.jface.viewers.ISelection)
+     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
      * @since 4.2
      */
     @Override
@@ -195,8 +194,7 @@ public class ExecuteVdbAction extends ActionDelegate
         if (!SelectionUtilities.isMultiSelection(selection)) {
             final Object obj = SelectionUtilities.getSelectedObject(selection);
 
-            if (obj instanceof IFile) if (CoreStringUtil.endsWithIgnoreCase(((IFile)obj).getName(),
-                                                                            ModelerCore.VDB_FILE_EXTENSION)) {
+            if (obj instanceof IFile) if (CoreStringUtil.endsWithIgnoreCase(((IFile)obj).getName(), ModelerCore.VDB_FILE_EXTENSION)) {
                 setSelectedVdbFile((IFile)obj);
                 enable = true;
             }
@@ -254,34 +252,13 @@ public class ExecuteVdbAction extends ActionDelegate
         // if not in an executable state, show dialog to allow user to fix any problems
         // (only if allowing user interaction)
         // dialog is shown for either error, warning, or info severity.
-        if (!this.canExecute.isOK() && this.allowUserInput) {
-            UiBusyIndicator.showWhile(null, new Runnable() {
-                public void run() {
-                    final Shell shell = DqpUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
-                    // TODO: Launch some "Select or Create Connection Factory Dialog"
-                    // dialog = new ConnectorBindingsDialog(shell, getSelectedVdbFile(), vdb, getVdbExecutionValidator());
-                }
-            });
-
-            // dialog.open();
-            //
-            // if (dialog.getReturnCode() == Window.OK) {
-            // // save VDB if necessary
-            // if (vdb.isModified()) vdb.save(new NullProgressMonitor());
-            //
-            // // recheck the execution status. should be OK if the dialog OK button was clicked. but just make sure.
-            // try {
-            // new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, operation);
-            // } catch (final InterruptedException e) {
-            // } catch (final InvocationTargetException e) {
-            // UTIL.log(e.getTargetException());
-            //                    MessageDialog.openError(getShell(), getString("executorErrorDialog.title"), //$NON-NLS-1$
-            //                                            getString("executorErrorDialog.msg") //$NON-NLS-1$
-            // );
-            // return;
-            // }
-            // }
-        }
+        if (!this.canExecute.isOK() && this.allowUserInput) UiBusyIndicator.showWhile(null, new Runnable() {
+            public void run() {
+                final Shell shell = DqpUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
+                // TODO: Launch some "Select or Create Connection Factory Dialog"
+                // dialog = new ConnectorBindingsDialog(shell, getSelectedVdbFile(), vdb, getVdbExecutionValidator());
+            }
+        });
     }
 
     public void setVdbExecutionValidator( final VdbExecutionValidator validator ) {

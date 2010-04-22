@@ -29,12 +29,20 @@ public class VdbPlugin extends Plugin {
     public static VdbPlugin singleton;
 
     /**
+     * @param error
+     */
+    public static void throwRuntimeExeption( final Exception error ) {
+        if (error instanceof RuntimeException) throw (RuntimeException)error;
+        if (error != null) throw new RuntimeException(error);
+    }
+
+    /**
      * {@inheritDoc}
      * 
      * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
      */
     @Override
-    public void start( BundleContext context ) throws Exception {
+    public void start( final BundleContext context ) throws Exception {
         super.start(context);
         singleton = this;
         ((PluginUtilImpl)UTIL).initializePlatformLogger(this);
@@ -46,7 +54,7 @@ public class VdbPlugin extends Plugin {
      * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
      */
     @Override
-    public void stop( BundleContext context ) throws Exception {
+    public void stop( final BundleContext context ) throws Exception {
         singleton = null;
         super.stop(context);
     }

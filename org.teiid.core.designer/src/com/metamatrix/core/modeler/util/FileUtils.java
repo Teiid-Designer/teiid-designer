@@ -45,7 +45,7 @@ public class FileUtils {
      * @throws Exception
      * @since 4.3
      */
-    public static void copy( final File fromFile,
+    public static File copy( final File fromFile,
                              final File destDirectory,
                              final boolean overwrite ) throws IOException {
         final File toFile = new File(destDirectory, fromFile.getName());
@@ -66,6 +66,7 @@ public class FileUtils {
         } finally {
             if (fis != null) fis.close();
         }
+        return toFile;
     }
 
     /**
@@ -196,12 +197,11 @@ public class FileUtils {
         if (filter != null) sourceFiles = sourceDirectory.listFiles(filter);
         else sourceFiles = sourceDirectory.listFiles();
 
-        for (final File srcFile : sourceFiles) {
+        for (final File srcFile : sourceFiles)
             if (srcFile.isDirectory()) {
                 final File childTargetDir = new File(targetDir.getAbsolutePath());
                 copyRecursively(srcFile, childTargetDir, filter, true);
             } else copy(srcFile.getAbsolutePath(), targetDir.getAbsolutePath() + File.separatorChar + srcFile.getName());
-        }
     }
 
     /**

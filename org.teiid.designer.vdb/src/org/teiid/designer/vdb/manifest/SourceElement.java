@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType( XmlAccessType.NONE )
 @XmlType( name = "" )
-public class ConnectorElement implements Serializable {
+public class SourceElement implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,13 +31,13 @@ public class ConnectorElement implements Serializable {
     /**
      * Used by JAXB
      */
-    public ConnectorElement() {
+    public SourceElement() {
     }
 
     /**
      * @param name
      */
-    public ConnectorElement( final String name ) {
+    SourceElement( final String name ) {
         this.name = name;
         this.jndiName = name;
     }

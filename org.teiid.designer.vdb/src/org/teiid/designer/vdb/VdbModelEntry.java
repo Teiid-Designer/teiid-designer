@@ -7,28 +7,36 @@
  */
 package org.teiid.designer.vdb;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import net.jcip.annotations.ThreadSafe;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
+import org.teiid.designer.vdb.plugin.VdbPlugin;
+import com.metamatrix.core.modeler.util.FileUtils;
+import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.ResourceFinder;
 import com.metamatrix.modeler.internal.core.builder.ModelBuildUtil;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.core.index.IndexUtil;
+import com.metamatrix.modeler.internal.core.resource.EmfResource;
 
 /**
  *
@@ -36,39 +44,43 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 @ThreadSafe
 public final class VdbModelEntry extends VdbEntry {
 
+    private static final String INDEX_FOLDER = "runtime-inf/"; //$NON-NLS-1$
+
+    private final String indexName;
     private final Set<IMarker> problems = new HashSet<IMarker>();
     private final AtomicBoolean visible = new AtomicBoolean(true);
     private final CopyOnWriteArraySet<VdbModelEntry> dependsUpon = new CopyOnWriteArraySet<VdbModelEntry>();
     private final CopyOnWriteArraySet<VdbModelEntry> dependentOf = new CopyOnWriteArraySet<VdbModelEntry>();
     private final boolean builtIn;
     private final ModelType type;
-    private final AtomicReference<String> source = new AtomicReference();
+    private final AtomicReference<String> source = new AtomicReference<String>();
 
     VdbModelEntry( final IPath name,
                    final Vdb vdb,
                    final IProgressMonitor monitor ) {
         super(name, vdb, monitor);
+        indexName = IndexUtil.getRuntimeIndexFileName(findFileInWorkspace());
+        synchronizeModelEntry(monitor);
         final Resource model = findModel();
         builtIn = (model == null ? false : getFinder().isBuiltInResource(model));
-        type = ModelType.get(ModelUtil.getXmiHeader(findFile()).getModelType());
-        synchronizeModelEntry(monitor);
-        System.out.println();
+        type = ((EmfResource)model).getModelType();
     }
 
     VdbModelEntry( final ModelElement model,
                    final Vdb vdb,
                    final IProgressMonitor monitor ) {
-        super(model.getPath(), vdb, monitor);
+        super(Path.fromPortableString(model.getPath()), vdb, monitor);
         type = ModelType.get(model.getType());
         visible.set(model.isVisible());
         boolean builtIn = false;
-        for (final PropertyElement property : model.getProperties())
-            if (PropertyElement.BUILT_IN.equals(property.getName())) {
-                builtIn = Boolean.parseBoolean(property.getValue());
-                break;
-            }
+        String indexName = null;
+        for (final PropertyElement property : model.getProperties()) {
+            final String name = property.getName();
+            if (ModelElement.BUILT_IN.equals(name)) builtIn = Boolean.parseBoolean(property.getValue());
+            else if (ModelElement.INDEX_NAME.equals(name)) indexName = property.getValue();
+        }
         this.builtIn = builtIn;
-        synchronizeModelEntry(monitor);
+        this.indexName = indexName;
     }
 
     private void clean() {
@@ -96,10 +108,8 @@ public final class VdbModelEntry extends VdbEntry {
     }
 
     private Resource findModel() {
-        final Resource[] models = getFinder().findByName(getName().toString(), true, false);
-        if (models.length == 0) return null;
-        assert models.length == 1;
-        return models[0];
+        return getFinder().findByURI(URI.createFileURI(ResourcesPlugin.getWorkspace().getRoot().getLocation().append(getName()).toString()),
+                                     false);
     }
 
     /**
@@ -127,8 +137,20 @@ public final class VdbModelEntry extends VdbEntry {
         try {
             return ModelerCore.getModelContainer().getResourceFinder();
         } catch (final Exception error) {
-            throw new RuntimeException(error);
+            VdbPlugin.throwRuntimeExeption(error);
+            return null;
         }
+    }
+
+    private File getIndexFile() {
+        return new File(getVdb().getFolder(), INDEX_FOLDER + indexName);
+    }
+
+    /**
+     * @return indexName
+     */
+    public String getIndexName() {
+        return indexName;
     }
 
     /**
@@ -160,13 +182,26 @@ public final class VdbModelEntry extends VdbEntry {
     }
 
     /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.vdb.VdbEntry#save(java.util.zip.ZipOutputStream, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+    final void save( final ZipOutputStream out,
+                     final IProgressMonitor monitor ) {
+        super.save(out, monitor);
+        // Save model index
+        save(out, new ZipEntry(INDEX_FOLDER + indexName), getIndexFile(), monitor);
+    }
+
+    /**
      * @param source
      */
     public final void setDataSource( final String source ) {
         final String oldSource = getDataSource();
         if (oldSource != null && oldSource.equals(source)) return;
         this.source.set(source);
-        getVdb().notifyChangeListeners(this, Vdb.DATA_SOURCE, oldSource, source);
+        getVdb().setModified(this, Vdb.DATA_SOURCE, oldSource, source);
     }
 
     /**
@@ -176,7 +211,7 @@ public final class VdbModelEntry extends VdbEntry {
         final boolean oldVisible = isVisible();
         if (oldVisible == visible) return;
         this.visible.set(visible);
-        getVdb().notifyChangeListeners(this, Vdb.VISIBLE, oldVisible, visible);
+        getVdb().setModified(this, Vdb.VISIBLE, oldVisible, visible);
     }
 
     /**
@@ -192,14 +227,14 @@ public final class VdbModelEntry extends VdbEntry {
     }
 
     private void synchronizeModelEntry( final IProgressMonitor monitor ) {
+        final IFile workspaceFile = findFileInWorkspace();
+        if (workspaceFile == null) return;
         clean();
         try {
             // Build model if necessary
-            final IFile file = findFile();
-            if (file == null) return;
-            ModelBuildUtil.buildResources(monitor, Collections.singleton(file), ModelerCore.getModelContainer(), false);
+            ModelBuildUtil.buildResources(monitor, Collections.singleton(workspaceFile), ModelerCore.getModelContainer(), false);
             // Synchronize model problems
-            Collections.addAll(problems, file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE));
+            Collections.addAll(problems, workspaceFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE));
             // Also add dependent models
             final Resource model = findModel();
             for (final Resource dependentModel : getFinder().findReferencesFrom(model, true, false)) {
@@ -214,8 +249,11 @@ public final class VdbModelEntry extends VdbEntry {
                 dependsUpon.add(dependentEntry);
                 dependentEntry.dependentOf.add(this);
             }
-        } catch (final CoreException error) {
-            throw new RuntimeException(error);
+            // Copy snapshot of workspace file index to VDB folder
+            final Index index = IndexUtil.getIndexFile(indexName, IndexUtil.INDEX_PATH + indexName, getName().lastSegment());
+            FileUtils.copy(index.getIndexFile(), getIndexFile().getParentFile(), true);
+        } catch (final Exception error) {
+            VdbPlugin.throwRuntimeExeption(error);
         }
     }
 }

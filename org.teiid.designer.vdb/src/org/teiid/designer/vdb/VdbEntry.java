@@ -7,10 +7,15 @@
  */
 package org.teiid.designer.vdb;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import net.jcip.annotations.ThreadSafe;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -21,6 +26,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.teiid.designer.vdb.manifest.EntryElement;
+import org.teiid.designer.vdb.manifest.PropertyElement;
+import org.teiid.designer.vdb.plugin.VdbPlugin;
+import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.ChecksumUtil;
 
 /**
@@ -29,19 +38,38 @@ import com.metamatrix.core.util.ChecksumUtil;
 @ThreadSafe
 public class VdbEntry {
 
+    static final int IO_BUFFER_SIZE = 8092;
+
     private final IPath name;
     private final Vdb vdb;
     private final AtomicReference<Synchronization> synchronization = new AtomicReference<Synchronization>(
-                                                                                                          Synchronization.NotSynchronized);
-    private final AtomicLong checksum = new AtomicLong();
+                                                                                                          Synchronization.NotApplicable);
+    private long checksum;
+    private final AtomicReference<String> description = new AtomicReference<String>();
     private final IResourceChangeListener fileListener;
+    private final int hashcode;
 
-    VdbEntry( final IPath name,
+    private final ReadWriteLock checksumLock = new ReentrantReadWriteLock();
+
+    VdbEntry( final EntryElement entry,
               final Vdb vdb,
               final IProgressMonitor monitor ) {
+        this(Path.fromPortableString(entry.getPath()), vdb);
+        for (final PropertyElement property : entry.getProperties()) {
+            final String name = property.getName();
+            if (EntryElement.CHECKSUM.equals(name)) checksum = Long.parseLong(property.getValue());
+        }
+        final IFile workspaceFile = findFileInWorkspace();
+        if (workspaceFile != null && checksum != computeChecksum(workspaceFile)) setSynchronization(Synchronization.NotSynchronized);
+    }
+
+    private VdbEntry( final IPath name,
+                      final Vdb vdb ) {
         this.name = name;
         this.vdb = vdb;
-        synchronizeEntry(monitor);
+        // Calculate hashcode
+        hashcode = 31 + name.hashCode();
+        // Register to listen for changes to this entries associated workspace file
         fileListener = new IResourceChangeListener() {
             public void resourceChanged( final IResourceChangeEvent event ) {
                 final IResourceDelta delta = event.getDelta().findMember(name);
@@ -52,28 +80,30 @@ public class VdbEntry {
         ResourcesPlugin.getWorkspace().addResourceChangeListener(fileListener);
     }
 
-    VdbEntry( final String name,
+    VdbEntry( final IPath name,
               final Vdb vdb,
               final IProgressMonitor monitor ) {
-        this(Path.fromPortableString(name), vdb, monitor);
+        this(name, vdb);
+        // Synchronize with workspace file
+        synchronizeEntry(monitor);
     }
 
     private long computeChecksum( final IFile file ) {
-        RuntimeException runtimeError = null;
+        Exception significantError = null;
         InputStream stream = null;
         try {
             stream = file.getContents();
             return ChecksumUtil.computeChecksum(stream).getValue();
         } catch (final Exception error) {
-            runtimeError = new RuntimeException(error);
+            significantError = error;
             setSynchronization(Synchronization.NotSynchronized);
-            throw runtimeError;
+            return 0;
         } finally {
             if (stream != null) try {
                 stream.close();
             } catch (final IOException ignored) {
-                if (runtimeError != null) throw runtimeError;
             }
+            VdbPlugin.throwRuntimeExeption(significantError);
         }
     }
 
@@ -81,13 +111,30 @@ public class VdbEntry {
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(fileListener);
     }
 
-    void fileChanged( final IResourceDelta delta ) {
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public final boolean equals( final Object object ) {
+        if (this == object) return true;
+        if (object == null) return false;
+        if (getClass() != object.getClass()) return false;
+        final VdbEntry other = (VdbEntry)object;
+        if (name == null) {
+            if (other.name != null) return false;
+        } else if (!name.equals(other.name)) return false;
+        return true;
+    }
+
+    final void fileChanged( final IResourceDelta delta ) {
         if ((delta.getFlags() & (IResourceDelta.REPLACED | IResourceDelta.MOVED_FROM | IResourceDelta.MOVED_TO)) > 0) throw new UnsupportedOperationException(
                                                                                                                                                               toString(delta));
         final int kind = delta.getKind();
         if (kind == IResourceDelta.REMOVED) setSynchronization(Synchronization.NotApplicable);
         else if (kind == IResourceDelta.ADDED || kind == IResourceDelta.CHANGED) {
-            if (checksum.get() != computeChecksum((IFile)delta.getResource())) setSynchronization(Synchronization.NotSynchronized);
+            if (getChecksum() != computeChecksum((IFile)delta.getResource())) setSynchronization(Synchronization.NotSynchronized);
             else setSynchronization(Synchronization.Synchronized);
         } else throw new UnsupportedOperationException(toString(delta));
     }
@@ -95,20 +142,39 @@ public class VdbEntry {
     /**
      * @return <code>true</code> if the associated file exists
      */
-    public final boolean fileExists() {
-        return findFile() != null;
+    public final boolean fileExistsInWorkspace() {
+        return findFileInWorkspace() != null;
     }
 
     /**
      * @return the associated workspace file, or <code>null</code> if it doesn't exist
      */
-    public final IFile findFile() {
+    public final IFile findFileInWorkspace() {
         final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(name);
         if (!(resource instanceof IFile)) {
             setSynchronization(Synchronization.NotApplicable);
             return null;
         }
         return (IFile)resource;
+    }
+
+    /**
+     * @return the checksum of this entry's associated file
+     */
+    public final long getChecksum() {
+        checksumLock.readLock().lock();
+        try {
+            return checksum;
+        } finally {
+            checksumLock.readLock().unlock();
+        }
+    }
+
+    /**
+     * @return description
+     */
+    public final String getDescription() {
+        return description.get();
     }
 
     /**
@@ -121,7 +187,6 @@ public class VdbEntry {
     /**
      * @return <code>true</code> if the associated file doesn't exist or this file entry is synchronized with the associated file,
      *         i.e., the entry information matches the file information.
-     * @throws RuntimeException
      */
     public final Synchronization getSynchronization() {
         return synchronization.get();
@@ -130,15 +195,68 @@ public class VdbEntry {
     /**
      * @return the VDB containing this entry
      */
-    Vdb getVdb() {
+    final Vdb getVdb() {
         return vdb;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public final int hashCode() {
+        return hashcode;
+    }
+
+    void save( final ZipOutputStream out,
+               final IProgressMonitor monitor ) {
+        final ZipEntry zipEntry = new ZipEntry(name.toString());
+        zipEntry.setComment(description.get());
+        save(out, zipEntry, new File(vdb.getFolder(), name.toString()), monitor);
+    }
+
+    /**
+     * @param out
+     * @param zipEntry
+     * @param file
+     * @param monitor
+     */
+    protected final void save( final ZipOutputStream out,
+                               final ZipEntry zipEntry,
+                               final File file,
+                               final IProgressMonitor monitor ) {
+        Exception significantError = null;
+        InputStream in = null;
+        try {
+            out.putNextEntry(zipEntry);
+            in = new FileInputStream(file);
+            final byte[] buf = new byte[IO_BUFFER_SIZE];
+            for (int len = in.read(buf); len >= 0; len = in.read(buf))
+                out.write(buf, 0, len);
+        } catch (final Exception error) {
+            significantError = error;
+        } finally {
+            try {
+                if (in != null) in.close();
+                out.closeEntry();
+            } catch (final IOException ignored) {
+            }
+            VdbPlugin.throwRuntimeExeption(significantError);
+        }
+    }
+
+    /**
+     * @param description
+     */
+    public final void setDescription( final String description ) {
+        this.description.set(description);
     }
 
     private void setSynchronization( final Synchronization synchronization ) {
         final Synchronization oldSynchronization = getSynchronization();
         if (oldSynchronization == synchronization) return;
         this.synchronization.set(synchronization);
-        vdb.notifyChangeListeners(this, Vdb.SYNCHRONIZATION, oldSynchronization, synchronization);
     }
 
     /**
@@ -153,13 +271,29 @@ public class VdbEntry {
      * Private since called by constructor and don't want subclasses overriding
      */
     private Synchronization synchronizeEntry( final IProgressMonitor monitor ) {
-        final IFile file = findFile();
-        if (file == null) return Synchronization.NotApplicable;
-        checksum.set(computeChecksum(file));
+        final IFile workspaceFile = findFileInWorkspace();
+        if (workspaceFile == null) return Synchronization.NotApplicable;
+        long oldChecksum = 0L;
+        checksumLock.writeLock().lock();
+        try {
+            oldChecksum = checksum;
+            checksum = computeChecksum(workspaceFile);
+            // Copy snapshot of workspace file to VDB folder
+            try {
+                FileUtils.copy(workspaceFile.getLocation().toFile(),
+                               new File(vdb.getFolder(), name.toString()).getParentFile(),
+                               true);
+            } catch (final IOException error) {
+                VdbPlugin.throwRuntimeExeption(error);
+            }
+        } finally {
+            checksumLock.writeLock().unlock();
+        }
+        vdb.setModified(this, Vdb.CHECKSUM, oldChecksum, checksum);
         return Synchronization.Synchronized;
     }
 
-    String toString( final IResourceDelta delta ) {
+    private String toString( final IResourceDelta delta ) {
         final StringBuilder builder = new StringBuilder("file="); //$NON-NLS-1$
         builder.append(delta.getFullPath().toString());
         builder.append(", kind="); //$NON-NLS-1$

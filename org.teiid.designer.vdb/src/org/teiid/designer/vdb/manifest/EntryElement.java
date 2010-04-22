@@ -8,13 +8,14 @@
 package org.teiid.designer.vdb.manifest;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import org.eclipse.core.runtime.IPath;
+import org.teiid.designer.vdb.VdbEntry;
 
 /**
  * 
@@ -22,6 +23,10 @@ import org.eclipse.core.runtime.IPath;
 @XmlAccessorType( XmlAccessType.NONE )
 @XmlType( name = "" )
 public class EntryElement implements Serializable {
+
+    /**
+     */
+    public static final String CHECKSUM = "checksum"; //$NON-NLS-1$
 
     private static final long serialVersionUID = 1L;
 
@@ -41,13 +46,12 @@ public class EntryElement implements Serializable {
     }
 
     /**
-     * @param name
-     * @param description
+     * @param entry
      */
-    public EntryElement( final IPath name,
-                         final String description ) {
-        this.path = name.toString();
-        this.description = description;
+    EntryElement( final VdbEntry entry ) {
+        path = entry.getName().toString();
+        description = entry.getDescription();
+        getProperties().add(new PropertyElement(CHECKSUM, Long.toString(entry.getChecksum())));
     }
 
     /**
@@ -65,9 +69,10 @@ public class EntryElement implements Serializable {
     }
 
     /**
-     * @return properties
+     * @return The list of properties for this entry; never <code>null</code>
      */
     public List<PropertyElement> getProperties() {
+        if (properties == null) properties = new ArrayList<PropertyElement>();
         return properties;
     }
 }

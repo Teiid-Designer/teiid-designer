@@ -93,10 +93,10 @@ public abstract class DefaultColumnProvider<T, V> implements ColumnProvider<T, V
      * {@inheritDoc}
      * 
      * @return <code>false</code>
-     * @see com.metamatrix.modeler.internal.vdb.ui.editor.ColumnProvider#isCellEditable(java.lang.Object)
+     * @see com.metamatrix.modeler.internal.vdb.ui.editor.ColumnProvider#isEditable(java.lang.Object)
      */
     @Override
-    public boolean isCellEditable( final T element ) {
+    public boolean isEditable( final T element ) {
         return false;
     }
 
@@ -131,7 +131,7 @@ public abstract class DefaultColumnProvider<T, V> implements ColumnProvider<T, V
      * @see com.metamatrix.modeler.internal.vdb.ui.editor.ColumnProvider#getValue(java.lang.Object)
      */
     @Override
-    public void setCellValue( final T element,
+    public void setValue( final T element,
                               final V value ) {
     }
 }

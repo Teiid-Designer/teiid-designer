@@ -20,10 +20,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType( name = "property" )
 public class PropertyElement implements Serializable {
 
-    /**
-     */
-    public static final String BUILT_IN = "builtIn"; //$NON-NLS-1$
-
     private static final long serialVersionUID = 1L;
 
     @XmlAttribute( name = "name", required = true )
@@ -42,8 +38,8 @@ public class PropertyElement implements Serializable {
      * @param name
      * @param value
      */
-    public PropertyElement( final String name,
-                            final String value ) {
+    PropertyElement( final String name,
+                     final String value ) {
         this.name = name;
         this.value = value;
     }

@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
+Bundle-Localization: plugin
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.legacy;singleton:=true
 Bundle-Version: 1.0.0
@@ -38,3 +39,4 @@ Export-Package: com.metamatrix.common.api,
  com.metamatrix.modeler.internal.transformation.util,
  com.metamatrix.modeler.transformation.metadata,
  com.metamatrix.query.sql
+Bundle-ActivationPolicy: lazy

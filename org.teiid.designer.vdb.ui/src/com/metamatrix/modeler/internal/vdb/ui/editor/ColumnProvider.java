@@ -25,8 +25,7 @@ public interface ColumnProvider<T, V> extends Comparator<T> {
     int getAlignment();
 
     /**
-     * @return the cell editor that will be used to edit the {@link TableColumn column's} {@link #isCellEditable(Object) editable}
-     *         cells
+     * @return the cell editor that will be used to edit the {@link TableColumn column's} {@link #isEditable(Object) editable} cells
      */
     Class<? extends CellEditor> getEditorClass();
 
@@ -34,7 +33,7 @@ public interface ColumnProvider<T, V> extends Comparator<T> {
      * @param element
      * @return the {@link TableColumn column's} image for the supplied element value
      */
-    Image getImage( final T element );
+    Image getImage( T element );
 
     /**
      * @return the name of the {@link TableColumn column}
@@ -46,7 +45,7 @@ public interface ColumnProvider<T, V> extends Comparator<T> {
      * @return the {@link TableColumn column's} text for the supplied element value (often just the string representation of the
      *         cell's {@link #getValue(Object) value})
      */
-    String getText( final T element );
+    String getText( T element );
 
     /**
      * @param element
@@ -58,13 +57,13 @@ public interface ColumnProvider<T, V> extends Comparator<T> {
      * @param element
      * @return the {@link TableColumn column's} model value for the supplied element value; must not be <code>null</code>
      */
-    V getValue( final T element );
+    V getValue( T element );
 
     /**
      * @param element
      * @return <code>true</code> if the {@link TableColumn column} is editable for the supplied element value
      */
-    boolean isCellEditable( final T element );
+    boolean isEditable( T element );
 
     /**
      * @return <code>true</code> if the column is resizable
@@ -77,12 +76,11 @@ public interface ColumnProvider<T, V> extends Comparator<T> {
     boolean isSortable();
 
     /**
-     * Must be implemented if the {@link TableColumn column} is {@link #isCellEditable(Object) editable} for the supplied element
-     * value.
+     * Must be implemented if the {@link TableColumn column} is {@link #isEditable(Object) editable} for the supplied element value.
      * 
      * @param element
      * @param value
      */
-    void setCellValue( final T element,
-                       V value );
+    void setValue( T element,
+                   V value );
 }

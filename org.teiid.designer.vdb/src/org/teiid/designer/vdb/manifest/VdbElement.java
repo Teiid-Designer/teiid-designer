@@ -8,6 +8,7 @@
 package org.teiid.designer.vdb.manifest;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -15,6 +16,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbEntry;
+import org.teiid.designer.vdb.VdbModelEntry;
 
 /**
  * 
@@ -24,7 +28,7 @@ import javax.xml.bind.annotation.XmlType;
 // Map this class to the type of the top-level element, which is defined using an anonymous type
 @XmlType( name = "" )
 // Associate this class to the root element
-@XmlRootElement
+@XmlRootElement( name = "vdb" )
 public class VdbElement implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,6 +38,9 @@ public class VdbElement implements Serializable {
 
     @XmlElement( name = "description" )
     private String description;
+
+    @XmlAttribute( name = "version", required = true )
+    private int version;
 
     @XmlElement( name = "model", required = true, type = ModelElement.class )
     private List<ModelElement> models;
@@ -48,13 +55,16 @@ public class VdbElement implements Serializable {
     }
 
     /**
-     * @param name
-     * @param description
+     * @param vdb
      */
-    public VdbElement( final String name,
-                        final String description ) {
-        this.name = name;
-        this.description = description;
+    public VdbElement( final Vdb vdb ) {
+        name = vdb.getName().lastSegment();
+        description = vdb.getDescription();
+        version = 1;
+        for (final VdbEntry entry : vdb.getEntries())
+            getEntries().add(new EntryElement(entry));
+        for (final VdbModelEntry modelEntry : vdb.getModelEntries())
+            getModels().add(new ModelElement(modelEntry));
     }
 
     /**
@@ -68,6 +78,7 @@ public class VdbElement implements Serializable {
      * @return entries
      */
     public List<EntryElement> getEntries() {
+        if (entries == null) entries = new ArrayList<EntryElement>();
         return entries;
     }
 
@@ -75,6 +86,7 @@ public class VdbElement implements Serializable {
      * @return models
      */
     public List<ModelElement> getModels() {
+        if (models == null) models = new ArrayList<ModelElement>();
         return models;
     }
 
@@ -83,5 +95,12 @@ public class VdbElement implements Serializable {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * @return version
+     */
+    public int getVersion() {
+        return version;
     }
 }

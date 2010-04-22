@@ -100,7 +100,7 @@ public class Table<T> {
                 @SuppressWarnings( "unchecked" )
                 @Override
                 protected boolean canEdit( final Object element ) {
-                    return columnProvider.isCellEditable((T)element);
+                    return columnProvider.isEditable((T)element);
                 }
 
                 @Override
@@ -122,7 +122,7 @@ public class Table<T> {
                 @Override
                 protected void setValue( final Object element,
                                          final Object value ) {
-                    columnProvider.setCellValue((T)element, (V)value);
+                    columnProvider.setValue((T)element, (V)value);
                     viewer.update(element, null);
                 }
             });
