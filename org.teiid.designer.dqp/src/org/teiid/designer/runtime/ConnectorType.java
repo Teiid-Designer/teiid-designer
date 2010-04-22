@@ -14,6 +14,7 @@ import java.util.Properties;
 import net.jcip.annotations.Immutable;
 import org.teiid.adminapi.PropertyDefinition;
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.StringUtilities;
 
 /**
  *
@@ -53,13 +54,13 @@ public final class ConnectorType implements Comparable<ConnectorType> {
 
         Server thisServer = getAdmin().getServer();
         Server thatServer = type.getAdmin().getServer();
-        
+
         int c = thisServer.getUrl().compareTo(thatServer.getUrl());
-        
+
         if (c == 0) {
             c = getName().compareTo(type.getName());
         }
-        
+
         return c;
     }
 
@@ -77,15 +78,17 @@ public final class ConnectorType implements Comparable<ConnectorType> {
     public String getName() {
         return this.name;
     }
-    
+
     /**
      * @return the string version of the default value for each property (empty string if no default)
      */
     public Properties getDefaultPropertyValues() {
         Properties defaultValues = new Properties();
-        
+
         for (PropertyDefinition propDef : getPropertyDefinitions()) {
-            defaultValues.setProperty(propDef.getName(), propDef.getDefaultValue().toString());
+            String value = (propDef.getDefaultValue() == null) ? StringUtilities.EMPTY_STRING
+                                                              : propDef.getDefaultValue().toString();
+            defaultValues.setProperty(propDef.getName(), value);
         }
 
         return defaultValues;

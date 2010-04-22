@@ -75,11 +75,10 @@ public class ExecutionAdmin {
         CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(properties, "properties"); //$NON-NLS-1$
 
-        this.admin.addConnectionFactory(name, type.getName(), properties); // TODO get server guys to return the binding
+        ConnectionFactory connectionFactory = this.admin.addConnectionFactory(name, type.getName(), properties);
         // TODO ask server guys if type needs to also be in properties
 
-        ConnectionFactory binding = this.admin.getConnectionFactory(name);
-        Connector connector = new Connector(binding, type);
+        Connector connector = new Connector(connectionFactory, type);
         this.connectorByNameMap.put(name, connector);
 
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddConnectorEvent(connector));
@@ -180,7 +179,7 @@ public class ExecutionAdmin {
      * @throws Exception
      */
     public ConnectorType getConnectorType( String name ) {
-        //        CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
         // return this.connectorTypeByNameMap.get(name);
         String fixedRarName = name;
         if (fixedRarName.endsWith(".rar")) {
@@ -323,7 +322,7 @@ public class ExecutionAdmin {
                                            String propName,
                                            String value,
                                            boolean notify ) throws Exception {
-        if (connector.isValidPropertyValue(propName, value)) {
+        if (connector.isValidPropertyValue(propName, value) == null) {
             String oldValue = connector.getPropertyValue(propName);
 
             // don't set if value has not changed
@@ -338,7 +337,7 @@ public class ExecutionAdmin {
                 this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(connector));
             }
         } else {
-            throw new Exception(Util.getString("ExecutionAdmin.invalidPropertyValue", value, propName)); //$NON-NLS-1$
+            throw new Exception(Util.getString("invalidPropertyValue", value, propName)); //$NON-NLS-1$
         }
     }
 

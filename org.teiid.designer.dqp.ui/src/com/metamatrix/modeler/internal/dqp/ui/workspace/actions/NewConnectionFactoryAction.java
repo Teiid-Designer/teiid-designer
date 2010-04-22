@@ -7,15 +7,17 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
+import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.Images.NEW_BINDING_ICON;
 import org.eclipse.jface.window.Window;
 import org.teiid.designer.runtime.Connector;
+import org.teiid.designer.runtime.ConnectorTemplate;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.ui.NewConnectionFactoryDialog;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.NewConnectorDialog;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -23,17 +25,24 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 /**
  * @since 5.0
  */
-public class NewConnectorAction extends ConfigurationManagerAction {
-    private static final String PREFIX = I18nUtil.getPropertyPrefix(NewConnectorAction.class);
-
+public class NewConnectionFactoryAction extends RuntimeAction {
     /**
      * @since 5.0
      */
-    public NewConnectorAction() {
-        super(DqpUiConstants.UTIL.getString(PREFIX + "label")); //$NON-NLS-1$
-        this.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.NEW_BINDING_ICON));
-        this.setToolTipText(DqpUiConstants.UTIL.getString(PREFIX + "tooltip")); //$NON-NLS-1$
+    public NewConnectionFactoryAction() {
+        super(UTIL.getString(I18nUtil.getPropertyPrefix(NewConnectionFactoryAction.class) + "label")); //$NON-NLS-1$
+        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(NEW_BINDING_ICON));
+        setToolTipText(UTIL.getString(I18nUtil.getPropertyPrefix(NewConnectionFactoryAction.class) + "tooltip")); //$NON-NLS-1$
         setEnabled(true);
+    }
+
+    /**
+     * Needed to check/reset enablement from ConnectorsView if NO selection
+     * 
+     * @since 5.0
+     */
+    public void checkEnablement() {
+        setEnablement();
     }
 
     /**
@@ -57,20 +66,21 @@ public class NewConnectorAction extends ConfigurationManagerAction {
         }
 
         // show dialog
-        NewConnectorDialog dialog = new NewConnectorDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(), admin, type);
+        NewConnectionFactoryDialog dialog = new NewConnectionFactoryDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(), admin, type);
 
         if (dialog.open() == Window.OK) {
             try {
-                admin.addConnector(dialog.getConnectorName(), dialog.getConnectorType(), dialog.getConnectorProperties());
+                ConnectorTemplate newConnector = dialog.getConnector();
+                admin.addConnector(newConnector.getName(), newConnector.getType(), newConnector.getChangedProperties());
             } catch (Exception e) {
-                // TODO might need a better error message here
-                WidgetUtil.showError(e);
+                UTIL.log(e);
+                WidgetUtil.showError(UTIL.getString(I18nUtil.getPropertyPrefix(NewConnectionFactoryAction.class) + "errorMsg")); //$NON-NLS-1$
             }
         }
     }
 
     /**
-     * @see com.metamatrix.modeler.internal.dqp.ui.workspace.actions.ConfigurationManagerAction#setEnablement()
+     * @see com.metamatrix.modeler.internal.dqp.ui.workspace.actions.RuntimeAction#setEnablement()
      * @since 5.0
      */
     @Override
@@ -89,12 +99,4 @@ public class NewConnectorAction extends ConfigurationManagerAction {
         setEnabled(result);
     }
 
-    /**
-     * Needed to check/reset enablement from ConnectorsView if NO selection
-     * 
-     * @since 5.0
-     */
-    public void checkEnablement() {
-        setEnablement();
-    }
 }

@@ -24,7 +24,7 @@ import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 /**
  * @since 5.0
  */
-public abstract class ConfigurationManagerAction extends Action implements ISelectionChangedListener {
+public abstract class RuntimeAction extends Action implements ISelectionChangedListener {
 
     /**
      * Set based on the connector(s), connector type(s) that are selected.
@@ -41,7 +41,7 @@ public abstract class ConfigurationManagerAction extends Action implements ISele
      * @param theText
      * @since 5.0
      */
-    public ConfigurationManagerAction( String theText ) {
+    public RuntimeAction( String theText ) {
         super(theText);
     }
 

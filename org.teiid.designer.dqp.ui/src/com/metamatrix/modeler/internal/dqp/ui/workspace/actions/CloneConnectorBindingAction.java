@@ -19,7 +19,7 @@ import com.metamatrix.ui.internal.util.UiUtil;
 /**
  * @since 5.0
  */
-public final class CloneConnectorBindingAction extends ConfigurationManagerAction {
+public final class CloneConnectorBindingAction extends RuntimeAction {
 
     /**
      * @since 5.0
@@ -79,7 +79,7 @@ public final class CloneConnectorBindingAction extends ConfigurationManagerActio
     }
 
     /**
-     * @see com.metamatrix.modeler.internal.dqp.ui.workspace.actions.ConfigurationManagerAction#setEnablement()
+     * @see com.metamatrix.modeler.internal.dqp.ui.workspace.actions.RuntimeAction#setEnablement()
      * @since 5.0
      */
     @Override

@@ -14,7 +14,7 @@ import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 /** 
  * @since 5.0
  */
-public final class DeleteSourceBindingAction extends ConfigurationManagerAction {
+public final class DeleteSourceBindingAction extends RuntimeAction {
 
     /** 
      * 
@@ -40,7 +40,7 @@ public final class DeleteSourceBindingAction extends ConfigurationManagerAction 
 
     /**
      *  
-     * @see com.metamatrix.modeler.internal.dqp.ui.workspace.actions.ConfigurationManagerAction#setEnablement()
+     * @see com.metamatrix.modeler.internal.dqp.ui.workspace.actions.RuntimeAction#setEnablement()
      * @since 5.0
      */
     @Override

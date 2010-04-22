@@ -7,24 +7,26 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
+import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import java.util.Properties;
 import org.eclipse.jface.window.Window;
 import org.teiid.designer.runtime.Connector;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.EditConnectorDialog;
+import org.teiid.designer.runtime.ui.EditConnectionFactoryDialog;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * @since 5.0
  */
-public class EditConnectorAction extends ConfigurationManagerAction {
+public class EditConnectionFactoryAction extends RuntimeAction {
 
     /**
      * @since 5.0
      */
-    public EditConnectorAction() {
-        super(DqpUiConstants.UTIL.getString("EditConnectorAction.label")); //$NON-NLS-1$
+    public EditConnectionFactoryAction() {
+        super(UTIL.getString(I18nUtil.getPropertyPrefix(EditConnectionFactoryAction.class) + "label")); //$NON-NLS-1$
+        setToolTipText(UTIL.getString(I18nUtil.getPropertyPrefix(EditConnectionFactoryAction.class) + "tooltip")); //$NON-NLS-1$
     }
 
     /**
@@ -36,22 +38,23 @@ public class EditConnectorAction extends ConfigurationManagerAction {
         Connector connector = (Connector)getSelectedObject();
         assert (connector != null); // action should not be enabled if there isn't one and only one connector selected
 
-        EditConnectorDialog dialog = new EditConnectorDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(), connector);
+        EditConnectionFactoryDialog dialog = new EditConnectionFactoryDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(), connector);
         dialog.open();
 
         if (dialog.getReturnCode() == Window.OK) {
-            Properties changedProperties = dialog.getPropertyChanges();
+            Properties changedProperties = dialog.getConnector().getChangedProperties();
+
             try {
                 getAdmin().setProperties(connector, changedProperties);
             } catch (Exception e) {
-                // TODO might need a better error message here
-                WidgetUtil.showError(e);
+                UTIL.log(e);
+                WidgetUtil.showError(UTIL.getString(I18nUtil.getPropertyPrefix(EditConnectionFactoryAction.class) + "errorMsg")); //$NON-NLS-1$
             }
         }
     }
 
     /**
-     * @see com.metamatrix.modeler.internal.dqp.ui.workspace.actions.ConfigurationManagerAction#setEnablement()
+     * @see com.metamatrix.modeler.internal.dqp.ui.workspace.actions.RuntimeAction#setEnablement()
      * @since 5.0
      */
     @Override
@@ -65,4 +68,5 @@ public class EditConnectorAction extends ConfigurationManagerAction {
 
         setEnabled(result);
     }
+
 }

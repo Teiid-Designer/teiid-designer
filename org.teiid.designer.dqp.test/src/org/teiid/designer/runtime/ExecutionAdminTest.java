@@ -11,6 +11,8 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.util.Properties;
@@ -86,12 +88,18 @@ public class ExecutionAdminTest {
 
     @Test
     public void shouldAddConnector() throws Exception {
+        String name = "name";
+        ConnectionFactory connectionFactory = mock(ConnectionFactory.class);
 
-        ConnectionFactory cb = mock(ConnectionFactory.class);
         Admin admin = mock(Admin.class);
-        when(admin.getConnectionFactory("name")).thenReturn(cb);
+        when(admin.getConnectionFactory(name)).thenReturn(connectionFactory);
+
+        ConnectorType type = mock(ConnectorType.class);
+        when(type.getName()).thenReturn("type");
+        when(admin.addConnectionFactory(anyString(), anyString(), (Properties)anyObject())).thenReturn(connectionFactory);
+
         ExecutionAdmin execAdmin = new ExecutionAdmin(admin, mock(Server.class), mock(EventManager.class));
-        execAdmin.addConnector("name", mock(ConnectorType.class), new Properties());
+        execAdmin.addConnector(name, mock(ConnectorType.class), new Properties());
     }
 
     @Test( expected = IllegalArgumentException.class )
@@ -274,7 +282,7 @@ public class ExecutionAdminTest {
     @Test
     public void shouldAllowSetPropertyValue() throws Exception {
         Connector mockConnector = mock(Connector.class);
-        when(mockConnector.isValidPropertyValue("name", "value")).thenReturn(true);
+        when(mockConnector.isValidPropertyValue("name", "value")).thenReturn(null);
         getNewAdmin().setPropertyValue(mockConnector, "name", "value");
     }
 

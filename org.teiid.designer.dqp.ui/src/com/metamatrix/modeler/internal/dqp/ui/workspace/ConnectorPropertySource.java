@@ -15,7 +15,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
@@ -23,17 +26,16 @@ import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
+import com.metamatrix.ui.internal.util.WidgetFactory;
 
 /**
  * @since 5.5
  */
 public class ConnectorPropertySource implements IPropertySource {
 
-    private Connector connector; // null if creating a new connector
+    private Connector connector;
     private final ConnectorType type;
-    private final Properties properties;
     private final Properties initialValues;
 
     private boolean isEditable = false;
@@ -43,15 +45,13 @@ public class ConnectorPropertySource implements IPropertySource {
      * @param type the connector type of the connector (never <code>null</code>)
      * @param properties the properties of the connector (never <code>null</code>)
      */
-    public ConnectorPropertySource( ConnectorType type,
-                                    Properties properties ) {
+    private ConnectorPropertySource( ConnectorType type,
+                                     Properties properties ) {
         CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(properties, "properties"); //$NON-NLS-1$
 
         this.type = type;
-        this.properties = properties;
-
-        this.initialValues = new Properties(this.properties);
+        this.initialValues = new Properties(properties);
     }
 
     /**
@@ -60,7 +60,6 @@ public class ConnectorPropertySource implements IPropertySource {
     public ConnectorPropertySource( Connector connector ) {
         this(connector.getType(), connector.getProperties());
         this.connector = connector;
-        this.properties.setProperty("rarName", connector.getType().getName());
     }
 
     /**
@@ -68,7 +67,7 @@ public class ConnectorPropertySource implements IPropertySource {
      * @since 4.2
      */
     public Object getEditableValue() {
-        return this.properties;
+        return this.connector;
     }
 
     /**
@@ -81,23 +80,54 @@ public class ConnectorPropertySource implements IPropertySource {
         boolean showExpertProps = this.provider.isShowingExpertProperties();
         Collection temp = new ArrayList(typeDefs.size());
 
-        for (PropertyDefinition propDefn : typeDefs) {
-            String id = propDefn.getName();
+        for (final PropertyDefinition propDefn : typeDefs) {
+            final String id = propDefn.getName();
             String displayName = propDefn.getDisplayName();
+//
+//            // don't add if an expert or readonly property and expert properties are not being shown
+//            if ((propDefn.isAdvanced() || !propDefn.isModifiable()) && !showExpertProps) {
+//                continue;
+//            }
 
-            // don't add if an expert or readonly property and expert properties are not being shown
-            if ((propDefn.isAdvanced() || !propDefn.isModifiable()) && !showExpertProps) {
-                continue;
-            }
-
-            Object descriptor = null;
+            PropertyDescriptor descriptor = null;
 
             // make sure readonly definitions are not modifiable
             if (this.isEditable && propDefn.isModifiable()) {
-                descriptor = new TextPropertyDescriptor(id, displayName);
+                if (propDefn.isMasked()) {
+                    descriptor = new MaskedTextPropertyDescriptor(id, displayName);
+                } else {
+                    descriptor = new TextPropertyDescriptor(id, displayName);
+                }
+
+                // set validator
+                final Connector validator = this.connector;
+
+                descriptor.setValidator(new ICellEditorValidator() {
+                    @Override
+                    public String isValid( Object value ) {
+                        String newValue = (String)value;
+                        
+                        // OK not to have a value if not required
+                        if ((newValue.length() == 0) && !propDefn.isRequired()) {
+                            return null;
+                        }
+                        
+                        return (validator.isValidPropertyValue(id, newValue));
+                    }
+                });
             } else {
                 // read only
-                descriptor = new PropertyDescriptor(id, displayName);
+                if (propDefn.isMasked()) {
+                    descriptor = new MaskedTextPropertyDescriptor(id, displayName);
+                    ((MaskedTextPropertyDescriptor)descriptor).setEditable(false);
+                } else {
+                    descriptor = new PropertyDescriptor(id, displayName);
+                }
+            }
+            
+            // identify as expert property
+            if (!showExpertProps && propDefn.isAdvanced()) {
+                descriptor.setFilterFlags(new String[] {IPropertySheetEntry.FILTER_ID_EXPERT});
             }
 
             temp.add(descriptor);
@@ -125,10 +155,26 @@ public class ConnectorPropertySource implements IPropertySource {
      * @since 4.2
      */
     public Object getPropertyValue( Object id ) {
-        String result = this.properties.getProperty((String)id);
+        String propName = (String)id;
+        String result = this.connector.getPropertyValue(propName);
 
-        if (result == null) {
-            result = CoreStringUtil.Constants.EMPTY_STRING;
+        // property not found or value is null
+        if (result == null) return null;
+
+        // return empty string
+        if (result.length() == 0) return result;
+
+        PropertyDefinition propDefn = this.type.getPropertyDefinition(propName);
+
+        // if masked property don't return actual result
+        if (propDefn.isMasked()) {
+            StringBuilder sb = new StringBuilder(10);
+
+            for (int i = 0; i < 10; ++i) {
+                sb.append(WidgetFactory.PASSWORD_ECHO_CHAR);
+            }
+
+            return sb.toString();
         }
 
         return result;
@@ -170,13 +216,13 @@ public class ConnectorPropertySource implements IPropertySource {
      */
     public void setPropertyValue( Object id,
                                   Object value ) {
-        PropertyDefinition propDefn = ((PropertyDefinition)id);
-        try {
-            this.connector.setPropertyValue(propDefn.getName(), value.toString());
+        String propName = (String)id;
 
-            if (this.connector != null) {
-                this.provider.propertyChanged(this.connector);
-            }
+        try {
+            String oldValue = this.connector.getPropertyValue(propName);
+            String newValue = value.toString();
+            this.connector.setPropertyValue(propName, newValue);
+            this.provider.propertyChanged(new PropertyChangeEvent(connector, propName, oldValue, newValue));
         } catch (Exception e) {
             UTIL.log(e);
         }

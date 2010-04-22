@@ -71,8 +71,8 @@ import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.CloneConnectorBindingAction;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.DeleteConnectorBindingAction;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.DeleteSourceBindingAction;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.EditConnectorAction;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.NewConnectorAction;
+import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.EditConnectionFactoryAction;
+import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.NewConnectionFactoryAction;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
@@ -106,8 +106,8 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
     ConnectorsViewTreeProvider treeProvider;
 
     Action showConnectorTypesToggleAction;
-    private EditConnectorAction editConnectorBindingAction;
-    private NewConnectorAction newConnectorBindingAction;
+    private EditConnectionFactoryAction editConnectionFactoryAction;
+    private NewConnectionFactoryAction newConnectionFactoryAction;
     private DeleteConnectorBindingAction deleteConnectorBindingAction;
     private CloneConnectorBindingAction cloneConnectorBindingAction;
     private DeleteSourceBindingAction deleteSourceBindingAction;
@@ -459,20 +459,20 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                 }
                 manager.add(this.reconnectAction);
                 manager.add(new Separator());
-                manager.add(this.newConnectorBindingAction);
+                manager.add(this.newConnectionFactoryAction);
                 manager.add(new Separator());
                 manager.add(this.newServerAction);
             } else if (selection instanceof Connector) {
-                manager.add(this.newConnectorBindingAction);
+                manager.add(this.newConnectionFactoryAction);
                 manager.add(new Separator());
-                manager.add(this.editConnectorBindingAction);
+                manager.add(this.editConnectionFactoryAction);
                 manager.add(this.cloneConnectorBindingAction);
                 manager.add(new Separator());
                 manager.add(this.deleteConnectorBindingAction);
                 manager.add(new Separator());
                 manager.add(this.newServerAction);
             } else if (selection instanceof ConnectorType) {
-                manager.add(this.newConnectorBindingAction);
+                manager.add(this.newConnectionFactoryAction);
                 manager.add(new Separator());
                 manager.add(this.newServerAction);
             } else {
@@ -485,8 +485,8 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         } else {
             manager.add(this.newServerAction);
             manager.add(new Separator());
-            this.newConnectorBindingAction.checkEnablement();
-            manager.add(this.newConnectorBindingAction);
+            this.newConnectionFactoryAction.checkEnablement();
+            manager.add(this.newConnectionFactoryAction);
         }
 
         // Other plug-ins can contribute there actions here
@@ -494,7 +494,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
     }
 
     private void fillLocalToolBar( IToolBarManager manager ) {
-        manager.add(this.newConnectorBindingAction);
+        manager.add(this.newConnectionFactoryAction);
         manager.add(new Separator());
         manager.add(this.showConnectorTypesToggleAction);
         manager.add(new Separator());
@@ -505,11 +505,11 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
      *  Initialize view actions, set icons and action text.
      */
     private void initActions() {
-        this.editConnectorBindingAction = new EditConnectorAction();
-        this.viewer.addSelectionChangedListener(editConnectorBindingAction);
+        this.editConnectionFactoryAction = new EditConnectionFactoryAction();
+        this.viewer.addSelectionChangedListener(editConnectionFactoryAction);
 
-        this.newConnectorBindingAction = new NewConnectorAction();
-        this.viewer.addSelectionChangedListener(newConnectorBindingAction);
+        this.newConnectionFactoryAction = new NewConnectionFactoryAction();
+        this.viewer.addSelectionChangedListener(newConnectionFactoryAction);
 
         this.deleteConnectorBindingAction = new DeleteConnectorBindingAction();
         this.viewer.addSelectionChangedListener(deleteConnectorBindingAction);

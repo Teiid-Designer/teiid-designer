@@ -8,6 +8,8 @@
 package org.teiid.designer.runtime;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.hamcrest.core.IsSame.sameInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -98,7 +100,7 @@ public class ConnectorTest {
     @Test
     public void shouldReturnInvalidValueForMissingProperty() {
         when(this.connectorType.getPropertyDefinition(PROP_NAME)).thenReturn(null); // remove property
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "true"), is(false));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "true"), notNullValue());
     }
 
     // ======================================================================================
@@ -107,186 +109,186 @@ public class ConnectorTest {
 
     @Test
     public void shouldDetectInvalidPropertyValueOfNull() {
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), is(false));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), notNullValue());
     }
 
     @Test
     public void shouldDetectValidBooleanPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Boolean.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Boolean.TYPE.getName());
 
         // tests
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "true"), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "false"), is(true));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "true"), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "false"), nullValue());
     }
 
     @Test
     public void shouldReturnInvalidBooleanPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Boolean.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Boolean.TYPE.getName());
 
         // tests
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "blue"), is(false));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), is(false));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "blue"), notNullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), notNullValue());
     }
 
     @Test
     public void shouldDetectValidCharacterPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Character.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Character.TYPE.getName());
 
         // tests
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "c"), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "1"), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, ";"), is(true));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "c"), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "1"), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, ";"), nullValue());
     }
 
     @Test
     public void shouldReturnInvalidCharacterPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Character.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Character.TYPE.getName());
 
         // tests
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "cc"), is(false));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), is(false));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "cc"), notNullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), notNullValue());
     }
 
     @Test
     public void shouldDetectValidBytePropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Byte.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Byte.TYPE.getName());
 
         // tests
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "1"), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Byte.toString(Byte.MAX_VALUE)), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "-1"), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Byte.toString(Byte.MIN_VALUE)), is(true));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "1"), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Byte.toString(Byte.MAX_VALUE)), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "-1"), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Byte.toString(Byte.MIN_VALUE)), nullValue());
     }
 
     @Test
     public void shouldReturnInvalidBytePropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Byte.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Byte.TYPE.getName());
 
         // tests
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Long.toString((long)Byte.MAX_VALUE + (long)1)), is(false));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Long.toString((long)Byte.MIN_VALUE - (long)1)), is(false));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), is(false));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Long.toString((long)Byte.MAX_VALUE + (long)1)), notNullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Long.toString((long)Byte.MIN_VALUE - (long)1)), notNullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), notNullValue());
     }
 
     @Test
     public void shouldDetectValidShortPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Short.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Short.TYPE.getName());
 
         // tests
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "1"), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Short.toString(Short.MAX_VALUE)), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "-1"), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Short.toString(Short.MIN_VALUE)), is(true));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "1"), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Short.toString(Short.MAX_VALUE)), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "-1"), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Short.toString(Short.MIN_VALUE)), nullValue());
     }
 
     @Test
     public void shouldReturnInvalidShortPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Short.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Short.TYPE.getName());
 
         // tests
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Long.toString((long)Short.MAX_VALUE + 1)), is(false));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Long.toString((long)Short.MIN_VALUE - 1)), is(false));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), is(false));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Long.toString((long)Short.MAX_VALUE + 1)), notNullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Long.toString((long)Short.MIN_VALUE - 1)), notNullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), notNullValue());
     }
 
     @Test
     public void shouldDetectValidIntegerPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Integer.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Integer.TYPE.getName());
 
         // tests
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "1"), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Integer.toString(Integer.MAX_VALUE)), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "-1"), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Integer.toString(Integer.MIN_VALUE - 1)), is(true));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "1"), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Integer.toString(Integer.MAX_VALUE)), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "-1"), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Integer.toString(Integer.MIN_VALUE - 1)), nullValue());
     }
 
     @Test
     public void shouldReturnInvalidIntegerPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Integer.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Integer.TYPE.getName());
 
         // tests
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Double.toString(Integer.MAX_VALUE + 1)), is(false));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Double.toString((double)Integer.MIN_VALUE - 1)), is(false));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), is(false));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Double.toString(Integer.MAX_VALUE + 1)), notNullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Double.toString((double)Integer.MIN_VALUE - 1)), notNullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), notNullValue());
     }
 
     @Test
     public void shouldDetectValidLongPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Long.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Long.TYPE.getName());
 
         // tests
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "1"), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Long.toString(Long.MAX_VALUE)), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "-1"), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Long.toString(Long.MIN_VALUE)), is(true));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "1"), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Long.toString(Long.MAX_VALUE)), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "-1"), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Long.toString(Long.MIN_VALUE)), nullValue());
     }
 
     @Test
     public void shouldReturnInvalidLongPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Long.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Long.TYPE.getName());
 
         // tests
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Double.toString((double)Long.MAX_VALUE + 1)), is(false));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Double.toString((double)Long.MIN_VALUE - 1)), is(false));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), is(false));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Double.toString((double)Long.MAX_VALUE + 1)), notNullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Double.toString((double)Long.MIN_VALUE - 1)), notNullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), notNullValue());
     }
 
     @Test
     public void shouldDetectValidFloatPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Float.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Float.TYPE.getName());
 
         // tests
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "1.0"), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Float.toString(Float.MAX_VALUE)), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Float.toString(Float.MAX_VALUE * 10)), is(true)); // Infinity
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "-1.0"), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Float.toString(Float.MIN_VALUE)), is(true));
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Float.toString((float)-1.0 / (float)0.0)), is(true)); // -Infinity
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "1.0"), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Float.toString(Float.MAX_VALUE)), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Float.toString(Float.MAX_VALUE * 10)), nullValue()); // Infinity
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, "-1.0"), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Float.toString(Float.MIN_VALUE)), nullValue());
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, Float.toString((float)-1.0 / (float)0.0)), nullValue()); // -Infinity
     }
 
     @Test
     public void shouldReturnInvalidFloatPropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Float.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Float.TYPE.getName());
 
         // tests
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), is(false));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), notNullValue());
     }
 
     @Test
     public void shouldDetectValidDoublePropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Double.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Double.TYPE.getName());
 
         // tests
-        assertThat(connector.isValidPropertyValue(PROP_NAME, "1.0"), is(true));
-        assertThat(connector.isValidPropertyValue(PROP_NAME, Double.toString(Double.MAX_VALUE)), is(true));
-        assertThat(connector.isValidPropertyValue(PROP_NAME, Float.toString((float)Double.MAX_VALUE + 1)), is(true)); // Infinity
-        assertThat(connector.isValidPropertyValue(PROP_NAME, "-1.0"), is(true));
-        assertThat(connector.isValidPropertyValue(PROP_NAME, Double.toString(Double.MIN_VALUE)), is(true));
-        assertThat(connector.isValidPropertyValue(PROP_NAME, Double.toString(-1.0 / 0.0)), is(true)); // -Infinity
+        assertThat(connector.isValidPropertyValue(PROP_NAME, "1.0"), nullValue());
+        assertThat(connector.isValidPropertyValue(PROP_NAME, Double.toString(Double.MAX_VALUE)), nullValue());
+        assertThat(connector.isValidPropertyValue(PROP_NAME, Float.toString((float)Double.MAX_VALUE + 1)), nullValue()); // Infinity
+        assertThat(connector.isValidPropertyValue(PROP_NAME, "-1.0"), nullValue());
+        assertThat(connector.isValidPropertyValue(PROP_NAME, Double.toString(Double.MIN_VALUE)), nullValue());
+        assertThat(connector.isValidPropertyValue(PROP_NAME, Double.toString(-1.0 / 0.0)), nullValue()); // -Infinity
     }
 
     @Test
     public void shouldReturnInvalidDoublePropertyValue() {
         // configure property definition
-        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Double.class.getName());
+        when(propertyDefinition.getPropertyTypeClassName()).thenReturn(Double.TYPE.getName());
 
         // tests
-        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), is(false));
+        assertThat(this.connector.isValidPropertyValue(PROP_NAME, null), notNullValue());
     }
 
     @Test

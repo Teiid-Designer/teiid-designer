@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.teiid.designer.runtime.Connector;
@@ -65,9 +66,9 @@ public class RuntimePropertySourceProvider implements IPropertySourceProvider {
         listenerList.remove(listener);
     }
 
-    void propertyChanged(Connector binding) {
+    void propertyChanged(PropertyChangeEvent event) {
         for ( Iterator<IPropertyChangeListener> iter = listenerList.iterator() ; iter.hasNext() ; ) {
-            iter.next().propertyChange(null);
+            iter.next().propertyChange(event);
         }
     }
 

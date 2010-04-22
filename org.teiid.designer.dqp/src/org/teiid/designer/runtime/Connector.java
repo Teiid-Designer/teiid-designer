@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
@@ -16,6 +17,7 @@ import org.teiid.adminapi.ConnectionFactory;
 import org.teiid.adminapi.PropertyDefinition;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.HashCodeUtil;
+import com.metamatrix.core.util.StringUtilities;
 
 /**
  */
@@ -60,6 +62,34 @@ public class Connector implements Comparable<Connector> {
         if (getName().equals(other.getName()) && getType().getAdmin().getServer().equals(otherServer)) return true;
 
         return false;
+    }
+
+    /**
+     * Obtains all the names of the properties whose values are invalid.
+     * 
+     * @return the names of the properties with invalid values (never <code>null</code> but can be empty)
+     */
+    public Collection<String> findInvalidProperties() {
+        Collection<String> propertyNames = new ArrayList<String>();
+
+        for (PropertyDefinition propDefn : getType().getPropertyDefinitions()) {
+            String name = propDefn.getName();
+            String value = getPropertyValue(name);
+
+            if (StringUtilities.isEmpty(value)) {
+                if (propDefn.isRequired()) {
+                    propertyNames.add(name);
+                }
+            } else if (isValidPropertyValue(name, value) != null) {
+                propertyNames.add(name);
+            }
+        }
+
+        return propertyNames;
+    }
+
+    protected ConnectionFactory getConnectionFactory() {
+        return this.binding;
     }
 
     /**
@@ -114,80 +144,85 @@ public class Connector implements Comparable<Connector> {
      * @return <code>true</code> if the property exists and the proposed value is valid
      * @since 7.0
      */
-    public boolean isValidPropertyValue( String name,
-                                         String value ) {
-        if (value == null) {
-            return false;
-        }
+    public String isValidPropertyValue( String name,
+                                        String value ) {
+        // make sure there is a property definition
         PropertyDefinition definition = this.type.getPropertyDefinition(name);
-        if (definition == null) return false;
+        if (definition == null) return Util.getString("missingPropertyDefinition", name); //$NON-NLS-1$
+
+        // make sure there is a value
+        if (value == null) {
+            return Util.getString("invalidNullPropertyValue", name); //$NON-NLS-1$
+        }
 
         String type = definition.getPropertyTypeClassName();
 
         // Note: "String" does not need any validation here
 
-        if (Boolean.class.getName().equals(type)) {
-
+        if (Boolean.class.getName().equals(type) || Boolean.TYPE.getName().equals(type)) {
             if (!value.equalsIgnoreCase(Boolean.TRUE.toString()) && !value.equalsIgnoreCase(Boolean.FALSE.toString())) {
-                return false;
+                return Util.getString("invalidPropertyEditorValue", value, Boolean.TYPE.getName()); //$NON-NLS-1$
             }
-        } else if (Character.class.getName().equals(type)) {
+        } else if (Character.class.getName().equals(type) || Character.TYPE.getName().equals(type)) {
             if (value.length() != 1) {
-                return false;
+                return Util.getString("invalidPropertyEditorValue", value, Character.TYPE.getName()); //$NON-NLS-1$
             }
-        } else if (Byte.class.getName().equals(type)) {
+        } else if (Byte.class.getName().equals(type) || Byte.TYPE.getName().equals(type)) {
             try {
                 Byte.parseByte(value);
             } catch (Exception e) {
-                return false;
+                return Util.getString("invalidPropertyEditorValue", value, Byte.TYPE.getName()); //$NON-NLS-1$
             }
-        } else if (Short.class.getName().equals(type)) {
+        } else if (Short.class.getName().equals(type) || Short.TYPE.getName().equals(type)) {
             try {
                 Short.parseShort(value);
             } catch (Exception e) {
-                return false;
+                return Util.getString("invalidPropertyEditorValue", value, Short.TYPE.getName()); //$NON-NLS-1$
             }
-        } else if (Integer.class.getName().equals(type)) {
+        } else if (Integer.class.getName().equals(type) || Integer.TYPE.getName().equals(type)) {
             try {
                 Integer.parseInt(value);
             } catch (Exception e) {
-                return false;
+                return Util.getString("invalidPropertyEditorValue", value, Integer.TYPE.getName()); //$NON-NLS-1$
             }
-        } else if (Long.class.getName().equals(type)) {
+        } else if (Long.class.getName().equals(type) || Long.TYPE.getName().equals(type)) {
             try {
                 Long.parseLong(value);
             } catch (Exception e) {
-                return false;
+                return Util.getString("invalidPropertyEditorValue", value, Long.TYPE.getName()); //$NON-NLS-1$
             }
-        } else if (Float.class.getName().equals(type)) {
+        } else if (Float.class.getName().equals(type) || Float.TYPE.getName().equals(type)) {
             try {
                 Float.parseFloat(value);
             } catch (Exception e) {
-                return false;
+                return Util.getString("invalidPropertyEditorValue", value, Float.TYPE.getName()); //$NON-NLS-1$
             }
-        } else if (Double.class.getName().equals(type)) {
+        } else if (Double.class.getName().equals(type) || Double.TYPE.getName().equals(type)) {
             try {
                 Double.parseDouble(value);
             } catch (Exception e) {
-                return false;
+                return Util.getString("invalidPropertyEditorValue", value, Double.TYPE.getName()); //$NON-NLS-1$
             }
+        } else if (!String.class.getName().equals(type)){
+            return Util.getString("unknownPropertyType", name, type); //$NON-NLS-1$
         }
 
         // should only get here if valid so far
         if (definition.isConstrainedToAllowedValues()) {
             Collection values = definition.getAllowedValues();
-            assert ((values != null) && !values.isEmpty()); // TODO is this a valid assert??
+            assert ((values != null) && !values.isEmpty());
 
             for (Object allowedValue : values) {
                 if (allowedValue.equals(value)) {
-                    return true;
+                    return null;
                 }
             }
 
-            return false;
+            return Util.getString("invalidPropertyEditorConstrainedValue", value, values.toString()); //$NON-NLS-1$;
         }
 
-        return true;
+        // valid value
+        return null;
     }
 
     /**
