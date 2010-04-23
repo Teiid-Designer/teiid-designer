@@ -39,6 +39,15 @@ public class CoreModelerPlugin extends Plugin {
     private static DeclarativeTransactionManager transactionMgr;
 
     /**
+     * Accessor for the TransactionManager instance to be used by aspects for declarative txn management. This instance may be null.
+     * 
+     * @return TransactionManager instance
+     */
+    public static DeclarativeTransactionManager getTransactionManager() {
+        return transactionMgr;
+    }
+
+    /**
      * Setter for the TransactionManager instance to be used by aspects for declarative txn management.
      * 
      * @param txnManager
@@ -48,21 +57,11 @@ public class CoreModelerPlugin extends Plugin {
     }
 
     /**
-     * Accessor for the TransactionManager instance to be used by aspects for declarative txn management. This instance may be
-     * null.
-     * 
-     * @return TransactionManager instance
-     */
-    public static DeclarativeTransactionManager getTransactionManager() {
-        return transactionMgr;
-    }
-
-    /**
      * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
      * @since 4.3.2
      */
     @Override
-    public void start( BundleContext context ) throws Exception {
+    public void start( final BundleContext context ) throws Exception {
         super.start(context);
         ((PluginUtilImpl)Util).initializePlatformLogger(this); // This must be called to initialize the platform logger!
         // Initialize the IDGenerator, which is an asynchronous call so should return quickly.
