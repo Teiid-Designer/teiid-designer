@@ -42,6 +42,14 @@ public class ConnectorPropertySource implements IPropertySource {
     private RuntimePropertySourceProvider provider;
 
     /**
+     * @param connector the connector whose properties are being edited (never <code>null</code>)
+     */
+    public ConnectorPropertySource( Connector connector ) {
+        this(connector.getType(), connector.getProperties());
+        this.connector = connector;
+    }
+
+    /**
      * @param type the connector type of the connector (never <code>null</code>)
      * @param properties the properties of the connector (never <code>null</code>)
      */
@@ -52,14 +60,6 @@ public class ConnectorPropertySource implements IPropertySource {
 
         this.type = type;
         this.initialValues = new Properties(properties);
-    }
-
-    /**
-     * @param connector the connector whose properties are being edited (never <code>null</code>)
-     */
-    public ConnectorPropertySource( Connector connector ) {
-        this(connector.getType(), connector.getProperties());
-        this.connector = connector;
     }
 
     /**
@@ -83,11 +83,11 @@ public class ConnectorPropertySource implements IPropertySource {
         for (final PropertyDefinition propDefn : typeDefs) {
             final String id = propDefn.getName();
             String displayName = propDefn.getDisplayName();
-//
-//            // don't add if an expert or readonly property and expert properties are not being shown
-//            if ((propDefn.isAdvanced() || !propDefn.isModifiable()) && !showExpertProps) {
-//                continue;
-//            }
+            //
+            // // don't add if an expert or readonly property and expert properties are not being shown
+            // if ((propDefn.isAdvanced() || !propDefn.isModifiable()) && !showExpertProps) {
+            // continue;
+            // }
 
             PropertyDescriptor descriptor = null;
 
@@ -106,12 +106,12 @@ public class ConnectorPropertySource implements IPropertySource {
                     @Override
                     public String isValid( Object value ) {
                         String newValue = (String)value;
-                        
+
                         // OK not to have a value if not required
-                        if ((newValue.length() == 0) && !propDefn.isRequired()) {
+                        if (((newValue == null) || (newValue.length() == 0)) && !propDefn.isRequired()) {
                             return null;
                         }
-                        
+
                         return (validator.isValidPropertyValue(id, newValue));
                     }
                 });
@@ -124,7 +124,7 @@ public class ConnectorPropertySource implements IPropertySource {
                     descriptor = new PropertyDescriptor(id, displayName);
                 }
             }
-            
+
             // identify as expert property
             if (!showExpertProps && propDefn.isAdvanced()) {
                 descriptor.setFilterFlags(new String[] {IPropertySheetEntry.FILTER_ID_EXPERT});
@@ -140,14 +140,6 @@ public class ConnectorPropertySource implements IPropertySource {
         result = sortPropertyDescriptors(result);
 
         return result;
-    }
-
-    /**
-     * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
-     * @since 4.2
-     */
-    public boolean isPropertySet( Object id ) {
-        return false;
     }
 
     /**
@@ -181,6 +173,14 @@ public class ConnectorPropertySource implements IPropertySource {
     }
 
     /**
+     * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
+     * @since 4.2
+     */
+    public boolean isPropertySet( Object id ) {
+        return false;
+    }
+
+    /**
      * @see org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java.lang.Object)
      * @since 4.2
      */
@@ -191,23 +191,6 @@ public class ConnectorPropertySource implements IPropertySource {
 
     public void setEditable( boolean isEditable ) {
         this.isEditable = isEditable;
-    }
-
-    public void setProvider( RuntimePropertySourceProvider provider ) {
-        this.provider = provider;
-    }
-
-    /**
-     * Sorts the properties using a custom sorter that puts the URL, user, and password always before other properties.
-     * 
-     * @param theDescriptors the descriptors being sorted
-     * @return the sorted descriptors
-     * @since 5.5
-     */
-    private IPropertyDescriptor[] sortPropertyDescriptors( IPropertyDescriptor[] theDescriptors ) {
-        List descriptors = Arrays.asList(theDescriptors);
-        Collections.sort(descriptors, new DescriptorSorter());
-        return (IPropertyDescriptor[])descriptors.toArray(new IPropertyDescriptor[descriptors.size()]);
     }
 
     /**
@@ -226,6 +209,23 @@ public class ConnectorPropertySource implements IPropertySource {
         } catch (Exception e) {
             UTIL.log(e);
         }
+    }
+
+    public void setProvider( RuntimePropertySourceProvider provider ) {
+        this.provider = provider;
+    }
+
+    /**
+     * Sorts the properties using a custom sorter that puts the URL, user, and password always before other properties.
+     * 
+     * @param theDescriptors the descriptors being sorted
+     * @return the sorted descriptors
+     * @since 5.5
+     */
+    private IPropertyDescriptor[] sortPropertyDescriptors( IPropertyDescriptor[] theDescriptors ) {
+        List descriptors = Arrays.asList(theDescriptors);
+        Collections.sort(descriptors, new DescriptorSorter());
+        return (IPropertyDescriptor[])descriptors.toArray(new IPropertyDescriptor[descriptors.size()]);
     }
 
     /**
