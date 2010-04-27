@@ -68,7 +68,7 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
 
     /** Delegate action to delete resources. */
     private SelectionListenerAction deleteResourceAction;
-    
+
     private SelectionListenerAction deleteProjectsAction;
 
     /** Delegate action to delete EObjects. */
@@ -118,7 +118,7 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
         // when deleting projects use the default behavior of the Eclipse action
         this.deleteProjectsAction = new org.eclipse.ui.actions.DeleteResourceAction(UiUtil.getWorkbenchWindowOnlyIfUiThread());
     }
-    
+
     /**
      * The resources being deleted will always either be all projects or all non-projects.
      * 
@@ -183,7 +183,7 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
 
                     if (okToDelete) {
                         closeResources(resources);
-                        
+
                         // get the appropriate action based on the selected objects
                         SelectionListenerAction action = getDelegateDeleteResourceAction(resources);
                         // If we make this call we can keep additional confirm dialogs from popping up
@@ -858,7 +858,8 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
                 }
             } else if (nextObj instanceof IFile) {
                 IFile file = (IFile)nextObj;
-                if (file.getFileExtension().equalsIgnoreCase(ModelerCore.DOT_PROJECT_EXTENSION)) return false;
+                if (file.getFileExtension() != null
+                    && file.getFileExtension().equalsIgnoreCase(ModelerCore.DOT_PROJECT_EXTENSION)) return false;
                 else if (file.getName().equalsIgnoreCase(ModelerCore.UDF_MODEL_NAME)) return false;
             }
         }
