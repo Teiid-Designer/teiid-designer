@@ -833,6 +833,9 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
         setEnabled(enable);
     }
 
+    /*
+     * Convenience access method
+     */
     protected Shell getShell() {
         return UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
     }
