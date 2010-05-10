@@ -101,44 +101,284 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
         }
     }
 
-    protected void initDelegateActions() {
-        this.deleteResourceAction = new org.eclipse.ui.actions.DeleteResourceAction(UiUtil.getWorkbenchWindowOnlyIfUiThread()) {
-            @Override
-            public void run() {
-                // setting this to testing mode in essence brings back the functionality of 5.5.3. Eclipse's
-                // DeleteResourceAction was changed to now use the LTK framework. When "fTestingMode" is "false" the LTK
-                // framework is used. This was causing a problem problem with a Shell being disposed and had something to
-                // do with our dialog that warned the user when a dependent model was being deleted. Couldn't figure out
-                // a way to get the LTK stuff working so this is the workaround.
-                this.fTestingMode = true;
-                super.run();
-            }
-        };
+    /*
+     * This method collects all model files either contained in the selected resources or
+     * contained in a selected folder.
+     */
+    private List allSelectedAndContainedModelFiles( List selectedResources ) {
+        List allSelectedAndContainedModelFiles = Collections.EMPTY_LIST;
 
-        // when deleting projects use the default behavior of the Eclipse action
-        this.deleteProjectsAction = new org.eclipse.ui.actions.DeleteResourceAction(UiUtil.getWorkbenchWindowOnlyIfUiThread());
+        // Iterator over the selected resources
+        for (int size = selectedResources.size(), i = 0; i < size; i++) {
+            Object obj = selectedResources.get(i);
+            if (obj instanceof IResource) {
+                if (allSelectedAndContainedModelFiles.isEmpty()) {
+                    allSelectedAndContainedModelFiles = new ArrayList();
+                }
+
+                IResource iRes = (IResource)obj;
+
+                if (!(obj instanceof IFolder) && ModelUtilities.isModelFile(iRes)) {
+                    // if the resource is not a folder and is a model file
+                    // Add to the selected for deletion list
+                    if (!allSelectedAndContainedModelFiles.contains(iRes)) {
+                        allSelectedAndContainedModelFiles.add(iRes);
+                    }
+                } else if (obj instanceof IFolder || obj instanceof IProject) {
+                    // If the resource is a folder (and maybe a project) get all models
+                    // contained under that folder
+                    Collection folderModels = getContainedModelFiles(obj);
+                    Iterator iter = folderModels.iterator();
+                    IResource nextRes = null;
+
+                    // Iterator over the contained models and check for duplicates.
+                    while (iter.hasNext()) {
+                        nextRes = (IResource)iter.next();
+                        if (!allSelectedAndContainedModelFiles.contains(nextRes)) {
+                            allSelectedAndContainedModelFiles.add(nextRes);
+                        }
+                    }
+                }
+            }
+        }
+        return allSelectedAndContainedModelFiles;
+    }
+
+    /*
+     * Filters modified resources to check for already existing in list, or in the list to be deleted.
+     */
+    private void appendDependentModelFiles( Collection affectedResources,
+                                            Collection allAffectedResources,
+                                            Collection targetedResources,
+                                            Collection selectedObjects ) {
+        // Walk through affectedResources list and add to allAffectedResources only if it doesn't contain the model resourse
+        Iterator iter = affectedResources.iterator();
+        IResource mr = null;
+
+        while (iter.hasNext()) {
+            mr = (IResource)iter.next();
+            if (!targetedResources.contains(mr) && !allAffectedResources.contains(mr)
+                && !isUnderSelectedObjects(mr, selectedObjects)) {
+                allAffectedResources.add(mr);
+            }
+        }
     }
 
     /**
-     * The resources being deleted will always either be all projects or all non-projects.
+     * If the specified <code>IFile</code> is a model resource it is closed. If the model is open in an editor, the editor is
+     * closed.
      * 
-     * @param resources the resources being deleted (never <code>null</code> and never empty)
-     * @return the Eclipse {@link org.eclipse.ui.actions.DeleteResourceAction}
-     * @since 6.0.0
+     * @param theFile the <code>IFile</code> being closed
+     * @return <code>true</code> if the model closed successfully or if not a model file; <code>false</code> otherwise.
      */
-    private SelectionListenerAction getDelegateDeleteResourceAction( List resources ) {
-        SelectionListenerAction action = null;
+    private boolean closeFile( IFile theFile ) {
+        boolean result = true;
 
-        // either all projects or all non-projects
-        if (resources.iterator().next() instanceof IProject) {
-            // don't change "fTestingMode" variable here as setting this to "true" stops the confirmation dialog from showing
-            action = this.deleteProjectsAction;
-        } else {
-            action = this.deleteResourceAction;
+        ModelResource model = null;
+        if (ModelUtilities.isModelFile(theFile)) {
+            try {
+                model = ModelUtilities.getModelResource(theFile, false);
+
+                if (model != null) {
+                    if (model.isLoaded()) {
+                        // see if the model is open, in an initialized ModelEditor
+                        if (ModelEditorManager.isOpen(theFile)) {
+                            if (!ModelEditorManager.isOpenAndInitialized(theFile)) {
+                                // System.out.println("[DeleteResourceAction.closeFile] model is open; about to close: " +
+                                // theFile.getName() );
+                                ModelEditorManager.close(theFile, false);
+                            }
+                        } else {
+                            // jh Defect 19139:
+                            // if the model is not open it might be in an Editor Reference. If so, clean that up.
+                            IEditorReference editorRef = ModelEditorManager.getEditorReferenceForFile(theFile);
+                            if (editorRef != null) {
+                                // System.out.println("[DeleteResourceAction.closeFile] Found an EditorReference; about to remove: "
+                                // + editorRef.getName() );
+                                ModelEditorManager.removeEditorReference(editorRef);
+                            }
+                        }
+                        // }
+                    } else {
+                        // jh Defect 19139:
+                        // if the model is not loaded it might be in an Editor Reference. If so, clean that up.
+                        IEditorReference editorRef = ModelEditorManager.getEditorReferenceForFile(theFile);
+                        if (editorRef != null) {
+                            // System.out.println("[DeleteResourceAction.closeFile] Found an EditorReference; about to remove: " +
+                            // editorRef.getName() );
+                            ModelEditorManager.removeEditorReference(editorRef);
+                        }
+                    }
+                }
+
+            } catch (ModelWorkspaceException theException) {
+                Util.log(theException);
+                result = false;
+            }
+
+            // don't close model if editor wasn't closed. user aborted close.
+            if (result) {
+                try {
+                    if (model != null) {
+                        // Need to close the model in the Explorer?
+                        // System.out.println("[DeleteResourceAction.closeFile] result is true; about to call closeModel(model): "
+                        // + model.getItemName() );
+                        closeModel(model);
+                    }
+                } catch (ModelWorkspaceException theException) {
+                    Util.log(theException);
+                    result = false;
+                }
+            }
+        } else if (ModelUtil.isVdbArchiveFile(theFile)) {
+            // IResource vbdResource = (IResource)theFile;
+
+            IEditorPart editor = UiUtil.getEditorForFile(theFile, false);
+            if (editor != null) {
+                if (editor.isDirty()) {
+                    String title = UiConstants.Util.getString("DeleteResourceAction.pendingChangesTitle"); //$NON-NLS-1$
+                    String message = UiConstants.Util.getString("DeleteResourceAction.pendingChangesMessage", theFile.getName()); //$NON-NLS-1$
+                    result = MessageDialog.openQuestion(getShell(), title, message);
+                }
+                if (result) {
+                    UiUtil.close(theFile, false);
+                }
+            }
+
         }
 
-        action.selectionChanged(new StructuredSelection(resources));
-        return action;
+        return result;
+    }
+
+    /**
+     * Closes all models under the specified <code>IFolder</code>. If a model is open in an editor, the editor is closed.
+     * 
+     * @param theFolder the <code>IFolder</code> whose models are being closed
+     * @return <code>true</code> if all models closed successfully; <code>false</code> otherwise.
+     */
+    private boolean closeFolder( IFolder theFolder ) {
+        boolean result = true;
+
+        try {
+            IResource[] kids = theFolder.members();
+
+            if (kids.length > 0) {
+                for (int i = 0; i < kids.length; i++) {
+                    if (!closeResource(kids[i])) {
+                        result = false;
+                    }
+                }
+            }
+        } catch (CoreException theException) {
+            Util.log(theException);
+            result = false;
+        }
+
+        return result;
+    }
+
+    private void closeModel( ModelResource modelResource ) throws ModelWorkspaceException {
+        ModelResourceEvent event = new ModelResourceEvent(modelResource, ModelResourceEvent.CLOSING, this);
+        UiPlugin.getDefault().getEventBroker().processEvent(event);
+        if (modelResource.isOpen() && modelResource.isLoaded()) {
+            modelResource.getEmfResource().setModified(false);
+            modelResource.close();
+            event = new ModelResourceEvent(modelResource, ModelResourceEvent.CLOSED, this);
+            UiPlugin.getDefault().getEventBroker().processEvent(event);
+        }
+    }
+
+    /**
+     * Closes all models under the specified <code>IProject</code>. If a model is open in an editor, the editor is closed.
+     * 
+     * @param theProject the <code>IProject</code> whose models are being closed
+     * @return <code>true</code> if all models closed successfully; <code>false</code> otherwise.
+     */
+    private boolean closeProject( IProject theProject ) {
+        boolean result = true;
+
+        try {
+            IResource[] kids = theProject.members();
+
+            if (kids.length > 0) {
+                for (int i = 0; i < kids.length; i++) {
+                    if (!closeResource(kids[i])) {
+                        result = false;
+                    }
+                }
+            }
+        } catch (CoreException theException) {
+            Util.log(theException);
+            result = false;
+        }
+
+        return result;
+    }
+
+    /**
+     * Closes all models under the specified <code>IResource</code>. If a model is open in an editor, the editor is closed.
+     * 
+     * @param theResource the <code>IResource</code> whose models are being closed
+     * @return <code>true</code> if all models closed successfully; <code>false</code> otherwise.
+     */
+    private boolean closeResource( IResource theResource ) {
+        boolean result = true;
+
+        if (ModelerCore.hasModelNature(theResource.getProject())) {
+            if (theResource instanceof IProject) {
+                result = closeProject((IProject)theResource);
+            } else if (theResource instanceof IFolder) {
+                result = closeFolder((IFolder)theResource);
+            } else if (theResource instanceof IFile) {
+                result = closeFile((IFile)theResource);
+            }
+        }
+
+        return result;
+    }
+
+    private void closeResources( List resources ) {
+
+        boolean userOK = true;
+        final List modifiedResources = ModelBuildUtil.getModifiedResources();
+
+        boolean started = ModelerCore.startTxn(false, false, "Closing Resources for Delete", //$NON-NLS-1$
+                                               new DefaultIgnorableNotificationSource(DeleteResourceAction.this));
+        boolean succeeded = false;
+        try {
+            for (int size = resources.size(), i = 0; i < size && userOK; i++) {
+                Object obj = resources.get(i);
+
+                if (obj instanceof IResource) {
+                    userOK = closeResource((IResource)obj);
+                }
+            }
+            succeeded = true;
+
+        } catch (final Exception err) {
+            final String msg = Util.getString("DeleteResourceAction.closeResources"); //$NON-NLS-1$
+            getPluginUtils().log(IStatus.ERROR, err, msg);
+        } finally {
+            if (started) {
+                if (succeeded) {
+                    ModelerCore.commitTxn();
+                } else {
+                    ModelerCore.rollbackTxn();
+                }
+            }
+        }
+
+        ModelBuildUtil.setModifiedResources(modifiedResources);
+    }
+
+    protected Container doGetContainer() {
+        try {
+            return ModelerCore.getModelContainer();
+        } catch (CoreException err) {
+            String message = Util.getString("DeleteResourceAction.doGetContainerProblemMessage"); //$NON-NLS-1$
+            UiConstants.Util.log(IStatus.ERROR, err, message);
+        }
+        return null;
     }
 
     /**
@@ -228,148 +468,6 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
     }
 
     /*
-     * This method collects all model files either contained in the selected resources or
-     * contained in a selected folder.
-     */
-    private List allSelectedAndContainedModelFiles( List selectedResources ) {
-        List allSelectedAndContainedModelFiles = Collections.EMPTY_LIST;
-
-        // Iterator over the selected resources
-        for (int size = selectedResources.size(), i = 0; i < size; i++) {
-            Object obj = selectedResources.get(i);
-            if (obj instanceof IResource) {
-                if (allSelectedAndContainedModelFiles.isEmpty()) {
-                    allSelectedAndContainedModelFiles = new ArrayList();
-                }
-
-                IResource iRes = (IResource)obj;
-
-                if (!(obj instanceof IFolder) && ModelUtilities.isModelFile(iRes)) {
-                    // if the resource is not a folder and is a model file
-                    // Add to the selected for deletion list
-                    if (!allSelectedAndContainedModelFiles.contains(iRes)) {
-                        allSelectedAndContainedModelFiles.add(iRes);
-                    }
-                } else if (obj instanceof IFolder || obj instanceof IProject) {
-                    // If the resource is a folder (and maybe a project) get all models
-                    // contained under that folder
-                    Collection folderModels = getContainedModelFiles(obj);
-                    Iterator iter = folderModels.iterator();
-                    IResource nextRes = null;
-
-                    // Iterator over the contained models and check for duplicates.
-                    while (iter.hasNext()) {
-                        nextRes = (IResource)iter.next();
-                        if (!allSelectedAndContainedModelFiles.contains(nextRes)) {
-                            allSelectedAndContainedModelFiles.add(nextRes);
-                        }
-                    }
-                }
-            }
-        }
-        return allSelectedAndContainedModelFiles;
-    }
-
-    /*
-     * This method calls the appropriate validate method to create the "Missing" import problem markers (and others) for the
-     * resources just deleted.
-     */
-    void validateDependentResources( Collection modelIResources,
-                                     IProgressMonitor theMontitor ) {
-        if (!modelIResources.isEmpty()) {
-            // In order for the notifications caused by "opening models" for validation, to be swallowed, the validation
-            // call needs to be wrapped in a transaction. This was discovered and relayed by Goutam on 2/14/05.
-            boolean started = ModelerCore.startTxn(false, false, "Validate Dependent Resources", //$NON-NLS-1$
-                                                   new DefaultIgnorableNotificationSource(DeleteResourceAction.this));
-            boolean succeeded = false;
-            try {
-                ModelBuildUtil.validateResources(theMontitor, modelIResources, doGetContainer(), false);
-
-                succeeded = true;
-
-            } catch (final Exception err) {
-                final String msg = Util.getString("DeleteResourceAction.validateDependentResources"); //$NON-NLS-1$
-                getPluginUtils().log(IStatus.ERROR, err, msg);
-            } finally {
-                if (started) {
-                    if (succeeded) {
-                        ModelerCore.commitTxn();
-                    } else {
-                        ModelerCore.rollbackTxn();
-                    }
-                }
-            }
-
-        }
-    }
-
-    /*
-     * Private method used to assess whether or not the user actually deleted the resources or said "NO". This action 
-     * doesn't know about the "Do you want to delete" dialog, so we needed an alternate way to check.
-     */
-    private boolean resourcesRemoved( List iResources ) {
-        if (!iResources.isEmpty()) {
-            IResource firstResource = (IResource)iResources.iterator().next();
-            if (!firstResource.exists()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /*
-     * Filters modified resources to check for already existing in list, or in the list to be deleted.
-     */
-    private void appendDependentModelFiles( Collection affectedResources,
-                                            Collection allAffectedResources,
-                                            Collection targetedResources,
-                                            Collection selectedObjects ) {
-        // Walk through affectedResources list and add to allAffectedResources only if it doesn't contain the model resourse
-        Iterator iter = affectedResources.iterator();
-        IResource mr = null;
-
-        while (iter.hasNext()) {
-            mr = (IResource)iter.next();
-            if (!targetedResources.contains(mr) && !allAffectedResources.contains(mr)
-                && !isUnderSelectedObjects(mr, selectedObjects)) {
-                allAffectedResources.add(mr);
-            }
-        }
-    }
-
-    private boolean warnUserAboutDependants( Collection dependentResources ) {
-        String title = Util.getString("DeleteResourceAction.confirmDependenciesTitle"); //$NON-NLS-1$
-        String msg = Util.getString("DeleteResourceAction.confirmDependenciesMessage"); //$NON-NLS-1$
-        List resourceList = new ArrayList(dependentResources.size());
-        for (Iterator iter = dependentResources.iterator(); iter.hasNext();) {
-            IPath shortPath = ((IResource)iter.next()).getFullPath().makeRelative();
-            resourceList.add(shortPath);
-        }
-        return ListMessageDialog.openWarningQuestion(getShell(), title, null, msg, resourceList, null);
-    }
-
-    private boolean isUnderSelectedObjects( IResource dependentResource,
-                                            Collection selectedObjects ) {
-        Iterator iter = selectedObjects.iterator();
-        while (iter.hasNext()) {
-            if (dependentResource.getProject().equals(iter.next())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    protected Container doGetContainer() {
-        try {
-            return ModelerCore.getModelContainer();
-        } catch (CoreException err) {
-            String message = Util.getString("DeleteResourceAction.doGetContainerProblemMessage"); //$NON-NLS-1$
-            UiConstants.Util.log(IStatus.ERROR, err, message);
-        }
-        return null;
-    }
-
-    /*
      * Private method used to obtain all Model file IResources contained in an IFolder
      * or IProject IResource.  This is required because if these containers are being deleted, we need to gather
      * up all objects that will go along with it and check for dependencies so we can validate all affected
@@ -431,235 +529,50 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
     }
 
     /**
-     * Closes all models under the specified <code>IResource</code>. If a model is open in an editor, the editor is closed.
+     * The resources being deleted will always either be all projects or all non-projects.
      * 
-     * @param theResource the <code>IResource</code> whose models are being closed
-     * @return <code>true</code> if all models closed successfully; <code>false</code> otherwise.
+     * @param resources the resources being deleted (never <code>null</code> and never empty)
+     * @return the Eclipse {@link org.eclipse.ui.actions.DeleteResourceAction}
+     * @since 6.0.0
      */
-    private boolean closeResource( IResource theResource ) {
-        boolean result = true;
+    private SelectionListenerAction getDelegateDeleteResourceAction( List resources ) {
+        SelectionListenerAction action = null;
 
-        if (ModelerCore.hasModelNature(theResource.getProject())) {
-            if (theResource instanceof IProject) {
-                result = closeProject((IProject)theResource);
-            } else if (theResource instanceof IFolder) {
-                result = closeFolder((IFolder)theResource);
-            } else if (theResource instanceof IFile) {
-                result = closeFile((IFile)theResource);
-            }
+        // either all projects or all non-projects
+        if (resources.iterator().next() instanceof IProject) {
+            // don't change "fTestingMode" variable here as setting this to "true" stops the confirmation dialog from showing
+            action = this.deleteProjectsAction;
+        } else {
+            action = this.deleteResourceAction;
         }
 
-        return result;
+        action.selectionChanged(new StructuredSelection(resources));
+        return action;
     }
 
-    /**
-     * If the specified <code>IFile</code> is a model resource it is closed. If the model is open in an editor, the editor is
-     * closed.
-     * 
-     * @param theFile the <code>IFile</code> being closed
-     * @return <code>true</code> if the model closed successfully or if not a model file; <code>false</code> otherwise.
+    /*
+     * Convenience access method
      */
-    private boolean closeFile( IFile theFile ) {
-        boolean result = true;
-
-        ModelResource model = null;
-        if (ModelUtilities.isModelFile(theFile)) {
-            try {
-                model = ModelUtilities.getModelResource(theFile, false);
-
-                if (model != null) {
-                    if (model.isLoaded()) {
-                        // see if the model is open, in an initialized ModelEditor
-                        if (ModelEditorManager.isOpen(theFile)) {
-                            if (!ModelEditorManager.isOpenAndInitialized(theFile)) {
-                                // System.out.println("[DeleteResourceAction.closeFile] model is open; about to close: " +
-                                // theFile.getName() );
-                                ModelEditorManager.close(theFile, false);
-                            }
-                        } else {
-                            // jh Defect 19139:
-                            // if the model is not open it might be in an Editor Reference. If so, clean that up.
-                            IEditorReference editorRef = ModelEditorManager.getEditorReferenceForFile(theFile);
-                            if (editorRef != null) {
-                                // System.out.println("[DeleteResourceAction.closeFile] Found an EditorReference; about to remove: "
-                                // + editorRef.getName() );
-                                ModelEditorManager.removeEditorReference(editorRef);
-                            }
-                        }
-                        // }
-                    } else {
-                        // jh Defect 19139:
-                        // if the model is not loaded it might be in an Editor Reference. If so, clean that up.
-                        IEditorReference editorRef = ModelEditorManager.getEditorReferenceForFile(theFile);
-                        if (editorRef != null) {
-                            // System.out.println("[DeleteResourceAction.closeFile] Found an EditorReference; about to remove: " +
-                            // editorRef.getName() );
-                            ModelEditorManager.removeEditorReference(editorRef);
-                        }
-                    }
-                }
-
-            } catch (ModelWorkspaceException theException) {
-                Util.log(theException);
-                result = false;
-            }
-
-            // don't close model if editor wasn't closed. user aborted close.
-            if (result) {
-                try {
-                    if (model != null) {
-                        // Need to close the model in the Explorer?
-                        // System.out.println("[DeleteResourceAction.closeFile] result is true; about to call closeModel(model): "
-                        // + model.getItemName() );
-                        closeModel(model);
-                    }
-                } catch (ModelWorkspaceException theException) {
-                    Util.log(theException);
-                    result = false;
-                }
-            }
-        } else if (ModelUtil.isVdbArchiveFile(theFile)) {
-            // IResource vbdResource = (IResource)theFile;
-
-            IEditorPart editor = UiUtil.getEditorForFile(theFile, false);
-            if (editor != null) {
-                if (editor.isDirty()) {
-                    String title = UiConstants.Util.getString("DeleteResourceAction.pendingChangesTitle"); //$NON-NLS-1$
-                    String message = UiConstants.Util.getString("DeleteResourceAction.pendingChangesMessage", theFile.getName()); //$NON-NLS-1$
-                    result = MessageDialog.openQuestion(getShell(), title, message);
-                }
-                if (result) {
-                    UiUtil.close(theFile, false);
-                }
-            }
-
-        }
-
-        return result;
+    protected Shell getShell() {
+        return UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
     }
 
-    private void closeResources( List resources ) {
-
-        boolean userOK = true;
-        final List modifiedResources = ModelBuildUtil.getModifiedResources();
-
-        boolean started = ModelerCore.startTxn(false, false, "Closing Resources for Delete", //$NON-NLS-1$
-                                               new DefaultIgnorableNotificationSource(DeleteResourceAction.this));
-        boolean succeeded = false;
-        try {
-            for (int size = resources.size(), i = 0; i < size && userOK; i++) {
-                Object obj = resources.get(i);
-
-                if (obj instanceof IResource) {
-                    userOK = closeResource((IResource)obj);
-                }
+    protected void initDelegateActions() {
+        this.deleteResourceAction = new org.eclipse.ui.actions.DeleteResourceAction(UiUtil.getWorkbenchWindowOnlyIfUiThread()) {
+            @Override
+            public void run() {
+                // setting this to testing mode in essence brings back the functionality of 5.5.3. Eclipse's
+                // DeleteResourceAction was changed to now use the LTK framework. When "fTestingMode" is "false" the LTK
+                // framework is used. This was causing a problem problem with a Shell being disposed and had something to
+                // do with our dialog that warned the user when a dependent model was being deleted. Couldn't figure out
+                // a way to get the LTK stuff working so this is the workaround.
+                this.fTestingMode = true;
+                super.run();
             }
-            succeeded = true;
+        };
 
-        } catch (final Exception err) {
-            final String msg = Util.getString("DeleteResourceAction.closeResources"); //$NON-NLS-1$
-            getPluginUtils().log(IStatus.ERROR, err, msg);
-        } finally {
-            if (started) {
-                if (succeeded) {
-                    ModelerCore.commitTxn();
-                } else {
-                    ModelerCore.rollbackTxn();
-                }
-            }
-        }
-
-        ModelBuildUtil.setModifiedResources(modifiedResources);
-    }
-
-    private boolean isOkToCloseResources( List resources ) {
-        boolean userOK = true;
-
-        // We need to wrap this in a transaction
-        boolean started = ModelerCore.startTxn(false, false, "Confirming Close Resources", //$NON-NLS-1$
-                                               new DefaultIgnorableNotificationSource(DeleteResourceAction.this));
-        boolean succeeded = false;
-        try {
-            for (int size = resources.size(), i = 0; i < size && userOK; i++) {
-                Object obj = resources.get(i);
-
-                if (obj instanceof IResource) {
-                    userOK = isOkToCloseResource((IResource)obj);
-                }
-            }
-            succeeded = true;
-        } catch (final Exception err) {
-            final String msg = UiConstants.Util.getString("DeleteResourceAction.confirmingCloseResources"); //$NON-NLS-1$
-            UiConstants.Util.log(IStatus.ERROR, err, msg);
-        } finally {
-            if (started) {
-                if (succeeded) {
-                    ModelerCore.commitTxn();
-                } else {
-                    ModelerCore.rollbackTxn();
-                }
-            }
-        }
-
-        return userOK;
-    }
-
-    private boolean isOkToCloseResource( IResource theResource ) {
-        boolean result = true;
-
-        if (ModelerCore.hasModelNature(theResource.getProject())) {
-            if (theResource instanceof IProject) {
-                result = isOkToCloseProject((IProject)theResource);
-            } else if (theResource instanceof IFolder) {
-                result = isOkToCloseFolder((IFolder)theResource);
-            } else if (theResource instanceof IFile) {
-                result = isOkToCloseFile((IFile)theResource);
-            }
-        }
-
-        return result;
-    }
-
-    private boolean isOkToCloseProject( IProject theProject ) {
-        boolean result = true;
-
-        try {
-            IResource[] kids = theProject.members();
-
-            if (kids.length > 0) {
-                for (int i = 0; i < kids.length; i++) {
-                    if (!isOkToCloseResource(kids[i])) {
-                        result = false;
-                    }
-                }
-            }
-        } catch (CoreException theException) {
-            Util.log(theException);
-            result = false;
-        }
-
-        return result;
-    }
-
-    private boolean isOkToCloseFolder( IFolder theFolder ) {
-        boolean result = true;
-
-        try {
-            IResource[] kids = theFolder.members();
-
-            if (kids.length > 0) {
-                for (int i = 0; i < kids.length; i++) {
-                    if (!isOkToCloseResource(kids[i])) {
-                        result = false;
-                    }
-                }
-            }
-        } catch (CoreException theException) {
-            Util.log(theException);
-            result = false;
-        }
-
-        return result;
+        // when deleting projects use the default behavior of the Eclipse action
+        this.deleteProjectsAction = new org.eclipse.ui.actions.DeleteResourceAction(UiUtil.getWorkbenchWindowOnlyIfUiThread());
     }
 
     private boolean isOkToCloseFile( IFile theFile ) {
@@ -696,24 +609,7 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
         return result;
     }
 
-    private void closeModel( ModelResource modelResource ) throws ModelWorkspaceException {
-        ModelResourceEvent event = new ModelResourceEvent(modelResource, ModelResourceEvent.CLOSING, this);
-        UiPlugin.getDefault().getEventBroker().processEvent(event);
-        if (modelResource.isOpen() && modelResource.isLoaded()) {
-            modelResource.getEmfResource().setModified(false);
-            modelResource.close();
-            event = new ModelResourceEvent(modelResource, ModelResourceEvent.CLOSED, this);
-            UiPlugin.getDefault().getEventBroker().processEvent(event);
-        }
-    }
-
-    /**
-     * Closes all models under the specified <code>IFolder</code>. If a model is open in an editor, the editor is closed.
-     * 
-     * @param theFolder the <code>IFolder</code> whose models are being closed
-     * @return <code>true</code> if all models closed successfully; <code>false</code> otherwise.
-     */
-    private boolean closeFolder( IFolder theFolder ) {
+    private boolean isOkToCloseFolder( IFolder theFolder ) {
         boolean result = true;
 
         try {
@@ -721,7 +617,7 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
 
             if (kids.length > 0) {
                 for (int i = 0; i < kids.length; i++) {
-                    if (!closeResource(kids[i])) {
+                    if (!isOkToCloseResource(kids[i])) {
                         result = false;
                     }
                 }
@@ -734,13 +630,7 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
         return result;
     }
 
-    /**
-     * Closes all models under the specified <code>IProject</code>. If a model is open in an editor, the editor is closed.
-     * 
-     * @param theProject the <code>IProject</code> whose models are being closed
-     * @return <code>true</code> if all models closed successfully; <code>false</code> otherwise.
-     */
-    private boolean closeProject( IProject theProject ) {
+    private boolean isOkToCloseProject( IProject theProject ) {
         boolean result = true;
 
         try {
@@ -748,7 +638,7 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
 
             if (kids.length > 0) {
                 for (int i = 0; i < kids.length; i++) {
-                    if (!closeResource(kids[i])) {
+                    if (!isOkToCloseResource(kids[i])) {
                         result = false;
                     }
                 }
@@ -759,6 +649,118 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
         }
 
         return result;
+    }
+
+    private boolean isOkToCloseResource( IResource theResource ) {
+        boolean result = true;
+
+        if (ModelerCore.hasModelNature(theResource.getProject())) {
+            if (theResource instanceof IProject) {
+                result = isOkToCloseProject((IProject)theResource);
+            } else if (theResource instanceof IFolder) {
+                result = isOkToCloseFolder((IFolder)theResource);
+            } else if (theResource instanceof IFile) {
+                result = isOkToCloseFile((IFile)theResource);
+            }
+        }
+
+        return result;
+    }
+
+    private boolean isOkToCloseResources( List resources ) {
+        boolean userOK = true;
+
+        // We need to wrap this in a transaction
+        boolean started = ModelerCore.startTxn(false, false, "Confirming Close Resources", //$NON-NLS-1$
+                                               new DefaultIgnorableNotificationSource(DeleteResourceAction.this));
+        boolean succeeded = false;
+        try {
+            for (int size = resources.size(), i = 0; i < size && userOK; i++) {
+                Object obj = resources.get(i);
+
+                if (obj instanceof IResource) {
+                    userOK = isOkToCloseResource((IResource)obj);
+                }
+            }
+            succeeded = true;
+        } catch (final Exception err) {
+            final String msg = UiConstants.Util.getString("DeleteResourceAction.confirmingCloseResources"); //$NON-NLS-1$
+            UiConstants.Util.log(IStatus.ERROR, err, msg);
+        } finally {
+            if (started) {
+                if (succeeded) {
+                    ModelerCore.commitTxn();
+                } else {
+                    ModelerCore.rollbackTxn();
+                }
+            }
+        }
+
+        return userOK;
+    }
+
+    private boolean isUnderSelectedObjects( IResource dependentResource,
+                                            Collection selectedObjects ) {
+        Iterator iter = selectedObjects.iterator();
+        while (iter.hasNext()) {
+            if (dependentResource.getProject().equals(iter.next())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isValidSelection() {
+        // Check for mixed Selection
+        // Can't delete EObjects & IResources together
+        if (SelectionUtilities.isMixedObjectTypes(getSelection())) {
+            return false;
+        }
+
+        boolean isValid = true;
+        // 1) Can't delete a .project file
+        // 2) Can't delete the "Configuration" project
+        // 3) Can't delete the "FunctionDefinitions" model
+        List selectedObjects = getSelectedObjects();
+        for (Iterator iter = selectedObjects.iterator(); iter.hasNext();) {
+            Object nextObj = iter.next();
+            if (nextObj instanceof IProject) {
+                String projName = ((IProject)nextObj).getName();
+                if (ModelerCore.isReservedProjectName(projName)) {
+                    return false;
+                }
+            } else if (nextObj instanceof IFile) {
+                IFile file = (IFile)nextObj;
+                if (file.getFileExtension() != null
+                    && file.getFileExtension().equalsIgnoreCase(ModelerCore.DOT_PROJECT_EXTENSION)) return false;
+                else if (file.getName().equalsIgnoreCase(ModelerCore.UDF_MODEL_NAME)) return false;
+            }
+        }
+
+        return isValid;
+    }
+
+    /*
+     * Notify with RefactorRenameEvent.TYPE_DELETE
+     */
+    private void notifyDeleted( IPath deletedResourcePath ) {
+        ((ModelerCore)ModelerCore.getPlugin()).notifyRefactored(new RefactorResourceEvent(null,
+                                                                                          RefactorResourceEvent.TYPE_DELETE,
+                                                                                          this, deletedResourcePath));
+    }
+
+    /*
+     * Private method used to assess whether or not the user actually deleted the resources or said "NO". This action 
+     * doesn't know about the "Do you want to delete" dialog, so we needed an alternate way to check.
+     */
+    private boolean resourcesRemoved( List iResources ) {
+        if (!iResources.isEmpty()) {
+            IResource firstResource = (IResource)iResources.iterator().next();
+            if (!firstResource.exists()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /* (non-Javadoc)
@@ -834,48 +836,46 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
     }
 
     /*
-     * Convenience access method
+     * This method calls the appropriate validate method to create the "Missing" import problem markers (and others) for the
+     * resources just deleted.
      */
-    protected Shell getShell() {
-        return UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
-    }
+    void validateDependentResources( Collection modelIResources,
+                                     IProgressMonitor theMontitor ) {
+        if (!modelIResources.isEmpty()) {
+            // In order for the notifications caused by "opening models" for validation, to be swallowed, the validation
+            // call needs to be wrapped in a transaction. This was discovered and relayed by Goutam on 2/14/05.
+            boolean started = ModelerCore.startTxn(false, false, "Validate Dependent Resources", //$NON-NLS-1$
+                                                   new DefaultIgnorableNotificationSource(DeleteResourceAction.this));
+            boolean succeeded = false;
+            try {
+                ModelBuildUtil.validateResources(theMontitor, modelIResources, doGetContainer(), false);
 
-    private boolean isValidSelection() {
-        // Check for mixed Selection
-        // Can't delete EObjects & IResources together
-        if (SelectionUtilities.isMixedObjectTypes(getSelection())) {
-            return false;
-        }
+                succeeded = true;
 
-        boolean isValid = true;
-        // 1) Can't delete a .project file
-        // 2) Can't delete the "Configuration" project
-        // 3) Can't delete the "FunctionDefinitions" model
-        List selectedObjects = getSelectedObjects();
-        for (Iterator iter = selectedObjects.iterator(); iter.hasNext();) {
-            Object nextObj = iter.next();
-            if (nextObj instanceof IProject) {
-                String projName = ((IProject)nextObj).getName();
-                if (ModelerCore.isReservedProjectName(projName)) {
-                    return false;
+            } catch (final Exception err) {
+                final String msg = Util.getString("DeleteResourceAction.validateDependentResources"); //$NON-NLS-1$
+                getPluginUtils().log(IStatus.ERROR, err, msg);
+            } finally {
+                if (started) {
+                    if (succeeded) {
+                        ModelerCore.commitTxn();
+                    } else {
+                        ModelerCore.rollbackTxn();
+                    }
                 }
-            } else if (nextObj instanceof IFile) {
-                IFile file = (IFile)nextObj;
-                if (file.getFileExtension() != null
-                    && file.getFileExtension().equalsIgnoreCase(ModelerCore.DOT_PROJECT_EXTENSION)) return false;
-                else if (file.getName().equalsIgnoreCase(ModelerCore.UDF_MODEL_NAME)) return false;
             }
-        }
 
-        return isValid;
+        }
     }
 
-    /*
-     * Notify with RefactorRenameEvent.TYPE_DELETE
-     */
-    private void notifyDeleted( IPath deletedResourcePath ) {
-        ((ModelerCore)ModelerCore.getPlugin()).notifyRefactored(new RefactorResourceEvent(null,
-                                                                                          RefactorResourceEvent.TYPE_DELETE,
-                                                                                          this, deletedResourcePath));
+    private boolean warnUserAboutDependants( Collection dependentResources ) {
+        String title = Util.getString("DeleteResourceAction.confirmDependenciesTitle"); //$NON-NLS-1$
+        String msg = Util.getString("DeleteResourceAction.confirmDependenciesMessage"); //$NON-NLS-1$
+        List resourceList = new ArrayList(dependentResources.size());
+        for (Iterator iter = dependentResources.iterator(); iter.hasNext();) {
+            IPath shortPath = ((IResource)iter.next()).getFullPath().makeRelative();
+            resourceList.add(shortPath);
+        }
+        return ListMessageDialog.openWarningQuestion(getShell(), title, null, msg, resourceList, null);
     }
 }
