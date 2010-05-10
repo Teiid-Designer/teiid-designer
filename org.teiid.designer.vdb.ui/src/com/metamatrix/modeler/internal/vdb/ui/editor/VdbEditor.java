@@ -10,18 +10,22 @@ package com.metamatrix.modeler.internal.vdb.ui.editor;
 import static org.teiid.designer.core.util.StringConstants.EMPTY_STRING;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -34,6 +38,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.ui.IEditorInput;
@@ -58,12 +63,13 @@ import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
+import com.metamatrix.ui.internal.widget.DefaultContentProvider;
 import com.metamatrix.ui.text.StyledTextEditor;
 
 /**
  * @since 4.0
  */
-// TODO: problems, read-only, undo/redo, model dependencies
+// TODO: read-only, undo/redo
 public final class VdbEditor extends EditorPart {
 
     private static final String DESCRIPTION_GROUP = i18n("descriptionGroup"); //$NON-NLS-1$
@@ -93,6 +99,7 @@ public final class VdbEditor extends EditorPart {
     static final String CONFIRM_SYNCHRONIZE_MESSAGE = i18n("confirmSynchronizeMessage"); //$NON-NLS-1$
     static final String CONFIRM_SYNCHRONIZE_ALL_MESSAGE = i18n("confirmSynchronizeAllMessage"); //$NON-NLS-1$
     static final String CONFIRM_REMOVE_MESSAGE = i18n("confirmRemoveMessage"); //$NON-NLS-1$
+    static final String CONFIRM_REMOVE_IMPORTED_BY_MESSAGE = i18n("confirmRemoveImportedByMessage"); //$NON-NLS-1$
 
     private static final String SYNCHRONIZE_ALL_BUTTON = i18n("synchronizeAllButton"); //$NON-NLS-1$
 
@@ -102,8 +109,12 @@ public final class VdbEditor extends EditorPart {
 
     Vdb vdb;
     StyledTextEditor textEditor;
-    Button synchronizeAllButton;
-    PropertyChangeListener vdbListener;
+    @SuppressWarnings( "unchecked" )
+    TableAndButtonsGroup modelsGroup;
+    @SuppressWarnings( "unchecked" )
+    TableAndButtonsGroup otherFilesGroup;
+    private Button synchronizeAllButton;
+    private PropertyChangeListener vdbListener;
 
     /**
      * {@inheritDoc}
@@ -192,7 +203,7 @@ public final class VdbEditor extends EditorPart {
             @Override
             public void setValue( final VdbEntry element,
                                   final Boolean value ) {
-                if (MessageDialog.openConfirm(pg.getShell(), CONFIRM_DIALOG_TITLE, CONFIRM_SYNCHRONIZE_MESSAGE)) element.synchronize(new NullProgressMonitor());
+                if (ConfirmationDialog.confirm(CONFIRM_SYNCHRONIZE_MESSAGE)) element.synchronize(new NullProgressMonitor());
             }
         };
         final TextColumnProvider descriptionColumnProvider = new TextColumnProvider<VdbEntry>() {
@@ -218,95 +229,90 @@ public final class VdbEditor extends EditorPart {
                 element.setDescription(value);
             }
         };
-        final TableAndButtonsGroup modelsGroup = new TableAndButtonsGroup(
-                                                                          pg,
-                                                                          MODELS_GROUP,
-                                                                          new DefaultTableProvider<VdbModelEntry>() {
+        modelsGroup = new TableAndButtonsGroup(pg, MODELS_GROUP, new DefaultTableProvider<VdbModelEntry>() {
 
-                                                                              @Override
-                                                                              public void doubleClicked( final VdbModelEntry element ) {
-                                                                                  openEditor(element);
-                                                                              }
+            @Override
+            public void doubleClicked( final VdbModelEntry element ) {
+                openEditor(element);
+            }
 
-                                                                              @Override
-                                                                              public VdbModelEntry[] getElements() {
-                                                                                  final Set<VdbModelEntry> modelEntries = vdb.getModelEntries();
-                                                                                  return modelEntries.toArray(new VdbModelEntry[modelEntries.size()]);
-                                                                              }
+            @Override
+            public VdbModelEntry[] getElements() {
+                final Set<VdbModelEntry> modelEntries = vdb.getModelEntries();
+                return modelEntries.toArray(new VdbModelEntry[modelEntries.size()]);
+            }
 
-                                                                              @Override
-                                                                              public boolean isDoubleClickSupported() {
-                                                                                  return true;
-                                                                              }
-                                                                          },
-                                                                          new TextColumnProvider<VdbModelEntry>() {
+            @Override
+            public boolean isDoubleClickSupported() {
+                return true;
+            }
+        }, new TextColumnProvider<VdbModelEntry>() {
 
-                                                                              @Override
-                                                                              public Image getImage( final VdbModelEntry element ) {
-                                                                                  return ModelIdentifier.getModelImage(element.findFileInWorkspace());
-                                                                              }
+            @Override
+            public Image getImage( final VdbModelEntry element ) {
+                return ModelIdentifier.getModelImage(element.findFileInWorkspace());
+            }
 
-                                                                              @Override
-                                                                              public String getName() {
-                                                                                  return MODEL_COLUMN_NAME;
-                                                                              }
+            @Override
+            public String getName() {
+                return MODEL_COLUMN_NAME;
+            }
 
-                                                                              @Override
-                                                                              public String getValue( final VdbModelEntry element ) {
-                                                                                  return element.getName().lastSegment();
-                                                                              }
-                                                                          }, pathColumnProvider, syncColumnProvider,
-                                                                          new CheckBoxColumnProvider<VdbModelEntry>() {
+            @Override
+            public String getValue( final VdbModelEntry element ) {
+                return element.getName().lastSegment();
+            }
+        }, pathColumnProvider, syncColumnProvider, new CheckBoxColumnProvider<VdbModelEntry>() {
 
-                                                                              @Override
-                                                                              public String getName() {
-                                                                                  return VISIBLE_COLUMN_NAME;
-                                                                              }
+            @Override
+            public String getName() {
+                return VISIBLE_COLUMN_NAME;
+            }
 
-                                                                              @Override
-                                                                              public String getToolTip( final VdbModelEntry element ) {
-                                                                                  return element.isVisible() ? VISIBLE_TOOLTIP : NOT_VISIBLE_TOOLTIP;
-                                                                              }
+            @Override
+            public String getToolTip( final VdbModelEntry element ) {
+                return element.isVisible() ? VISIBLE_TOOLTIP : NOT_VISIBLE_TOOLTIP;
+            }
 
-                                                                              @Override
-                                                                              public Boolean getValue( final VdbModelEntry element ) {
-                                                                                  return element.isVisible();
-                                                                              }
+            @Override
+            public Boolean getValue( final VdbModelEntry element ) {
+                return element.isVisible();
+            }
 
-                                                                              @Override
-                                                                              public boolean isEditable( final VdbModelEntry element ) {
-                                                                                  return true;
-                                                                              }
+            @Override
+            public boolean isEditable( final VdbModelEntry element ) {
+                return true;
+            }
 
-                                                                              @Override
-                                                                              public void setValue( final VdbModelEntry element,
-                                                                                                    final Boolean value ) {
-                                                                                  element.setVisible(value);
-                                                                              }
-                                                                          }, new TextColumnProvider<VdbModelEntry>() {
+            @Override
+            public void setValue( final VdbModelEntry element,
+                                  final Boolean value ) {
+                element.setVisible(value);
+            }
+        }, new TextColumnProvider<VdbModelEntry>() {
 
-                                                                              @Override
-                                                                              public String getName() {
-                                                                                  return DATA_SOURCE_COLUMN_NAME;
-                                                                              }
+            @Override
+            public String getName() {
+                return DATA_SOURCE_COLUMN_NAME;
+            }
 
-                                                                              @Override
-                                                                              public String getValue( final VdbModelEntry element ) {
-                                                                                  final String value = element.getDataSource();
-                                                                                  return value == null ? EMPTY_STRING : value;
-                                                                              }
+            @Override
+            public String getValue( final VdbModelEntry element ) {
+                final String value = element.getDataSource();
+                return value == null ? EMPTY_STRING : value;
+            }
 
-                                                                              @Override
-                                                                              public boolean isEditable( final VdbModelEntry element ) {
-                                                                                  return true;
-                                                                              }
+            @Override
+            public boolean isEditable( final VdbModelEntry element ) {
+                return true;
+            }
 
-                                                                              @Override
-                                                                              public void setValue( final VdbModelEntry element,
-                                                                                                    final String value ) {
-                                                                                  element.setDataSource(value);
-                                                                              }
-                                                                          }, descriptionColumnProvider);
+            @Override
+            public void setValue( final VdbModelEntry element,
+                                  final String value ) {
+                element.setDataSource(value);
+            }
+        }, descriptionColumnProvider);
         final ModelLabelProvider modelLabelProvider = new ModelLabelProvider();
         final ISelectionStatusValidator validator = new ISelectionStatusValidator() {
 
@@ -350,44 +356,67 @@ public final class VdbEditor extends EditorPart {
 
             @Override
             public void selected( final IStructuredSelection selection ) {
-                if (!MessageDialog.openConfirm(pg.getShell(), CONFIRM_DIALOG_TITLE, CONFIRM_REMOVE_MESSAGE)) return;
-                for (final Object element : selection.toList())
-                    vdb.removeEntry((VdbEntry)element);
+                if (!ConfirmationDialog.confirm(CONFIRM_REMOVE_MESSAGE)) return;
+                final Set<VdbEntry> entries = new HashSet<VdbEntry>();
+                final Set<VdbModelEntry> importedBy = new HashSet<VdbModelEntry>();
+                for (final Object element : selection.toList()) {
+                    entries.add((VdbEntry)element);
+                    if (element instanceof VdbModelEntry) importedBy.addAll(((VdbModelEntry)element).getImportedBy());
+                }
+                if (!importedBy.isEmpty()) importedBy.removeAll(entries);
+                if (!importedBy.isEmpty()) {
+                    if (!ConfirmationDialog.confirm(new ConfirmationDialog(CONFIRM_REMOVE_IMPORTED_BY_MESSAGE) {
+
+                        @Override
+                        protected Control createCustomArea( final Composite parent ) {
+                            final ListViewer viewer = new ListViewer(parent);
+                            viewer.setContentProvider(new DefaultContentProvider());
+                            viewer.setLabelProvider(new LabelProvider() {
+
+                                @Override
+                                public String getText( final Object element ) {
+                                    return ((VdbEntry)element).getName().toString();
+                                }
+                            });
+                            viewer.getList().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+                            viewer.setInput(importedBy);
+                            return viewer.getControl();
+                        }
+                    })) return;
+                    entries.addAll(importedBy);
+                }
+                for (final VdbEntry entry : entries)
+                    vdb.removeEntry(entry);
             }
         };
         modelsGroup.add(removeButtonProvider);
         modelsGroup.setInput(vdb);
 
         final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
-        final TableAndButtonsGroup otherFilesGroup = new TableAndButtonsGroup(
-                                                                              pg,
-                                                                              OTHER_FILES_GROUP,
-                                                                              new DefaultTableProvider<VdbEntry>() {
+        otherFilesGroup = new TableAndButtonsGroup(pg, OTHER_FILES_GROUP, new DefaultTableProvider<VdbEntry>() {
 
-                                                                                  @Override
-                                                                                  public VdbEntry[] getElements() {
-                                                                                      final Set<VdbEntry> entries = vdb.getEntries();
-                                                                                      return entries.toArray(new VdbModelEntry[entries.size()]);
-                                                                                  }
-                                                                              },
-                                                                              new TextColumnProvider<VdbEntry>() {
+            @Override
+            public VdbEntry[] getElements() {
+                final Set<VdbEntry> entries = vdb.getEntries();
+                return entries.toArray(new VdbModelEntry[entries.size()]);
+            }
+        }, new TextColumnProvider<VdbEntry>() {
 
-                                                                                  @Override
-                                                                                  public Image getImage( final VdbEntry element ) {
-                                                                                      return workbenchLabelProvider.getImage(element.findFileInWorkspace());
-                                                                                  }
+            @Override
+            public Image getImage( final VdbEntry element ) {
+                return workbenchLabelProvider.getImage(element.findFileInWorkspace());
+            }
 
-                                                                                  @Override
-                                                                                  public String getName() {
-                                                                                      return FILE_COLUMN_NAME;
-                                                                                  }
+            @Override
+            public String getName() {
+                return FILE_COLUMN_NAME;
+            }
 
-                                                                                  @Override
-                                                                                  public String getValue( final VdbEntry element ) {
-                                                                                      return element.getName().lastSegment();
-                                                                                  }
-                                                                              }, pathColumnProvider, syncColumnProvider,
-                                                                              descriptionColumnProvider);
+            @Override
+            public String getValue( final VdbEntry element ) {
+                return element.getName().lastSegment();
+            }
+        }, pathColumnProvider, syncColumnProvider, descriptionColumnProvider);
         otherFilesGroup.add(otherFilesGroup.new AddButtonProvider() {
 
             @Override
@@ -424,7 +453,7 @@ public final class VdbEditor extends EditorPart {
 
             @Override
             public void widgetSelected( final SelectionEvent event ) {
-                if (!MessageDialog.openConfirm(pg.getShell(), CONFIRM_DIALOG_TITLE, CONFIRM_SYNCHRONIZE_ALL_MESSAGE)) return;
+                if (!ConfirmationDialog.confirm(CONFIRM_SYNCHRONIZE_ALL_MESSAGE)) return;
                 vdb.synchronize(new NullProgressMonitor());
                 modelsGroup.getTable().getViewer().refresh();
                 otherFilesGroup.getTable().getViewer().refresh();
@@ -464,6 +493,12 @@ public final class VdbEditor extends EditorPart {
     @Override
     public void doSave( final IProgressMonitor monitor ) {
         vdb.save(monitor);
+        try {
+            vdb.getFile().getParent().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+        } catch (final CoreException error) {
+            VdbUiConstants.Util.log(error);
+            WidgetUtil.showError(error);
+        }
     }
 
     /**
@@ -545,6 +580,10 @@ public final class VdbEditor extends EditorPart {
 
     void vdbNotification( final String property ) {
         if (Vdb.CLOSED.equals(property)) return;
+        if (Vdb.SYNCHRONIZATION.equals(property)) {
+            modelsGroup.getTable().getViewer().refresh();
+            otherFilesGroup.getTable().getViewer().refresh();
+        }
         synchronizeAllButton.setEnabled(vdb.isModified());
         firePropertyChange(IEditorPart.PROP_DIRTY);
     }

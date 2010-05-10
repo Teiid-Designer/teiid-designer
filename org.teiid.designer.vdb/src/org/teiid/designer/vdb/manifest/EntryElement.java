@@ -45,9 +45,6 @@ public class EntryElement implements Serializable {
     public EntryElement() {
     }
 
-    /**
-     * @param entry
-     */
     EntryElement( final VdbEntry entry ) {
         path = entry.getName().toString();
         description = entry.getDescription();

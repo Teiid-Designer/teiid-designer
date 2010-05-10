@@ -59,7 +59,7 @@ public class CoreModelerPlugin extends Plugin {
     /**
      * @param error
      */
-    public static void throwRuntimeExeption( final Exception error ) {
+    public static void throwRuntimeException( final Exception error ) {
         if (error instanceof RuntimeException) throw (RuntimeException)error;
         if (error != null) throw new RuntimeException(error);
     }

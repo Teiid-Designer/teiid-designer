@@ -34,10 +34,6 @@ public class PropertyElement implements Serializable {
     public PropertyElement() {
     }
 
-    /**
-     * @param name
-     * @param value
-     */
     PropertyElement( final String name,
                      final String value ) {
         this.name = name;

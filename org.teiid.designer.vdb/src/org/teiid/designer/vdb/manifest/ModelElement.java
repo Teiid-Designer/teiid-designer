@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbModelEntry.Problem;
 
 /**
  * 
@@ -30,6 +31,10 @@ public class ModelElement extends EntryElement {
     /**
      */
     public static final String INDEX_NAME = "indexName"; //$NON-NLS-1$
+
+    /**
+     */
+    public static final String IMPORTS = "imports"; //$NON-NLS-1$
 
     private static final long serialVersionUID = 1L;
 
@@ -54,21 +59,21 @@ public class ModelElement extends EntryElement {
     public ModelElement() {
     }
 
-    /**
-     * @param entry
-     */
     ModelElement( final VdbModelEntry entry ) {
         super(entry);
-        // TODO: problems, dependencies
         final String lastSeg = entry.getName().lastSegment();
         final int ndx = lastSeg.lastIndexOf('.');
         name = (ndx < 0 ? lastSeg : lastSeg.substring(0, ndx));
         type = entry.getType().getName();
         visible = entry.isVisible();
-        final String source = entry.getDataSource();
-        if (source != null) getSources().add(new SourceElement(source));
-        getProperties().add(new PropertyElement(BUILT_IN, Boolean.toString(entry.isBuiltIn())));
-        getProperties().add(new PropertyElement(INDEX_NAME, entry.getIndexName()));
+        getSources().add(new SourceElement(entry));
+        for (final Problem problem : entry.getProblems())
+            getProblems().add(new ProblemElement(problem));
+        final List<PropertyElement> props = getProperties();
+        props.add(new PropertyElement(BUILT_IN, Boolean.toString(entry.isBuiltIn())));
+        props.add(new PropertyElement(INDEX_NAME, entry.getIndexName()));
+        for (final VdbModelEntry importedEntry : entry.getImports())
+            props.add(new PropertyElement(IMPORTS, importedEntry.getName().toString()));
     }
 
     /**

@@ -11,10 +11,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -33,6 +33,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import net.jcip.annotations.ThreadSafe;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,13 +45,15 @@ import org.teiid.designer.vdb.manifest.VdbElement;
 import org.teiid.designer.vdb.plugin.VdbPlugin;
 import org.xml.sax.SAXException;
 import com.metamatrix.core.modeler.util.FileUtils;
+import com.metamatrix.core.modeler.util.OperationUtil;
+import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
 import com.metamatrix.core.util.StringUtilities;
 
 /**
  * 
  */
 @ThreadSafe
-public class Vdb {
+public final class Vdb {
 
     /**
      * The file extension of VDBs ( {@value} )
@@ -84,6 +88,12 @@ public class Vdb {
     public static final String CHECKSUM = "checksum"; //$NON-NLS-1$
 
     /**
+     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB entry's
+     * {@link VdbEntry#getSynchronization() synchronization} changes
+     */
+    public static final String SYNCHRONIZATION = "synchronization"; //$NON-NLS-1$
+
+    /**
      * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB model
      * entry's {@link VdbModelEntry#isVisible() visibility} changes
      */
@@ -110,56 +120,66 @@ public class Vdb {
     private static final String MANIFEST = "META-INF/vdb.xml"; //$NON-NLS-1$
 
     private final IPath name;
+    final IFile file;
     private final File folder;
-    private final File rootFolder;
-    private final CopyOnWriteArraySet<VdbEntry> entries = new CopyOnWriteArraySet<VdbEntry>();
-    private final CopyOnWriteArraySet<VdbModelEntry> modelEntries = new CopyOnWriteArraySet<VdbModelEntry>();
+    final CopyOnWriteArraySet<VdbEntry> entries = new CopyOnWriteArraySet<VdbEntry>();
+    final CopyOnWriteArraySet<VdbModelEntry> modelEntries = new CopyOnWriteArraySet<VdbModelEntry>();
     private final CopyOnWriteArrayList<PropertyChangeListener> listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
-    private final AtomicBoolean modified = new AtomicBoolean();
+    final AtomicBoolean modified = new AtomicBoolean();
     private final AtomicReference<String> description = new AtomicReference<String>();
 
     /**
-     * Constructs a VDB for an existing archive.
-     * 
      * @param file
      * @param monitor
      */
     public Vdb( final IFile file,
                 final IProgressMonitor monitor ) {
+        this.file = file;
         name = file.getFullPath();
         // Create folder for VDB in state folder
-        final IPath stateFolder = VdbPlugin.singleton.getStateLocation();
-        rootFolder = stateFolder.append(name.segment(0)).toFile(); // Saved for close
-        folder = stateFolder.append(name).toFile();
+        folder = VdbPlugin.singleton.getStateLocation().append(name).toFile();
         folder.mkdirs();
         // Open archive and populate model entries
         if (file.getLocation().toFile().length() == 0) return;
-        ZipFile archive = null;
-        Exception significantError = null;
-        InputStream manifestStream = null;
-        try {
-            archive = new ZipFile(file.getLocation().toString());
-            // Initialize using manifest
-            final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
-            unmarshaller.setSchema(getManifestSchema());
-            manifestStream = archive.getInputStream(archive.getEntry(MANIFEST));
-            final VdbElement manifest = (VdbElement)unmarshaller.unmarshal(manifestStream);
-            setDescription(manifest.getDescription());
-            for (final EntryElement entry : manifest.getEntries())
-                entries.add(new VdbEntry(entry, this, monitor));
-            for (final ModelElement model : manifest.getModels())
-                modelEntries.add(new VdbModelEntry(model, this, monitor));
-            modified.set(false);
-        } catch (final Exception error) {
-            significantError = error;
-        } finally {
-            try {
-                if (manifestStream != null) manifestStream.close();
-                if (archive != null) archive.close();
-            } catch (final IOException ignored) {
+        OperationUtil.perform(new Unreliable() {
+
+            ZipFile archive = null;
+            InputStream entryStream = null;
+
+            @Override
+            public void doIfFails() {
             }
-            VdbPlugin.throwRuntimeExeption(significantError);
-        }
+
+            @Override
+            public void finallyDo() throws Exception {
+                if (entryStream != null) entryStream.close();
+                if (archive != null) archive.close();
+            }
+
+            @Override
+            public void tryToDo() throws Exception {
+                archive = new ZipFile(file.getLocation().toString());
+                for (final Enumeration<? extends ZipEntry> iter = archive.entries(); iter.hasMoreElements();) {
+                    final ZipEntry zipEntry = iter.nextElement();
+                    entryStream = archive.getInputStream(zipEntry);
+                    if (zipEntry.getName().equals(MANIFEST)) {
+                        // Initialize using manifest
+                        final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
+                        unmarshaller.setSchema(getManifestSchema());
+                        final VdbElement manifest = (VdbElement)unmarshaller.unmarshal(entryStream);
+                        setDescription(manifest.getDescription());
+                        for (final EntryElement element : manifest.getEntries())
+                            entries.add(new VdbEntry(Vdb.this, element, zipEntry.getComment(), monitor));
+                        for (final ModelElement element : manifest.getModels())
+                            modelEntries.add(new VdbModelEntry(Vdb.this, element, zipEntry.getComment(), monitor));
+                        // Initialize model entry imports only after all model entries have been created
+                        for (final VdbModelEntry entry : modelEntries)
+                            entry.initializeImports();
+                    } else FileUtils.copy(entryStream, new File(getFolder(), zipEntry.getName()));
+                }
+                modified.set(false);
+            }
+        });
     }
 
     /**
@@ -176,7 +196,7 @@ public class Vdb {
      */
     public final VdbEntry addEntry( final IPath name,
                                     final IProgressMonitor monitor ) {
-        return addEntry(new VdbEntry(name, this, monitor), entries, monitor);
+        return addEntry(new VdbEntry(this, name, monitor), entries, monitor);
     }
 
     private <T extends VdbEntry> T addEntry( final T entry,
@@ -197,7 +217,7 @@ public class Vdb {
      */
     public final VdbModelEntry addModelEntry( final IPath name,
                                               final IProgressMonitor monitor ) {
-        return addEntry(new VdbModelEntry(name, this, monitor), modelEntries, monitor);
+        return addEntry(new VdbModelEntry(this, name, monitor), modelEntries, monitor);
     }
 
     /**
@@ -209,7 +229,7 @@ public class Vdb {
         listeners.clear();
         description.set(StringUtilities.EMPTY_STRING);
         // Clean up state folder
-        FileUtils.removeDirectoryAndChildren(rootFolder);
+        FileUtils.removeDirectoryAndChildren(VdbPlugin.singleton.getStateLocation().append(name.segment(0)).toFile());
         // Mark VDB as unmodified
         if (isModified()) modified.set(false);
         // Notify change listeners VDB is closed
@@ -230,15 +250,22 @@ public class Vdb {
         return Collections.unmodifiableSet(entries);
     }
 
+    /**
+     * @return The workspace file that represents this VDB
+     */
+    public final IFile getFile() {
+        return file;
+    }
+
     final File getFolder() {
         return folder;
     }
 
-    private JAXBContext getJaxbContext() throws JAXBException {
+    JAXBContext getJaxbContext() throws JAXBException {
         return JAXBContext.newInstance(new Class<?>[] {VdbElement.class});
     }
 
-    private Schema getManifestSchema() throws SAXException {
+    Schema getManifestSchema() throws SAXException {
         final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         return schemaFactory.newSchema(VdbElement.class.getResource("/vdb-deployer.xsd")); //$NON-NLS-1$
     }
@@ -279,10 +306,10 @@ public class Vdb {
         return true;
     }
 
-    private void notifyChangeListeners( final Object source,
-                                        final String propertyName,
-                                        final Object oldValue,
-                                        final Object newValue ) {
+    void notifyChangeListeners( final Object source,
+                                final String propertyName,
+                                final Object oldValue,
+                                final Object newValue ) {
         PropertyChangeEvent event = null;
         for (final PropertyChangeListener listener : listeners) {
             if (event == null) event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
@@ -314,50 +341,57 @@ public class Vdb {
         // Build JAXB model
         final VdbElement vdbElement = new VdbElement(this);
         // Save archive
-        Exception significantError = null;
-        ZipOutputStream out = null;
         final File tmpFolder = new File(System.getProperty("java.io.tmpdir")); //$NON-NLS-1$
-        final File tmpRootFolder = new File(tmpFolder, name.segment(0)); // Saved for cleanup
         final File tmpArchive = new File(tmpFolder, name.toString());
         tmpArchive.getParentFile().mkdirs();
-        try {
-            out = new ZipOutputStream(new FileOutputStream(tmpArchive));
-            // Create VDB manifest
-            final ZipEntry zipEntry = new ZipEntry(MANIFEST);
-            zipEntry.setComment(description.get());
-            out.putNextEntry(zipEntry);
-            try {
-                final Marshaller marshaller = getJaxbContext().createMarshaller();
-                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-                marshaller.setSchema(getManifestSchema());
-                marshaller.marshal(vdbElement, out);
-            } finally {
-                out.closeEntry();
+        OperationUtil.perform(new Unreliable() {
+
+            ZipOutputStream out = null;
+
+            @Override
+            public void doIfFails() {
             }
-            // Save entries
-            for (final VdbEntry entry : entries)
-                entry.save(out, monitor);
-            for (final VdbModelEntry entry : modelEntries)
-                entry.save(out, monitor);
-            // Replace archive in workspace with temporary archive
-            final File archiveFile = ResourcesPlugin.getWorkspace().getRoot().findMember(name).getLocation().toFile();
-            if (!archiveFile.delete()) throw new RuntimeException(VdbPlugin.UTIL.getString("unableToDelete", archiveFile)); //$NON-NLS-1$
-            if (!tmpArchive.renameTo(archiveFile)) throw new RuntimeException(
-                                                                              VdbPlugin.UTIL.getString("unableToRename", tmpArchive, archiveFile)); //$NON-NLS-1$
-            // Mark as unmodified
-            if (isModified()) modified.set(false);
-            // Notify change listeners
-            notifyChangeListeners(this, SAVED, null, null);
-        } catch (final Exception error) {
-            significantError = error;
-        } finally {
-            try {
+
+            @Override
+            public void finallyDo() throws Exception {
                 if (out != null) out.close();
-            } catch (final IOException ignored) {
+                FileUtils.removeDirectoryAndChildren(new File(tmpFolder, getName().segment(0)));
             }
-            FileUtils.removeDirectoryAndChildren(tmpRootFolder);
-            VdbPlugin.throwRuntimeExeption(significantError);
-        }
+
+            @Override
+            public void tryToDo() throws Exception {
+                out = new ZipOutputStream(new FileOutputStream(tmpArchive));
+                // Create VDB manifest
+                final ZipEntry zipEntry = new ZipEntry(MANIFEST);
+                zipEntry.setComment(getDescription());
+                out.putNextEntry(zipEntry);
+                try {
+                    final Marshaller marshaller = getJaxbContext().createMarshaller();
+                    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+                    marshaller.setSchema(getManifestSchema());
+                    marshaller.marshal(vdbElement, out);
+                } finally {
+                    out.closeEntry();
+                }
+                // Clear all problem markers on VDB file
+                for (final IMarker marker : file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE))
+                    marker.delete();
+                // Save entries
+                for (final VdbEntry entry : entries)
+                    entry.save(out, monitor);
+                for (final VdbModelEntry entry : modelEntries)
+                    entry.save(out, monitor);
+                // Replace archive in workspace with temporary archive
+                final File archiveFile = ResourcesPlugin.getWorkspace().getRoot().findMember(getName()).getLocation().toFile();
+                if (!archiveFile.delete()) throw new RuntimeException(VdbPlugin.UTIL.getString("unableToDelete", archiveFile)); //$NON-NLS-1$
+                if (!tmpArchive.renameTo(archiveFile)) throw new RuntimeException(
+                                                                                  VdbPlugin.UTIL.getString("unableToRename", tmpArchive, archiveFile)); //$NON-NLS-1$
+                // Mark as unmodified
+                if (isModified()) modified.set(false);
+                // Notify change listeners
+                notifyChangeListeners(this, SAVED, null, null);
+            }
+        });
     }
 
     /**

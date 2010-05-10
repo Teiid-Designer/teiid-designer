@@ -15,16 +15,18 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import com.metamatrix.core.MetaMatrixCoreException;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
+import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
 import com.metamatrix.core.util.ChecksumUtil;
 import com.metamatrix.core.util.CoreArgCheck;
 
 public class FileUtils {
 
-    public static int DEFAULT_BUFFER_SIZE = 2048;
+    public static int DEFAULT_BUFFER_SIZE = 8092;
     public static String TEMP_DIRECTORY;
 
     public final static String JAVA_IO_TEMP_DIR = "java.io.tmpdir";//$NON-NLS-1$
@@ -69,6 +71,27 @@ public class FileUtils {
         return toFile;
     }
 
+    public static void copy( final File source,
+                             final OutputStream destination ) {
+        OperationUtil.perform(new UnreliableCopy(source, destination));
+    }
+
+    public static void copy( final InputStream source,
+                             final File destination ) {
+        OperationUtil.perform(new UnreliableCopy(source, destination));
+    }
+
+    public static void copy( final InputStream source,
+                             final OutputStream destination ) {
+        try {
+            final byte[] buf = new byte[DEFAULT_BUFFER_SIZE];
+            for (int len = source.read(buf); len >= 0; len = source.read(buf))
+                destination.write(buf, 0, len);
+        } catch (final IOException error) {
+            CoreModelerPlugin.throwRuntimeException(error);
+        }
+    }
+
     /**
      * Copy a file. Overwrites the destination file if it exists.
      * 
@@ -104,7 +127,8 @@ public class FileUtils {
 
         final File fromFile = new File(fromFileName);
         if (!fromFile.exists()) throw new FileNotFoundException(
-                                                                CoreModelerPlugin.Util.getString("FileUtils.File_does_not_exist._1", fromFileName)); //$NON-NLS-1$
+                                                                CoreModelerPlugin.Util.getString("FileUtils.File_does_not_exist._1", //$NON-NLS-1$
+                                                                                                 fromFileName));
 
         FileInputStream fis = null;
         try {
@@ -182,10 +206,12 @@ public class FileUtils {
                                         final FilenameFilter filter,
                                         final boolean includeSourceRoot ) throws FileNotFoundException, Exception {
         if (!sourceDirectory.exists()) throw new FileNotFoundException(
-                                                                       CoreModelerPlugin.Util.getString("FileUtils.File_does_not_exist._1", sourceDirectory)); //$NON-NLS-1$
+                                                                       CoreModelerPlugin.Util.getString("FileUtils.File_does_not_exist._1", //$NON-NLS-1$
+                                                                                                        sourceDirectory));
 
         if (!sourceDirectory.isDirectory()) throw new FileNotFoundException(
-                                                                            CoreModelerPlugin.Util.getString("FileUtils.Not_a_directory", sourceDirectory)); //$NON-NLS-1$
+                                                                            CoreModelerPlugin.Util.getString("FileUtils.Not_a_directory", //$NON-NLS-1$
+                                                                                                             sourceDirectory));
 
         File targetDir = new File(targetDirectory.getAbsolutePath() + File.separatorChar + sourceDirectory.getName());
         if (includeSourceRoot) // copy source directory
@@ -367,5 +393,46 @@ public class FileUtils {
     }
 
     private FileUtils() {
+    }
+
+    static class UnreliableCopy implements Unreliable {
+
+        private File sourceFile;
+        private InputStream source;
+        private File destinationFile;
+        private OutputStream destination;
+
+        UnreliableCopy( final File source,
+                        final OutputStream destination ) {
+            sourceFile = source;
+            this.destination = destination;
+        }
+
+        UnreliableCopy( final InputStream source,
+                        final File destination ) {
+            this.source = source;
+            destinationFile = destination;
+        }
+
+        @Override
+        public void doIfFails() {
+        }
+
+        @Override
+        public void finallyDo() throws Exception {
+            if (destinationFile != null) destination.close();
+            if (sourceFile != null) source.close();
+        }
+
+        @Override
+        public void tryToDo() throws Exception {
+            if (source == null) source = new FileInputStream(sourceFile);
+            if (destination == null) {
+                final File folder = destinationFile.getParentFile();
+                if (folder != null) folder.mkdirs();
+                destination = new FileOutputStream(destinationFile);
+            }
+            copy(source, destination);
+        }
     }
 }

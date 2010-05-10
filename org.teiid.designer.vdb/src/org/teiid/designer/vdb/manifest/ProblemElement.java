@@ -13,6 +13,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
+import org.eclipse.core.resources.IMarker;
+import org.teiid.designer.vdb.VdbModelEntry.Problem;
+import com.metamatrix.core.modeler.CoreModelerPlugin;
 
 /**
  * 
@@ -28,6 +31,32 @@ public class ProblemElement implements Serializable {
 
     @XmlValue
     private String message;
+
+    @XmlAttribute( name = "path" )
+    private String location;
+
+    /**
+     * Used by JAXB
+     */
+    public ProblemElement() {
+    }
+
+    ProblemElement( final Problem problem ) {
+        try {
+            severity = (problem.getSeverity() == IMarker.SEVERITY_ERROR ? Severity.ERROR : Severity.WARNING);
+            message = problem.getMessage();
+            location = problem.getLocation();
+        } catch (final Exception error) {
+            CoreModelerPlugin.throwRuntimeException(error);
+        }
+    }
+
+    /**
+     * @return location
+     */
+    public String getLocation() {
+        return location;
+    }
 
     /**
      * @return message

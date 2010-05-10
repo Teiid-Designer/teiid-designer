@@ -8,7 +8,6 @@
 package org.teiid.designer.vdb;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicReference;
@@ -28,8 +27,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
-import org.teiid.designer.vdb.plugin.VdbPlugin;
+import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
+import com.metamatrix.core.modeler.util.OperationUtil;
+import com.metamatrix.core.modeler.util.ZipUtil;
 import com.metamatrix.core.util.ChecksumUtil;
 
 /**
@@ -38,35 +39,35 @@ import com.metamatrix.core.util.ChecksumUtil;
 @ThreadSafe
 public class VdbEntry {
 
-    static final int IO_BUFFER_SIZE = 8092;
-
     private final IPath name;
     private final Vdb vdb;
     private final AtomicReference<Synchronization> synchronization = new AtomicReference<Synchronization>(
                                                                                                           Synchronization.NotApplicable);
     private long checksum;
-    private final AtomicReference<String> description = new AtomicReference<String>();
+    final AtomicReference<String> description = new AtomicReference<String>();
     private final IResourceChangeListener fileListener;
     private final int hashcode;
 
     private final ReadWriteLock checksumLock = new ReentrantReadWriteLock();
 
-    VdbEntry( final EntryElement entry,
-              final Vdb vdb,
+    VdbEntry( final Vdb vdb,
+              final EntryElement element,
+              final String description,
               final IProgressMonitor monitor ) {
-        this(Path.fromPortableString(entry.getPath()), vdb);
-        for (final PropertyElement property : entry.getProperties()) {
+        this(vdb, Path.fromPortableString(element.getPath()));
+        for (final PropertyElement property : element.getProperties()) {
             final String name = property.getName();
             if (EntryElement.CHECKSUM.equals(name)) checksum = Long.parseLong(property.getValue());
         }
         final IFile workspaceFile = findFileInWorkspace();
-        if (workspaceFile != null && checksum != computeChecksum(workspaceFile)) setSynchronization(Synchronization.NotSynchronized);
+        if (workspaceFile != null) setSynchronization(checksum == computeChecksum(workspaceFile) ? Synchronization.Synchronized : Synchronization.NotSynchronized);
+        this.description.set(description);
     }
 
-    private VdbEntry( final IPath name,
-                      final Vdb vdb ) {
-        this.name = name;
+    private VdbEntry( final Vdb vdb,
+                      final IPath name ) {
         this.vdb = vdb;
+        this.name = name;
         // Calculate hashcode
         hashcode = 31 + name.hashCode();
         // Register to listen for changes to this entries associated workspace file
@@ -80,35 +81,40 @@ public class VdbEntry {
         ResourcesPlugin.getWorkspace().addResourceChangeListener(fileListener);
     }
 
-    VdbEntry( final IPath name,
-              final Vdb vdb,
+    VdbEntry( final Vdb vdb,
+              final IPath name,
               final IProgressMonitor monitor ) {
-        this(name, vdb);
+        this(vdb, name);
         // Synchronize with workspace file
-        synchronizeEntry(monitor);
+        setSynchronization(synchronizeEntry(monitor));
     }
 
     private long computeChecksum( final IFile file ) {
-        Exception significantError = null;
-        InputStream stream = null;
-        try {
-            stream = file.getContents();
-            return ChecksumUtil.computeChecksum(stream).getValue();
-        } catch (final Exception error) {
-            significantError = error;
-            setSynchronization(Synchronization.NotSynchronized);
-            return 0;
-        } finally {
-            if (stream != null) try {
-                stream.close();
-            } catch (final IOException ignored) {
+        return OperationUtil.perform(new OperationUtil.ReturningUnreliable<Long>() {
+
+            private InputStream stream = null;
+
+            @Override
+            public void doIfFails() {
+                setSynchronization(Synchronization.NotSynchronized);
             }
-            VdbPlugin.throwRuntimeExeption(significantError);
-        }
+
+            @Override
+            public void finallyDo() throws Exception {
+                if (stream != null) stream.close();
+            }
+
+            @Override
+            public Long tryToDo() throws Exception {
+                stream = file.getContents();
+                return ChecksumUtil.computeChecksum(stream).getValue();
+            }
+        });
     }
 
     void dispose() {
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(fileListener);
+        new File(vdb.getFolder(), name.toString()).delete();
     }
 
     /**
@@ -226,37 +232,23 @@ public class VdbEntry {
                                final ZipEntry zipEntry,
                                final File file,
                                final IProgressMonitor monitor ) {
-        Exception significantError = null;
-        InputStream in = null;
-        try {
-            out.putNextEntry(zipEntry);
-            in = new FileInputStream(file);
-            final byte[] buf = new byte[IO_BUFFER_SIZE];
-            for (int len = in.read(buf); len >= 0; len = in.read(buf))
-                out.write(buf, 0, len);
-        } catch (final Exception error) {
-            significantError = error;
-        } finally {
-            try {
-                if (in != null) in.close();
-                out.closeEntry();
-            } catch (final IOException ignored) {
-            }
-            VdbPlugin.throwRuntimeExeption(significantError);
-        }
+        ZipUtil.copy(file, zipEntry, out);
     }
 
     /**
      * @param description
      */
     public final void setDescription( final String description ) {
+        final String oldDescription = this.description.get();
         this.description.set(description);
+        vdb.setModified(this, Vdb.DESCRIPTION, oldDescription, description);
     }
 
-    private void setSynchronization( final Synchronization synchronization ) {
+    void setSynchronization( final Synchronization synchronization ) {
         final Synchronization oldSynchronization = getSynchronization();
         if (oldSynchronization == synchronization) return;
         this.synchronization.set(synchronization);
+        vdb.setModified(this, Vdb.SYNCHRONIZATION, oldSynchronization, synchronization);
     }
 
     /**
@@ -284,13 +276,32 @@ public class VdbEntry {
                                new File(vdb.getFolder(), name.toString()).getParentFile(),
                                true);
             } catch (final IOException error) {
-                VdbPlugin.throwRuntimeExeption(error);
+                CoreModelerPlugin.throwRuntimeException(error);
             }
         } finally {
             checksumLock.writeLock().unlock();
         }
         vdb.setModified(this, Vdb.CHECKSUM, oldChecksum, checksum);
         return Synchronization.Synchronized;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public final String toString() {
+        final StringBuilder builder = new StringBuilder(getClass().getSimpleName());
+        builder.append("(name="); //$NON-NLS-1$
+        builder.append(name);
+        builder.append(", synchronization="); //$NON-NLS-1$
+        builder.append(synchronization);
+        builder.append(", description="); //$NON-NLS-1$
+        builder.append(description);
+        toString(builder);
+        builder.append(')');
+        return builder.toString();
     }
 
     private String toString( final IResourceDelta delta ) {
@@ -305,6 +316,16 @@ public class VdbEntry {
         builder.append(", to="); //$NON-NLS-1$
         builder.append(delta.getMovedToPath());
         return builder.toString();
+    }
+
+    /**
+     * Intended for a subclass to append its properties and their values, in the form ", <name>=<value>, ...", to the supplied
+     * string builder, which represents the entry's {@link #toString()} value. Each name-value pair, including the first, must be
+     * preceded by a comma followed by a space.
+     * 
+     * @param builder
+     */
+    protected void toString( final StringBuilder builder ) {
     }
 
     /**

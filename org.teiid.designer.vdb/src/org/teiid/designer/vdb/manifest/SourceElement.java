@@ -12,6 +12,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.plugin.VdbPlugin;
 
 /**
  * 
@@ -34,12 +36,12 @@ public class SourceElement implements Serializable {
     public SourceElement() {
     }
 
-    /**
-     * @param name
-     */
-    SourceElement( final String name ) {
-        this.name = name;
-        this.jndiName = name;
+    SourceElement( final VdbModelEntry entry ) {
+        name = entry.getDataSource();
+        final StringBuilder builder = new StringBuilder(VdbPlugin.workspaceUuid.toString());
+        for (final String segment : entry.getName().removeLastSegments(1).segments())
+            builder.append('.').append(segment);
+        this.jndiName = builder.append(name).toString();
     }
 
     /**
