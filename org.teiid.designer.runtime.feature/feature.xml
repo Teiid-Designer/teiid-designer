@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.teiid.designer.runtime.feature"
+      label="%featureName"
+      version="7.0.0"
+      provider-name="%providerName">
+
+   <description url="http://www.example.com/description">
+      Teiid Designer Add-on Feature Set for Teiid Runtime:
+
+ 1) connection management
+ 2) VDB creation and management
+ 3) Data Preview and VDB execution
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      %copyright
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      %license
+   </license>
+
+   <includes
+         id="org.teiid.designer.feature"
+         version="7.0.0"
+         name="Teiid Designer Design-time"/>
+
+   <plugin
+         id="org.teiid.designer.dqp"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.teiid.designer.dqp.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.teiid.designer.vdb.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="net.sourceforge.sqlexplorer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.teiid.designer.vdb"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
