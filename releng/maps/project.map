@@ -4,6 +4,7 @@ feature@org.teiid.designer.feature=SVN,,http://anonsvn.jboss.org/repos,,tdesigne
 plugin@net.sf.saxon=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/trunk/net.sf.saxon
 plugin@net.sourceforge.sqlexplorer=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/trunk/net.sourceforge.sqlexplorer
 plugin@org.apache.commons.validator=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/trunk/org.apache.commons.validator
+plugin@org.apache.log4j=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/trunk/org.apache.log4j
 plugin@org.apache.oro=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/trunk/org.apache.oro
 plugin@org.apache.poi=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/trunk/org.apache.poi
 plugin@org.jaxen=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/trunk/org.jaxen
@@ -107,4 +108,6 @@ plugin@org.teiid.designer.xsd=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/tru
 plugin@org.teiid.designer.xsd.ui=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/trunk/org.teiid.designer.xsd.ui
 plugin@org.teiid.designer.xsd.ui.test=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/trunk/org.teiid.designer.xsd.ui.test
 plugin@org.wsdl4j=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/trunk/org.wsdl4j
+
+
 plugin@teiid_embedded_query=SVN,,http://anonsvn.jboss.org/repos,,tdesigner/trunk/teiid_embedded_query
