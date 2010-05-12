@@ -23,7 +23,7 @@
 
    <includes
          id="org.teiid.designer.feature"
-         version="7.0.0"
+         version="0.0.0"
          name="Teiid Designer Design-time"/>
 
    <plugin
