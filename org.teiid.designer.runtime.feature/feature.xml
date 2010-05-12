@@ -20,7 +20,7 @@ Including: Connection management, VDB creation and management and Data Preview/V
 
 Some portions may be licensed to Red Hat, Inc. under one or more contributor license agreements.
    </license>
-   
+
    <includes
          id="org.teiid.designer.feature"
          version="0.0.0"
@@ -39,23 +39,10 @@ Some portions may be licensed to Red Hat, Inc. under one or more contributor lic
          version="0.0.0"/>
 
    <plugin
-         id="org.teiid.designer.vdb.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="net.sourceforge.sqlexplorer"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
-   <plugin
-         id="org.teiid.designer.vdb"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="net.jcip.annotations"
