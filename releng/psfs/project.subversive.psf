@@ -97,8 +97,7 @@
   <project reference="1.0.1,http://anonsvn.jboss.org/repos/tdesigner/org.teiid.designer.ui.common,org.teiid.designer.ui.common"/>
   <project reference="1.0.1,http://anonsvn.jboss.org/repos/tdesigner/org.teiid.designer.ui.common.test,org.teiid.designer.ui.common.test"/>
   <project reference="1.0.1,http://anonsvn.jboss.org/repos/tdesigner/org.teiid.designer.ui.test,org.teiid.designer.ui.test"/>
-  <project reference="1.0.1,http://anonsvn.jboss.org/repos/tdesigner/org.teiid.designer.vdb.edit,org.teiid.designer.vdb.edit"/>
-  <project reference="1.0.1,http://anonsvn.jboss.org/repos/tdesigner/org.teiid.designer.vdb.edit.test,org.teiid.designer.vdb.edit.test"/>
+  <project reference="1.0.1,http://anonsvn.jboss.org/repos/tdesigner/org.teiid.designer.vdb,org.teiid.designer.vdb"/>
   <project reference="1.0.1,http://anonsvn.jboss.org/repos/tdesigner/org.teiid.designer.vdb.ui,org.teiid.designer.vdb.ui"/>
   <project reference="1.0.1,http://anonsvn.jboss.org/repos/tdesigner/org.teiid.designer.webservice,org.teiid.designer.webservice"/>
   <project reference="1.0.1,http://anonsvn.jboss.org/repos/tdesigner/org.teiid.designer.webservice.test,org.teiid.designer.webservice.test"/>
