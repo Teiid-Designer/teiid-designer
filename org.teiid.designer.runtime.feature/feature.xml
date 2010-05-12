@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.teiid.designer.runtime.feature"
-      label="%featureName"
-      version="7.0.0"
-      provider-name="%providerName">
+      label="Teiid Designer Runtime"
+      version="0.0.0"
+      provider-name="Red Hat, Inc.">
 
    <description url="http://www.example.com/description">
-      Teiid Designer Add-on Feature Set for Teiid Runtime:
+      Teiid Designer Runtime
 
- 1) connection management
- 2) VDB creation and management
- 3) Data Preview and VDB execution
+Including: Connection management, VDB creation and management and Data Preview/VDB execution
    </description>
 
    <copyright url="http://www.example.com/copyright">
-      %copyright
+      Teiid Designer (http://www.jboss.org/teiiddesigner.html) is copyright 2000-2010 MetaMatrix, Inc. and Red Hat, Inc.
    </copyright>
 
    <license url="http://www.example.com/license">
-      %license
-   </license>
+      This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which is available at http://www.eclipse.org/legal/epl-v10.html.
 
+Some portions may be licensed to Red Hat, Inc. under one or more contributor license agreements.
+   </license>
+   
    <includes
          id="org.teiid.designer.feature"
          version="0.0.0"
@@ -56,5 +56,11 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="net.jcip.annotations"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
