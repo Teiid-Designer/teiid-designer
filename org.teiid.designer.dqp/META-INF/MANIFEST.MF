@@ -26,7 +26,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.teiid.designer.transformation,
  org.teiid.designer.legacy,
  org.teiid.designer.vdb,
- net.jcip.annotations;resolution:=optional
+ net.jcip.annotations
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.teiid.adminapi
