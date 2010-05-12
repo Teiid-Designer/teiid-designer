@@ -72,8 +72,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     private static ModelWorkspaceManager manager;
 
     /**
-     * Returns the {@link ModelWorkspaceItem} corresponding to the given file, or <code>null</code> if unable to associate the given
-     * file with a {@link ModelWorkspaceItem}.
+     * Returns the {@link ModelWorkspaceItem} corresponding to the given file, or <code>null</code> if unable to associate the
+     * given file with a {@link ModelWorkspaceItem}.
      * <p>
      * The file must be one of:
      * <ul>
@@ -236,8 +236,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     private final Collection workspaceListeners = new ArrayList();
 
     /**
-     * Collection of veto listeners for resource change events; each listener may veto the unloading and reloading of the in-memory
-     * model.
+     * Collection of veto listeners for resource change events; each listener may veto the unloading and reloading of the
+     * in-memory model.
      */
     private final Collection resourceReloadVetoListeners = new ArrayList();
 
@@ -253,8 +253,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     private int indexType = ModelResource.NOT_INDEXED;
 
     /**
-     * Used to keep a cache of IMarker-EObject maps to eliminate repetitive UUID/EObject resolving. Part of Defect 22362 to improve
-     * XML Document editing performance. Improves time to decoration tree & table view items.
+     * Used to keep a cache of IMarker-EObject maps to eliminate repetitive UUID/EObject resolving. Part of Defect 22362 to
+     * improve XML Document editing performance. Improves time to decoration tree & table view items.
      */
     private final ModelMarkerManager markerManager = new ModelMarkerManager();
 
@@ -451,7 +451,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                 if (resource.getType() == IResource.FILE) {
                     final ModelWorkspaceItem resourceItem = this.modelWorkspace.getWorkspaceItem(resource.getFullPath(),
                                                                                                  resource.getType());
-                    if (resourceItem != null && resourceItem instanceof ModelResourceImpl) {
+                    if (resourceItem != null && resourceItem instanceof ModelResourceImpl
+                        && !ModelUtil.isVdbArchiveFile(resourceItem.getCorrespondingResource())) {
                         final ModelResourceImpl model = (ModelResourceImpl)resourceItem;
                         return model.processContentsChange(notification);
                     }
@@ -757,8 +758,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     }
 
     /**
-     * Find all {@link org.eclipse.core.resources.IResource}s whose {@linkcom.metamatrix.modeler.core.workspace.ModelResource}s are
-     * not indexed to the given index type.
+     * Find all {@link org.eclipse.core.resources.IResource}s whose {@linkcom.metamatrix.modeler.core.workspace.ModelResource}s
+     * are not indexed to the given index type.
      * 
      * @param indexType The indexType of the ModelResource.
      * @return The collection of IResource objects

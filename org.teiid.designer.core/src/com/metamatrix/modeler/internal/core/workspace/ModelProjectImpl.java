@@ -351,6 +351,9 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
      */
     protected ModelResource createModelResource( final IFile resource ) {
         ModelWorkspaceItem parent = findParent(resource);
+        if (!ModelUtil.isVdbArchiveFile(resource)) {
+            return new ModelResourceImpl(parent, resource.getName(), false);
+        }
         return new ModelResourceImpl(parent, resource.getName());
     }
 
