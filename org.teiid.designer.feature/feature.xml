@@ -9,7 +9,7 @@
 <feature
       id="org.teiid.designer.feature"
       label="%featureName"
-      version="7.0.0"
+      version="0.0.0"
       provider-name="%providerName"
       plugin="org.teiid.designer"
       image="feature.gif">
@@ -512,11 +512,11 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
+c
    <plugin
          id="net.jcip.annotations"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
+-->
 </feature>

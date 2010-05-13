@@ -2,7 +2,7 @@
 <feature
       id="org.teiid.designer.runtime.feature"
       label="Teiid Designer Runtime"
-      version="7.0.0"
+      version="0.0.0"
       provider-name="Red Hat, Inc.">
 
    <description url="http://www.example.com/description">
@@ -49,11 +49,12 @@ Some portions may be licensed to Red Hat, Inc. under one or more contributor lic
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
+<!--
    <plugin
          id="net.jcip.annotations"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+-->
 
 </feature>
