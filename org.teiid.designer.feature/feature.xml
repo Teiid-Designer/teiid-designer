@@ -512,7 +512,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-c
+<!--
    <plugin
          id="net.jcip.annotations"
          download-size="0"
