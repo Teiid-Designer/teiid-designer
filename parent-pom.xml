@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.jboss.tools</groupId>
+	<artifactId>org.jboss.tools.parent.pom</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>JBoss Tools Parent</name>
+	<packaging>pom</packaging>
+
+	<properties>
+		<tychoVersion>0.9.0-SNAPSHOT</tychoVersion>
+		<!-- <tychoVersion>0.8.0</tychoVersion> -->
+		<scmBranch>branches/modular_build</scmBranch>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.sonatype.tycho</groupId>
+				<artifactId>maven-osgi-packaging-plugin</artifactId>
+				<version>${tychoVersion}</version>
+				<configuration>
+					<format>'v'yyyyMMdd-HHmm</format>
+					<archiveSite>true</archiveSite>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.sonatype.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tychoVersion}</version>
+				<extensions>true</extensions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-plugin</artifactId>
+				<version>1.0</version>
+				<configuration>
+					<useNonInteractive>true</useNonInteractive>
+					<connectionType>connection</connectionType>
+					<!-- <connectionType>developerConnection</connectionType> -->
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.sonatype.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tychoVersion}</version>
+				<configuration>
+					<resolver>p2</resolver>
+					<environments>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>carbon</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+
+			<!-- to skip running tests (compile only) use commandline flag: -Dmaven.test.skip 
+				To allow all tests in a pom to pass/fail, use commandline flag: -fae (fail 
+				at end) -->
+			<plugin>
+				<groupId>org.sonatype.tycho</groupId>
+				<artifactId>maven-osgi-test-plugin</artifactId>
+				<version>${tychoVersion}</version>
+				<configuration>
+					<useUIHarness>true</useUIHarness>
+					<useUIThread>true</useUIThread>
+					<!-- https://docs.sonatype.org/display/TYCHO/How+to+run+SWTBot+tests+with+Tycho -->
+					<!-- set useUIThread=true for regular ui tests -->
+					<!-- set useUIThread=false for swtbot tests (?) -->
+					<product>org.eclipse.sdk.ide</product>
+					<application>org.eclipse.ui.ide.workbench</application>
+					<dependencies>
+						<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.eclipse.sdk.ide</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+					</dependencies>
+					<includes>
+						<include>**/AllTests.class</include>
+						<include>**/*AllTests*.class</include>
+						<include>**/*AllBotTests*.class</include>
+						<include>**/*TestSuite*.class</include>
+					</includes>
+					<parallel>true</parallel>
+				</configuration>
+			</plugin>
+			<!-- Enable deploy task -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.4.2</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
+		</plugins>
+		<!-- Enable SCP -->
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
+	</build>
+
+	<scm>
+		<connection>scm:svn:http://anonsvn.jboss.org/repos/jbosstools/${scmBranch}
+		</connection>
+		<developerConnection>scm:svn:http://anonsvn.jboss.org/repos/jbosstools/${scmBranch}
+		</developerConnection>
+		<url>http://anonsvn.jboss.org/repos/jbosstools/${scmBranch}
+		</url>
+	</scm>
+
+	<issueManagement>
+		<system>jira</system>
+		<url>https://jira.jboss.org/jira/secure/</url>
+	</issueManagement>
+
+	<profiles>
+		<profile>
+			<id>helios</id>
+			<activation>
+				<property>
+					<name>helios</name>
+				</property>
+			</activation>
+			<repositories>
+				<repository>
+					<id>helios</id>
+					<url>http://download.eclipse.org/releases/helios/</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
+					<id>eclipse36</id>
+					<url>http://download.eclipse.org/eclipse/updates/3.6/</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
+					<id>birt26</id>
+					<url>http://download.eclipse.org/birt/update-site/2.6/</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
+					<id>swtbot-helios</id>
+					<url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site
+					</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+			</repositories>
+		</profile>
+		<profile>
+			<id>svn-repos</id>
+			<activation>
+				<property>
+					<name>svn</name>
+				</property>
+			</activation>
+			<repositories>
+				<repository>
+					<id>svnkit13</id>
+					<url>http://eclipse.svnkit.com/1.3.x/</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
+					<id>subclipse16</id>
+					<url>http://subclipse.tigris.org/update_1.6.x/</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
+					<id>subversive07</id>
+					<url>http://download.eclipse.org/technology/subversive/0.7/update-site/
+					</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
+					<id>subversive20</id>
+					<url>http://community.polarion.com/projects/subversive/download/eclipse/2.0/update-site/
+					</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+
+			</repositories>
+		</profile>
+	</profiles>
+
+	<repositories>
+		<!-- TODO: add JBT nightly update site so we can build against binaries -->
+		<repository>
+			<id>galileo</id>
+			<url>http://download.eclipse.org/releases/galileo/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>eclipse35</id>
+			<url>http://download.eclipse.org/eclipse/updates/3.5/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>birt25r</id>
+			<url>http://download.eclipse.org/birt/update-site/2.5</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>swtbot-galileo</id>
+			<url>http://download.eclipse.org/technology/swtbot/galileo/dev-build/update-site
+			</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+
+		<repository>
+			<id>webtools</id>
+			<url>http://download.eclipse.org/webtools/updates/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>m2eclipse</id>
+			<url>http://m2eclipse.sonatype.org/sites/m2e/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>m2eclipse-extras</id>
+			<url>http://m2eclipse.sonatype.org/sites/m2e-extras/</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>maven-central</id>
+			<url>http://repo1.maven.org/maven2/
+			</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+		<pluginRepository>
+			<id>sonatype-maven-central</id>
+			<url>http://repository.sonatype.org/content/repositories/central/
+			</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+		<pluginRepository>
+			<id>maven-snapshots-sonatype</id>
+			<url>https://repository.apache.org/content/repositories/maven-snapshots-sonatype/
+			</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+		<pluginRepository>
+			<id>tycho</id>
+			<url>https://repository.sonatype.org/content/repositories/snapshots/
+			</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+		<pluginRepository>
+			<id>apache-snapshots</id>
+			<url>http://repository.apache.org/snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<!-- https://issues.sonatype.org/browse/TYCHO-413: does not work - doesn't 
+		respect username & ssh key -->
+	<distributionManagement>
+		<!-- http://download.jboss.org/jbosstools/ -->
+		<!-- <repository> <id>jbosstools.internal.repo</id> <url> scp://filemgmt.jboss.org/downloads_htdocs/tools/repository/ 
+			</url> </repository> -->
+		<!-- https://sourceforge.net/projects/jboss/files/JBossTools/JBossTools3.2.x -->
+		<!-- <repository> <id>jbosstools.external.repo</id> <name>JBoss Developer 
+			Studio Repository</name> <url>scp://nickboldt,jboss@frs.sourceforge.net/home/frs/project/j/jb/jboss/JBossTools/JBossTools3.2.x/</url> 
+			</repository> -->
+
+		<!-- http://reports.qa.atl.jboss.com/binaries/RHDS/ -->
+		<!-- <repository> <id>jbds.internal.repo</id> <name>JBoss Developer Studio 
+			Repository</name> <url>scp://hudson@localhost/qa/services/http/binaries/RHDS/repository/</url> 
+			</repository> -->
+		<!-- http://devstudio.jboss.com -->
+		<!-- <repository> <id>jbds.external.repo</id> <name>JBoss Developer Studio 
+			Repository</name> <url>scp://nboldt@wallace.redhat.com/mnt/devstudio/repository/</url> 
+			</repository> -->
+	</distributionManagement>
+</project>
