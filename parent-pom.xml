@@ -33,17 +33,6 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-scm-plugin</artifactId>
-				<version>1.0</version>
-				<configuration>
-					<useNonInteractive>true</useNonInteractive>
-					<connectionType>connection</connectionType>
-					<!-- <connectionType>developerConnection</connectionType> -->
-				</configuration>
-			</plugin>
-
-			<plugin>
 				<groupId>org.sonatype.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tychoVersion}</version>
@@ -110,45 +99,8 @@
 					<parallel>true</parallel>
 				</configuration>
 			</plugin>
-			<!-- Enable deploy task -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.5</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.4.2</version>
-				<configuration>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-
 		</plugins>
-		<!-- Enable SCP -->
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh</artifactId>
-				<version>1.0-beta-6</version>
-			</extension>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh-external</artifactId>
-				<version>1.0-beta-6</version>
-			</extension>
-		</extensions>
 	</build>
-
-	<scm>
-		<connection>scm:svn:http://anonsvn.jboss.org/repos/jbosstools/${scmBranch}
-		</connection>
-		<developerConnection>scm:svn:http://anonsvn.jboss.org/repos/jbosstools/${scmBranch}
-		</developerConnection>
-		<url>http://anonsvn.jboss.org/repos/jbosstools/${scmBranch}
-		</url>
-	</scm>
 
 	<issueManagement>
 		<system>jira</system>
@@ -410,24 +362,4 @@
 		</pluginRepository>
 	</pluginRepositories>
 
-	<!-- https://issues.sonatype.org/browse/TYCHO-413: does not work - doesn't 
-		respect username & ssh key -->
-	<distributionManagement>
-		<!-- http://download.jboss.org/jbosstools/ -->
-		<!-- <repository> <id>jbosstools.internal.repo</id> <url> scp://filemgmt.jboss.org/downloads_htdocs/tools/repository/ 
-			</url> </repository> -->
-		<!-- https://sourceforge.net/projects/jboss/files/JBossTools/JBossTools3.2.x -->
-		<!-- <repository> <id>jbosstools.external.repo</id> <name>JBoss Developer 
-			Studio Repository</name> <url>scp://nickboldt,jboss@frs.sourceforge.net/home/frs/project/j/jb/jboss/JBossTools/JBossTools3.2.x/</url> 
-			</repository> -->
-
-		<!-- http://reports.qa.atl.jboss.com/binaries/RHDS/ -->
-		<!-- <repository> <id>jbds.internal.repo</id> <name>JBoss Developer Studio 
-			Repository</name> <url>scp://hudson@localhost/qa/services/http/binaries/RHDS/repository/</url> 
-			</repository> -->
-		<!-- http://devstudio.jboss.com -->
-		<!-- <repository> <id>jbds.external.repo</id> <name>JBoss Developer Studio 
-			Repository</name> <url>scp://nboldt@wallace.redhat.com/mnt/devstudio/repository/</url> 
-			</repository> -->
-	</distributionManagement>
 </project>
