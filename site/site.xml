@@ -12,7 +12,7 @@ With Teiid Designer, not only do you create source data models and map your sour
 
 Visit the project home page at:  http://www.teiid.org  for details.
    </description>
-   <feature url="features/org.teiid.designer.runtime_0.0.0.jar" id="org.teiid.designer.runtime" version="0.0.0">
+   <feature url="features/org.teiid.designer.feature_0.0.0.jar" id="org.teiid.designer.feature" version="0.0.0">
    	<category name="MetadataModeling"/>
    </feature>
    <feature url="features/org.teiid.designer.runtime.feature_0.0.0.jar" id="org.teiid.designer.runtime.feature" version="0.0.0">
