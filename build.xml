@@ -1091,8 +1091,8 @@ To force a build of unchanged components, use -Dbuild.if.sources.unchanged=true<
 					<param name="update.site.path" value="${update.site.path}" />
 				</antcall>
 			</else>
-			<var name="update.site.path" unset="true" />
 		</if>
+		<var name="update.site.path" unset="true" />
 
 	</target>
 
