@@ -8,7 +8,7 @@
 	<property name="COMPONENTS" value="." />
 
 	<!-- svn root, including trunk or branch path -->
-	<property name="svn.root" value="http://anonsvn.jboss.org/repos/tdesigner/trunk/" />
+	<property name="svn.root" value="http://anonsvn.jboss.org/repos/tdesigner/trunk" />
 
 	<!-- if true, use -Dmaven.repo.local=${COMMON_TOOLS}/m2-repository; if false, use default ~/.m2/repository; or set another path if preferred -->
 	<property name="maven.repo.local" value="false" />
