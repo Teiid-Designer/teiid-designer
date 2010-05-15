@@ -961,7 +961,7 @@ To force a build of unchanged components, use -Dbuild.if.sources.unchanged=true<
 	<target name="build.update.site">
 		<property name="update.site.path" value="site" />
 		<!-- without deleting previous target dir, update sites may end up missing all plugins and features! -->
-		<delete dir="${WORKINGDIR}/${update.site.path}/target" includeemptydirs="true" quiet="true" />
+		<delete dir="${WORKINGDIR}/${update.site.path}/target/site" includeemptydirs="true" quiet="true" />
 
 		<if>
 			<equals arg1="${update.site.path}" arg2="site" />
@@ -992,7 +992,6 @@ To force a build of unchanged components, use -Dbuild.if.sources.unchanged=true<
 		<if>
 			<and>
 				<available file="${WORKINGDIR}/${update.site.path}/target/site.zip" type="file" />
-				<available file="${WORKINGDIR}/${update.site.path}/target/site" type="dir" />
 			</and>
 			<then>
 				<echo>Update site ${WORKINGDIR}/${update.site.path}/target/site.zip already exists.</echo>
