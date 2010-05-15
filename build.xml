@@ -844,9 +844,14 @@ ${test.results.errors.failures.skipped}
 			</else>
 		</if>
 		<if>
-			<not>
-				<contains string="${COMPONENTS.to.check}" substring=",site" />
-			</not>
+			<and>
+				<not>
+					<equals arg1="${COMPONENTS.to.check}" arg2="." />
+				</not>
+				<not>
+					<contains string="${COMPONENTS.to.check}" substring=",site" />
+				</not>
+			</and>
 			<then>
 				<var name="COMPONENTS.to.check" value="${COMPONENTS.to.check},site" />
 			</then>
@@ -854,6 +859,44 @@ ${test.results.errors.failures.skipped}
 		<for param="COMPONENT" list="${COMPONENTS.to.check}" delimiter=",; 
 	">
 			<sequential>
+				<!-- rename any leftover site.zip files -->
+				<for param="updateZip">
+					<path>
+						<fileset dir="${WORKINGDIR}/@{COMPONENT}" includes="**/site.zip" />
+					</path>
+					<sequential>
+						<if>
+							<equals arg1="@{COMPONENT}" arg2="site" />
+							<then>
+								<var name="destinationZip"
+								     value="${WORKINGDIR}/@{COMPONENT}/site/target/JBossTools-ALL-Update-SNAPSHOT.zip"
+								/>
+							</then>
+							<else>
+								<var name="COMPONENT.name" value="" />
+								<if>
+									<equals arg1="@{COMPONENT}" arg2="." />
+									<then>
+										<var name="COMPONENT.name" value="${product.id}" />
+									</then>
+									<else>
+										<var name="COMPONENT.name" value="@{COMPONENTS}" />
+									</else>
+								</if>
+								<var name="destinationZip"
+								     value="${WORKINGDIR}/@{COMPONENT}/site/target/JBossTools-${COMPONENT.name}-Update-SNAPSHOT.zip"
+								/>
+							</else>
+						</if>
+						<!-- rename resulting update site zip -->
+						<move file="${WORKINGDIR}/@{COMPONENT}/site/target/site.zip"
+						      tofile="${destinationZip}"
+						      overwrite="true"
+						      preservelastmodified="false"
+						/>
+					</sequential>
+				</for>
+				
 				<for param="updateZip">
 					<path>
 						<fileset dir="${WORKINGDIR}/@{COMPONENT}" includes="**/JBossTools*Update*.zip" />
