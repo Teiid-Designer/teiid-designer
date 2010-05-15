@@ -615,11 +615,16 @@ To force a build of unchanged components, use -Dbuild.if.sources.unchanged=true<
 					</else>
 				</if>
 
-				<!-- prevent recursion: overall site component is built with create.overall.update.site, not simpler create.update.site -->
+				<!-- prevent recursion: overall site component is built with create.overall.update.site, not simpler create.update.site; also, don't rebuild the site if it's already been done by "." component -->
 				<if>
-					<not>
-						<equals arg1="@{COMPONENT}" arg2="site" />
-					</not>
+					<and>
+						<not>
+							<equals arg1="@{COMPONENT}" arg2="site" />
+						</not>
+						<not>
+							<equals arg1="@{COMPONENT}" arg2="." />
+						</not>
+					</and>
 					<then>
 						<antcall target="create.update.site">
 							<param name="COMPONENT" value="@{COMPONENT}" />
@@ -961,7 +966,7 @@ To force a build of unchanged components, use -Dbuild.if.sources.unchanged=true<
 	<target name="build.update.site">
 		<property name="update.site.path" value="site" />
 		<!-- without deleting previous target dir, update sites may end up missing all plugins and features! -->
-		<delete dir="${WORKINGDIR}/${update.site.path}/target/site" includeemptydirs="true" quiet="true" />
+		<delete dir="${WORKINGDIR}/${update.site.path}/target" includeemptydirs="true" quiet="true" />
 
 		<if>
 			<equals arg1="${update.site.path}" arg2="site" />
@@ -988,34 +993,23 @@ To force a build of unchanged components, use -Dbuild.if.sources.unchanged=true<
 		</if>
 		<delete file="${destinationZip}" quiet="true" />
 
-		<!-- don't regen the update site if the site/ dir and site.zip already exist! -->
 		<if>
-			<and>
-				<available file="${WORKINGDIR}/${update.site.path}/target/site.zip" type="file" />
-			</and>
+			<equals arg1="${COMPONENTS.to.build}" arg2="site" />
 			<then>
-				<echo>Update site ${WORKINGDIR}/${update.site.path}/target/site.zip already exists.</echo>
+				<!-- Call maven to generate pom.xml, then build site from site.xml -->
+				<antcall target="run.build">
+					<param name="COMPONENTS.to.build" value="${COMPONENTS.to.build}" />
+					<param name="MAVEN_FLAGS" value="verify -e -q -B -fae -Dmaven.test.skip" />
+					<param name="noXvfb" value="true" />
+				</antcall>
 			</then>
 			<else>
-				<if>
-					<equals arg1="${COMPONENTS.to.build}" arg2="site" />
-					<then>
-						<!-- Call maven to generate pom.xml, then build site from site.xml -->
-						<antcall target="run.build">
-							<param name="COMPONENTS.to.build" value="${COMPONENTS.to.build}" />
-							<param name="MAVEN_FLAGS" value="verify -e -q -B -fae -Dmaven.test.skip" />
-							<param name="noXvfb" value="true" />
-						</antcall>
-					</then>
-					<else>
-						<!-- Or just call maven to build site -->
-						<antcall target="mvn">
-							<param name="MAVEN_DIR" value="${WORKINGDIR}/${update.site.path}" />
-							<param name="MAVEN_FLAGS" value="verify -e -q -B -fae -Dmaven.test.skip" />
-							<param name="noXvfb" value="true" />
-						</antcall>
-					</else>
-				</if>
+				<!-- Or just call maven to build site -->
+				<antcall target="mvn">
+					<param name="MAVEN_DIR" value="${WORKINGDIR}/${update.site.path}" />
+					<param name="MAVEN_FLAGS" value="verify -e -q -B -fae -Dmaven.test.skip" />
+					<param name="noXvfb" value="true" />
+				</antcall>
 			</else>
 		</if>
 
