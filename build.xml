@@ -13,6 +13,11 @@
 	<!-- if true, use -Dmaven.repo.local=${COMMON_TOOLS}/m2-repository; if false, use default ~/.m2/repository; or set another path if preferred -->
 	<property name="maven.repo.local" value="false" />
 
+	<!-- name/version we're building -->
+	<property name="product.name" value="Teiid Designer" />
+	<property name="product.id" value="TeiidDesigner" />
+	<property name="product.version" value="7.0.0-beta-1" />
+
 	<!-- update site description :: not used if site.xml already present -->
 	<property name="update.site.description" value="Nightly Build" />
 
@@ -506,6 +511,12 @@ To force a build of unchanged components, use -Dbuild.if.sources.unchanged=true<
 							<echo level="warning">The following components' sources have changed and will be built:
 	COMPONENTS.to.build = ${COMPONENTS.to.build}
 </echo>
+						</then>
+					</elseif>
+					<elseif>
+						<equals arg1="${COMPONENTS.to.build}" arg2=".," />
+						<then>
+							<property name="no.overall" value="true" />
 						</then>
 					</elseif>
 				</if>
@@ -1053,10 +1064,36 @@ To force a build of unchanged components, use -Dbuild.if.sources.unchanged=true<
 		</condition>
 		<antcall target="genSiteXml" />
 
-		<antcall target="build.update.site">
-			<param name="COMPONENTS.to.build" value="${COMPONENT}" />
-			<param name="update.site.path" value="${COMPONENT}/site" />
-		</antcall>
+		<var name="update.site.path" value="${COMPONENT}/site" />
+		<var name="COMPONENT.name" value="" />
+		<if>
+			<available file="${WORKINGDIR}/${COMPONENT}/site/target/site.zip" type="file" />
+			<then>
+				<echo>Update site ${WORKINGDIR}/${COMPONENT}/site/target/site.zip already exists.</echo>
+				<if>
+					<equals arg1="${COMPONENT}" arg2="." />
+					<then>
+						<var name="COMPONENT.name" value="${product.id}" />
+					</then>
+					<else>
+						<var name="COMPONENT.name" value="${COMPONENT}" />
+					</else>
+				</if>
+				<move file="${WORKINGDIR}/${update.site.path}/target/site.zip"
+				      tofile="${WORKINGDIR}/${update.site.path}/target/JBossTools-${COMPONENT.name}-Update-SNAPSHOT.zip"
+				      overwrite="true"
+				      preservelastmodified="false"
+				/>
+			</then>
+			<else>
+				<antcall target="build.update.site">
+					<param name="COMPONENTS.to.build" value="${COMPONENT}" />
+					<param name="update.site.path" value="${update.site.path}" />
+				</antcall>
+			</else>
+			<var name="update.site.path" unset="true" />
+		</if>
+
 	</target>
 
 	<target name="genPomXml" description="Generate a pom.xml" unless="site.pom.exists">
