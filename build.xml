@@ -11,7 +11,7 @@
 	<property name="svn.root" value="http://anonsvn.jboss.org/repos/tdesigner/trunk" />
 
 	<!-- if true, use -Dmaven.repo.local=${COMMON_TOOLS}/m2-repository; if false, use default ~/.m2/repository; or set another path if preferred -->
-	<property name="maven.repo.local" value="false" />
+	<property name="maven.repo.local" value="true" />
 
 	<!-- name/version we're building -->
 	<property name="product.name" value="Teiid Designer" />
