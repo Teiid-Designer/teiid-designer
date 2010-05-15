@@ -1075,7 +1075,7 @@ To force a build of unchanged components, use -Dbuild.if.sources.unchanged=true<
 		</if>
 	</target>
 
-	<!-- Used to build the update site of a component; requires a site.xml and pom.xml be generated first -->
+	<!-- Used to build the update site of a component; requires a site.xml and pom.xml be generated first, if not already checked in -->
 	<target name="create.update.site" depends="init">
 		<var name="site.pom.exists" unset="true" />
 		<condition property="site.pom.exists">
@@ -1091,7 +1091,7 @@ To force a build of unchanged components, use -Dbuild.if.sources.unchanged=true<
 
 		<antcall target="build.update.site">
 			<param name="COMPONENTS.to.build" value="${COMPONENT}" />
-			<param name="update.site.path" value="${update.site.path}" />
+			<param name="update.site.path" value="${COMPONENT}/site" />
 		</antcall>
 	</target>
 
