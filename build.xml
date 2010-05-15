@@ -1,20 +1,19 @@
-<project default="run" basedir="." name="project build.xml">
+<project default="run" basedir="." name="build.xml to wrap maven">
 	<!-- ****************************** Configuration ****************************** -->
-
-	<!-- set name of component(s) to build+test, IN ORDER -->
-	<property name="COMPONENTS" value="." />
-	<!-- <property name="COMPONENTS.to.build" value="." /> -->
-
-	<!-- svn root, including trunk or branch path -->
-	<property name="svn.root" value="http://anonsvn.jboss.org/repos/tdesigner/trunk/" />
 
 	<!-- default maven version -->
 	<property name="maven.version" value="3.0-beta-1" />
 
-	<!-- if false, use default ~/.m2/repository; if true, use -Dmaven.repo.local=${COMMON_TOOLS}/m2-repository, or set another path if preferred -->
+	<!-- set name of component(s) to build+test, IN ORDER; if no subcomponents, use "." -->
+	<property name="COMPONENTS" value="." />
+
+	<!-- svn root, including trunk or branch path -->
+	<property name="svn.root" value="http://anonsvn.jboss.org/repos/tdesigner/trunk/" />
+
+	<!-- if true, use -Dmaven.repo.local=${COMMON_TOOLS}/m2-repository; if false, use default ~/.m2/repository; or set another path if preferred -->
 	<property name="maven.repo.local" value="false" />
 
-	<!-- update site description -->
+	<!-- update site description :: not used if site.xml already present -->
 	<property name="update.site.description" value="Nightly Build" />
 
 	<!-- ****************************** Usage Instructions ****************************** -->
@@ -24,34 +23,28 @@ To run this script in Eclipse:
     Run As > Ant Build
 
 To run this script via commandline (build default modules + run tests, then collect test results and build per-component + overall update site zips):
-    cd /tmp/tdesigner; ant
+    cd /path/to/checked/out/source/tree; ant
 
 or, to build everything but not *run* the tests:
-    cd /tmp/tdesigner; \
     ant -DMAVEN_FLAGS="clean install -Dmaven.test.skip"
 		or
 	ant -Dnotests=true
 
 or, to purge the local repo (or purge then build):
-    cd /tmp/tdesigner; \
 	ant purge -q
 		or
 	ant clean-run
 
 or, to rebuild even if sources have not changed:
-    cd /tmp/tdesigner; \
     ant -Dbuild.if.sources.unchanged=true
 
 or, to fetch fresh sources, then build anew:
-    cd /tmp/tdesigner; \
-	ant -Dclean.sources=true
+    ant -Dclean.sources=true
 
 or, to (re-)run tests w/o (re-)building first:
-    cd /tmp/tdesigner; \
     ant -DMAVEN_FLAGS="osgi-test:test -B -fn"
 			
 or, to re-build a single component's update site w/o first building, testing, and installing it into the m2 repo:
-    cd /tmp/tdesigner; \
     ant create.update.site
 
 To have hudson manage sources (rather than having this script checkout/update them) use: 
@@ -89,7 +82,7 @@ Here is the order in which components must be built:
 
 	<target name="run"
 	        description="run a build, collect test results, generate overall update site"
-	        depends="build, collect.all.test.results, collect.update.site.results"
+	        depends="build, collect.all.test.results, create.overall.update.site, collect.update.site.results"
 	/>
 
 	<target name="build"
