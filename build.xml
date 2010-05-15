@@ -49,8 +49,11 @@ or, to fetch fresh sources, then build anew:
 or, to (re-)run tests w/o (re-)building first:
     ant -DMAVEN_FLAGS="osgi-test:test -B -fn"
 			
-or, to re-build a single component's update site w/o first building, testing, and installing it into the m2 repo:
+or, to re-build a single component's update site w/o building, testing, and installing it into the m2 repo:
     ant create.update.site
+
+or, to re-build the overall update site w/o building first (no applicable when COMPONENTS=.):
+    ant create.overall.update.site -Dbuild.if.sources.unchanged=true
 
 To have hudson manage sources (rather than having this script checkout/update them) use: 
 	-Dhudson.managed.sources=true
@@ -968,30 +971,52 @@ To force a build of unchanged components, use -Dbuild.if.sources.unchanged=true<
 				/>
 			</then>
 			<else>
+				<var name="COMPONENT.name" value="" />
+				<if>
+					<equals arg1="${COMPONENT}" arg2="." />
+					<then>
+						<var name="COMPONENT.name" value="${product.id}" />
+					</then>
+					<else>
+						<var name="COMPONENT.name" value="${COMPONENTS.to.build}" />
+					</else>
+				</if>
 				<var name="destinationZip"
-				     value="${WORKINGDIR}/${update.site.path}/target/JBossTools-${COMPONENTS.to.build}-Update-SNAPSHOT.zip"
+				     value="${WORKINGDIR}/${update.site.path}/target/JBossTools-${COMPONENT.name}-Update-SNAPSHOT.zip"
 				/>
 			</else>
 		</if>
 		<delete file="${destinationZip}" quiet="true" />
 
+		<!-- don't regen the update site if the site/ dir and site.zip already exist! -->
 		<if>
-			<equals arg1="${COMPONENTS.to.build}" arg2="site" />
+			<and>
+				<available file="${WORKINGDIR}/${update.site.path}/target/site.zip" type="file" />
+				<available file="${WORKINGDIR}/${update.site.path}/target/site" type="dir" />
+			</and>
 			<then>
-				<!-- Call maven to generate pom.xml, then build site from site.xml -->
-				<antcall target="run.build">
-					<param name="COMPONENTS.to.build" value="${COMPONENTS.to.build}" />
-					<param name="MAVEN_FLAGS" value="verify -e -q -B -fae -Dmaven.test.skip" />
-					<param name="noXvfb" value="true" />
-				</antcall>
+				<echo>Update site ${WORKINGDIR}/${update.site.path}/target/site.zip already exists.</echo>
 			</then>
 			<else>
-				<!-- Or just call maven to build site -->
-				<antcall target="mvn">
-					<param name="MAVEN_DIR" value="${WORKINGDIR}/${update.site.path}" />
-					<param name="MAVEN_FLAGS" value="verify -e -q -B -fae -Dmaven.test.skip" />
-					<param name="noXvfb" value="true" />
-				</antcall>
+				<if>
+					<equals arg1="${COMPONENTS.to.build}" arg2="site" />
+					<then>
+						<!-- Call maven to generate pom.xml, then build site from site.xml -->
+						<antcall target="run.build">
+							<param name="COMPONENTS.to.build" value="${COMPONENTS.to.build}" />
+							<param name="MAVEN_FLAGS" value="verify -e -q -B -fae -Dmaven.test.skip" />
+							<param name="noXvfb" value="true" />
+						</antcall>
+					</then>
+					<else>
+						<!-- Or just call maven to build site -->
+						<antcall target="mvn">
+							<param name="MAVEN_DIR" value="${WORKINGDIR}/${update.site.path}" />
+							<param name="MAVEN_FLAGS" value="verify -e -q -B -fae -Dmaven.test.skip" />
+							<param name="noXvfb" value="true" />
+						</antcall>
+					</else>
+				</if>
 			</else>
 		</if>
 
@@ -1064,36 +1089,10 @@ To force a build of unchanged components, use -Dbuild.if.sources.unchanged=true<
 		</condition>
 		<antcall target="genSiteXml" />
 
-		<var name="update.site.path" value="${COMPONENT}/site" />
-		<var name="COMPONENT.name" value="" />
-		<if>
-			<available file="${WORKINGDIR}/${COMPONENT}/site/target/site.zip" type="file" />
-			<then>
-				<echo>Update site ${WORKINGDIR}/${COMPONENT}/site/target/site.zip already exists.</echo>
-				<if>
-					<equals arg1="${COMPONENT}" arg2="." />
-					<then>
-						<var name="COMPONENT.name" value="${product.id}" />
-					</then>
-					<else>
-						<var name="COMPONENT.name" value="${COMPONENT}" />
-					</else>
-				</if>
-				<move file="${WORKINGDIR}/${update.site.path}/target/site.zip"
-				      tofile="${WORKINGDIR}/${update.site.path}/target/JBossTools-${COMPONENT.name}-Update-SNAPSHOT.zip"
-				      overwrite="true"
-				      preservelastmodified="false"
-				/>
-			</then>
-			<else>
-				<antcall target="build.update.site">
-					<param name="COMPONENTS.to.build" value="${COMPONENT}" />
-					<param name="update.site.path" value="${update.site.path}" />
-				</antcall>
-			</else>
-		</if>
-		<var name="update.site.path" unset="true" />
-
+		<antcall target="build.update.site">
+			<param name="COMPONENTS.to.build" value="${COMPONENT}" />
+			<param name="update.site.path" value="${update.site.path}" />
+		</antcall>
 	</target>
 
 	<target name="genPomXml" description="Generate a pom.xml" unless="site.pom.exists">
