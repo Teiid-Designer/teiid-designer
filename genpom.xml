@@ -492,7 +492,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	">
 			<sequential>
 				<var name="COMPONENT" value="@{COMPONENT}" />
-				<echo level="info">COMPONENT = ${COMPONENT}</echo>
+				<echo level="info">COMPONENT = '${COMPONENT}'</echo>
 				<if>
 					<not>
 						<available file="${WORKINGDIR}/${pathToParentPomInput}parent-pom.xml" type="file" />
@@ -511,7 +511,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 						<var name="pathToParentPom" value="../" />
 					</then>
 				</if>
-				<echo level="verbose">COMPONENT = ${COMPONENT}, pathToParentPom = ${pathToParentPom}</echo>
+				<echo level="verbose">COMPONENT = '${COMPONENT}', pathToParentPom = ${pathToParentPom}</echo>
 
 				<!-- if set, compare values in tags file to values found in manifests and report discrepancies -->
 				<!--<property name="tagsFile"
@@ -561,7 +561,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 					</not>
 					<then>
 						<length property="show.pom.exists.warning.count" string="${show.pom.exists.warning}" />
-						<echo level="warning">${show.pom.exists.warning.count} ${COMPONENT} pom.xml file(s) already exist. To overwrite, use -Doverwrite.existing.pom.xml=true</echo>
+						<echo level="warning">${show.pom.exists.warning.count} '${COMPONENT}' pom.xml file(s) already exist. To overwrite, use -Doverwrite.existing.pom.xml=true</echo>
 					</then>
 				</if>
 				<var name="show.pom.exists.warning.count" unset="true" />

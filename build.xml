@@ -1,0 +1,1849 @@
+<project default="run" basedir="." name="project build.xml">
+	<!-- ****************************** Configuration ****************************** -->
+
+	<!-- set name of component(s) to build+test, IN ORDER -->
+	<property name="COMPONENTS" value="." />
+	<!-- <property name="COMPONENTS.to.build" value="." /> -->
+
+	<!-- svn root, including trunk or branch path -->
+	<property name="svn.root" value="http://anonsvn.jboss.org/repos/tdesigner/trunk/" />
+
+	<!-- default maven version -->
+	<property name="maven.version" value="3.0-beta-1" />
+
+	<!-- if false, use default ~/.m2/repository; if true, use -Dmaven.repo.local=${COMMON_TOOLS}/m2-repository, or set another path if preferred -->
+	<property name="maven.repo.local" value="false" />
+
+	<!-- update site description -->
+	<property name="update.site.description" value="Nightly Build" />
+
+	<!-- ****************************** Usage Instructions ****************************** -->
+	<target name="help" description="Usage Instructions" depends="init">
+		<echo>
+To run this script in Eclipse:
+    Run As > Ant Build
+
+To run this script via commandline (build default modules + run tests, then collect test results and build per-component + overall update site zips):
+    cd /tmp/tdesigner; ant
+
+or, to build everything but not *run* the tests:
+    cd /tmp/tdesigner; \
+    ant -DMAVEN_FLAGS="clean install -Dmaven.test.skip"
+		or
+	ant -Dnotests=true
+
+or, to purge the local repo (or purge then build):
+    cd /tmp/tdesigner; \
+	ant purge -q
+		or
+	ant clean-run
+
+or, to rebuild even if sources have not changed:
+    cd /tmp/tdesigner; \
+    ant -Dbuild.if.sources.unchanged=true
+
+or, to fetch fresh sources, then build anew:
+    cd /tmp/tdesigner; \
+	ant -Dclean.sources=true
+
+or, to (re-)run tests w/o (re-)building first:
+    cd /tmp/tdesigner; \
+    ant -DMAVEN_FLAGS="osgi-test:test -B -fn"
+			
+or, to re-build a single component's update site w/o first building, testing, and installing it into the m2 repo:
+    cd /tmp/tdesigner; \
+    ant create.update.site
+
+To have hudson manage sources (rather than having this script checkout/update them) use: 
+	-Dhudson.managed.sources=true
+			
+Note: if tests stall on Linux, install Xvfb and this script will use that to run Maven, unless use:
+	-DnoXvfb=true
+
+Here is the order in which components must be built:
+</echo>
+		<for param="COMPONENT" list="${COMPONENTS}" delimiter=";">
+			<sequential>
+				<echo message="    @{COMPONENT}," />
+			</sequential>
+		</for>
+	</target>
+
+	<!-- ******************* MAIN ENTRY TARGETS ******************* -->
+	<target name="clean-run" description="purge m2 repo, then run build" depends="purge, run" />
+
+	<target name="purge" depends="init">
+		<antcall target="genPomXml">
+			<param name="COMPONENT" value="purge" />
+			<param name="packaging" value="pom" />
+		</antcall>
+		<antcall target="mvn">
+			<param name="COMPONENT" value="purge" />
+			<param name="MAVEN_DIR" value="${WORKINGDIR}/purge/site" />
+			<param name="MAVEN_FLAGS" value="dependency:purge-local-repository -e -U -q -B -fae" />
+			<param name="noXvfb" value="true" />
+		</antcall>
+		<delete dir="${WORKINGDIR}/purge" includeemptydirs="true" quiet="true" />
+		<delete dir="${COMMON_TOOLS}/m2-repository/org/jboss/tools" includeemptydirs="true" quiet="true" />
+	</target>
+
+	<target name="run"
+	        description="run a build, collect test results, generate overall update site"
+	        depends="build, collect.all.test.results, collect.update.site.results"
+	/>
+
+	<target name="build"
+	        description="run a build"
+	        depends="init, get.bootstrap.scripts, get.sources, get.components.to.build, run.build"
+	/>
+
+	<target name="test"
+	        description="run tests w/o first getting sources + list of components to build; assumes an upstream build job was already run"
+	        depends="init, get.bootstrap.scripts, get.all.components, run.build, collect.all.test.results"
+	/>
+
+	<!-- ******************* MAIN ENTRY TARGETS ******************* -->
+
+	<!-- override for local build -->
+	<condition property="isInHudson" value="true">
+		<or>
+			<contains string="${user.dir}" substring="hudson" />
+			<contains string="${user.name}" substring="hudson" />
+			<contains string="${user.home}" substring="hudson" />
+		</or>
+	</condition>
+	<target name="local" unless="isInHudson">
+		<property name="WORKINGDIR" value="${basedir}" />
+		<property name="COMMON_TOOLS" value="${java.io.tmpdir}" />
+	</target>
+
+	<target name="get.ant-contrib" unless="ant-contrib.jar.exists">
+		<property name="ANTCONTRIB_MIRROR" value="http://downloads.sourceforge.net/ant-contrib/" />
+		<get usetimestamp="true"
+		     dest="${COMMON_TOOLS}/ant-contrib-1.0b2-bin.zip"
+		     src="${ANTCONTRIB_MIRROR}/ant-contrib-1.0b2-bin.zip"
+		/>
+		<touch file="${COMMON_TOOLS}/ant-contrib-1.0b2-bin.zip" />
+		<mkdir dir="${java.io.tmpdir}/ant-contrib-1.0b2-bin.zip_" />
+		<unzip src="${COMMON_TOOLS}/ant-contrib-1.0b2-bin.zip"
+		       dest="${java.io.tmpdir}/ant-contrib-1.0b2-bin.zip_"
+		       overwrite="true"
+		/>
+		<copy file="${java.io.tmpdir}/ant-contrib-1.0b2-bin.zip_/ant-contrib/lib/ant-contrib.jar"
+		      tofile="${COMMON_TOOLS}/ant-contrib.jar"
+		      failonerror="true"
+		/>
+		<delete dir="${java.io.tmpdir}/ant-contrib-1.0b2-bin.zip_" includeemptydirs="true" quiet="true" />
+	</target>
+
+	<target name="get.svnant" unless="svnant.jar.exists">
+		<echo level="debug">${os.name}, ${os.arch}, ${os.version}, ${osgi.os}</echo>
+		<property name="SVNANT_MIRROR" value="http://www.tigris.org/files/documents/906/46267" />
+		<if>
+			<istrue value="${isWindows}" />
+			<then>
+				<var name="svnant.enabled" unset="true" />
+				<var name="svnant.enabled" value="false" />
+			</then>
+			<else>
+				<exec executable="wget" dir="${COMMON_TOOLS}">
+					<arg line="${SVNANT_MIRROR}/svnant-1.3.0.zip --no-clobber" />
+				</exec>
+			</else>
+		</if>
+
+		<if>
+			<istrue value="${svnant.enabled}" />
+			<then>
+				<if>
+					<available file="${COMMON_TOOLS}/svnant-1.3.0.zip" type="file" />
+					<then>
+						<touch file="${COMMON_TOOLS}/svnant-1.3.0.zip" />
+						<mkdir dir="${java.io.tmpdir}/svnant-1.3.0.zip_" />
+						<unzip src="${COMMON_TOOLS}/svnant-1.3.0.zip"
+						       dest="${java.io.tmpdir}/svnant-1.3.0.zip_"
+						       overwrite="true"
+						/>
+						<copy todir="${COMMON_TOOLS}" failonerror="true">
+							<fileset dir="${java.io.tmpdir}/svnant-1.3.0.zip_/svnant-1.3.0/lib/" includes="*.jar" />
+						</copy>
+						<delete dir="${java.io.tmpdir}/svnant-1.3.0.zip_" includeemptydirs="true" quiet="true" />
+					</then>
+					<elseif>
+						<or>
+							<not>
+								<available file="${COMMON_TOOLS}/svnant.jar" type="file" />
+							</not>
+							<not>
+								<available file="${COMMON_TOOLS}/svnkit.jar" type="file" />
+							</not>
+							<not>
+								<available file="${COMMON_TOOLS}/svnClientAdapter.jar" type="file" />
+							</not>
+						</or>
+						<then>
+							<fail>Error!
+Build cannot proceed!
+	Must install svnant.jar, svnkit.jar + svnClientAdapter.jar from 
+		${SVNANT_MIRROR}/svnant-1.3.0.zip 
+	into ${COMMON_TOOLS}/.
+</fail>
+						</then>
+					</elseif>
+				</if>
+			</then>
+			<else>
+				<echo level="warning">Warning! 
+Svnant unavailable. Will use Maven to fetch sources.
+</echo>
+			</else>
+		</if>
+	</target>
+
+	<target name="get.maven" unless="maven.exists">
+		<property name="MAVEN_MIRROR" value="http://mirror.csclub.uwaterloo.ca/apache/maven/binaries" />
+		<get usetimestamp="true"
+		     dest="${COMMON_TOOLS}/apache-maven-${maven.version}-bin.tar.gz"
+		     src="${MAVEN_MIRROR}/apache-maven-${maven.version}-bin.tar.gz"
+		/>
+		<untar compression="gzip"
+		       overwrite="false"
+		       dest="${COMMON_TOOLS}"
+		       src="${COMMON_TOOLS}/apache-maven-${maven.version}-bin.tar.gz"
+		/>
+		<chmod perm="755" file="${COMMON_TOOLS}/apache-maven-${maven.version}/bin/mvn" />
+	</target>
+
+	<target name="init" depends="local">
+		<macrodef name="now">
+			<attribute name="level" default="warning" />
+			<text name="info" optional="true" />
+			<sequential>
+				<var name="now" unset="true" />
+				<tstamp>
+					<format property="now" pattern="hh:mm:ss" />
+				</tstamp>
+				<echo level="@{level}">${now} @{info}</echo>
+			</sequential>
+		</macrodef>
+
+		<condition property="isWindows" value="true" else="false">
+			<or>
+				<os family="windows" />
+				<contains string="${os.name}" substring="windows" casesensitive="false" />
+			</or>
+		</condition>
+
+		<!-- https://jira.jboss.org/jira/browse/JBQA-3313 Use static, shared space outside workspace, instead of working directly in the workspace -->
+		<condition property="WORKINGDIR" value="/home/hudson/static_build_env/jbds/tools/sources" else="${basedir}">
+			<available file="/home/hudson/static_build_env/jbds" type="dir" />
+		</condition>
+		<mkdir dir="${WORKINGDIR}" />
+		<echo level="info">WORKINGDIR = ${WORKINGDIR}</echo>
+
+		<condition property="COMMON_TOOLS"
+		           value="/home/hudson/static_build_env/jbds/tools"
+		           else="${WORKINGDIR}/../tools"
+		>
+			<available file="/home/hudson/static_build_env/jbds" type="dir" />
+		</condition>
+		<mkdir dir="${COMMON_TOOLS}" />
+		<echo level="info">COMMON_TOOLS = ${COMMON_TOOLS}</echo>
+
+		<available file="${COMMON_TOOLS}/ant-contrib.jar" type="file" property="ant-contrib.jar.exists" />
+		<antcall target="get.ant-contrib" />
+		<taskdef resource="net/sf/antcontrib/antlib.xml">
+			<classpath>
+				<pathelement location="${COMMON_TOOLS}/ant-contrib.jar" />
+			</classpath>
+		</taskdef>
+
+		<property name="svnant.enabled" value="true" />
+		<available file="${COMMON_TOOLS}/svnant.jar" type="file" property="svnant.jar.exists" />
+		<antcall target="get.svnant" />
+		<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml">
+			<classpath>
+				<pathelement location="${COMMON_TOOLS}/svnant.jar" />
+				<pathelement location="${COMMON_TOOLS}/svnkit.jar" />
+				<pathelement location="${COMMON_TOOLS}/svnClientAdapter.jar" />
+			</classpath>
+		</taskdef>
+
+		<available file="${COMMON_TOOLS}/apache-maven-${maven.version}/bin/mvn" type="file" property="maven.exists" />
+		<antcall target="get.maven" />
+	</target>
+
+	<target name="get.sources" description="if sources not already on disk, fetch them" unless="hudson.managed.sources">
+		<property name="clean.sources" value="false" />
+		<property name="svn.recurse" value="true" />
+
+		<!-- = = = = = = = = = = = = = = = = =
+          COMPONENT: component to fetch or update
+          op: up (update) or co (checkout)
+         = = = = = = = = = = = = = = = = = -->
+		<macrodef name="svn.fetch">
+			<attribute name="component" />
+			<attribute name="op" />
+			<sequential>
+				<!-- check out or update -->
+				<if>
+					<equals arg1="@{op}" arg2="up" />
+					<then>
+						<now level="info">Update '@{COMPONENT}'</now>
+						<if>
+							<istrue value="${svnant.enabled}" />
+							<then>
+								<!-- remove generated site/ folder -->
+								<if>
+									<not>
+										<equals arg1="@{component}" arg2="." />
+									</not>
+									<then>
+										<delete dir="${WORKINGDIR}/@{component}/site"
+										        includeemptydirs="true"
+										        quiet="true"
+										/>
+									</then>
+								</if>
+								<svn javahl="false" svnkit="true" failonerror="false">
+									<revert recurse="${svn.recurse}" dir="@{component}" />
+								</svn>
+								<svn javahl="false" svnkit="true" failonerror="false">
+									<update recurse="${svn.recurse}" dir="@{component}" />
+								</svn>
+							</then>
+							<else>
+								<antcall target="mvn">
+									<param name="MAVEN_DIR" value="${WORKINGDIR}" />
+									<param name="MAVEN_FLAGS"
+									       value="scm:update -f ${WORKINGDIR}/parent-pom.xml -e -q -B -fae -Dmaven.test.skip -DworkingDirectory=${WORKINGDIR}/@{component} -DconnectionUrl=scm:svn:${svn.root}/@{component} -DdeveloperConnectionUrl=scm:svn:${svn.root}/@{component}"
+									/>
+									<param name="noXvfb" value="true" />
+								</antcall>
+							</else>
+						</if>
+					</then>
+					<else>
+						<now level="info">Fetch sources from ${svn.root}/@{component} into ${WORKINGDIR}/@{component}</now>
+						<if>
+							<istrue value="${svnant.enabled}" />
+							<then>
+								<svn javahl="false" svnkit="true" failonerror="true">
+									<checkout recurse="${svn.recurse}"
+									          url="${svn.root}/@{component}"
+									          destpath="${WORKINGDIR}/@{component}"
+									/>
+								</svn>
+							</then>
+							<else>
+								<antcall target="mvn">
+									<param name="MAVEN_DIR" value="${WORKINGDIR}" />
+									<param name="MAVEN_FLAGS"
+									       value="scm:checkout -f ${WORKINGDIR}/parent-pom.xml -e -q -B -fae -Dmaven.test.skip -DskipCheckoutIfExists=true -DcheckoutDirectory=${WORKINGDIR}/@{component} -DworkingDirectory=${WORKINGDIR}/@{component} -DconnectionUrl=scm:svn:${svn.root}/@{component} -DdeveloperConnectionUrl=scm:svn:${svn.root}/@{component}"
+									/>
+									<param name="noXvfb" value="true" />
+								</antcall>
+							</else>
+						</if>
+					</else>
+				</if>
+
+				<!-- Store svn info so we can compare it later and thus not need to update or checkout every time -->
+				<if>
+					<istrue value="${svnant.enabled}" />
+					<then>
+						<svn javahl="false" svnkit="true" failonerror="false">
+							<info target="${WORKINGDIR}/@{component}"
+							      propprefix="svn.info.@{component}"
+							      verbose="false"
+							/>
+						</svn>
+					</then>
+				</if>
+				<if>
+					<isset property="svn.info.@{component}.rev" />
+					<then>
+						<echo file="${WORKINGDIR}/svn.info-@{component}.txt">svn.info.@{component}.rev = ${svn.info.@{component}.rev}
+</echo>
+					</then>
+				</if>
+				<echo file="${WORKINGDIR}/build.cfg" message="@{component}," append="true" />
+			</sequential>
+		</macrodef>
+
+		<!-- only reset the file if we don't already have a value for COMPONENTS.to.build; thus when called later for "site" component build, append instead of overwriting -->
+		<if>
+			<not>
+				<isset property="COMPONENTS.to.build" />
+			</not>
+			<then>
+				<echo file="${WORKINGDIR}/build.cfg" message="COMPONENTS.to.build = " />
+			</then>
+		</if>
+		<!-- check for each component dir in ${WORKINGDIR}; if not found, fetch -->
+		<if>
+			<and>
+				<isset property="COMPONENT" />
+				<not>
+					<equals arg1="${COMPONENT}" arg2="" />
+				</not>
+			</and>
+			<then>
+				<var name="COMPONENTS" unset="true" />
+				<var name="COMPONENTS" value="${COMPONENT}" />
+			</then>
+		</if>
+		<for param="COMPONENT" list="${COMPONENTS}" delimiter=",; 
+	">
+			<sequential>
+				<if>
+					<equals arg1="${clean.sources}" arg2="true" />
+					<then>
+						<delete dir="${WORKINGDIR}/@{COMPONENT}" includeemptydirs="true" quiet="true" />
+					</then>
+				</if>
+				<if>
+					<not>
+						<available file="${WORKINGDIR}/@{COMPONENT}" type="dir" />
+					</not>
+					<then>
+						<svn.fetch component="@{COMPONENT}" op="co" />
+					</then>
+					<else>
+						<if>
+							<available file="${WORKINGDIR}/svn.info-@{COMPONENT}.txt" type="file" />
+							<then>
+								<property file="${WORKINGDIR}/svn.info-@{COMPONENT}.txt" />
+								<!-- check svn info; if new version found, svn up -->
+								<if>
+									<istrue value="${svnant.enabled}" />
+									<then>
+										<svn javahl="false" svnkit="true" failonerror="false">
+											<info target="${WORKINGDIR}/@{COMPONENT}"
+											      propprefix="svn.info.@{COMPONENT}.check"
+											      verbose="false"
+											/>
+										</svn>
+									</then>
+								</if>
+								<if>
+									<or>
+										<not>
+											<isset property="svn.info.@{COMPONENT}.rev" />
+										</not>
+										<not>
+											<isset property="svn.info.@{COMPONENT}.check.rev" />
+										</not>
+										<not>
+											<equals arg1="${svn.info.@{COMPONENT}.rev}"
+											        arg2="${svn.info.@{COMPONENT}.check.rev}"
+											/>
+										</not>
+									</or>
+									<then>
+										<svn.fetch component="@{COMPONENT}" op="up" />
+									</then>
+									<else>
+										<if>
+											<and>
+												<isset property="build.if.sources.unchanged" />
+												<istrue value="${build.if.sources.unchanged}" />
+											</and>
+											<then>
+												<svn.fetch component="@{COMPONENT}" op="up" />
+											</then>
+										</if>
+									</else>
+								</if>
+							</then>
+							<else>
+								<svn.fetch component="@{COMPONENT}" op="up" />
+							</else>
+						</if>
+					</else>
+				</if>
+			</sequential>
+		</for>
+
+	</target>
+
+	<target name="get.bootstrap.scripts">
+		<!-- also get files required to bootstrap the build -->
+		<get src="${svn.root}/parent-pom.xml" dest="${WORKINGDIR}/parent-pom.xml" usetimestamp="true" />
+		<get src="${svn.root}/genpom.xml" dest="${WORKINGDIR}/genpom.xml" usetimestamp="true" />
+	</target>
+
+	<target name="get.all.components">
+		<var name="COMPONENTS.to.build" unset="true" />
+		<var name="COMPONENTS.to.build" value="" />
+		<for param="COMPONENT" list="${COMPONENTS}" delimiter="; ">
+			<sequential>
+				<var name="COMPONENTS.to.build" value="${COMPONENTS.to.build}@{COMPONENT}," />
+			</sequential>
+		</for>
+	</target>
+
+	<target name="get.components.to.build">
+		<if>
+			<available file="${WORKINGDIR}/build.cfg" type="file" />
+			<then>
+				<property file="${WORKINGDIR}/build.cfg" />
+				<if>
+					<equals arg1="${COMPONENTS.to.build}" arg2="" />
+					<then>
+						<echo level="warning">All components up to date: nothing to do!
+To force a build of unchanged components, use -Dbuild.if.sources.unchanged=true</echo>
+
+						<!-- create fake test result file to avoid Hudson failure -->
+						<delete dir="${basedir}/surefire-reports/NoTestsRun" includeemptydirs="true" />
+						<mkdir dir="${basedir}/surefire-reports/NoTestsRun" />
+						<echo file="${basedir}/surefire-reports/NoTestsRun/TEST-org.jboss.tools.NoTestsRun.xml">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;testsuite failures="0" time="0.001" errors="0" skipped="0" tests="1" name="org.jboss.tools.NoTestsRun"&gt;
+  &lt;testcase time="0.001" classname="org.jboss.tools.NoTestsRun" name="NoTestsRun"/&gt;
+&lt;/testsuite&gt;
+</echo>
+						<property name="no.tests.run" value="true" />
+						<property name="no.overall" value="true" />
+					</then>
+					<elseif>
+						<not>
+							<equals arg1="${COMPONENTS.to.build}" arg2=".," />
+						</not>
+						<then>
+							<echo level="warning">The following components' sources have changed and will be built:
+	COMPONENTS.to.build = ${COMPONENTS.to.build}
+</echo>
+						</then>
+					</elseif>
+				</if>
+			</then>
+			<else>
+				<antcallback target="get.all.components" return="COMPONENTS.to.build" />
+			</else>
+		</if>
+	</target>
+
+	<target name="run.build">
+		<!-- could set -Dmaven.test.skip to skip tests, or use osgi-test:test to just (re-)run tests w/o first building -->
+		<property name="MAVEN_FLAGS" value="clean install -B -fn -q -U -e -Dsurefire.useFile=false" />
+
+		<!-- commandline overrides to suppress doing tests -->
+		<if>
+			<or>
+				<isset property="notest" />
+				<isset property="notests" />
+				<isset property="skiptest" />
+				<isset property="skiptests" />
+			</or>
+			<then>
+				<property name="noXvfb" value="true" />
+				<if>
+					<not>
+						<contains string="${MAVEN_FLAGS}" substring="-Dmaven.test.skip" />
+					</not>
+					<then>
+						<var name="MAVEN_FLAGS" value="${MAVEN_FLAGS} -Dmaven.test.skip" />
+					</then>
+				</if>
+			</then>
+		</if>
+
+		<for param="COMPONENT" list="${COMPONENTS.to.build}" delimiter=", 
+	">
+			<sequential>
+				<if>
+					<equals arg1="@{COMPONENT}" arg2="site" />
+					<then>
+						<now level="warning">Build overall update @{COMPONENT}</now>
+					</then>
+					<else>
+						<now level="warning">Build '@{COMPONENT}' component</now>
+					</else>
+				</if>
+				<!-- TODO if needed: optional extra instructions to do before a maven build -->
+				<loadfile property="@{COMPONENT}.pom.xml" srcfile="${WORKINGDIR}/@{COMPONENT}/pom.xml" />
+				<if>
+					<and>
+						<!-- if pom.xml does not call custom build.xml directly -->
+						<not>
+							<contains string="${@{COMPONENT}.pom.xml}"
+							          substring="&lt;ant antfile=&quot;build.xml&quot; /&gt;"
+							/>
+						</not>
+						<available file="${WORKINGDIR}/@{COMPONENT}/build.xml" type="file" />
+						<not>
+							<equals arg1="@{COMPONENT}" arg2="." />
+						</not>
+					</and>
+					<then>
+						<echo>Run custom '@{COMPONENT}/build.xml'</echo>
+						<ant antfile="${WORKINGDIR}/@{COMPONENT}/build.xml">
+							<property name="COMPONENT" value="@{COMPONENT}" />
+							<property name="basedir" value="${WORKINGDIR}/@{COMPONENT}" />
+						</ant>
+					</then>
+				</if>
+
+				<!-- If poms already exist, DO NOT OVERWRITE unless -Doverwrite.existing.pom.xml=true -->
+				<ant antfile="genpom.xml" target="run" dir="${WORKINGDIR}">
+					<property name="COMPONENT" value="@{COMPONENT}" />
+				</ant>
+
+				<antcall target="mvn">
+					<param name="COMPONENT" value="@{COMPONENT}" />
+				</antcall>
+
+				<!-- don't collect test results if there are no test results to collect! -->
+				<if>
+					<not>
+						<contains string="${MAVEN_FLAGS}" substring="-Dmaven.test.skip" />
+					</not>
+					<then>
+						<antcall target="collect.test.results">
+							<param name="COMPONENT" value="@{COMPONENT}" />
+						</antcall>
+					</then>
+					<else>
+						<property name="no.tests.run" value="true" />
+					</else>
+				</if>
+
+				<!-- prevent recursion: overall site component is built with create.overall.update.site, not simpler create.update.site -->
+				<if>
+					<not>
+						<equals arg1="@{COMPONENT}" arg2="site" />
+					</not>
+					<then>
+						<antcall target="create.update.site">
+							<param name="COMPONENT" value="@{COMPONENT}" />
+						</antcall>
+					</then>
+				</if>
+			</sequential>
+		</for>
+		<now level="info">Builds done</now>
+	</target>
+
+	<target name="mvn">
+		<var name="mvnExe" value="mvn" />
+		<antcallback target="getMvnExe" return="mvnExe" />
+		<echo level="verbose">Exe: ${COMMON_TOOLS}/apache-maven-${maven.version}/bin/${mvnExe}</echo>
+		<echo level="verbose">Pom: ${WORKINGDIR}/${COMPONENT}/pom.xml</echo>
+		<property name="MAVEN_DIR" value="${WORKINGDIR}/${COMPONENT}" />
+		<!-- support using true/false/other path values of maven.repo.local -->
+		<if>
+			<isset property="maven.repo.local" />
+			<then>
+				<if>
+					<isfalse value="${maven.repo.local}" />
+					<then>
+						<var name="maven.repo.local" value="" />
+					</then>
+					<elseif>
+						<istrue value="${maven.repo.local}" />
+						<then>
+							<var name="maven.repo.local" value=" -Dmaven.repo.local=${COMMON_TOOLS}/m2-repository" />
+						</then>
+					</elseif>
+					<else>
+						<var name="maven.repo.local" value=" -Dmaven.repo.local=${maven.repo.local}" />
+					</else>
+				</if>
+			</then>
+			<else>
+				<var name="maven.repo.local" value=" -Dmaven.repo.local=${COMMON_TOOLS}/m2-repository" />
+			</else>
+		</if>
+		<!-- 3 hr timeout = 10800000ms -->
+		<exec executable="${COMMON_TOOLS}/apache-maven-${maven.version}/bin/${mvnExe}"
+		      dir="${MAVEN_DIR}"
+		      failifexecutionfails="true"
+		      failonerror="true"
+		      timeout="10800000"
+		>
+			<env key="M2_HOME" value="${COMMON_TOOLS}/apache-maven-${maven.version}" />
+			<env key="MAVEN_OPTS" value="-Xms512m -Xmx1024m -XX:PermSize=128m -XX:MaxPermSize=256m" />
+			<!-- more debug output with <env key="MAVEN_OPTS" value="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000"/> -->
+			<!-- <arg line="-o -Dmaven.test.skip" /> -->
+			<arg line="${MAVEN_FLAGS} -Dmaven.repo.local=${COMMON_TOOLS}/m2-repository" />
+		</exec>
+	</target>
+
+	<!-- Use Xvfb wrapper for maven when invoking UI tests -->
+	<target name="getMvnExe" unless="noXvfb">
+		<if>
+			<available file="/usr/bin/Xvfb" type="file" />
+			<then>
+				<if>
+					<not>
+						<available file="${COMMON_TOOLS}/apache-maven-${maven.version}/bin/mvnWithXvfb" type="file" />
+					</not>
+					<then>
+						<echo file="${COMMON_TOOLS}/apache-maven-${maven.version}/bin/mvnWithXvfb">#!/bin/bash
+if [[ -f /tmp/.X3-lock ]]; then 
+kill -9 `cat /tmp/.X3-lock`
+rm -fr /tmp/.X3-lock
+fi
+/usr/bin/Xvfb :3 -ac 2&gt;&amp;1 1&gt;/dev/null &amp; 
+DISPLAY=:3 /opt/maven3/bin/mvn $*
+kill -9 `cat /tmp/.X3-lock`
+rm -fr /tmp/.X3-lock
+</echo>
+						<chmod perm="755" file="${COMMON_TOOLS}/apache-maven-${maven.version}/bin/mvnWithXvfb" />
+					</then>
+				</if>
+				<var name="mvnExe" value="mvnWithXvfb" />
+			</then>
+		</if>
+	</target>
+
+	<target name="collect.test.results">
+		<delete dir="${basedir}/surefire-reports/NoTestsRun" includeemptydirs="true" />
+		<property name="COMPONENT" value="" />
+		<!-- collect test results by copying ${WORKINGDIR}/${COMPONENT}/**/target/surefire-reports/*.xml into ${basedir}/surefire-reports/${COMPONENT} -->
+		<delete dir="${basedir}/surefire-reports/${COMPONENT}" includeemptydirs="true" />
+		<mkdir dir="${basedir}/surefire-reports/${COMPONENT}" />
+		<copy todir="${basedir}/surefire-reports/${COMPONENT}"
+		      flatten="true"
+		      preservelastmodified="true"
+		      overwrite="true"
+		>
+			<fileset dir="${WORKINGDIR}/${COMPONENT}" includes="**/target/surefire-reports/*.xml" />
+		</copy>
+	</target>
+
+	<target name="collect.all.test.results" unless="no.tests.run">
+		<var name="test.results.all" value="" />
+		<var name="test.results.errors.failures.skipped" value="" />
+
+		<!-- Parse this: <testsuite errors="0" skipped="0" tests="10" time="0.042" failures="0" name="org.jboss.tools.jmx.ui.JMXUIAllTests"> -->
+		<for param="testresultfile" delimiter=", 
+		">
+			<path>
+				<fileset dir="${basedir}/surefire-reports/"
+				         includes="**/TEST-*.xml"
+				         excludes="**/*pom.xml, **/build.xml"
+				/>
+			</path>
+			<sequential>
+				<var name="testsuite.name" unset="true" />
+				<var name="testsuite.tests" unset="true" />
+				<var name="testsuite.time" unset="true" />
+				<var name="testsuite.skipped" unset="true" />
+				<var name="testsuite.errors" unset="true" />
+				<var name="testsuite.failures" unset="true" />
+				<xmlproperty file="@{testresultfile}" keepRoot="true" collapseAttributes="true" />
+				<for param="ts" list="testsuite.skipped, testsuite.errors, testsuite.failures" delimiter=", ">
+					<sequential>
+						<propertyregex override="true"
+						               property="ts.label"
+						               defaultvalue="@{ts}"
+						               input="@{ts}"
+						               regexp="testsuite\.(.+)"
+						               replace="\1"
+						/>
+						<if>
+							<isset property="@{ts}" />
+							<then>
+								<if>
+									<equals arg1="${@{ts}}" arg2="0" />
+									<then>
+										<var name="@{ts}" value="" />
+									</then>
+									<else>
+										<var name="@{ts}" value="; ${@{ts}} ${ts.label}" />
+									</else>
+								</if>
+							</then>
+						</if>
+
+					</sequential>
+				</for>
+				<if>
+					<or>
+						<not>
+							<equals arg1="${testsuite.skipped}" arg2="" />
+						</not>
+						<not>
+							<equals arg1="${testsuite.errors}" arg2="" />
+						</not>
+						<not>
+							<equals arg1="${testsuite.failures}" arg2="" />
+						</not>
+					</or>
+					<then>
+						<var name="test.results.errors.failures.skipped"
+						     value="${test.results.errors.failures.skipped}${testsuite.name} ran ${testsuite.tests} tests in ${testsuite.time}s${testsuite.skipped}${testsuite.errors}${testsuite.failures}${line.separator}"
+						/>
+					</then>
+				</if>
+				<if>
+					<isset property="testsuite.name" />
+					<then>
+						<var name="test.results.all"
+						     value="${test.results.all}${testsuite.name} ran ${testsuite.tests} tests in ${testsuite.time}s${testsuite.skipped}${testsuite.errors}${testsuite.failures}${line.separator}"
+						/>
+					</then>
+				</if>
+				<var name="testsuite.name" unset="true" />
+				<var name="testsuite.tests" unset="true" />
+				<var name="testsuite.time" unset="true" />
+				<var name="testsuite.skipped" unset="true" />
+				<var name="testsuite.errors" unset="true" />
+				<var name="testsuite.failures" unset="true" />
+			</sequential>
+		</for>
+		<echo level="verbose">-------------------------------------------------------
+ A L L   T E S T   R E S U L T S 
+-------------------------------------------------------
+${test.results.all}
+-------------------------------------------------------
+
+</echo>
+		<if>
+			<and>
+				<isset property="test.results.errors.failures.skipped" />
+				<not>
+					<equals arg1="${test.results.errors.failures.skipped}" arg2="" />
+				</not>
+			</and>
+			<then>
+				<echo level="error">-------------------------------------------------------
+ T E S T   R E S U L T S 
+-------------------------------------------------------
+${test.results.errors.failures.skipped}
+-------------------------------------------------------
+
+</echo>
+			</then>
+		</if>
+	</target>
+
+	<!-- collect names, dates, and contained features in all generated update site zips, including the overall one -->
+	<target name="collect.update.site.results" depends="init">
+		<var name="COMPONENTS.to.check" unset="" />
+		<if>
+			<isset property="COMPONENTS.to.build" />
+			<then>
+				<var name="COMPONENTS.to.check" value="${COMPONENTS.to.build}" />
+			</then>
+			<else>
+				<var name="COMPONENTS.to.check" value="${COMPONENTS}" />
+			</else>
+		</if>
+		<if>
+			<not>
+				<contains string="${COMPONENTS.to.check}" substring=",site" />
+			</not>
+			<then>
+				<var name="COMPONENTS.to.check" value="${COMPONENTS.to.check},site" />
+			</then>
+		</if>
+		<for param="COMPONENT" list="${COMPONENTS.to.check}" delimiter=",; 
+	">
+			<sequential>
+				<for param="updateZip">
+					<path>
+						<fileset dir="${WORKINGDIR}/@{COMPONENT}" includes="**/JBossTools*Update*.zip" />
+					</path>
+					<sequential>
+						<propertyregex property="updateZip"
+						               defaultvalue="@{updateZip}"
+						               input="@{updateZip}"
+						               regexp=".+/site/target/([^/]+.+\.zip)"
+						               replace="\1"
+						               override="true"
+						/>
+						<exec executable="unzip" outputproperty="zip.contents">
+							<arg line="-l @{updateZip}" />
+						</exec>
+						<if>
+							<and>
+								<isset property="zip.contents" />
+								<contains string="${zip.contents}" substring="plugins/" />
+								<contains string="${zip.contents}" substring=".jar" />
+							</and>
+							<then>
+								<echo level="info">@{COMPONENT} :: ${updateZip}</echo>
+								<for param="featureJar" list="${zip.contents}" delimiter="
+">
+									<sequential>
+										<if>
+											<and>
+												<contains string="@{featureJar}" substring="features/" />
+												<contains string="@{featureJar}" substring=".jar" />
+											</and>
+											<then>
+												<echo level="info">  :: @{featureJar}</echo>
+											</then>
+										</if>
+									</sequential>
+								</for>
+							</then>
+							<else>
+								<echo level="warn">@{COMPONENT} :: ${updateZip}</echo>
+							</else>
+						</if>
+					</sequential>
+				</for>
+				<if>
+					<not>
+						<isset property="zip.contents" />
+					</not>
+					<then>
+						<echo level="warn">No update site found for @{COMPONENT}.</echo>
+					</then>
+				</if>
+				<var name="zip.contents" unset="true" />
+				<var name="zip.features" unset="true" />
+				<echo level="info">
+				</echo>
+			</sequential>
+		</for>
+	</target>
+
+	<!-- Used to build the overall update site for all components; requires a custom site.xml (generated from category.*.xml) and previously checked in pom.xml -->
+	<target name="create.overall.update.site" depends="init" unless="no.overall">
+		<if>
+			<isset property="no.overall" />
+			<then>
+				<echo>All components up to date: nothing to do!
+To force a build of unchanged components, use -Dbuild.if.sources.unchanged=true</echo>
+			</then>
+			<else>
+				<property name="update.site.path" value="site" />
+
+				<!-- Fetch fresh sources (checkout or update) -->
+				<antcall target="get.sources">
+					<param name="COMPONENT" value="site" />
+				</antcall>
+
+				<!-- Get correct version of site.xml + resolve variables -->
+				<loadfile property="site.xml.transformed"
+				          srcfile="${WORKINGDIR}/${update.site.path}/category.${product.id}.xml"
+				>
+					<filterchain>
+						<expandproperties />
+					</filterchain>
+				</loadfile>
+				<echo file="${WORKINGDIR}/${update.site.path}/site.xml" message="${site.xml.transformed}" />
+				<var name="site.xml.transformed" unset="true" />
+
+				<!-- Build update site -->
+				<antcall target="build.update.site">
+					<param name="COMPONENTS.to.build" value="site" />
+					<param name="update.site.path" value="${update.site.path}" />
+				</antcall>
+
+				<!-- Copy overall site into workspace so it can be archived by Hudson -->
+				<if>
+					<not>
+						<equals arg1="${basedir}" arg2="${WORKINGDIR}" />
+					</not>
+					<then>
+						<mkdir dir="${basedir}/${update.site.path}/target" />
+						<copy todir="${basedir}/${update.site.path}/target" overwrite="true">
+							<fileset dir="${WORKINGDIR}/${update.site.path}/target/site" />
+						</copy>
+					</then>
+				</if>
+			</else>
+		</if>
+	</target>
+
+	<target name="build.update.site">
+		<property name="update.site.path" value="site" />
+		<!-- without deleting previous target dir, update sites may end up missing all plugins and features! -->
+		<delete dir="${WORKINGDIR}/${update.site.path}/target" includeemptydirs="true" quiet="true" />
+
+		<if>
+			<equals arg1="${update.site.path}" arg2="site" />
+			<then>
+				<var name="destinationZip"
+				     value="${WORKINGDIR}/${update.site.path}/target/JBossTools-ALL-Update-SNAPSHOT.zip"
+				/>
+			</then>
+			<else>
+				<var name="destinationZip"
+				     value="${WORKINGDIR}/${update.site.path}/target/JBossTools-${COMPONENTS.to.build}-Update-SNAPSHOT.zip"
+				/>
+			</else>
+		</if>
+		<delete file="${destinationZip}" quiet="true" />
+
+		<if>
+			<equals arg1="${COMPONENTS.to.build}" arg2="site" />
+			<then>
+				<!-- Call maven to generate pom.xml, then build site from site.xml -->
+				<antcall target="run.build">
+					<param name="COMPONENTS.to.build" value="${COMPONENTS.to.build}" />
+					<param name="MAVEN_FLAGS" value="verify -e -q -B -fae -Dmaven.test.skip" />
+					<param name="noXvfb" value="true" />
+				</antcall>
+			</then>
+			<else>
+				<!-- Or just call maven to build site -->
+				<antcall target="mvn">
+					<param name="MAVEN_DIR" value="${WORKINGDIR}/${update.site.path}" />
+					<param name="MAVEN_FLAGS" value="verify -e -q -B -fae -Dmaven.test.skip" />
+					<param name="noXvfb" value="true" />
+				</antcall>
+			</else>
+		</if>
+
+		<if>
+			<and>
+				<available file="${WORKINGDIR}/${update.site.path}/target/site/plugins" type="dir" />
+				<available file="${WORKINGDIR}/${update.site.path}/target/site/features" type="dir" />
+			</and>
+			<then>
+				<!-- rename resulting update site zip -->
+				<move file="${WORKINGDIR}/${update.site.path}/target/site.zip"
+				      tofile="${destinationZip}"
+				      overwrite="true"
+				      preservelastmodified="false"
+				/>
+
+				<!-- Create real update site zip, including web UI -->
+				<copy todir="${WORKINGDIR}/${update.site.path}/target/site">
+					<fileset dir="${WORKINGDIR}/${update.site.path}" includes="web/*, index.html" />
+				</copy>
+				<zip destfile="${destinationZip}"
+				     basedir="${WORKINGDIR}/${update.site.path}/target/site"
+				     update="true"
+				     includes="web/*, index.html"
+				/>
+
+				<!-- Copy zip into workspace so it can be archived by Hudson -->
+				<if>
+					<not>
+						<equals arg1="${basedir}" arg2="${WORKINGDIR}" />
+					</not>
+					<then>
+						<mkdir dir="${basedir}/${update.site.path}/target" />
+						<copy todir="${basedir}/${update.site.path}/target"
+						      flatten="true"
+						      preservelastmodified="true"
+						      overwrite="true"
+						>
+							<fileset dir="${WORKINGDIR}/${update.site.path}/target" includes="*Update*.zip" />
+						</copy>
+					</then>
+				</if>
+			</then>
+			<else>
+				<delete file="${WORKINGDIR}/${update.site.path}/target/site.zip" quiet="true" />
+				<if>
+					<equals arg1="${update.site.path}" arg2="site" />
+					<then>
+						<fail>Overall update site zip contains no features!</fail>
+					</then>
+					<else>
+						<echo level="info">Update site zip for ${COMPONENTS.to.build} contains no features!</echo>
+					</else>
+				</if>
+			</else>
+		</if>
+	</target>
+
+	<!-- Used to build the update site of a component; requires a site.xml and pom.xml be generated first -->
+	<target name="create.update.site" depends="init">
+		<var name="site.pom.exists" unset="true" />
+		<condition property="site.pom.exists">
+			<available file="${WORKINGDIR}/${COMPONENT}/site/pom.xml" type="file" />
+		</condition>
+		<antcall target="genPomXml" />
+
+		<var name="site.sitexml.exists" unset="true" />
+		<condition property="site.sitexml.exists">
+			<available file="${WORKINGDIR}/${COMPONENT}/site/site.xml" type="file" />
+		</condition>
+		<antcall target="genSiteXml" />
+
+		<antcall target="build.update.site">
+			<param name="COMPONENTS.to.build" value="${COMPONENT}" />
+			<param name="update.site.path" value="${COMPONENT}/site" />
+		</antcall>
+	</target>
+
+	<target name="genPomXml" description="Generate a pom.xml" unless="site.pom.exists">
+		<property name="pomDir" value="${WORKINGDIR}/${COMPONENT}/site" />
+		<property name="COMPONENT" value="${COMPONENT}" />
+		<property name="packaging" value="eclipse-update-site" />
+		<mkdir dir="${pomDir}" />
+		<echo file="${pomDir}/pom.xml">&lt;project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt; 
+	&lt;parent&gt;
+		&lt;relativePath&gt;../../parent-pom.xml&lt;/relativePath&gt;
+		&lt;groupId&gt;org.jboss.tools&lt;/groupId&gt;
+		&lt;artifactId&gt;org.jboss.tools.parent.pom&lt;/artifactId&gt;
+		&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+	&lt;/parent&gt;
+	&lt;groupId&gt;org.jboss.tools&lt;/groupId&gt;
+	&lt;artifactId&gt;${COMPONENT}.site&lt;/artifactId&gt; 
+	&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+	&lt;packaging&gt;${packaging}&lt;/packaging&gt;
+&lt;/project&gt;
+</echo>
+
+	</target>
+
+	<target name="genSiteXml"
+	        description="Generate a site.xml to contain the features in a category"
+	        unless="site.sitexml.exists"
+	>
+		<property name="updateSiteJarDir" value="${WORKINGDIR}/${COMPONENT}/site" />
+		<property name="COMPONENT" value="${COMPONENT}" />
+		<property name="category.name" value="${product.name} ${COMPONENT} ${update.site.description} Update Site" />
+
+		<mkdir dir="${updateSiteJarDir}" />
+		<echo file="${updateSiteJarDir}/site.xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;site&gt;
+	&lt;description&gt;To install these features, point Eclipse at this site.&lt;/description&gt;
+	&lt;!-- ${category.name} --&gt;
+	&lt;category-def label="${category.name}" name="${category.name}"&gt;
+		&lt;description&gt;${category.name}: contains all features in this build.&lt;/description&gt;
+	&lt;/category-def&gt;
+</echo>
+
+		<mkdir dir="${updateSiteJarDir}/../features" />
+		<for param="featureJar">
+			<path>
+				<fileset dir="${updateSiteJarDir}/../features" includes="**/target/*.jar" excludes="**/*test*" />
+			</path>
+			<sequential>
+				<var name="feature.jarfile" unset="true" />
+				<var name="feature.id" unset="true" />
+				<antcallback target="get.feature.id" return="feature.id">
+					<property name="featureJar" value="@{featureJar}" />
+				</antcallback>
+				<echo append="true" file="${updateSiteJarDir}/site.xml">	&lt;feature url="features/${feature.id}_0.0.0.jar" id="${feature.id}" version="0.0.0"&gt;
+		&lt;category name="${category.name}"/&gt;
+	&lt;/feature&gt;
+</echo>
+				<var name="feature.jarfile" unset="true" />
+				<var name="feature.id" unset="true" />
+			</sequential>
+		</for>
+		<echo append="true" file="${updateSiteJarDir}/site.xml">
+&lt;/site&gt;
+</echo>
+	</target>
+
+	<target name="get.feature.id">
+		<antcallback target="get.artifact.id" return="artifact.id">
+			<param name="regexp.path" value=".+/features/[^/]+/target/([^/]+feature.+\.jar)" />
+			<param name="artifactJar" value="${featureJar}" />
+		</antcallback>
+		<var name="feature.id" value="${artifact.id}" />
+	</target>
+
+	<target name="get.plugin.id">
+		<antcallback target="get.artifact.id" return="artifact.id">
+			<param name="regexp.path" value=".+/plugins/([^/]+.+\.jar)" />
+			<param name="artifactJar" value="${pluginJar}" />
+		</antcallback>
+		<var name="plugin.id" value="${artifact.id}" />
+	</target>
+
+	<target name="get.artifact.id">
+		<!-- for a feature: regexp=".+/features/[^/]+/target/([^/]+feature.+\.jar)"
+			for a plugin: regexp=".+/plugins/([^/]+.+\.jar)" -->
+		<property name="regexp.path" value=".+/plugins/([^/]+.+\.jar)" />
+
+		<propertyregex property="artifact.jarfile"
+		               defaultvalue="${artifactJar}"
+		               input="${artifactJar}"
+		               regexp="${regexp.path}"
+		               replace="\1"
+		               override="true"
+		/>
+		<propertyregex property="artifact.id"
+		               defaultvalue="${artifact.jarfile}"
+		               input="${artifact.jarfile}"
+		               regexp="([^_]+)_(\d+\.\d+\.\d+.+)\.jar"
+		               replace="\1"
+		               override="true"
+		/>
+		<propertyregex property="artifact.id"
+		               defaultvalue="${artifact.id}"
+		               input="${artifact.id}"
+		               regexp="([^_]+)-(\d+\.\d+\.\d+.+)\.jar"
+		               replace="\1"
+		               override="true"
+		/>
+		<propertyregex property="artifact.id"
+		               defaultvalue="${artifact.id}"
+		               input="${artifact.id}"
+		               regexp="([^_]+)-(\d+\.\d+\.\d+.SNAPSHOT)\.jar"
+		               replace="\1"
+		               override="true"
+		/>
+		<var name="artifactJar" unset="true" />
+	</target>
+
+	<!-- unpack previously built & jarred plugin jars -->
+	<target name="unjarPlugins">
+		<for param="artifactJar">
+			<path>
+				<fileset dir="${WORKINGDIR}/${COMPONENT}/plugins/" includes="*.jar" />
+			</path>
+			<sequential>
+				<antcallback target="get.artifact.id" return="artifact.id">
+					<property name="artifactJar" value="@{artifactJar}" />
+					<property name="regexp.path" value=".+/plugins/([^/]+.+\.jar)" />
+				</antcallback>
+				<unzip src="@{artifactJar}" dest="${WORKINGDIR}/${COMPONENT}/plugins/${artifact.id}" overwrite="true" />
+				<var name="artifact.id" unset="true" />
+			</sequential>
+		</for>
+	</target>
+
+	<!-- rename previously built & unpacked feature dirs -->
+	<target name="renameFeatures">
+		<echo level="debug">${WORKINGDIR}/${COMPONENT}/features</echo>
+		<for param="artifactJar">
+			<path>
+				<dirset dir="${WORKINGDIR}/${COMPONENT}/features" includes="*feature_*" />
+			</path>
+			<sequential>
+				<antcallback target="get.artifact.id" return="artifact.id">
+					<property name="artifactJar" value="@{artifactJar}" />
+					<property name="regexp.path" value=".+/features/([^/]+feature)_\d+.+" />
+				</antcallback>
+				<move file="@{artifactJar}"
+				      tofile="${WORKINGDIR}/${COMPONENT}/features/${artifact.id}"
+				      overwrite="true"
+				/>
+				<var name="artifact.id" unset="true" />
+			</sequential>
+		</for>
+	</target>
+
+	<!-- for a given ${COMPONENT} dir, switch all plugin/feature manifests from .SNAPSHOT to .qualifier -->
+	<target name="snapshot2qualifier">
+		<property name="COMPONENT" value="" />
+		<for param="artifactManifest">
+			<path>
+				<fileset dir="${WORKINGDIR}/${COMPONENT}"
+				         excludes="**/target/**"
+				         includes="**/plugins/**/**/MANIFEST.MF, **/features/**/feature.xml"
+				/>
+			</path>
+			<sequential>
+				<loadfile property="artifact.file" srcfile="@{artifactManifest}">
+					<filterchain>
+						<replaceregex pattern="([0-9]+).SNAPSHOT" replace="\1.qualifier" />
+					</filterchain>
+				</loadfile>
+				<echo file="@{artifactManifest}" message="${artifact.file}" />
+				<var name="artifact.file" unset="true" />
+			</sequential>
+		</for>
+	</target>
+
+	<!-- include a build.properties file if one not provided -->
+	<target name="genBuildProperties">
+		<for param="artifactDir">
+			<path>
+				<dirset dir="${WORKINGDIR}/${COMPONENT}/features/" excludes="." includes="*" />
+				<dirset dir="${WORKINGDIR}/${COMPONENT}/plugins/" excludes="." includes="*" />
+			</path>
+			<sequential>
+				<if>
+					<not>
+						<available file="@{artifactDir}/build.properties" type="file" />
+					</not>
+					<then>
+						<echo file="@{artifactDir}/build.properties">bin.includes = feature.*, ., plugin.*, about.*, META-INF/, .options/, lib/, help/, icons/, org/, src/
+</echo>
+					</then>
+				</if>
+			</sequential>
+		</for>
+	</target>
+
+	<!-- TODO: figure out why this fails with error: 
+			insecure -e option not allowed.
+			This account is restricted by rssh.
+			Allowed commands: scp sftp rsync
+	-->
+	<target name="deploy" if="isInHudson" depends="init, get.bootstrap.scripts">
+		<!-- default destinations -->
+		<property name="DESTINATION.jbosstools" value="tools@filemgmt.jboss.org:/downloads_htdocs/tools/repository" />
+		<property name="DESTINATION.jbds" value="/qa/services/http/binaries/RHDS/repository" />
+
+		<!-- values for this deployment -->
+		<property name="deployDir" value="${DESTINATION.jbosstools}/SNAPSHOT" />
+		<property name="sourceDir" value="${WORKINGDIR}" />
+		<property name="synchMethodParam" value=" --delete" />
+
+		<echo level="debug">Promote build in ${sourceDir} ...</echo>
+		<!-- rsync or scp build dir ${sourceDir} into ${deployDir}/ -->
+		<if>
+			<available file="/usr/bin/rsync" type="file" />
+			<then>
+				<var name="deployCmd"
+				     value="/usr/bin/rsync -arz --delete --include=*/*/*/target/ --include=*.xml --include=svn.info*.txt --include=${WORKINGDIR}/build.cfg --exclude=eclipse/ ${sourceDir} ${deployDir}/"
+				/>
+			</then>
+			<elseif>
+				<available file="/usr/bin/scp" type="file" />
+				<then>
+					<var name="deployCmd" value="/usr/bin/scp -r ${sourceDir} ${deployDir}/" />
+				</then>
+			</elseif>
+			<else>
+				<fail>ERROR!
+Cannot deploy - please install scp or rsync on this server and try again.
+</fail>
+			</else>
+		</if>
+		<if>
+			<available file="${sourceDir}" type="dir" />
+			<then>
+				<echo message="${deployCmd}" />
+				<exec executable="bash" failonerror="true">
+					<arg line=" -c &quot;${deployCmd}&quot;" />
+				</exec>
+			</then>
+			<else>
+				<fail>ERROR!
+Cannot deploy - sourceDir not found in 
+	${sourceDir}
+</fail>
+			</else>
+		</if>
+
+	</target>
+
+	<!-- ************************************ TESTS ************************************ -->
+
+	<target name="test.expected.values">
+		<property name="ant.enable.asserts" value="true" />
+
+		<!-- expected values for get.sources.* tests -->
+		<property name="get.sources.expected.dirs" value="tests,common,xulrunner," />
+		<property name="get.sources.expected.files" value="${WORKINGDIR}/build.cfg" />
+
+		<!-- expected values for test.get.sources.build.updated.only tests -->
+		<property name="get.components.to.build.expected.2" value="tests,common,xulrunner," />
+		<property name="get.components.to.build.expected.4" value="tests,xulrunner," />
+		<property name="get.components.to.build.expected.6" value="" />
+
+		<!-- expected values for test.get.sources.build.all tests -->
+		<property name="get.components.to.build.expected.2.all" value="tests,common,xulrunner," />
+		<property name="get.components.to.build.expected.4.all" value="tests,common,xulrunner," />
+		<property name="get.components.to.build.expected.6.all" value="tests,common,xulrunner," />
+
+		<!-- expected values for test.get.all.components -->
+		<property name="get.all.components.expected"
+		          value="tests,common,flow,jbpm,jmx,archives,as,drools,bpel,smooks,freemarker,profiler,portlet,xulrunner,jst,vpe,jsf,esb,tptp,ws,cdi,struts,hibernatetools,seam,examples,birt,maven,"
+		/>
+
+		<!-- expected values for test.get.feature.id -->
+		<property name="get.artifact.id.expected.tests/features/org.jboss.tools.test.feature/target/org.jboss.tools.test.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.test.feature"
+		/>
+		<property name="get.artifact.id.expected.common/features/org.jboss.tools.common.all.feature/target/org.jboss.tools.common.all.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.common.all.feature"
+		/>
+		<property name="get.artifact.id.expected.common/features/org.jboss.tools.common.all.tests.feature/target/org.jboss.tools.common.all.tests.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.common.all.tests.feature"
+		/>
+		<property name="get.artifact.id.expected.common/features/org.jboss.tools.common.core.feature/target/org.jboss.tools.common.core.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.common.core.feature"
+		/>
+		<property name="get.artifact.id.expected.common/features/org.jboss.tools.common.feature/target/org.jboss.tools.common.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.common.feature"
+		/>
+		<property name="get.artifact.id.expected.common/features/org.jboss.tools.common.text.ext.feature/target/org.jboss.tools.common.text.ext.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.common.text.ext.feature"
+		/>
+		<property name="get.artifact.id.expected.common/features/org.jboss.tools.common.ui.feature/target/org.jboss.tools.common.ui.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.common.ui.feature"
+		/>
+		<property name="get.artifact.id.expected.common/features/org.jboss.tools.common.verification.feature/target/org.jboss.tools.common.verification.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.common.verification.feature"
+		/>
+		<property name="get.artifact.id.expected.flow/features/org.jboss.tools.flow.common.feature/target/org.jboss.tools.flow.common.feature-4.0.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.flow.common.feature"
+		/>
+		<property name="get.artifact.id.expected.jbpm/features/org.jboss.tools.flow.jpdl4.feature/target/org.jboss.tools.flow.jpdl4.feature-4.0.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.flow.jpdl4.feature"
+		/>
+		<property name="get.artifact.id.expected.jbpm/features/org.jboss.tools.jbpm.common.feature/target/org.jboss.tools.jbpm.common.feature-4.3.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.jbpm.common.feature"
+		/>
+		<property name="get.artifact.id.expected.jbpm/features/org.jboss.tools.jbpm.convert.feature/target/org.jboss.tools.jbpm.convert.feature-1.0.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.jbpm.convert.feature"
+		/>
+		<property name="get.artifact.id.expected.jbpm/features/org.jboss.tools.jbpm3.feature/target/org.jboss.tools.jbpm3.feature-3.2.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.jbpm3.feature"
+		/>
+		<property name="get.artifact.id.expected.jbpm/features/org.jboss.tools.jbpm3.tests.feature/target/org.jboss.tools.jbpm3.tests.feature-3.2.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.jbpm3.tests.feature"
+		/>
+		<property name="get.artifact.id.expected.jbpm/features/org.jboss.tools.jbpm4.feature/target/org.jboss.tools.jbpm4.feature-4.0.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.jbpm4.feature"
+		/>
+		<property name="get.artifact.id.expected.jbpm/features/org.jboss.tools.jbpm4.tests.feature/target/org.jboss.tools.jbpm4.tests.feature-4.3.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.jbpm4.tests.feature"
+		/>
+		<property name="get.artifact.id.expected.jbpm/features/org.jbpm.gd.jpdl.feature/target/org.jbpm.gd.jpdl.feature-3.2.0-SNAPSHOT.jar"
+		          value="org.jbpm.gd.jpdl.feature"
+		/>
+		<property name="get.artifact.id.expected.jmx/features/org.jboss.tools.jmx.feature/target/org.jboss.tools.jmx.feature-1.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.jmx.feature"
+		/>
+		<property name="get.artifact.id.expected.jmx/features/org.jboss.tools.jmx.tests.feature/target/org.jboss.tools.jmx.tests.feature-1.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.jmx.tests.feature"
+		/>
+		<property name="get.artifact.id.expected.archives/features/org.jboss.ide.eclipse.archives.feature/target/org.jboss.ide.eclipse.archives.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.ide.eclipse.archives.feature"
+		/>
+		<property name="get.artifact.id.expected.archives/features/org.jboss.ide.eclipse.archives.test.feature/target/org.jboss.ide.eclipse.archives.test.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.ide.eclipse.archives.test.feature"
+		/>
+		<property name="get.artifact.id.expected.as/features/org.jboss.ide.eclipse.as.test.feature/target/org.jboss.ide.eclipse.as.test.feature-2.1.0-SNAPSHOT.jar"
+		          value="org.jboss.ide.eclipse.as.test.feature"
+		/>
+		<property name="get.artifact.id.expected.bpel/features/org.jboss.tools.bpel.feature/target/org.jboss.tools.bpel.feature-1.0.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.bpel.feature"
+		/>
+		<property name="get.artifact.id.expected.bpel/features/org.jboss.tools.bpel.tests.feature/target/org.jboss.tools.bpel.tests.feature-1.0.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.bpel.tests.feature"
+		/>
+		<property name="get.artifact.id.expected.smooks/features/org.jboss.tools.smooks.feature/target/org.jboss.tools.smooks.feature-1.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.smooks.feature"
+		/>
+		<property name="get.artifact.id.expected.smooks/features/org.jboss.tools.smooks.test.feature/target/org.jboss.tools.smooks.test.feature-1.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.smooks.test.feature"
+		/>
+		<property name="get.artifact.id.expected.freemarker/features/org.jboss.ide.eclipse.freemarker.feature/target/org.jboss.ide.eclipse.freemarker.feature-1.1.0-SNAPSHOT.jar"
+		          value="org.jboss.ide.eclipse.freemarker.feature"
+		/>
+		<property name="get.artifact.id.expected.freemarker/features/org.jboss.ide.eclipse.freemarker.test.feature/target/org.jboss.ide.eclipse.freemarker.test.feature-1.1.0-SNAPSHOT.jar"
+		          value="org.jboss.ide.eclipse.freemarker.test.feature"
+		/>
+		<property name="get.artifact.id.expected.profiler/features/org.jboss.tools.profiler.feature/target/org.jboss.tools.profiler.feature-1.0.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.profiler.feature"
+		/>
+		<property name="get.artifact.id.expected.portlet/features/org.jboss.tools.portlet.feature/target/org.jboss.tools.portlet.feature-1.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.portlet.feature"
+		/>
+		<property name="get.artifact.id.expected.portlet/features/org.jboss.tools.portlet.test.feature/target/org.jboss.tools.portlet.test.feature-1.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.portlet.test.feature"
+		/>
+		<property name="get.artifact.id.expected.jst/features/org.jboss.tools.jst.feature/target/org.jboss.tools.jst.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.jst.feature"
+		/>
+		<property name="get.artifact.id.expected.jst/features/org.jboss.tools.jst.web.tiles.feature/target/org.jboss.tools.jst.web.tiles.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.jst.web.tiles.feature"
+		/>
+		<property name="get.artifact.id.expected.vpe/features/org.jboss.tools.vpe.feature/target/org.jboss.tools.vpe.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.vpe.feature"
+		/>
+		<property name="get.artifact.id.expected.vpe/features/org.jboss.tools.xulrunner.feature/target/org.jboss.tools.xulrunner.feature-1.9.1.2.jar"
+		          value="org.jboss.tools.xulrunner.feature"
+		/>
+		<property name="get.artifact.id.expected.jsf/features/org.jboss.tools.jsf.feature/target/org.jboss.tools.jsf.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.jsf.feature"
+		/>
+		<property name="get.artifact.id.expected.jsf/features/org.jboss.tools.richfaces.feature/target/org.jboss.tools.richfaces.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.richfaces.feature"
+		/>
+		<property name="get.artifact.id.expected.esb/features/org.jboss.tools.esb.feature/target/org.jboss.tools.esb.feature-1.3.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.esb.feature"
+		/>
+		<property name="get.artifact.id.expected.esb/features/org.jboss.tools.esb.test.feature/target/org.jboss.tools.esb.test.feature-1.3.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.esb.test.feature"
+		/>
+		<property name="get.artifact.id.expected.tptp/features/org.jboss.tools.tptp.feature/target/org.jboss.tools.tptp.feature-1.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.tptp.feature"
+		/>
+		<property name="get.artifact.id.expected.ws/features/org.jboss.tools.ws.feature/target/org.jboss.tools.ws.feature-1.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.ws.feature"
+		/>
+		<property name="get.artifact.id.expected.cdi/features/org.jboss.tools.cdi.feature/target/org.jboss.tools.cdi.feature-1.0.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.cdi.feature"
+		/>
+		<property name="get.artifact.id.expected.struts/features/org.jboss.tools.struts.feature/target/org.jboss.tools.struts.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.struts.feature"
+		/>
+		<property name="get.artifact.id.expected.hibernatetools/features/org.hibernate.eclipse.feature/target/org.hibernate.eclipse.feature-3.3.0-SNAPSHOT.jar"
+		          value="org.hibernate.eclipse.feature"
+		/>
+		<property name="get.artifact.id.expected.hibernatetools/features/org.hibernate.eclipse.test.feature/target/org.hibernate.eclipse.test.feature-3.3.0-SNAPSHOT.jar"
+		          value="org.hibernate.eclipse.test.feature"
+		/>
+		<property name="get.artifact.id.expected.seam/features/org.jboss.tools.seam.feature/target/org.jboss.tools.seam.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.seam.feature"
+		/>
+		<property name="get.artifact.id.expected.seam/features/org.jboss.tools.seam.test.feature/target/org.jboss.tools.seam.test.feature-3.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.seam.test.feature"
+		/>
+		<property name="get.artifact.id.expected.examples/features/org.jboss.tools.community.project.examples.feature/target/org.jboss.tools.community.project.examples.feature-1.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.community.project.examples.feature"
+		/>
+		<property name="get.artifact.id.expected.examples/features/org.jboss.tools.project.examples.feature/target/org.jboss.tools.project.examples.feature-1.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.project.examples.feature"
+		/>
+		<property name="get.artifact.id.expected.examples/features/org.jboss.tools.project.examples.test.feature/target/org.jboss.tools.project.examples.test.feature-1.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.project.examples.test.feature"
+		/>
+		<property name="get.artifact.id.expected.birt/features/org.jboss.tools.birt.feature/target/org.jboss.tools.birt.feature-1.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.birt.feature"
+		/>
+		<property name="get.artifact.id.expected.birt/features/org.jboss.tools.birt.test.feature/target/org.jboss.tools.birt.test.feature-1.1.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.birt.test.feature"
+		/>
+		<property name="get.artifact.id.expected.maven/features/org.jboss.tools.maven.feature/target/org.jboss.tools.maven.feature-1.0.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.maven.feature"
+		/>
+		<property name="get.artifact.id.expected.maven/features/org.jboss.tools.maven.seam.feature/target/org.jboss.tools.maven.seam.feature-1.0.0-SNAPSHOT.jar"
+		          value="org.jboss.tools.maven.seam.feature"
+		/>
+
+		<property name="get.artifact.id.expected.as/features/org.jboss.ide.eclipse.as.feature/target/org.jboss.ide.eclipse.as.feature-2.1.0-SNAPSHOT.jar"
+		          value="org.jboss.ide.eclipse.as.feature"
+		/>
+		<property name="get.artifact.id.expected.xulrunner/features/org.mozilla.xpcom.feature/target/org.mozilla.xpcom.feature-1.9.1.2a.jar"
+		          value="org.mozilla.xpcom.feature"
+		/>
+		<property name="get.artifact.id.expected.xulrunner/features/org.mozilla.xulrunner.feature/target/org.mozilla.xulrunner.feature-1.9.1.2.jar"
+		          value="org.mozilla.xulrunner.feature"
+		/>
+
+		<!-- expected values for test.get.plugin.id -->
+		<property name="get.artifact.id.expected.drools/plugins/org.eclipse.webdav_3.0.101.jar"
+		          value="org.eclipse.webdav"
+		/>
+		<property name="get.artifact.id.expected.drools/plugins/org.guvnor.tools_5.1.0.SNAPSHOT.jar"
+		          value="org.guvnor.tools"
+		/>
+		<property name="get.artifact.id.expected.drools/plugins/org.drools.eclipse_5.1.0.SNAPSHOT.jar"
+		          value="org.drools.eclipse"
+		/>
+		<property name="get.artifact.id.expected.drools/plugins/org.drools.eclipse.task_5.1.0.SNAPSHOT.jar"
+		          value="org.drools.eclipse.task"
+		/>
+
+	</target>
+
+	<target name="test.all">
+		<antcall target="test.get.sources.build.all" />
+		<antcall target="test.get.sources" />
+		<antcall target="test.get.feature.id" />
+		<antcall target="test.get.plugin.id.drools" />
+	</target>
+
+	<!-- simpler tests, run faster -->
+	<target name="test.get.feature.id.vpe">
+		<antcall target="test.get.feature.id">
+			<param name="COMPONENTS" value="vpe" />
+		</antcall>
+	</target>
+	<target name="test.get.plugin.id.drools">
+		<antcall target="test.get.plugin.id">
+			<param name="COMPONENTS" value="drools" />
+		</antcall>
+	</target>
+
+	<!-- test all feature.id fetches -->
+	<target name="test.get.feature.id" depends="init, test.expected.values">
+		<for param="COMPONENT" list="${COMPONENTS}" delimiter=";, 
+	">
+			<sequential>
+				<echo level="info">Test feature.ids for @{COMPONENT}</echo>
+				<for param="artifactJar" delimiter=", ">
+					<path>
+						<fileset dir="${basedir}/@{COMPONENT}" includes="**/features/**/target/*.jar" />
+					</path>
+					<sequential>
+						<echo level="verbose">Test @{artifactJar}</echo>
+						<antcallback target="get.artifact.id" return="artifact.id">
+							<property name="artifactJar" value="@{artifactJar}" />
+							<param name="regexp.path" value=".+/features/[^/]+/target/([^/]+feature.+\.jar)" />
+						</antcallback>
+						<propertyregex override="true"
+						               property="artifact.id.expected.name"
+						               defaultvalue="@{artifactJar}"
+						               input="@{artifactJar}"
+						               regexp="${basedir}\/(.+)"
+						               replace="get.artifact.id.expected.\1"
+						/>
+						<!-- <echo>&lt;property name="get.artifact.id.expected.@{artifactJar}" value="${artifact.id}"/&gt; </echo> -->
+						<propertycopy name="artifact.id.expected" from="${artifact.id.expected.name}" />
+						<assert failonerror="true" message="Expected: ${artifact.id.expected}; got: ${artifact.id}">
+							<bool>
+								<equals arg1="${artifact.id.expected}" arg2="${artifact.id}" />
+							</bool>
+						</assert>
+						<var name="artifact.id.expected" unset="true" />
+					</sequential>
+				</for>
+			</sequential>
+		</for>
+	</target>
+
+	<!-- test all plugin.id fetches -->
+	<target name="test.get.plugin.id" depends="init, test.expected.values">
+		<for param="COMPONENT" list="${COMPONENTS}" delimiter=";, 
+	">
+			<sequential>
+				<echo level="info">Test plugin.ids for @{COMPONENT}</echo>
+				<for param="artifactJar" delimiter=", ">
+					<path>
+						<fileset dir="${basedir}/@{COMPONENT}" includes="**/plugins/*.jar" excludes="**/target/**" />
+					</path>
+					<sequential>
+						<echo level="verbose">[1] Test @{artifactJar}</echo>
+						<antcallback target="get.artifact.id" return="artifact.id">
+							<property name="artifactJar" value="@{artifactJar}" />
+							<property name="regexp.path" value=".+/plugins/([^/]+.+\.jar)" />
+						</antcallback>
+						<propertyregex override="true"
+						               property="artifact.id.expected.name"
+						               defaultvalue="@{artifactJar}"
+						               input="@{artifactJar}"
+						               regexp="${basedir}\/(.+)"
+						               replace="get.artifact.id.expected.\1"
+						/>
+						<!-- <echo>&lt;property name="get.artifact.id.expected.@{artifactJar}" value="${artifact.id}"/&gt; </echo> -->
+						<propertycopy name="artifact.id.expected" from="${artifact.id.expected.name}" />
+						<assert failonerror="true" message="Expected: ${artifact.id.expected}; got: ${artifact.id}">
+							<bool>
+								<equals arg1="${artifact.id.expected}" arg2="${artifact.id}" />
+							</bool>
+						</assert>
+						<var name="artifact.id.expected" unset="true" />
+						<var name="artifact.id" unset="true" />
+
+						<echo level="verbose">[2] Test @{artifactJar}</echo>
+						<antcallback target="get.plugin.id" return="plugin.id">
+							<property name="artifactJar" value="@{artifactJar}" />
+							<property name="regexp.path" value=".+/plugins/([^/]+.+\.jar)" />
+						</antcallback>
+						<propertyregex override="true"
+						               property="artifact.id.expected.name"
+						               defaultvalue="@{artifactJar}"
+						               input="@{artifactJar}"
+						               regexp="${basedir}\/(.+)"
+						               replace="get.artifact.id.expected.\1"
+						/>
+						<!-- <echo>&lt;property name="get.artifact.id.expected.@{artifactJar}" value="${artifact.id}"/&gt; </echo> -->
+						<propertycopy name="artifact.id.expected" from="${artifact.id.expected.name}" />
+						<assert failonerror="true" message="Expected: ${artifact.id.expected}; got: ${plugin.id}">
+							<bool>
+								<equals arg1="${artifact.id.expected}" arg2="${plugin.id}" />
+							</bool>
+						</assert>
+						<var name="artifact.id.expected" unset="true" />
+						<var name="artifact.id" unset="true" />
+					</sequential>
+				</for>
+			</sequential>
+		</for>
+	</target>
+
+	<target name="test.get.sources.build.all"
+	        depends="init, test.expected.values"
+	        description="verify get.sources works to fetch, then update; verify all components will be built"
+	>
+		<var name="build.if.sources.unchanged" value="true" />
+		<var name="get.components.to.build.expected.2" unset="true" />
+		<var name="get.components.to.build.expected.4" unset="true" />
+		<var name="get.components.to.build.expected.6" unset="true" />
+		<var name="get.components.to.build.expected.2" value="${get.components.to.build.expected.2.all}" />
+		<var name="get.components.to.build.expected.4" value="${get.components.to.build.expected.4.all}" />
+		<var name="get.components.to.build.expected.6" value="${get.components.to.build.expected.6.all}" />
+		<antcall target="test.get.sources" />
+	</target>
+
+	<target name="test.get.sources"
+	        depends="init, test.expected.values"
+	        description="verify get.sources works to fetch, then update; verify if components are not updated, they will not be built"
+	>
+		<var name="COMPONENTS" unset="true" />
+		<var name="COMPONENTS" value="${get.sources.expected.dirs}" />
+
+		<!-- for testing purposes, do not recurse (otherwise will have to download 100s of Mb of data -->
+		<var name="svn.recurse" unset="true" />
+		<var name="svn.recurse" value="false" />
+
+		<!-- cleanup before test -->
+		<for param="expected.dir" list="${get.sources.expected.dirs}" delimiter=", 
+	">
+			<sequential>
+				<delete dir="${WORKINGDIR}/@{expected.dir}" includeemptydirs="true" />
+				<delete file="${WORKINGDIR}/svn.info-@{expected.dir}.txt" />
+			</sequential>
+		</for>
+		<for param="expected.file" list="${get.sources.expected.files}" delimiter=", 
+	">
+			<sequential>
+				<delete file="${WORKINGDIR}/@{expected.file}" />
+			</sequential>
+		</for>
+
+		<echo level="info">----------------------------------</echo>
+		<echo level="info">
+1/6: Test checkout</echo>
+		<antcall target="get.sources" />
+		<for param="expected.dir" list="${get.sources.expected.dirs}" delimiter=", 
+	">
+			<sequential>
+				<assert failonerror="true" message="Dir ${WORKINGDIR}/@{expected.dir} not found!">
+					<bool>
+						<available file="${WORKINGDIR}/@{expected.dir}" type="dir" />
+					</bool>
+				</assert>
+			</sequential>
+		</for>
+		<for param="expected.file" list="${get.sources.expected.files}" delimiter=", 
+	">
+			<sequential>
+				<assert failonerror="true" message="Dir ${WORKINGDIR}/@{expected.file} not found!">
+					<bool>
+						<available file="${WORKINGDIR}/@{expected.file}" type="file" />
+					</bool>
+				</assert>
+			</sequential>
+		</for>
+		<echo level="info">----------------------------------</echo>
+
+		<echo level="info">
+2/6: Test build.cfg</echo>
+		<var name="COMPONENTS.to.build" unset="true" />
+		<antcallback target="get.components.to.build" return="COMPONENTS.to.build" />
+		<assert failonerror="true"
+		        message="expected: [${get.components.to.build.expected.2}] but got: [${COMPONENTS.to.build}]"
+		>
+			<bool>
+				<equals arg1="${get.components.to.build.expected.2}" arg2="${COMPONENTS.to.build}" />
+			</bool>
+		</assert>
+		<echo level="info">----------------------------------</echo>
+
+		<echo level="info">
+3/6: Test update</echo>
+		<delete file="${WORKINGDIR}/svn.info-tests.txt" />
+		<delete file="${WORKINGDIR}/svn.info-xulrunner.txt" />
+		<touch file="${WORKINGDIR}/common/pom.xml" />
+		<var name="COMPONENTS.to.build" unset="true" />
+		<antcall target="get.sources" />
+		<for param="expected.dir" list="${get.sources.expected.dirs}" delimiter=", 
+	">
+			<sequential>
+				<assert failonerror="true" message="Dir ${WORKINGDIR}/@{expected.dir} not found!">
+					<bool>
+						<available file="${WORKINGDIR}/@{expected.dir}" type="dir" />
+					</bool>
+				</assert>
+			</sequential>
+		</for>
+		<for param="expected.file" list="${get.sources.expected.files}" delimiter=", 
+	">
+			<sequential>
+				<assert failonerror="true" message="Dir ${WORKINGDIR}/@{expected.file} not found!">
+					<bool>
+						<available file="${WORKINGDIR}/@{expected.file}" type="file" />
+					</bool>
+				</assert>
+			</sequential>
+		</for>
+		<echo level="info">----------------------------------</echo>
+
+		<echo level="info">
+4/6: Test build.cfg</echo>
+		<var name="COMPONENTS.to.build" unset="true" />
+		<antcallback target="get.components.to.build" return="COMPONENTS.to.build" />
+		<assert failonerror="true"
+		        message="expected: [${get.components.to.build.expected.4}] but got: [${COMPONENTS.to.build}]"
+		>
+			<bool>
+				<equals arg1="${get.components.to.build.expected.4}" arg2="${COMPONENTS.to.build}" />
+			</bool>
+		</assert>
+		<echo level="info">----------------------------------</echo>
+
+		<echo level="info">
+5/6: Test info w/o update</echo>
+		<var name="COMPONENTS.to.build" unset="true" />
+		<antcall target="get.sources" />
+		<for param="expected.dir" list="${get.sources.expected.dirs}" delimiter=", 
+	">
+			<sequential>
+				<assert failonerror="true" message="Dir ${WORKINGDIR}/@{expected.dir} not found!">
+					<bool>
+						<available file="${WORKINGDIR}/@{expected.dir}" type="dir" />
+					</bool>
+				</assert>
+			</sequential>
+		</for>
+		<for param="expected.file" list="${get.sources.expected.files}" delimiter=", 
+	">
+			<sequential>
+				<assert failonerror="true" message="Dir ${WORKINGDIR}/@{expected.file} not found!">
+					<bool>
+						<available file="${WORKINGDIR}/@{expected.file}" type="file" />
+					</bool>
+				</assert>
+			</sequential>
+		</for>
+		<echo level="info">----------------------------------</echo>
+
+		<echo level="info">
+6/6: Test build.cfg</echo>
+		<var name="COMPONENTS.to.build" unset="true" />
+		<antcallback target="get.components.to.build" return="COMPONENTS.to.build" />
+		<assert failonerror="true"
+		        message="expected: [${get.components.to.build.expected.6}] but got: [${COMPONENTS.to.build}]"
+		>
+			<bool>
+				<equals arg1="${get.components.to.build.expected.6}" arg2="${COMPONENTS.to.build}" />
+			</bool>
+		</assert>
+		<echo level="info">----------------------------------</echo>
+	</target>
+
+	<!-- TODO: fixme: manual test; lacks something we can assert... maybe that deployDir exists? -->
+	<target name="test.deploy" depends="init">
+		<antcall target="deploy">
+			<param name="deployDir" value="tools@filemgmt.jboss.org:/downloads_htdocs/tools/repository/SNAPSHOT" />
+			<param name="sourceDir" value="${WORKINGDIR}/surefire-reports" />
+		</antcall>
+	</target>
+
+	<target name="test.now" depends="init">
+		<now>foobar!</now>
+		<now />
+		<now level="error">error!</now>
+		<now level="info">info!</now>
+	</target>
+
+	<target name="test.get.all.components" depends="init, test.expected.values">
+		<var name="COMPONENTS" unset="true" />
+		<var name="COMPONENTS"
+		     value="tests,common;
+	    flow,jbpm;
+	    jmx,archives,as;
+	    drools,bpel,smooks,freemarker,profiler,portlet;
+	    xulrunner,jst,vpe,jsf;
+	        esb,tptp,ws;
+	        cdi,struts,hibernatetools,seam;
+	            examples,birt;
+	            maven"
+		/>
+		<antcallback target="get.all.components" return="COMPONENTS.to.build" />
+		<assert failonerror="true"
+		        message="expected: [${get.all.components.expected}] but got: [${COMPONENTS.to.build}]"
+		>
+			<bool>
+				<equals arg1="${get.all.components.expected}" arg2="${COMPONENTS.to.build}" />
+			</bool>
+		</assert>
+	</target>
+
+</project>
