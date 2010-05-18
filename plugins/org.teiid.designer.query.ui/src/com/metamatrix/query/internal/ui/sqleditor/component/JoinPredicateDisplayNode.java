@@ -9,10 +9,14 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
 import com.metamatrix.query.sql.ReservedWords;
+import com.metamatrix.query.sql.lang.Criteria;
 import com.metamatrix.query.sql.lang.FromClause;
 import com.metamatrix.query.sql.lang.JoinPredicate;
 import com.metamatrix.query.sql.lang.JoinType;
+import com.metamatrix.query.sql.lang.PredicateCriteria;
 
 /**
  * The <code>JoinPredicateDisplayNode</code> class is used to represent a JoinPredicate.
@@ -64,7 +68,7 @@ public class JoinPredicateDisplayNode extends FromClauseDisplayNode {
 
         Iterator iter = joinPredicate.getJoinCriteria().iterator();
         while (iter.hasNext()) {
-            childNodeList.add(DisplayNodeFactory.createDisplayNode(this, iter.next()));
+            childNodeList.add(DisplayNodeFactory.createDisplayNode(this, clause));
         }
 
         // Build the Display Node List
@@ -138,42 +142,34 @@ public class JoinPredicateDisplayNode extends FromClauseDisplayNode {
             }
         }
 
-        if (childNodeList.size() > 2) {
-            Iterator iter = childNodeList.iterator();
-            if (iter.hasNext()) iter.next();
-            if (iter.hasNext()) iter.next();
-
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.ON));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
-            while (iter.hasNext()) {
-                child = (DisplayNode)iter.next();
-                if (child instanceof PredicateCriteriaDisplayNode) {
-                    // indent = child.getIndentLevel();
-                    if (child.hasDisplayNodes()) {
-                        displayNodeList.addAll(child.getDisplayNodeList());
-                    } else {
-                        displayNodeList.add(child);
-                    }
+     // join criteria
+        List joinCriteria = joinPredicate.getJoinCriteria();
+    	if(joinCriteria != null && joinCriteria.size() > 0) {
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.ON));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
+            
+    		Iterator critIter = joinCriteria.iterator();
+    		while(critIter.hasNext()) {
+    			Criteria crit = (Criteria) critIter.next();
+                if(crit instanceof PredicateCriteria) {
+                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,crit));
                 } else {
-                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, LTPAREN));
-                    if (child.hasDisplayNodes()) {
-                        displayNodeList.addAll(child.getDisplayNodeList());
-                    } else {
-                        displayNodeList.add(child);
-                    }
-                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, RTPAREN));
+                	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
+                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,crit));
+                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,RTPAREN));
                 }
-                if (iter.hasNext()) {
-                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
-                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.AND));
-                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
-                }
-            }
-        }
 
-        if (joinPredicate.hasHint()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, RTPAREN));
+    			if(critIter.hasNext()) {
+                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
+                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.AND));
+                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
+    			}
+    		}
+    	}
+
+        if(joinPredicate.hasHint()) {
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,RTPAREN));
         }
 
         addFromClauseDepOptions(joinPredicate);

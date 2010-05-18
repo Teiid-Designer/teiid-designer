@@ -381,7 +381,31 @@ public class TestDisplayNodeFactory extends TestCase {
 
         helpTest(jp, "m.g2 INNER JOIN m.g3 ON NOT (m.g2.e1 = m.g3.e1)"); //$NON-NLS-1$
     }
+    
+    public void testJoinPredicate6() {
+	    ArrayList crits = new ArrayList();
+	    CompareCriteria comprCrit1 = new CompareCriteria(new ElementSymbol("m.g2.e1"), CompareCriteria.EQ, new ElementSymbol("m.g3.e1")); //$NON-NLS-1$ //$NON-NLS-2$
+	    CompareCriteria comprCrit2 = new CompareCriteria(new ElementSymbol("m.g2.e2"), CompareCriteria.EQ, new ElementSymbol("m.g3.e2")); //$NON-NLS-1$ //$NON-NLS-2$
+  		IsNullCriteria inc = new IsNullCriteria();
+  		inc.setExpression(new ElementSymbol("m.g.e1")); //$NON-NLS-1$
+	    
+  		crits.add(inc);
+  		crits.add(comprCrit2);
+  		
+        CompoundCriteria compCrit = new CompoundCriteria(CompoundCriteria.OR, crits);
 
+        ArrayList crits2 = new ArrayList();
+        crits2.add(comprCrit1);
+        crits2.add(compCrit);
+        
+        JoinPredicate jp = new JoinPredicate(
+    		new UnaryFromClause(new GroupSymbol("m.g2")), //$NON-NLS-1$
+    		new UnaryFromClause(new GroupSymbol("m.g3")), //$NON-NLS-1$
+    		JoinType.JOIN_LEFT_OUTER,
+    		crits2 );
+    		
+    	helpTest(jp, "m.g2 LEFT OUTER JOIN m.g3 ON m.g2.e1 = m.g3.e1 AND ((m.g.e1 IS NULL) OR (m.g2.e2 = m.g3.e2))"); //$NON-NLS-1$
+	}
     public void testJoinType1() {
         helpTest(JoinType.JOIN_CROSS, "CROSS JOIN"); //$NON-NLS-1$
     }
