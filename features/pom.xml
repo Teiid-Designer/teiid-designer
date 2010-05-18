@@ -14,7 +14,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	<modules>
 		<module>org.teiid.designer.feature</module>
 		<module>org.teiid.designer.runtime.feature</module>
-		<module>org.teiid.designer.datatools.connectivity</module>
+		<module>org.teiid.datatools.connectivity.feature</module>
 	</modules>
 </project>
 	
