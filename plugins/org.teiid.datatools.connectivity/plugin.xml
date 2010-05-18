@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+ 
+	<extension point="org.eclipse.datatools.connectivity.driverExtension">
+		<category parentCategory="org.eclipse.datatools.connectivity.db.driverCategory"
+			id="org.teiid.datatools.connectivity.driver.teiidCategory"
+			name="Teiid"
+			description="Drivers for Teiid Federating Query Engine" />
+		
+		<driverTemplate
+        createDefault="false"
+        defaultDefinitionName="Teiid Server Driver"
+        description="Driver for the Teiid Federating Query Engine"
+        emptyJarListIsOK="false"
+        id="org.teiid.datatools.connectivity.driver.serverDriverTemplate"
+        jarList="TEIID_HOME/client/teiid-version-client.jar"
+        name="Teiid Server JDBC Driver"
+        parentCategory="org.teiid.datatools.connectivity.driver.teiidCategory">
+			<properties>
+				<property generated="false"
+					id="org.eclipse.datatools.connectivity.db.driverClass" name="Driver Class"
+					value="org.teiid.jdbc.TeiidDriver" required="true" visible="true" />
+				<property generated="false"
+					id="org.eclipse.datatools.connectivity.db.vendor" name="Vendor"
+					value="Teiid.org" required="true" visible="true" />
+				<property generated="false"
+					id="org.eclipse.datatools.connectivity.db.version" name="Version"
+					value="7.0" required="true" visible="true" />
+				<property generated="false"
+					id="org.eclipse.datatools.connectivity.db.URL" name="Connection URL"
+					value="jdbc:teiid:vdb-name@mm://host:port" required="true"
+					visible="true" />
+				<property generated="false"
+					id="org.eclipse.datatools.connectivity.db.username" name="User ID"
+					value="" required="false" visible="true" />
+				<property generated="false"
+					id="org.eclipse.datatools.connectivity.db.password" name="Password"
+					required="false" visible="true" />
+			</properties>
+		</driverTemplate>
+
+	</extension>
+ <extension
+       point="org.eclipse.datatools.connectivity.sqm.core.databaseDefinition">
+    <definition
+          allowsConnections="true"
+          description="Definition of the Teiid Database"
+          file="src/org/teiid/datatools/connectivity/database/teiidDB.xmi"
+          product="Teiid.org"
+          productDisplayString="Teiid"
+          version="7.0"
+          versionDisplayString="7.0">
+    </definition>
+ </extension>
+ <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+         <category
+            id="org.eclipse.datatools.connectivity.db.category"
+            name="Database Connections"/>
+      <connectionProfile
+            category="org.eclipse.datatools.connectivity.db.category"
+            configurationType="org.eclipse.datatools.connectivity.db.generic.configurationType"
+            icon="icons/jdbc_16.gif"
+            id="org.teiid.datatools.connectivity.connectionProfile"
+            name="Teiid Virtual Database"
+            pingFactory="org.teiid.datatools.connectivity.TeiidJDBCConnectionFactory"
+            propertiesPersistenceHook="org.teiid.datatools.connectivity.TeiidPersistanceHook"/>
+      <connectionFactory
+            class="org.teiid.datatools.connectivity.TeiidJDBCConnectionFactory"
+            id="java.sql.Connection"
+            name="JDBC Connection"
+            profile="org.teiid.datatools.connectivity.connectionProfile"/>
+   </extension>
+   
+   <extension
+    	point="org.eclipse.datatools.connectivity.sqm.core.mappings">
+       <providerIDtoDriverCategoryID
+          driverCategoryID="org.teiid.datatools.connectivity.driver.teiidCategory"
+          providerID="org.teiid.datatools.connectivity.connectionProfile">
+       </providerIDtoDriverCategoryID>
+    </extension>
+
+</plugin>
