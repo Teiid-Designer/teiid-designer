@@ -1,6 +1,9 @@
 <project default="run" basedir="." name="build.xml to wrap maven">
 	<!-- ****************************** Configuration ****************************** -->
 
+	<!-- TODO: support building from workspace (flat - no plugins/, tests/, features/ in pom.xml) -->
+	<!-- TODO: support fetching entire tree if not available from ${svn.root} into ./ dir -->
+
 	<!-- default maven version -->
 	<property name="maven.version" value="3.0-beta-1" />
 
@@ -899,7 +902,7 @@ ${test.results.errors.failures.skipped}
 						/>
 					</sequential>
 				</for>
-				
+
 				<for param="updateZip">
 					<path>
 						<fileset dir="${WORKINGDIR}/@{COMPONENT}" includes="**/JBossTools*Update*.zip" />

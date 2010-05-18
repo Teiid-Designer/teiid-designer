@@ -15,7 +15,7 @@
 <feature
       id="org.teiid.datatools.connectivity.feature"
       label="%featureName"
-      version="0.1.0"
+      version="0.1.0.qualifier"
       provider-name="Red Hat, Inc.">
 
    <description url="http://www.teiid.org/">
@@ -31,12 +31,6 @@
 
 Some portions may be licensed to Red Hat, Inc. under one or more contributor license agreements.
    </license>
-
-   <includes
-         id="org.teiid.datatools.connectivity.feature"
-         version="0.0.0"
-         name="Teiid Datatools Connectivity"/>
-
 
    <plugin
          id="org.teiid.datatools.connectivity"
