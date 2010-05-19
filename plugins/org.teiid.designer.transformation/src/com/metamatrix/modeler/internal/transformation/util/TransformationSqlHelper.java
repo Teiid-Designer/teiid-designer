@@ -19,6 +19,8 @@ import java.util.StringTokenizer;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
+import org.teiid.designer.udf.UdfManager;
+
 import com.metamatrix.api.exception.MetaMatrixComponentException;
 import com.metamatrix.api.exception.query.QueryMetadataException;
 import com.metamatrix.common.types.DataTypeManager;
@@ -3246,8 +3248,7 @@ public class TransformationSqlHelper implements SqlConstants {
                                           Expression expression ) {
         Class originalType = DataTypeManager.getDataTypeClass(originalTypeName);
 
-        FunctionLibrary library = new FunctionLibrary(SystemFunctionManager.getSystemFunctions(),
-                                                      new FunctionTree(new UDFSource(Collections.EMPTY_LIST)));
+        FunctionLibrary library = UdfManager.INSTANCE.getFunctionLibrary();
         FunctionDescriptor fd = library.findFunction(FunctionLibrary.CONVERT, new Class[] {originalType,
             DataTypeManager.DefaultDataClasses.STRING});
 

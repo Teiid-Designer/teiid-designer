@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.designer.udf.UdfManager;
+
 import com.metamatrix.common.types.DataTypeManager;
 import com.metamatrix.common.types.NullType;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -480,8 +482,7 @@ public class RuntimeTypeConverter {
                                               String theNewTypeName ) {
         Class originalType = DataTypeManager.getDataTypeClass(theOriginalTypeName);
 
-        FunctionLibrary library = new FunctionLibrary(SystemFunctionManager.getSystemFunctions(),
-                                                      new FunctionTree(new UDFSource(Collections.EMPTY_LIST)));
+        FunctionLibrary library = UdfManager.INSTANCE.getFunctionLibrary();
         FunctionDescriptor fd = library.findFunction(FunctionLibrary.CONVERT, new Class[] {originalType,
             DataTypeManager.DefaultDataClasses.STRING});
 
