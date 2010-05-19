@@ -411,6 +411,8 @@ public final class UdfManager implements IResourceChangeListener {
                 // }
             }
         }
+        
+        functionLibrary = null;
     }
 
     /**

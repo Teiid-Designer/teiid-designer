@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.teiid.designer.udf.UdfManager;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.function.FunctionForm;
@@ -103,8 +106,8 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
         // not sure if users can dynamically add categories.
         // make this construct categories each time this method is called
         categories = null;
-        funcLib = new FunctionLibrary(SystemFunctionManager.getSystemFunctions(),
-                                      new FunctionTree(new UDFSource(Collections.EMPTY_LIST)));
+        funcLib = UdfManager.INSTANCE.getFunctionLibrary(); //new FunctionLibrary(SystemFunctionManager.getSystemFunctions(),
+                                      //new FunctionTree(new UDFSource(Collections.EMPTY_LIST)));
         List list = funcLib.getFunctionCategories();
 
         if ((list != null) && !list.isEmpty()) {

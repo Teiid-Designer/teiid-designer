@@ -13,6 +13,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import org.teiid.designer.udf.UdfManager;
+
 import com.metamatrix.common.types.DataTypeManager;
 import com.metamatrix.query.function.FunctionForm;
 import com.metamatrix.query.function.FunctionLibrary;
@@ -53,8 +56,7 @@ public class SqlSyntax {
         Collections.sort(RESERVED_WORDS);
 
         // FUNCTION NAMES List
-        FunctionLibrary functionLib = new FunctionLibrary(SystemFunctionManager.getSystemFunctions(),
-                                                          new FunctionTree(new UDFSource(Collections.EMPTY_LIST)));
+        FunctionLibrary functionLib = UdfManager.INSTANCE.getFunctionLibrary();
         List allCategories = functionLib.getFunctionCategories();
         Set allFunctionNames = new HashSet();
         Iterator iter = allCategories.iterator();
