@@ -483,6 +483,8 @@ public class ModelUtil {
                     if (header != null && ModelType.PHYSICAL_LITERAL.equals(ModelType.get(header.getModelType()))) return true;
                 }
             }
+        } else if( obj != null && obj instanceof EmfResource ) {
+        	return ModelType.PHYSICAL_LITERAL.equals(((EmfResource)obj).getModelAnnotation().getModelType());
         }
         return false;
     }
