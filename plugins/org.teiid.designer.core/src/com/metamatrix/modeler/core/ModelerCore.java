@@ -43,13 +43,13 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.aspects.DeclarativeTransactionManager;
-import com.metamatrix.core.id.ObjectID;
+import org.teiid.core.id.ObjectID;
 import com.metamatrix.core.interceptor.InvocationFactoryHelper;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.core.util.Stopwatch;
-import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.container.ResourceDescriptor;
 import com.metamatrix.modeler.core.index.IndexSelectorFactory;
@@ -1829,6 +1829,23 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         CoreArgCheck.isNotNull(project);
         try {
             return project.hasNature(NATURE_ID);
+        } catch (CoreException e) {
+            // project does not exist or is not open
+        }
+        return false;
+    }
+
+    /**
+     * Returns true if the given project is accessible and it has a java nature, otherwise false.
+     * 
+     * @since 4.0
+     */
+    public static boolean hasNature( IProject project,
+                                     String nature ) {
+        CoreArgCheck.isNotNull(project);
+        CoreArgCheck.isNotEmpty(nature);
+        try {
+            return project.hasNature(nature);
         } catch (CoreException e) {
             // project does not exist or is not open
         }
